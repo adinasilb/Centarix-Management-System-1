@@ -1,0 +1,143 @@
+﻿@model IEnumerable<PrototypeWithAuth.Models.Vendor>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorEnName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorHeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorBuisnessID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactPerson)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorContactPhone1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorContactPhone2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorFax)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorCity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorStreet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorZip)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorWebsite)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorBank)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorBankBranch)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorAccountNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorSwift)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorBIC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorGoldAccount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorEnName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorHeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorBuisnessID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactPerson)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorContactPhone1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorContactPhone2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorFax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorCity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorStreet)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorZip)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorWebsite)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorBank)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorBankBranch)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorAccountNum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorSwift)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorBIC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VendorGoldAccount)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.VendorID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

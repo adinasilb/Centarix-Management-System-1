@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_LoginView.cshtml";
+
+
+}
+   
+        <div class="text-center">
+            <h6>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h6>
+            <div class="btn-group">
+                <button type="submit" class="button" >Protocols</button>
+                &nbsp;
+                <button type="submit" class="button" onclick="@("window.location.href='" + @Url.Action("Index", "Vendors") + "'");">Orders and Inventory</button>
+                &nbsp;
+                <button type="submit" class="button">Expenses</button>
+                &nbsp;
+                <button type="submit" class="button">Biomarkers</button>
+            </div>
+        </div>

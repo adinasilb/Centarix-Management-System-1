@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+
+namespace PrototypeWithAuth.Data
+{
+    public class ApplicationUser : IdentityUser // in order to custimize the users
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+       // public string URLPic { get; set; }
+    }
+}
