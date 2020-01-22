@@ -12,6 +12,10 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int InventoryID { get; set; }
 
+        [Required]
+        [Display(Name = "Item Name")]
+        public string ItemDescription { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime ItemReceivedDate { get; set; }
 
