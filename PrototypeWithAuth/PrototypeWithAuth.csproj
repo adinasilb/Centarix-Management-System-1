@@ -5,6 +5,11 @@
     <UserSecretsId>aspnet-PrototypeWithAuth-FF43606E-A387-46F0-A35D-9ED6980E4BEE</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200130075438_PopulateParentCategory.cs" />
+    <Compile Remove="Data\Migrations\20200130075438_PopulateParentCategory.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />

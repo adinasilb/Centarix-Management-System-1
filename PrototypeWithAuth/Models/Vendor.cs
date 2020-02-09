@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int VendorID { get; set; } 
         [Required, MaxLength(50)]
+        [Display(Name ="Vendor")]
         public string VendorEnName { get; set; }
         [MaxLength (50)]
         public string VendorHeName { get; set; }

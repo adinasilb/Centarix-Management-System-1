@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200204090320_editProductModelWithProductSubcategory")]
+    partial class editProductModelWithProductSubcategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -348,8 +350,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ProductSubcategoryID");
 
-                    b.HasIndex("VendorID");
-
                     b.ToTable("Products");
                 });
 
@@ -615,12 +615,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ProductSubcategory", "ProductSubcategory")
                         .WithMany()
                         .HasForeignKey("ProductSubcategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
-                        .WithMany()
-                        .HasForeignKey("VendorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

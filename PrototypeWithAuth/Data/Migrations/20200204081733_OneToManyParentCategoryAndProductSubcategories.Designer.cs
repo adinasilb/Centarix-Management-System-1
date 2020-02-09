@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200204081733_OneToManyParentCategoryAndProductSubcategories")]
+    partial class OneToManyParentCategoryAndProductSubcategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -346,10 +348,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("ProductID");
 
-                    b.HasIndex("ProductSubcategoryID");
-
-                    b.HasIndex("VendorID");
-
                     b.ToTable("Products");
                 });
 
@@ -606,21 +604,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.InventorySubcategory", "InventorySubcategory")
                         .WithMany("Inventories")
                         .HasForeignKey("InventorySubcategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.ProductSubcategory", "ProductSubcategory")
-                        .WithMany()
-                        .HasForeignKey("ProductSubcategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
-                        .WithMany()
-                        .HasForeignKey("VendorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

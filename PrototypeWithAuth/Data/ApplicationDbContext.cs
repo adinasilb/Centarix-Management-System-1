@@ -19,6 +19,9 @@ namespace PrototypeWithAuth.Data
 
         }
         public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<Product> Products  { get; set; }
+        public DbSet <ProductSubcategory> ProductSubcategories { get; set; }
+        public DbSet <ParentCategory> ParentCategories { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<InventorySubcategory> InventorySubcategories { get; set; }
 
@@ -30,6 +33,8 @@ namespace PrototypeWithAuth.Data
                 .HasOne <InventorySubcategory>(i => i.InventorySubcategory)
                 .WithMany(isc => isc.Inventories)
                 .HasForeignKey(i => i.InventorySubcategoryID);
+
+            modelBuilder.Seed();
         }
     }
 }

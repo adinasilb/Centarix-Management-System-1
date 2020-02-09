@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.Models
         public int InventorySubcategoryID { get; set; }
         
         [Required]
-        [Display(Name = "Item Name")]
+        [Display(Name = "Item Subcategory")]
         public string InventorySubcategoryDescription { get; set; }
 
         

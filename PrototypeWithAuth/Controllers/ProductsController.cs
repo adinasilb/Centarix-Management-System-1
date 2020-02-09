@@ -8,26 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 
-
 namespace PrototypeWithAuth.Controllers
 {
-    public class InventoriesController : Controller
+    public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public InventoriesController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Inventories
+        // GET: Products
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Inventories.Include(i => i.InventorySubcategory).ToListAsync());
+            return View(await _context.Products.Include(p => p.ProductSubcategory).ToListAsync());
         }
-        
 
-        // GET: Inventories/Details/5
+        // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,39 +33,39 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var inventory = await _context.Inventories
-                .FirstOrDefaultAsync(m => m.InventoryID == id);
-            if (inventory == null)
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductID == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(inventory);
+            return View(product);
         }
 
-        // GET: Inventories/Create
+        // GET: Products/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Inventories/Create
+        // POST: Products/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InventoryID,ItemReceivedDate,ItemPaymentDate")] Inventory inventory)
+        public async Task<IActionResult> Create([Bind("ProductID,ProductName,VendorID,ProductSubcategoryID,LocationID,QuantityPerUnit,UnitsInStock,UnitsInOrder,ReorderLevel,ProductComment,ProductMedia")] Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(inventory);
+                _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(inventory);
+            return View(product);
         }
 
-        // GET: Inventories/Edit/5
+        // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,22 +73,22 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var inventory = await _context.Inventories.FindAsync(id);
-            if (inventory == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(inventory);
+            return View(product);
         }
 
-        // POST: Inventories/Edit/5
+        // POST: Products/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InventoryID,ItemReceivedDate,ItemPaymentDate")] Inventory inventory)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductID,ProductName,VendorID,ProductSubcategoryID,LocationID,QuantityPerUnit,UnitsInStock,UnitsInOrder,ReorderLevel,ProductComment,ProductMedia")] Product product)
         {
-            if (id != inventory.InventoryID)
+            if (id != product.ProductID)
             {
                 return NotFound();
             }
@@ -99,12 +97,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    _context.Update(inventory);
+                    _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!InventoryExists(inventory.InventoryID))
+                    if (!ProductExists(product.ProductID))
                     {
                         return NotFound();
                     }
@@ -115,10 +113,10 @@ namespace PrototypeWithAuth.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(inventory);
+            return View(product);
         }
 
-        // GET: Inventories/Delete/5
+        // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,30 +124,30 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var inventory = await _context.Inventories
-                .FirstOrDefaultAsync(m => m.InventoryID == id);
-            if (inventory == null)
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductID == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(inventory);
+            return View(product);
         }
 
-        // POST: Inventories/Delete/5
+        // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var inventory = await _context.Inventories.FindAsync(id);
-            _context.Inventories.Remove(inventory);
+            var product = await _context.Products.FindAsync(id);
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InventoryExists(int id)
+        private bool ProductExists(int id)
         {
-            return _context.Inventories.Any(e => e.InventoryID == id);
+            return _context.Products.Any(e => e.ProductID == id);
         }
     }
 }
