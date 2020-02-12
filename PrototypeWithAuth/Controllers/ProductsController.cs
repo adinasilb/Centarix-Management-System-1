@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -20,11 +21,30 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int ? subcategoryID, int ? vendorID)
         {
-            return View(await _context.Products.Include(p => p.ProductSubcategory).ToListAsync());
+            if (vendorID != null)
+            {
+                var products = _context.Products
+                    .OrderByDescending(p => p.ProductID)
+                    .Where(p => p.VendorID == vendorID);
+                return View(await products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
+            }
+            else if (subcategoryID != null)
+            {
+                var products = _context.Products
+                    .OrderByDescending(p => p.ProductID)
+                    .Where(p => p.ProductSubcategoryID == subcategoryID);
+                return View(await products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
+            }
+            else
+            {
+                return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
+            }
+            //return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
+        
         }
-
+        
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -33,7 +53,8 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var product = await _context.Products.Include(p => p.ProductSubcategory)
+                .Include(v =>v.Vendor)
                 .FirstOrDefaultAsync(m => m.ProductID == id);
             if (product == null)
             {
@@ -44,9 +65,26 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        public IActionResult Create(int ? parentCategoryID)
         {
-            return View();
+            var parentCategories = _context.ParentCategories.ToList();
+            var productSubcategories1 = _context.ProductSubcategories.ToList();
+
+            var viewModel = new CreateProductViewModel
+            {
+                ParentCategories = parentCategories,
+                ProductSubcategories = productSubcategories1
+            };
+            return View(viewModel);
+
+           
+        }
+        [HttpGet] //send a json to that the subcategory list is filered
+        public JsonResult GetSubCategoryList(int ParentCategoryId)
+        {
+            var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
+            return Json(subCategoryList);
+
         }
 
         // POST: Products/Create
@@ -54,15 +92,16 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductID,ProductName,VendorID,ProductSubcategoryID,LocationID,QuantityPerUnit,UnitsInStock,UnitsInOrder,ReorderLevel,ProductComment,ProductMedia")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductID,ProductName,VendorID,ProductSubcategoryID,ParentCategoryID,LocationID,QuantityPerUnit,UnitsInStock,UnitsInOrder,ReorderLevel,ProductComment,ProductMedia")]Product product)
         {
-            if (ModelState.IsValid)
-            {
+            
+           // if (ModelState.IsValid)
+          //  {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(product);
+           // }
+            //return View(viewModel);
         }
 
         // GET: Products/Edit/5

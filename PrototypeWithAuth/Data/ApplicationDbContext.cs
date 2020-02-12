@@ -22,17 +22,17 @@ namespace PrototypeWithAuth.Data
         public DbSet<Product> Products  { get; set; }
         public DbSet <ProductSubcategory> ProductSubcategories { get; set; }
         public DbSet <ParentCategory> ParentCategories { get; set; }
-        public DbSet<Inventory> Inventories { get; set; }
-        public DbSet<InventorySubcategory> InventorySubcategories { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             // configures one-to-many relationship between Inventory and InventorySubcategories
-            modelBuilder.Entity<Inventory>()
-                .HasOne <InventorySubcategory>(i => i.InventorySubcategory)
-                .WithMany(isc => isc.Inventories)
-                .HasForeignKey(i => i.InventorySubcategoryID);
+          
+            modelBuilder.Entity<ProductSubcategory>()
+            .HasOne<ParentCategory>(ps => ps.ParentCategory)
+            .WithMany(pc => pc.ProductSubcategories)
+            .HasForeignKey(ps => ps.ParentCategoryID);
 
             modelBuilder.Seed();
         }

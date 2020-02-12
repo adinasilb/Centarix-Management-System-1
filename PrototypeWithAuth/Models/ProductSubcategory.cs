@@ -18,5 +18,7 @@ namespace PrototypeWithAuth.Models
         [Required]
         [Display(Name = "Type")]
         public string ProductSubcategoryDescription { get; set; }
+
+        public IEnumerable<Product> Products { get; set; }
     }
 }

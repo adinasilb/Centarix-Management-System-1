@@ -14,6 +14,8 @@ namespace PrototypeWithAuth.Models
 
         [Required]
         public string ParentCategoryDescription { get; set; }
+
+       
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
     }
 }
