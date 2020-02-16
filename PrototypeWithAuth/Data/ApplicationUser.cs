@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace PrototypeWithAuth.Data
 {
-    public class ApplicationUser : IdentityUser // in order to custimize the users
+    public class ApplicationUser : IdentityUser // in order to customize the users
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+
        // public string URLPic { get; set; }
     }
 }

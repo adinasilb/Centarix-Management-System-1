@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200204090320_editProductModelWithProductSubcategory")]
+    partial class editProductModelWithProductSubcategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,6 +227,49 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Inventory", b =>
+                {
+                    b.Property<int>("InventoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("InventorySubcategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ItemPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ItemReceivedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("InventoryID");
+
+                    b.HasIndex("InventorySubcategoryID");
+
+                    b.ToTable("Inventories");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.InventorySubcategory", b =>
+                {
+                    b.Property<int>("InventorySubcategoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("InventorySubcategoryDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("InventorySubcategoryID");
+
+                    b.ToTable("InventorySubcategories");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
                 {
                     b.Property<int>("ParentCategoryID")
@@ -304,8 +349,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ProductID");
 
                     b.HasIndex("ProductSubcategoryID");
-
-                    b.HasIndex("VendorID");
 
                     b.ToTable("Products");
                 });
@@ -558,17 +601,20 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Inventory", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.InventorySubcategory", "InventorySubcategory")
+                        .WithMany("Inventories")
+                        .HasForeignKey("InventorySubcategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.ProductSubcategory", "ProductSubcategory")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductSubcategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
                         .WithMany()
-                        .HasForeignKey("VendorID")
+                        .HasForeignKey("ProductSubcategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

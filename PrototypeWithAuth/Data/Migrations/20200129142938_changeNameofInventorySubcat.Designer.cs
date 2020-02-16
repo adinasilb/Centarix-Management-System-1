@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200129142938_changeNameofInventorySubcat")]
+    partial class changeNameofInventorySubcat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,202 +227,47 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.Inventory", b =>
                 {
-                    b.Property<int>("ParentCategoryID")
+                    b.Property<int>("InventoryID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ParentCategoryDescription")
+                    b.Property<int>("InventorySubcategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ParentCategoryID");
+                    b.Property<DateTime>("ItemPaymentDate")
+                        .HasColumnType("datetime2");
 
-                    b.ToTable("ParentCategories");
+                    b.Property<DateTime>("ItemReceivedDate")
+                        .HasColumnType("datetime2");
 
-                    b.HasData(
-                        new
-                        {
-                            ParentCategoryID = 1,
-                            ParentCategoryDescription = "Plastics"
-                        },
-                        new
-                        {
-                            ParentCategoryID = 2,
-                            ParentCategoryDescription = "Reagents"
-                        },
-                        new
-                        {
-                            ParentCategoryID = 3,
-                            ParentCategoryDescription = "Proprietry"
-                        },
-                        new
-                        {
-                            ParentCategoryID = 4,
-                            ParentCategoryDescription = "Reusable"
-                        });
+                    b.HasKey("InventoryID");
+
+                    b.HasIndex("InventorySubcategoryID");
+
+                    b.ToTable("Inventories");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.InventorySubcategory", b =>
                 {
-                    b.Property<int>("ProductID")
+                    b.Property<int>("InventorySubcategoryID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LocationID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductComment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductMedia")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductName")
+                    b.Property<string>("InventorySubcategoryDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductSubcategoryID")
-                        .HasColumnType("int");
+                    b.HasKey("InventorySubcategoryID");
 
-                    b.Property<int>("QuantityPerUnit")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReorderLevel")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UnitsInOrder")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UnitsInStock")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VendorID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductID");
-
-                    b.HasIndex("ProductSubcategoryID");
-
-                    b.HasIndex("VendorID");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProductSubcategory", b =>
-                {
-                    b.Property<int>("ProductSubcategoryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ParentCategoryID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductSubcategoryDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductSubcategoryID");
-
-                    b.HasIndex("ParentCategoryID");
-
-                    b.ToTable("ProductSubcategories");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductSubcategoryID = 11,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tubes"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 12,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Pipets"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 13,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tips"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 14,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Dishes"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 15,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Cell Culture Plates"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 21,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Chemical Powder"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 22,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "DNA Enzyme"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 23,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Antibodies"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 24,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Cell Media"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 31,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Virus"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 32,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Plasmid"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 33,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Primers"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 41,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Beaker"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 42,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Buckets"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 43,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Measuring Instruments"
-                        });
+                    b.ToTable("InventorySubcategories");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>
@@ -558,26 +405,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.Inventory", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.ProductSubcategory", "ProductSubcategory")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductSubcategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
-                        .WithMany()
-                        .HasForeignKey("VendorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProductSubcategory", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.ParentCategory", "ParentCategory")
-                        .WithMany("ProductSubcategories")
-                        .HasForeignKey("ParentCategoryID")
+                    b.HasOne("PrototypeWithAuth.Models.InventorySubcategory", "InventorySubcategory")
+                        .WithMany("Inventories")
+                        .HasForeignKey("InventorySubcategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

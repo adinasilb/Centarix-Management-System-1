@@ -1,0 +1,20 @@
+﻿@model IEnumerable<PrototypeWithAuth.Models.ProductSubcategory>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/View.cshtml";
+}
+
+<table class="table">
+    <tbody>
+@foreach (var item in Model) {
+        
+        <tr>
+            <td>
+                
+                @Html.ActionLink(item.ProductSubcategoryDescription, "Index", "Products", new { subcategoryID = @item.ProductSubcategoryID}, null)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
