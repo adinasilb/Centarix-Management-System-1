@@ -20,31 +20,70 @@ namespace PrototypeWithAuth.Controllers
             _context = context;
         }
 
+
         // GET: Products
-        public async Task<IActionResult> Index(int ? subcategoryID, int ? vendorID)
+        //public async Task<IActionResult> Index(int? subcategoryID, int? vendorID)
+        //{
+        //    if (vendorID != null)
+        //    {
+        //        var products = _context.Products
+        //            .OrderByDescending(p => p.ProductID)
+        //            .Where(p => p.VendorID == vendorID);
+        //        return View(await products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
+        //    }
+        //    else if (subcategoryID != null)
+        //    {
+        //        var products = _context.Products
+        //            .OrderByDescending(p => p.ProductID)
+        //            .Where(p => p.ProductSubcategoryID == subcategoryID);
+        //        return View(await products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
+        //    }
+        //    else
+        //    {
+        //        return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
+        //    }
+        //    //return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
+
+        //}
+        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, bool IsNewItem = false)
         {
+            var parentCategories = _context.ParentCategories.ToList();
+            var productSubcategories = _context.ProductSubcategories.ToList();
+            var products = _context.Products.ToList();
+
+            var viewModel = new CreateProductViewModel
+            {
+                ParentCategories = parentCategories,
+                ProductSubcategories = productSubcategories,
+                Products = products
+            };
+            if (IsNewItem)
+            {
+                viewModel.IsNewItem = true;
+            }
+
             if (vendorID != null)
             {
-                var products = _context.Products
-                    .OrderByDescending(p => p.ProductID)
+                products.
+                    OrderByDescending(p => p.ProductID)
                     .Where(p => p.VendorID == vendorID);
-                return View(await products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
+                return View(viewModel);
             }
             else if (subcategoryID != null)
             {
-                var products = _context.Products
+                products
                     .OrderByDescending(p => p.ProductID)
                     .Where(p => p.ProductSubcategoryID == subcategoryID);
-                return View(await products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
+                return View(viewModel);
             }
             else
             {
-                return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
+                return View(viewModel);/*Include(p => p.ProductSubcategory.ParentCategory).*/
             }
             //return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
-        
+
         }
-        
+
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -54,7 +93,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             var product = await _context.Products.Include(p => p.ProductSubcategory)
-                .Include(v =>v.Vendor)
+                .Include(v => v.Vendor)
                 .FirstOrDefaultAsync(m => m.ProductID == id);
             if (product == null)
             {
@@ -64,20 +103,25 @@ namespace PrototypeWithAuth.Controllers
             return View(product);
         }
 
+        ////creates a partialview which is called as a modal
+        //public IActionResult CreateModal()
+        //{
+        //    return PartialView();
+        //}
+
         // GET: Products/Create
-        public IActionResult Create(int ? parentCategoryID)
+        public IActionResult Create(int? parentCategoryID)
         {
-            var parentCategories = _context.ParentCategories.ToList();
-            var productSubcategories1 = _context.ProductSubcategories.ToList();
+                var parentCategories = _context.ParentCategories.ToList();
+                var productSubcategories1 = _context.ProductSubcategories.ToList();
 
-            var viewModel = new CreateProductViewModel
-            {
-                ParentCategories = parentCategories,
-                ProductSubcategories = productSubcategories1
-            };
-            return View(viewModel);
+                var viewModel = new CreateProductViewModel
+                {
+                    ParentCategories = parentCategories,
+                    ProductSubcategories = productSubcategories1
+                };
+                return PartialView(viewModel);
 
-           
         }
         [HttpGet] //send a json to that the subcategory list is filered
         public JsonResult GetSubCategoryList(int ParentCategoryId)
@@ -94,13 +138,13 @@ namespace PrototypeWithAuth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductID,ProductName,VendorID,ProductSubcategoryID,ParentCategoryID,LocationID,QuantityPerUnit,UnitsInStock,UnitsInOrder,ReorderLevel,ProductComment,ProductMedia")]Product product)
         {
-            
-           // if (ModelState.IsValid)
-          //  {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-           // }
+
+            // if (ModelState.IsValid)
+            //  {
+            _context.Add(product);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            // }
             //return View(viewModel);
         }
 

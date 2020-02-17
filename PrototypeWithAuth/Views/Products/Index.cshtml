@@ -1,104 +1,281 @@
-﻿@model IEnumerable<PrototypeWithAuth.Models.Product>
+﻿@*@model IEnumerable<PrototypeWithAuth.Models.Product>*@
+@model PrototypeWithAuth.ViewModels.CreateProductViewModel
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/View.cshtml";
 }
 
+<div class="row">
+    @*<div class="col-md-2 border-right">
+            <navbar>
+                <nav>
+                    <ul>
+                        <li><button id="AddItemModal">Add Item</button></li>
+                    </ul>
+                </nav>
+            </navbar>
+        </div>*@
+    @if (Model.IsNewItem)
+    {
+        <div class="AddItemModalView modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Item</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <h1>Create</h1>
+
+                        <h4>Product</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <form asp-action="Create">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-group">
+                                        <label asp-for="Product.ProductName" class="control-label"></label>
+                                        <input asp-for="Product.ProductName" class="form-control" />
+                                        <span asp-validation-for="Product.ProductName" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                                        @Html.DropDownListFor(c => c.Product.ProductSubcategory.ParentCategoryID,
+                                        new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+                                        "Select Category", new { @class = "form-control", @id = "parentlist" })
+                                        <span asp-validation-for="Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                                        <select name="Product.ProductSubcategoryID" id="sublist" class="form-control"></select>
+                                        <span asp-validation-for="Product.ProductSubcategoryID" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="Product.VendorID" class="control-label"></label>
+                                        <input asp-for="Product.VendorID" class="form-control" />
+                                        <span asp-validation-for="Product.VendorID" class="text-danger"></span>
+                                    </div>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductMedia)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <!-- <th>
-        @Html.DisplayNameFor(model => model.VendorID)
-    </th>-->
-            <th>
-                @Html.DisplayNameFor(model => model.Vendor.VendorEnName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductSubcategory.ProductSubcategoryDescription)
-            </th>
-            <!--<th>
-        @Html.DisplayNameFor(model => model.ProductSubcategoryID)
-    </th>-->
-            <th>
-                @Html.DisplayNameFor(model => model.LocationID)
-            </th>
-            <!-- <th>
-         @Html.DisplayNameFor(model => model.QuantityPerUnit)
-     </th>
-     <th>
-         @Html.DisplayNameFor(model => model.UnitsInStock)
-     </th>
-     <th>
-         @Html.DisplayNameFor(model => model.UnitsInOrder)
-     </th>
-     <th>
-         @Html.DisplayNameFor(model => model.ReorderLevel)
-     </th>-->
-            <th>
-                @Html.DisplayNameFor(model => model.ProductComment)
-            </th>
-            <th>
-                <a>Details</a>
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductMedia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <!--<td>
-        @Html.DisplayFor(modelItem => item.VendorID)
-    </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.Vendor.VendorEnName)
-            </td>
-            <th>
-                @Html.DisplayFor(modelItem => item.ProductSubcategory.ProductSubcategoryDescription)
-            </th>
-            <!--<td>
-        @Html.DisplayFor(modelItem => item.ProductSubcategoryID)
-    </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.LocationID)
-            </td>
-            <!--<td>
-        @Html.DisplayFor(modelItem => item.QuantityPerUnit)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.UnitsInStock)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.UnitsInOrder)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ReorderLevel)
-    </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductComment)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.ProductID">Details</a>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
-            </td>
-        </tr>
+                                    <div class="form-group">
+                                        <label asp-for="Product.LocationID" class="control-label"></label>
+                                        <input asp-for="Product.LocationID" class="form-control" />
+                                        <span asp-validation-for="Product.LocationID" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label asp-for="Product.QuantityPerUnit" class="control-label"></label>
+                                        <input asp-for="Product.QuantityPerUnit" class="form-control" />
+                                        <span asp-validation-for="Product.QuantityPerUnit" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label asp-for="Product.UnitsInStock" class="control-label"></label>
+                                        <input asp-for="Product.UnitsInStock" class="form-control" />
+                                        <span asp-validation-for="Product.UnitsInStock" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label asp-for="Product.UnitsInOrder" class="control-label"></label>
+                                        <input asp-for="Product.UnitsInOrder" class="form-control" />
+                                        <span asp-validation-for="Product.UnitsInOrder" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label asp-for="Product.ReorderLevel" class="control-label"></label>
+                                        <input asp-for="Product.ReorderLevel" class="form-control" />
+                                        <span asp-validation-for="Product.ReorderLevel" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label asp-for="Product.ProductComment" class="control-label"></label>
+                                        <input asp-for="Product.ProductComment" class="form-control" />
+                                        <span asp-validation-for="Product.ProductComment" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label asp-for="Product.ProductMedia" class="control-label"></label>
+                                        <input asp-for="Product.ProductMedia" class="form-control" />
+                                        <span asp-validation-for="Product.ProductMedia" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <input type="submit" value="Create" class="btn btn-primary" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a asp-action="Index">Back to List</a>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-md-10">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.ProductMedia)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.ProductName)
+                    </th>
+                    <!-- <th>
+                        @Html.DisplayNameFor(model => model.Product.VendorID)
+                    </th>-->
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.Product.Vendor.VendorEnName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.ProductSubcategory.ProductSubcategoryDescription)
+                    </th>
+                    <!--<th>
+                        @Html.DisplayNameFor(model => model.Product.ProductSubcategoryID)
+                    </th>-->
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.Product.LocationID)
+                    </th>
+                    <!-- <th>
+                        @Html.DisplayNameFor(model => model.Product.QuantityPerUnit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.UnitsInStock)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.UnitsInOrder)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.ReorderLevel)
+                    </th>-->
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.Product.ProductComment)
+                    </th>
+                    <th>
+                        <a>Details</a>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Products)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProductMedia)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProductName)
+                        </td>
+                        <!--<td>
+                            @Html.DisplayFor(modelItem => item.VendorID)
+                        </td>-->
+                        <td>
+
+                            @Html.DisplayFor(modelItem => item.Vendor.VendorEnName)
+                        </td>
+                        <th>
+                            @Html.DisplayFor(modelItem => item.ProductSubcategory.ProductSubcategoryDescription)
+                        </th>
+                        <!--<td>
+                            @Html.DisplayFor(modelItem => item.ProductSubcategoryID)
+                        </td>-->
+                        <td>
+
+                            @Html.DisplayFor(modelItem => item.LocationID)
+                        </td>
+                        <!--<td>
+                            @Html.DisplayFor(modelItem => item.QuantityPerUnit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnitsInStock)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnitsInOrder)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReorderLevel)
+                        </td>-->
+                        <td>
+
+                            @Html.DisplayFor(modelItem => item.ProductComment)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.ProductID">Details</a>
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".AddItemModalView").show();
+
+        $("body").click(function () {
+            if ($(".AddItemModalView").is(":visible")) {
+                $(".AddItemModalView").hide();
+            }
+        });
+    });
+</script>
+@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script type="text/javascript">
+        //Insert default item "Select" in dropdownlist on load
+        $(document).ready(function () {
+            var items = "<option value='0'>Select Subcategory</option>";
+            $("#sublist").html(items);
+
+            $("#modalProductCreate").show();
+        });
+
+
+        $("#parentlist").change(function () {
+            var parentCategoryId = $("#parentlist").val();
+            var url = "/Products/GetSubCategoryList";
+
+            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                var item = "";
+                $("#sublist").empty();
+                $.each(data, function (i, subCategory) {
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                });
+                $("#sublist").html(item);
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>

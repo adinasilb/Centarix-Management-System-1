@@ -14,6 +14,8 @@
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <header>
@@ -64,7 +66,8 @@
         <aside style="margin-left: 2.5em">
             <ul class="navbar-nav flex-grow-1">
                 <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Create">Add Item</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Add Item</a>
+                    @Html.ActionLink("Add Item", "Index", "Products", new { @IsNewItem = true })
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Vendors" asp-action="Index">Vendors</a>
@@ -95,8 +98,6 @@
                 &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </div>
         </footer>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         @RenderSection("Scripts", required: false)
 </body>
