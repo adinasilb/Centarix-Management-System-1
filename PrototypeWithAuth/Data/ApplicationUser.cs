@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.Data
 {
@@ -10,8 +11,10 @@ namespace PrototypeWithAuth.Data
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public IEnumerable<Request> Requests { get; set;}
 
 
-       // public string URLPic { get; set; }
+        // public string URLPic { get; set; }
+
     }
 }

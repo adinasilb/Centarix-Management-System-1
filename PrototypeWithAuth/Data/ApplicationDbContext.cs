@@ -18,6 +18,8 @@ namespace PrototypeWithAuth.Data
 
 
         }
+        public DbSet<RequestStatus> RequestStatuses { get; set; }
+        public DbSet<Request> Requests { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Product> Products  { get; set; }
         public DbSet <ProductSubcategory> ProductSubcategories { get; set; }
@@ -33,6 +35,23 @@ namespace PrototypeWithAuth.Data
             .HasOne<ParentCategory>(ps => ps.ParentCategory)
             .WithMany(pc => pc.ProductSubcategories)
             .HasForeignKey(ps => ps.ParentCategoryID);
+            
+            modelBuilder.Entity<Request>()
+            .HasOne<ApplicationUser>(r => r.ApplicationUser)
+            .WithMany(au => au.Requests)
+            .HasForeignKey(r => r.ApplicationUserID);
+
+            modelBuilder.Entity<Request>()
+            .HasOne<RequestStatus>(r => r.RequestStatus)
+            .WithMany(rs => rs.Requests)
+            .HasForeignKey(r => r.RequestStatusID);
+
+            modelBuilder.Entity<Vendor>()
+            .HasOne<ParentCategory>(v => v.ParentCategory)
+            .WithMany(pc => pc.Vendors)
+            .HasForeignKey(v => v.ParentCategoryID)
+            .OnDelete(DeleteBehavior.Restrict);
+            
 
             modelBuilder.Seed();
         }

@@ -23,11 +23,9 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "CompanyID")]
         public string VendorBuisnessID { get; set; }
 
-      //  public int ParentCategoryID { get; set; }
-       // public ParentCategory ParentCategory { get; set; } //every vendor is related to one parent category
+        public int ParentCategoryID { get; set; } //should probably make null
+        public ParentCategory ParentCategory { get; set; } //every vendor is related to one parent category
 
-        //[MaxLength(50)]
-        //public List<VendorTypeVendor> VendorTypeVendors  { get; set; } // setting up the many to many relatiosnship with vendortype, making a list for it
         [MaxLength(50)]
         public string ContactPerson { get; set; }
         [MaxLength (50)]

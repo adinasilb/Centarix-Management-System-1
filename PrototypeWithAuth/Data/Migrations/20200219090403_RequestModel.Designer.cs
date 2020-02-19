@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200219090403_RequestModel")]
+    partial class RequestModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -270,6 +272,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("LocationID")
+                        .HasColumnType("int");
+
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
 
@@ -281,6 +286,18 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductSubcategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuantityPerUnit")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReorderLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitsInOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitsInStock")
                         .HasColumnType("int");
 
                     b.Property<int>("VendorID")
@@ -427,9 +444,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("InvoiceNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LocationID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -458,24 +472,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("RequestStatusID");
-
                     b.ToTable("Requests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestStatus", b =>
-                {
-                    b.Property<int>("RequestStatusID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("RequestStatusDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RequestStatusID");
-
-                    b.ToTable("RequestStatuses");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>
@@ -496,9 +493,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("OrderEmail")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
-
-                    b.Property<int>("ParentCategoryID")
-                        .HasColumnType("int");
 
                     b.Property<string>("VendorAccountNum")
                         .IsRequired()
@@ -561,8 +555,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VendorID");
-
-                    b.HasIndex("ParentCategoryID");
 
                     b.ToTable("Vendors");
                 });
@@ -647,21 +639,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
                         .WithMany("Requests")
                         .HasForeignKey("ApplicationUserID");
-
-                    b.HasOne("PrototypeWithAuth.Models.RequestStatus", "RequestStatus")
-                        .WithMany("Requests")
-                        .HasForeignKey("RequestStatusID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.ParentCategory", "ParentCategory")
-                        .WithMany("Vendors")
-                        .HasForeignKey("ParentCategoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
