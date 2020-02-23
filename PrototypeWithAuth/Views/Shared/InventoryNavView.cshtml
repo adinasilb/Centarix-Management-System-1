@@ -7,31 +7,32 @@
 <div class="row">
     <div class="col-md-2 border-right">
         @*<nav class="navbar flex-grow-1">*@
-            <ul class="nav flex-column nav-pills nav-stacked">
-                <li class="nav-item">
-                    @Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class="btn btn-link text-dark"})
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    @Html.ActionLink("Type", "Index", "ProductSubcategories", new { }, new { @class = "btn btn-link text-dark" })
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    @Html.ActionLink("Vendor", "Index", "Vendors", new { }, new { @class = "btn btn-link text-dark" })
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    @Html.ActionLink("Owner", "Index", "Owners", new { }, new { @class = "btn btn-link text-dark" })
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = "btn btn-link text-dark" })
-                </li>
-            </ul>
+        <ul class="nav flex-column nav-pills nav-stacked">
+            <li class="nav-item">
+                @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
+                <button class="btn btn-link load-product-details" value="0" data-target="item">Add Item</button>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                @Html.ActionLink("Type", "Index", "ProductSubcategories", new { }, new { @class = "btn btn-link text-dark" })
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                @Html.ActionLink("Vendor", "Index", "Vendors", new { }, new { @class = "btn btn-link text-dark" })
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                @Html.ActionLink("Owner", "Index", "Owners", new { }, new { @class = "btn btn-link text-dark" })
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = "btn btn-link text-dark" })
+            </li>
+        </ul>
         @*</nav>*@
     </div>
     <div class="col-md-10 border-left">
@@ -39,11 +40,36 @@
     </div>
 </div>
 
-<!-- MODAL FOR UPSERT -->
-<div id='upsert-modal' class='modal fade in'>
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div id='myModalContent'></div>
-        </div>
-    </div>
+<!-- The Modal -->
+<div class="modal modal-view" id="myModal">
 </div>
+
+@RenderSection("Scripts", required: false)
+<script>
+    //Render a partial view inside of a modal
+    //To do later: add a loading gif div
+    $(".load-product-details").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "ModalView/?id=" + $(this).val()
+        $.ajax({
+            url: $itemurl,
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                //replaces the modal-view class with the ModalView view
+                $(".modal-view").html(data);
+                //shows the modal
+                $(".modal").modal('show');
+                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                $(".modal-backdrop").remove();
+                /* Following two lines should set the correct data-target tab to open ----> not working right now */
+                var tab = e.relatedTarget.hash;
+                $('.nav-tabs a[href="' + tab + '"]').tab('show');
+            }
+        });
+        return false;
+    });
+
+</script>

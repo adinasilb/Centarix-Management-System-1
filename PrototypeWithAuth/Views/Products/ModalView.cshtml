@@ -1,16 +1,16 @@
-﻿@model PrototypeWithAuth.Models.Product
+﻿@model PrototypeWithAuth.ViewModels.CreateProductViewModel
 
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view">
 
     <div class="modal-content">
 
 
-        <form asp-action="Edit" asp-route-id="@Model.ProductID" method="post"  style="height: 100%; overflow: auto;">
+        <form asp-action="Edit" asp-route-id="@Model.Product.ProductID" method="post"  style="height: 100%; overflow: auto;">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProductID" />
+            <input type="hidden" asp-for="Product.ProductID" />
             <!-- Modal Header -->
             <div class="modal-header border-bottom-0">
-                <h4 class="modal-title">@Model.ProductName</h4>
+                <h4 class="modal-title">@Model.Product.ProductName</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -33,54 +33,54 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label asp-for="ProductName" class="control-label"></label>
-                                        <input asp-for="ProductName" class="form-control" />
-                                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                                        <label asp-for="Product.ProductName" class="control-label"></label>
+                                        <input asp-for="Product.ProductName" class="form-control" />
+                                        <span asp-validation-for="Product.ProductName" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="VendorID" class="control-label"></label>
-                                        <input asp-for="VendorID" class="form-control" />
-                                        <span asp-validation-for="VendorID" class="text-danger"></span>
+                                        <label asp-for="Product.VendorID" class="control-label"></label>
+                                        <input asp-for="Product.VendorID" class="form-control" />
+                                        <span asp-validation-for="Product.VendorID" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="ProductSubcategoryID" class="control-label"></label>
-                                        <input asp-for="ProductSubcategoryID" class="form-control" />
-                                        <span asp-validation-for="ProductSubcategoryID" class="text-danger"></span>
+                                        <label asp-for="Product.ProductSubcategoryID" class="control-label"></label>
+                                        <input asp-for="Product.ProductSubcategoryID" class="form-control" />
+                                        <span asp-validation-for="Product.ProductSubcategoryID" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="LocationID" class="control-label"></label>
-                                        <input asp-for="LocationID" class="form-control" />
-                                        <span asp-validation-for="LocationID" class="text-danger"></span>
+                                        <label asp-for="Product.LocationID" class="control-label"></label>
+                                        <input asp-for="Product.LocationID" class="form-control" />
+                                        <span asp-validation-for="Product.LocationID" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="QuantityPerUnit" class="control-label"></label>
-                                        <input asp-for="QuantityPerUnit" class="form-control" />
-                                        <span asp-validation-for="QuantityPerUnit" class="text-danger"></span>
+                                        <label asp-for="Product.QuantityPerUnit" class="control-label"></label>
+                                        <input asp-for="Product.QuantityPerUnit" class="form-control" />
+                                        <span asp-validation-for="Product.QuantityPerUnit" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="UnitsInStock" class="control-label"></label>
-                                        <input asp-for="UnitsInStock" class="form-control" />
-                                        <span asp-validation-for="UnitsInStock" class="text-danger"></span>
+                                        <label asp-for="Product.UnitsInStock" class="control-label"></label>
+                                        <input asp-for="Product.UnitsInStock" class="form-control" />
+                                        <span asp-validation-for="Product.UnitsInStock" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="UnitsInOrder" class="control-label"></label>
-                                        <input asp-for="UnitsInOrder" class="form-control" />
-                                        <span asp-validation-for="UnitsInOrder" class="text-danger"></span>
+                                        <label asp-for="Product.UnitsInOrder" class="control-label"></label>
+                                        <input asp-for="Product.UnitsInOrder" class="form-control" />
+                                        <span asp-validation-for="Product.UnitsInOrder" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="ReorderLevel" class="control-label"></label>
-                                        <input asp-for="ReorderLevel" class="form-control" />
-                                        <span asp-validation-for="ReorderLevel" class="text-danger"></span>
+                                        <label asp-for="Product.ReorderLevel" class="control-label"></label>
+                                        <input asp-for="Product.ReorderLevel" class="form-control" />
+                                        <span asp-validation-for="Product.ReorderLevel" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="ProductComment" class="control-label"></label>
-                                        <input asp-for="ProductComment" class="form-control" />
-                                        <span asp-validation-for="ProductComment" class="text-danger"></span>
+                                        <label asp-for="Product.ProductComment" class="control-label"></label>
+                                        <input asp-for="Product.ProductComment" class="form-control" />
+                                        <span asp-validation-for="Product.ProductComment" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="ProductMedia" class="control-label"></label>
-                                        <input asp-for="ProductMedia" class="form-control" />
-                                        <span asp-validation-for="ProductMedia" class="text-danger"></span>
+                                        <label asp-for="Product.ProductMedia" class="control-label"></label>
+                                        <input asp-for="Product.ProductMedia" class="form-control" />
+                                        <span asp-validation-for="Product.ProductMedia" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
             <div class="modal-footer">
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-outline-primary" />
-                    @Html.ActionLink("Delete", "Delete", new { @id = Model.ProductID}, new { @class = "btn btn-outline-danger" })
+                    @Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID}, new { @class = "btn btn-outline-danger" })
                     <button type="button" class="btn btn-outline-info" data-dismiss="modal">Close</button>
                 </div>
             </div>

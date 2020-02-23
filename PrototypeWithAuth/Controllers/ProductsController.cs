@@ -221,13 +221,21 @@ namespace PrototypeWithAuth.Controllers
             {
                 return NotFound();
             }
-
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            CreateProductViewModel CPViewModelObj = new CreateProductViewModel();
+            if (id == 0)
             {
-                return NotFound();
+                CPViewModelObj.ParentCategories = _context.ParentCategories.ToList();
+                CPViewModelObj.ProductSubcategories = _context.ProductSubcategories.ToList();
             }
-            return PartialView(product);
+            else
+            {
+                CPViewModelObj.Product = await _context.Products.FindAsync(id);
+                if (CPViewModelObj.Product == null)
+                {
+                    return NotFound();
+                }
+            }
+            return PartialView(CPViewModelObj);
         }
 
         [HttpPost]
