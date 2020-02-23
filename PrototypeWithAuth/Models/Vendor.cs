@@ -23,8 +23,8 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "CompanyID")]
         public string VendorBuisnessID { get; set; }
 
-        public int ParentCategoryID { get; set; } //should probably make null
-        public ParentCategory ParentCategory { get; set; } //every vendor is related to one parent category
+        //public int ParentCategoryID { get; set; } //should probably make null
+        //public ParentCategory ParentCategory { get; set; } //every vendor is related to one parent category
 
         [MaxLength(50)]
         public string ContactPerson { get; set; }

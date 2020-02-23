@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200130075438_PopulateParentCategory.cs" />
     <Compile Remove="Data\Migrations\20200130075438_PopulateParentCategory.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200221071910_addTablesRequestAndRequestStat.cs" />
+    <Compile Remove="Data\Migrations\20200221071910_addTablesRequestAndRequestStat.Designer.cs" />
   </ItemGroup>
 
 

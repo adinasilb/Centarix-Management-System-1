@@ -16,6 +16,6 @@ namespace PrototypeWithAuth.Models
         public string ParentCategoryDescription { get; set; }
             
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
-        public IEnumerable<Vendor> Vendors { get; set; }
+       // public IEnumerable<Vendor> Vendors { get; set; }
     }
 }
