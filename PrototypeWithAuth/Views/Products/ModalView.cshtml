@@ -1,85 +1,123 @@
 ﻿@model PrototypeWithAuth.Models.Product
-<!-- Modal Header -->
-    <div class="modal-header">
-        <h4 class="modal-title">@Model.ProductName</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <hr />
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#home" class="btn btn-outline-secondary">Home</a></li>
-            <li><a data-toggle="tab" href="#menu1" class="btn btn-outline-secondary">Menu 1</a></li>
-            <li><a data-toggle="tab" href="#menu2" class="btn btn-outline-secondary">Menu 2</a></li>
-            <li><a data-toggle="tab" href="#menu3" class="btn btn-outline-secondary">Menu 3</a></li>
-        </ul>
+
+<div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view">
+
+    <div class="modal-content">
+
+
+        <form asp-action="Edit" asp-route-id="@Model.ProductID" method="post"  style="height: 100%; overflow: auto;">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductID" />
+            <!-- Modal Header -->
+            <div class="modal-header border-bottom-0">
+                <h4 class="modal-title">@Model.ProductName</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="container-fluid">
+
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
+                        <li><a data-toggle="tab" href="#location" class="btn btn-outline-secondary">Location</a></li>
+                        <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary">Price</a></li>
+                        <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
+                        <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="item" class="tab-pane fade in active">
+                            <h3>ITEM</h3>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="ProductName" class="control-label"></label>
+                                        <input asp-for="ProductName" class="form-control" />
+                                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="VendorID" class="control-label"></label>
+                                        <input asp-for="VendorID" class="form-control" />
+                                        <span asp-validation-for="VendorID" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="ProductSubcategoryID" class="control-label"></label>
+                                        <input asp-for="ProductSubcategoryID" class="form-control" />
+                                        <span asp-validation-for="ProductSubcategoryID" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="LocationID" class="control-label"></label>
+                                        <input asp-for="LocationID" class="form-control" />
+                                        <span asp-validation-for="LocationID" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="QuantityPerUnit" class="control-label"></label>
+                                        <input asp-for="QuantityPerUnit" class="form-control" />
+                                        <span asp-validation-for="QuantityPerUnit" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="UnitsInStock" class="control-label"></label>
+                                        <input asp-for="UnitsInStock" class="form-control" />
+                                        <span asp-validation-for="UnitsInStock" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="UnitsInOrder" class="control-label"></label>
+                                        <input asp-for="UnitsInOrder" class="form-control" />
+                                        <span asp-validation-for="UnitsInOrder" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="ReorderLevel" class="control-label"></label>
+                                        <input asp-for="ReorderLevel" class="form-control" />
+                                        <span asp-validation-for="ReorderLevel" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="ProductComment" class="control-label"></label>
+                                        <input asp-for="ProductComment" class="form-control" />
+                                        <span asp-validation-for="ProductComment" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="ProductMedia" class="control-label"></label>
+                                        <input asp-for="ProductMedia" class="form-control" />
+                                        <span asp-validation-for="ProductMedia" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="location" class="tab-pane fade">
+                            <h3>LOCATION</h3>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                        <div id="price" class="tab-pane fade">
+                            <h3>PRICE</h3>
+                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                        </div>
+                        <div id="documents" class="tab-pane fade">
+                            <h3>DOCUMENTS</h3>
+                            <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                        </div>
+                        <div id="comments" class="tab-pane fade">
+                            <h3>COMMENTS</h3>
+                            <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-outline-primary" />
+                    @Html.ActionLink("Delete", "Delete", new { @id = Model.ProductID}, new { @class = "btn btn-outline-danger" })
+                    <button type="button" class="btn btn-outline-info" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </form>
+
     </div>
 
-<!-- Modal body -->
-<div class="modal-body">
 
-    <div class="tab-content">
-        <div id="home" class="tab-pane fade in active">
-            <h3>HOME</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
-        <div id="menu1" class="tab-pane fade">
-            <h3>Menu 1</h3>
-            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-        </div>
-        <div id="menu2" class="tab-pane fade">
-            <h3>Menu 2</h3>
-            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-        </div>
-        <div id="menu3" class="tab-pane fade">
-            <h3>Menu 3</h3>
-            <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-        </div>
-    </div>
 </div>
-
-<!-- Modal footer -->
-<div class="modal-footer">
-    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-</div>
-@*
-    <ul class="nav nav-pills">
-        <li class="active"><a data-toggle="pill" href="#home">Home</a></li>
-        <li><a data-toggle="pill" href="#menu1">Menu 1</a></li>
-        <li><a data-toggle="pill" href="#menu2">Menu 2</a></li>
-    </ul>
-
-        <div class="tab-content">
-            <div id="home" class="tab-pane fade in active">
-                <h3>HOME</h3>
-                <p>Some content.</p>
-            </div>
-            <div id="menu1" class="tab-pane fade">
-                <h3>Menu 1</h3>
-                <p>Some content in menu 1.</p>
-            </div>
-            <div id="menu2" class="tab-pane fade">
-                <h3>Menu 2</h3>
-                <p>Some content in menu 2.</p>
-            </div>
-        </div>
-
-        ***************************************************************************
-
-        <ul class="nav nav-pills">
-            <li class="nav-item active"><a data-toggle="pill" href="#item" class="btn btn-link nav-link active">Item</a></li>
-            <li class="nav-item"><a data-toggle="pill" href="#location" class="btn btn-link nav-link">Location</a></li>
-            <li class="nav-item"><a data-toggle="pill" href="#price" class="btn btn-link nav-link">Price</a></li>
-            <li class="nav-item"><a data-toggle="pill" href="#documents" class="btn btn-link nav-link">Documents</a></li>
-            <li class="nav-item"><a data-toggle="pill" href="#comments" class="btn btn-link nav-link">Comments</a></li>
-        </ul>
-        <div class="tab-content">
-            <div id="item" class="tab-pane fade in active">
-            </div>
-            <div id="location" class="tab-pane fade">
-            </div>
-            <div id="price" class="tab-pane fade">
-            </div>
-            <div id="documents" class="tab-pane fade">
-            </div>
-            <div id="comments" class="tab-pane fade">
-            </div>
-        </div>
-*@

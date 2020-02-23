@@ -19,13 +19,13 @@ namespace PrototypeWithAuth.Models
         
         public int VendorID { get; set; }
         
-        [Required]
+        //[Required]
         
         public Vendor Vendor { get; set; }
 
         public int ProductSubcategoryID { get; set; }
         
-        [Required]
+        //[Required]
         
         public ProductSubcategory ProductSubcategory { get; set; }
 

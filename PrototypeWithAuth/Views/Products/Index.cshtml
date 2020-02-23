@@ -50,26 +50,26 @@
                 @Html.DisplayNameFor(model => model.ProductSubcategory.ProductSubcategoryDescription)
             </th>
             <!--<th>
-<<<<<<< Updated upstream
-        @Html.DisplayNameFor(model => model.ProductSubcategoryID)
-    </th>-->
+            <<<<<<< Updated upstream
+                    @Html.DisplayNameFor(model => model.ProductSubcategoryID)
+                </th>-->
             <th>
                 @Html.DisplayNameFor(model => model.LocationID)
             </th>
             <!-- <th>
-         @Html.DisplayNameFor(model => model.QuantityPerUnit)
-     </th>
-     <th>
-         @Html.DisplayNameFor(model => model.UnitsInStock)
-     </th>
-     <th>
-         @Html.DisplayNameFor(model => model.UnitsInOrder)
-     </th>
-     <th>
-         @Html.DisplayNameFor(model => model.ReorderLevel)
-     </th>
-                @Html.DisplayNameFor(model => model.ProductSubcategoryID)
-            </th>-->
+                @Html.DisplayNameFor(model => model.QuantityPerUnit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitsInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitsInOrder)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReorderLevel)
+            </th>
+                       @Html.DisplayNameFor(model => model.ProductSubcategoryID)
+                   </th>-->
             @*<th>
                 @Html.DisplayNameFor(model => model.LocationID)
                 </th>
@@ -85,7 +85,6 @@
                 <th>
                 @Html.DisplayNameFor(model => model.ReorderLevel)
                 </th>*@
->>>>>>> Stashed changes
             <th>
                 @Html.DisplayNameFor(model => model.ProductComment)
             </th>
@@ -96,55 +95,6 @@
         </tr>
     </thead>
     <tbody>
-<<<<<<< Updated upstream
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductMedia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <!--<td>
-        @Html.DisplayFor(modelItem => item.VendorID)
-    </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.Vendor.VendorEnName)
-            </td>
-            <th>
-                @Html.DisplayFor(modelItem => item.ProductSubcategory.ProductSubcategoryDescription)
-            </th>
-            <!--<td>
-        @Html.DisplayFor(modelItem => item.ProductSubcategoryID)
-    </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.LocationID)
-            </td>
-            <!--<td>
-        @Html.DisplayFor(modelItem => item.QuantityPerUnit)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.UnitsInStock)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.UnitsInOrder)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ReorderLevel)
-    </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductComment)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.ProductID">Details</a>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
-            </td>
-        </tr>
-}
-=======
         @foreach (var item in Model)
         {
             <tr>
@@ -163,40 +113,36 @@
                 <th>
                     @Html.DisplayFor(modelItem => item.ProductSubcategory.ProductSubcategoryDescription)
                 </th>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.ProductSubcategoryID)
-                    </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.LocationID)
-                            </td>
-                            <td>
-                        @Html.DisplayFor(modelItem => item.QuantityPerUnit)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UnitsInStock)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UnitsInOrder)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ReorderLevel)
-                    </td>*@
+                <!--<td>
+                    @Html.DisplayFor(modelItem => item.ProductSubcategoryID)
+                </td>-->
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocationID)
+                </td>
+                <!--<td>
+                    @Html.DisplayFor(modelItem => item.QuantityPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitsInStock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitsInOrder)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReorderLevel)
+                </td>-->
                 <td>
                     @Html.DisplayFor(modelItem => item.ProductComment)
                 </td>
                 <td>
-                    @*<a asp-action="DetailsCopy" asp-route-id="@item.ProductID">Details</a>*@
-                    <button class="btn bt-link load-product-details" value="@item.ProductID">Details Copy</button>
+                    <a asp-action="Details" asp-route-id="@item.ProductID">Details</a>
                 </td>
                 <td>
-                    @*<a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>*@
-                    <button class="btn bt-link load-product-detail" value="@item.ProductID">Edit Copy</button>
-
+                    <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
                 </td>
             </tr>
         }
->>>>>>> Stashed changes
     </tbody>
 </table>
 
@@ -214,6 +160,9 @@
                 $(".modal-view").html(data);
                 $(".modal").modal('show');
                 $(".modal-backdrop").remove();
+                /* Following two lines should set the correct data-target tab to open ----> not working right now */
+                var tab = e.relatedTarget.hash;
+                $('.nav-tabs a[href="' + tab + '"]').tab('show');
             }
         });
         return false;

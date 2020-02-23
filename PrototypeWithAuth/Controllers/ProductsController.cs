@@ -183,6 +183,7 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
             {
                 try
@@ -201,9 +202,13 @@ namespace PrototypeWithAuth.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexCopy));
             }
-            return View(product);
+            else
+            {
+                ModelState.AddModelError("", "Product Not Found --> Write a better error");
+            }
+            return View("Edit", product);
         }
 
 

@@ -6,14 +6,10 @@
 }
 
 <!-- The Modal -->
-<div class="modal" id="myModal">
-    <div class="modal-dialog  modal-dialog-scrollable">
-        <div class="modal-content  modal-view">
+<div class="modal modal-view" id="myModal">
 
-            
 
-        </div>
-    </div>
+
 </div>
 
 
@@ -103,16 +99,12 @@
                     @Html.DisplayFor(modelItem => item.ProductComment)
                 </td>
                 <td>
-                    @*<a asp-action="DetailsCopy" asp-route-id="@item.ProductID">Details</a>*@
-                    @*<button class="btn bt-link load-product-details" value="@item.ProductID">Details Copy</button>*@
                     <!-- Button to Open the Modal -->
-                    <button class="btn bt-link load-product-details" value="@item.ProductID">Details Copy</button>
+                    <button class="btn bt-link load-product-details" value="@item.ProductID" data-target="item">Open Details / Edit</button>
                 </td>
                 <td>
                     @*<a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
                         <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>*@
-                    @*<button class="btn bt-link load-product-detail" value="@item.ProductID">Edit Copy</button>*@
-
                 </td>
             </tr>
         }
@@ -126,7 +118,7 @@
     $(".load-product-details").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        //takes the item value and calls the Products controller with the ModalView view to render the modal inside 
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "ModalView/?id=" + $(this).val()
         $.ajax({
             url: $itemurl,
@@ -139,6 +131,9 @@
                 $(".modal").modal('show');
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
                 $(".modal-backdrop").remove();
+                /* Following two lines should set the correct data-target tab to open ----> not working right now */
+                var tab = e.relatedTarget.hash;
+                $('.nav-tabs a[href="' + tab + '"]').tab('show');
             }
         });
         return false;
