@@ -39,7 +39,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
+                return View(await _context.Products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
             }
             //return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
         
@@ -63,6 +63,57 @@ namespace PrototypeWithAuth.Controllers
 
             return View(product);
         }
+
+        /*
+         * START ADINA'S COPY
+         */
+        public async Task<IActionResult> IndexCopy(int? subcategoryID, int? vendorID)
+        {
+            if (vendorID != null)
+            {
+                var products = _context.Products
+                    .OrderByDescending(p => p.ProductID)
+                    .Where(p => p.VendorID == vendorID);
+                return View(await products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
+            }
+            else if (subcategoryID != null)
+            {
+                var products = _context.Products
+                    .OrderByDescending(p => p.ProductID)
+                    .Where(p => p.ProductSubcategoryID == subcategoryID);
+                return View(await products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
+            }
+            else
+            {
+                return View(await _context.Products.Include(p => p.ProductSubcategory).Include(v => v.Vendor).ToListAsync());
+            }
+            //return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
+
+        }
+
+
+        public async Task<IActionResult> DetailsCopy(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Products.Include(p => p.ProductSubcategory)
+                .Include(v => v.Vendor)
+                .FirstOrDefaultAsync(m => m.ProductID == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView(product);
+        }
+
+        /*
+        * END ADINA'S COPY
+        */
 
         // GET: Products/Create
         public IActionResult Create(int ? parentCategoryID)
@@ -154,6 +205,61 @@ namespace PrototypeWithAuth.Controllers
             }
             return View(product);
         }
+
+
+        /*
+         * START MODAL VIEW COPY
+         */
+        public async Task<IActionResult> ModalView(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return PartialView(product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ModalView(int id, [Bind("ProductID,ProductName,VendorID,ProductSubcategoryID,LocationID,QuantityPerUnit,UnitsInStock,UnitsInOrder,ReorderLevel,ProductComment,ProductMedia")] Product product)
+        {
+            if (id != product.ProductID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(product);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductExists(product.ProductID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return PartialView(product);
+        }
+
+        /*
+         * END MODAL VIEW COPY
+         */
 
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)

@@ -13,12 +13,12 @@
         <div class="text-center">
             <h6>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h6>
             <div class="btn-group">
-                <button type="submit" class="button" >Protocols</button>
+                <button type="submit" class="button btn btn-outline-secondary" >Protocols</button>
                 &nbsp;
-                <button type="submit" class="button" onclick="@("window.location.href='" + @Url.Action("Index", "Products") + "'");">Orders and Inventory</button>
+                @Html.ActionLink("Orders And Inventory", "IndexCopy", "Products", new { }, new { @class="btn btn-outline-secondary"})
                 &nbsp;
-                <button type="submit" class="button">Expenses</button>
+                <button type="submit" class="button btn btn-outline-secondary">Expenses</button>
                 &nbsp;
-                <button type="submit" class="button">Biomarkers</button>
+                <button type="submit" class="button btn btn-outline-secondary">Biomarkers</button>
             </div>
         </div>

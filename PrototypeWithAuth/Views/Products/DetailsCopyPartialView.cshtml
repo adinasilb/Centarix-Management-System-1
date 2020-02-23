@@ -1,0 +1,106 @@
+﻿@model PrototypeWithAuth.Models.Product
+
+DETAILS MODAL
+<hr />
+@Model.ProductName
+<div id="modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Details @Model.ProductName</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h4>Product</h4>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.ProductName)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.ProductName)
+                        </dd>
+                        <!--<dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.VendorID)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.VendorID)
+                        </dd>-->
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.Vendor.VendorEnName)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.Vendor.VendorEnName)
+                        </dd>
+                        <!-- <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.ProductSubcategoryID)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.ProductSubcategoryID)
+                        </dd>-->
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.ProductSubcategory.ProductSubcategoryDescription)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.ProductSubcategory.ProductSubcategoryDescription)
+                        </dd>
+                        @*<dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.LocationID)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.LocationID)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.QuantityPerUnit)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.QuantityPerUnit)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.UnitsInStock)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.UnitsInStock)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.UnitsInOrder)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.UnitsInOrder)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.ReorderLevel)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.ReorderLevel)
+                            </dd>*@
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.ProductComment)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.ProductComment)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.ProductMedia)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.ProductMedia)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.ProductID">Edit</a> |
+                    <a asp-action="Index">Back to List</a>
+                </div>
+                @*<button type="button" class="btn" data-dismiss="modal">Close</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+

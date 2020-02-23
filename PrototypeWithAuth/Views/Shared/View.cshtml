@@ -14,6 +14,8 @@
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <header>
@@ -61,29 +63,8 @@
     </header>
     <!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
   <!--for now i am using an aside just to help me viuslly see thing on the side-->
-        <aside style="margin-left: 2.5em">
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Create">Add Item</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Vendors" asp-action="Index">Vendors</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="ProductSubcategories" asp-action="Index">Types</a>
-                </li>
-
-            </ul>
-
-        </aside>
-   
-        <div class="container">
-            <div class="sidebar">
-
-                <ul>
-                    <!--this is where we should have a sceleton for a side menu-->
-                </ul>
-            </div>
+     
+        <div class="container-fluid">
             <main role="main" class="pb-3">
                 @RenderBody()
             </main>
@@ -95,8 +76,6 @@
                 &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </div>
         </footer>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         @RenderSection("Scripts", required: false)
 </body>

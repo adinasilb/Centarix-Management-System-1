@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/InventoryNavView.cshtml";
 }
 
 <h1>Index</h1>
@@ -24,49 +25,50 @@
             <th>
                 @Html.DisplayNameFor(model => model.VendorBuisnessID)
             </th>
-           
+
             <th>
                 @Html.DisplayNameFor(model => model.OrderEmail)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.VendorContactPhone1)
             </th>
-           
+
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.VendorID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VendorEnName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VendorHeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VendorBuisnessID)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorEnName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorHeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorBuisnessID)
+                </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VendorContactPhone1)
-            </td>
-            <td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorContactPhone1)
+                </td>
+                <td>
 
-                @Html.ActionLink("orders", "Index", "Products", new { vendorID = @item.VendorID }, null)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VendorID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>
-            </td>
-        </tr>
-}
+                    @Html.ActionLink("orders", "Index", "Products", new { vendorID = @item.VendorID }, null)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.VendorID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

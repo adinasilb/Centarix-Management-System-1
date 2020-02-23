@@ -17,5 +17,6 @@ namespace PrototypeWithAuth.Models
 
        
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
+        //public IEnumerable<Vendor> Vendors { get; set; }
     }
 }

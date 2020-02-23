@@ -8,23 +8,9 @@
 <!-- The Modal -->
 <div class="modal" id="myModal">
     <div class="modal-dialog  modal-dialog-scrollable">
-        <div class="modal-content ">
+        <div class="modal-content  modal-view">
 
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Modal Heading</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body modal-view">
-                Modal body..
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
+            
 
         </div>
     </div>
@@ -50,24 +36,6 @@
                 @Html.DisplayNameFor(model => model.ProductSubcategory.ProductSubcategoryDescription)
             </th>
             <!--<th>
-<<<<<<< Updated upstream
-        @Html.DisplayNameFor(model => model.ProductSubcategoryID)
-    </th>-->
-            <th>
-                @Html.DisplayNameFor(model => model.LocationID)
-            </th>
-            <!-- <th>
-         @Html.DisplayNameFor(model => model.QuantityPerUnit)
-     </th>
-     <th>
-         @Html.DisplayNameFor(model => model.UnitsInStock)
-     </th>
-     <th>
-         @Html.DisplayNameFor(model => model.UnitsInOrder)
-     </th>
-     <th>
-         @Html.DisplayNameFor(model => model.ReorderLevel)
-     </th>
                 @Html.DisplayNameFor(model => model.ProductSubcategoryID)
             </th>-->
             @*<th>
@@ -85,7 +53,6 @@
                 <th>
                 @Html.DisplayNameFor(model => model.ReorderLevel)
                 </th>*@
->>>>>>> Stashed changes
             <th>
                 @Html.DisplayNameFor(model => model.ProductComment)
             </th>
@@ -96,55 +63,6 @@
         </tr>
     </thead>
     <tbody>
-<<<<<<< Updated upstream
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductMedia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <!--<td>
-        @Html.DisplayFor(modelItem => item.VendorID)
-    </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.Vendor.VendorEnName)
-            </td>
-            <th>
-                @Html.DisplayFor(modelItem => item.ProductSubcategory.ProductSubcategoryDescription)
-            </th>
-            <!--<td>
-        @Html.DisplayFor(modelItem => item.ProductSubcategoryID)
-    </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.LocationID)
-            </td>
-            <!--<td>
-        @Html.DisplayFor(modelItem => item.QuantityPerUnit)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.UnitsInStock)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.UnitsInOrder)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ReorderLevel)
-    </td>-->
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductComment)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.ProductID">Details</a>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
-            </td>
-        </tr>
-}
-=======
         @foreach (var item in Model)
         {
             <tr>
@@ -186,33 +104,40 @@
                 </td>
                 <td>
                     @*<a asp-action="DetailsCopy" asp-route-id="@item.ProductID">Details</a>*@
+                    @*<button class="btn bt-link load-product-details" value="@item.ProductID">Details Copy</button>*@
+                    <!-- Button to Open the Modal -->
                     <button class="btn bt-link load-product-details" value="@item.ProductID">Details Copy</button>
                 </td>
                 <td>
                     @*<a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
                         <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>*@
-                    <button class="btn bt-link load-product-detail" value="@item.ProductID">Edit Copy</button>
+                    @*<button class="btn bt-link load-product-detail" value="@item.ProductID">Edit Copy</button>*@
 
                 </td>
             </tr>
         }
->>>>>>> Stashed changes
     </tbody>
 </table>
 
 
 <script>
+    //Render a partial view inside of a modal
+    //To do later: add a loading gif div
     $(".load-product-details").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        var $itemurl = "Products/ModalView/?id=" + $(this).val()
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside 
+        var $itemurl = "ModalView/?id=" + $(this).val()
         $.ajax({
             url: $itemurl,
             type: 'GET',
             cache: false,
             success: function (data) {
+                //replaces the modal-view class with the ModalView view
                 $(".modal-view").html(data);
+                //shows the modal
                 $(".modal").modal('show');
+                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
                 $(".modal-backdrop").remove();
             }
         });
