@@ -270,7 +270,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LocationID")
+                    b.Property<string>("Handeling")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LocationID")
                         .HasColumnType("int");
 
                     b.Property<string>("ProductComment")
@@ -286,16 +289,16 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProductSubcategoryID")
                         .HasColumnType("int");
 
-                    b.Property<int>("QuantityPerUnit")
+                    b.Property<int?>("QuantityPerUnit")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReorderLevel")
+                    b.Property<int?>("ReorderLevel")
                         .HasColumnType("int");
 
-                    b.Property<int>("UnitsInOrder")
+                    b.Property<int?>("UnitsInOrder")
                         .HasColumnType("int");
 
-                    b.Property<int>("UnitsInStock")
+                    b.Property<int?>("UnitsInStock")
                         .HasColumnType("int");
 
                     b.Property<int>("VendorID")
@@ -421,6 +424,84 @@ namespace PrototypeWithAuth.Data.Migrations
                             ParentCategoryID = 4,
                             ProductSubcategoryDescription = "Measuring Instruments"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
+                {
+                    b.Property<int>("RequestID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AmountWithInLocation")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AmountWithOutLocation")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CatalogNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Cost")
+                        .HasColumnType("float");
+
+                    b.Property<string>("InvoiceNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LocationID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RequestStatusID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("WithOrder")
+                        .HasColumnType("bit");
+
+                    b.HasKey("RequestID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("ProductID");
+
+                    b.HasIndex("RequestStatusID");
+
+                    b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestStatus", b =>
+                {
+                    b.Property<int>("RequestStatusID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("RequestStatusDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RequestStatusID");
+
+                    b.ToTable("RequestStatuses");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>
@@ -580,6 +661,23 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ParentCategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("Requests")
+                        .HasForeignKey("ApplicationUserID");
+
+                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.RequestStatus", "RequestStatus")
+                        .WithMany("Requests")
+                        .HasForeignKey("RequestStatusID");
                 });
 #pragma warning restore 612, 618
         }

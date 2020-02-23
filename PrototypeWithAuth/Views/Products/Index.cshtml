@@ -2,33 +2,9 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/InventoryNavView.cshtml";
+    Layout = "~/Views/Shared/View.cshtml";
 }
 
-<!-- The Modal -->
-<div class="modal" id="myModal">
-    <div class="modal-dialog  modal-dialog-scrollable">
-        <div class="modal-content ">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Modal Heading</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body modal-view">
-                Modal body..
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-
-        </div>
-    </div>
-</div>
 
 
 <table class="table">
@@ -41,8 +17,8 @@
                 @Html.DisplayNameFor(model => model.ProductName)
             </th>
             <!-- <th>
-                @Html.DisplayNameFor(model => model.VendorID)
-            </th>-->
+        @Html.DisplayNameFor(model => model.VendorID)
+    </th>-->
             <th>
                 @Html.DisplayNameFor(model => model.Vendor.VendorEnName)
             </th>
@@ -50,41 +26,23 @@
                 @Html.DisplayNameFor(model => model.ProductSubcategory.ProductSubcategoryDescription)
             </th>
             <!--<th>
-            <<<<<<< Updated upstream
-                    @Html.DisplayNameFor(model => model.ProductSubcategoryID)
-                </th>-->
-            <th>
-                @Html.DisplayNameFor(model => model.LocationID)
-            </th>
-            <!-- <th>
-                @Html.DisplayNameFor(model => model.QuantityPerUnit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnitsInStock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnitsInOrder)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReorderLevel)
-            </th>
-                       @Html.DisplayNameFor(model => model.ProductSubcategoryID)
-                   </th>-->
+        @Html.DisplayNameFor(model => model.ProductSubcategoryID)
+    </th>-->
             @*<th>
                 @Html.DisplayNameFor(model => model.LocationID)
-                </th>
-                <th>
-                @Html.DisplayNameFor(model => model.QuantityPerUnit)
-                </th>
-                <th>
-                @Html.DisplayNameFor(model => model.UnitsInStock)
-                </th>
-                <th>
-                   @Html.DisplayNameFor(model => model.UnitsInOrder)
-                </th>
-                <th>
-                @Html.DisplayNameFor(model => model.ReorderLevel)
-                </th>*@
+            </th>
+             <th>
+         @Html.DisplayNameFor(model => model.QuantityPerUnit)
+     </th>
+     <th>
+         @Html.DisplayNameFor(model => model.UnitsInStock)
+     </th>
+     <th>
+         @Html.DisplayNameFor(model => model.UnitsInOrder)
+     </th>
+     <th>
+         @Html.DisplayNameFor(model => model.ReorderLevel)
+     </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.ProductComment)
             </th>
@@ -95,77 +53,52 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductMedia)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
-                </td>
-                <!--<td>
-                    @Html.DisplayFor(modelItem => item.VendorID)
-                </td>-->
-                <td>
-                    @Html.DisplayFor(modelItem => item.Vendor.VendorEnName)
-                </td>
-                <th>
-                    @Html.DisplayFor(modelItem => item.ProductSubcategory.ProductSubcategoryDescription)
-                </th>
-                <!--<td>
-                    @Html.DisplayFor(modelItem => item.ProductSubcategoryID)
-                </td>-->
-                <td>
-                    @Html.DisplayFor(modelItem => item.LocationID)
-                </td>
-                <!--<td>
-                    @Html.DisplayFor(modelItem => item.QuantityPerUnit)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UnitsInStock)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UnitsInOrder)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReorderLevel)
-                </td>-->
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductComment)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.ProductID">Details</a>
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
-                </td>
-            </tr>
-        }
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductMedia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <!--<td>
+        @Html.DisplayFor(modelItem => item.VendorID)
+    </td>-->
+            <td>
+                @Html.DisplayFor(modelItem => item.Vendor.VendorEnName)
+            </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.ProductSubcategory.ProductSubcategoryDescription)
+            </th>
+            @*<td>
+        @Html.DisplayFor(modelItem => item.ProductSubcategoryID)
+    </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LocationID)
+            </td>
+            <td>
+        @Html.DisplayFor(modelItem => item.QuantityPerUnit)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.UnitsInStock)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.UnitsInOrder)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ReorderLevel)
+    </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductComment)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ProductID">Details</a>
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
+            </td>
+        </tr>
+}
     </tbody>
 </table>
-
-
-<script>
-    $(".load-product-details").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var $itemurl = "Products/ModalView/?id=" + $(this).val()
-        $.ajax({
-            url: $itemurl,
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                $(".modal-view").html(data);
-                $(".modal").modal('show');
-                $(".modal-backdrop").remove();
-                /* Following two lines should set the correct data-target tab to open ----> not working right now */
-                var tab = e.relatedTarget.hash;
-                $('.nav-tabs a[href="' + tab + '"]').tab('show');
-            }
-        });
-        return false;
-    });
-
-</script>
