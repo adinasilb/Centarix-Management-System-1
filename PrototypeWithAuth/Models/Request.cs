@@ -16,7 +16,7 @@ namespace PrototypeWithAuth.Models
         public int ProductID { get; set; }
         public int LocationID { get; set; } // if status is recieved; then LocationID is required (have to make a custom rule)
         public int RequestStatusID { get; set; }
-        public RequestStatus RequestStatus { get; set; }
+        //public RequestStatus RequestStatus { get; set; }
         public string ApplicationUserID { get; set; }
         
         [ForeignKey("ApplicationUserID")]
