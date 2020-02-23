@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -80,7 +81,7 @@ namespace PrototypeWithAuth.Controllers
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories1 = _context.ProductSubcategories.ToList();
 
-            var viewModel = new CreateProductViewModel
+            var viewModel = new AddNewItemViewModel
             {
                 ParentCategories = parentCategories,
                 ProductSubcategories = productSubcategories1
