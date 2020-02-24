@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.Models.Request
+﻿@model PrototypeWithAuth.ViewModels.AddNewItemViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,77 +13,95 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(r => r.Product.ProductID)
+            @*<div class="form-group">
+                <label asp-for="Product.ProductID" class="control-label"></label>
+                <select asp-for="Product.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
+            </div>*@
             <div class="form-group">
-                <label asp-for="ProductID" class="control-label"></label>
-                <select asp-for="ProductID" class ="form-control" asp-items="ViewBag.ProductID"></select>
+                <label asp-for="Product.ProductName" class="control-label"></label>
+                <input asp-for="Product.ProductName" class="form-control" />
+                <span asp-validation-for="Product.ProductName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LocationID" class="control-label"></label>
-                <input asp-for="LocationID" class="form-control" />
-                <span asp-validation-for="LocationID" class="text-danger"></span>
+                <label asp-for="Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                @Html.DropDownListFor(c => c.Product.ProductSubcategory.ParentCategoryID,
+                new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+                "Select Category", new { @class = "form-control", @id = "parentlist" })
+                <span asp-validation-for="Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RequestStatusID" class="control-label"></label>
-                <select asp-for="RequestStatusID" class ="form-control" asp-items="ViewBag.RequestStatusID"></select>
+                <label asp-for="Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                <select name="Product.ProductSubcategoryID" id="sublist" class="form-control"></select>
+                <span asp-validation-for="Product.ProductSubcategoryID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AmountWithInLocation" class="control-label"></label>
-                <input asp-for="AmountWithInLocation" class="form-control" />
-                <span asp-validation-for="AmountWithInLocation" class="text-danger"></span>
+                <label asp-for="Request.LocationID" class="control-label"></label>
+                <input asp-for="Request.LocationID" class="form-control" />
+                <span asp-validation-for="Request.LocationID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AmountWithOutLocation" class="control-label"></label>
-                <input asp-for="AmountWithOutLocation" class="form-control" />
-                <span asp-validation-for="AmountWithOutLocation" class="text-danger"></span>
+                <label asp-for="Request.RequestStatusID" class="control-label"></label>
+                <select asp-for="Request.RequestStatusID" class="form-control" asp-items="ViewBag.RequestStatusID"></select>
             </div>
             <div class="form-group">
-                <label asp-for="ApplicationUserID" class="control-label"></label>
-                <select asp-for="ApplicationUserID" class ="form-control" asp-items="ViewBag.ApplicationUserID"></select>
+                <label asp-for="Request.AmountWithInLocation" class="control-label"></label>
+                <input asp-for="Request.AmountWithInLocation" class="form-control" />
+                <span asp-validation-for="Request.AmountWithInLocation" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="OrderDate" class="control-label"></label>
-                <input asp-for="OrderDate" class="form-control" />
-                <span asp-validation-for="OrderDate" class="text-danger"></span>
+                <label asp-for="Request.AmountWithOutLocation" class="control-label"></label>
+                <input asp-for="Request.AmountWithOutLocation" class="form-control" />
+                <span asp-validation-for="Request.AmountWithOutLocation" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="OrderNumber" class="control-label"></label>
-                <input asp-for="OrderNumber" class="form-control" />
-                <span asp-validation-for="OrderNumber" class="text-danger"></span>
+                <label asp-for="Request.ApplicationUserID" class="control-label"></label>
+                <select asp-for="Request.ApplicationUserID" class="form-control" asp-items="ViewBag.ApplicationUserID"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
+                <label asp-for="Request.OrderDate" class="control-label"></label>
+                <input asp-for="Request.OrderDate" class="form-control" />
+                <span asp-validation-for="Request.OrderDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Cost" class="control-label"></label>
-                <input asp-for="Cost" class="form-control" />
-                <span asp-validation-for="Cost" class="text-danger"></span>
+                <label asp-for="Request.OrderNumber" class="control-label"></label>
+                <input asp-for="Request.OrderNumber" class="form-control" />
+                <span asp-validation-for="Request.OrderNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.Quantity" class="control-label"></label>
+                <input asp-for="Request.Quantity" class="form-control" />
+                <span asp-validation-for="Request.Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.Cost" class="control-label"></label>
+                <input asp-for="Request.Cost" class="form-control" />
+                <span asp-validation-for="Request.Cost" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="WithOrder" /> @Html.DisplayNameFor(model => model.WithOrder)
+                    <input class="form-check-input" asp-for="Request.WithOrder" /> @Html.DisplayNameFor(model => model.Request.WithOrder)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="InvoiceNumber" class="control-label"></label>
-                <input asp-for="InvoiceNumber" class="form-control" />
-                <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+                <label asp-for="Request.InvoiceNumber" class="control-label"></label>
+                <input asp-for="Request.InvoiceNumber" class="form-control" />
+                <span asp-validation-for="Request.InvoiceNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CatalogNumber" class="control-label"></label>
-                <input asp-for="CatalogNumber" class="form-control" />
-                <span asp-validation-for="CatalogNumber" class="text-danger"></span>
+                <label asp-for="Request.CatalogNumber" class="control-label"></label>
+                <input asp-for="Request.CatalogNumber" class="form-control" />
+                <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SerialNumber" class="control-label"></label>
-                <input asp-for="SerialNumber" class="form-control" />
-                <span asp-validation-for="SerialNumber" class="text-danger"></span>
+                <label asp-for="Request.SerialNumber" class="control-label"></label>
+                <input asp-for="Request.SerialNumber" class="form-control" />
+                <span asp-validation-for="Request.SerialNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="URL" class="control-label"></label>
-                <input asp-for="URL" class="form-control" />
-                <span asp-validation-for="URL" class="text-danger"></span>
+                <label asp-for="Request.URL" class="control-label"></label>
+                <input asp-for="Request.URL" class="form-control" />
+                <span asp-validation-for="Request.URL" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -95,4 +113,35 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        //Insert default item "Select" in dropdownlist on load
+        $(document).ready(function () {
+            var items = "<option value='0'>Select Subcategory</option>";
+            $("#sublist").html(items);
+        });
+
+
+        $("#parentlist").change(function () {
+            var parentCategoryId = $("#parentlist").val();
+            var url = "/Products/GetSubCategoryList";
+
+            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                var item = "";
+                $("#sublist").empty();
+                $.each(data, function (i, subCategory) {
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                });
+                $("#sublist").html(item);
+            });
+        });
+    </script>
+}
+
+
+
+
 

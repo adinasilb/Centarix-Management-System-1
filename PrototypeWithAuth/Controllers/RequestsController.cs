@@ -39,7 +39,9 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                return View(await _context.Products.Include(p => p.ProductSubcategory)./*Include(p => p.ProductSubcategory.ParentCategory).*/Include(v => v.Vendor).ToListAsync());
+                var applicationDbContext = _context.Requests.Include(r => r.ApplicationUser).Include(r => r.Product).Include(r => r.RequestStatus).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor);
+                return View(await applicationDbContext.ToListAsync());
+                //return View(await _context.Requests.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).ToListAsync());
             }
 
             //var applicationDbContext = _context.Requests.Include(r => r.ApplicationUser).Include(r => r.Product).Include(r => r.RequestStatus);
@@ -68,16 +70,19 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests/Create
-        public IActionResult Create()
+        //public IActionResult Create()
+        //{
+        //    ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
+        //    ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName");
+        //    ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID");
+        //    return View();
+        //}
+        // GET: Products/Create
+        public IActionResult Create(int? parentCategoryID) //need to correct to be for request
         {
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName");
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID");
-            return View();
-        }
-        // GET: Products/Create
-        public IActionResult Create(int? parentCategoryID) //need to correct to be for request
-        {
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories1 = _context.ProductSubcategories.ToList();
 
@@ -100,12 +105,14 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+
         // POST: Requests/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")] Request request)
+        public async Task<IActionResult> Create([Bind(Include = "ProductID")] Request request)
+        // "RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")]
         {
             if (ModelState.IsValid)
             {
