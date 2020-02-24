@@ -141,17 +141,21 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Create(AddNewItemViewModel AddNewItemViewModelObj)
         // "RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")]
         {
-            var vendorlist = _context.Vendors.ToList();
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories = _context.ProductSubcategories.ToList();
             AddNewItemViewModelObj.ParentCategories = parentCategories;
             AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
 
-            
+
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ApplicationUserID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", AddNewItemViewModelObj.Request.ProductID);
+            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", AddNewItemViewModelObj.Request.RequestStatusID);
+
             Product product = new Product
             {
+                ProductID = AddNewItemViewModelObj.Product.ProductID,
                 ProductName = AddNewItemViewModelObj.Product.ProductName,
-                VendorID = /*AddNewItemViewModelObj.Product.VendorID*/ vendorlist[0].VendorID,
+                VendorID = /*AddNewItemViewModelObj.Product.VendorID*/ _context.Vendors.ToList()[0].VendorID,
                 ProductSubcategoryID = AddNewItemViewModelObj.Product.ProductSubcategoryID,
                 LocationID = AddNewItemViewModelObj.Product.LocationID,
                 Handeling = AddNewItemViewModelObj.Product.Handeling,
@@ -162,20 +166,66 @@ namespace PrototypeWithAuth.Controllers
                 ProductComment = /*AddNewItemViewModelObj.Product.ProductComment*/"comment...",
                 ProductMedia = /*AddNewItemViewModelObj.Product.ProductMedia*/"media..."
             };
-            _context.Add(product);
-            _context.SaveChanges();
-            if (ModelState.IsValid)
+            try
             {
-                //await _context.SaveChangesAsync();
-                _context.Add(AddNewItemViewModelObj.Request);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.Add(product);
+                _context.SaveChanges();
+            }
+            catch(Exception)
+            {
+                return View(AddNewItemViewModelObj.Request);
+            }
+            //AddNewItemViewModelObj.Product = product;
+            //AddNewItemViewModelObj.Request.ProductID = product.ProductID;
+
+            
+            if (product != null)
+            {
+                Request request = new Request
+                {
+                    RequestID = AddNewItemViewModelObj.Request.RequestID,
+                    ProductID = product.ProductID,
+                    LocationID = product.LocationID,
+                    RequestStatusID = AddNewItemViewModelObj.Request.RequestStatusID,
+                    AmountWithInLocation = AddNewItemViewModelObj.Request.AmountWithInLocation,
+                    AmountWithOutLocation = AddNewItemViewModelObj.Request.AmountWithOutLocation,
+                    ApplicationUserID = AddNewItemViewModelObj.Request.ApplicationUserID,
+                    OrderDate = AddNewItemViewModelObj.Request.OrderDate,
+                    OrderNumber = AddNewItemViewModelObj.Request.OrderNumber,
+                    Quantity = AddNewItemViewModelObj.Request.Quantity,
+                    Cost = AddNewItemViewModelObj.Request.Cost,
+                    WithOrder = true /*AddNewItemViewModelObj.Request.WithOrder*/,
+                    InvoiceNumber = AddNewItemViewModelObj.Request.InvoiceNumber,
+                    CatalogNumber = AddNewItemViewModelObj.Request.CatalogNumber,
+                    SerialNumber = AddNewItemViewModelObj.Request.SerialNumber,
+                    URL = AddNewItemViewModelObj.Request.URL
+                };
+
+                try
+                {
+                    _context.Add(request);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return View(AddNewItemViewModelObj);
+                }
+
+                if (request != null)
+                {
+                    return RedirectToAction("Index");
+                }
             }
 
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ApplicationUserID);
-            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", AddNewItemViewModelObj.Request.ProductID);
-            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", AddNewItemViewModelObj.Request.RequestStatusID);
-            return View(AddNewItemViewModelObj.Request);
+            //if (ModelState.IsValid)
+            //{
+            //    //await _context.SaveChangesAsync();
+            //    _context.Add(AddNewItemViewModelObj.Request);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+
+            return View(AddNewItemViewModelObj);
         }
 
         // GET: Requests/Edit/5

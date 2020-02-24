@@ -108,12 +108,17 @@
             </div>
 
             @* HIDDEN FORS *@
+
+            @*Products:*@
             @Html.HiddenFor(vm => vm.Product.QuantityPerUnit)
             @Html.HiddenFor(vm => vm.Product.UnitsInStock)
             @Html.HiddenFor(vm => vm.Product.UnitsInOrder)
             @Html.HiddenFor(vm => vm.Product.ReorderLevel)
             @Html.HiddenFor(vm => vm.Product.ProductComment)
             @Html.HiddenFor(vm => vm.Product.ProductMedia)
+
+            @*Requests*@
+            @Html.HiddenFor(vm => vm.Request.RequestID)
         </form>
     </div>
 </div>
