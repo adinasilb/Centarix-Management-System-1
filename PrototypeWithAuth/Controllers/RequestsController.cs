@@ -88,19 +88,20 @@ namespace PrototypeWithAuth.Controllers
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID");
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories1 = _context.ProductSubcategories.ToList();
+            var vendors = _context.Vendors.ToList();
 
             var viewModel = new AddNewItemViewModel
             {
                 ParentCategories = parentCategories,
-                ProductSubcategories = productSubcategories1
+                ProductSubcategories = productSubcategories1,
+                Vendors = vendors
             };
             return View(viewModel);
 
 
         }
 
-
-        [HttpGet] //send a json to that the subcategory list is filtered
+        [HttpGet] //send a json to that the subcategory list is filered
         public JsonResult GetSubCategoryList(int ParentCategoryId)
         {
             var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
@@ -120,10 +121,12 @@ namespace PrototypeWithAuth.Controllers
         {
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories = _context.ProductSubcategories.ToList();
+            var vendors = _context.Vendors.ToList();
             AddNewItemViewModelObj.ParentCategories = parentCategories;
             AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
+            AddNewItemViewModelObj.Vendors = vendors;
 
-            // view data is placed in th ebeginning in order to redirect when errrs are caught, so need to have the info saved before handling the error
+            // view data is placed in the beginning in order to redirect when errrs are caught, so need to have the info saved before handling the error
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ApplicationUserID);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", AddNewItemViewModelObj.Request.ProductID);
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", AddNewItemViewModelObj.Request.RequestStatusID);
@@ -133,7 +136,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ProductID = AddNewItemViewModelObj.Product.ProductID,
                 ProductName = AddNewItemViewModelObj.Product.ProductName,
-                VendorID = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.VendorID),
+                VendorID = AddNewItemViewModelObj.Product.VendorID, //should not insert a 0, should not allow the user to enter the form (data validation)
                 ProductSubcategoryID = AddNewItemViewModelObj.Product.ProductSubcategoryID,
                 LocationID = AddNewItemViewModelObj.Product.LocationID,
                 Handeling = AppUtility.ReplaceStringValueIfNull(AddNewItemViewModelObj.Product.Handeling),
@@ -148,10 +151,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 _context.Add(product);
                 _context.SaveChanges();
+                AddNewItemViewModelObj.Product = product;
                 Request request = new Request
                 {
                     RequestID = AddNewItemViewModelObj.Request.RequestID,
                     ProductID = product.ProductID,
+                    Product = _context.Products.Find(product.ProductID),
                     LocationID = AddNewItemViewModelObj.Product.LocationID,
                     RequestStatusID = AddNewItemViewModelObj.Request.RequestStatusID,
                     AmountWithInLocation = AddNewItemViewModelObj.Request.AmountWithInLocation,
@@ -190,101 +195,6 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
-
-        /* Working Creating Product and Model
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> Create(AddNewItemViewModel AddNewItemViewModelObj)
-    //// "RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")]
-    //{
-    //    var parentCategories = _context.ParentCategories.ToList();
-    //    var productSubcategories = _context.ProductSubcategories.ToList();
-    //    AddNewItemViewModelObj.ParentCategories = parentCategories;
-    //    AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
-
-
-    //    ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ApplicationUserID);
-    //    ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", AddNewItemViewModelObj.Request.ProductID);
-    //    ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", AddNewItemViewModelObj.Request.RequestStatusID);
-
-    //    Product product = new Product
-    //    {
-    //        ProductID = AddNewItemViewModelObj.Product.ProductID,
-    //        ProductName = AddNewItemViewModelObj.Product.ProductName,
-    //        VendorID = /*AddNewItemViewModelObj.Product.VendorID*/
-        //_context.Vendors.ToList()[0].VendorID,
-        //        ProductSubcategoryID = AddNewItemViewModelObj.Product.ProductSubcategoryID,
-        //        LocationID = AddNewItemViewModelObj.Product.LocationID,
-        //        Handeling = AddNewItemViewModelObj.Product.Handeling,
-        //        QuantityPerUnit = /*AddNewItemViewModelObj.Product.QuantityPerUnit*/0,
-        //        UnitsInStock = /*AddNewItemViewModelObj.Product.UnitsInStock*/0,
-        //        UnitsInOrder = /*AddNewItemViewModelObj.Product.UnitsInOrder*/0,
-        //        ReorderLevel = /*AddNewItemViewModelObj.Product.ReorderLevel*/0,
-        //        ProductComment = /*AddNewItemViewModelObj.Product.ProductComment*/"comment...",
-        //        ProductMedia = /*AddNewItemViewModelObj.Product.ProductMedia*/"media..."
-        //    };
-        //    try
-        //    {
-        //        _context.Add(product);
-        //        _context.SaveChanges();
-        //    }
-        //    catch(Exception)
-        //    {
-        //        return View(AddNewItemViewModelObj.Request);
-        //    }
-        //    //AddNewItemViewModelObj.Product = product;
-        //    //AddNewItemViewModelObj.Request.ProductID = product.ProductID;
-
-
-        //    if (product != null)
-        //    {
-        //        Request request = new Request
-        //        {
-        //            RequestID = AddNewItemViewModelObj.Request.RequestID,
-        //            ProductID = product.ProductID,
-        //            LocationID = product.LocationID,
-        //            RequestStatusID = AddNewItemViewModelObj.Request.RequestStatusID,
-        //            AmountWithInLocation = AddNewItemViewModelObj.Request.AmountWithInLocation,
-        //            AmountWithOutLocation = AddNewItemViewModelObj.Request.AmountWithOutLocation,
-        //            ApplicationUserID = AddNewItemViewModelObj.Request.ApplicationUserID,
-        //            OrderDate = AddNewItemViewModelObj.Request.OrderDate,
-        //            OrderNumber = AddNewItemViewModelObj.Request.OrderNumber,
-        //            Quantity = AddNewItemViewModelObj.Request.Quantity,
-        //            Cost = AddNewItemViewModelObj.Request.Cost,
-        //            WithOrder = true /*AddNewItemViewModelObj.Request.WithOrder*/,
-        //            InvoiceNumber = AddNewItemViewModelObj.Request.InvoiceNumber,
-        //            CatalogNumber = AddNewItemViewModelObj.Request.CatalogNumber,
-        //            SerialNumber = AddNewItemViewModelObj.Request.SerialNumber,
-        //            URL = AddNewItemViewModelObj.Request.URL
-        //        };
-
-        //        try
-        //        {
-        //            _context.Add(request);
-        //            _context.SaveChanges();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return View(AddNewItemViewModelObj);
-        //        }
-
-        //        if (request != null)
-        //        {
-        //            return RedirectToAction("Index");
-        //        }
-        //    }
-
-        //    //if (ModelState.IsValid)
-        //    //{
-        //    //    //await _context.SaveChangesAsync();
-        //    //    _context.Add(AddNewItemViewModelObj.Request);
-        //    //    await _context.SaveChangesAsync();
-        //    //    return RedirectToAction(nameof(Index));
-        //    //}
-
-        //    return View(AddNewItemViewModelObj);
-        //}
-
 
 
         // GET: Requests/Edit/5
@@ -391,7 +301,7 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var request = await _context.Requests.FindAsync(id);
+            Request request = _context.Requests.Include(r => r.Product).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory).SingleOrDefault( x => x.RequestID == id);
             if (request == null)
             {
                 return NotFound();

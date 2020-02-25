@@ -50,11 +50,14 @@
                     <!--this unordered list should also not be hard coded, this view should be inherited so whichever body is being rendered will disply an
                         ul within this naigation bar-->
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        <li class="nav-item border-right">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Centarix</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Inventory</a>
+                        <li class="nav-item nav-fill">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="IndexCopy">Inventory</a>
+                        </li>
+                        <li class="nav-item nav-fill">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Requests" asp-action="Index">Requests</a>
                         </li>
                     </ul>
                 </div>

@@ -1,13 +1,13 @@
-﻿@model PrototypeWithAuth.ViewModels.AddNewItemViewModel
+﻿@model PrototypeWithAuth.Models.Request
 
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view">
 
     <div class="modal-content">
 
 
-        <form asp-action="Edit" asp-route-id="@Model.Product.ProductID" method="post" style="height: 100%; overflow: auto;">
+        <form asp-action="Edit" method="post" style="height: 100%; overflow: auto;">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Product.ProductID" />
+            <input type="hidden" asp-for="@Model.RequestID" />
             <!-- Modal Header -->
             <div class="modal-header border-bottom-0">
                 <h4 class="modal-title">@Model.Product.ProductName</h4>
@@ -31,12 +31,15 @@
                             <h3>ITEM</h3>
                             <hr />
                             <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label asp-for="Product.ProductSubcategory.ParentCategoryID" class="control-label"></label>
-                                        <input asp-for="Product.ProductSubcategory.ParentCategoryID" class="form-control" />
-                                        <span asp-validation-for="Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
-                                    </div>
+                                <div class="col-md-4">
+                                    <strong>@Html.LabelFor(r => r.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)</strong><br />
+                                    label
+                                </div>
+                                <div class="col-md-4">
+
+                                </div>
+                                <div class="col-md-4">
+
                                 </div>
                             </div>
                         </div>

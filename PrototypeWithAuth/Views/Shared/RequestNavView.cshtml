@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "InventoryNavView";
+    ViewData["Title"] = "RequestNavView";
     Layout = "~/Views/Shared/View.cshtml";
 }
 @*  *@
@@ -11,9 +11,6 @@
             <li class="nav-item">
                 @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
                 <button class="btn btn-link load-product-details" value="0" data-target="item">Add Item</button>
-            </li>
-            <li class="nav-item">
-                @Html.ActionLink("Create New Request", "Create", "Product", new { }, new { @class = "btn btn-link text-dark"})
             </li>
             <li class="nav-item">
                 @Html.ActionLink("Type", "Index", "ProductSubcategories", new { }, new { @class = "btn btn-link text-dark" })
@@ -47,7 +44,7 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "ModalView/?id=" + $(this).val()
+        var $itemurl = "Requests/ModalView/?id=" + $(this).val()
         $.ajax({
             url: $itemurl,
             type: 'GET',

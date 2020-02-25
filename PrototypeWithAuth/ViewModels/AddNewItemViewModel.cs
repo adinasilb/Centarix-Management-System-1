@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
+        public IEnumerable<Vendor> Vendors { get; set; }
         public Product Product { get; set; }
         public Request Request { get; set; } // requests already include the product, do we still need to include products into the view model?
     }

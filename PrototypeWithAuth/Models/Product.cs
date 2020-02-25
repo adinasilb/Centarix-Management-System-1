@@ -16,7 +16,7 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Item Name")]
         public string ProductName { get; set; }
 
-        
+        [Required] //Adina: I added this in just for the controller (if you need to migrate this to the database, I didn't do that)
         public int VendorID { get; set; }
         
         //[Required]
