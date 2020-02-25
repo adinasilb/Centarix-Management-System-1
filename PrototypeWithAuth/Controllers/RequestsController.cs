@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
@@ -99,7 +100,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [HttpGet] //send a json to that the subcategory list is filered
+        [HttpGet] //send a json to that the subcategory list is filtered
         public JsonResult GetSubCategoryList(int ParentCategoryId)
         {
             var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
@@ -108,84 +109,50 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        // POST: Requests/Create
+        // POST: Requests/Create/ 
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-
-
-        /*
-         * Faige: Create
-         *
-         
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")] Request request)
-    // "RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")]
-    {
-        if (ModelState.IsValid)
-        {
-            _context.Add(request);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
-        ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
-        ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
-        return View(request);
-    }
-
-           */
+        // Adina's code fore createing and binding product model with request model in a single view, check that all errors are handled for.
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddNewItemViewModel AddNewItemViewModelObj)
-        // "RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")]
         {
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories = _context.ProductSubcategories.ToList();
             AddNewItemViewModelObj.ParentCategories = parentCategories;
             AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
 
-
+            // view data is placed in th ebeginning in order to redirect when errrs are caught, so need to have the info saved before handling the error
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ApplicationUserID);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", AddNewItemViewModelObj.Request.ProductID);
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", AddNewItemViewModelObj.Request.RequestStatusID);
+
 
             Product product = new Product
             {
                 ProductID = AddNewItemViewModelObj.Product.ProductID,
                 ProductName = AddNewItemViewModelObj.Product.ProductName,
-                VendorID = /*AddNewItemViewModelObj.Product.VendorID*/ _context.Vendors.ToList()[0].VendorID,
+                VendorID = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.VendorID),
                 ProductSubcategoryID = AddNewItemViewModelObj.Product.ProductSubcategoryID,
                 LocationID = AddNewItemViewModelObj.Product.LocationID,
-                Handeling = AddNewItemViewModelObj.Product.Handeling,
-                QuantityPerUnit = /*AddNewItemViewModelObj.Product.QuantityPerUnit*/0,
-                UnitsInStock = /*AddNewItemViewModelObj.Product.UnitsInStock*/0,
-                UnitsInOrder = /*AddNewItemViewModelObj.Product.UnitsInOrder*/0,
-                ReorderLevel = /*AddNewItemViewModelObj.Product.ReorderLevel*/0,
-                ProductComment = /*AddNewItemViewModelObj.Product.ProductComment*/"comment...",
-                ProductMedia = /*AddNewItemViewModelObj.Product.ProductMedia*/"media..."
+                Handeling = AppUtility.ReplaceStringValueIfNull(AddNewItemViewModelObj.Product.Handeling),
+                QuantityPerUnit = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.QuantityPerUnit),
+                UnitsInStock = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.UnitsInStock),
+                UnitsInOrder = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.UnitsInOrder),
+                ReorderLevel = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.ReorderLevel),
+                ProductComment = AppUtility.ReplaceStringValueIfNull(AddNewItemViewModelObj.Product.ProductComment),
+                ProductMedia = AppUtility.ReplaceStringValueIfNull(AddNewItemViewModelObj.Product.ProductMedia)
             };
             try
             {
                 _context.Add(product);
                 _context.SaveChanges();
-            }
-            catch(Exception)
-            {
-                return View(AddNewItemViewModelObj.Request);
-            }
-            //AddNewItemViewModelObj.Product = product;
-            //AddNewItemViewModelObj.Request.ProductID = product.ProductID;
-
-            
-            if (product != null)
-            {
                 Request request = new Request
                 {
                     RequestID = AddNewItemViewModelObj.Request.RequestID,
                     ProductID = product.ProductID,
-                    LocationID = product.LocationID,
+                    LocationID = AddNewItemViewModelObj.Product.LocationID,
                     RequestStatusID = AddNewItemViewModelObj.Request.RequestStatusID,
                     AmountWithInLocation = AddNewItemViewModelObj.Request.AmountWithInLocation,
                     AmountWithOutLocation = AddNewItemViewModelObj.Request.AmountWithOutLocation,
@@ -194,137 +161,229 @@ namespace PrototypeWithAuth.Controllers
                     OrderNumber = AddNewItemViewModelObj.Request.OrderNumber,
                     Quantity = AddNewItemViewModelObj.Request.Quantity,
                     Cost = AddNewItemViewModelObj.Request.Cost,
-                    WithOrder = true /*AddNewItemViewModelObj.Request.WithOrder*/,
+                    WithOrder = AddNewItemViewModelObj.Request.WithOrder,
                     InvoiceNumber = AddNewItemViewModelObj.Request.InvoiceNumber,
                     CatalogNumber = AddNewItemViewModelObj.Request.CatalogNumber,
                     SerialNumber = AddNewItemViewModelObj.Request.SerialNumber,
-                    URL = AddNewItemViewModelObj.Request.URL
+                    URL = AddNewItemViewModelObj.Request.URL,
                 };
-
                 try
                 {
                     _context.Add(request);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
-                catch (Exception ex)
+                catch //(Exception ex)
                 {
+                    _context.Remove(product);
+                    await _context.SaveChangesAsync();
                     return View(AddNewItemViewModelObj);
                 }
-
                 if (request != null)
                 {
                     return RedirectToAction("Index");
                 }
+                return View(AddNewItemViewModelObj);
+            }
+            catch (Exception ex)
+            {
+                return View(AddNewItemViewModelObj);
             }
 
-            //if (ModelState.IsValid)
-            //{
-            //    //await _context.SaveChangesAsync();
-            //    _context.Add(AddNewItemViewModelObj.Request);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-
-            return View(AddNewItemViewModelObj);
         }
+
+        /* Working Creating Product and Model
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> Create(AddNewItemViewModel AddNewItemViewModelObj)
+    //// "RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")]
+    //{
+    //    var parentCategories = _context.ParentCategories.ToList();
+    //    var productSubcategories = _context.ProductSubcategories.ToList();
+    //    AddNewItemViewModelObj.ParentCategories = parentCategories;
+    //    AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
+
+
+    //    ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ApplicationUserID);
+    //    ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", AddNewItemViewModelObj.Request.ProductID);
+    //    ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", AddNewItemViewModelObj.Request.RequestStatusID);
+
+    //    Product product = new Product
+    //    {
+    //        ProductID = AddNewItemViewModelObj.Product.ProductID,
+    //        ProductName = AddNewItemViewModelObj.Product.ProductName,
+    //        VendorID = /*AddNewItemViewModelObj.Product.VendorID*/
+        //_context.Vendors.ToList()[0].VendorID,
+        //        ProductSubcategoryID = AddNewItemViewModelObj.Product.ProductSubcategoryID,
+        //        LocationID = AddNewItemViewModelObj.Product.LocationID,
+        //        Handeling = AddNewItemViewModelObj.Product.Handeling,
+        //        QuantityPerUnit = /*AddNewItemViewModelObj.Product.QuantityPerUnit*/0,
+        //        UnitsInStock = /*AddNewItemViewModelObj.Product.UnitsInStock*/0,
+        //        UnitsInOrder = /*AddNewItemViewModelObj.Product.UnitsInOrder*/0,
+        //        ReorderLevel = /*AddNewItemViewModelObj.Product.ReorderLevel*/0,
+        //        ProductComment = /*AddNewItemViewModelObj.Product.ProductComment*/"comment...",
+        //        ProductMedia = /*AddNewItemViewModelObj.Product.ProductMedia*/"media..."
+        //    };
+        //    try
+        //    {
+        //        _context.Add(product);
+        //        _context.SaveChanges();
+        //    }
+        //    catch(Exception)
+        //    {
+        //        return View(AddNewItemViewModelObj.Request);
+        //    }
+        //    //AddNewItemViewModelObj.Product = product;
+        //    //AddNewItemViewModelObj.Request.ProductID = product.ProductID;
+
+
+        //    if (product != null)
+        //    {
+        //        Request request = new Request
+        //        {
+        //            RequestID = AddNewItemViewModelObj.Request.RequestID,
+        //            ProductID = product.ProductID,
+        //            LocationID = product.LocationID,
+        //            RequestStatusID = AddNewItemViewModelObj.Request.RequestStatusID,
+        //            AmountWithInLocation = AddNewItemViewModelObj.Request.AmountWithInLocation,
+        //            AmountWithOutLocation = AddNewItemViewModelObj.Request.AmountWithOutLocation,
+        //            ApplicationUserID = AddNewItemViewModelObj.Request.ApplicationUserID,
+        //            OrderDate = AddNewItemViewModelObj.Request.OrderDate,
+        //            OrderNumber = AddNewItemViewModelObj.Request.OrderNumber,
+        //            Quantity = AddNewItemViewModelObj.Request.Quantity,
+        //            Cost = AddNewItemViewModelObj.Request.Cost,
+        //            WithOrder = true /*AddNewItemViewModelObj.Request.WithOrder*/,
+        //            InvoiceNumber = AddNewItemViewModelObj.Request.InvoiceNumber,
+        //            CatalogNumber = AddNewItemViewModelObj.Request.CatalogNumber,
+        //            SerialNumber = AddNewItemViewModelObj.Request.SerialNumber,
+        //            URL = AddNewItemViewModelObj.Request.URL
+        //        };
+
+        //        try
+        //        {
+        //            _context.Add(request);
+        //            _context.SaveChanges();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return View(AddNewItemViewModelObj);
+        //        }
+
+        //        if (request != null)
+        //        {
+        //            return RedirectToAction("Index");
+        //        }
+        //    }
+
+        //    //if (ModelState.IsValid)
+        //    //{
+        //    //    //await _context.SaveChangesAsync();
+        //    //    _context.Add(AddNewItemViewModelObj.Request);
+        //    //    await _context.SaveChangesAsync();
+        //    //    return RedirectToAction(nameof(Index));
+        //    //}
+
+        //    return View(AddNewItemViewModelObj);
+        //}
+
+
 
         // GET: Requests/Edit/5
         public async Task<IActionResult> Edit(int? id)
-    {
-        if (id == null)
         {
-            return NotFound();
-        }
-
-        var request = await _context.Requests.FindAsync(id);
-        if (request == null)
-        {
-            return NotFound();
-        }
-        ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
-        ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
-        ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
-        return View(request);
-    }
-
-    // POST: Requests/Edit/5
-    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")] Request request)
-    {
-        if (id != request.RequestID)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
+            if (id == null)
             {
-                _context.Update(request);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+
+            var request = await _context.Requests.FindAsync(id);
+            if (request == null)
             {
-                if (!RequestExists(request.RequestID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
+            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
+            return View(request);
+        }
+
+        // POST: Requests/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")] Request request)
+        {
+            if (id != request.RequestID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(request);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!RequestExists(request.RequestID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
+            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
+            return View(request);
+        }
+
+        // GET: Requests/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var request = await _context.Requests
+                .Include(r => r.ApplicationUser)
+                .Include(r => r.Product)
+                .Include(r => r.RequestStatus)
+                .FirstOrDefaultAsync(m => m.RequestID == id);
+            if (request == null)
+            {
+                return NotFound();
+            }
+
+            return View(request);
+        }
+
+        // POST: Requests/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var request = await _context.Requests.FindAsync(id);
+            _context.Requests.Remove(request);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
-        ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
-        ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
-        return View(request);
-    }
 
-    // GET: Requests/Delete/5
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null)
+        private bool RequestExists(int id)
         {
-            return NotFound();
+            return _context.Requests.Any(e => e.RequestID == id);
         }
 
-        var request = await _context.Requests
-            .Include(r => r.ApplicationUser)
-            .Include(r => r.Product)
-            .Include(r => r.RequestStatus)
-            .FirstOrDefaultAsync(m => m.RequestID == id);
-        if (request == null)
-        {
-            return NotFound();
-        }
-
-        return View(request);
-    }
-
-    // POST: Requests/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        var request = await _context.Requests.FindAsync(id);
-        _context.Requests.Remove(request);
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-    }
-
-    private bool RequestExists(int id)
-    {
-        return _context.Requests.Any(e => e.RequestID == id);
-    }
-
-    /*
-     * START MODAL VIEW COPY
-     */
+        /*
+         * START MODAL VIEW COPY
+         */
         public async Task<IActionResult> ModalView(int? id)
         {
             if (id == null)
