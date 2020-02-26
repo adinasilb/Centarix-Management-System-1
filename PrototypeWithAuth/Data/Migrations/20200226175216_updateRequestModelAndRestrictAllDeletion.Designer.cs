@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200226175216_updateRequestModelAndRestrictAllDeletion")]
+    partial class updateRequestModelAndRestrictAllDeletion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -442,17 +444,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("ArrivalDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("CatalogNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
-                    b.Property<byte>("ExpectedSupplyDays")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("ExpectedSupplyDays")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
@@ -487,8 +486,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("URL")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("Warranty")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("Warranty")
+                        .HasColumnType("int");
 
                     b.Property<bool>("WithOrder")
                         .HasColumnType("bit");
@@ -517,33 +516,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("RequestStatusID");
 
                     b.ToTable("RequestStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            RequestStatusID = 1,
-                            RequestStatusDescription = "New"
-                        },
-                        new
-                        {
-                            RequestStatusID = 2,
-                            RequestStatusDescription = "Ordered"
-                        },
-                        new
-                        {
-                            RequestStatusID = 3,
-                            RequestStatusDescription = "RecievedAndIsInventory"
-                        },
-                        new
-                        {
-                            RequestStatusID = 4,
-                            RequestStatusDescription = "Partial"
-                        },
-                        new
-                        {
-                            RequestStatusID = 5,
-                            RequestStatusDescription = "Clarify"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>

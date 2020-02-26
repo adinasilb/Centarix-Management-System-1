@@ -16,11 +16,9 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Item Name")]
         public string ProductName { get; set; }
 
-        
+        [Required] //vendor, or vendor id?
         public int VendorID { get; set; }
-        
-        //[Required]
-        
+    
         public Vendor Vendor { get; set; }
 
         public int ProductSubcategoryID { get; set; }
@@ -28,6 +26,7 @@ namespace PrototypeWithAuth.Models
         //[Required]
         
         public ProductSubcategory ProductSubcategory { get; set; }
+        public IEnumerable<Request> Requests { get; set; }
         public int? LocationID { get; set; }
         public string Handeling { get; set; }
 

@@ -116,15 +116,15 @@ namespace PrototypeWithAuth.Controllers
         */
 
         // GET: Products/Create
-        public IActionResult Create(int ? parentCategoryID)
+        public IActionResult Create(/*int ? parentCategoryID*/)
         {
             var parentCategories = _context.ParentCategories.ToList();
-            var productSubcategories1 = _context.ProductSubcategories.ToList();
+            var productSubcategories = _context.ProductSubcategories.ToList();
 
             var viewModel = new CreateProductViewModel
             {
                 ParentCategories = parentCategories,
-                ProductSubcategories = productSubcategories1
+                ProductSubcategories = productSubcategories
             };
             return View(viewModel);
 
@@ -145,14 +145,27 @@ namespace PrototypeWithAuth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductID,ProductName,VendorID,ProductSubcategoryID,ParentCategoryID,LocationID,QuantityPerUnit,UnitsInStock,UnitsInOrder,ReorderLevel,ProductComment,ProductMedia")]Product product)
         {
-            
-           // if (ModelState.IsValid)
-          //  {
+
+
+            if (ModelState.IsValid)
+            {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-           // }
-            //return View(viewModel);
+            }
+            else
+            {
+                var parentCategories = _context.ParentCategories.ToList();
+                var productSubcategories = _context.ProductSubcategories.ToList();
+
+                var viewModel = new CreateProductViewModel
+                {
+                    ParentCategories = parentCategories,
+                    ProductSubcategories = productSubcategories
+                };
+                return View(viewModel);
+            }
+            
         }
 
         // GET: Products/Edit/5

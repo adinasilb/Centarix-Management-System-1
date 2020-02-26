@@ -130,6 +130,34 @@ namespace PrototypeWithAuth.Data
                 }
 
               );
+            modelBuilder.Entity<RequestStatus>().HasData
+          (
+              new RequestStatus
+              {
+                  RequestStatusID = 1,
+                  RequestStatusDescription = "New"
+              },
+              new RequestStatus
+              {
+                  RequestStatusID = 2,
+                  RequestStatusDescription = "Ordered"
+              },
+              new RequestStatus
+              {
+                  RequestStatusID = 3,
+                  RequestStatusDescription = "RecievedAndIsInventory"
+              },
+               new RequestStatus
+               {
+                   RequestStatusID = 4,
+                   RequestStatusDescription = "Partial"
+               },
+                new RequestStatus
+                {
+                    RequestStatusID = 5,
+                    RequestStatusDescription = "Clarify"
+                }
+             );
 
 
         }

@@ -31,11 +31,21 @@ namespace PrototypeWithAuth.Models
         public double Cost { get; set; }
         public bool WithOrder { get; set; }
         public string InvoiceNumber { get; set; }
+        
+        [DataType(DataType.Date)]
+        public DateTime InvoiceDate { get; set; }
         public string CatalogNumber { get; set; }
         public string SerialNumber { get; set; }
         public string URL { get; set; }
         //public string ExpenseDiscription { get; set; } - this is really the product name - so when view products, only return those with a specific subcategoryID,
 
+        public byte Warranty { get; set; } // will need to cast it to datetime when calulating the end date, in the front end
+
+        public byte ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
+        public string RequestComment { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime ArrivalDate { get; set; } 
 
     }
 }

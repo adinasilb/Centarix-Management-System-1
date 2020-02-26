@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
+using System.Linq;
 
 namespace PrototypeWithAuth.Data
 {
@@ -30,7 +31,8 @@ namespace PrototypeWithAuth.Data
         {
             base.OnModelCreating(modelBuilder);
             // configures one-to-many relationship between Inventory and InventorySubcategories
-          
+            
+           
             modelBuilder.Entity<ProductSubcategory>()
             .HasOne<ParentCategory>(ps => ps.ParentCategory)
             .WithMany(pc => pc.ProductSubcategories)
@@ -40,6 +42,12 @@ namespace PrototypeWithAuth.Data
             .HasOne<ApplicationUser>(r => r.ApplicationUser)
             .WithMany(au => au.Requests)
             .HasForeignKey(r => r.ApplicationUserID);
+
+            //modelBuilder.Entity<Request>()
+            //.HasOne<Product>(r => r.Product)
+            //.WithMany(p => p.Requests)
+            //.HasForeignKey(r => r.ProductID)
+            //.OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Request>()
             .HasOne<RequestStatus>(r => r.RequestStatus)
@@ -54,6 +62,13 @@ namespace PrototypeWithAuth.Data
 
 
             modelBuilder.Seed();
+
+            //foreach loop ensures that deletion is resticted - no cascade delete
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
         }
     }
 }

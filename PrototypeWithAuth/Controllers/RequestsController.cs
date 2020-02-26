@@ -83,13 +83,14 @@ namespace PrototypeWithAuth.Controllers
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName");
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID");
+            
             var parentCategories = _context.ParentCategories.ToList();
-            var productSubcategories1 = _context.ProductSubcategories.ToList();
+            var productSubcategories = _context.ProductSubcategories.ToList();
 
             var viewModel = new AddNewItemViewModel
             {
                 ParentCategories = parentCategories,
-                ProductSubcategories = productSubcategories1
+                ProductSubcategories = productSubcategories
             };
             return View(viewModel);
 
@@ -111,20 +112,51 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind(Include = "ProductID")] Request request)
+        public async Task<IActionResult> Create([Bind("RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")] AddNewItemViewModel addNewItemViewModelObj)
         // "RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")]
         {
+
             if (ModelState.IsValid)
             {
-                _context.Add(request);
+                _context.Add(addNewItemViewModelObj);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(addNewItemViewModelObj);
+                //return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
-            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
-            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
-            return View(request);
+            else
+            {
+                var parentCategories = _context.ParentCategories.ToList();
+                var productSubcategories = _context.ProductSubcategories.ToList();
+
+                var viewModel = new AddNewItemViewModel
+                {
+                    ParentCategories = parentCategories,
+                    ProductSubcategories = productSubcategories
+                };
+                return View(viewModel);
+            }
+            // ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModelObj.ApplicationUserID);
+            //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModelObj.Product.ProductID);
+            //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
+           // return View(addNewItemViewModelObj);
+       
         }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")] Request request)
+        //// "RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")]
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(request);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
+        //    ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
+        //    ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
+        //    return View(request);
+        //}
 
         // GET: Requests/Edit/5
         public async Task<IActionResult> Edit(int? id)
