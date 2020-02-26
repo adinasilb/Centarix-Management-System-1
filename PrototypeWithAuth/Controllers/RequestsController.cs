@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -80,22 +81,27 @@ namespace PrototypeWithAuth.Controllers
         //    return View();
         //}
 
-        // GET: Products/Create
-        public IActionResult Create(int? parentCategoryID) //need to correct to be for request
+        // GET: Requests/Create
+        public IActionResult Create() //need to correct to be for request
         {
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName");
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID");
             var parentCategories = _context.ParentCategories.ToList();
-            var productSubcategories1 = _context.ProductSubcategories.ToList();
+            var productSubcategories = _context.ProductSubcategories.ToList();
             var vendors = _context.Vendors.ToList();
 
             var viewModel = new AddNewItemViewModel
             {
                 ParentCategories = parentCategories,
-                ProductSubcategories = productSubcategories1,
-                Vendors = vendors
+                ProductSubcategories = productSubcategories,
+                Vendors = vendors,
+                Request = new Request()
             };
+
+            viewModel.Request.Product = new Product(); // have to instantaiate the product from the requests, because the viewModel relies on request.product to create the new product
+
+
             return View(viewModel);
 
 
@@ -113,12 +119,13 @@ namespace PrototypeWithAuth.Controllers
         // POST: Requests/Create/ 
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        // Adina's code fore createing and binding product model with request model in a single view, check that all errors are handled for.
+        // Adina's code for creating and binding product model with request model in a single view, check that all errors are handled for.
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddNewItemViewModel AddNewItemViewModelObj)
         {
+            //insert the lists of parentcategories, productcategories, and vendors into the view model object for validation purposes and to return the same view if needed
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories = _context.ProductSubcategories.ToList();
             var vendors = _context.Vendors.ToList();
@@ -126,74 +133,26 @@ namespace PrototypeWithAuth.Controllers
             AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
             AddNewItemViewModelObj.Vendors = vendors;
 
-            // view data is placed in the beginning in order to redirect when errrs are caught, so need to have the info saved before handling the error
+            // view data is placed in the beginning in order to redirect when errors are caught, so need to have the info saved before handling the error
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ApplicationUserID);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", AddNewItemViewModelObj.Request.ProductID);
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", AddNewItemViewModelObj.Request.RequestStatusID);
 
+            //inserting the vendor from the vendor id, the subcategory from the subcategory id and the application user from the application user id to test for the viewmodel validation
+            AddNewItemViewModelObj.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == AddNewItemViewModelObj.Request.Product.VendorID);
+            AddNewItemViewModelObj.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == AddNewItemViewModelObj.Request.Product.ProductSubcategoryID);
+            AddNewItemViewModelObj.Request.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == AddNewItemViewModelObj.Request.ApplicationUserID);
 
-            Product product = new Product
+            //using the dataannotations validator to test the updated object because modelstate.isvalid only looks at the stack trace that was passed in 
+            var context = new ValidationContext(AddNewItemViewModelObj.Request, null, null);
+            var results = new List<ValidationResult>();
+            if (Validator.TryValidateObject(AddNewItemViewModelObj.Request, context, results, true))
             {
-                ProductID = AddNewItemViewModelObj.Product.ProductID,
-                ProductName = AddNewItemViewModelObj.Product.ProductName,
-                VendorID = AddNewItemViewModelObj.Product.VendorID, //should not insert a 0, should not allow the user to enter the form (data validation)
-                ProductSubcategoryID = AddNewItemViewModelObj.Product.ProductSubcategoryID,
-                LocationID = AddNewItemViewModelObj.Product.LocationID,
-                Handeling = AppUtility.ReplaceStringValueIfNull(AddNewItemViewModelObj.Product.Handeling),
-                QuantityPerUnit = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.QuantityPerUnit),
-                UnitsInStock = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.UnitsInStock),
-                UnitsInOrder = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.UnitsInOrder),
-                ReorderLevel = AppUtility.ReplaceIntValueIfNull(AddNewItemViewModelObj.Product.ReorderLevel),
-                ProductComment = AppUtility.ReplaceStringValueIfNull(AddNewItemViewModelObj.Product.ProductComment),
-                ProductMedia = AppUtility.ReplaceStringValueIfNull(AddNewItemViewModelObj.Product.ProductMedia)
-            };
-            try
-            {
-                _context.Add(product);
-                _context.SaveChanges();
-                AddNewItemViewModelObj.Product = product;
-                Request request = new Request
-                {
-                    RequestID = AddNewItemViewModelObj.Request.RequestID,
-                    ProductID = product.ProductID,
-                    Product = _context.Products.Find(product.ProductID),
-                    LocationID = AddNewItemViewModelObj.Product.LocationID,
-                    RequestStatusID = AddNewItemViewModelObj.Request.RequestStatusID,
-                    AmountWithInLocation = AddNewItemViewModelObj.Request.AmountWithInLocation,
-                    AmountWithOutLocation = AddNewItemViewModelObj.Request.AmountWithOutLocation,
-                    ApplicationUserID = AddNewItemViewModelObj.Request.ApplicationUserID,
-                    OrderDate = AddNewItemViewModelObj.Request.OrderDate,
-                    OrderNumber = AddNewItemViewModelObj.Request.OrderNumber,
-                    Quantity = AddNewItemViewModelObj.Request.Quantity,
-                    Cost = AddNewItemViewModelObj.Request.Cost,
-                    WithOrder = AddNewItemViewModelObj.Request.WithOrder,
-                    InvoiceNumber = AddNewItemViewModelObj.Request.InvoiceNumber,
-                    CatalogNumber = AddNewItemViewModelObj.Request.CatalogNumber,
-                    SerialNumber = AddNewItemViewModelObj.Request.SerialNumber,
-                    URL = AddNewItemViewModelObj.Request.URL,
-                };
-                try
-                {
-                    _context.Add(request);
-                    await _context.SaveChangesAsync();
-                }
-                catch //(Exception ex)
-                {
-                    _context.Remove(product);
-                    await _context.SaveChangesAsync();
-                    return View(AddNewItemViewModelObj);
-                }
-                if (request != null)
-                {
-                    return RedirectToAction("Index");
-                }
-                return View(AddNewItemViewModelObj);
+                _context.Add(AddNewItemViewModelObj.Request);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
-            catch (Exception ex)
-            {
-                return View(AddNewItemViewModelObj);
-            }
-
+            return View(AddNewItemViewModelObj);
         }
 
 
@@ -219,40 +178,70 @@ namespace PrototypeWithAuth.Controllers
         // POST: Requests/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")] Request request)
+        //{
+        //    if (id != request.RequestID)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(request);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!RequestExists(request.RequestID))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
+        //    ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
+        //    ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
+        //    return View(request);
+        //}
+
+        //POST: Requests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")] Request request)
+        public async Task<IActionResult> Edit(AddNewItemViewModel addNewItemViewModel)
         {
-            if (id != request.RequestID)
-            {
-                return NotFound();
-            }
-
+            addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
+            addNewItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
+            addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+            //DEBUG OVER HERE THAT REQUEST PRODUCT IS INCLUDED
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(request);
+                    _context.Update(addNewItemViewModel.Request.Product.ProductID);
+                    _context.Update(addNewItemViewModel.Request);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!RequestExists(request.RequestID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return View(addNewItemViewModel);
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
-            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
-            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
-            return View(request);
+            else
+            {
+                return View(addNewItemViewModel);
+            }
+            return RedirectToAction("Index");
         }
+
 
         // GET: Requests/Delete/5
         public async Task<IActionResult> Delete(int? id)
