@@ -116,7 +116,7 @@ namespace PrototypeWithAuth.Controllers
         */
 
         // GET: Products/Create
-        public IActionResult Create(int ? parentCategoryID)
+        public IActionResult Create()
         {
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories1 = _context.ProductSubcategories.ToList();

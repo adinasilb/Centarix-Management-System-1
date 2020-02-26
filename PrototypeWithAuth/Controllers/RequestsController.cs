@@ -175,69 +175,38 @@ namespace PrototypeWithAuth.Controllers
             return View(request);
         }
 
-        // POST: Requests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("RequestID,ProductID,LocationID,RequestStatusID,AmountWithInLocation,AmountWithOutLocation,ApplicationUserID,OrderDate,OrderNumber,Quantity,Cost,WithOrder,InvoiceNumber,CatalogNumber,SerialNumber,URL")] Request request)
-        //{
-        //    if (id != request.RequestID)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(request);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!RequestExists(request.RequestID))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
-        //    ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
-        //    ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
-        //    return View(request);
-        //}
-
         //POST: Requests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(AddNewItemViewModel addNewItemViewModel)
         {
+            //same logic as create controller
             addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             addNewItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
             addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
-            //DEBUG OVER HERE THAT REQUEST PRODUCT IS INCLUDED
-            if (ModelState.IsValid)
+
+            addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
+            addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
+            addNewItemViewModel.Request.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ApplicationUserID);
+            
+            var context = new ValidationContext(addNewItemViewModel.Request, null, null);
+            var results = new List<ValidationResult>();
+            if (Validator.TryValidateObject(addNewItemViewModel.Request, context, results, true))
             {
                 try
                 {
-                    _context.Update(addNewItemViewModel.Request.Product.ProductID);
+                    _context.Update(addNewItemViewModel.Request.Product);
                     _context.Update(addNewItemViewModel.Request);
                     await _context.SaveChangesAsync();
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
-                    return View(addNewItemViewModel);
+                    return await ModalView(addNewItemViewModel.Request.RequestID);
                 }
             }
             else
             {
-                return View(addNewItemViewModel);
+                return await ModalView(addNewItemViewModel.Request.RequestID);
             }
             return RedirectToAction("Index");
         }
@@ -315,36 +284,42 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ModalView(int id, [Bind("ProductID,ProductName,VendorID,ProductSubcategoryID,LocationID,QuantityPerUnit,UnitsInStock,UnitsInOrder,ReorderLevel,ProductComment,ProductMedia")] Product product)
+        public async Task<IActionResult> ModalView(AddNewItemViewModel addNewItemViewModel)
         {
-            if (id != product.ProductID)
-            {
-                return NotFound();
-            }
+            //same logic as create controller
+            addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
+            addNewItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
+            addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
 
-            if (ModelState.IsValid)
+            addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
+            addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
+            addNewItemViewModel.Request.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ApplicationUserID);
+
+            //in case we need to redirect to action
+            TempData["ModalView"] = true;
+            TempData["RequestID"] = addNewItemViewModel.Request.RequestID;
+
+            var context = new ValidationContext(addNewItemViewModel.Request, null, null);
+            var results = new List<ValidationResult>();
+            if (Validator.TryValidateObject(addNewItemViewModel.Request, context, results, true))
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(addNewItemViewModel.Request.Product);
+                    _context.Update(addNewItemViewModel.Request);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    //Get ProductExists to work
-                    /*if (!ProductExists(product.ProductID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }*/
-                    return NotFound();
+                    TempData["ErrorMessage"] = ex.ToString();
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return PartialView(product);
+            else
+            {
+                return View(addNewItemViewModel);
+            }
+            return RedirectToAction("Index");
         }
 
         /*

@@ -44,7 +44,12 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/ModalView/?id=" + $(this).val()
+        $.fn.CallPage($(this).val());
+        return false;
+    });
+
+    $.fn.CallPage = function($requestid) {
+        var $itemurl = "Requests/ModalView/?id=" + $requestid
         $.ajax({
             url: $itemurl,
             type: 'GET',
@@ -61,7 +66,6 @@
                 $('.nav-tabs a[href="' + tab + '"]').tab('show');
             }
         });
-        return false;
-    });
+    }
 
 </script>
