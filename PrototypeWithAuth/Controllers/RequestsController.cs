@@ -300,16 +300,28 @@ namespace PrototypeWithAuth.Controllers
             {
                 return NotFound();
             }
+            var parentcategories = await _context.ParentCategories.ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var vendors = await _context.Vendors.ToListAsync();
 
-            Request request = _context.Requests.Include(r => r.Product).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory).SingleOrDefault( x => x.RequestID == id);
-            if (request == null)
+            AddNewItemViewModel addNewItemViewModel = new AddNewItemViewModel
+            {
+                Request = _context.Requests.Include(r => r.Product)
+                    .Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.Product.ProductSubcategory.ParentCategory)
+                    .SingleOrDefault(x => x.RequestID == id),
+                ParentCategories = parentcategories,
+                ProductSubcategories = productsubactegories,
+                Vendors = vendors
+            };
+            if (addNewItemViewModel.Request == null)
             {
                 return NotFound();
             }
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
-            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
-            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
-            return PartialView(request);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ApplicationUserID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
+            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
+            return PartialView(addNewItemViewModel);
         }
 
         [HttpPost]

@@ -47,30 +47,58 @@
 
 
 @*<script>
-    //Render a partial view inside of a modal
-    //To do later: add a loading gif div
-    $(".load-product-details").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        //takes the item value and calls the Requests controller with the ModalView view to render the modal inside
-        var $itemurl = "ModalView/?id=" + $(this).val()
-        $.ajax({
-            url: $itemurl,
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                //replaces the modal-view class with the ModalView view
-                $(".modal-view").html(data);
-                //shows the modal
-                $(".modal").modal('show');
-                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                $(".modal-backdrop").remove();
-                /* Following two lines should set the correct data-target tab to open ----> not working right now */
-                var tab = e.relatedTarget.hash;
-                $('.nav-tabs a[href="' + tab + '"]').tab('show');
-            }
+        //Render a partial view inside of a modal
+        //To do later: add a loading gif div
+        $(".load-product-details").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            //takes the item value and calls the Requests controller with the ModalView view to render the modal inside
+            var $itemurl = "ModalView/?id=" + $(this).val()
+            $.ajax({
+                url: $itemurl,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    //replaces the modal-view class with the ModalView view
+                    $(".modal-view").html(data);
+                    //shows the modal
+                    $(".modal").modal('show');
+                    //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                    $(".modal-backdrop").remove();
+                    /* Following two lines should set the correct data-target tab to open ----> not working right now */
+                    var tab = e.relatedTarget.hash;
+                    $('.nav-tabs a[href="' + tab + '"]').tab('show');
+                }
+            });
+            return false;
         });
-        return false;
-    });
 
-</script>*@
+    </script>*@
+
+@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        //Insert default item "Select" in dropdownlist on load
+        $(document).ready(function () {
+            var items = "<option value='0'>Select Subcategory</option>";
+            $("#sublist").html(items);
+        });
+
+
+        $("#parentlist").change(function () {
+            var parentCategoryId = $("#parentlist").val();
+            var url = "/Products/GetSubCategoryList";
+
+            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                var item = "";
+                $("#sublist").empty();
+                $.each(data, function (i, subCategory) {
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                });
+                $("#sublist").html(item);
+            });
+        });
+    </script>
+}
