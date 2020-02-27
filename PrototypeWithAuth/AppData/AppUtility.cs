@@ -10,6 +10,8 @@ namespace PrototypeWithAuth.AppData
     public static class AppUtility
     {
 
+        public enum RequestPageTypeEnum { None, Request, Inventory }
+        
         public static Request CheckRequestForNullsAndReplace(Request request)
         {
             request.LocationID = ReplaceIntValueIfNull(request.LocationID);

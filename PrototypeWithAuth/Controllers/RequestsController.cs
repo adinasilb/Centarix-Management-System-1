@@ -25,9 +25,17 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, string PageType = "")
+        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.None)
         {
+            //instantiate your requests list to pass in 
+            var requests2 = _context.Requests.ToList();
+            //use an enum to determine which page type you are using and fill the data accordingly, also pass the data through tempdata to the page
             TempData["PageType"] = PageType;
+            if (PageType == AppUtility.RequestPageTypeEnum.Request)
+            {
+                //get all the requests that go on the request page
+                // ex. requests2 = requests2.where()....
+            }
             if (vendorID != null)
             {
                 var requests = _context.Requests
@@ -104,7 +112,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             viewModel.Request.Product = new Product(); // have to instantaiate the product from the requests, because the viewModel relies on request.product to create the new product
-            
+
             return View(viewModel);
         }
 
@@ -193,7 +201,7 @@ namespace PrototypeWithAuth.Controllers
             addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
             addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
             addNewItemViewModel.Request.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ApplicationUserID);
-            
+
             var context = new ValidationContext(addNewItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
             if (Validator.TryValidateObject(addNewItemViewModel.Request, context, results, true))
@@ -204,7 +212,7 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(addNewItemViewModel.Request);
                     await _context.SaveChangesAsync();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return await ModalView(addNewItemViewModel.Request.RequestID);
                 }
@@ -345,5 +353,14 @@ namespace PrototypeWithAuth.Controllers
         /*
          * END MODAL VIEW COPY
          */
-            }
+
+        //Get the Json of the vendor business id from the vendor id so JS (site.js) can auto load the form-control with the newly requested vendor
+        [HttpGet] //send a json to that the subcategory list is filered
+        public JsonResult GetVendorBusinessID(int VendorID)
+        {
+            Vendor vendor = _context.Vendors.SingleOrDefault(v => v.VendorID == VendorID);
+            return Json(vendor);
         }
+
+    }
+}
