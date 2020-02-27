@@ -1,5 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddNewItemViewModel
 
+
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view">
@@ -51,7 +52,7 @@
                                     <div class="form-group sublist">
                                         @******NOT WORKING******@
                                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-                                        <input asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" disabled="disabled" class="form-control-plaintext"/>
+                                        <input asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" disabled="disabled" class="form-control-plaintext" />
                                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
                                         new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
                                         "Select Subcategory", new { @class = "form-control", @id = "sublist" })
@@ -83,7 +84,7 @@
                                                 dataValueField: "VendorID",
                                                 dataTextField: "VendorEnName"),
                                             optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                                            htmlAttributes: new { @class = "form-control" }
+                                            htmlAttributes: new { @class = "form-control", @id = "vendorList" }
                                         )
                                         <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                     </div>
@@ -91,7 +92,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                                        <input asp-for="Request.Product.Vendor.VendorBuisnessID" class="form-control" />
+                                        <input asp-for="Request.Product.Vendor.VendorBuisnessID" class="form-control-plaintext" disabled="disabled" id="vendor-bus-id" />
                                         <span asp-validation-for="Request.Product.Vendor.VendorBuisnessID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -236,7 +237,6 @@
 
             @*Begin Hidden Inputs:*@
             @Html.HiddenFor(vm => vm.Request.ProductID)
-            @Html.HiddenFor(vm => vm.Request.Product.VendorID)
             @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
             @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
             @*End Hidden Inputs*@

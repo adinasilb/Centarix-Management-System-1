@@ -30,3 +30,17 @@ $("#parentlist").change(function () {
         $("#sublist").html(item);
     });
 });
+
+//load the vendor business id with the vendor business id corresponding to the newly selected vendor from the vendor list
+$("#vendorList").change(function () {
+    //get the new vendor id selected
+    var vendorid = $("#vendorList").val();
+    //load the url of the Json Get from the controller
+    var url = "/Requests/GetVendorBusinessID";
+
+    $.getJSON(url, function (data) {
+        var JsonData = JSON.parse(data);
+        $(".modal-footer").html(JsonData.VendorBusinessID);
+    })
+    
+});
