@@ -13,7 +13,7 @@ $.fn.LoadCorrectSubcategory = function () {
     //idx = $("#sublist").find('option[value="' + $correctsub + '"]').index()
     //$("#sublist").get(0).selectedIndex = idx;
     //$("#sublist").find('option[value="' + $correctsub + '"]').attr('selected', 'selected');
-    $(".modal-footer").html($correctsub);
+    //works --> just don't want it here need to change to correct place $(".modal-footer").html($correctsub);
 };
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected

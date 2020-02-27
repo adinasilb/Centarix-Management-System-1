@@ -20,8 +20,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string PageType)
         {
+            TempData["PageType"] = PageType;
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory);
             return View(await applicationDbContext.ToListAsync());
         }

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
@@ -43,34 +44,3 @@
         }
     </tbody>
 </table>
-
-
-
-@*<script>
-        //Render a partial view inside of a modal
-        //To do later: add a loading gif div
-        $(".load-product-details").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            //takes the item value and calls the Requests controller with the ModalView view to render the modal inside
-            var $itemurl = "ModalView/?id=" + $(this).val()
-            $.ajax({
-                url: $itemurl,
-                type: 'GET',
-                cache: false,
-                success: function (data) {
-                    //replaces the modal-view class with the ModalView view
-                    $(".modal-view").html(data);
-                    //shows the modal
-                    $(".modal").modal('show');
-                    //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                    $(".modal-backdrop").remove();
-                    /* Following two lines should set the correct data-target tab to open ----> not working right now */
-                    var tab = e.relatedTarget.hash;
-                    $('.nav-tabs a[href="' + tab + '"]').tab('show');
-                }
-            });
-            return false;
-        });
-
-    </script>*@

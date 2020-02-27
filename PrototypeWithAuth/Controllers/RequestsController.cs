@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
@@ -24,8 +25,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID)
+        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, string PageType = "")
         {
+            TempData["PageType"] = PageType;
             if (vendorID != null)
             {
                 var requests = _context.Requests
@@ -90,20 +92,20 @@ namespace PrototypeWithAuth.Controllers
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories = _context.ProductSubcategories.ToList();
             var vendors = _context.Vendors.ToList();
+            var requeststatutes = _context.RequestStatuses.ToList();
 
             var viewModel = new AddNewItemViewModel
             {
                 ParentCategories = parentCategories,
                 ProductSubcategories = productSubcategories,
                 Vendors = vendors,
+                RequestStatuses = requeststatutes,
                 Request = new Request()
             };
 
             viewModel.Request.Product = new Product(); // have to instantaiate the product from the requests, because the viewModel relies on request.product to create the new product
             
             return View(viewModel);
-
-
         }
 
         [HttpGet] //send a json to that the subcategory list is filered
@@ -128,9 +130,11 @@ namespace PrototypeWithAuth.Controllers
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories = _context.ProductSubcategories.ToList();
             var vendors = _context.Vendors.ToList();
+            var requeststatuses = _context.RequestStatuses.ToList();
             AddNewItemViewModelObj.ParentCategories = parentCategories;
             AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
             AddNewItemViewModelObj.Vendors = vendors;
+            AddNewItemViewModelObj.RequestStatuses = requeststatuses;
 
             // view data is placed in the beginning in order to redirect when errors are caught, so need to have the info saved before handling the error
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ApplicationUserID);
@@ -184,6 +188,7 @@ namespace PrototypeWithAuth.Controllers
             addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             addNewItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
             addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+            addNewItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
 
             addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
             addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
@@ -298,6 +303,7 @@ namespace PrototypeWithAuth.Controllers
             addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             addNewItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
             addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+            addNewItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
 
             addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
             addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
@@ -311,6 +317,12 @@ namespace PrototypeWithAuth.Controllers
             var results = new List<ValidationResult>();
             if (Validator.TryValidateObject(addNewItemViewModel.Request, context, results, true))
             {
+                /*
+                 * the viewmodel loads the request.product with a primary key of 0
+                 * so if you don't insert the request.productid into the request.product.product id
+                 * it will create a new one instead of updating the existing one
+                 */
+                addNewItemViewModel.Request.Product.ProductID = addNewItemViewModel.Request.ProductID;
                 try
                 {
                     _context.Update(addNewItemViewModel.Request.Product);
@@ -333,5 +345,5 @@ namespace PrototypeWithAuth.Controllers
         /*
          * END MODAL VIEW COPY
          */
-    }
-}
+            }
+        }
