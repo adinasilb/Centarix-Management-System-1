@@ -1,5 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddNewItemViewModel
 
+<script src="~/js/site.js" asp-append-version="true"></script>
+
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view">
 
     <div class="modal-content">
@@ -10,7 +12,7 @@
             <input type="hidden" asp-for="@Model.Request.RequestID" />
             <!-- Modal Header -->
             <div class="modal-header border-bottom-0">
-                @if(TempData["ErrorMessage"] != null)
+                @if (TempData["ErrorMessage"] != null)
                 {
                     <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
                 }
@@ -21,7 +23,7 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <div class="container-fluid">
+                <div class="container-fluid div-tabs">
 
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
@@ -46,10 +48,15 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    @******NOT WORKING******@
-                                    <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-                                    <select name="Product.ProductSubcategoryID" id="sublist" class="form-control"></select>
-                                    <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
+                                    <div class="form-group sublist">
+                                        @******NOT WORKING******@
+                                        <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                                        @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
+                                        new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+                                        "Select Subategory", new { @class = "form-control", @id = "sublist" })
+                                        @*<select name="Product.ProductSubcategoryID" id="sublist" class="form-control"></select>*@
+                                        <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label">Project:</label>
@@ -185,7 +192,10 @@
             @Html.HiddenFor(vm => vm.Request.Product.VendorID)
             @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
             @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
-        @*End Hidden Inputs*@
+            @*End Hidden Inputs*@
+
+            @*Hidden Input for Product Subcategory*@
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
         </form>
 
     </div>
@@ -193,3 +203,31 @@
 
 </div>
 
+@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+@*This will work for the EDIT (putting in the already loaded product subcategory)*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+       
+        $(document).ready(function () {
+            $("form").hover() {
+                //var parentCategoryId = $("#parentlist").val();
+                //var url = "/Products/GetSubCategoryList";
+
+                //$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                //    var item = "";
+                //    $("#sublist").empty();
+                //    $.each(data, function (i, subCategory) {
+                //        item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                //    });
+                //    $("#sublist").html(item);
+                //});
+
+                //$.fn.LoadCorrectSubcategory();
+                var $correctsub = ("#CorrectSubcategory").val();
+                $(".modal-footer").html("123");
+            };
+        });
+    </script>
+}

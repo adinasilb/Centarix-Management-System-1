@@ -158,19 +158,19 @@
         });
 
 
-        $("#parentlist").change(function () {
-            var parentCategoryId = $("#parentlist").val();
-            var url = "/Products/GetSubCategoryList";
+        //$("#parentlist").change(function () {
+        //    var parentCategoryId = $("#parentlist").val();
+        //    var url = "/Products/GetSubCategoryList";
 
-            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-                var item = "";
-                $("#sublist").empty();
-                $.each(data, function (i, subCategory) {
-                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-                });
-                $("#sublist").html(item);
-            });
-        });
+        //    $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+        //        var item = "";
+        //        $("#sublist").empty();
+        //        $.each(data, function (i, subCategory) {
+        //            item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+        //        });
+        //        $("#sublist").html(item);
+        //    });
+        //});
     </script>
 }
             }

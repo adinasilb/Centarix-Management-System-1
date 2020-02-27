@@ -10,7 +10,7 @@
         <ul class="nav flex-column nav-pills nav-stacked">
             <li class="nav-item">
                 @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
-                <button class="btn btn-link load-product-details" value="0" data-target="item">Add Item</button>
+                <button class="btn btn-link load-product-details" data-value="0" data-target="item" href="item">Add Item</button>
             </li>
             <li class="nav-item">
                 @Html.ActionLink("Type", "Index", "ProductSubcategories", new { }, new { @class = "btn btn-link text-dark" })
@@ -44,11 +44,12 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        $.fn.CallPage($(this).val());
+        var $tab = e.target.hash;
+        $.fn.CallPage($(this).val(), $tab);
         return false;
     });
 
-    $.fn.CallPage = function($requestid) {
+    $.fn.CallPage = function ($requestid, $tab) {
         var $itemurl = "Requests/ModalView/?id=" + $requestid
         $.ajax({
             url: $itemurl,
@@ -61,11 +62,37 @@
                 $(".modal").modal('show');
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
                 $(".modal-backdrop").remove();
-                /* Following two lines should set the correct data-target tab to open ----> not working right now */
-                var tab = e.relatedTarget.hash;
-                $('.nav-tabs a[href="' + tab + '"]').tab('show');
+                /* Following line should set the correct data-target tab to open ----> not working right now */
+                //$('.nav-tabs a[href="' + $tab + '"]').tab - pane('show');
+                var selectedTab = 0;
+                var mytabs = $('.div-tabs ul li a').each(function (x, obj) {
+                    if (obj.hash.indexOf(location.hash) != -1 && location.hash != '') {
+                        selectedTab = x;
+                    }
+                });
+                $("#tabs").tab({ selected: selectedTab });
+                //document.ready for modal is done here --> setting up product subcategories
+                var parentCategoryId = $("#parentlist").val();
+                var url = "/Products/GetSubCategoryList";
+
+                $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                    var item = "";
+                    $("#sublist").empty();
+                    $.each(data, function (i, subCategory) {
+                        item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                    });
+                    $("#sublist").html(item);
+                });
+                
+                $.fn.LoadCorrectSubcategory();
             }
         });
     }
+
+    //$(".modal-view").on('show.bs.show.bs.modal', function (evt) {
+    //    var button = $(evt.relatedTarget);
+    //    var modal = $(this);
+    //    modal.find('[href="' + button.attr("href") + '"]').tab('show');
+    //});
 
 </script>

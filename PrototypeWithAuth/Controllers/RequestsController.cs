@@ -100,8 +100,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             viewModel.Request.Product = new Product(); // have to instantaiate the product from the requests, because the viewModel relies on request.product to create the new product
-
-
+            
             return View(viewModel);
 
 
@@ -176,6 +175,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         //POST: Requests/Edit/5
+        //This is not being used right now --> delete 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(AddNewItemViewModel addNewItemViewModel)
@@ -257,6 +257,14 @@ namespace PrototypeWithAuth.Controllers
             if (id == null)
             {
                 return NotFound();
+            }
+            else if (id == 0)
+            {
+
+            }
+            else
+            {
+
             }
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
