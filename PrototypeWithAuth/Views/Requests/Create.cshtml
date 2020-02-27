@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/View.cshtml";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
 <h1>Create</h1>
@@ -13,32 +13,64 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @Html.HiddenFor(r => r.Product.ProductID)
-            @*<div class="form-group">
-                <label asp-for="Product.ProductID" class="control-label"></label>
-                <select asp-for="Product.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
-            </div>*@
+
+            @* HIDDEN FORS *@
+
+            @*Products:*@
+            @Html.HiddenFor(vm => vm.Request.Product.QuantityPerUnit, new { @Value = 0 })
+            @Html.HiddenFor(vm => vm.Request.Product.UnitsInStock, new { @Value = 0 })
+            @Html.HiddenFor(vm => vm.Request.Product.UnitsInOrder, new { @Value = "0" })
+            @Html.HiddenFor(vm => vm.Request.Product.ReorderLevel, new { @Value = "0" })
+            @Html.HiddenFor(vm => vm.Request.Product.ProductComment, new { @Value = "" })
+            @Html.HiddenFor(vm => vm.Request.Product.ProductMedia, new { @Value = "" })
+            @Html.HiddenFor(vm => vm.Request.Product.Handeling, new { @Value = "0" })
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+            @Html.HiddenFor(vm => vm.Request.Product.Vendor.VendorID)
+            @Html.HiddenFor(vm => vm.Request.Product.Vendor.VendorBank)
+            @Html.HiddenFor(vm => vm.Request.Product.Vendor.VendorEnName)
+            @Html.HiddenFor(vm => vm.Request.Product.Vendor.VendorAccountNum)
+            @Html.HiddenFor(vm => vm.Request.Product.Vendor.VendorBankBranch)
+            @Html.HiddenFor(vm => vm.Request.Product.Vendor.VendorBuisnessID)
+
+            @*Requests*@
+            @Html.HiddenFor(vm => vm.Request.RequestID)
+            @Html.HiddenFor(r => r.Request.Product.ProductID)
+
+
             <div class="form-group">
-                <label asp-for="Product.ProductName" class="control-label"></label>
-                <input asp-for="Product.ProductName" class="form-control" />
-                <span asp-validation-for="Product.ProductName" class="text-danger"></span>
+                <label asp-for="Request.Product.ProductName" class="control-label"></label>
+                <input asp-for="Request.Product.ProductName" class="form-control" />
+                <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-                @Html.DropDownListFor(c => c.Product.ProductSubcategory.ParentCategoryID,
+                <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
                 new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
                 "Select Category", new { @class = "form-control", @id = "parentlist" })
-                <span asp-validation-for="Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+                <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-                <select name="Product.ProductSubcategoryID" id="sublist" class="form-control"></select>
-                <span asp-validation-for="Product.ProductSubcategoryID" class="text-danger"></span>
+                <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                <select @*asp-for="Request.Product.ProductSubcategoryID"*@ name="Request.Product.ProductSubcategoryID" id="sublist" class="form-control"></select>
+                <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Request.LocationID" class="control-label"></label>
-                <input asp-for="Request.LocationID" class="form-control" />
-                <span asp-validation-for="Request.LocationID" class="text-danger"></span>
+                <label asp-for="Request.Product.Vendor.VendorEnName" class="control-label"></label>
+                @Html.DropDownListFor(
+                    vm => vm.Request.Product.VendorID,
+                    new SelectList(
+                        Model.Vendors,
+                        dataValueField: "VendorID",
+                        dataTextField: "VendorEnName"),
+                    optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                    htmlAttributes: new { @class = "form-control" }
+                )
+                <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.Product.LocationID" class="control-label"></label>
+                <input asp-for="Request.Product.LocationID" class="form-control" />
+                <span asp-validation-for="Request.Product.LocationID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Request.RequestStatusID" class="control-label"></label>
@@ -106,16 +138,17 @@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index"> Back to List </a>
 </div>
 @*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
     <script type="text/javascript">
         //Insert default item "Select" in dropdownlist on load
@@ -125,21 +158,22 @@
         });
 
 
-        $("#parentlist").change(function () {
-            var parentCategoryId = $("#parentlist").val();
-            var url = "/Products/GetSubCategoryList";
+        //$("#parentlist").change(function () {
+        //    var parentCategoryId = $("#parentlist").val();
+        //    var url = "/Products/GetSubCategoryList";
 
-            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-                var item = "";
-                $("#sublist").empty();
-                $.each(data, function (i, subCategory) {
-                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-                });
-                $("#sublist").html(item);
-            });
-        });
+        //    $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+        //        var item = "";
+        //        $("#sublist").empty();
+        //        $.each(data, function (i, subCategory) {
+        //            item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+        //        });
+        //        $("#sublist").html(item);
+        //    });
+        //});
     </script>
 }
+            }
 
 
 

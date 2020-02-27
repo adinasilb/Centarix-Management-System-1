@@ -2,119 +2,75 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/View.cshtml";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
-<h1>Index</h1>
+@*<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>*@
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LocationID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RequestStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountWithInLocation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountWithOutLocation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WithOrder)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InvoiceNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CatalogNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SerialNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.URL)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Product.ProductMedia)</th>
+            <th>@Html.DisplayNameFor(model => model.Product.ProductName)</th>
+            <th>@Html.DisplayNameFor(m => m.Product.Vendor.VendorEnName)</th>
+            <th>TOTAL</th> @*Placeholder until we insert total*@
+            <th>@Html.DisplayNameFor(m => m.Product.ProductSubcategory.ProductSubcategoryDescription)</th>
+            <th>@Html.DisplayNameFor(m => m.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m.ApplicationUser.LastName)</th>
+            <th>@Html.DisplayNameFor(m => m.OrderDate)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocationID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountWithInLocation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountWithOutLocation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WithOrder)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InvoiceNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CatalogNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SerialNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.URL)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RequestID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RequestID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RequestID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>Product Image</td>
+                <td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName)</td>
+                <td>Placeholder</td> @*Computed column?*@
+                <td>@Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription)</td>
+                <td>@Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)</td>
+                <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                <td>
+                    <a asp-action="Received" asp-route-id="@item.RequestID">Received</a> |
+                    <!-- Button to Open the Modal -->
+                    <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">Edit</button>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+
+
+@*<script>
+        //Render a partial view inside of a modal
+        //To do later: add a loading gif div
+        $(".load-product-details").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            //takes the item value and calls the Requests controller with the ModalView view to render the modal inside
+            var $itemurl = "ModalView/?id=" + $(this).val()
+            $.ajax({
+                url: $itemurl,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    //replaces the modal-view class with the ModalView view
+                    $(".modal-view").html(data);
+                    //shows the modal
+                    $(".modal").modal('show');
+                    //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                    $(".modal-backdrop").remove();
+                    /* Following two lines should set the correct data-target tab to open ----> not working right now */
+                    var tab = e.relatedTarget.hash;
+                    $('.nav-tabs a[href="' + tab + '"]').tab('show');
+                }
+            });
+            return false;
+        });
+
+    </script>*@

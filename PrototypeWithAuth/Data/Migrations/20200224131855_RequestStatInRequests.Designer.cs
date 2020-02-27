@@ -10,8 +10,8 @@ using PrototypeWithAuth.Data;
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200221073946_RequestRequestStatFK")]
-    partial class RequestRequestStatFK
+    [Migration("20200224131855_RequestStatInRequests")]
+    partial class RequestStatInRequests
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -484,6 +484,8 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ApplicationUserID");
 
+                    b.HasIndex("ProductID");
+
                     b.HasIndex("RequestStatusID");
 
                     b.ToTable("Requests");
@@ -668,6 +670,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
                         .WithMany("Requests")
                         .HasForeignKey("ApplicationUserID");
+
+                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.RequestStatus", "RequestStatus")
                         .WithMany("Requests")

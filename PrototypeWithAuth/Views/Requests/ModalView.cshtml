@@ -1,0 +1,233 @@
+﻿@model PrototypeWithAuth.ViewModels.AddNewItemViewModel
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view">
+
+    <div class="modal-content">
+
+
+        <form asp-action="ModalView" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Request.RequestID" />
+            <!-- Modal Header -->
+            <div class="modal-header border-bottom-0">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                }
+                <h4 class="modal-title"><input asp-for="Request.Product.ProductName" /></h4>
+                <span asp-validation-for="Request.Product.ProductName"></span>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="container-fluid div-tabs">
+
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
+                        <li><a data-toggle="tab" href="#location" class="btn btn-outline-secondary">Location</a></li>
+                        <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary">Price</a></li>
+                        <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
+                        <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="item" class="tab-pane fade in active">
+                            <h3>ITEM</h3>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                                        @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
+                                        new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+                                        "Select Category", new { @class = "form-control", @id = "parentlist" })
+                                        <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group sublist">
+                                        @******NOT WORKING******@
+                                        <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                                        @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
+                                        new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+                                        "Select Subategory", new { @class = "form-control", @id = "sublist" })
+                                        @*<select name="Product.ProductSubcategoryID" id="sublist" class="form-control"></select>*@
+                                        <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">Project:</label>
+                                    <select class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="control-label">Sub Project:</label>
+                                    <select class="form-control"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="Request.Product.Vendor" class="control-label"></label>
+                                    @Html.DropDownListFor(
+                                        vm => vm.Request.Product.VendorID,
+                                        new SelectList(
+                                            Model.Vendors,
+                                            dataValueField: "VendorID",
+                                            dataTextField: "VendorEnName"),
+                                        optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                                        htmlAttributes: new { @class = "form-control" }
+                                    )
+                                    <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">Vendor#</label>
+                                    <input class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label asp-for="Request.OrderNumber" class="control-label"></label>
+                                    <input asp-for="Request.OrderNumber" class="form-control" />
+                                    <span asp-validation-for="Request.OrderNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Request.OrderDate" class="control-label"></label>
+                                    <input asp-for="Request.OrderDate" class="form-control" />
+                                    <span asp-validation-for="Request.OrderDate" class="text-danger" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label asp-for="Request.InvoiceNumber" class="control-label"></label>
+                                    <input asp-for="Request.InvoiceNumber" class="form-control" />
+                                    <span asp-validation-for="Request.InvoiceNumber" class="text-danger" />
+                                </div>
+                                <div class="col-md-6">
+                                    @*Is this diff than order date? where do we get the info?*@
+                                    <label asp-for="Request.OrderDate" class="control-label"></label>
+                                    <input asp-for="Request.OrderDate" class="form-control" />
+                                    <span asp-validation-for="Request.OrderDate" class="text-danger" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label asp-for="Request.CatalogNumber" class="control-label"></label>
+                                    <input asp-for="Request.CatalogNumber" class="form-control" />
+                                    <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    @*Where is this info from?*@
+                                    <label class="control-label">Warranty Month</label>
+                                    <input class="form-control" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    @*Where is this info from?*@
+                                    <label class="control-label">End Date</label>
+                                    <input class="form-control" />
+                                    <span class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    @*Does this program need to keep track how often a product is used*@
+                                    <label class="control-label">Expected supply days</label>
+                                    <input class="form-control" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    @*Does this program need to keep track how often a product is used*@
+                                    <label class="control-label">Expected supply date</label>
+                                    <input class="form-control" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="Request.URL" class="control-label"></label>
+                                    <input asp-for="Request.URL" class="form-control" />
+                                    <span asp-validation-for="Request.URL" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="location" class="tab-pane fade">
+                            <h3>LOCATION</h3>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                        <div id="price" class="tab-pane fade">
+                            <h3>PRICE</h3>
+                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                        </div>
+                        <div id="documents" class="tab-pane fade">
+                            <h3>DOCUMENTS</h3>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">Order Document</label>
+                                    <input type="file" name="document1" id="document1" />
+                                    <span class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="comments" class="tab-pane fade">
+                            <h3>COMMENTS</h3>
+                            <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-outline-primary" />
+                    @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
+                    <button type="button" class="btn btn-outline-info" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+            @*Begin Hidden Inputs:*@
+            @Html.HiddenFor(vm => vm.Request.ProductID)
+            @Html.HiddenFor(vm => vm.Request.Product.VendorID)
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+            @*End Hidden Inputs*@
+
+            @*Hidden Input for Product Subcategory*@
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+        </form>
+
+    </div>
+
+
+</div>
+
+@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+@*This will work for the EDIT (putting in the already loaded product subcategory)*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+       
+        $(document).ready(function () {
+            $("form").hover() {
+                //var parentCategoryId = $("#parentlist").val();
+                //var url = "/Products/GetSubCategoryList";
+
+                //$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                //    var item = "";
+                //    $("#sublist").empty();
+                //    $.each(data, function (i, subCategory) {
+                //        item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                //    });
+                //    $("#sublist").html(item);
+                //});
+
+                //$.fn.LoadCorrectSubcategory();
+                var $correctsub = ("#CorrectSubcategory").val();
+                $(".modal-footer").html("123");
+            };
+        });
+    </script>
+}
