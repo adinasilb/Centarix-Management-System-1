@@ -11,6 +11,7 @@
             <li class="nav-item">
                 @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
                 <button class="btn btn-link load-product-details" data-value="0" data-target="item" href="item">Add Item</button>
+                @Html.ActionLink("Create", "Create", "Requests", new { }, new { @class = "btn btn-link"})
             </li>
             <li class="nav-item">
                 @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = "requests" }, new { @class = "btn btn-link text-dark" })

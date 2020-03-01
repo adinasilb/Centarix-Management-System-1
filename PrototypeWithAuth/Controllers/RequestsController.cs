@@ -28,9 +28,9 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.None)
         {
             //instantiate your list of requests to pass into the index
-            var requests1 = _context.Requests;
+            IQueryable<Request> requests1 = _context.Requests;
             //use an iqueryable (not ienumerable) until its passed in so you can include the vendors and subcategories later on
-            IQueryable<Request> requests4 = null;
+            //IQueryable<Request> requests4 = null;
             //use an enum to determine which page type you are using and fill the data accordingly, 
             //also pass the data through tempdata to the page so you can 
             TempData["PageType"] = PageType;
@@ -42,33 +42,29 @@ namespace PrototypeWithAuth.Controllers
                 var requests2 = requests1.Where(r => r.RequestStatus.RequestStatusDescription == "New");
                 var requests3 = requests1.Where(r => r.RequestStatus.RequestStatusDescription == "Ordered");
                 //partial and clarify?
-                requests4 = requests2.Concat(requests3);
+                requests1 = requests2.Concat(requests3);
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
             else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
             {
                 //partial and clarify?
-                requests4 = requests1.Where(r => r.RequestStatus.RequestStatusDescription == "RecievedAndIsInventory");
+                requests1 = requests1.Where(r => r.RequestStatus.RequestStatusDescription == "RecievedAndIsInventory");
             }
 
             //now that the lists are created sort by vendor or subcategory
             if (vendorID != null)
             {
-                requests4 = requests4
+                requests1 = requests1
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.VendorID == vendorID);
                 //return View(await requests4.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).ToListAsync());
             }
             else if (subcategoryID != null)
             {
-                requests4 = requests4
+                requests1 = requests1
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
                 //return View(await requests4.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).ToListAsync());
-            }
-            else
-            {
-                requests4 = requests1;
             }
             //else
             //{
@@ -76,7 +72,8 @@ namespace PrototypeWithAuth.Controllers
             //    return View(await applicationDbContext.ToListAsync());
             //    //return View(await _context.Requests.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).ToListAsync());
             //}
-            return View(await requests4.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToListAsync());
+            var requests5 = await requests1.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToListAsync();
+            return View(requests5);
             //var applicationDbContext = _context.Requests.Include(r => r.ApplicationUser).Include(r => r.Product).Include(r => r.RequestStatus);
             //return View(await applicationDbContext.ToListAsync());
         }
@@ -306,6 +303,7 @@ namespace PrototypeWithAuth.Controllers
             AddNewItemViewModel addNewItemViewModel = new AddNewItemViewModel
             {
                 Request = _context.Requests.Include(r => r.Product)
+                    //.Include(r => r.RequestStatus) =>not needed as of now
                     .Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .SingleOrDefault(x => x.RequestID == id),
