@@ -135,27 +135,27 @@ namespace PrototypeWithAuth.Data
               new RequestStatus
               {
                   RequestStatusID = 1,
-                  RequestStatusDescription = "New"
+                  RequestStatusDescription = "New" // request page, under new
               },
               new RequestStatus
               {
                   RequestStatusID = 2,
-                  RequestStatusDescription = "Ordered"
+                  RequestStatusDescription = "Ordered" // request page, under order
               },
               new RequestStatus
               {
                   RequestStatusID = 3,
-                  RequestStatusDescription = "RecievedAndIsInventory"
+                  RequestStatusDescription = "RecievedAndIsInventory"  // request page, under recieved (only pass in the first 50) and under Inventory
               },
                new RequestStatus
                {
                    RequestStatusID = 4,
-                   RequestStatusDescription = "Partial"
+                   RequestStatusDescription = "Partial" // request page, under order
                },
                 new RequestStatus
                 {
                     RequestStatusID = 5,
-                    RequestStatusDescription = "Clarify"
+                    RequestStatusDescription = "Clarify" // request page, under order
                 }
              );
 

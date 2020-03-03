@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200303065030_includeUnitsAndUnitType")]
+    partial class includeUnitsAndUnitType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -576,21 +578,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.UnitParentType", b =>
-                {
-                    b.Property<int>("UnitParentTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("UnitParentTypeDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UnitParentTypeID");
-
-                    b.ToTable("UnitParentTypes");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.UnitType", b =>
                 {
                     b.Property<int>("UnitTypeID")
@@ -598,15 +585,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("UnitParentTypeID")
-                        .HasColumnType("int");
-
                     b.Property<string>("UnitTypeDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UnitTypeID");
-
-                    b.HasIndex("UnitParentTypeID");
 
                     b.ToTable("UnitTypes");
                 });
@@ -802,15 +784,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UnitTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.UnitType", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.UnitParentType", "UnitParentType")
-                        .WithMany("UnitTypes")
-                        .HasForeignKey("UnitParentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

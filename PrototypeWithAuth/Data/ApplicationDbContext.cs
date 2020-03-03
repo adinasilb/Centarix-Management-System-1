@@ -25,7 +25,8 @@ namespace PrototypeWithAuth.Data
         public DbSet<Product> Products  { get; set; }
         public DbSet <ProductSubcategory> ProductSubcategories { get; set; }
         public DbSet <ParentCategory> ParentCategories { get; set; }
-
+        public DbSet<UnitType> UnitTypes { get; set; }
+        public DbSet<UnitParentType> UnitParentTypes {get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +38,11 @@ namespace PrototypeWithAuth.Data
             .HasOne<ParentCategory>(ps => ps.ParentCategory)
             .WithMany(pc => pc.ProductSubcategories)
             .HasForeignKey(ps => ps.ParentCategoryID);
+
+            modelBuilder.Entity<UnitType>()
+           .HasOne<UnitParentType>(ut => ut.UnitParentType)
+           .WithMany(upt => upt.UnitTypes)
+           .HasForeignKey(ut => ut.UnitParentTypeID);
 
             modelBuilder.Entity<Request>()
             .HasOne<ApplicationUser>(r => r.ApplicationUser)
