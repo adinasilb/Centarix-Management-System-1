@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -20,8 +21,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
+            TempData["PageType"] = PageType;
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory);
             return View(await applicationDbContext.ToListAsync());
         }

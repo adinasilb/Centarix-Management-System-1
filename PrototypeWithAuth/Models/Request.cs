@@ -51,7 +51,7 @@ namespace PrototypeWithAuth.Models
         public string CatalogNumber { get; set; }
         public string SerialNumber { get; set; }
         public string URL { get; set; }
-        //public string ExpenseDiscription { get; set; } - this is really the product name - so when view products, only return those with a specific subcategoryID,
+        //public string ExpenseDescription { get; set; } - this is really the product name - so when view products, only return those with a specific subcategoryID,
 
         public byte Warranty { get; set; } // will need to cast it to datetime when calulating the end date, in the front end
 

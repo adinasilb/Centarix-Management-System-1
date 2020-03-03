@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 
@@ -20,8 +21,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Vendors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
+            TempData["PageType"] = PageType;
             return View(await _context.Vendors.ToListAsync());
         }
 

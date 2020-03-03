@@ -1,20 +1,34 @@
 ﻿@model IEnumerable<PrototypeWithAuth.Models.ProductSubcategory>
+@using PrototypeWithAuth.AppData
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/View.cshtml";
+    var pagetype = TempData["PageType"];
+    //if (pagetype.Equals(AppUtility.RequestPageTypeEnum.Request))
+    //{
+    //    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    //}
+    //else if (pagetype.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    //{
+    //    Layout = "~/Views/Shared/InventoryNavView.cshtml";
+    //}
+    //else
+    //{
+    //    Layout = "~/Views/Shared/View.cshtml";
+    //}
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
 <table class="table">
     <tbody>
-@foreach (var item in Model) {
-        
-        <tr>
-            <td>
-                
-                @Html.ActionLink(item.ProductSubcategoryDescription, "Index", "Products", new { subcategoryID = @item.ProductSubcategoryID}, null)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+
+                    @Html.ActionLink(item.ProductSubcategoryDescription, "Index", "Requests", new { @subcategoryID = @item.ProductSubcategoryID, @PageType = pagetype }, null)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

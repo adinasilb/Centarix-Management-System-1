@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<PrototypeWithAuth.Models.Vendor>
+@using PrototypeWithAuth.AppData
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/InventoryNavView.cshtml";
+    string pageType = TempData["PageType"].ToString();
 }
 
 <h1>Index</h1>
@@ -61,7 +63,7 @@
                 </td>
                 <td>
 
-                    @Html.ActionLink("orders", "Index", "Products", new { vendorID = @item.VendorID }, null)
+                    @Html.ActionLink("orders", "Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |
