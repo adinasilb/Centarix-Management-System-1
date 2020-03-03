@@ -147,6 +147,10 @@ namespace PrototypeWithAuth.Controllers
 
             viewModel.Request.Product = new Product(); // have to instantaiate the product from the requests, because the viewModel relies on request.product to create the new product
 
+            //adding a tempdata so the testing in the requestnavview layout page will work (better to create a base controller for temp data and store it there)
+            //https://stackoverflow.com/questions/37267586/how-to-check-condition-if-temp-data-has-value-in-every-controller
+            //if putting it here should get from somewhere and not just make it up...
+            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
             return View(viewModel);
         }
 

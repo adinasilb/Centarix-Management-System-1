@@ -50,13 +50,10 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group sublist">
-                                        @******NOT WORKING******@
                                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-                                        <input asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" disabled="disabled" class="form-control-plaintext" />
                                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
                                         new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
                                         "Select Subcategory", new { @class = "form-control", @id = "sublist" })
-                                        @*<select name="Product.ProductSubcategoryID" id="sublist" class="form-control"></select>*@
                                         <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -239,6 +236,7 @@
             @Html.HiddenFor(vm => vm.Request.ProductID)
             @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
             @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+            @Html.HiddenFor(vm => vm.Request.RequestStatusID)
             @*End Hidden Inputs*@
 
             @*Hidden Input for Product Subcategory*@

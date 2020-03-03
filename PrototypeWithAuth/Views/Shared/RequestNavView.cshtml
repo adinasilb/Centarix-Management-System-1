@@ -21,7 +21,7 @@
             <li class="nav-item">
                 @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
                 <button class="btn btn-link load-product-details" data-value="0" data-target="item" href="item">Add Item</button>
-                @Html.ActionLink("Create", "Create", "Requests", new { }, new { @class = "btn btn-link"})
+                @Html.ActionLink("Create", "Create", "Requests", new { }, new { @class = "btn btn-link" })
             </li>
             <li class="nav-item">
                 @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageTypeString }, new { @class = "btn btn-link text-dark" })
@@ -49,6 +49,7 @@
 
 @RenderSection("Scripts", required: false)
 <script>
+
     //Render a partial view inside of a modal
     //To do later: add a loading gif div
     $(".load-product-details").on("click", function (e) {
@@ -84,18 +85,18 @@
                 $("#tabs").tab({ selected: selectedTab });
                 //document.ready for modal is done here --> setting up product subcategories
                 var parentCategoryId = $("#parentlist").val();
+                var subcategoryId1 = $("#sublist").val();
                 var url = "/Products/GetSubCategoryList";
 
                 $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
                     var item = "";
-                    $("#sublist").empty();
                     $.each(data, function (i, subCategory) {
                         item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
                     });
                     $("#sublist").html(item);
+                    $("#sublist").val(subcategoryId1).change();
                 });
-                
-                $.fn.LoadCorrectSubcategory();
+
             }
         });
     }

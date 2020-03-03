@@ -37,6 +37,10 @@
             @Html.HiddenFor(r => r.Request.Product.ProductID)
 
 
+            @Html.HiddenFor(m => m.Request.Product.ProductSubcategory.ProductSubcategoryID)
+            @Html.HiddenFor(m => m.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+
+
             <div class="form-group">
                 <label asp-for="Request.Product.ProductName" class="control-label"></label>
                 <input asp-for="Request.Product.ProductName" class="form-control" />

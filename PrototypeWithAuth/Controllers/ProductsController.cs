@@ -137,6 +137,14 @@ namespace PrototypeWithAuth.Controllers
             return Json(subCategoryList);
 
         }
+        [HttpGet]
+        public JsonResult GetSubCategoryListWithPreviousSubcategoryId(int ParentCategoryId, int SubcategoryId)
+        {
+            var subCategoryListTop1 = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).Where(c => c.ProductSubcategoryID == SubcategoryId).ToList();
+            var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).Where(c => c.ProductSubcategoryID != SubcategoryId).ToList();
+            var OrderedList = subCategoryListTop1.Concat(subCategoryList);
+            return Json(OrderedList);
+        }
 
         // POST: Products/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
