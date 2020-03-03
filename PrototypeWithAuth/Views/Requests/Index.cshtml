@@ -1,9 +1,20 @@
 ﻿@model IEnumerable<PrototypeWithAuth.Models.Request>
+@using PrototypeWithAuth.AppData
 
 @{
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+
+    int vendorID = 0; int subcategoryID = 0;
+    if (TempData["VendorID"] != null)
+    {
+        vendorID = (int)TempData["VendorID"];
+    }
+    else if (TempData["SubcategoryID"] != null)
+    {
+        subcategoryID = (int)TempData["SubcategoryID"];
+    }
 }
 
 @*<h1>Index</h1>
@@ -11,6 +22,25 @@
     <p>
         <a asp-action="Create">Create New</a>
     </p>*@
+@if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Request))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-inline">
+                <li class="list-inline-item nav-fill">
+                    @Html.ActionLink("New", "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
+                </li>
+                <li class="list-inline-item nav-fill">
+                    @Html.ActionLink("Ordered", "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
+                </li>
+                <li class="list-inline-item nav-fill">
+                    @Html.ActionLink("Received", "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+<hr />
 <table class="table table-striped">
     <thead>
         <tr>
@@ -29,22 +59,22 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>Product Image</td>
-            <td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
-            <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName)</td>
-            <td>Placeholder</td> @*Computed column?*@
-            <td>@Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription)</td>
-            <td>@Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)</td>
-            <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
-            @*here for testing purposes*@
-            <td>@Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusDescription)</td>
-            <td>
-                <a asp-action="Received" asp-route-id="@item.RequestID">Received</a> |
-                <!-- Button to Open the Modal -->
-                <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">Edit</button>
-            </td>
-        </tr>
+            <tr>
+                <td>Product Image</td>
+                <td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName)</td>
+                <td>Placeholder</td> @*Computed column?*@
+                <td>@Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription)</td>
+                <td>@Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)</td>
+                <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                @*here for testing purposes*@
+                <td>@Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusDescription)</td>
+                <td>
+                    <a asp-action="Received" asp-route-id="@item.RequestID">Received</a> |
+                    <!-- Button to Open the Modal -->
+                    <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">Edit</button>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

@@ -59,5 +59,29 @@ namespace PrototypeWithAuth.AppData
             }
             return sReturn;
         }
+
+        //this checks if a list is empty
+        //right now used in the requestscontroller -> index
+        public static Boolean IsEmpty<T>(this IEnumerable<T> source)
+        {
+            if (source == null)
+                return true; // or throw an exception
+            return !source.Any();
+        }
+
+        //combines two lists first checking if one is empty so it doesn't get an error
+        public static IQueryable<Request> CombineTwoRequestsLists(IQueryable<Request> RequestListToCheck, IQueryable<Request> FullRequestList)
+        {
+            IQueryable<Request> ReturnList = null;
+            if (!RequestListToCheck.IsEmpty())
+            {
+                ReturnList = RequestListToCheck.Concat(FullRequestList);
+            }
+            else
+            {
+                ReturnList = FullRequestList;
+            }
+            return ReturnList;
+        }
     }
 }

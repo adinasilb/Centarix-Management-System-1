@@ -25,57 +25,74 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.None)
+        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             //instantiate your list of requests to pass into the index
-            IQueryable<Request> requests1 = _context.Requests;
-            //use an iqueryable (not ienumerable) until its passed in so you can include the vendors and subcategories later on
-            //IQueryable<Request> requests4 = null;
+            IQueryable<Request> fullRequestsList = _context.Requests;
+            //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
+            IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             //use an enum to determine which page type you are using and fill the data accordingly, 
             //also pass the data through tempdata to the page so you can 
             TempData["PageType"] = PageType;
             //if it is a request page --> get all the requests with a new or ordered request status
             if (PageType == AppUtility.RequestPageTypeEnum.Request)
             {
-                //get all the requests that go on the request page
-                //do i have to include requeststatus somewhere here? or is it ok that i included it before?
-                var requests2 = requests1.Where(r => r.RequestStatus.RequestStatusDescription == "New");
-                var requests3 = requests1.Where(r => r.RequestStatus.RequestStatusDescription == "Ordered");
+                /*
+                 * In order to combine all the requests each one needs to be in a separate list
+                 * Then you need to union them one at a time into separate variables
+                 * you only need the separate union variable in order for the union to work
+                 * and the original queries are on separate lists because each is querying the full database with a separate where
+                 */
+                IQueryable<Request> newRequestsList1 = Enumerable.Empty<Request>().AsQueryable();
+                IQueryable<Request> newRequestsList2 = Enumerable.Empty<Request>().AsQueryable();
+                IQueryable<Request> newRequestsList3 = Enumerable.Empty<Request>().AsQueryable();
+                //if there is no specifed RequestStatusID it will get all of them otherwise it will just get the one specified
+                if (RequestStatusID == null || RequestStatusID == 1)
+                {
+                    newRequestsList1 = fullRequestsList.Where(r => r.RequestStatusID == 1);
+                    RequestsPassedIn = newRequestsList1;
+                }
+                if (RequestStatusID == null || RequestStatusID == 2)
+                {
+                    newRequestsList2 = fullRequestsList.Where(r => r.RequestStatusID == 2);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, newRequestsList2);
+                }
                 //partial and clarify?
-                requests1 = requests2.Concat(requests3);
+                if (RequestStatusID == null || RequestStatusID == 3)
+                {
+                    newRequestsList3 = fullRequestsList.Where(r => r.RequestStatusID == 3).Take(100);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, newRequestsList3);
+                }
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
             else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
             {
                 //partial and clarify?
-                requests1 = requests1.Where(r => r.RequestStatus.RequestStatusDescription == "RecievedAndIsInventory");
+                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusDescription == "RecievedAndIsInventory");
+            }
+            else
+            {
+                RequestsPassedIn = fullRequestsList;
             }
 
             //now that the lists are created sort by vendor or subcategory
-            if (vendorID != null)
+            if (vendorID > 0)
             {
-                requests1 = requests1
+                RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.VendorID == vendorID);
-                //return View(await requests4.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).ToListAsync());
+                //pass the vendorID into the temp data to use if you'd like to sort from there
+                TempData["VendorID"] = vendorID;
             }
-            else if (subcategoryID != null)
+            else if (subcategoryID > 0)
             {
-                requests1 = requests1
+                RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
-                //return View(await requests4.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).ToListAsync());
+                //pass the subcategoryID into the temp data to use if you'd like to sort from there
+                TempData["SubcategoryID"] = subcategoryID;
             }
-            //else
-            //{
-            //    var applicationDbContext = _context.Requests.Include(r => r.ApplicationUser).Include(r => r.Product).Include(r => r.RequestStatus).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor);
-            //    return View(await applicationDbContext.ToListAsync());
-            //    //return View(await _context.Requests.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).ToListAsync());
-            //}
-            var requests5 = await requests1.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToListAsync();
-            return View(requests5);
-            //var applicationDbContext = _context.Requests.Include(r => r.ApplicationUser).Include(r => r.Product).Include(r => r.RequestStatus);
-            //return View(await applicationDbContext.ToListAsync());
+            return View(await RequestsPassedIn.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToListAsync());
         }
 
         // GET: Requests/Details/5

@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
@@ -27,10 +28,14 @@
                 <div class="container-fluid">
                     <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left">
                         <li class="nav-item nav-fill">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="IndexCopy">Inventory</a>
+                            @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = "btn btn-link text-dark" })
                         </li>
                         <li class="nav-item nav-fill">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Requests" asp-action="Index">Requests</a>
+                            @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-link text-dark" })
+                        </li>
+                        @*Here for testing purposes*@
+                        <li class="nav-item nav-fill">
+                            @Html.ActionLink("Products", "IndexCopy", "Products", new { }, new { @class = "btn btn-link text-dark" })
                         </li>
                     </ul>
                 </div>
