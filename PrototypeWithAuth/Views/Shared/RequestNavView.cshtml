@@ -2,6 +2,16 @@
 @{
     ViewData["Title"] = "RequestNavView";
     Layout = "~/Views/Shared/View.cshtml";
+
+    AppUtility.RequestPageTypeEnum pageTypeString = AppUtility.RequestPageTypeEnum.None;
+    if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Request))
+    {
+        pageTypeString = AppUtility.RequestPageTypeEnum.Request;
+    }
+    else if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    {
+        pageTypeString = AppUtility.RequestPageTypeEnum.Inventory;
+    }
 }
 @*  *@
 <div class="row">
@@ -14,10 +24,10 @@
                 @Html.ActionLink("Create", "Create", "Requests", new { }, new { @class = "btn btn-link"})
             </li>
             <li class="nav-item">
-                @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = "requests" }, new { @class = "btn btn-link text-dark" })
+                @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageTypeString }, new { @class = "btn btn-link text-dark" })
             </li>
             <li class="nav-item">
-                @Html.ActionLink("Vendor", "Index", "Vendors", new { }, new { @class = "btn btn-link text-dark" })
+                @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageTypeString }, new { @class = "btn btn-link text-dark" })
             </li>
             <li class="nav-item">
                 @Html.ActionLink("Owner", "Index", "Owners", new { }, new { @class = "btn btn-link text-dark" })

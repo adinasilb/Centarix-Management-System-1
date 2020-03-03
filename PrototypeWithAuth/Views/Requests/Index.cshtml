@@ -15,6 +15,8 @@
     {
         subcategoryID = (int)TempData["SubcategoryID"];
     }
+
+    string PageType = TempData["PageType"].ToString();
 }
 
 @*<h1>Index</h1>
@@ -22,7 +24,7 @@
     <p>
         <a asp-action="Create">Create New</a>
     </p>*@
-@if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Request))
+@if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
 {
     <div class="row">
         <div class="col-md-12">

@@ -1,20 +1,22 @@
 ﻿@model IEnumerable<PrototypeWithAuth.Models.ProductSubcategory>
+@using PrototypeWithAuth.AppData
 
 @{
     ViewData["Title"] = "Index";
-    string pagetype = TempData["PageType"].ToString();
-    if (pagetype == "requests")
-    {
-        Layout = "~/Views/Shared/RequestNavView.cshtml";
-    }
-    else if (pagetype == "inventory")
-    {
-        Layout = "~/Views/Shared/InventoryNavView.cshtml";
-    }
-    else
-    {
-        Layout = "~/Views/Shared/View.cshtml";
-    }
+    var pagetype = TempData["PageType"];
+    //if (pagetype.Equals(AppUtility.RequestPageTypeEnum.Request))
+    //{
+    //    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    //}
+    //else if (pagetype.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    //{
+    //    Layout = "~/Views/Shared/InventoryNavView.cshtml";
+    //}
+    //else
+    //{
+    //    Layout = "~/Views/Shared/View.cshtml";
+    //}
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
 <table class="table">
