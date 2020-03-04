@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.Data
         }
         public DbSet<RequestStatus> RequestStatuses { get; set; }
         public DbSet<Request> Requests { get; set; }
+        public DbSet<ParentRequest> ParentRequests { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Product> Products  { get; set; }
         public DbSet <ProductSubcategory> ProductSubcategories { get; set; }
@@ -44,9 +45,9 @@ namespace PrototypeWithAuth.Data
            .WithMany(upt => upt.UnitTypes)
            .HasForeignKey(ut => ut.UnitParentTypeID);
 
-            modelBuilder.Entity<Request>()
-            .HasOne<ApplicationUser>(r => r.ApplicationUser)
-            .WithMany(au => au.Requests)
+            modelBuilder.Entity<ParentRequest>()
+            .HasOne<ApplicationUser>(pr => pr.ApplicationUser)
+            .WithMany(au => au.ParentRequests)
             .HasForeignKey(r => r.ApplicationUserID);
 
             //modelBuilder.Entity<Request>()

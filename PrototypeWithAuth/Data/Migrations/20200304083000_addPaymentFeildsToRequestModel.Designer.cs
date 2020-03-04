@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200304083000_addPaymentFeildsToRequestModel")]
+    partial class addPaymentFeildsToRequestModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,35 +265,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
-                {
-                    b.Property<int>("ParentRequestID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("InvoiceDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("InvoiceNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("OrderNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("ParentRequestID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.ToTable("ParentRequests");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
                 {
                     b.Property<int>("ProductID")
@@ -468,6 +441,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("AmountWithOutLocation")
                         .HasColumnType("int");
 
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
 
@@ -483,10 +459,19 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<byte>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvoiceNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("LocationID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParentRequestID")
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderNumber")
                         .HasColumnType("int");
 
                     b.Property<bool>("Payed")
@@ -545,7 +530,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("RequestID");
 
-                    b.HasIndex("ParentRequestID");
+                    b.HasIndex("ApplicationUserID");
 
                     b.HasIndex("ProductID");
 
@@ -772,14 +757,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany("ParentRequests")
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.ProductSubcategory", "ProductSubcategory")
@@ -806,11 +783,10 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
                         .WithMany("Requests")
-                        .HasForeignKey("ParentRequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Product", "Product")
                         .WithMany("Requests")

@@ -42,22 +42,22 @@
             @Html.DisplayFor(model => model.AmountWithOutLocation)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApplicationUser)
+            @Html.DisplayNameFor(model => model.ParentRequest.ApplicationUser)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApplicationUser.Id)
+            @Html.DisplayFor(model => model.ParentRequest.ApplicationUser.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderDate)
+            @Html.DisplayNameFor(model => model.ParentRequest.OrderDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderDate)
+            @Html.DisplayFor(model => model.ParentRequest.OrderDate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderNumber)
+            @Html.DisplayNameFor(model => model.ParentRequest.OrderNumber)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderNumber)
+            @Html.DisplayFor(model => model.ParentRequest.OrderNumber)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Quantity)
@@ -78,10 +78,10 @@
             @Html.DisplayFor(model => model.WithOrder)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.InvoiceNumber)
+            @Html.DisplayNameFor(model => model.ParentRequest.InvoiceNumber)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.InvoiceNumber)
+            @Html.DisplayFor(model => model.ParentRequest.InvoiceNumber)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CatalogNumber)

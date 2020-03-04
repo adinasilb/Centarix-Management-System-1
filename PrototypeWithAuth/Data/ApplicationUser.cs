@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.Data
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public IEnumerable<Request> Requests { get; set;}
+        public IEnumerable<ParentRequest> ParentRequests { get; set;}
 
 
         // public string URLPic { get; set; }

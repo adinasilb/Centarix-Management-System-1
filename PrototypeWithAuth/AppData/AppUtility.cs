@@ -11,20 +11,20 @@ namespace PrototypeWithAuth.AppData
     {
 
         public enum RequestPageTypeEnum { None, Request, Inventory }
-        
-        public static Request CheckRequestForNullsAndReplace(Request request)
-        {
-            request.LocationID = ReplaceIntValueIfNull(request.LocationID);
-            request.AmountWithInLocation = ReplaceIntValueIfNull(request.AmountWithInLocation);
-            request.AmountWithOutLocation = ReplaceIntValueIfNull(request.AmountWithOutLocation);
-            request.OrderNumber = ReplaceIntValueIfNull(request.OrderNumber);
-            request.Quantity = ReplaceIntValueIfNull(request.Quantity);
-            request.InvoiceNumber = ReplaceStringValueIfNull(request.InvoiceNumber);
-            request.CatalogNumber = ReplaceStringValueIfNull(request.CatalogNumber);
-            request.SerialNumber = ReplaceStringValueIfNull(request.SerialNumber);
-            request.URL = ReplaceStringValueIfNull(request.URL);
-            return request;
-        }
+
+        //public static Request CheckRequestForNullsAndReplace(Request request)
+        //{
+        //    request.LocationID = ReplaceIntValueIfNull(request.LocationID);
+        //    request.AmountWithInLocation = ReplaceIntValueIfNull(request.AmountWithInLocation);
+        //    request.AmountWithOutLocation = ReplaceIntValueIfNull(request.AmountWithOutLocation);
+        //    ParentRequest.OrderNumber = ReplaceIntValueIfNull(request.OrderNumber);
+        //    request.Quantity = ReplaceIntValueIfNull(request.Quantity);
+        //    request.InvoiceNumber = ReplaceStringValueIfNull(request.InvoiceNumber);
+        //    request.CatalogNumber = ReplaceStringValueIfNull(request.CatalogNumber);
+        //    request.SerialNumber = ReplaceStringValueIfNull(request.SerialNumber);
+        //    request.URL = ReplaceStringValueIfNull(request.URL);
+        //    return request;
+        //}
 
         public static Product CheckProductForNullsAndReplace(Product product)
         {

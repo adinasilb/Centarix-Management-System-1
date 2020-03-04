@@ -14,6 +14,8 @@ namespace PrototypeWithAuth.Models
         public int RequestID { get; set; }
         public int ProductID { get; set; }
         public Product Product { get; set; }
+        public int ParentRequestID { get; set; }
+        public ParentRequest ParentRequest { get; set; }
         public int? LocationID { get; set; } // if status is recieved; then LocationID is required (have to make a custom rule)
         public int? RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }
@@ -33,21 +35,10 @@ namespace PrototypeWithAuth.Models
         public UnitType SubSubUnitType { get; set; }
         public int UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
         public int UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
-        public string ApplicationUserID { get; set; }
-
-        [ForeignKey("ApplicationUserID")]
-        public ApplicationUser ApplicationUser { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime OrderDate { get; set; }
-        public int? OrderNumber { get; set; }
         public int Quantity { get; set; }
         public double Cost { get; set; }
         public bool WithOrder { get; set; }
-        public string InvoiceNumber { get; set; }
-        
-        [DataType(DataType.Date)]
-        public DateTime InvoiceDate { get; set; }
+
         public string CatalogNumber { get; set; }
         public string SerialNumber { get; set; }
         public string URL { get; set; }
@@ -55,11 +46,16 @@ namespace PrototypeWithAuth.Models
 
         public byte Warranty { get; set; } // will need to cast it to datetime when calulating the end date, in the front end
 
+        public double VAT = 0.17; // should this be coded into the model or should we set it elsewhere?
+        public double Discount { get; set; }
+        public bool Payed { get; set; }
+        public int Payments { get; set; } //number of installments
         public byte ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
         public string RequestComment { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime ArrivalDate { get; set; } 
+
 
     }
 }
