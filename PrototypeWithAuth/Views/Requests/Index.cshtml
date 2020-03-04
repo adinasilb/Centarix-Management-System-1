@@ -41,13 +41,13 @@
         <div class="col-md-12">
             <ul class="list-inline">
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
+                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark new-button" })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
+                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark ordered-button" })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
+                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark received-button" })
                 </li>
             </ul>
         </div>
@@ -94,3 +94,14 @@
 
 <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
+<script>
+    $(document).ready(function () {
+        var $newButton = $(".new-button");
+        var $receivedButton = $(".received-button");
+        var $orderedButton = $(".ordered-button");
+        $(".new-button").click(function () {
+            console.log("entered the click!");
+        });
+    });
+</script>
