@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.AddNewItemViewModel
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -100,18 +100,18 @@
                 <span asp-validation-for="Request.AmountWithOutLocation" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Request.ApplicationUserID" class="control-label"></label>
-                <select asp-for="Request.ApplicationUserID" class="form-control" asp-items="ViewBag.ApplicationUserID"></select>
+                <label asp-for="Request.ParentRequest.ApplicationUserID" class="control-label"></label>
+                <select asp-for="Request.ParentRequest.ApplicationUserID" class="form-control" asp-items="ViewBag.ParentRequest.ApplicationUserID"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Request.OrderDate" class="control-label"></label>
-                <input asp-for="Request.OrderDate" class="form-control" />
-                <span asp-validation-for="Request.OrderDate" class="text-danger"></span>
+                <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
+                <input asp-for="Request.ParentRequest.OrderDate" class="form-control" />
+                <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Request.OrderNumber" class="control-label"></label>
-                <input asp-for="Request.OrderNumber" class="form-control" />
-                <span asp-validation-for="Request.OrderNumber" class="text-danger"></span>
+                <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
+                <input asp-for="Request.ParentRequest.OrderNumber" class="form-control" />
+                <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Request.Quantity" class="control-label"></label>
@@ -129,9 +129,9 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Request.InvoiceNumber" class="control-label"></label>
-                <input asp-for="Request.InvoiceNumber" class="form-control" />
-                <span asp-validation-for="Request.InvoiceNumber" class="text-danger"></span>
+                <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
+                <input asp-for="Request.ParentRequest.InvoiceNumber" class="form-control" />
+                <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Request.CatalogNumber" class="control-label"></label>

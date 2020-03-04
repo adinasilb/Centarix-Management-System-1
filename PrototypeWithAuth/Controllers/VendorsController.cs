@@ -20,6 +20,8 @@ namespace PrototypeWithAuth.Controllers
             _context = context;
         }
 
+
+
         // GET: Vendors
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
@@ -150,6 +152,14 @@ namespace PrototypeWithAuth.Controllers
         private bool VendorExists(int id)
         {
             return _context.Vendors.Any(e => e.VendorID == id);
+        }
+
+        //Get the Json of the vendor business id from the vendor id so JS (site.js) can auto load the form-control with the newly requested vendor
+        [HttpGet] //send a json to that the subcategory list is filered
+        public JsonResult GetVendorBusinessID(int VendorID)
+        {
+            Vendor vendor = _context.Vendors.SingleOrDefault(v => v.VendorID == VendorID);
+            return Json(vendor);
         }
     }
 }

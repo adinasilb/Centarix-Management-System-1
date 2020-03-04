@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.AddNewItemViewModel
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
@@ -97,26 +97,26 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label asp-for="Request.OrderNumber" class="control-label"></label>
-                                    <input asp-for="Request.OrderNumber" class="form-control" />
-                                    <span asp-validation-for="Request.OrderNumber" class="text-danger"></span>
+                                    <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
+                                    <input asp-for="Request.ParentRequest.OrderNumber" class="form-control" />
+                                    <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6">
-                                    <label asp-for="Request.OrderDate" class="control-label"></label>
-                                    <input asp-for="Request.OrderDate" class="form-control" />
-                                    <span asp-validation-for="Request.OrderDate" class="text-danger" />
+                                    <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
+                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control" />
+                                    <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label asp-for="Request.InvoiceNumber" class="control-label"></label>
-                                    <input asp-for="Request.InvoiceNumber" class="form-control" />
-                                    <span asp-validation-for="Request.InvoiceNumber" class="text-danger" />
+                                    <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
+                                    <input asp-for="Request.ParentRequest.InvoiceNumber" class="form-control" />
+                                    <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
                                 </div>
                                 <div class="col-md-6">
-                                    <label asp-for="Request.InvoiceDate" class="control-label"></label>
-                                    <input asp-for="Request.InvoiceDate" class="form-control" />
-                                    <span asp-validation-for="Request.InvoiceDate" class="text-danger" />
+                                    <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
+                                    <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control" />
+                                    <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
                                 </div>
                             </div>
                             <div class="row">
@@ -135,7 +135,7 @@
                                     @{ 
                                         //get this just to return the date (not the time)
                                         //adding the amount of months of the warranty to the invoice date
-                                        var endWarrantyDate = Model.Request.InvoiceDate.AddMonths(Model.Request.Warranty).Date;
+                                        var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty).Date;
                                     }
                                     <input value="@endWarrantyDate" class="form-control-plaintext" disabled="disabled" />
                                 </div>
@@ -150,7 +150,7 @@
                                     @{
                                         //get this just to return the date (not the time)
                                         //adding the amount of months of the expected supply days to the invoice date
-                                        var endSupplyDate = Model.Request.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
+                                        var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
                                     }
                                     <label class="control-label">Expected supply date</label>
                                     <input value="@endSupplyDate" class="form-control-plaintext" disabled="disabled" />

@@ -27,136 +27,14 @@ namespace PrototypeWithAuth.Controllers
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory);
             return View(await applicationDbContext.ToListAsync());
         }
-
-        /*// GET: ProductSubcategories/Details/5
-        public async Task<IActionResult> Details(int? id)
+        
+        [HttpGet] //send a json to that the subcategory list is filered
+        public JsonResult GetSubCategoryList(int ParentCategoryId)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
+            return Json(subCategoryList);
 
-            var productSubcategory = await _context.ProductSubcategories
-                .Include(p => p.ParentCategory)
-                .FirstOrDefaultAsync(m => m.ProductSubcategoryID == id);
-            if (productSubcategory == null)
-            {
-                return NotFound();
-            }
-
-            return View(productSubcategory);
         }
 
-        // GET: ProductSubcategories/Create
-        public IActionResult Create()
-        {
-            ViewData["ParentCategoryID"] = new SelectList(_context.ParentCategories, "ParentCategoryID", "ParentCategoryDescription");
-            return View();
-        }
-
-        // POST: ProductSubcategories/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductSubcategoryID,ParentCategoryID,ProductSubcategoryDescription")] ProductSubcategory productSubcategory)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(productSubcategory);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ParentCategoryID"] = new SelectList(_context.ParentCategories, "ParentCategoryID", "ParentCategoryDescription", productSubcategory.ParentCategoryID);
-            return View(productSubcategory);
-        }
-
-        // GET: ProductSubcategories/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var productSubcategory = await _context.ProductSubcategories.FindAsync(id);
-            if (productSubcategory == null)
-            {
-                return NotFound();
-            }
-            ViewData["ParentCategoryID"] = new SelectList(_context.ParentCategories, "ParentCategoryID", "ParentCategoryDescription", productSubcategory.ParentCategoryID);
-            return View(productSubcategory);
-        }
-
-        // POST: ProductSubcategories/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductSubcategoryID,ParentCategoryID,ProductSubcategoryDescription")] ProductSubcategory productSubcategory)
-        {
-            if (id != productSubcategory.ProductSubcategoryID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(productSubcategory);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductSubcategoryExists(productSubcategory.ProductSubcategoryID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ParentCategoryID"] = new SelectList(_context.ParentCategories, "ParentCategoryID", "ParentCategoryDescription", productSubcategory.ParentCategoryID);
-            return View(productSubcategory);
-        }
-
-        // GET: ProductSubcategories/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var productSubcategory = await _context.ProductSubcategories
-                .Include(p => p.ParentCategory)
-                .FirstOrDefaultAsync(m => m.ProductSubcategoryID == id);
-            if (productSubcategory == null)
-            {
-                return NotFound();
-            }
-
-            return View(productSubcategory);
-        }
-
-        // POST: ProductSubcategories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var productSubcategory = await _context.ProductSubcategories.FindAsync(id);
-            _context.ProductSubcategories.Remove(productSubcategory);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProductSubcategoryExists(int id)
-        {
-            return _context.ProductSubcategories.Any(e => e.ProductSubcategoryID == id);
-        }*/
     }
 }

@@ -131,7 +131,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             var request = await _context.Requests
-                .Include(r => r.ApplicationUser)
+                .Include(r => r.ParentRequest.ApplicationUser)
                 .Include(r => r.Product)
                 .Include(r => r.RequestStatus)
                 .FirstOrDefaultAsync(m => m.RequestID == id);
@@ -161,18 +161,19 @@ namespace PrototypeWithAuth.Controllers
             var parentCategories = _context.ParentCategories.ToList();
             var productSubcategories = _context.ProductSubcategories.ToList();
             var vendors = _context.Vendors.ToList();
-            var requeststatutes = _context.RequestStatuses.ToList();
+            var requeststatuses = _context.RequestStatuses.ToList();
 
-            var viewModel = new AddNewItemViewModel
+            var viewModel = new RequestItemViewModel
             {
                 ParentCategories = parentCategories,
                 ProductSubcategories = productSubcategories,
                 Vendors = vendors,
-                RequestStatuses = requeststatutes,
+                RequestStatuses = requeststatuses,
                 Request = new Request()
             };
 
             viewModel.Request.Product = new Product(); // have to instantaiate the product from the requests, because the viewModel relies on request.product to create the new product
+            viewModel.Request.ParentRequest = new ParentRequest();
 
             //adding a tempdata so the testing in the requestnavview layout page will work (better to create a base controller for temp data and store it there)
             //https://stackoverflow.com/questions/37267586/how-to-check-condition-if-temp-data-has-value-in-every-controller
@@ -197,7 +198,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddNewItemViewModel AddNewItemViewModelObj)
+
+        //CREATE PARENTREQUEST!!!!!!!!!
+
+
+
+        public async Task<IActionResult> Create(RequestItemViewModel AddNewItemViewModelObj)
         {
             //insert the lists of parentcategories, productcategories, and vendors into the view model object for validation purposes and to return the same view if needed
             var parentCategories = _context.ParentCategories.ToList();
@@ -210,14 +216,14 @@ namespace PrototypeWithAuth.Controllers
             AddNewItemViewModelObj.RequestStatuses = requeststatuses;
 
             // view data is placed in the beginning in order to redirect when errors are caught, so need to have the info saved before handling the error
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ApplicationUserID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ParentRequest.ApplicationUserID);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", AddNewItemViewModelObj.Request.ProductID);
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", AddNewItemViewModelObj.Request.RequestStatusID);
 
             //inserting the vendor from the vendor id, the subcategory from the subcategory id and the application user from the application user id to test for the viewmodel validation
             AddNewItemViewModelObj.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == AddNewItemViewModelObj.Request.Product.VendorID);
             AddNewItemViewModelObj.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == AddNewItemViewModelObj.Request.Product.ProductSubcategoryID);
-            AddNewItemViewModelObj.Request.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == AddNewItemViewModelObj.Request.ApplicationUserID);
+            AddNewItemViewModelObj.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == AddNewItemViewModelObj.Request.ParentRequest.ApplicationUserID);
 
             //using the dataannotations validator to test the updated object because modelstate.isvalid only looks at the stack trace that was passed in 
             var context = new ValidationContext(AddNewItemViewModelObj.Request, null, null);
@@ -245,7 +251,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return NotFound();
             }
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ApplicationUserID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ParentRequest.ApplicationUserID);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
             return View(request);
@@ -255,7 +261,7 @@ namespace PrototypeWithAuth.Controllers
         //This is not being used right now --> delete 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(AddNewItemViewModel addNewItemViewModel)
+        public async Task<IActionResult> Edit(RequestItemViewModel addNewItemViewModel)
         {
             //same logic as create controller
             addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
@@ -265,7 +271,7 @@ namespace PrototypeWithAuth.Controllers
 
             addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
             addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
-            addNewItemViewModel.Request.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ApplicationUserID);
+            addNewItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
 
             var context = new ValidationContext(addNewItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
@@ -299,7 +305,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             var request = await _context.Requests
-                .Include(r => r.ApplicationUser)
+                .Include(r => r.ParentRequest.ApplicationUser)
                 .Include(r => r.Product)
                 .Include(r => r.RequestStatus)
                 .FirstOrDefaultAsync(m => m.RequestID == id);
@@ -348,7 +354,7 @@ namespace PrototypeWithAuth.Controllers
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
 
-            AddNewItemViewModel addNewItemViewModel = new AddNewItemViewModel
+            RequestItemViewModel addNewItemViewModel = new RequestItemViewModel
             {
                 Request = _context.Requests.Include(r => r.Product)
                     //.Include(r => r.RequestStatus) =>not needed as of now
@@ -363,7 +369,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return NotFound();
             }
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ApplicationUserID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
             ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
             return PartialView(addNewItemViewModel);
@@ -371,7 +377,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ModalView(AddNewItemViewModel addNewItemViewModel)
+        public async Task<IActionResult> ModalView(RequestItemViewModel addNewItemViewModel)
         {
             //same logic as create controller
             addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
@@ -381,7 +387,7 @@ namespace PrototypeWithAuth.Controllers
 
             addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
             addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
-            addNewItemViewModel.Request.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ApplicationUserID);
+            addNewItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
 
             //in case we need to redirect to action
             TempData["ModalView"] = true;
@@ -457,13 +463,7 @@ namespace PrototypeWithAuth.Controllers
          * END MODAL VIEW COPY
          */
 
-        //Get the Json of the vendor business id from the vendor id so JS (site.js) can auto load the form-control with the newly requested vendor
-        [HttpGet] //send a json to that the subcategory list is filered
-        public JsonResult GetVendorBusinessID(int VendorID)
-        {
-            Vendor vendor = _context.Vendors.SingleOrDefault(v => v.VendorID == VendorID);
-            return Json(vendor);
-        }
+
 
     }
 }
