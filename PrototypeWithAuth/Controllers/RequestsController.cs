@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,11 +21,13 @@ namespace PrototypeWithAuth.Controllers
     public class RequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IHostingEnvironment _environment;
         private int _amountNew = 0; private int _amountOrdered = 0; private int _amountReceived = 0;
 
-        public RequestsController(ApplicationDbContext context)
+        public RequestsController(ApplicationDbContext context, IHostingEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: Requests
@@ -117,7 +120,7 @@ namespace PrototypeWithAuth.Controllers
 
             //Getting the page that is going to be seen (if no page was specified it will be one
             var pageNumber = page ?? 1;
-            var onePageOfProducts = RequestsPassedIn.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedList(pageNumber, 4);
+            var onePageOfProducts = await RequestsPassedIn.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 4);
 
             return View(onePageOfProducts);
         }
@@ -371,6 +374,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Obsolete]//referring to the file system (_environment)
         public async Task<IActionResult> ModalView(AddNewItemViewModel addNewItemViewModel)
         {
             //same logic as create controller
@@ -387,43 +391,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["ModalView"] = true;
             TempData["RequestID"] = addNewItemViewModel.Request.RequestID;
 
-            var orderDocs = addNewItemViewModel.OrderDocs;
-            var invoiceDocs = addNewItemViewModel.InvoiceDocs;
-            var shipmentDocs = addNewItemViewModel.ShipmentDocs;
-            var quoteDocs = addNewItemViewModel.QuoteDocs;
-            var infoDocs = addNewItemViewModel.InfoDocs;
-            var picturesDocs = addNewItemViewModel.PicturesDocs;
-            var returnDocs = addNewItemViewModel.ReturnDocs;
-            var creditDocs = addNewItemViewModel.CreditDocs; 
-
-            int countFileUploads = 0;
-            //saving the files (will return request to take off the files or get better ones if doesn't go through)
-            long size = orderDocs.Sum(f => f.Length);
-            //full path to file in temp location
-            var filePath = Path.GetTempFileName();
-            foreach (var formFile in orderDocs)
-            { 
-                if (formFile.Length > 0)
-                {
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        try
-                        {
-                            await formFile.CopyToAsync(stream);
-                            countFileUploads += 1;
-                        }
-                        catch
-                        { //catch exception here }
-                        }
-                    }
-                }
-            }
-
-            if (countFileUploads < size)
-            {
-                //return to the modal view with error
-            }
-
+           
             var context = new ValidationContext(addNewItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
             if (Validator.TryValidateObject(addNewItemViewModel.Request, context, results, true))
