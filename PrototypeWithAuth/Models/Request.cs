@@ -19,20 +19,20 @@ namespace PrototypeWithAuth.Models
         public RequestStatus RequestStatus { get; set; }
         public int? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit
         public int? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
-        public int Unit { get; set; } //largest unit the request comes in
+        public int Unit { get; set; } //largest unit the request comes in - amount of unit
         
         [ForeignKey("UnitTypeID")]
         public UnitType UnitType { get; set; }
-        public int? SubUnit { get; set; } // if this is not null, then it this is the smallest unit
-        
+        public int? SubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subunit
+
         [ForeignKey("SubUnitTypeID")]
         public UnitType SubUnitType { get; set; }
-        public int? SubSubunit { get; set; } // if this is not null, then it this is the smallest unit
-        
+        public int? SubSubunit { get; set; } // if this is not null, then it this is the smallest unit - amount of subsubunit
+
         [ForeignKey("SubSubUnitTypeID")]
         public UnitType SubSubUnitType { get; set; }
-        public int UnitsOrdered { get; set; }
-        public int UnitsInStock { get; set; }
+        public int UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
+        public int UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
         public string ApplicationUserID { get; set; }
 
         [ForeignKey("ApplicationUserID")]

@@ -27,11 +27,14 @@ $("#vendorList").change(function () {
     //get the new vendor id selected
     var vendorid = $("#vendorList").val();
     //load the url of the Json Get from the controller
-    var url = "/Requests/GetVendorBusinessID";
-
-    $.getJSON(url, function (data) {
-        var JsonData = JSON.parse(data);
-        $(".modal-footer").html(JsonData.VendorBusinessID);
-    })
     
 });
+
+$.fn.ChangeVendorBusinessId = function ($vendorid) {
+    var url = "/Requests/GetVendorBusinessID";
+
+    $.getJSON(url, { VendorID: vendorid }, function (data) {
+        var newBusId = "" + data.vendorBuisnessID;
+        $(".vendorBusinessId").html(newBusId);
+    })
+}

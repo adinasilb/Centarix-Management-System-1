@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -12,12 +13,14 @@ using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
+using X.PagedList;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class RequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private int _amountNew = 0; private int _amountOrdered = 0; private int _amountReceived = 0;
 
         public RequestsController(ApplicationDbContext context)
         {
@@ -25,7 +28,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
+        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, int? page, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests;
@@ -34,6 +37,7 @@ namespace PrototypeWithAuth.Controllers
             //use an enum to determine which page type you are using and fill the data accordingly, 
             //also pass the data through tempdata to the page so you can 
             TempData["PageType"] = PageType;
+            //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
             if (PageType == AppUtility.RequestPageTypeEnum.Request)
             {
@@ -43,26 +47,39 @@ namespace PrototypeWithAuth.Controllers
                  * you only need the separate union variable in order for the union to work
                  * and the original queries are on separate lists because each is querying the full database with a separate where
                  */
-                IQueryable<Request> newRequestsList1 = Enumerable.Empty<Request>().AsQueryable();
-                IQueryable<Request> newRequestsList2 = Enumerable.Empty<Request>().AsQueryable();
-                IQueryable<Request> newRequestsList3 = Enumerable.Empty<Request>().AsQueryable();
-                //if there is no specifed RequestStatusID it will get all of them otherwise it will just get the one specified
+
+                IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
                 if (RequestStatusID == null || RequestStatusID == 1)
                 {
-                    newRequestsList1 = fullRequestsList.Where(r => r.RequestStatusID == 1);
-                    RequestsPassedIn = newRequestsList1;
+                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 1);
+                    RequestsPassedIn = TempRequestList;
+                    _amountNew += TempRequestList.Count();
                 }
                 if (RequestStatusID == null || RequestStatusID == 2)
                 {
-                    newRequestsList2 = fullRequestsList.Where(r => r.RequestStatusID == 2);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, newRequestsList2);
+                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 2);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                    _amountOrdered += TempRequestList.Count();
                 }
-                //partial and clarify?
                 if (RequestStatusID == null || RequestStatusID == 3)
                 {
-                    newRequestsList3 = fullRequestsList.Where(r => r.RequestStatusID == 3).Take(100);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, newRequestsList3);
+                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 3).Take(50);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                    _amountReceived += TempRequestList.Count();
                 }
+                if (RequestStatusID == null || RequestStatusID == 4)
+                {
+                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 4);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                    _amountOrdered += TempRequestList.Count();
+                }
+                if (RequestStatusID == null || RequestStatusID == 5)
+                {
+                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 5);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                    _amountOrdered += TempRequestList.Count();
+                }
+
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
             else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
@@ -92,7 +109,17 @@ namespace PrototypeWithAuth.Controllers
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
                 TempData["SubcategoryID"] = subcategoryID;
             }
-            return View(await RequestsPassedIn.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToListAsync());
+
+            //passing in the amounts to display in the top buttons
+            TempData["AmountNew"] = _amountNew;
+            TempData["AmountOrdered"] = _amountOrdered;
+            TempData["AmountReceived"] = _amountReceived;
+
+            //Getting the page that is going to be seen (if no page was specified it will be one
+            var pageNumber = page ?? 1;
+            var onePageOfProducts = RequestsPassedIn.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedList(pageNumber, 4);
+
+            return View(onePageOfProducts);
         }
 
         // GET: Requests/Details/5
@@ -359,6 +386,43 @@ namespace PrototypeWithAuth.Controllers
             //in case we need to redirect to action
             TempData["ModalView"] = true;
             TempData["RequestID"] = addNewItemViewModel.Request.RequestID;
+
+            var orderDocs = addNewItemViewModel.OrderDocs;
+            var invoiceDocs = addNewItemViewModel.InvoiceDocs;
+            var shipmentDocs = addNewItemViewModel.ShipmentDocs;
+            var quoteDocs = addNewItemViewModel.QuoteDocs;
+            var infoDocs = addNewItemViewModel.InfoDocs;
+            var picturesDocs = addNewItemViewModel.PicturesDocs;
+            var returnDocs = addNewItemViewModel.ReturnDocs;
+            var creditDocs = addNewItemViewModel.CreditDocs; 
+
+            int countFileUploads = 0;
+            //saving the files (will return request to take off the files or get better ones if doesn't go through)
+            long size = orderDocs.Sum(f => f.Length);
+            //full path to file in temp location
+            var filePath = Path.GetTempFileName();
+            foreach (var formFile in orderDocs)
+            { 
+                if (formFile.Length > 0)
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        try
+                        {
+                            await formFile.CopyToAsync(stream);
+                            countFileUploads += 1;
+                        }
+                        catch
+                        { //catch exception here }
+                        }
+                    }
+                }
+            }
+
+            if (countFileUploads < size)
+            {
+                //return to the modal view with error
+            }
 
             var context = new ValidationContext(addNewItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();

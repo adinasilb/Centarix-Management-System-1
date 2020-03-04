@@ -1,5 +1,12 @@
-﻿@model IEnumerable<PrototypeWithAuth.Models.Request>
-@using PrototypeWithAuth.AppData
+﻿@model IPagedList<PrototypeWithAuth.Models.Request>
+@using PrototypeWithAuth.AppData;
+
+@using X.PagedList.Mvc.Core; @* import this so we get our HTML Helper *@
+@using X.PagedList; @* import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)*@
+
+<!-- import the included stylesheet for some (very basic) default styling -->
+@*<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+
 
 @{
     ViewData["Title"] = "Index";
@@ -17,6 +24,10 @@
     }
 
     string PageType = TempData["PageType"].ToString();
+
+    string newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
+    string orderedButtonText = "Ordered [" + TempData["AmountOrdered"].ToString() + "]";
+    string receivedButtonText = "Received [" + TempData["AmountReceived"].ToString() + "]";
 }
 
 @*<h1>Index</h1>
@@ -24,19 +35,19 @@
     <p>
         <a asp-action="Create">Create New</a>
     </p>*@
-@if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
+@if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request.ToString()))
 {
     <div class="row">
         <div class="col-md-12">
             <ul class="list-inline">
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink("New", "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
+                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink("Ordered", "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
+                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink("Received", "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
+                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark" })
                 </li>
             </ul>
         </div>
@@ -46,15 +57,15 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.Product.ProductMedia)</th>
-            <th>@Html.DisplayNameFor(model => model.Product.ProductName)</th>
-            <th>@Html.DisplayNameFor(m => m.Product.Vendor.VendorEnName)</th>
+            <th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>
+            <th>@Html.DisplayNameFor(model => model[0].Product.ProductName)</th>
+            <th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>
             <th>TOTAL</th> @*Placeholder until we insert total*@
-            <th>@Html.DisplayNameFor(m => m.Product.ProductSubcategory.ProductSubcategoryDescription)</th>
-            <th>@Html.DisplayNameFor(m => m.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m.ApplicationUser.LastName)</th>
-            <th>@Html.DisplayNameFor(m => m.OrderDate)</th>
+            <th>@Html.DisplayNameFor(m => m[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
+            <th>@Html.DisplayNameFor(m => m[0].ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ApplicationUser.LastName)</th>
+            <th>@Html.DisplayNameFor(m => m[0].OrderDate)</th>
             @*here for testing purposes*@
-            <th>@Html.DisplayNameFor(m => m.RequestStatus.RequestStatusDescription)</th>
+            <th>@Html.DisplayNameFor(m => m[0].RequestStatus.RequestStatusDescription)</th>
             <th></th>
         </tr>
     </thead>
@@ -80,3 +91,6 @@
         }
     </tbody>
 </table>
+
+<!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
