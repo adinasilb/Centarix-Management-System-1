@@ -2,10 +2,9 @@
 
 namespace PrototypeWithAuth.Data.Migrations
 {
-    public partial class RequestStatInRequests : Migration
+    public partial class RequestRequestStatFK : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
-
         {
             migrationBuilder.AddColumn<int>(
                 name: "RequestStatusID",
@@ -13,9 +12,9 @@ namespace PrototypeWithAuth.Data.Migrations
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                    name: "IX_Requests_RequestStatusID",
-                    table: "Requests",
-                    column: "RequestStatusID");
+                name: "IX_Requests_RequestStatusID",
+                table: "Requests",
+                column: "RequestStatusID");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Requests_RequestStatuses_RequestStatusID",
@@ -26,11 +25,8 @@ namespace PrototypeWithAuth.Data.Migrations
                 onDelete: ReferentialAction.Restrict);
         }
 
-
-
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
             migrationBuilder.DropForeignKey(
                 name: "FK_Requests_RequestStatuses_RequestStatusID",
                 table: "Requests");

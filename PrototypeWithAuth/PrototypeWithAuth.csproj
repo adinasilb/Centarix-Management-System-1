@@ -12,6 +12,10 @@
     <Compile Remove="Data\Migrations\20200221071910_addTablesRequestAndRequestStat.Designer.cs" />
     <Compile Remove="Data\Migrations\20200224131546_databaseIncludeRequestStatID.cs" />
     <Compile Remove="Data\Migrations\20200224131546_databaseIncludeRequestStatID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200224131855_RequestStatInRequests.cs" />
+    <Compile Remove="Data\Migrations\20200224131855_RequestStatInRequests.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200304105050_RequestRequestStatFK.cs" />
+    <Compile Remove="Data\Migrations\20200304105050_RequestRequestStatFK.Designer.cs" />
   </ItemGroup>
 
 
