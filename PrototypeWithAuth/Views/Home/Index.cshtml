@@ -17,7 +17,7 @@
                 &nbsp;
                 @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-outline-secondary" })
                 &nbsp;
-                <button type="submit" class="button btn btn-outline-secondary">Expenses</button>
+                @Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn btn-outline-secondary" })
                 &nbsp;
                 <button type="submit" class="button btn btn-outline-secondary">Biomarkers</button>
             </div>

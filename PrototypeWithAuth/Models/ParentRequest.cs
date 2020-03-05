@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.Models
         public int ParentRequestID { get; set; }
         public IEnumerable<Request> Requests { get; set; }
 
-        public string ApplicationUserID { get; set; }
+        public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
 
         [ForeignKey("ApplicationUserID")]
         public ApplicationUser ApplicationUser { get; set; }
@@ -28,6 +28,9 @@ namespace PrototypeWithAuth.Models
 
         [DataType(DataType.Date)]
         public DateTime InvoiceDate { get; set; }
+        public bool WithOrder { get; set; }
+        public double Discount { get; set; }
+        public bool Payed { get; set; }
     }
 }
 //list of request, owner, order date, (order number for an entire order or is it just for specific request) same for invoice number
