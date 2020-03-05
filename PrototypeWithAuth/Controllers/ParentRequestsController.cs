@@ -29,7 +29,7 @@ namespace PrototypeWithAuth.Controllers
         // GET: ParentRequests
         public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, int? page, AppUtility.PaymentPageTypeEnum PageType = AppUtility.PaymentPageTypeEnum.Notifications)
         {
-            var applicationDbContext = _context.ParentRequests.Include(p => p.ApplicationUser);
+            var applicationDbContext = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests);
             return View(await applicationDbContext.ToListAsync());
         }
 

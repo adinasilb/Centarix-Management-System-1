@@ -125,8 +125,15 @@ namespace PrototypeWithAuth.Controllers
 
             //Getting the page that is going to be seen (if no page was specified it will be one)
             var pageNumber = page ?? 1;
-            var onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
-
+            var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
+            try
+            {
+                onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
+            }
+            catch
+            {
+                //do something here 
+            }
             return View(onePageOfProducts);
         }
 
