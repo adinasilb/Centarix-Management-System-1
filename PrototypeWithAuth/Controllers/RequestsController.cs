@@ -22,7 +22,7 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private int _amountNew = 0; private int _amountOrdered = 0; private int _amountReceived = 0;
+        private List<Request> _cartRequests = new List<Request>();
 
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -31,10 +31,17 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, int? page, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
+        public async Task<IActionResult> Index(int? page, int? RequestStatusID, int subcategoryID = 0, int vendorID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests;
+
+            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 1, vendorID, subcategoryID);
+            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 2, vendorID, subcategoryID);
+            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 3, vendorID, subcategoryID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 4, vendorID, subcategoryID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 5, vendorID, subcategoryID);
+
             //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             //use an enum to determine which page type you are using and fill the data accordingly, 
@@ -50,37 +57,33 @@ namespace PrototypeWithAuth.Controllers
                  * you only need the separate union variable in order for the union to work
                  * and the original queries are on separate lists because each is querying the full database with a separate where
                  */
-
                 IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
                 if (RequestStatusID == null || RequestStatusID == 1)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 1);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
                     RequestsPassedIn = TempRequestList;
-                    _amountNew += TempRequestList.Count();
                 }
                 if (RequestStatusID == null || RequestStatusID == 2)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 2);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    _amountOrdered += TempRequestList.Count();
                 }
                 if (RequestStatusID == null || RequestStatusID == 3)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 3).Take(50);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    _amountReceived += TempRequestList.Count();
                 }
-                if (RequestStatusID == null || RequestStatusID == 4)
+                //if the user chooses a new status they want to see this too
+                if (RequestStatusID == null || RequestStatusID == 4 || RequestStatusID == 1)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 4);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    _amountOrdered += TempRequestList.Count();
                 }
-                if (RequestStatusID == null || RequestStatusID == 5)
+                //if the user chooses a new status they want to see this too
+                if (RequestStatusID == null || RequestStatusID == 5 || RequestStatusID == 1)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 5);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    _amountOrdered += TempRequestList.Count();
                 }
 
             }
@@ -103,6 +106,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.Product.VendorID == vendorID);
                 //pass the vendorID into the temp data to use if you'd like to sort from there
                 TempData["VendorID"] = vendorID;
+
             }
             else if (subcategoryID > 0)
             {
@@ -111,16 +115,17 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
                 TempData["SubcategoryID"] = subcategoryID;
+
             }
 
             //passing in the amounts to display in the top buttons
-            TempData["AmountNew"] = _amountNew;
-            TempData["AmountOrdered"] = _amountOrdered;
-            TempData["AmountReceived"] = _amountReceived;
+            TempData["AmountNew"] = newCount;
+            TempData["AmountOrdered"] = orderedCount;
+            TempData["AmountReceived"] = receivedCount;
 
             //Getting the page that is going to be seen (if no page was specified it will be one)
             var pageNumber = page ?? 1;
-            var onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 4);
+            var onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
 
             return View(onePageOfProducts);
         }
@@ -165,16 +170,21 @@ namespace PrototypeWithAuth.Controllers
             var productSubcategories = _context.ProductSubcategories.ToList();
             var vendors = _context.Vendors.ToList();
             var requeststatuses = _context.RequestStatuses.ToList();
+
+            //create a list of users with a column of a combined first and last name and the value as an ID to store the info
             var usersCreateList = _context.Users.Select(s => new { Text = s.FirstName + " " + s.LastName, Value = s.Id }).ToList();
+            //turn it into a select list (which is what a dropdownlist uses)
             var usersSelectList = new SelectList(usersCreateList, "Value", "Text");
 
             RequestItemViewModel viewModel = new RequestItemViewModel
             {
+                //pass the lists into the viewmodel to use on the front end
                 ParentCategories = parentCategories,
                 ProductSubcategories = productSubcategories,
                 Vendors = vendors,
                 RequestStatuses = requeststatuses,
                 Users = usersSelectList,
+                //instantiate a new request
                 Request = new Request()
             };
 
@@ -210,7 +220,11 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        //CREATE PARENTREQUEST!!!!!!!!!
+        /*
+         * ParentRequest looks like it's working
+         * Create the cart and then check
+         */
+
         public async Task<IActionResult> Create(RequestItemViewModel requestItemViewModel)
         {
             //insert the lists of parentcategories, productcategories, and vendors into the view model object for validation purposes and to return the same view if needed

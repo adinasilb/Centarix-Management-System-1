@@ -12,6 +12,73 @@ namespace PrototypeWithAuth.AppData
 
         public enum RequestPageTypeEnum { None, Request, Inventory }
 
+        public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0)
+        {
+            int ReturnList = 0;
+            if (VendorID > 0)
+            {
+                ReturnList = RequestsList
+                    .Where(r => r.RequestStatusID == RequestStatusID)
+                    .Where(r => r.Product.VendorID == VendorID)
+                    .Count();
+            }
+            else if (SubcategoryID > 0)
+            {
+                ReturnList = RequestsList
+                    .Where(r => r.RequestStatusID == RequestStatusID)
+                    .Where(r => r.Product.ProductSubcategoryID == SubcategoryID)
+                    .Count();
+            }
+            else
+            {
+                ReturnList = RequestsList.Where(r => r.RequestStatusID == RequestStatusID).Count();
+            }
+            return ReturnList;
+        }
+
+        public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
+        {
+            IQueryable<Request> ReturnList = Enumerable.Empty<Request>().AsQueryable();
+            if (AmountToTake > 0)
+            {
+                ReturnList = FullRequestList.Where(r => r.RequestStatusID == RequestStatusID).Take(AmountToTake);
+            }
+            else
+            {
+                ReturnList = FullRequestList.Where(r => r.RequestStatusID == RequestStatusID);
+            }
+            return ReturnList;
+        }
+
+        //this checks if a list is empty
+        //right now used in the requestscontroller -> index
+        public static Boolean IsEmpty<T>(this IEnumerable<T> source)
+        {
+            if (source == null)
+                return true; // or throw an exception
+            return !source.Any();
+        }
+
+        //combines two lists first checking if one is empty so it doesn't get an error
+        public static IQueryable<Request> CombineTwoRequestsLists(IQueryable<Request> RequestListToCheck1, IQueryable<Request> RequestListToCheck2)
+        {
+            IQueryable<Request> ReturnList = null;
+            if (!RequestListToCheck1.IsEmpty() && RequestListToCheck2.IsEmpty())
+            {
+                ReturnList = RequestListToCheck1;
+            }
+            else if (RequestListToCheck1.IsEmpty() && !RequestListToCheck2.IsEmpty())
+            {
+                ReturnList = RequestListToCheck2;
+            }
+            else if (!RequestListToCheck1.IsEmpty() && !RequestListToCheck2.IsEmpty())
+            {
+                ReturnList = RequestListToCheck1.Concat(RequestListToCheck2);
+            }
+            return ReturnList;
+        }
+
+
         //public static Request CheckRequestForNullsAndReplace(Request request)
         //{
         //    request.LocationID = ReplaceIntValueIfNull(request.LocationID);
@@ -58,30 +125,6 @@ namespace PrototypeWithAuth.AppData
                 sReturn = value;
             }
             return sReturn;
-        }
-
-        //this checks if a list is empty
-        //right now used in the requestscontroller -> index
-        public static Boolean IsEmpty<T>(this IEnumerable<T> source)
-        {
-            if (source == null)
-                return true; // or throw an exception
-            return !source.Any();
-        }
-
-        //combines two lists first checking if one is empty so it doesn't get an error
-        public static IQueryable<Request> CombineTwoRequestsLists(IQueryable<Request> RequestListToCheck, IQueryable<Request> FullRequestList)
-        {
-            IQueryable<Request> ReturnList = null;
-            if (!RequestListToCheck.IsEmpty())
-            {
-                ReturnList = RequestListToCheck.Concat(FullRequestList);
-            }
-            else
-            {
-                ReturnList = FullRequestList;
-            }
-            return ReturnList;
         }
     }
 }
