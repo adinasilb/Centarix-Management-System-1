@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,18 +21,29 @@ namespace PrototypeWithAuth.Controllers
     public class RequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private int _amountNew = 0; private int _amountOrdered = 0; private int _amountReceived = 0;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private List<Request> _cartRequests = new List<Request>();
 
-        public RequestsController(ApplicationDbContext context)
+        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, int? page, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests;
+
+            TempData["RequestStatusID"] = RequestStatusID;
+
+            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 1, vendorID, subcategoryID);
+            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 2, vendorID, subcategoryID);
+            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 3, vendorID, subcategoryID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 4, vendorID, subcategoryID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 5, vendorID, subcategoryID);
+
             //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             //use an enum to determine which page type you are using and fill the data accordingly, 
@@ -47,37 +59,33 @@ namespace PrototypeWithAuth.Controllers
                  * you only need the separate union variable in order for the union to work
                  * and the original queries are on separate lists because each is querying the full database with a separate where
                  */
-
                 IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
-                if (RequestStatusID == null || RequestStatusID == 1)
+                if (RequestStatusID == 0 || RequestStatusID == 1)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 1);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
                     RequestsPassedIn = TempRequestList;
-                    _amountNew += TempRequestList.Count();
                 }
-                if (RequestStatusID == null || RequestStatusID == 2)
+                if (RequestStatusID == 0 || RequestStatusID == 2)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 2);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    _amountOrdered += TempRequestList.Count();
                 }
-                if (RequestStatusID == null || RequestStatusID == 3)
+                if (RequestStatusID == 0 || RequestStatusID == 3)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 3).Take(50);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    _amountReceived += TempRequestList.Count();
                 }
-                if (RequestStatusID == null || RequestStatusID == 4)
+                //if the user chooses a new status they want to see this too
+                if (RequestStatusID == 0 || RequestStatusID == 4 || RequestStatusID == 1)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 4);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    _amountOrdered += TempRequestList.Count();
                 }
-                if (RequestStatusID == null || RequestStatusID == 5)
+                //if the user chooses a new status they want to see this too
+                if (RequestStatusID == 0 || RequestStatusID == 5 || RequestStatusID == 1)
                 {
-                    TempRequestList = fullRequestsList.Where(r => r.RequestStatusID == 5);
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    _amountOrdered += TempRequestList.Count();
                 }
 
             }
@@ -111,13 +119,13 @@ namespace PrototypeWithAuth.Controllers
             }
 
             //passing in the amounts to display in the top buttons
-            TempData["AmountNew"] = _amountNew;
-            TempData["AmountOrdered"] = _amountOrdered;
-            TempData["AmountReceived"] = _amountReceived;
+            TempData["AmountNew"] = newCount;
+            TempData["AmountOrdered"] = orderedCount;
+            TempData["AmountReceived"] = receivedCount;
 
-            //Getting the page that is going to be seen (if no page was specified it will be one
+            //Getting the page that is going to be seen (if no page was specified it will be one)
             var pageNumber = page ?? 1;
-            var onePageOfProducts = RequestsPassedIn.Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedList(pageNumber, 4);
+            var onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
 
             return View(onePageOfProducts);
         }
@@ -153,7 +161,7 @@ namespace PrototypeWithAuth.Controllers
         //}
 
         // GET: Requests/Create
-        public IActionResult Create() //need to correct to be for request
+        public async Task<IActionResult> CreateAsync() //need to correct to be for request
         {
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName");
@@ -163,17 +171,30 @@ namespace PrototypeWithAuth.Controllers
             var vendors = _context.Vendors.ToList();
             var requeststatuses = _context.RequestStatuses.ToList();
 
-            var viewModel = new RequestItemViewModel
+            //create a list of users with a column of a combined first and last name and the value as an ID to store the info
+            var usersCreateList = _context.Users.Select(s => new { Text = s.FirstName + " " + s.LastName, Value = s.Id }).ToList();
+            //turn it into a select list (which is what a dropdownlist uses)
+            var usersSelectList = new SelectList(usersCreateList, "Value", "Text");
+
+            RequestItemViewModel viewModel = new RequestItemViewModel
             {
+                //pass the lists into the viewmodel to use on the front end
                 ParentCategories = parentCategories,
                 ProductSubcategories = productSubcategories,
                 Vendors = vendors,
                 RequestStatuses = requeststatuses,
+                Users = usersSelectList,
+                //instantiate a new request
                 Request = new Request()
             };
 
             viewModel.Request.Product = new Product(); // have to instantaiate the product from the requests, because the viewModel relies on request.product to create the new product
             viewModel.Request.ParentRequest = new ParentRequest();
+
+            //gets the user
+            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+            //passes the user into the view model in the correct place
+            viewModel.Request.ParentRequest.ApplicationUserID = user.Id;
 
             //adding a tempdata so the testing in the requestnavview layout page will work (better to create a base controller for temp data and store it there)
             //https://stackoverflow.com/questions/37267586/how-to-check-condition-if-temp-data-has-value-in-every-controller
@@ -199,42 +220,44 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        //CREATE PARENTREQUEST!!!!!!!!!
+        /*
+         * ParentRequest looks like it's working
+         * Create the cart and then check
+         */
 
-
-
-        public async Task<IActionResult> Create(RequestItemViewModel AddNewItemViewModelObj)
+        public async Task<IActionResult> Create(RequestItemViewModel requestItemViewModel)
         {
             //insert the lists of parentcategories, productcategories, and vendors into the view model object for validation purposes and to return the same view if needed
-            var parentCategories = _context.ParentCategories.ToList();
-            var productSubcategories = _context.ProductSubcategories.ToList();
-            var vendors = _context.Vendors.ToList();
-            var requeststatuses = _context.RequestStatuses.ToList();
-            AddNewItemViewModelObj.ParentCategories = parentCategories;
-            AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
-            AddNewItemViewModelObj.Vendors = vendors;
-            AddNewItemViewModelObj.RequestStatuses = requeststatuses;
+            //var parentCategories = _context.ParentCategories.ToList();
+            //var productSubcategories = _context.ProductSubcategories.ToList();
+            //var vendors = _context.Vendors.ToList();
+            //var requeststatuses = _context.RequestStatuses.ToList();
+            //AddNewItemViewModelObj.ParentCategories = parentCategories;
+            //AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
+            //AddNewItemViewModelObj.Vendors = vendors;
+            //AddNewItemViewModelObj.RequestStatuses = requeststatuses;
 
             // view data is placed in the beginning in order to redirect when errors are caught, so need to have the info saved before handling the error
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", AddNewItemViewModelObj.Request.ParentRequest.ApplicationUserID);
-            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", AddNewItemViewModelObj.Request.ProductID);
-            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", AddNewItemViewModelObj.Request.RequestStatusID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", requestItemViewModel.Request.ParentRequest.ApplicationUserID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", requestItemViewModel.Request.ProductID);
+            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", requestItemViewModel.Request.RequestStatusID);
 
             //inserting the vendor from the vendor id, the subcategory from the subcategory id and the application user from the application user id to test for the viewmodel validation
-            AddNewItemViewModelObj.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == AddNewItemViewModelObj.Request.Product.VendorID);
-            AddNewItemViewModelObj.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == AddNewItemViewModelObj.Request.Product.ProductSubcategoryID);
-            AddNewItemViewModelObj.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == AddNewItemViewModelObj.Request.ParentRequest.ApplicationUserID);
+            requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
+            requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
+            requestItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == requestItemViewModel.Request.ParentRequest.ApplicationUserID);
 
             //using the dataannotations validator to test the updated object because modelstate.isvalid only looks at the stack trace that was passed in 
-            var context = new ValidationContext(AddNewItemViewModelObj.Request, null, null);
+            var context = new ValidationContext(requestItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
-            if (Validator.TryValidateObject(AddNewItemViewModelObj.Request, context, results, true))
+            if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
             {
-                _context.Add(AddNewItemViewModelObj.Request);
+                _context.Add(requestItemViewModel.Request.ParentRequest);
+                _context.Add(requestItemViewModel.Request);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(AddNewItemViewModelObj);
+            return View(requestItemViewModel);
         }
 
 
@@ -393,42 +416,6 @@ namespace PrototypeWithAuth.Controllers
             TempData["ModalView"] = true;
             TempData["RequestID"] = addNewItemViewModel.Request.RequestID;
 
-            var orderDocs = addNewItemViewModel.OrderDocs;
-            var invoiceDocs = addNewItemViewModel.InvoiceDocs;
-            var shipmentDocs = addNewItemViewModel.ShipmentDocs;
-            var quoteDocs = addNewItemViewModel.QuoteDocs;
-            var infoDocs = addNewItemViewModel.InfoDocs;
-            var picturesDocs = addNewItemViewModel.PicturesDocs;
-            var returnDocs = addNewItemViewModel.ReturnDocs;
-            var creditDocs = addNewItemViewModel.CreditDocs; 
-
-            int countFileUploads = 0;
-            //saving the files (will return request to take off the files or get better ones if doesn't go through)
-            long size = orderDocs.Sum(f => f.Length);
-            //full path to file in temp location
-            var filePath = Path.GetTempFileName();
-            foreach (var formFile in orderDocs)
-            { 
-                if (formFile.Length > 0)
-                {
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        try
-                        {
-                            await formFile.CopyToAsync(stream);
-                            countFileUploads += 1;
-                        }
-                        catch
-                        { //catch exception here }
-                        }
-                    }
-                }
-            }
-
-            if (countFileUploads < size)
-            {
-                //return to the modal view with error
-            }
 
             var context = new ValidationContext(addNewItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();

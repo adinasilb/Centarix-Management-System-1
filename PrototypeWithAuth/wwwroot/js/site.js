@@ -10,7 +10,7 @@ function showmodal() {
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#parentlist").change(function () {
     var parentCategoryId = $("#parentlist").val();
-    var url = "/Products/GetSubCategoryList";
+    var url = "/Requests/GetSubCategoryList";
 
     $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
         var item = "";

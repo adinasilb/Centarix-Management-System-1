@@ -12,10 +12,15 @@
     <Compile Remove="Data\Migrations\20200221071910_addTablesRequestAndRequestStat.Designer.cs" />
     <Compile Remove="Data\Migrations\20200224131546_databaseIncludeRequestStatID.cs" />
     <Compile Remove="Data\Migrations\20200224131546_databaseIncludeRequestStatID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200224131855_RequestStatInRequests.cs" />
+    <Compile Remove="Data\Migrations\20200224131855_RequestStatInRequests.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200304105050_RequestRequestStatFK.cs" />
+    <Compile Remove="Data\Migrations\20200304105050_RequestRequestStatFK.Designer.cs" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -24,6 +29,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />
