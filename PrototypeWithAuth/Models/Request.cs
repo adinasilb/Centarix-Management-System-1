@@ -37,7 +37,7 @@ namespace PrototypeWithAuth.Models
         public int UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
         public int Quantity { get; set; }
         public double Cost { get; set; }
-        public bool WithOrder { get; set; }
+        
 
         public string CatalogNumber { get; set; }
         public string SerialNumber { get; set; }
@@ -47,8 +47,7 @@ namespace PrototypeWithAuth.Models
         public byte Warranty { get; set; } // will need to cast it to datetime when calulating the end date, in the front end
 
         public double VAT = 0.17; // should this be coded into the model or should we set it elsewhere?
-        public double Discount { get; set; }
-        public bool Payed { get; set; }
+
         public int Payments { get; set; } //number of installments
         public byte ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
         public string RequestComment { get; set; }

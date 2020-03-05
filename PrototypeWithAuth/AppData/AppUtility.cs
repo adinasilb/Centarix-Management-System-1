@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.AppData
     {
 
         public enum RequestPageTypeEnum { None, Request, Inventory }
+        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses} //these are all going to the ParentRequestIndex
 
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0)
         {

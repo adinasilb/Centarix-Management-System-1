@@ -1,0 +1,44 @@
+﻿@using PrototypeWithAuth.AppData
+@{
+    ViewData["Title"] = "NotificationsNavView";
+    Layout = "~/Views/Shared/PaymentView.cshtml";
+
+    //change enum to paymenmts enum , have to figure out how to filter accordingly
+
+    //AppUtility.RequestPageTypeEnum pageTypeString = AppUtility.RequestPageTypeEnum.None;
+    //if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Request))
+    //{
+    //    pageTypeString = AppUtility.RequestPageTypeEnum.Request;
+    //}
+    //else if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    //{
+    //    pageTypeString = AppUtility.RequestPageTypeEnum.Inventory;
+    //}
+}
+
+<div class="row">
+    <div class="col-md-2 border-right">
+        @*<nav class="navbar flex-grow-1">*@
+        <ul class="nav flex-column nav-pills nav-stacked">
+            <li class="nav-item">
+                @Html.ActionLink("To Pay", "Index", "ParentRequests", new { },new { @class = "btn btn-link text-dark" })
+            </li>
+            <li class="nav-item">
+                @Html.ActionLink("No Invoice", "Index", "ParentRequests", new {}, new { @class = "btn btn-link text-dark" })
+            </li>
+            <li class="nav-item">
+                @Html.ActionLink("Didn't Arrive", "Index", "ParentRequests", new {}, new { @class = "btn btn-link text-dark" })
+            </li>
+            <li class="nav-item">
+                @Html.ActionLink("Partial Delivery", "Index", "ParentRequests", new { }, new { @class = "btn btn-link text-dark" })
+            </li>
+            <li class="nav-item">
+                @Html.ActionLink("For Clarification", "Index", "ParentRequests", new { }, new { @class = "btn btn-link text-dark" })
+            </li>
+        </ul>
+        @*</nav>*@
+    </div>
+    <div class="col-md-10 border-left">
+        @RenderBody()
+    </div>
+</div>
