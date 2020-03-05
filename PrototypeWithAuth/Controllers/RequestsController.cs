@@ -31,10 +31,12 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? page, int? RequestStatusID, int subcategoryID = 0, int vendorID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests;
+
+            TempData["RequestStatusID"] = RequestStatusID;
 
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 1, vendorID, subcategoryID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 2, vendorID, subcategoryID);
@@ -58,29 +60,29 @@ namespace PrototypeWithAuth.Controllers
                  * and the original queries are on separate lists because each is querying the full database with a separate where
                  */
                 IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
-                if (RequestStatusID == null || RequestStatusID == 1)
+                if (RequestStatusID == 0 || RequestStatusID == 1)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
                     RequestsPassedIn = TempRequestList;
                 }
-                if (RequestStatusID == null || RequestStatusID == 2)
+                if (RequestStatusID == 0 || RequestStatusID == 2)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                 }
-                if (RequestStatusID == null || RequestStatusID == 3)
+                if (RequestStatusID == 0 || RequestStatusID == 3)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                 }
                 //if the user chooses a new status they want to see this too
-                if (RequestStatusID == null || RequestStatusID == 4 || RequestStatusID == 1)
+                if (RequestStatusID == 0 || RequestStatusID == 4 || RequestStatusID == 1)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                 }
                 //if the user chooses a new status they want to see this too
-                if (RequestStatusID == null || RequestStatusID == 5 || RequestStatusID == 1)
+                if (RequestStatusID == 0 || RequestStatusID == 5 || RequestStatusID == 1)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
@@ -106,7 +108,6 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.Product.VendorID == vendorID);
                 //pass the vendorID into the temp data to use if you'd like to sort from there
                 TempData["VendorID"] = vendorID;
-
             }
             else if (subcategoryID > 0)
             {
@@ -115,7 +116,6 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
                 TempData["SubcategoryID"] = subcategoryID;
-
             }
 
             //passing in the amounts to display in the top buttons

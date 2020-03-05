@@ -28,6 +28,30 @@
     string newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
     string orderedButtonText = "Ordered [" + TempData["AmountOrdered"].ToString() + "]";
     string receivedButtonText = "Received [" + TempData["AmountReceived"].ToString() + "]";
+
+    string newActiveClass = "btn btn-outline-secondary text-dark new-button";
+    string orderedActiveClass = "btn btn-outline-secondary text-dark new-button";
+    string receivedActiveClass = "btn btn-outline-secondary text-dark new-button";
+
+    //changing the classes for the action links based on the tempdata of request status
+    int requestStatusID = 0;
+    int.TryParse(TempData["RequestStatusID"].ToString(), out requestStatusID);
+    switch (requestStatusID)
+    {
+        case 1:
+        case 4:
+        case 5:
+            newActiveClass = "btn btn-secondary text-dark new-button";
+            break;
+        case 2:
+            orderedActiveClass = "btn btn-secondary text-dark new-button";
+            break;
+        case 3:
+            receivedActiveClass = "btn btn-secondary text-dark new-button";
+            break;
+        default:
+            break;
+    }
 }
 
 @*<h1>Index</h1>
@@ -40,14 +64,14 @@
     <div class="row">
         <div class="col-md-12">
             <ul class="list-inline">
-                <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark new-button" })
+                <li class="list-inline-item nav-fill active">
+                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = newActiveClass })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark ordered-button" })
+                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-outline-secondary text-dark received-button" })
+                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })
                 </li>
             </ul>
         </div>
@@ -94,14 +118,3 @@
 
 <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
-
-<script>
-    $(document).ready(function () {
-        var $newButton = $(".new-button");
-        var $receivedButton = $(".received-button");
-        var $orderedButton = $(".ordered-button");
-        $(".new-button").click(function () {
-            console.log("entered the click!");
-        });
-    });
-</script>
