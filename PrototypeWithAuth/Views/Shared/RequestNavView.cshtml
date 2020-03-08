@@ -4,13 +4,9 @@
     Layout = "~/Views/Shared/View.cshtml";
 
     AppUtility.RequestPageTypeEnum pageTypeString = AppUtility.RequestPageTypeEnum.None;
-    if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Request))
+    if (TempData["PageType"] != null)
     {
-        pageTypeString = AppUtility.RequestPageTypeEnum.Request;
-    }
-    else if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Inventory))
-    {
-        pageTypeString = AppUtility.RequestPageTypeEnum.Inventory;
+        pageTypeString = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
     }
 }
 @*  *@
@@ -20,7 +16,7 @@
         <ul class="nav flex-column nav-pills nav-stacked">
             <li class="nav-item">
                 @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
-                <button class="btn btn-link load-product-details" data-value="0" data-target="item" href="item">Add Item</button>
+                <button class="btn btn-link load-product-details" value="0" data-target="item" href="item">Add Item</button>
                 @Html.ActionLink("Create", "Create", "Requests", new { }, new { @class = "btn btn-link" })
             </li>
             <li class="nav-item">

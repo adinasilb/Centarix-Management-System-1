@@ -5,6 +5,40 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
     Layout = null;
+
+    /*
+     * Determine Active Nav Link START
+     * using the 
+     */
+
+    //initializing pageType to None just in case none is passed in we don't want to disable any buttons unnecessarily (can take this out in the future if we are sure that we don't need it)
+    var pageType = AppUtility.RequestPageTypeEnum.None;
+
+    //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
+    if (TempData["PageType"] != null)
+    {
+        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+    }
+
+    //passing the 
+    string initalClasses = "btn btn-block-link text-dark";
+    string currentClasses = " disabled";
+    string inventoryClass = initalClasses;
+    string requestClass = initalClasses;
+    switch (pageType)
+    {
+        case AppUtility.RequestPageTypeEnum.Inventory:
+            inventoryClass = initalClasses + currentClasses;
+            requestClass = initalClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Request:
+            inventoryClass = initalClasses;
+            requestClass = initalClasses + currentClasses;
+            break;
+    }
+    
+    /*Determine Active Nav Link END*/
+
 }
 
 <!DOCTYPE html>
@@ -28,14 +62,10 @@
                 <div class="container-fluid">
                     <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left">
                         <li class="nav-item nav-fill">
-                            @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = "btn btn-link text-dark" })
+                            @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @role = "button", @id = "inventory-link" })
                         </li>
                         <li class="nav-item nav-fill">
-                            @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-link text-dark" })
-                        </li>
-                        @*Here for testing purposes*@
-                        <li class="nav-item nav-fill">
-                            @Html.ActionLink("Products", "IndexCopy", "Products", new { }, new { @class = "btn btn-link text-dark" })
+                            @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
                         </li>
                     </ul>
                 </div>
