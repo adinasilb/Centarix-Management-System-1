@@ -458,6 +458,7 @@ namespace PrototypeWithAuth.Controllers
                  * the viewmodel loads the request.product with a primary key of 0
                  * so if you don't insert the request.productid into the request.product.product id
                  * it will create a new one instead of updating the existing one
+                 * only need this if using an existing product
                  */
                 requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 try
