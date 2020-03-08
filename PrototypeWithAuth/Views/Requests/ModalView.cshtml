@@ -50,8 +50,8 @@
                                     <div class="form-group">
                                         <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-     "Select Category", new { @class = "form-control", @id = "parentlist" })
+                                        new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+                                        "Select Category", new { @class = "form-control", @id = "parentlist" })
                                         <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -59,8 +59,8 @@
                                     <div class="form-group sublist">
                                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-     new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-     "Select Subcategory", new { @class = "form-control", @id = "sublist" })
+                                        new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+                                        "Select Subcategory", new { @class = "form-control", @id = "sublist" })
                                         <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -82,14 +82,14 @@
                                     <div class="form-group">
                                         <label asp-for="Request.Product.Vendor" class="control-label"></label>
                                         @Html.DropDownListFor(
-         vm => vm.Request.Product.VendorID,
-         new SelectList(
-             Model.Vendors,
-             dataValueField: "VendorID",
-             dataTextField: "VendorEnName"),
-         optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-         htmlAttributes: new { @class = "form-control", @id = "vendorList" }
-     )
+                                        vm => vm.Request.Product.VendorID,
+                                        new SelectList(
+                                        Model.Vendors,
+                                        dataValueField: "VendorID",
+                                        dataTextField: "VendorEnName"),
+                                        optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                                        htmlAttributes: new { @class = "form-control", @id = "vendorList" }
+                                        )
                                         <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -173,13 +173,7 @@
                             <hr />
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label asp-for="Request.ParentRequest.ApplicationUserID" class="control-label"></label>
-                                    @Html.DropDownListFor(
-                                        vm => vm.Request.ParentRequest.ApplicationUserID,
-                                        Model.Users,
-                                        htmlAttributes: new {@class = "form-control"}
-                                    )
-                                    <span asp-validation-for="Request.ParentRequest.ApplicationUserID" class="text-danger"></span>
+                                    ---
                                 </div>
                             </div>
                         </div>
@@ -281,5 +275,40 @@
 
     <script type="text/javascript">
 
+        /*
+         * Including these js pieces from site.js b/c has issue always attaching
+         */
+
+        //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
+        $("#parentlist").change(function () {
+            var parentCategoryId = $("#parentlist").val();
+            var url = "/Requests/GetSubCategoryList";
+
+            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                var item = "";
+                $("#sublist").empty();
+                $.each(data, function (i, subCategory) {
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                });
+                $("#sublist").html(item);
+            });
+        });
+
+        //load the vendor business id with the vendor business id corresponding to the newly selected vendor from the vendor list
+        $("#vendorList").change(function () {
+            //get the new vendor id selected
+            var vendorid = $("#vendorList").val();
+            //load the url of the Json Get from the controller
+
+        });
+
+        $.fn.ChangeVendorBusinessId = function ($vendorid) {
+            var url = "/Requests/GetVendorBusinessID";
+
+            $.getJSON(url, { VendorID: vendorid }, function (data) {
+                var newBusId = "" + data.vendorBuisnessID;
+                $(".vendorBusinessId").html(newBusId);
+            })
+        }
     </script>
 }

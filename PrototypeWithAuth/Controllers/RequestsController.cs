@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -34,9 +34,10 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             //instantiate your list of requests to pass into the index
-            IQueryable<Request> fullRequestsList = _context.Requests;
+            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest);
 
             TempData["RequestStatusID"] = RequestStatusID;
+            var SidebarTitle = AppUtility.RequestSidebarEnum.None;
 
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 1, vendorID, subcategoryID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 2, vendorID, subcategoryID);
@@ -107,6 +108,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.VendorID == vendorID);
                 //pass the vendorID into the temp data to use if you'd like to sort from there
+                SidebarTitle = AppUtility.RequestSidebarEnum.Vendor;
                 TempData["VendorID"] = vendorID;
             }
             else if (subcategoryID > 0)
@@ -115,6 +117,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
+                SidebarTitle = AppUtility.RequestSidebarEnum.Type;
                 TempData["SubcategoryID"] = subcategoryID;
             }
 
@@ -122,6 +125,8 @@ namespace PrototypeWithAuth.Controllers
             TempData["AmountNew"] = newCount;
             TempData["AmountOrdered"] = orderedCount;
             TempData["AmountReceived"] = receivedCount;
+
+            TempData["SidebarTitle"] = SidebarTitle;
 
             //Getting the page that is going to be seen (if no page was specified it will be one)
             var pageNumber = page ?? 1;
@@ -378,17 +383,12 @@ namespace PrototypeWithAuth.Controllers
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
             var requeststatuses = await _context.RequestStatuses.ToListAsync();
-            //create a list of users with a column of a combined first and last name and the value as an ID to store the info
-            var usersCreateList = _context.Users.Select(s => new { Text = s.FirstName + " " + s.LastName, Value = s.Id }).ToList();
-            //turn it into a select list (which is what a dropdownlist uses)
-            var usersSelectList = new SelectList(usersCreateList, "Value", "Text");
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
                 ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
-                Users = usersSelectList,
                 RequestStatuses = requeststatuses
             };
 
@@ -428,7 +428,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ModalView(RequestItemViewModel addNewItemViewModel)
+        public async Task<IActionResult> ModalView(RequestItemViewModel requestItemViewModel)
         {
             //same logic as create controller
             //addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
@@ -436,28 +436,33 @@ namespace PrototypeWithAuth.Controllers
             //addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
             //addNewItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
 
-            addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
-            addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
-            addNewItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
+            requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
+            requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
+            //use application user of whoever signed in
+            requestItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault( u => u.Id == _userManager.GetUserId(User));
+
+            //for now putting in the REQUEST STATUS as NEW --> will need to add business logic in the future
+            requestItemViewModel.Request.RequestStatusID = 1;
+            //do we need this next line actually?
+            requestItemViewModel.Request.RequestStatus = _context.RequestStatuses.FirstOrDefault(rs => rs.RequestStatusID == requestItemViewModel.Request.RequestStatusID);
 
             //in case we need to redirect to action
             TempData["ModalView"] = true;
-            TempData["RequestID"] = addNewItemViewModel.Request.RequestID;
+            TempData["RequestID"] = requestItemViewModel.Request.RequestID;
 
-            var context = new ValidationContext(addNewItemViewModel.Request, null, null);
+            var context = new ValidationContext(requestItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
-            if (Validator.TryValidateObject(addNewItemViewModel.Request, context, results, true))
+            if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
             {
                 /*
                  * the viewmodel loads the request.product with a primary key of 0
                  * so if you don't insert the request.productid into the request.product.product id
                  * it will create a new one instead of updating the existing one
                  */
-                addNewItemViewModel.Request.Product.ProductID = addNewItemViewModel.Request.ProductID;
+                requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 try
                 {
-                    _context.Update(addNewItemViewModel.Request.Product);
-                    _context.Update(addNewItemViewModel.Request);
+                    _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
@@ -468,7 +473,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                return View(addNewItemViewModel);
+                return View(requestItemViewModel);
             }
             return RedirectToAction("Index");
         }

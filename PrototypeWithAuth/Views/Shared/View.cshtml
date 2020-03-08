@@ -21,8 +21,8 @@
     }
 
     //passing the 
-    string initalClasses = "btn btn-block-link text-dark";
-    string currentClasses = " disabled";
+    string initalClasses = "nav-link";
+    string currentClasses = " text-dark";
     string inventoryClass = initalClasses;
     string requestClass = initalClasses;
     switch (pageType)
@@ -51,6 +51,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -61,10 +62,10 @@
                 </div>
                 <div class="container-fluid">
                     <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left">
-                        <li class="nav-item nav-fill">
+                        <li class="nav-item">
                             @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @role = "button", @id = "inventory-link" })
                         </li>
-                        <li class="nav-item nav-fill">
+                        <li class="nav-item">
                             @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
                         </li>
                     </ul>
@@ -84,7 +85,7 @@
                     </div>
                 </div>
             </div>
-            @*</nav>*@
+            </nav>
     </header>
     <!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
     <!--for now i am using an aside just to help me viuslly see thing on the side-->

@@ -8,6 +8,32 @@
     {
         pageTypeString = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
     }
+
+    string originalNavClasses = "btn btn-link text-dark";
+    string activeClass = " font-weight-bold";
+
+    string type = originalNavClasses;
+    string vendor = originalNavClasses;
+    string owner = originalNavClasses;
+    string location = originalNavClasses;
+
+    var SidebarType = TempData["SidebarTitle"];
+    switch (SidebarType)
+    {
+        case AppUtility.RequestSidebarEnum.Type:
+            type += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.Vendor:
+            vendor += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.Owner:
+            owner += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.Location:
+            location += activeClass;
+            break;
+    }
+
 }
 @*  *@
 <div class="row">
@@ -16,20 +42,19 @@
         <ul class="nav flex-column nav-pills nav-stacked">
             <li class="nav-item">
                 @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
-                <button class="btn btn-link load-product-details" value="0" data-target="item" href="item">Add Item</button>
-                @Html.ActionLink("Create", "Create", "Requests", new { }, new { @class = "btn btn-link" })
+                <button class="btn btn-link text-dark load-product-details" value="0" data-target="item" href="item">Add Item</button>
             </li>
             <li class="nav-item">
-                @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageTypeString }, new { @class = "btn btn-link text-dark" })
+                @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageTypeString }, new { @class = type })
             </li>
             <li class="nav-item">
-                @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageTypeString }, new { @class = "btn btn-link text-dark" })
+                @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageTypeString }, new { @class = vendor })
             </li>
             <li class="nav-item">
-                @Html.ActionLink("Owner", "Index", "Owners", new { }, new { @class = "btn btn-link text-dark" })
+                @Html.ActionLink("Owner", "Index", "Owners", new { }, new { @class = owner })
             </li>
             <li class="nav-item">
-                @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = "btn btn-link text-dark" })
+                @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = location })
             </li>
         </ul>
         @*</nav>*@
@@ -82,7 +107,7 @@
                 //document.ready for modal is done here --> setting up product subcategories
                 var parentCategoryId = $("#parentlist").val();
                 var subcategoryId1 = $("#sublist").val();
-                var url = "/Products/GetSubCategoryList";
+                var url = "/Requests/GetSubCategoryList";
 
                 $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
                     var item = "";

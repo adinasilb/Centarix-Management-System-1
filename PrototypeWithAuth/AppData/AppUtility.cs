@@ -12,6 +12,7 @@ namespace PrototypeWithAuth.AppData
 
         public enum RequestPageTypeEnum { None, Request, Inventory }
         public enum PaymentPageTypeEnum { None, Notifications, General, Expenses} //these are all going to the ParentRequestIndex
+        public enum RequestSidebarEnum { None, Type, Vendor, Owner, Location }
 
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0)
         {
@@ -74,7 +75,7 @@ namespace PrototypeWithAuth.AppData
             }
             else if (!RequestListToCheck1.IsEmpty() && !RequestListToCheck2.IsEmpty())
             {
-                ReturnList = RequestListToCheck1.Concat(RequestListToCheck2);
+                ReturnList = RequestListToCheck1.Concat(RequestListToCheck2).OrderByDescending(r => r.ParentRequest.OrderDate);
             }
             return ReturnList;
         }
@@ -126,6 +127,12 @@ namespace PrototypeWithAuth.AppData
                 sReturn = value;
             }
             return sReturn;
+        }
+
+        struct PaymentNotificationValuePairs
+        {
+            public string NotificationListName;
+            public int Amount;
         }
     }
 }
