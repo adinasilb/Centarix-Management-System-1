@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200309091716_muTry1")]
+    partial class muTry1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -712,7 +714,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             UnitTypeID = 10,
                             UnitParentTypeID = 2,
-                            UnitTypeDescription = "ug"
+                            UnitTypeDescription = "956g"
                         },
                         new
                         {
@@ -730,7 +732,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             UnitTypeID = 13,
                             UnitParentTypeID = 2,
-                            UnitTypeDescription = "ul"
+                            UnitTypeDescription = "956l"
                         },
                         new
                         {
