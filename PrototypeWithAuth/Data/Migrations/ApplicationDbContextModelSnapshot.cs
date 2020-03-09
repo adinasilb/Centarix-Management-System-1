@@ -615,6 +615,23 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("UnitParentTypeID");
 
                     b.ToTable("UnitParentTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            UnitParentTypeID = 1,
+                            UnitParentTypeDescription = "Units"
+                        },
+                        new
+                        {
+                            UnitParentTypeID = 2,
+                            UnitParentTypeDescription = "Weight/Volume"
+                        },
+                        new
+                        {
+                            UnitParentTypeID = 3,
+                            UnitParentTypeDescription = "Test"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.UnitType", b =>
@@ -635,6 +652,116 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("UnitParentTypeID");
 
                     b.ToTable("UnitTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            UnitTypeID = 1,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Bottle"
+                        },
+                        new
+                        {
+                            UnitTypeID = 2,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Box"
+                        },
+                        new
+                        {
+                            UnitTypeID = 3,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Pack"
+                        },
+                        new
+                        {
+                            UnitTypeID = 4,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Bag"
+                        },
+                        new
+                        {
+                            UnitTypeID = 5,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Unit"
+                        },
+                        new
+                        {
+                            UnitTypeID = 6,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Vial"
+                        },
+                        new
+                        {
+                            UnitTypeID = 7,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "Kg"
+                        },
+                        new
+                        {
+                            UnitTypeID = 8,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "gr"
+                        },
+                        new
+                        {
+                            UnitTypeID = 9,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "mg"
+                        },
+                        new
+                        {
+                            UnitTypeID = 10,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "�g"
+                        },
+                        new
+                        {
+                            UnitTypeID = 11,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "Liter"
+                        },
+                        new
+                        {
+                            UnitTypeID = 12,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "ml"
+                        },
+                        new
+                        {
+                            UnitTypeID = 13,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "�l"
+                        },
+                        new
+                        {
+                            UnitTypeID = 14,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "gal"
+                        },
+                        new
+                        {
+                            UnitTypeID = 15,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "rxhs"
+                        },
+                        new
+                        {
+                            UnitTypeID = 16,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "test"
+                        },
+                        new
+                        {
+                            UnitTypeID = 17,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "preps"
+                        },
+                        new
+                        {
+                            UnitTypeID = 18,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "assays"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>

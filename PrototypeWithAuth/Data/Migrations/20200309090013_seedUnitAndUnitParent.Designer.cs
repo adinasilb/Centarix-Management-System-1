@@ -10,8 +10,8 @@ using PrototypeWithAuth.Data;
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200304105331_RequestRequestStatFK2_")]
-    partial class RequestRequestStatFK2_
+    [Migration("20200309090013_seedUnitAndUnitParent")]
+    partial class seedUnitAndUnitParent
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -275,6 +275,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
+
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
 
@@ -286,6 +289,12 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("OrderNumber")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Payed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("WithOrder")
+                        .HasColumnType("bit");
 
                     b.HasKey("ParentRequestID");
 
@@ -479,9 +488,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
-                    b.Property<double>("Discount")
-                        .HasColumnType("float");
-
                     b.Property<byte>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
@@ -490,9 +496,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("ParentRequestID")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Payed")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Payments")
                         .HasColumnType("int");
@@ -541,9 +544,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<byte>("Warranty")
                         .HasColumnType("tinyint");
-
-                    b.Property<bool>("WithOrder")
-                        .HasColumnType("bit");
 
                     b.HasKey("RequestID");
 
@@ -617,6 +617,23 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("UnitParentTypeID");
 
                     b.ToTable("UnitParentTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            UnitParentTypeID = 1,
+                            UnitParentTypeDescription = "Units"
+                        },
+                        new
+                        {
+                            UnitParentTypeID = 2,
+                            UnitParentTypeDescription = "Weight/Volume"
+                        },
+                        new
+                        {
+                            UnitParentTypeID = 3,
+                            UnitParentTypeDescription = "Test"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.UnitType", b =>
@@ -637,6 +654,116 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("UnitParentTypeID");
 
                     b.ToTable("UnitTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            UnitTypeID = 1,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Bottle"
+                        },
+                        new
+                        {
+                            UnitTypeID = 2,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Box"
+                        },
+                        new
+                        {
+                            UnitTypeID = 3,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Pack"
+                        },
+                        new
+                        {
+                            UnitTypeID = 4,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Bag"
+                        },
+                        new
+                        {
+                            UnitTypeID = 5,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Unit"
+                        },
+                        new
+                        {
+                            UnitTypeID = 6,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Vial"
+                        },
+                        new
+                        {
+                            UnitTypeID = 7,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "Kg"
+                        },
+                        new
+                        {
+                            UnitTypeID = 8,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "gr"
+                        },
+                        new
+                        {
+                            UnitTypeID = 9,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "mg"
+                        },
+                        new
+                        {
+                            UnitTypeID = 10,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "�g"
+                        },
+                        new
+                        {
+                            UnitTypeID = 11,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "Liter"
+                        },
+                        new
+                        {
+                            UnitTypeID = 12,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "ml"
+                        },
+                        new
+                        {
+                            UnitTypeID = 13,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "�l"
+                        },
+                        new
+                        {
+                            UnitTypeID = 14,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "gal"
+                        },
+                        new
+                        {
+                            UnitTypeID = 15,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "rxhs"
+                        },
+                        new
+                        {
+                            UnitTypeID = 16,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "test"
+                        },
+                        new
+                        {
+                            UnitTypeID = 17,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "preps"
+                        },
+                        new
+                        {
+                            UnitTypeID = 18,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "assays"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>

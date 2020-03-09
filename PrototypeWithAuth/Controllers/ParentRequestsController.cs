@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -29,12 +30,68 @@ namespace PrototypeWithAuth.Controllers
         // GET: ParentRequests
         public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, int? page, AppUtility.PaymentPageTypeEnum PageType = AppUtility.PaymentPageTypeEnum.Notifications)
         {
-            var applicationDbContext = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests);
-            return View(await applicationDbContext.ToListAsync());
+            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr =>pr.Vendor);
+            
+
+
+            List<List<ParentRequest>> ReturnParentRequestList = new List<List<ParentRequest>>();
+            List<ParentRequest> NotPayedList = new List<ParentRequest>();
+            List<ParentRequest> NoInvoiceList = new List<ParentRequest>();
+            List<ParentRequest> DidntArriveList = new List<ParentRequest>();
+            List<ParentRequest> PartialDeliveryList = new List<ParentRequest>();
+            List <ParentRequest> ForClarification = new List<ParentRequest>();
+   
+
+            foreach (var parentRequest in fullParentRequestsList)
+            {
+                if (parentRequest.Payed != true)
+                {
+                    NotPayedList.Add(parentRequest);
+                }
+                if (parentRequest.InvoiceNumber == null)
+                {
+                    NoInvoiceList.Add(parentRequest);
+                }
+             
+
+                // if ordered, can also include if not  payed or if no invioce..
+                //partial,  can also include if not  payed or if no invioce..
+                //clarify,  can also include if not  payed or if no invioce..
+
+
+
+            }
+
+            Dictionary<string, int> titleList = new Dictionary<string, int>();
+            titleList.Add("To Pay", NotPayedList.Count);
+            titleList.Add("No Invoice", NoInvoiceList.Count);
+            titleList.Add("Didn't Arrive", DidntArriveList.Count);
+            titleList.Add("Partial Delivery", PartialDeliveryList.Count);
+            titleList.Add("For Clarification", ForClarification.Count);
+
+            //foreach (var list in nameOfLists)
+            //{
+            //    ReturnParentRequestList = ReturnParentRequestList.Add(list); 
+            //}
+            ReturnParentRequestList.Add(NotPayedList);
+            ReturnParentRequestList.Add(NoInvoiceList);
+            ReturnParentRequestList.Add(DidntArriveList);
+            ReturnParentRequestList.Add(PartialDeliveryList);
+            ReturnParentRequestList.Add(ForClarification);
+            //ReturnParentRequestList = ReturnParentRequestList.Add(NoInvoiceList);
+
+            PaymentNotificationsViewModel paymentNotificationsViewModel = new PaymentNotificationsViewModel
+            {
+                TitleList = titleList,
+                ParentRequests = await ReturnParentRequestList.ToListAsync() }
+            ;
+
+            return View(paymentNotificationsViewModel);
+ 
         }
 
-        // GET: ParentRequests/Details/5
-        public async Task<IActionResult> Details(int? id)
+            // GET: ParentRequests/Details/5
+            public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {

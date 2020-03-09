@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.Data
 {
     public static class ModelExtensionData
     {
-        public static void Seed(this ModelBuilder modelBuilder) 
+        public static void Seed(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ParentCategory>().HasData
            (
@@ -158,6 +158,137 @@ namespace PrototypeWithAuth.Data
                     RequestStatusDescription = "Clarify" // request page, under order
                 }
              );
+            modelBuilder.Entity<UnitParentType>().HasData
+         (
+         new UnitParentType
+         {
+             UnitParentTypeID = 1,
+             UnitParentTypeDescription = "Units"
+         },
+         new UnitParentType
+         {
+             UnitParentTypeID = 2,
+             UnitParentTypeDescription = "Weight/Volume"
+         },
+         new UnitParentType
+         {
+             UnitParentTypeID = 3,
+             UnitParentTypeDescription = "Test"
+         }
+         );
+
+            modelBuilder.Entity<UnitType>().HasData
+         (
+             new UnitType
+             {
+                 UnitTypeID = 1,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Bottle"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 2,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Box"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 3,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Pack"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 4,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Bag"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 5,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Unit"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 6,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Vial"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 7,
+                 UnitParentTypeID = 2,
+                 UnitTypeDescription = "Kg"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 8,
+                 UnitParentTypeID = 2,
+                 UnitTypeDescription = "gr"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 9,
+                 UnitParentTypeID = 2,
+                 UnitTypeDescription = "mg"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 10,
+                 UnitParentTypeID = 2,
+                 UnitTypeDescription = "�g"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 11,
+                 UnitParentTypeID = 2,
+                 UnitTypeDescription = "Liter"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 12,
+                 UnitParentTypeID = 2,
+                 UnitTypeDescription = "ml"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 13,
+                 UnitParentTypeID = 2,
+                 UnitTypeDescription = "�l"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 14,
+                 UnitParentTypeID = 2,
+                 UnitTypeDescription = "gal"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 15,
+                 UnitParentTypeID = 3,
+                 UnitTypeDescription = "rxhs"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 16,
+                 UnitParentTypeID = 3,
+                 UnitTypeDescription = "test"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 17,
+                 UnitParentTypeID = 3,
+                 UnitTypeDescription = "preps"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 18,
+                 UnitParentTypeID = 3,
+                 UnitTypeDescription = "assays"
+             }
+            );
+
 
 
         }
