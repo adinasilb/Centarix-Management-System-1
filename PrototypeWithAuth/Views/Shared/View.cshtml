@@ -5,6 +5,42 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
     Layout = null;
+
+    /*
+     * Determine Active Nav Link START
+     * using the
+     */
+
+    //initializing pageType to None just in case none is passed in we don't want to disable any buttons unnecessarily (can take this out in the future if we are sure that we don't need it)
+    var pageType = AppUtility.RequestPageTypeEnum.None;
+
+    //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
+    if (TempData["PageType"] != null)
+    {
+        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+    }
+
+    //passing the
+    string initalClasses = "nav-link";
+    string currentClasses = " text-dark";
+    string inventoryClass = initalClasses;
+    string requestClass = initalClasses;
+    string cartClass = initalClasses;
+    switch (pageType)
+    {
+        case AppUtility.RequestPageTypeEnum.Inventory:
+            inventoryClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Request:
+            requestClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Cart:
+            cartClass = initalClasses + currentClasses;
+            break;
+    }
+
+    /*Determine Active Nav Link END*/
+
 }
 
 <!DOCTYPE html>
@@ -17,6 +53,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -27,15 +64,14 @@
                 </div>
                 <div class="container-fluid">
                     <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left">
-                        <li class="nav-item nav-fill">
-                            @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = "btn btn-link text-dark" })
+                        <li class="nav-item">
+                            @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @role = "button", @id = "inventory-link" })
                         </li>
-                        <li class="nav-item nav-fill">
-                            @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = "btn btn-link text-dark" })
+                        <li class="nav-item">
+                            @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
                         </li>
-                        @*Here for testing purposes*@
-                        <li class="nav-item nav-fill">
-                            @Html.ActionLink("Products", "IndexCopy", "Products", new { }, new { @class = "btn btn-link text-dark" })
+                        <li class="nav-item">
+                            @Html.ActionLink("Cart", "Cart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" })
                         </li>
                     </ul>
                 </div>
@@ -54,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            @*</nav>*@
+        </nav>
     </header>
     <!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
     <!--for now i am using an aside just to help me viuslly see thing on the side-->

@@ -1,5 +1,9 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 
+@{
+    string Type = ViewData["ModalViewType"].ToString();
+
+}
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
@@ -17,7 +21,10 @@
                 {
                     <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
                 }
-                <h4 class="modal-title"><input asp-for="Request.Product.ProductName" /></h4>
+                <div class="form-group">
+                    <h4><label asp-for="Request.Product.ProductName" class="control-label">@Type Request : </label> </h4>
+                    <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded" /></h4>
+                </div>
                 <span asp-validation-for="Request.Product.ProductName"></span>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
@@ -43,8 +50,8 @@
                                     <div class="form-group">
                                         <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-     "Select Category", new { @class = "form-control", @id = "parentlist" })
+                                        new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+                                        "Select Category", new { @class = "form-control", @id = "parentlist" })
                                         <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -52,8 +59,8 @@
                                     <div class="form-group sublist">
                                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-     new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-     "Select Subcategory", new { @class = "form-control", @id = "sublist" })
+                                        new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+                                        "Select Subcategory", new { @class = "form-control", @id = "sublist" })
                                         <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -75,14 +82,14 @@
                                     <div class="form-group">
                                         <label asp-for="Request.Product.Vendor" class="control-label"></label>
                                         @Html.DropDownListFor(
-         vm => vm.Request.Product.VendorID,
-         new SelectList(
-             Model.Vendors,
-             dataValueField: "VendorID",
-             dataTextField: "VendorEnName"),
-         optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-         htmlAttributes: new { @class = "form-control", @id = "vendorList" }
-     )
+                                        vm => vm.Request.Product.VendorID,
+                                        new SelectList(
+                                        Model.Vendors,
+                                        dataValueField: "VendorID",
+                                        dataTextField: "VendorEnName"),
+                                        optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                                        htmlAttributes: new { @class = "form-control", @id = "vendorList" }
+                                        )
                                         <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -132,10 +139,10 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">End Date</label>
-                                    @{ 
+                                    @{
                                         //get this just to return the date (not the time)
                                         //adding the amount of months of the warranty to the invoice date
-                                        var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty).Date;
+                                        var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                                     }
                                     <input value="@endWarrantyDate" class="form-control-plaintext" disabled="disabled" />
                                 </div>
@@ -168,7 +175,183 @@
                         </div>
                         <div id="price" class="tab-pane fade">
                             <h3>PRICE</h3>
-                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-4 border rounded p-1">
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.Unit" class="control-label"></label>
+                                            <input asp-for="Request.Unit" class="form-control" />
+                                            <span asp-validation-for="Request.Unit" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="Request.UnitType" class="control-label"></label>
+                                                @Html.DropDownListFor(
+                                                    vm => vm.Request.UnitType,
+                                                    Model.UnitTypeList,
+                                                    htmlAttributes: new { @class = "form-control", @id="unit-type"}
+                                                )
+                                                <span asp-validation-for="Request.UnitType" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Price:</label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#36;</span>
+                                                    <input class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#x20aa;</span>
+                                                    <input class="form-control disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 border rounded p-1">
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.SubUnit" class="control-label"></label>
+                                            <input asp-for="Request.SubUnit" class="form-control" />
+                                            <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.SubUnitType" class="control-label"></label>
+                                            @Html.DropDownListFor(
+                                                    vm => vm.Request.SubUnitType,
+                                                    Model.UnitTypeList,
+                                                    htmlAttributes: new { @class = "form-control" }
+                                                )
+                                            <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Price:</label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#36;</span>
+                                                    <input class="form-control-plaintext" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#x20aa;</span>
+                                                    <input class="form-control-plaintext" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 border rounded p-1">
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.SubSubunit" class="control-label"></label>
+                                            <input asp-for="Request.SubSubunit" class="form-control" />
+                                            <span asp-validation-for="Request.SubSubunit" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.SubSubUnitType" class="control-label"></label>
+                                            @Html.DropDownListFor(
+                                                    vm => vm.Request.SubSubUnitType,
+                                                    Model.UnitTypeList,
+                                                    htmlAttributes: new { @class = "form-control" }
+                                                )
+                                            <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Price:</label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#36;</span>
+                                                    <input class="form-control-plaintext" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#x20aa;</span>
+                                                    <input class="form-control-plaintext" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Sum:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input class="form-control-plaintext" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Sum:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input class="form-control-plaintext" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">VAT</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input class="form-control-plaintext" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Sum:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input class="form-control-plaintext" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Sum:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input class="form-control-plaintext" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Discount:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Terms:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <label class="form-check-label"><input class="form-check-input" type="checkbox" />Paid</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                @*calculate payments here*@
+                            </div>
                         </div>
                         <div id="documents" class="tab-pane fade">
                             <h3>DOCUMENTS</h3>
@@ -177,7 +360,7 @@
                                 <div class="col-md-3">
                                     <label class="control-label">Order Doc</label>
                                     <input type="file" multiple name="order-docs" id="order-docs file" class="form-control-file" value="ActionHandlerForForm" />
-                                   
+
                                     <span class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
@@ -232,8 +415,9 @@
             <div class="modal-footer">
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-outline-primary" />
+                    <input type="submit" value="Add To Cart" class="btn btn-outline-primary" />
                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
-                    <button type="button" class="btn btn-outline-info" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
 
@@ -260,5 +444,44 @@
 
     <script type="text/javascript">
 
+        /*
+         * Including these js pieces from site.js b/c has issue always attaching
+         */
+
+        //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
+        $("#parentlist").change(function () {
+            var parentCategoryId = $("#parentlist").val();
+            var url = "/Requests/GetSubCategoryList";
+
+            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                var item = "";
+                $("#sublist").empty();
+                $.each(data, function (i, subCategory) {
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                });
+                $("#sublist").html(item);
+            });
+        });
+
+        //load the vendor business id with the vendor business id corresponding to the newly selected vendor from the vendor list
+        $("#vendorList").change(function () {
+            //get the new vendor id selected
+            var vendorid = $("#vendorList").val();
+            //load the url of the Json Get from the controller
+
+        });
+
+        $.fn.ChangeVendorBusinessId = function ($vendorid) {
+            var url = "/Requests/GetVendorBusinessID";
+
+            $.getJSON(url, { VendorID: vendorid }, function (data) {
+                var newBusId = "" + data.vendorBuisnessID;
+                $(".vendorBusinessId").html(newBusId);
+            })
+        }
+
+        $("#unit-type").change(function () {
+            console.log("Unit type clicked");
+        });
     </script>
 }

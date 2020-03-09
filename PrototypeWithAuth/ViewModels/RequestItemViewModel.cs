@@ -16,7 +16,11 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
+        public IEnumerable<SelectListItem> UnitTypeList { get; set; }
+
+        //can get rid of this just check
         public SelectList Users { get; set; }
+
         public Request Request { get; set; } // requests already include the product, we do not need to include a seperate product
 
     }
