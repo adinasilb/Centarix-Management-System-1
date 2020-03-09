@@ -23,7 +23,19 @@
         subcategoryID = (int)TempData["SubcategoryID"];
     }
 
-    string PageType = TempData["PageType"].ToString();
+    var PageType = TempData["PageType"];
+
+    //saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
+    bool Request = false;
+    bool Inventory = false;
+    if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
+    {
+        Request = true;
+    }
+    else if (PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    {
+        Inventory = true;
+    }
 
     string newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
     string orderedButtonText = "Ordered [" + TempData["AmountOrdered"].ToString() + "]";
@@ -57,7 +69,7 @@
     <p>
         <a asp-action="Create">Create New</a>
     </p>*@
-@if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request.ToString()))
+@if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
 {
     <div class="row">
         <div class="col-md-12">
@@ -82,6 +94,11 @@
             <th>@Html.DisplayNameFor(model => model[0].Product.ProductName)</th>
             <th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>
             <th>TOTAL</th> @*Placeholder until we insert total*@
+            @*Later on should have a better location...*@
+            @if (Inventory)
+            {
+                <th>@Html.DisplayNameFor(m => m[0].Product.LocationID)</th>
+}
             <th>@Html.DisplayNameFor(m => m[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
             <th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>
             <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
@@ -98,13 +115,26 @@
                 <td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName)</td>
                 <td>Placeholder</td> @*Computed column?*@
+                @*Later on should have a better location...*@
+                @if (Inventory)
+                {
+                    <th>@Html.DisplayFor(m => m[0].Product.LocationID)</th>
+                }
                 <td>@Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription)</td>
                 <td>@Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName)</td>
                 <td>@Html.DisplayFor(modelItem => item.ParentRequest.OrderDate)</td>
                 @*here for testing purposes*@
                 <td>@Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusDescription)</td>
                 <td>
-                    <a asp-action="Received" asp-route-id="@item.RequestID">Received</a> |
+                    @if (item.RequestStatusID == 1)
+                    {
+                        <button class="btn btn-link">Approve</button><span> | </span>
+                    }
+                    else
+                    {
+                        @*work on getting the correct syntax to create a new product with*@
+                        <button class="btn btn-link load-product-details" value="">Order</button><span>|</span>
+                    }
                     <!-- Button to Open the Modal -->
                     <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">Edit</button>
                 </td>

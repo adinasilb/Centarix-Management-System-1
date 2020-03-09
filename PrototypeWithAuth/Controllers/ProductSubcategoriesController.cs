@@ -34,7 +34,6 @@ namespace PrototypeWithAuth.Controllers
         {
             var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
             return Json(subCategoryList);
-
         }
 
     }
