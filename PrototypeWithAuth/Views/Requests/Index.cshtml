@@ -62,6 +62,8 @@
             receivedActiveClass = "btn btn-secondary text-dark new-button";
             break;
     }
+
+    bool userCanApprove = false;
 }
 
 @*<h1>Index</h1>
@@ -98,13 +100,13 @@
             @if (Inventory)
             {
                 <th>@Html.DisplayNameFor(m => m[0].Product.LocationID)</th>
-}
+            }
             <th>@Html.DisplayNameFor(m => m[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
             <th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>
             <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
             @*here for testing purposes*@
             <th>@Html.DisplayNameFor(m => m[0].RequestStatus.RequestStatusDescription)</th>
-            <th></th>
+            <th></th><th></th>
         </tr>
     </thead>
     <tbody>
@@ -128,13 +130,18 @@
                 <td>
                     @if (item.RequestStatusID == 1)
                     {
-                        <button class="btn btn-link">Approve</button><span> | </span>
+                        //this is a nested if b/c if user can't approve then i still don't want it to go the the else
+                        if (userCanApprove)
+                        {
+                            <button class="btn btn-link">Approve</button>
+                        }
                     }
                     else
                     {
                         @*work on getting the correct syntax to create a new product with*@
-                        <button class="btn btn-link load-product-details" value="">Order</button><span>|</span>
+                        <button class="btn btn-link load-order-details" value="@item.RequestID">Order</button>
                     }
+                    </td><td>
                     <!-- Button to Open the Modal -->
                     <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">Edit</button>
                 </td>

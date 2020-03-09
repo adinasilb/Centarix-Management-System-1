@@ -2,7 +2,17 @@
 
 @{
     string Type = ViewData["ModalViewType"].ToString();
-
+    bool create = false;
+    bool edit = false;
+    switch (Type)
+    {
+        case "Create":
+            create = true;
+            break;
+        case "Edit":
+            edit = true;
+            break;
+    }
 }
 
 <script src="~/js/site.js" asp-append-version="true"></script>
@@ -12,7 +22,7 @@
     <div class="modal-content d-inline-block">
 
 
-        <form asp-action="ModalView" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+        <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="@Model.Request.RequestID" />
             <!-- Modal Header -->
@@ -190,7 +200,7 @@
                                                 @Html.DropDownListFor(
                                                     vm => vm.Request.UnitType,
                                                     Model.UnitTypeList,
-                                                    htmlAttributes: new { @class = "form-control", @id="unit-type"}
+                                                    htmlAttributes: new { @class = "form-control", @id = "unit-type" }
                                                 )
                                                 <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                             </div>
@@ -414,8 +424,12 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-outline-primary" />
-                    <input type="submit" value="Add To Cart" class="btn btn-outline-primary" />
+                    <input type="submit" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
+                    @*you can only add to cart if you are creating a new one*@
+                    @if (create)
+                    {
+                        <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
+                    }
                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                     <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
                 </div>

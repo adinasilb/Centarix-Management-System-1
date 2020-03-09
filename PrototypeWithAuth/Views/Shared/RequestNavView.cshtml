@@ -119,12 +119,22 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $tab = e.target.hash;
-        $.fn.CallPage($(this).val(), $tab);
+        var $itemurl = "Requests/ModalView/?id=" + $(this).val();
+        $.fn.CallPage($tab, $itemurl);
         return false;
     });
 
-    $.fn.CallPage = function ($requestid, $tab) {
-        var $itemurl = "Requests/ModalView/?id=" + $requestid
+    $(".load-order-details").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $tab = e.target.hash;
+        var $itemurl = "Requests/ModalView/?id=" + $(this).val()+"&NewRequestFromProduct=true";
+        $.fn.CallPage($tab, $itemurl);
+        return false;
+    });
+
+    $.fn.CallPage = function ($tab, $itemurl) {
         $.ajax({
             url: $itemurl,
             type: 'GET',

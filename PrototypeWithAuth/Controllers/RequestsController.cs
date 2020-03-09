@@ -371,7 +371,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * START MODAL VIEW COPY
          */
-        public async Task<IActionResult> ModalView(int? id)
+        public async Task<IActionResult> ModalView(int? id, bool NewRequestFromProduct = false)
         {
             string ModalViewType = "";
             if (id == null)
@@ -403,6 +403,25 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Request.ParentRequest = new ParentRequest();
                 requestItemViewModel.Request.RequestStatus = new RequestStatus();
                 requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
+            }
+            else if (NewRequestFromProduct)
+            {
+                ModalViewType = "Create"; //?
+
+                requestItemViewModel.Request = new Request();
+                requestItemViewModel.Request.ParentRequest = new ParentRequest();
+                requestItemViewModel.Request.RequestStatus = new RequestStatus();
+                requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
+
+                var request = _context.Requests
+                    .Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.Product.ProductSubcategory.ParentCategory)
+                    .SingleOrDefault(x => x.RequestID == id);
+                requestItemViewModel.Request.ProductID = request.ProductID;
+                requestItemViewModel.Request.Product = request.Product;
+                requestItemViewModel.Request.Product.ProductSubcategory = request.Product.ProductSubcategory;
+                requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory = request.Product.ProductSubcategory.ParentCategory;
+
             }
             else
             {
@@ -480,6 +499,13 @@ namespace PrototypeWithAuth.Controllers
                 return View(requestItemViewModel);
             }
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCart(RequestItemViewModel requestItemViewModel)
+        {
+            return RedirectToAction("Cart");
         }
 
         /*

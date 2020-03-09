@@ -64,7 +64,7 @@ namespace PrototypeWithAuth.AppData
         //combines two lists first checking if one is empty so it doesn't get an error
         public static IQueryable<Request> CombineTwoRequestsLists(IQueryable<Request> RequestListToCheck1, IQueryable<Request> RequestListToCheck2)
         {
-            IQueryable<Request> ReturnList = null;
+            IQueryable<Request> ReturnList = Enumerable.Empty<Request>().AsQueryable();
             if (!RequestListToCheck1.IsEmpty() && RequestListToCheck2.IsEmpty())
             {
                 ReturnList = RequestListToCheck1;
