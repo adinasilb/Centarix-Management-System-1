@@ -3,10 +3,26 @@
     ViewData["Title"] = "RequestNavView";
     Layout = "~/Views/Shared/View.cshtml";
 
-    AppUtility.RequestPageTypeEnum pageTypeString = AppUtility.RequestPageTypeEnum.None;
+    AppUtility.RequestPageTypeEnum pageType = AppUtility.RequestPageTypeEnum.None;
     if (TempData["PageType"] != null)
     {
-        pageTypeString = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+    }
+
+    bool Cart = false;
+    bool Requests = false;
+    bool Inventory = false;
+    switch (pageType)
+    {
+        case AppUtility.RequestPageTypeEnum.Request:
+            Requests = true;
+            break;
+        case AppUtility.RequestPageTypeEnum.Inventory:
+            Inventory = true;
+            break;
+        case AppUtility.RequestPageTypeEnum.Cart:
+            Cart = true;
+            break;
     }
 
     string originalNavClasses = "btn btn-link text-dark";
@@ -16,6 +32,7 @@
     string vendor = originalNavClasses;
     string owner = originalNavClasses;
     string location = originalNavClasses;
+    string cart = originalNavClasses;
 
     var SidebarType = TempData["SidebarTitle"];
     switch (SidebarType)
@@ -32,6 +49,9 @@
         case AppUtility.RequestSidebarEnum.Location:
             location += activeClass;
             break;
+        case AppUtility.RequestSidebarEnum.Cart:
+            cart += activeClass;
+            break;
     }
 
 }
@@ -40,22 +60,43 @@
     <div class="col-md-2 border-right">
         @*<nav class="navbar flex-grow-1">*@
         <ul class="nav flex-column nav-pills nav-stacked">
-            <li class="nav-item">
-                @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
-                <button class="btn btn-link text-dark load-product-details" value="0" data-target="item" href="item">Add Item</button>
-            </li>
-            <li class="nav-item">
-                @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageTypeString }, new { @class = type })
-            </li>
-            <li class="nav-item">
-                @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageTypeString }, new { @class = vendor })
-            </li>
-            <li class="nav-item">
-                @Html.ActionLink("Owner", "Index", "Owners", new { }, new { @class = owner })
-            </li>
-            <li class="nav-item">
-                @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = location })
-            </li>
+            @if (Requests || Inventory)
+            {
+                <li class="nav-item">
+                    @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
+                    <button class="btn btn-link text-dark load-product-details" value="0" data-target="item" href="item">Add Item</button>
+                </li>
+            }
+            @if (Requests || Inventory)
+            {
+                <li class="nav-item">
+                    @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageType }, new { @class = type })
+                </li>
+            }
+            @if (Requests || Inventory)
+            {
+                <li class="nav-item">
+                    @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageType }, new { @class = vendor })
+                </li>
+            }
+            @if (Requests || Inventory)
+            {
+                <li class="nav-item">
+                    @Html.ActionLink("Owner", "Index", "Owners", new { }, new { @class = owner })
+                </li>
+            }
+            @if (Inventory)
+            {
+                <li class="nav-item">
+                    @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = location })
+                </li>
+            }
+            @if (Cart)
+            {
+                <li class="nav-item">
+                    <a class=@cart>Cart</a>
+                </li>
+            }
         </ul>
         @*</nav>*@
     </div>

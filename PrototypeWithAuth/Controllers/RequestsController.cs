@@ -442,7 +442,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
             //use application user of whoever signed in
-            requestItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault( u => u.Id == _userManager.GetUserId(User));
+            requestItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
             //for now putting in the REQUEST STATUS as NEW --> will need to add business logic in the future
             requestItemViewModel.Request.RequestStatusID = 1;
@@ -486,7 +486,17 @@ namespace PrototypeWithAuth.Controllers
          * END MODAL VIEW COPY
          */
 
-
+        /*
+         * BEGIN CART
+         */
+        public async Task<IActionResult> Cart()
+        {
+            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
+            return View();
+        }
+        /*
+         * END CART
+         */
 
     }
 }

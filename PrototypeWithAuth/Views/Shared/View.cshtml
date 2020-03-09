@@ -8,7 +8,7 @@
 
     /*
      * Determine Active Nav Link START
-     * using the 
+     * using the
      */
 
     //initializing pageType to None just in case none is passed in we don't want to disable any buttons unnecessarily (can take this out in the future if we are sure that we don't need it)
@@ -20,23 +20,25 @@
         pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
     }
 
-    //passing the 
+    //passing the
     string initalClasses = "nav-link";
     string currentClasses = " text-dark";
     string inventoryClass = initalClasses;
     string requestClass = initalClasses;
+    string cartClass = initalClasses;
     switch (pageType)
     {
         case AppUtility.RequestPageTypeEnum.Inventory:
             inventoryClass = initalClasses + currentClasses;
-            requestClass = initalClasses;
             break;
         case AppUtility.RequestPageTypeEnum.Request:
-            inventoryClass = initalClasses;
             requestClass = initalClasses + currentClasses;
             break;
+        case AppUtility.RequestPageTypeEnum.Cart:
+            cartClass = initalClasses + currentClasses;
+            break;
     }
-    
+
     /*Determine Active Nav Link END*/
 
 }
@@ -68,6 +70,9 @@
                         <li class="nav-item">
                             @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
                         </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Cart", "Cart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" })
+                        </li>
                     </ul>
                 </div>
                 <div class="container-fluid justify-content-end">
@@ -85,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            </nav>
+        </nav>
     </header>
     <!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
     <!--for now i am using an aside just to help me viuslly see thing on the side-->
