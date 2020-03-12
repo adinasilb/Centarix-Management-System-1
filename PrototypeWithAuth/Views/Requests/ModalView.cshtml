@@ -187,7 +187,7 @@
                             <h3>PRICE</h3>
                             <hr />
                             <div class="row">
-                                <div class="col-md-4 border rounded p-1">
+                                <div class="col-md-4 border rounded p-1 RequestUnitCard">
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.Unit" class="control-label"></label>
@@ -225,11 +225,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 border rounded p-1">
+                                <div class="col-md-4 border rounded p-1 RequestSubunitCard">
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.SubUnit" class="control-label"></label>
-                                            <input asp-for="Request.SubUnit" class="form-control" />
+                                            <input asp-for="Request.SubUnit" class="form-control" disabled />
                                             <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6 form-group">
@@ -238,7 +238,7 @@
                                                     vm => vm.Request.SubUnitType,
                                                     Model.UnitTypeList,
                                                     "",
-                                                    htmlAttributes: new { @class = "form-control", @id= "subunit-type" }
+                                                    htmlAttributes: new { @class = "form-control", @id = "subunit-type", @disabled = "disabled" }
                                                 )
                                             <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                         </div>
@@ -261,11 +261,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 border rounded p-1">
+                                <div class="col-md-4 border rounded p-1 RequestSubsubunitCard">
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.SubSubunit" class="control-label"></label>
-                                            <input asp-for="Request.SubSubunit" class="form-control" />
+                                            <input asp-for="Request.SubSubunit" class="form-control" disabled />
                                             <span asp-validation-for="Request.SubSubunit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6 form-group">
@@ -274,7 +274,7 @@
                                                     vm => vm.Request.SubSubUnitType,
                                                     Model.UnitTypeList,
                                                     "",
-                                                    htmlAttributes: new { @class = "form-control", @id= "subsubunit-type" }
+                                                    htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disabled = "disabled" }
                                                 )
                                             <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                         </div>
@@ -480,8 +480,8 @@
             });
         });
 
-        //load the vendor business id with the vendor business id corresponding to the newly selected vendor from the vendor list
-        
+                //load the vendor business id with the vendor business id corresponding to the newly selected vendor from the vendor list
+
 
     </script>
 }

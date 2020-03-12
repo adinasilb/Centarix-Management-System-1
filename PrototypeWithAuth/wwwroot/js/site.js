@@ -54,16 +54,34 @@ $("#unit-amount").change(function () {
 $("#unit-type").change(function () {
     var selected = $(':selected', this);
     var optgroup = selected.closest('optgroup').attr('label');
-    console.log("Unit type changed " + optgroup);
 
-    //the following is based on the fact that the unit types and parents are seeded with primary key values
-    if (optgroup == "Weight/Volume" || optgroup == "Test") {
-        $("#subunit-type").children().remove("optgroup[label='Units']");
-        $("#subsubunit-type").children().remove("optgroup[label='Units']");
+    if (selected.val() != "") {
+        console.log("inside the if");
+        $(".RequestSubunitCard .form-control").prop('disabled', false);
     }
-    if (optgroup == "Test") {
-        $("#subunit-type").children().remove("optgroup[label='Weight/Volume']");
-        $("#subsubunit-type").children().remove("optgroup[label='Weight/Volume']");
+    //needed to do an else if b/c it wasn't entering the else for some reason
+    else if (selected.val() == "") {
+        console.log("inside the else");
+        $(".RequestSubunitCard .form-control").prop('disabled', true);
+        $(".RequestSubsubunitCard .form-control").prop('disabled', true);
+    }
+    //the following is based on the fact that the unit types and parents are seeded with primary key values
+
+    //take out the sub sub units??
+
+    switch (optgroup) {
+        case "Units":
+            $("#subunit-type optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+            $("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+            break;
+        case "Weight/Volume":
+            $("#subunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+            $("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+            break;
+        case "Test":
+            $("#subunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+            $("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+            break;
     }
 });
 $("#subunit-type").change(function () {
@@ -71,11 +89,25 @@ $("#subunit-type").change(function () {
     var optgroup = selected.closest('optgroup').attr('label');
     console.log("Unit type changed " + optgroup);
 
-    //the following is based on the fact that the unit types and parents are seeded with primary key values
-    if (optgroup == "Weight/Volume" || optgroup == "Test") {
-        $("#subsubunit-type").children().remove("optgroup[label='Units']");
+    if (selected > "") {
+        $(".RequestSubsubunitCard .form-control").attr('disabled', false);
     }
-    if (optgroup == "Test") {
-        $("#subsubunit-type").children().remove("optgroup[label='Weight/Volume']");
+    else {
+        $(".RequestSubsubunitCard .form-control").attr('disabled', true);
+    }
+    //the following is based on the fact that the unit types and parents are seeded with primary key values
+    switch (optgroup) {
+        case "Units":
+            $("#subsubunit-type optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+            $("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+            break;
+        case "Weight/Volume":
+            $("#subsubunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+            $("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+            break;
+        case "Test":
+            $("#subsubunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+            $("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+            break;
     }
 });
