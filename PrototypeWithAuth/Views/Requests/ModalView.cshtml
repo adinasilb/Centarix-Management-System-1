@@ -191,7 +191,7 @@
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.Unit" class="control-label"></label>
-                                            <input asp-for="Request.Unit" class="form-control" id="unit-amount" />
+                                            <input asp-for="Request.Unit" class="form-control" id="unit-amount" min="0"  />
                                             <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6">
@@ -213,13 +213,13 @@
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control" />
+                                                    <input class="form-control" id="unit-price-dollars" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input class="form-control" disabled />
+                                                    <input class="form-control" id="unit-price-shekel" disabled />
                                                 </div>
                                             </div>
                                         </div>
@@ -229,7 +229,7 @@
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.SubUnit" class="control-label"></label>
-                                            <input asp-for="Request.SubUnit" class="form-control" disabled />
+                                            <input asp-for="Request.SubUnit" class="form-control" id="subunit-amount" min="0" disabled />
                                             <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6 form-group">
@@ -249,13 +249,13 @@
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control-plaintext" disabled />
+                                                    <input class="form-control-plaintext" id="subunit-price-dollars" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input class="form-control-plaintext" disabled />
+                                                    <input class="form-control-plaintext" id="subunit-price-shekel" disabled />
                                                 </div>
                                             </div>
                                         </div>
@@ -265,7 +265,7 @@
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.SubSubunit" class="control-label"></label>
-                                            <input asp-for="Request.SubSubunit" class="form-control" disabled />
+                                            <input asp-for="Request.SubSubunit" class="form-control" id="subsubunit-amount" min="0" disabled />
                                             <span asp-validation-for="Request.SubSubunit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6 form-group">
@@ -285,13 +285,13 @@
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control-plaintext" disabled />
+                                                    <input class="form-control-plaintext" id="subsubunit-price-dollars" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input class="form-control-plaintext" disabled />
+                                                    <input class="form-control-plaintext" id="subsubunit-price-shekel" disabled />
                                                 </div>
                                             </div>
                                         </div>
@@ -304,7 +304,7 @@
                                         <label class="control-label">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input class="form-control-plaintext" disabled />
+                                            <input class="form-control" id="sumDollars" />
                                         </div>
                                     </div>
                                 </div>
@@ -313,7 +313,7 @@
                                         <label class="control-label">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input class="form-control-plaintext" disabled />
+                                            <input class="form-control-plaintext" id="sumShekel" disabled />
                                         </div>
                                     </div>
                                 </div>

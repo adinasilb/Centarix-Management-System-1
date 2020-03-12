@@ -3,6 +3,9 @@
 
 // Write your JavaScript code.
 
+//global Exchange Rate variable (usd --> nis)
+var exchangeRate = 3.64;
+
 function showmodal() {
     $("#modal").modal('show');
 };
@@ -48,9 +51,6 @@ $.fn.ChangeVendorBusinessId = function (vendorid) {
 
 //PRICE PAGE ON MODAL VIEW//
 
-$("#unit-amount").change(function () {
-    console.log("Unit amount changed");
-});
 $("#unit-type").change(function () {
     var selected = $(':selected', this);
     var optgroup = selected.closest('optgroup').attr('label');
@@ -111,3 +111,24 @@ $("#subunit-type").change(function () {
             break;
     }
 });
+
+
+//Automatic updates on prices and sums for Modal View --> Pricing
+$("#unit-amount").change(function () {
+    console.log("Unit amount changed");
+});
+$("#subunit-amount").change(function () {
+    console.log("Subunit amount changed");
+});
+$("#subsubunit-amount").change(function () {
+    console.log("Subsubunit amount changed");
+});
+$("#sumDollars").change(function () {
+    console.log("Sum dollars amount changed");
+});
+$.fn.CalculateSum = function () {
+    //first update the units
+    //check if unit (amount) is blank
+    var $unitAmt = $("#unit-amount").val()
+    console.log("unit amount: " + $unitAmt);
+} 
