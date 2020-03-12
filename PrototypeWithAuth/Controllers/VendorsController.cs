@@ -156,7 +156,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         //Get the Json of the vendor business id from the vendor id so JS (site.js) can auto load the form-control with the newly requested vendor
-        [HttpGet] //send a json to that the subcategory list is filered
+        [HttpGet] 
         public JsonResult GetVendorBusinessID(int VendorID)
         {
             Vendor vendor = _context.Vendors.SingleOrDefault(v => v.VendorID == VendorID);

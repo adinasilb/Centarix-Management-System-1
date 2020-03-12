@@ -129,7 +129,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $tab = e.target.hash;
-        var $itemurl = "Requests/ModalView/?id=" + $(this).val()+"&NewRequestFromProduct=true";
+        var $itemurl = "Requests/ModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
         $.fn.CallPage($tab, $itemurl);
         return false;
     });
@@ -168,6 +168,17 @@
                     $("#sublist").html(item);
                     $("#sublist").val(subcategoryId1).change();
                 });
+
+                //get the current vendor id (if loading an already existing product)
+                var vendorid = $("#vendorList").val();
+                //call a function to lad the vendor business id from the vendor id
+                $.fn.ChangeVendorBusinessId(vendorid);
+
+                //IN THE FUTURE: USE DATEPICKER (CODE BELOW- PARTIAL)
+
+                //set the auto date for order date and invoice date to the current date
+                //console.log("About to enter the datepicker")
+                //$('.datepicker').datepicker();
 
             }
         });

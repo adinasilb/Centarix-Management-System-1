@@ -120,14 +120,14 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control" />
+                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control datepicker" />
                                     <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.InvoiceNumber" class="form-control" />
+                                    <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control" />
                                     <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
                                 </div>
                                 <div class="col-md-6">
@@ -191,7 +191,7 @@
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.Unit" class="control-label"></label>
-                                            <input asp-for="Request.Unit" class="form-control" />
+                                            <input asp-for="Request.Unit" class="form-control" id="unit-amount" />
                                             <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6">
@@ -200,6 +200,7 @@
                                                 @Html.DropDownListFor(
                                                     vm => vm.Request.UnitType,
                                                     Model.UnitTypeList,
+                                                    "",
                                                     htmlAttributes: new { @class = "form-control", @id = "unit-type" }
                                                 )
                                                 <span asp-validation-for="Request.UnitType" class="text-danger"></span>
@@ -218,7 +219,7 @@
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input class="form-control disabled" />
+                                                    <input class="form-control" disabled />
                                                 </div>
                                             </div>
                                         </div>
@@ -236,7 +237,8 @@
                                             @Html.DropDownListFor(
                                                     vm => vm.Request.SubUnitType,
                                                     Model.UnitTypeList,
-                                                    htmlAttributes: new { @class = "form-control" }
+                                                    "",
+                                                    htmlAttributes: new { @class = "form-control", @id= "subunit-type" }
                                                 )
                                             <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                         </div>
@@ -247,13 +249,13 @@
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control-plaintext" />
+                                                    <input class="form-control-plaintext" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input class="form-control-plaintext" />
+                                                    <input class="form-control-plaintext" disabled />
                                                 </div>
                                             </div>
                                         </div>
@@ -271,7 +273,8 @@
                                             @Html.DropDownListFor(
                                                     vm => vm.Request.SubSubUnitType,
                                                     Model.UnitTypeList,
-                                                    htmlAttributes: new { @class = "form-control" }
+                                                    "",
+                                                    htmlAttributes: new { @class = "form-control", @id= "subsubunit-type" }
                                                 )
                                             <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                         </div>
@@ -282,13 +285,13 @@
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control-plaintext" />
+                                                    <input class="form-control-plaintext" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input class="form-control-plaintext" />
+                                                    <input class="form-control-plaintext" disabled />
                                                 </div>
                                             </div>
                                         </div>
@@ -301,7 +304,7 @@
                                         <label class="control-label">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input class="form-control-plaintext" />
+                                            <input class="form-control-plaintext" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -310,7 +313,7 @@
                                         <label class="control-label">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input class="form-control-plaintext" />
+                                            <input class="form-control-plaintext" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -328,7 +331,7 @@
                                         <label class="control-label">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input class="form-control-plaintext" />
+                                            <input class="form-control-plaintext" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -337,7 +340,7 @@
                                         <label class="control-label">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input class="form-control-plaintext" />
+                                            <input class="form-control-plaintext" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -478,24 +481,7 @@
         });
 
         //load the vendor business id with the vendor business id corresponding to the newly selected vendor from the vendor list
-        $("#vendorList").change(function () {
-            //get the new vendor id selected
-            var vendorid = $("#vendorList").val();
-            //load the url of the Json Get from the controller
+        
 
-        });
-
-        $.fn.ChangeVendorBusinessId = function ($vendorid) {
-            var url = "/Requests/GetVendorBusinessID";
-
-            $.getJSON(url, { VendorID: vendorid }, function (data) {
-                var newBusId = "" + data.vendorBuisnessID;
-                $(".vendorBusinessId").html(newBusId);
-            })
-        }
-
-        $("#unit-type").change(function () {
-            console.log("Unit type clicked");
-        });
     </script>
 }

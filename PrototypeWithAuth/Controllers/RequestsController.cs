@@ -215,15 +215,6 @@ namespace PrototypeWithAuth.Controllers
             return View(viewModel);
         }
 
-        [HttpGet] //send a json to that the subcategory list is filered
-        public JsonResult GetSubCategoryList(int ParentCategoryId)
-        {
-            var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
-            return Json(subCategoryList);
-
-        }
-
-
         // POST: Requests/Create/ 
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -403,6 +394,12 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Request.ParentRequest = new ParentRequest();
                 requestItemViewModel.Request.RequestStatus = new RequestStatus();
                 requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
+
+                //if you are creating a new one set the dates to today to prevent problems in the front end
+                //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
+                //(already imported it)
+                requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
+                requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
             }
             else if (NewRequestFromProduct)
             {
@@ -414,13 +411,10 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
 
                 var request = _context.Requests
-                    .Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.Product.ProductSubcategory.ParentCategory)
+                    .Include(r => r.Product)
                     .SingleOrDefault(x => x.RequestID == id);
                 requestItemViewModel.Request.ProductID = request.ProductID;
                 requestItemViewModel.Request.Product = request.Product;
-                requestItemViewModel.Request.Product.ProductSubcategory = request.Product.ProductSubcategory;
-                requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory = request.Product.ProductSubcategory.ParentCategory;
 
             }
             else
@@ -452,16 +446,11 @@ namespace PrototypeWithAuth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ModalView(RequestItemViewModel requestItemViewModel)
         {
-            //same logic as create controller
-            //addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
-            //addNewItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
-            //addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
-            //addNewItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
-
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
-            requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
+            /*take this out*/requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
             //use application user of whoever signed in
-            requestItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
 
             //for now putting in the REQUEST STATUS as NEW --> will need to add business logic in the future
             requestItemViewModel.Request.RequestStatusID = 1;
@@ -523,6 +512,20 @@ namespace PrototypeWithAuth.Controllers
         /*
          * END CART
          */
+
+        /*
+         * JSONS
+         */
+
+        [HttpGet] //send a json to that the subcategory list is filered
+        public JsonResult GetSubCategoryList(int ParentCategoryId)
+        {
+            var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
+            return Json(subCategoryList);
+
+        }
+
+
 
     }
 }
