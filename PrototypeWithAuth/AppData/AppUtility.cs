@@ -14,7 +14,7 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentPageTypeEnum { None, Notifications, General, Expenses} //these are all going to the ParentRequestIndex
         public enum RequestSidebarEnum { None, Type, Vendor, Owner, Location, Cart }
 
-        public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0)
+        public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
         {
             int ReturnList = 0;
             if (VendorID > 0)
@@ -29,6 +29,13 @@ namespace PrototypeWithAuth.AppData
                 ReturnList = RequestsList
                     .Where(r => r.RequestStatusID == RequestStatusID)
                     .Where(r => r.Product.ProductSubcategoryID == SubcategoryID)
+                    .Count();
+            }
+            else if (ApplicationUserID != null)
+            {
+                ReturnList = RequestsList
+                    .Where(r => r.RequestStatusID == RequestStatusID)
+                    .Where(r => r.ParentRequest.ApplicationUserID == ApplicationUserID)
                     .Count();
             }
             else

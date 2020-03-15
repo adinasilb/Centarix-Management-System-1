@@ -83,8 +83,9 @@ namespace PrototypeWithAuth.Controllers
             PaymentNotificationsViewModel paymentNotificationsViewModel = new PaymentNotificationsViewModel
             {
                 TitleList = titleList,
-                ParentRequests = await ReturnParentRequestList.ToListAsync() }
-            ;
+                ParentRequests = await ReturnParentRequestList.ToListAsync()
+            };
+            
 
             return View(paymentNotificationsViewModel);
  

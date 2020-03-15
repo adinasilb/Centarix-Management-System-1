@@ -13,7 +13,7 @@
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
-    int vendorID = 0; int subcategoryID = 0;
+    int vendorID = 0; int subcategoryID = 0; string applicationUserID = null;
     if (TempData["VendorID"] != null)
     {
         vendorID = (int)TempData["VendorID"];
@@ -21,6 +21,10 @@
     else if (TempData["SubcategoryID"] != null)
     {
         subcategoryID = (int)TempData["SubcategoryID"];
+    }
+     else if (TempData["ApplicationUserID"] != null)
+    {
+        applicationUserID = TempData["ApplicationUserID"].ToString();
     }
 
     var PageType = TempData["PageType"];
@@ -75,13 +79,13 @@
         <div class="col-md-12">
             <ul class="list-inline">
                 <li class="list-inline-item nav-fill active">
-                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = newActiveClass })
+                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID,@vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = newActiveClass })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })
+                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID,@vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })
+                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID,@vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })
                 </li>
             </ul>
         </div>
