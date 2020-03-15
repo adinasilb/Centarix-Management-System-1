@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 
 //global Exchange Rate variable (usd --> nis)
-var exchangeRate = 3.64;
+var $exchangeRate = 3.67;
 
 function showmodal() {
     $("#modal").modal('show');
@@ -115,7 +115,7 @@ $("#subunit-type").change(function () {
 
 //Automatic updates on prices and sums for Modal View --> Pricing
 $("#unit-amount").change(function () {
-    console.log("Unit amount changed");
+    $.fn.ChangeUnitAndSum();
 });
 $("#subunit-amount").change(function () {
     console.log("Subunit amount changed");
@@ -124,11 +124,49 @@ $("#subsubunit-amount").change(function () {
     console.log("Subsubunit amount changed");
 });
 $("#sumDollars").change(function () {
-    console.log("Sum dollars amount changed");
+    $.fn.ChangeUnitAndSum();
 });
-$.fn.CalculateSum = function () {
-    //first update the units
-    //check if unit (amount) is blank
-    var $unitAmt = $("#unit-amount").val()
-    console.log("unit amount: " + $unitAmt);
+$("#vatInShekel").change(function () {
+    $.fn.ChangeVAT();
+});
+$.fn.ChangeUnitAndSum = function (){
+    var $unitAmt = $("#unit-amount").val();
+    var $sumDollars = $("#sumDollars").val();
+    $unitSumDollars = $sumDollars / $unitAmt;
+    console.log($unitSumDollars);
+    $('input[name="unit-price-dollars"]').val($unitSumDollars);
+    $.fn.ChangeShekalim();
+}
+$.fn.ChangeShekalim = function () {
+    //change the sum
+    $sumDollars = $("#sumDollars").val();
+    $sumShekel = $sumDollars * $exchangeRate;
+    $('input[name="sumShekel"').val($sumShekel);
+
+    //change the unit
+    $unitPriceDollars = $("#unit-price-dollars").val();
+    $unitPriceShekel = $unitPriceDollars * $exchangeRate;
+    $('input[name="unit-price-shekel"]').val($unitPriceShekel);
+
+    //change the subunit 
+    $subunitPriceDollars = $("#subunit-price-dollars").val();
+    $subunitPriceShekel = $subunitPriceDollars * $exchangeRate;
+    $('input[name="subunit-price-shekel"]').val($subunitPriceShekel);
+
+    //change the subsubunit
+    $subsubunitPriceDollars = $("#subsubunit-price-dollars").val();
+    $subsubunitPriceShekel = $subsubunitPriceDollars * $exchangeRate;
+    $('input[name="subsubunit-price-shekel"]').val($subsubunitPriceShekel);
+
+    $.fn.ChangeVAT();
 } 
+
+$.fn.ChangeVAT = function () {
+    $vatInShekel = $("#vatInShekel").val();
+    console.log("Vat in Shekel: " + $vatInShekel);
+    $('input[name="SumPlusVat-Shekel"]').val($("#sumShekel").val() + $vatInShekel);
+    //IS THIS THE BEST WAY OF DOING IT OR SHOULD I CONVERT THE INPUT I JUST DID??
+    $vatInDollars = $vatInShekel / $exchangeRate;
+    console.log("Vat in Dollars: " + $vatInDollars);
+    $('input[name="SumPlusVat-Shekel"]').val($("#sumDollars").val() + $vatInDollars);
+}
