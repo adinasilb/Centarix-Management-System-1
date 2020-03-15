@@ -127,9 +127,10 @@ $("#sumDollars").change(function () {
     $.fn.ChangeUnitAndSum();
 });
 $("#vatInShekel").change(function () {
+    console.log("Vat changed");
     $.fn.ChangeVAT();
 });
-$.fn.ChangeUnitAndSum = function (){
+$.fn.ChangeUnitAndSum = function () {
     var $unitAmt = $("#unit-amount").val();
     var $sumDollars = $("#sumDollars").val();
     $unitSumDollars = $sumDollars / $unitAmt;
@@ -159,14 +160,14 @@ $.fn.ChangeShekalim = function () {
     $('input[name="subsubunit-price-shekel"]').val($subsubunitPriceShekel);
 
     $.fn.ChangeVAT();
-} 
+}
 
 $.fn.ChangeVAT = function () {
     $vatInShekel = $("#vatInShekel").val();
-    console.log("Vat in Shekel: " + $vatInShekel);
-    $('input[name="SumPlusVat-Shekel"]').val($("#sumShekel").val() + $vatInShekel);
+    $sumPlusVatShekel = $("#sumShekel").val() + $vatInShekel;
+    $('input[name="SumPlusVat-Shekel"]').val($sumPlusVatShekel);
     //IS THIS THE BEST WAY OF DOING IT OR SHOULD I CONVERT THE INPUT I JUST DID??
     $vatInDollars = $vatInShekel / $exchangeRate;
-    console.log("Vat in Dollars: " + $vatInDollars);
-    $('input[name="SumPlusVat-Shekel"]').val($("#sumDollars").val() + $vatInDollars);
+    $sumPlusVatDollars = $("#sumDollars").val() + $vatInDollars;
+    $('input[name="SumPlusVat-Shekel"]').val($sumPlusVatDollars);
 }
