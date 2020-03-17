@@ -169,6 +169,20 @@
                     $("#sublist").val(subcategoryId1).change();
                 });
 
+                //For the order files
+
+                //goes into this function  
+                $(".custom-file-input").on("change", function () {
+                    var fileLabel = $(this).next(".custom-file-label");
+                    var files = $(this)[0].files;
+                    if (files.length > 1) {
+                        fileLabel.html(files.length + ' files selected');
+                    }
+                    else {
+                        fileLabel.html(files[0].name);
+                    }
+                });
+
                 //get the current vendor id (if loading an already existing product)
                 var vendorid = $("#vendorList").val();
                 //call a function to lad the vendor business id from the vendor id

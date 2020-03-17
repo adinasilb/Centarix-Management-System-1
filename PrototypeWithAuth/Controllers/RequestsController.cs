@@ -15,6 +15,7 @@ using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using X.PagedList;
+using Microsoft.AspNetCore.Hosting;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -22,12 +23,15 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHostingEnvironment _hostingEnvironment;
         private List<Request> _cartRequests = new List<Request>();
 
-        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            //use the hosting environment for the file uploads
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Requests
@@ -230,16 +234,6 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> Create(RequestItemViewModel requestItemViewModel)
         {
-            //insert the lists of parentcategories, productcategories, and vendors into the view model object for validation purposes and to return the same view if needed
-            //var parentCategories = _context.ParentCategories.ToList();
-            //var productSubcategories = _context.ProductSubcategories.ToList();
-            //var vendors = _context.Vendors.ToList();
-            //var requeststatuses = _context.RequestStatuses.ToList();
-            //AddNewItemViewModelObj.ParentCategories = parentCategories;
-            //AddNewItemViewModelObj.ProductSubcategories = productSubcategories;
-            //AddNewItemViewModelObj.Vendors = vendors;
-            //AddNewItemViewModelObj.RequestStatuses = requeststatuses;
-
             // view data is placed in the beginning in order to redirect when errors are caught, so need to have the info saved before handling the error
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", requestItemViewModel.Request.ParentRequest.ApplicationUserID);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", requestItemViewModel.Request.ProductID);
@@ -428,6 +422,8 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestStatus)
                     .Include(r => r.ParentRequest.ApplicationUser)
                     .SingleOrDefault(x => x.RequestID == id);
+                
+
 
                 if (requestItemViewModel.Request == null)
                 {
@@ -447,7 +443,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ModalView(RequestItemViewModel requestItemViewModel)
         {
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
-            /*take this out*/requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
+            /*take this out*/
+            requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
             //use application user of whoever signed in
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
@@ -467,7 +464,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 /*
                  * the viewmodel loads the request.product with a primary key of 0
-                 * so if you don't insert the request.productid into the request.product.product id
+                 * so if you don't insert the request.productid into the request.product.productid
                  * it will create a new one instead of updating the existing one
                  * only need this if using an existing product
                  */
@@ -476,6 +473,24 @@ namespace PrototypeWithAuth.Controllers
                 {
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
+                    //save the files
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
+                    Directory.CreateDirectory(requestFolder);
+                    if (requestItemViewModel.orderFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile orderFile in requestItemViewModel.orderFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Orders");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + orderFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            orderFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
