@@ -14,7 +14,7 @@
             <tr>
                 <td>
 
-                    @Html.ActionLink(item.FirstName, "Index", "Requests", new { @applicationUserID =  @item.Id, @PageType = pagetype }, null)
+                    @Html.ActionLink(item.FirstName + " " + item.LastName, "Index", "Requests", new { @applicationUserID =  @item.Id, @PageType = pagetype }, null)
                 </td>
             </tr>
         }

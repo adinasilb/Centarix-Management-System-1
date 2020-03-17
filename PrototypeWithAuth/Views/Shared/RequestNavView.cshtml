@@ -82,7 +82,7 @@
             @if (Requests || Inventory)
             {
                 <li class="nav-item">
-                    @Html.ActionLink("Owner", "Index", "ApplicationUsers", new { }, new { @class = owner }) @*have to create contorller for application user?*@
+                    @Html.ActionLink("Owner", "Index", "ApplicationUsers", new { @PageType = pageType }, new { @class = owner }) @*have to create contorller for application user?*@
                 </li>
             }
             @if (Inventory)
