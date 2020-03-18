@@ -1,132 +1,140 @@
-﻿@*@model IPagedList<PrototypeWithAuth.Models.ParentRequest>
-    @using PrototypeWithAuth.AppData;
-
-    @using X.PagedList.Mvc.Core;  import this so we get our HTML Helper
-    @using X.PagedList;  import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)*@
-
-@model PrototypeWithAuth.ViewModels.PaymentNotificationsViewModel
+﻿@model PrototypeWithAuth.ViewModels.PaymentNotificationsViewModel
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/NotificationsNavView.cshtml";
+    Layout = "~/Views/Shared/PaymentView.cshtml";
 }
+    <div class="row">
+        <div class="col-md-2 border-right">
+            @*<nav class="navbar flex-grow-1">*@
+            <ul class="nav flex-column nav-pills nav-stacked">
+                <li class="nav-item">
+                    <a href="#@Model.TitleList.ElementAt(0).Key">@Model.TitleList.ElementAt(0).Key <br />[@Model.TitleList.ElementAt(0).Value] </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#@Model.TitleList.ElementAt(1).Key">@Model.TitleList.ElementAt(1).Key <br />[@Model.TitleList.ElementAt(1).Value] </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#@Model.TitleList.ElementAt(2).Key">@Model.TitleList.ElementAt(2).Key <br />[@Model.TitleList.ElementAt(2).Value] </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#@Model.TitleList.ElementAt(3).Key">@Model.TitleList.ElementAt(3).Key <br />[@Model.TitleList.ElementAt(3).Value] </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#@Model.TitleList.ElementAt(4).Key">@Model.TitleList.ElementAt(4).Key <br />[@Model.TitleList.ElementAt(4).Value] </a>
+                </li>
+            </ul>
+            @*</nav>*@
+        </div>
+        <div class="col-md-10 border-left">
+            @for (int index = 0; index < Model.TitleList.Count; index++)
+            {
+                var currentTitle = Model.TitleList.ElementAt(index);
+                <h6 id="@currentTitle.Key">@currentTitle.Key [@currentTitle.Value]</h6>
+                <br />
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderNumber)
+                            </th>
 
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.Vendor.VendorEnName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Cost)
 
-@for (int index = 0; index < Model.TitleList.Count; index++)
-{
-    var currentTitle = Model.TitleList.ElementAt(index);
-    <h6>@currentTitle.Key [@currentTitle.Value]</h6>
-    <br />
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderNumber)
-                </th>
+                            </th>
+                        </tr>
+                    </thead>
 
-                <th>
-                    @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.Vendor.VendorEnName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Cost)
+                 
 
-                </th>
-            </tr>
-        </thead>
+                    @foreach (var item in Model.ParentRequests.ElementAt(index)) //go through the full list but
+                    {
+                        bool onlyOneRequest = true;
+                        if (item.Requests.Count() > 1)
+                        {
+                            onlyOneRequest = false;
 
-        @*@for (var i = 0; i < Model.ParentRequests.Count; i++)*@
+                        }
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderNumber)
+                              
+                            </td>
+                            <td>
+                                @if (onlyOneRequest)
+                                {
+                                    
+                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName);
+                                }
+                                else
+                                {
+                                    
+                                    @Html.DisplayFor(modelItem => item.ParentRequestID);
+                                }
+                            </td>
 
-        @foreach (var item in Model.ParentRequests.ElementAt(index)) //go through the full list but
-        {
-        bool onlyOneRequest = true;
-        if (item.Requests.Count() > 1)
-        {
-        onlyOneRequest = false;
+                            <td>
+                              
+                                @Html.DisplayFor(modelItem => item.OrderDate)
+                            </td>
+                            <td>
+                                @if (onlyOneRequest)
+                                {
+                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.ParentRequestID);
+                                }
+                            </td>
+                            <td>
+                                @if (onlyOneRequest)
+                                {
+                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.ParentRequestID);
+                                }
+                            </td>
+                            <th>
+                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
+                            </th>
+                            <th>
+                                @if (onlyOneRequest)
+                                {
+                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
+                                }
+                                else
+                                {
 
-        }
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderNumber)
-            </td>
-            <td>
-                @if (onlyOneRequest)
-                {
-                    Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName);
-                }
-                else
-                {
-                    Html.DisplayFor(modelItem => item.ParentRequestID);
-                }
-            </td>
+                                }
+                            </th>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
-            </td>
-            <td>
-                @if (onlyOneRequest)
-                {
-                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-                }
-                else
-                {
-                    Html.DisplayFor(modelItem => item.ParentRequestID);
-                }
-            </td>
-            <td>
-                @if (onlyOneRequest)
-                {
-                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
-                }
-                else
-                {
-                    Html.DisplayFor(modelItem => item.ParentRequestID);
-                }
-            </td>
-            <th>
-                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
-            </th>
-            <th>
-                @if (onlyOneRequest)
-                {
-                    Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
-                }
-                else
-                {
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.ParentRequestID">Details</a> |
+                            </td>
+                        </tr>
 
-                }
-            </th>
-
-            <td>
-                <a asp-action="Details" asp-route-id="@item.ParentRequestID">Details</a> |
-            </td>
-        </tr>
-
-        }
-    </table>
-    <br />
-}
-
-
-
-@*<script>
-        $(document).ready(function () {
-            $("#totalRequestsNotPayed").html("To Pay [@totalRequestsNotPayed]")
-        });
-
-         $(document).ready(function () {
-            $("#totalRequestsNoInvioce").html("No Invoice [@totalRequestsNoInvioce]")
-        });
-
-    </script>*@
+                    }
+                </table>
+                <br />
+            }
+        </div>
+    </div>

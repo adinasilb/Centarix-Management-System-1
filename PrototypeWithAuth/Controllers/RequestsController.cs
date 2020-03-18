@@ -35,7 +35,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest);
@@ -43,11 +43,11 @@ namespace PrototypeWithAuth.Controllers
             TempData["RequestStatusID"] = RequestStatusID;
             var SidebarTitle = AppUtility.RequestSidebarEnum.None;
 
-            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 1, vendorID, subcategoryID);
-            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 2, vendorID, subcategoryID);
-            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 3, vendorID, subcategoryID);
-            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 4, vendorID, subcategoryID);
-            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryID(fullRequestsList, 5, vendorID, subcategoryID);
+            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
+            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
+            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, vendorID, subcategoryID, applicationUserID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, vendorID, subcategoryID, applicationUserID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, vendorID, subcategoryID, applicationUserID);
 
             //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
@@ -124,6 +124,15 @@ namespace PrototypeWithAuth.Controllers
                 SidebarTitle = AppUtility.RequestSidebarEnum.Type;
                 TempData["SubcategoryID"] = subcategoryID;
             }
+            else if (applicationUserID != null)
+            {
+                RequestsPassedIn = RequestsPassedIn
+                    .OrderByDescending(r => r.ProductID)
+                    .Where(r => r.ParentRequest.ApplicationUserID == applicationUserID);
+                //pass the subcategoryID into the temp data to use if you'd like to sort from there
+                SidebarTitle = AppUtility.RequestSidebarEnum.Owner;
+                TempData["ApplicationUserID"] = applicationUserID;
+            }
 
             //passing in the amounts to display in the top buttons
             TempData["AmountNew"] = newCount;
@@ -145,6 +154,9 @@ namespace PrototypeWithAuth.Controllers
             }
             return View(onePageOfProducts);
         }
+
+
+
 
         // GET: Requests/Details/5
         public async Task<IActionResult> Details(int? id)

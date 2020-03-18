@@ -19,23 +19,28 @@ namespace PrototypeWithAuth.Models
         public int? LocationID { get; set; } // if status is recieved; then LocationID is required (have to make a custom rule)
         public int? RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }
-        public int? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit
-        public int? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
-        public int Unit { get; set; } //largest unit the request comes in - amount of unit
-        
+        public uint? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit
+        public uint? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
+        public uint Unit { get; set; } //largest unit the request comes in - amount of unit
+        //public int Unit { get; set; }
+
+        public int? UnitTypeID { get; set; }
         [ForeignKey("UnitTypeID")]
         public UnitType UnitType { get; set; }
-        public int? SubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subunit
-
+       // public int[] UnitTypes { get; set; }
+        public uint? SubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subunit
+        public int? SubUnitTypeID { get; set; }
         [ForeignKey("SubUnitTypeID")]
         public UnitType SubUnitType { get; set; }
-        public int? SubSubunit { get; set; } // if this is not null, then it this is the smallest unit - amount of subsubunit
+        public uint? SubSubunit { get; set; } // if this is not null, then it this is the smallest unit - amount of subsubunit
+
+        public int? SubSubUnitTypeID { get; set; }
 
         [ForeignKey("SubSubUnitTypeID")]
         public UnitType SubSubUnitType { get; set; }
-        public int UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
-        public int UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
-        public int Quantity { get; set; }
+        public uint UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
+        public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
+        public uint Quantity { get; set; }
         public double Cost { get; set; }
         
 
@@ -48,7 +53,7 @@ namespace PrototypeWithAuth.Models
 
         public double VAT = 0.17; // should this be coded into the model or should we set it elsewhere?
 
-        public int Payments { get; set; } //number of installments
+        public uint Payments { get; set; } //number of installments
         public byte ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
         public string RequestComment { get; set; }
 

@@ -1,0 +1,111 @@
+﻿@using System.Globalization;
+@model IEnumerable<PrototypeWithAuth.Models.ParentRequest>
+@{
+    ViewData["Title"] = "GeneralPaymentList";
+    Layout = "~/Views/Shared/PaymentView.cshtml";
+}
+<div class="row">
+    <div class="col-md-2 border-right">
+        @*<nav class="navbar flex-grow-1">*@
+        <ul class="nav flex-column nav-pills nav-stacked">
+            @{int yearCount = 0;}
+            @foreach (var group in Model.GroupBy(m => m.OrderDate.Year))
+            {
+
+                <li class="nav-item">
+
+                    <a href="#@Model.ElementAt(yearCount).OrderDate.Year">
+                        @Model.ElementAt(yearCount).OrderDate.Year@*.ToString("yyyy",
+                CultureInfo.CreateSpecificCulture("en-US"))*@
+                    </a>
+                </li>
+                yearCount++;
+            }
+        </ul>
+        @*</nav>*@
+        
+    </div>
+    <div class="col-md-10 border-left">
+
+        @foreach (var group in Model.GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month }))
+        {
+            @*<h1>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName()</h1>*@
+            <h1>
+            </h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.OrderNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.OrderDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Cost)
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                @{int total = 0;}
+
+                @foreach (var item in group@*.GroupBy(item => item.OrderDate.Month)*@)
+{
+total++;
+//int index = 0;
+@if (total.Equals(group.Count()))
+{
+    <h6 id = @item.OrderDate.Year>
+        @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.@*ElementAt(index).*@OrderDate.Month) [@total]
+    </h6>
+}
+<tr>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@OrderNumber)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Product.ProductName)
+    </td>
+    <td>
+        @Html.DisplayFor(modeIteml => item.@*ElementAt(index).*@OrderDate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Product.Vendor.VendorEnName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Cost)
+    </td>
+
+    <td>
+        <a asp-action="Details" asp-route-id="@item.ParentRequestID">Details</a> |
+    </td>
+</tr>
+//index++;
+
+}
+            </table>
+        }
+    </div>
+</div>
+    </div>
+

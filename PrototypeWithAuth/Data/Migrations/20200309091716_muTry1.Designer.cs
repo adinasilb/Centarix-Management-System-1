@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200309091716_muTry1")]
+    partial class muTry1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -471,11 +473,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("AmountWithInLocation")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("AmountWithInLocation")
+                        .HasColumnType("int");
 
-                    b.Property<long?>("AmountWithOutLocation")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("AmountWithOutLocation")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
@@ -495,14 +497,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ParentRequestID")
                         .HasColumnType("int");
 
-                    b.Property<long>("Payments")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Payments")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<long>("Quantity")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<string>("RequestComment")
                         .HasColumnType("nvarchar(max)");
@@ -516,11 +518,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("SubSubUnitTypeID")
                         .HasColumnType("int");
 
-                    b.Property<long?>("SubSubunit")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("SubSubunit")
+                        .HasColumnType("int");
 
-                    b.Property<long?>("SubUnit")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("SubUnit")
+                        .HasColumnType("int");
 
                     b.Property<int?>("SubUnitTypeID")
                         .HasColumnType("int");
@@ -528,17 +530,17 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("URL")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Unit")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Unit")
+                        .HasColumnType("int");
 
                     b.Property<int?>("UnitTypeID")
                         .HasColumnType("int");
 
-                    b.Property<long>("UnitsInStock")
-                        .HasColumnType("bigint");
+                    b.Property<int>("UnitsInStock")
+                        .HasColumnType("int");
 
-                    b.Property<long>("UnitsOrdered")
-                        .HasColumnType("bigint");
+                    b.Property<int>("UnitsOrdered")
+                        .HasColumnType("int");
 
                     b.Property<byte>("Warranty")
                         .HasColumnType("tinyint");
@@ -712,7 +714,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             UnitTypeID = 10,
                             UnitParentTypeID = 2,
-                            UnitTypeDescription = "ug"
+                            UnitTypeDescription = "956g"
                         },
                         new
                         {
@@ -730,7 +732,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             UnitTypeID = 13,
                             UnitParentTypeID = 2,
-                            UnitTypeDescription = "ul"
+                            UnitTypeDescription = "956l"
                         },
                         new
                         {

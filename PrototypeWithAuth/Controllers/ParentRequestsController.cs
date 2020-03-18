@@ -30,17 +30,18 @@ namespace PrototypeWithAuth.Controllers
         // GET: ParentRequests
         public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, int? page, AppUtility.PaymentPageTypeEnum PageType = AppUtility.PaymentPageTypeEnum.Notifications)
         {
-            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr =>pr.Vendor);
-            
+            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.Vendor);
 
+            //if (PageType == AppUtility.PaymentPageTypeEnum.Notifications)
+            //{
 
             List<List<ParentRequest>> ReturnParentRequestList = new List<List<ParentRequest>>();
             List<ParentRequest> NotPayedList = new List<ParentRequest>();
             List<ParentRequest> NoInvoiceList = new List<ParentRequest>();
             List<ParentRequest> DidntArriveList = new List<ParentRequest>();
             List<ParentRequest> PartialDeliveryList = new List<ParentRequest>();
-            List <ParentRequest> ForClarification = new List<ParentRequest>();
-   
+            List<ParentRequest> ForClarification = new List<ParentRequest>();
+
 
             foreach (var parentRequest in fullParentRequestsList)
             {
@@ -52,7 +53,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     NoInvoiceList.Add(parentRequest);
                 }
-             
+
 
                 // if ordered, can also include if not  payed or if no invioce..
                 //partial,  can also include if not  payed or if no invioce..
@@ -83,15 +84,57 @@ namespace PrototypeWithAuth.Controllers
             PaymentNotificationsViewModel paymentNotificationsViewModel = new PaymentNotificationsViewModel
             {
                 TitleList = titleList,
-                ParentRequests = await ReturnParentRequestList.ToListAsync() }
-            ;
+                ParentRequests = await ReturnParentRequestList.ToListAsync()
+            };
+
 
             return View(paymentNotificationsViewModel);
- 
+            //}
+            //    else if (PageType == AppUtility.PaymentPageTypeEnum.General)
+            //    {
+            //       var fullParentRequestsListByDate = fullParentRequestsList
+            //            .OrderByDescending(f => f.Time.Date)
+            //            .ThenBy(f => f.Time.TimeOfDay);
+            //        return View(fullParentRequestsListByDate);
+            //    }
+
+            //    return View(paymentNotificationsViewModel);
+            //}
+        }
+        [HttpGet]
+        public async Task<IActionResult> GeneralPaymentList()
+        {
+
+            //var model = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.Vendor)
+            //    .GroupBy(o => new
+            //    {
+            //        Month = o.OrderDate.Month,
+            //        Year = o.OrderDate.Year
+            //    })
+            //    .Select(g => new OrderByDateViewModel
+            //    {
+            //        Month = g.Key.Month,
+            //        Year = g.Key.Year,
+            //        Total = g.Count()
+            //    })
+            //    .OrderByDescending(a => a.Year)
+            //    .ThenByDescending(a => a.Month)
+            //    .ToList();
+
+            //return View(await model.ToListAsync());
+            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.Vendor);
+
+            var fullParentRequestsListByDate = fullParentRequestsList
+                        //.GroupBy(f => f.OrderDate.Month) 
+                        .OrderByDescending(f => f.OrderDate.Date)
+                        .ThenBy(f => f.OrderDate.TimeOfDay);
+            //.GroupBy(f => f.OrderDate.Year);
+            return View(await fullParentRequestsListByDate.ToListAsync());
         }
 
-            // GET: ParentRequests/Details/5
-            public async Task<IActionResult> Details(int? id)
+
+        // GET: ParentRequests/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {

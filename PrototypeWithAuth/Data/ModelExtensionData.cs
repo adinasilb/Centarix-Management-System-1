@@ -237,7 +237,7 @@ namespace PrototypeWithAuth.Data
              {
                  UnitTypeID = 10,
                  UnitParentTypeID = 2,
-                 UnitTypeDescription = "�g"
+                 UnitTypeDescription = "ug"
              },
              new UnitType
              {
@@ -255,7 +255,7 @@ namespace PrototypeWithAuth.Data
              {
                  UnitTypeID = 13,
                  UnitParentTypeID = 2,
-                 UnitTypeDescription = "�l"
+                 UnitTypeDescription = "ul"
              },
              new UnitType
              {
