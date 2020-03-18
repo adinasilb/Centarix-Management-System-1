@@ -423,7 +423,25 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ParentRequest.ApplicationUser)
                     .SingleOrDefault(x => x.RequestID == id);
 
-                requestItemViewModel.orderFileString = Url.Content("~/");
+                //may be able to do this together - combining the path for the orders folders
+                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
+                string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
+                //the partial file name that we will search for (1- because we want the first one)
+                string partialFile = "1";
+                //creating the directory from the path made earlier
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles(partialFile + "*.*");
+                string fullname = "";
+                //getting the file from the FileInfo[]
+                foreach(FileInfo file in orderfilesfound)
+                {
+                    fullname = file.FullName;
+                    //breaking here b/c for now only need the first one
+                    break;
+                }
+                requestItemViewModel.orderFileString = fullname;
 
                 if (requestItemViewModel.Request == null)
                 {

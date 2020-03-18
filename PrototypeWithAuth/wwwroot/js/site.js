@@ -119,6 +119,7 @@ $("#unit-amount").change(function () {
 });
 $("#subunit-amount").change(function () {
     console.log("Subunit amount changed");
+    $.fn.GetSubUnitPrice();
 });
 $("#subsubunit-amount").change(function () {
     console.log("Subsubunit amount changed");
@@ -162,6 +163,7 @@ $.fn.ChangeShekalim = function () {
     $.fn.ChangeVAT();
 }
 
+//CURRENTLY NOT WORKING
 $.fn.ChangeVAT = function () {
     var vatInShekel = $("#vatInShekel").val();
     console.log("vat in shekel: " + vatInShekel);
@@ -177,4 +179,14 @@ $.fn.ChangeVAT = function () {
     console.log("sum plus vat in dollars: " + $sumPlusVatDollars);
     $('input[name="SumPlusVat-Shekel"]').val($sumPlusVatDollars);
     console.log("-----------------------------------");
+}
+
+//get price for subunits
+$.fn.GetSubUnitPrice = function () {
+    var subunitpricedollars = $("#unit-price-dollars").val() / $("#subunit-amount").val();
+    console.log("subunit price dollars " + subunitpricedollars);
+    var subunitpriceshekel = subunitpricedollars * $exchangeRate;
+    console.log("subunit price shekel " + subunitpriceshekel);
+    $('input[name="subunit-price-dollars"]').val(subunitpricedollars);
+    $('input[name="subunit-price-shekel"]').val(subunitpriceshekel);
 }
