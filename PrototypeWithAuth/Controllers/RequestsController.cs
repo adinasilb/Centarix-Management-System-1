@@ -422,8 +422,8 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestStatus)
                     .Include(r => r.ParentRequest.ApplicationUser)
                     .SingleOrDefault(x => x.RequestID == id);
-                
 
+                requestItemViewModel.orderFileString = Url.Content("~/");
 
                 if (requestItemViewModel.Request == null)
                 {
@@ -477,10 +477,10 @@ namespace PrototypeWithAuth.Controllers
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
                     Directory.CreateDirectory(requestFolder);
-                    if (requestItemViewModel.orderFiles != null) //test for more than one???
+                    if (requestItemViewModel.OrderFiles != null) //test for more than one???
                     {
                         var x = 1;
-                        foreach (IFormFile orderFile in requestItemViewModel.orderFiles)
+                        foreach (IFormFile orderFile in requestItemViewModel.OrderFiles)
                         {
                             //create file
                             string folderPath = Path.Combine(requestFolder, "Orders");
