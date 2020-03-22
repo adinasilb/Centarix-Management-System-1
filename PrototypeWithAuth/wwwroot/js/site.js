@@ -168,7 +168,7 @@ $.fn.ChangeVAT = function () {
     var vatInShekel = $("#vatInShekel").val();
     console.log("vat in shekel: " + vatInShekel);
     var sumShekel = $("#sumShekel").val();
-    console.log("su,m in shekel: " + sumShekel);
+    console.log("sum in shekel: " + sumShekel);
     var $sumPlusVatShekel = parseInt(sumShekel) + parseInt(vatInShekel);
     console.log("sum plus vat in shekel: " + $sumPlusVatShekel);
     $('input[name="SumPlusVat-Shekel"]').val($sumPlusVatShekel);
@@ -177,7 +177,7 @@ $.fn.ChangeVAT = function () {
     console.log("Vat in dollars: " + vatInDollars);
     var $sumPlusVatDollars = parseInt($("#sumDollars").val()) + parseInt(vatInDollars);
     console.log("sum plus vat in dollars: " + $sumPlusVatDollars);
-    $('input[name="SumPlusVat-Shekel"]').val($sumPlusVatDollars);
+    $('input[name="SumPlusVat-Dollar"]').val($sumPlusVatDollars);
     console.log("-----------------------------------");
 }
 
