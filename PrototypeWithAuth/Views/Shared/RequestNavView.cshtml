@@ -64,7 +64,7 @@
             {
                 <li class="nav-item">
                     @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
-                    <button class="btn btn-link text-dark load-product-details" value="0" data-target="item" href="item">Add Item</button>
+                    <button class="btn btn-link text-dark load-product-details" value="0" data-target="item" data-backdrop="static" data-keyboard="false" href="item">Add Item</button>
                 </li>
             }
             @if (Requests || Inventory)
@@ -142,6 +142,11 @@
             success: function (data) {
                 //replaces the modal-view class with the ModalView view
                 $(".modal-view").html(data);
+                //turn off data dismiss by clicking out of the box and by pressing esc
+                $(".modal-view").modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
                 //shows the modal
                 $(".modal").modal('show');
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
@@ -171,7 +176,7 @@
 
                 //For the order files
 
-                //goes into this function  
+                //goes into this function
                 $(".custom-file-input").on("change", function () {
                     var fileLabel = $(this).next(".custom-file-label");
                     var files = $(this)[0].files;
