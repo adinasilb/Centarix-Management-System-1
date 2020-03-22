@@ -60,8 +60,8 @@
                                     <div class="form-group">
                                         <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-     "Select Category", new { @class = "form-control", @id = "parentlist" })
+new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+"Select Category", new { @class = "form-control", @id = "parentlist" })
                                         <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -69,8 +69,8 @@
                                     <div class="form-group sublist">
                                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-     new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-     "Select Subcategory", new { @class = "form-control", @id = "sublist" })
+new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+"Select Subcategory", new { @class = "form-control", @id = "sublist" })
                                         <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -92,14 +92,14 @@
                                     <div class="form-group">
                                         <label asp-for="Request.Product.Vendor" class="control-label"></label>
                                         @Html.DropDownListFor(
-     vm => vm.Request.Product.VendorID,
-     new SelectList(
-     Model.Vendors,
-     dataValueField: "VendorID",
-     dataTextField: "VendorEnName"),
-     optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-     htmlAttributes: new { @class = "form-control", @id = "vendorList" }
-     )
+vm => vm.Request.Product.VendorID,
+new SelectList(
+Model.Vendors,
+dataValueField: "VendorID",
+dataTextField: "VendorEnName"),
+optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+htmlAttributes: new { @class = "form-control", @id = "vendorList" }
+)
                                         <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -198,11 +198,11 @@
                                             <div class="form-group">
                                                 <label asp-for="Request.UnitType" class="control-label"></label>
                                                 @Html.DropDownListFor(
-         vm => vm.Request.UnitType,
-         Model.UnitTypeList,
-         "",
-         htmlAttributes: new { @class = "form-control", @id = "unit-type" }
-     )
+vm => vm.Request.UnitType,
+Model.UnitTypeList,
+"",
+htmlAttributes: new { @class = "form-control", @id = "unit-type" }
+)
                                                 <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -235,11 +235,11 @@
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.SubUnitType" class="control-label"></label>
                                             @Html.DropDownListFor(
-             vm => vm.Request.SubUnitType,
-             Model.UnitTypeList,
-             "",
-             htmlAttributes: new { @class = "form-control", @id = "subunit-type", @disabled = "disabled" }
-         )
+vm => vm.Request.SubUnitType,
+Model.UnitTypeList,
+"",
+htmlAttributes: new { @class = "form-control", @id = "subunit-type", @disabled = "disabled" }
+)
                                             <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -271,11 +271,11 @@
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.SubSubUnitType" class="control-label"></label>
                                             @Html.DropDownListFor(
-             vm => vm.Request.SubSubUnitType,
-             Model.UnitTypeList,
-             "",
-             htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disabled = "disabled" }
-         )
+vm => vm.Request.SubSubUnitType,
+Model.UnitTypeList,
+"",
+htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disabled = "disabled" }
+)
                                             <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -363,7 +363,43 @@
                                 </div>
                             </div>
                             <div class="row">
-                                @*calculate payments here*@
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label asp-for="Request.Payments" class="control-label"></label>
+                                        <input asp-for="Request.Payments" class="form-control" />
+                                        <span asp-validation-for="Request.Payments" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-10 rounded card p-3">
+                                    <table class="table table-sm">
+                                        <thead class="thead-light rounded" >
+                                            <tr>
+                                                <th>Payment Date</th>
+                                                <th>Payment Type</th>
+                                                <th>Account</th>
+                                                <th>Reference</th>
+                                                <th>Debt</th>
+                                            </tr>
+                                        </thead>
+                                        @{var originalInvoiceDate = Model.Request.ParentRequest.InvoiceDate; }
+                                        @for (var i = 1; i <= Model.Request.Payments; i++)
+                                        {
+                                            var newMonth = originalInvoiceDate.AddMonths(i);
+                                            if (newMonth <= DateTime.Now)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @newMonth
+                                                    </td>
+                                                    <td>payment type</td>
+                                                    <td>account</td>
+                                                    <td>Reference</td>
+                                                    <td>Debt</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </table>
+                                </div>
                             </div>
                         </div>
                         <div id="documents" class="tab-pane fade">
@@ -376,7 +412,10 @@
                                         <input type="file" asp-for="OrderFiles" class="form-control custom-file-input" multiple />
                                         <label class="custom-file-label">Choose File...</label>
                                     </div>
-
+                                    @if (Model.orderFileStrings != null)
+                                    {
+                                        <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
+                                    }
                                     @*<div id="carousel" class="carousel ui-slider">
                                             <ol class="carousel-indicators">
                                             </ol>
@@ -420,6 +459,20 @@
                                     <span class="text-danger"></span>
                                 </div>
                             </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3 class="images-header"></h3>
+                                    <hr />
+                                    @if (Model.orderFileStrings != null)
+                                    {
+                                        <div class="fill-images-orders">
+                                            <a href="@Model.orderFileStrings[0]" target="_blank">Click to open</a>
+                                            <embed src="@Model.orderFileStrings[0]" type="application/pdg" height="100%" width="100%" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                         </div>
                         <div id="comments" class="tab-pane fade">
                             <h3>COMMENTS</h3>
@@ -449,11 +502,13 @@
             @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
             @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
             @Html.HiddenFor(vm => vm.Request.RequestStatusID)
+            @Html.HiddenFor(vm => vm.Request.ParentRequestID)
             @*End Hidden Inputs*@
 
             @*Hidden Input for Product Subcategory*@
             @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
         </form>
+
 
     </div>
 
@@ -485,8 +540,6 @@
                 $("#sublist").html(item);
             });
         });
-
-                    //load the vendor business id with the vendor business id corresponding to the newly selected vendor from the vendor list
 
 
     </script>

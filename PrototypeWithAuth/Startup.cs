@@ -57,6 +57,8 @@ namespace PrototypeWithAuth
                                  .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
+
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,7 +73,8 @@ namespace PrototypeWithAuth
                 app.UseRouting();
                 app.UseAuthentication();
                 app.UseAuthorization();
-               
+
+                app.UseSession();
 
                 app.UseEndpoints(endpoints =>
                 {
@@ -123,7 +126,7 @@ namespace PrototypeWithAuth
                 }
             }
             var poweruser = new ApplicationUser();
-            poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
+            poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
 
             await UserManager.AddToRoleAsync(poweruser, "Admin");
 

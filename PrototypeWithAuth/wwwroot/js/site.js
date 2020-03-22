@@ -120,9 +120,11 @@ $("#unit-amount").change(function () {
 $("#subunit-amount").change(function () {
     console.log("Subunit amount changed");
     $.fn.GetSubUnitPrice();
+    $.fn.GetSubSubUnitPrice();
 });
 $("#subsubunit-amount").change(function () {
     console.log("Subsubunit amount changed");
+    $.fn.GetSubSubUnitPrice();
 });
 $("#sumDollars").change(function () {
     $.fn.ChangeUnitAndSum();
@@ -138,6 +140,8 @@ $.fn.ChangeUnitAndSum = function () {
     console.log("Unit sum in dollars: " + $unitSumDollars);
     $('input[name="unit-price-dollars"]').val($unitSumDollars);
     $.fn.ChangeShekalim();
+    $.fn.GetSubUnitPrice();
+    $.fn.GetSubSubUnitPrice();
 }
 $.fn.ChangeShekalim = function () {
     //change the sum
@@ -177,7 +181,7 @@ $.fn.ChangeVAT = function () {
     console.log("Vat in dollars: " + vatInDollars);
     var $sumPlusVatDollars = parseInt($("#sumDollars").val()) + parseInt(vatInDollars);
     console.log("sum plus vat in dollars: " + $sumPlusVatDollars);
-    $('input[name="SumPlusVat-Shekel"]').val($sumPlusVatDollars);
+    $('input[name="SumPlusVat-Dollar"]').val($sumPlusVatDollars);
     console.log("-----------------------------------");
 }
 
@@ -190,3 +194,25 @@ $.fn.GetSubUnitPrice = function () {
     $('input[name="subunit-price-dollars"]').val(subunitpricedollars);
     $('input[name="subunit-price-shekel"]').val(subunitpriceshekel);
 }
+
+//get price for subsubunits
+$.fn.GetSubSubUnitPrice = function () {
+    var subsubunitpricedollars = $("#subunit-price-dollars").val() / $("#subsubunit-amount").val();
+    console.log("subsubunit price dollars " + subsubunitpricedollars);
+    var subsubunitpriceshekel = subsubunitpricedollars * $exchangeRate;
+    console.log("subsubunit price shekel " + subsubunitpriceshekel);
+    $('input[name="subsubunit-price-dollars"]').val(subsubunitpricedollars);
+    $('input[name="subsubunit-price-shekel"]').val(subsubunitpriceshekel);
+}
+
+
+//load the vendor business id with the vendor business id corresponding to the newly selected vendor from the vendor list
+
+//view documents on modal view
+$(".view-docs").click(function (clickEvent) {
+    console.log("order docs clicked!");
+    clickEvent.preventDefault();
+    clickEvent.stopPropagation();
+    var title = $(this).val();
+    $(".images-header").html(title + " Documents Uploaded:");
+});

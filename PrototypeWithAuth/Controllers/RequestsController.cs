@@ -440,20 +440,24 @@ namespace PrototypeWithAuth.Controllers
                 string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
                 string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
                 //the partial file name that we will search for (1- because we want the first one)
-                string partialFile = "1";
                 //creating the directory from the path made earlier
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
-                //searching for the partial file name in the directory
-                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles(partialFile + "*.*");
-                string fullname = "";
-                //getting the file from the FileInfo[]
-                foreach(FileInfo file in orderfilesfound)
+
+                if (Directory.Exists(uploadFolder3))
                 {
-                    fullname = file.FullName;
-                    //breaking here b/c for now only need the first one
-                    break;
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
+                    //searching for the partial file name in the directory
+                    FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    //checking if there were any files found before looping through them (to prevent an error)
+                    requestItemViewModel.orderFileStrings = new List<string>();
+                    if (orderfilesfound[0].Exists)
+                    {
+                        //getting the file from the FileInfo[]
+                        foreach (FileInfo file in orderfilesfound)
+                        {
+                            requestItemViewModel.orderFileStrings.Add(file.FullName.ToString());
+                        }
+                    }
                 }
-                requestItemViewModel.orderFileString = fullname;
 
                 if (requestItemViewModel.Request == null)
                 {
@@ -472,18 +476,21 @@ namespace PrototypeWithAuth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ModalView(RequestItemViewModel requestItemViewModel)
         {
+            //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
+            requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
-            /*take this out*/
-            requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
-            //use application user of whoever signed in
-            var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-            requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
+            //checks if it's a new request
+            if (requestItemViewModel.Request.RequestID == 0)
+            {
+                //use application user of whoever signed in
+                var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
+            }
 
             //for now putting in the REQUEST STATUS as NEW --> will need to add business logic in the future
-            requestItemViewModel.Request.RequestStatusID = 1;
-            //do we need this next line actually?
-            requestItemViewModel.Request.RequestStatus = _context.RequestStatuses.FirstOrDefault(rs => rs.RequestStatusID == requestItemViewModel.Request.RequestStatusID);
 
+            requestItemViewModel.Request.RequestStatusID = 1;
+            
             //in case we need to redirect to action
             TempData["ModalView"] = true;
             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
