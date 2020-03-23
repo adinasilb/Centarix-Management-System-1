@@ -216,3 +216,28 @@ $(".view-docs").click(function (clickEvent) {
     var title = $(this).val();
     $(".images-header").html(title + " Documents Uploaded:");
 });
+
+////change expected supply days automatically
+//$("#Request_ExpectedSupplyDays").change(function () {
+//    console.log("Request_expectedsupplydays changed!")
+//    var invoiceDate = $("#Request_ParentRequest_InvoiceDate").val();
+//    console.log("Invoice Date: " + invoiceDate);
+//    var invoiceDateinDateFormat = new Date(invoiceDate);
+//    console.log("Invoice Date in Date Format: " + invoiceDateinDateFormat);
+//    var expectedSupplyDays = $(this).val();
+//    console.log("Expected Supply Days: " + expectedSupplyDays);
+//    var expectedSupplyDate = invoiceDateinDateFormat.setMonth(3);
+//    console.log("Expected Supply Date: " + expectedSupplyDate);
+//});
+////change warranty month automatically
+//$("#Request_Warranty").change(function () {
+//    console.log("Request_Warranty changed!")
+//});
+
+//function addMonths(date, months) {
+//    var d = date.getDate();
+//    date.setMonth(date.getMonth() + +months);
+//    if (date.getDate() != d) {
+//        date.setDate(0);
+//    }
+//};

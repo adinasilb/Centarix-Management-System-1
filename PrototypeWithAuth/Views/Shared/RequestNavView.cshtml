@@ -54,8 +54,20 @@
             break;
     }
 
+    bool SendEmail = false;
+    if (TempData["Email"] != null)
+    {
+        SendEmail = true;
+    }
+
 }
 @*  *@
+@{
+    if (TempData["SuccessMessage"] != null)
+    {
+        <div>@TempData["SuccessMessage"].ToString()</div>
+    }
+}
 <div class="row">
     <div class="col-md-2 border-right">
         @*<nav class="navbar flex-grow-1">*@
@@ -109,9 +121,13 @@
 <div class="modal modal-view" id="myModal">
 </div>
 
+<!-- Confirm Email Modal -->
+<div class="modal confirm-email-modal" id="myModal">
+</div>
+
+
 @RenderSection("Scripts", required: false)
 <script>
-
     //Render a partial view inside of a modal
     //To do later: add a loading gif div
     $(".load-product-details").on("click", function (e) {

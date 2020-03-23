@@ -22,7 +22,7 @@
     {
         subcategoryID = (int)TempData["SubcategoryID"];
     }
-     else if (TempData["ApplicationUserID"] != null)
+    else if (TempData["ApplicationUserID"] != null)
     {
         applicationUserID = TempData["ApplicationUserID"].ToString();
     }
@@ -68,6 +68,7 @@
     }
 
     bool userCanApprove = false;
+
 }
 
 @*<h1>Index</h1>
@@ -81,13 +82,13 @@
         <div class="col-md-12">
             <ul class="list-inline">
                 <li class="list-inline-item nav-fill active">
-                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID,@vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = newActiveClass })
+                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = newActiveClass })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID,@vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })
+                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })
                 </li>
                 <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID,@vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })
+                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })
                 </li>
             </ul>
         </div>
@@ -110,7 +111,8 @@
             <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
             @*here for testing purposes*@
             <th>@Html.DisplayNameFor(m => m[0].RequestStatus.RequestStatusDescription)</th>
-            <th></th><th></th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -145,7 +147,8 @@
                         @*work on getting the correct syntax to create a new product with*@
                         <button class="btn btn-link load-order-details" value="@item.RequestID">Order</button>
                     }
-                    </td><td>
+                </td>
+                <td>
                     <!-- Button to Open the Modal -->
                     <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">Edit</button>
                 </td>

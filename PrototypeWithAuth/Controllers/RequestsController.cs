@@ -16,6 +16,7 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using X.PagedList;
 using Microsoft.AspNetCore.Hosting;
+using System.Net.Mail;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -476,6 +477,9 @@ namespace PrototypeWithAuth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ModalView(RequestItemViewModel requestItemViewModel)
         {
+            //setting up a bool in the beginning of whether to send an email or not.
+            //will use it in a later version to set to false if we shouldn't send an email
+            bool WithOrder = true;
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
             requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
@@ -489,9 +493,11 @@ namespace PrototypeWithAuth.Controllers
             }
 
             //for now putting in the REQUEST STATUS as NEW --> will need to add business logic in the future
+            if (requestItemViewModel.Request.RequestStatusID == 0)
+            {
+                requestItemViewModel.Request.RequestStatusID = 1;
+            }
 
-            requestItemViewModel.Request.RequestStatusID = 1;
-            
             //in case we need to redirect to action
             TempData["ModalView"] = true;
             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
@@ -528,6 +534,11 @@ namespace PrototypeWithAuth.Controllers
                             orderFile.CopyTo(new FileStream(filePath, FileMode.Create));
                             x++;
                         }
+                    }
+                    if (WithOrder)
+                    {
+                        TempData["Email"] = "True";
+                        return RedirectToAction("Index");
                     }
                 }
                 catch (Exception ex)
