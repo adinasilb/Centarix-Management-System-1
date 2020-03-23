@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200322100221_commentTextAndTimeStampToCommentTable")]
+    partial class commentTextAndTimeStampToCommentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,9 +240,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("CommentText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CommentTimeStamp")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
 
@@ -251,34 +250,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("RequestID");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.CompanyAccount", b =>
-                {
-                    b.Property<int>("CompanyAccountID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CompanyAccountNum")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(5)")
-                        .HasMaxLength(5);
-
-                    b.Property<string>("CompanyBankNum")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CompanyBranchNum")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaymentTypeID")
-                        .HasColumnType("int");
-
-                    b.HasKey("CompanyAccountID");
-
-                    b.HasIndex("PaymentTypeID");
-
-                    b.ToTable("CompanyAccounts");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -332,9 +303,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("Discount")
                         .HasColumnType("float");
 
-                    b.Property<long>("Installments")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
 
@@ -358,49 +326,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ApplicationUserID");
 
                     b.ToTable("ParentRequests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>
-                {
-                    b.Property<int>("PaymentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CompanyAccountID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ParentRequestID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Reference")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PaymentID");
-
-                    b.HasIndex("CompanyAccountID");
-
-                    b.HasIndex("ParentRequestID");
-
-                    b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.PaymentType", b =>
-                {
-                    b.Property<int>("PaymentTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("PaymentTypeDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PaymentTypeID");
-
-                    b.ToTable("PaymentTypes");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
@@ -599,6 +524,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("ParentRequestID")
                         .HasColumnType("int");
+
+                    b.Property<long>("Payments")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
@@ -1015,36 +943,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.CompanyAccount", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.PaymentType", "PaymentType")
-                        .WithMany()
-                        .HasForeignKey("PaymentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
                         .WithMany("ParentRequests")
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
-                        .WithMany()
-                        .HasForeignKey("CompanyAccountID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
-                        .WithMany("Payments")
-                        .HasForeignKey("ParentRequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
