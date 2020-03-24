@@ -428,7 +428,8 @@ namespace PrototypeWithAuth.Controllers
                 Request request = _context.Requests.Include(r => r.ParentRequest).Where(r => r.RequestID == id).SingleOrDefault();
                 if (!request.ParentRequest.Payed)
                 {
-                    IEnumerable<Payment> payments = _context.Payments.Where(p => p.ParentRequestID == request.ParentRequestID);
+                    //check later if should be order by or order by descending
+                    IEnumerable<Payment> payments = _context.Payments.Where(p => p.ParentRequestID == request.ParentRequestID).OrderBy(p => p.PaymentDate);
                     if (payments.Count() == request.ParentRequest.Installments)
                     {
                         //insert payed = true into database
@@ -436,7 +437,16 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else
                     {
-                        
+                        if (payments.Count() == 0 || payments.Last().PaymentDate.Month < DateTime.Now.Month)
+                        {
+                            int installmentsLeft = (Int32)request.ParentRequest.Installments - payments.Count();
+                            for(var i = 0; i < installmentsLeft; i++)
+                            {
+                                Payment newPayment = new Payment();
+                                newPayment.PaymentDate = request.ParentRequest.InvoiceDate.AddMonths(installmentsLeft - i);
+                                _context.Add(newPayment);
+                            }
+                        }
                     }
                 }
 
