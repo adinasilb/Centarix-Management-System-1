@@ -22,3 +22,4 @@ namespace PrototypeWithAuth.Models
         public CompanyAccount CompanyAccount{ get; set; }
     }
 }
+

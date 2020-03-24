@@ -1,8 +1,31 @@
-﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
-
+﻿@model PrototypeWithAuth.Models.Request
+@{ 
+    var SubjectName = "Order";
+    @*New line not working*@
+    var OrderText = "Hi, \n We would like to place an order for " + Model.Product.ProductName;
+}
 
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view">
     <div class="modal-content d-inline-block">
-        Confirm Email Modal!
+
+        <div class="modal-header border-bottom-0">
+            Confirm Email Modal!
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <form action="mailto:adinasilberberg@gmail.com?Subject= @SubjectName&body=@OrderText" method="post" enctype="application/x-www-form-urlencoded">
+            <div class="modal-body">
+                Please review the text &amp; confirm:
+                <hr />
+                @OrderText
+            </div>
+
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-success" value="Confirm & Send Email" />
+                @*FAIGE: should we have a return to request?*@
+                <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
+            </div>
+        </form>
+
     </div>
 </div>

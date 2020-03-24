@@ -19,10 +19,8 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
         public List<string> orderFileStrings { get; set; }
         public List<IFormFile> OrderFiles { get; set; }
-
-        //can get rid of this just check
-        public SelectList Users { get; set; }
-
+        public IEnumerable<Comment> OldComments { get; set; }
+        public Comment NewComment { get; set; }
         public Request Request { get; set; } // requests already include the product, we do not need to include a seperate product
 
     }

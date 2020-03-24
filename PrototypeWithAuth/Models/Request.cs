@@ -55,7 +55,7 @@ namespace PrototypeWithAuth.Models
         public double ExchangeRate { get; set; } // holding the rate of exchange for this specic request
         
         public byte ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
-        public string RequestComment { get; set; }
+        public string RequestComment { get; set; } //can take this out - Adina
 
         [DataType(DataType.Date)]
         public DateTime ArrivalDate { get; set; } 

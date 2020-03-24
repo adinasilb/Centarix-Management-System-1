@@ -4,7 +4,6 @@
 // Write your JavaScript code.
 
 //global Exchange Rate variable (usd --> nis)
-var $exchangeRate = 3.67;
 
 function showmodal() {
     $("#modal").modal('show');
@@ -52,7 +51,11 @@ $.fn.ChangeVendorBusinessId = function (vendorid) {
 //PRICE PAGE ON MODAL VIEW//
 
 $("#unit-type").change(function () {
-    var selected = $(':selected', this);
+    $.fn.OpenSubUnits();
+});
+
+$.fn.OpenSubUnits = function () {
+    var selected = $(':selected', $("#unit-type"));
     var optgroup = selected.closest('optgroup').attr('label');
 
     if (selected.val() != "") {
@@ -83,9 +86,14 @@ $("#unit-type").change(function () {
             $("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
             break;
     }
-});
+}
+
 $("#subunit-type").change(function () {
-    var selected = $(':selected', this);
+    $.fn.OpenSubSubUnits();
+});
+
+$.fn.OpenSubSubUnits = function () {
+    var selected = $(':selected', $("#subunit-type"));
     var optgroup = selected.closest('optgroup').attr('label');
     console.log("Unit type changed " + optgroup);
 
@@ -110,7 +118,7 @@ $("#subunit-type").change(function () {
             $("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
             break;
     }
-});
+}
 
 
 //Automatic updates on prices and sums for Modal View --> Pricing
@@ -144,6 +152,7 @@ $.fn.ChangeUnitAndSum = function () {
     $.fn.GetSubSubUnitPrice();
 }
 $.fn.ChangeShekalim = function () {
+    var $exchangeRate = $("#Request_ExchangeRate").val();
     //change the sum
     $sumDollars = $("#sumDollars").val();
     $sumShekel = $sumDollars * $exchangeRate;
@@ -169,6 +178,7 @@ $.fn.ChangeShekalim = function () {
 
 //CURRENTLY NOT WORKING
 $.fn.ChangeVAT = function () {
+    var $exchangeRate = $("#Request_ExchangeRate").val();
     var vatInShekel = $("#vatInShekel").val();
     console.log("vat in shekel: " + vatInShekel);
     var sumShekel = $("#sumShekel").val();
@@ -187,6 +197,7 @@ $.fn.ChangeVAT = function () {
 
 //get price for subunits
 $.fn.GetSubUnitPrice = function () {
+    var $exchangeRate = $("#Request_ExchangeRate").val();
     var subunitpricedollars = $("#unit-price-dollars").val() / $("#subunit-amount").val();
     console.log("subunit price dollars " + subunitpricedollars);
     var subunitpriceshekel = subunitpricedollars * $exchangeRate;
@@ -197,6 +208,7 @@ $.fn.GetSubUnitPrice = function () {
 
 //get price for subsubunits
 $.fn.GetSubSubUnitPrice = function () {
+    var $exchangeRate = $("#Request_ExchangeRate").val();
     var subsubunitpricedollars = $("#subunit-price-dollars").val() / $("#subsubunit-amount").val();
     console.log("subsubunit price dollars " + subsubunitpricedollars);
     var subsubunitpriceshekel = subsubunitpricedollars * $exchangeRate;
@@ -215,6 +227,27 @@ $(".view-docs").click(function (clickEvent) {
     clickEvent.stopPropagation();
     var title = $(this).val();
     $(".images-header").html(title + " Documents Uploaded:");
+});
+
+//on opening of the price tag see if subunits and subsubunits should be enabled
+$("#priceTab").click(function () {
+    console.log("price tab clicked!");
+    if ($("#unit-amount").val() || $("#unit-type").val()) {
+        $.fn.OpenSubUnits();
+        $.fn.ChangeUnitAndSum();
+    }
+    if ($("#subunit-amount").val() || $("#subunit-type").val()) {
+        console.log("sub unit amount was filled out!");
+        $.fn.OpenSubSubUnits();
+        $.fn.GetSubUnitPrice();
+    }
+    if ($("#subsubunit-amount").val() || $("#subsubunit-type").val()) {
+        console.log("sub sub unit amount was filled out!");
+        $.fn.GetSubSubUnitPrice();
+    }
+    if ($("#vatInShekel").val()) {
+        $.fn.ChangeVAT();
+    }
 });
 
 ////change expected supply days automatically

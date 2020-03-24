@@ -200,11 +200,6 @@ namespace PrototypeWithAuth.Controllers
             var vendors = _context.Vendors.ToList();
             var requeststatuses = _context.RequestStatuses.ToList();
 
-            //create a list of users with a column of a combined first and last name and the value as an ID to store the info
-            var usersCreateList = _context.Users.Select(s => new { Text = s.FirstName + " " + s.LastName, Value = s.Id }).ToList();
-            //turn it into a select list (which is what a dropdownlist uses)
-            var usersSelectList = new SelectList(usersCreateList, "Value", "Text");
-
             RequestItemViewModel viewModel = new RequestItemViewModel
             {
                 //pass the lists into the viewmodel to use on the front end
@@ -212,7 +207,6 @@ namespace PrototypeWithAuth.Controllers
                 ProductSubcategories = productSubcategories,
                 Vendors = vendors,
                 RequestStatuses = requeststatuses,
-                Users = usersSelectList,
                 //instantiate a new request
                 Request = new Request()
             };
@@ -384,6 +378,7 @@ namespace PrototypeWithAuth.Controllers
             //redo the unit types when seeded
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
 
+
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
                 ParentCategories = parentcategories,
@@ -428,13 +423,44 @@ namespace PrototypeWithAuth.Controllers
             {
                 ModalViewType = "Edit";
 
+                //ASK FAIGE IF THIS COULD BE DONE IN A BETTER WAY (like both requests together?)
+                //Add in payments that may or may not be in the table
+                Request request = _context.Requests.Include(r => r.ParentRequest).Where(r => r.RequestID == id).SingleOrDefault();
+                if (!request.ParentRequest.Payed)
+                {
+                    IEnumerable<Payment> payments = _context.Payments.Where(p => p.ParentRequestID == request.ParentRequestID);
+                    if (payments.Count() == request.ParentRequest.Installments)
+                    {
+                        //insert payed = true into database
+                        //do we need this here?
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+
                 requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
                     .Include(r => r.ParentRequest)
                     .Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.RequestStatus)
                     .Include(r => r.ParentRequest.ApplicationUser)
+                    .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .SingleOrDefault(x => x.RequestID == id);
+                
+                //check if this works once there are commments
+                var comments = Enumerable.Empty<Comment>();
+                comments = _context.Comments
+                    .Include(r => r.ApplicationUser)
+                    .Where(r => r.Request.RequestID == id);
+                //needs to be instantiated here so it doesn't throw an error if nothing is in it
+                /*
+                 *I think it should be an ienumerable and look like
+                 *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
+                 *ike before but it's not recognizing the syntax
+                */
+                requestItemViewModel.OldComments = comments.ToList();
 
                 //may be able to do this together - combining the path for the orders folders
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -477,6 +503,9 @@ namespace PrototypeWithAuth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ModalView(RequestItemViewModel requestItemViewModel)
         {
+            //HERE FOR TESTING PURPOSES ONLY
+            TempData["SendEmail"] = requestItemViewModel.Request.RequestID;
+
             //setting up a bool in the beginning of whether to send an email or not.
             //will use it in a later version to set to false if we shouldn't send an email
             bool WithOrder = true;
@@ -484,11 +513,14 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
+
+            //declared outside the if b/c it's used farther down to (for the new comment too)
+            var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+
             //checks if it's a new request
             if (requestItemViewModel.Request.ParentRequestID == 0)
             {
                 //use application user of whoever signed in
-                var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
                 requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
             }
 
@@ -517,6 +549,24 @@ namespace PrototypeWithAuth.Controllers
                 {
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
+
+                    if (!String.IsNullOrEmpty(requestItemViewModel.NewComment.CommentText))
+                    {
+                        try
+                        {
+                            //save the new comment
+                            requestItemViewModel.NewComment.ApplicationUserID = currentUser.Id;
+                            requestItemViewModel.NewComment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                            requestItemViewModel.NewComment.RequestID = requestItemViewModel.Request.RequestID;
+                            _context.Add(requestItemViewModel.NewComment);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            //Tell the user that the comment didn't save here
+                        }
+                    }
+
                     //save the files
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
@@ -563,6 +613,21 @@ namespace PrototypeWithAuth.Controllers
 
         /*
          * END MODAL VIEW COPY
+         */
+
+        /*
+         * BEGIN SEND EMAIL
+         */
+
+        public async Task<IActionResult> ConfirmEmailModal(int? id)
+        {
+            Request request = await _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefaultAsync();
+            return View(request);
+        }
+
+
+        /*
+         * END SEND EMAIL
          */
 
         /*

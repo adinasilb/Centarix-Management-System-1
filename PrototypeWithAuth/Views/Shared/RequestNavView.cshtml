@@ -54,10 +54,10 @@
             break;
     }
 
-    bool SendEmail = false;
+    var SendEmail = "0";
     if (TempData["Email"] != null)
     {
-        SendEmail = true;
+        SendEmail = TempData["SendEmail"].ToString();
     }
 
 }
@@ -128,6 +128,19 @@
 
 @RenderSection("Scripts", required: false)
 <script>
+    
+    $(document).ready(function () {
+        console.log("Requests nav view document is ready!");
+        var sendEmail = parseInt('@SendEmail'); //comes in as a string (even though originally an int and therefore must be converted.)
+        console.log("send email " + sendEmail);
+        if (sendEmail > 0) {
+            console.log("send email is true");
+            var tab = "";
+            var $itemUrl = "Requests/ConfirmEmailModal/?id=" + sendEmail;
+            $.fn.CallPage(tab, $itemUrl, true);
+        }
+    });
+
     //Render a partial view inside of a modal
     //To do later: add a loading gif div
     $(".load-product-details").on("click", function (e) {
@@ -150,7 +163,7 @@
         return false;
     });
 
-    $.fn.CallPage = function ($tab, $itemurl) {
+    $.fn.CallPage = function ($tab, $itemurl, isEmail = false) {
         $.ajax({
             url: $itemurl,
             type: 'GET',
@@ -167,53 +180,55 @@
                 $(".modal").modal('show');
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
                 $(".modal-backdrop").remove();
-                /* Following line should set the correct data-target tab to open ----> not working right now */
-                //$('.nav-tabs a[href="' + $tab + '"]').tab - pane('show');
-                var selectedTab = 0;
-                var mytabs = $('.div-tabs ul li a').each(function (x, obj) {
-                    if (obj.hash.indexOf(location.hash) != -1 && location.hash != '') {
-                        selectedTab = x;
-                    }
-                });
-                $("#tabs").tab({ selected: selectedTab });
-                //document.ready for modal is done here --> setting up product subcategories
-                var parentCategoryId = $("#parentlist").val();
-                var subcategoryId1 = $("#sublist").val();
-                var url = "/Requests/GetSubCategoryList";
-
-                $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-                    var item = "";
-                    $.each(data, function (i, subCategory) {
-                        item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                if (!isEmail) {
+                    /* Following line should set the correct data-target tab to open ----> not working right now */
+                    //$('.nav-tabs a[href="' + $tab + '"]').tab - pane('show');
+                    var selectedTab = 0;
+                    var mytabs = $('.div-tabs ul li a').each(function (x, obj) {
+                        if (obj.hash.indexOf(location.hash) != -1 && location.hash != '') {
+                            selectedTab = x;
+                        }
                     });
-                    $("#sublist").html(item);
-                    $("#sublist").val(subcategoryId1).change();
-                });
+                    $("#tabs").tab({ selected: selectedTab });
+                    //document.ready for modal is done here --> setting up product subcategories
+                    var parentCategoryId = $("#parentlist").val();
+                    var subcategoryId1 = $("#sublist").val();
+                    var url = "/Requests/GetSubCategoryList";
 
-                //For the order files
+                    $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                        var item = "";
+                        $.each(data, function (i, subCategory) {
+                            item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                        });
+                        $("#sublist").html(item);
+                        $("#sublist").val(subcategoryId1).change();
+                    });
 
-                //goes into this function
-                $(".custom-file-input").on("change", function () {
-                    var fileLabel = $(this).next(".custom-file-label");
-                    var files = $(this)[0].files;
-                    if (files.length > 1) {
-                        fileLabel.html(files.length + ' files selected');
-                    }
-                    else {
-                        fileLabel.html(files[0].name);
-                    }
-                });
+                    //For the order files
 
-                //get the current vendor id (if loading an already existing product)
-                var vendorid = $("#vendorList").val();
-                //call a function to lad the vendor business id from the vendor id
-                $.fn.ChangeVendorBusinessId(vendorid);
+                    //goes into this function
+                    $(".custom-file-input").on("change", function () {
+                        var fileLabel = $(this).next(".custom-file-label");
+                        var files = $(this)[0].files;
+                        if (files.length > 1) {
+                            fileLabel.html(files.length + ' files selected');
+                        }
+                        else {
+                            fileLabel.html(files[0].name);
+                        }
+                    });
 
-                //IN THE FUTURE: USE DATEPICKER (CODE BELOW- PARTIAL)
+                    //get the current vendor id (if loading an already existing product)
+                    var vendorid = $("#vendorList").val();
+                    //call a function to lad the vendor business id from the vendor id
+                    $.fn.ChangeVendorBusinessId(vendorid);
 
-                //set the auto date for order date and invoice date to the current date
-                //console.log("About to enter the datepicker")
-                //$('.datepicker').datepicker();
+                    //IN THE FUTURE: USE DATEPICKER (CODE BELOW- PARTIAL)
+
+                    //set the auto date for order date and invoice date to the current date
+                    //console.log("About to enter the datepicker")
+                    //$('.datepicker').datepicker();
+                }
 
             }
         });

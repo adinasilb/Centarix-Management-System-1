@@ -99,7 +99,7 @@
                 <input asp-for="Request.AmountWithOutLocation" class="form-control" />
                 <span asp-validation-for="Request.AmountWithOutLocation" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="Request.ParentRequest.ApplicationUserID" class="control-label"></label>
                 @Html.DropDownListFor(
                         vm => vm.Request.ParentRequest.ApplicationUserID,
@@ -108,7 +108,7 @@
                     )
 
                 <span asp-validation-for="Request.ParentRequest.ParentRequestID" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
                 @Html.TextBoxFor(model => model.Request.ParentRequest.OrderDate,
