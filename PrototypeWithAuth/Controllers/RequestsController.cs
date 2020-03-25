@@ -24,8 +24,10 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        //take this out?
         private readonly IHostingEnvironment _hostingEnvironment;
-        private List<Request> _cartRequests = new List<Request>();
+        //take this out?
+        private readonly List<Request> _cartRequests = new List<Request>();
 
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
         {
@@ -440,7 +442,7 @@ namespace PrototypeWithAuth.Controllers
                         if (payments.Count() == 0 || payments.Last().PaymentDate.Month < DateTime.Now.Month)
                         {
                             int installmentsLeft = (Int32)request.ParentRequest.Installments - payments.Count();
-                            for(var i = 0; i < installmentsLeft; i++)
+                            for (var i = 0; i < installmentsLeft; i++)
                             {
                                 Payment newPayment = new Payment();
                                 newPayment.PaymentDate = request.ParentRequest.InvoiceDate.AddMonths(installmentsLeft - i);
@@ -458,7 +460,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ParentRequest.ApplicationUser)
                     .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .SingleOrDefault(x => x.RequestID == id);
-                
+
                 //check if this works once there are commments
                 var comments = Enumerable.Empty<Comment>();
                 comments = _context.Comments
@@ -485,13 +487,13 @@ namespace PrototypeWithAuth.Controllers
                     //searching for the partial file name in the directory
                     FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
                     //checking if there were any files found before looping through them (to prevent an error)
-                    requestItemViewModel.orderFileStrings = new List<string>();
+                    requestItemViewModel.OrderFileStrings = new List<string>();
                     if (orderfilesfound[0].Exists)
                     {
                         //getting the file from the FileInfo[]
                         foreach (FileInfo file in orderfilesfound)
                         {
-                            requestItemViewModel.orderFileStrings.Add(file.FullName.ToString());
+                            requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
                         }
                     }
                 }
@@ -511,20 +513,22 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ModalView(RequestItemViewModel requestItemViewModel)
+        public async Task<IActionResult> ModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
-            //HERE FOR TESTING PURPOSES ONLY
-            TempData["SendEmail"] = requestItemViewModel.Request.RequestID;
+            //initializing the boolean here
+            //b/c need to check if the requestID is 0 but then pass in the new request ID
+            bool WithOrder = false;
+            if (OrderType.Equals("Save") && requestItemViewModel.Request.RequestID == 0)
+            {
+                WithOrder = true;
+            }
 
-            //setting up a bool in the beginning of whether to send an email or not.
-            //will use it in a later version to set to false if we shouldn't send an email
-            bool WithOrder = true;
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
             requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
-            //declared outside the if b/c it's used farther down to (for the new comment too)
+            //declared outside the if b/c it's used farther down to (for parent request the new comment too)
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
             //checks if it's a new request
@@ -535,7 +539,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             //for now putting in the REQUEST STATUS as NEW --> will need to add business logic in the future
-            if (requestItemViewModel.Request.RequestStatusID == 0)
+            if (requestItemViewModel.Request.RequestStatusID == null)
             {
                 requestItemViewModel.Request.RequestStatusID = 1;
             }
@@ -577,6 +581,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
 
+                    //check if there are any files to upload first
                     //save the files
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
@@ -585,20 +590,21 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var x = 1;
                         foreach (IFormFile orderFile in requestItemViewModel.OrderFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, "Orders");
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + orderFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            orderFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
+                            foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
+                            {
+                                //create file
+                                string folderPath = Path.Combine(requestFolder, "Orders");
+                                Directory.CreateDirectory(folderPath);
+                                string uniqueFileName = x + orderfile.FileName;
+                                string filePath = Path.Combine(folderPath, uniqueFileName);
+                                orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
+                                x++;
+                            }
                     }
+                    //test that this works
                     if (WithOrder)
                     {
-                        TempData["Email"] = "True";
-                        return RedirectToAction("Index");
+                        TempData["SendEmail"] = requestItemViewModel.Request.RequestID.ToString();
                     }
                 }
                 catch (Exception ex)
@@ -631,7 +637,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> ConfirmEmailModal(int? id)
         {
-            Request request = await _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefaultAsync();
+            Request request = await _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).Include(r => r.Product.Vendor).FirstOrDefaultAsync();
             return View(request);
         }
 

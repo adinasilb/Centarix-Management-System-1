@@ -403,14 +403,17 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                             </tr>
                                         </thead>
                                         @{
-                                            foreach (Payment payment in Model.Request.ParentRequest.Payments)
+                                            if (Model.Request.ParentRequest.Payments != null)
                                             {
-                                                <tr>
-                                                    <td>@payment.PaymentDate</td>
-                                                    <td>@payment.CompanyAccount.PaymentType.PaymentTypeDescription</td>
-                                                    <td>@payment.CompanyAccount.CompanyAccountNum</td>
-                                                    <td>@payment.PaymentID</td>
-                                                </tr>
+                                                foreach (Payment payment in Model.Request.ParentRequest.Payments)
+                                                {
+                                                    <tr>
+                                                        <td>@payment.PaymentDate</td>
+                                                        <td>@payment.CompanyAccount.PaymentType.PaymentTypeDescription</td>
+                                                        <td>@payment.CompanyAccount.CompanyAccountNum</td>
+                                                        <td>@payment.PaymentID</td>
+                                                    </tr>
+                                                }
                                             }
                                         }
                                     </table>
@@ -433,7 +436,7 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                         <input type="file" asp-for="OrderFiles" class="form-control custom-file-input" multiple />
                                         <label class="custom-file-label">Choose File...</label>
                                     </div>
-                                    @if (Model.orderFileStrings != null)
+                                    @if (Model.OrderFileStrings != null)
                                     {
                                         <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                     }
@@ -485,11 +488,11 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                 <div class="col-md-12">
                                     <h3 class="images-header"></h3>
                                     <hr />
-                                    @if (Model.orderFileStrings != null)
+                                    @if (Model.OrderFileStrings != null)
                                     {
                                         <div class="fill-images-orders">
-                                            <a href="@Model.orderFileStrings[0]" target="_blank">Click to open</a>
-                                            <embed src="@Model.orderFileStrings[0]" type="application/pdg" @*height="100%" width="100%"*@ />
+                                            <a href="@Model.OrderFileStrings[0]" target="_blank">Click to open</a>
+                                            <embed src="@Model.OrderFileStrings[0]" type="application/pdg" @*height="100%" width="100%"*@ />
                                         </div>
                                     }
                                 </div>
@@ -540,10 +543,11 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                             <h3>ORDER</h3>
                             <hr />
                             <div class="form-group">
-                                <input type="submit" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
+                                <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
                                 @*you can only add to cart if you are creating a new one*@
                                 @if (create)
                                 {
+                                    <input type="submit" name="OrderType" value="Without Order" asp-action="ModalView" class="btn btn-outline-primary" />
                                     <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
                                 }
                                 @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@

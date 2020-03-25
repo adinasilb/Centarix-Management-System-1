@@ -59,16 +59,16 @@ namespace PrototypeWithAuth.Controllers
                 //partial,  can also include if not  payed or if no invioce..
                 //clarify,  can also include if not  payed or if no invioce..
 
-
-
             }
 
-            Dictionary<string, int> titleList = new Dictionary<string, int>();
-            titleList.Add("To Pay", NotPayedList.Count);
-            titleList.Add("No Invoice", NoInvoiceList.Count);
-            titleList.Add("Didn't Arrive", DidntArriveList.Count);
-            titleList.Add("Partial Delivery", PartialDeliveryList.Count);
-            titleList.Add("For Clarification", ForClarification.Count);
+            Dictionary<string, int> titleList = new Dictionary<string, int>
+            {
+                { "To Pay", NotPayedList.Count },
+                { "No Invoice", NoInvoiceList.Count },
+                { "Didn't Arrive", DidntArriveList.Count },
+                { "Partial Delivery", PartialDeliveryList.Count },
+                { "For Clarification", ForClarification.Count }
+            };
 
             //foreach (var list in nameOfLists)
             //{

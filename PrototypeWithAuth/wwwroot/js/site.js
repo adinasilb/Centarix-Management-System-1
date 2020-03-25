@@ -144,7 +144,9 @@ $("#vatInShekel").change(function () {
 $.fn.ChangeUnitAndSum = function () {
     var $unitAmt = $("#unit-amount").val();
     var $sumDollars = $("#sumDollars").val();
-    $unitSumDollars = $sumDollars / $unitAmt;
+    if ($sumDollars != Infinity && $sumDollars != NaN) {
+        $unitSumDollars = $sumDollars / $unitAmt;
+    }
     console.log("Unit sum in dollars: " + $unitSumDollars);
     $('input[name="unit-price-dollars"]').val($unitSumDollars);
     $.fn.ChangeShekalim();
@@ -185,13 +187,17 @@ $.fn.ChangeVAT = function () {
     console.log("sum in shekel: " + sumShekel);
     var $sumPlusVatShekel = parseInt(sumShekel) + parseInt(vatInShekel);
     console.log("sum plus vat in shekel: " + $sumPlusVatShekel);
-    $('input[name="SumPlusVat-Shekel"]').val($sumPlusVatShekel);
+    if ($sumPlusVatShekel != Infinity && $sumPlusVatShekel != NaN) {
+        $('input[name="SumPlusVat-Shekel"]').val($sumPlusVatShekel);
+    }
     //IS THIS THE BEST WAY OF DOING IT OR SHOULD I CONVERT THE INPUT I JUST DID??
     var vatInDollars = vatInShekel / $exchangeRate;
     console.log("Vat in dollars: " + vatInDollars);
     var $sumPlusVatDollars = parseInt($("#sumDollars").val()) + parseInt(vatInDollars);
     console.log("sum plus vat in dollars: " + $sumPlusVatDollars);
-    $('input[name="SumPlusVat-Dollar"]').val($sumPlusVatDollars);
+    if ($sumPlusVatDollars != Infinity && $sumPlusVatDollars != NaN) {
+        $('input[name="SumPlusVat-Dollar"]').val($sumPlusVatDollars);
+    }
     console.log("-----------------------------------");
 }
 
@@ -202,8 +208,12 @@ $.fn.GetSubUnitPrice = function () {
     console.log("subunit price dollars " + subunitpricedollars);
     var subunitpriceshekel = subunitpricedollars * $exchangeRate;
     console.log("subunit price shekel " + subunitpriceshekel);
-    $('input[name="subunit-price-dollars"]').val(subunitpricedollars);
-    $('input[name="subunit-price-shekel"]').val(subunitpriceshekel);
+    if (subunitpricedollars != Infinity && subunitpricedollars != NaN) {
+        $('input[name="subunit-price-dollars"]').val(subunitpricedollars);
+    }
+    if (subunitpriceshekel != Infinity && subunitpriceshekel != NaN) {
+        $('input[name="subunit-price-shekel"]').val(subunitpriceshekel);
+    }
 }
 
 //get price for subsubunits
@@ -213,8 +223,12 @@ $.fn.GetSubSubUnitPrice = function () {
     console.log("subsubunit price dollars " + subsubunitpricedollars);
     var subsubunitpriceshekel = subsubunitpricedollars * $exchangeRate;
     console.log("subsubunit price shekel " + subsubunitpriceshekel);
-    $('input[name="subsubunit-price-dollars"]').val(subsubunitpricedollars);
-    $('input[name="subsubunit-price-shekel"]').val(subsubunitpriceshekel);
+    if (subsubunitpricedollars != Infinity && subsubunitpricedollars != NaN) {
+        $('input[name="subsubunit-price-dollars"]').val(subsubunitpricedollars);
+    }
+    if (subsubunitpriceshekel != Infinity && subsubunitpriceshekel != NaN) {
+        $('input[name="subsubunit-price-shekel"]').val(subsubunitpriceshekel);
+    }
 }
 
 
@@ -232,16 +246,16 @@ $(".view-docs").click(function (clickEvent) {
 //on opening of the price tag see if subunits and subsubunits should be enabled
 $("#priceTab").click(function () {
     console.log("price tab clicked!");
-    if ($("#unit-amount").val() || $("#unit-type").val()) {
+    if ($("#unit-amount").val() && $("#unit-type").val()) {
         $.fn.OpenSubUnits();
         $.fn.ChangeUnitAndSum();
     }
-    if ($("#subunit-amount").val() || $("#subunit-type").val()) {
+    if ($("#subunit-amount").val() && $("#subunit-type").val()) {
         console.log("sub unit amount was filled out!");
         $.fn.OpenSubSubUnits();
         $.fn.GetSubUnitPrice();
     }
-    if ($("#subsubunit-amount").val() || $("#subsubunit-type").val()) {
+    if ($("#subsubunit-amount").val() && $("#subsubunit-type").val()) {
         console.log("sub sub unit amount was filled out!");
         $.fn.GetSubSubUnitPrice();
     }

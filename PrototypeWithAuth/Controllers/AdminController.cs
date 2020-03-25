@@ -75,7 +75,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult GetHomeView()
         {
-            return View("~/Views/Home/IndexAdmin.cshtml");
+            //Adina's code: should not go to IndexAdmin otherwise if not Admin will say denied Index will take them to IndexAdmin if they're an admin
+            return RedirectToAction("Index", "Home");
+            //Faige's original code below:
+            //return View("~/Views/Home/IndexAdmin.cshtml");
         }
     }
 }

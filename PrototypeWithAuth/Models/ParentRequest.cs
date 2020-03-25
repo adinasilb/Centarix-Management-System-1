@@ -28,7 +28,7 @@ namespace PrototypeWithAuth.Models
 
         [DataType(DataType.Date)]
         public DateTime InvoiceDate { get; set; }
-        public bool WithOrder { get; set; }
+        public bool WithOrder { get; set; } //do we need this here?
         public double Discount { get; set; }
         public bool Payed { get; set; }
 

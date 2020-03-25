@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.Models
 {
     public class Comment
     {
-        private DateTime commentTimeStamp = DateTime.Now;
+        private DateTime commentTimeStamp = DateTime.Now; //should this be readonly -ADINA
         [Key]
         public int CommentID { get; set; }
         public int RequestID { get; set; }
@@ -25,7 +25,7 @@ namespace PrototypeWithAuth.Models
         public DateTime CommentTimeStamp
         {
             get => commentTimeStamp;
-            set { }
+            set { } //should we take out the set? -ADINA
         }
     }
 }

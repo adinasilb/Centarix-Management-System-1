@@ -17,7 +17,7 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
-        public List<string> orderFileStrings { get; set; }
+        public List<string> OrderFileStrings { get; set; }
         public List<IFormFile> OrderFiles { get; set; }
         public IEnumerable<Comment> OldComments { get; set; }
         public Comment NewComment { get; set; }
