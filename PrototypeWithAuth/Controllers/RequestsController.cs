@@ -518,10 +518,6 @@ namespace PrototypeWithAuth.Controllers
             //initializing the boolean here
             //b/c need to check if the requestID is 0 but then pass in the new request ID
             bool WithOrder = false;
-            if (OrderType.Equals("Save") && requestItemViewModel.Request.RequestID == 0)
-            {
-                WithOrder = true;
-            }
 
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
             requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
@@ -538,12 +534,21 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
             }
 
-            //for now putting in the REQUEST STATUS as NEW --> will need to add business logic in the future
+            //can we combine this with the one above?
+            //if it's a new request need to put in a request status
             if (requestItemViewModel.Request.RequestStatusID == null)
             {
+                //all new ones will be "new" until actually ordered after the confirm email
                 requestItemViewModel.Request.RequestStatusID = 1;
+                //if it's less than 5500 shekel OR the user is an admin it will be ordered
+                if ((requestItemViewModel.Request.Cost < 5500 || User.IsInRole("Admin")) && OrderType.Equals("Order"))
+                {
+                    if (OrderType.Equals("Order"))
+                    {
+                        WithOrder = true;
+                    }
+                }
             }
-
             //in case we need to redirect to action
             TempData["ModalView"] = true;
             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
@@ -619,6 +624,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return RedirectToAction("Index");
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

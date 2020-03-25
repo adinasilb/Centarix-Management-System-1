@@ -1,5 +1,5 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using PrototypeWithAuth.Data
+﻿@using PrototypeWithAuth.Data
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
@@ -9,18 +9,19 @@
 
 
 }
-   
-        <div class="text-center">
-            <h6>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h6>
-            <div class="btn-group">
-                <button type="submit" class="button btn btn-outline-secondary">Protocols</button>
-                &nbsp;
-                @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-outline-secondary" })
-                &nbsp;
-                @Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn btn-outline-secondary" })
-                &nbsp;
-                <button type="submit" class="button btn btn-outline-secondary">Biomarkers</button>
-                &nbsp;
-                @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-outline-secondary" })
-            </div>
-        </div>
+@*Need to add security here*@
+
+<div class="text-center">
+    <h6>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h6>
+    <div class="btn-group">
+        <button type="submit" class="button btn btn-outline-secondary">Protocols</button>
+        &nbsp;
+        @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-outline-secondary" })
+        &nbsp;
+        @Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn btn-outline-secondary" })
+        &nbsp;
+        <button type="submit" class="button btn btn-outline-secondary">Biomarkers</button>
+        &nbsp;
+        @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-outline-secondary" })
+    </div>
+</div>

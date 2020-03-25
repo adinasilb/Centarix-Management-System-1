@@ -1,6 +1,10 @@
 ﻿@model IPagedList<PrototypeWithAuth.Models.Request>
 @using PrototypeWithAuth.AppData;
 
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
 @using X.PagedList.Mvc.Core; @* import this so we get our HTML Helper *@
 @using X.PagedList; @* import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)*@
 
@@ -66,8 +70,6 @@
             receivedActiveClass = "btn btn-secondary text-dark new-button";
             break;
     }
-
-    bool userCanApprove = false;
 
 }
 
@@ -137,10 +139,14 @@
                     @if (item.RequestStatusID == 1)
                     {
                         //this is a nested if b/c if user can't approve then i still don't want it to go the the else
-                        if (userCanApprove)
+                        if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
                         {
                             <button class="btn btn-link">Approve</button>
                         }
+                    }
+                    else if (item.RequestStatusID == 2)
+                    {
+                        <button class="btn btn-link">Receive</button>
                     }
                     else
                     {
