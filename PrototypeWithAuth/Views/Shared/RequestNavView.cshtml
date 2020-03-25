@@ -167,6 +167,7 @@
     $.fn.CallPage = function ($tab, $itemurl, isEmail = false) {
         console.log("in function");
         $.ajax({
+            async: true,
             url: $itemurl,
             type: 'GET',
             cache: false,

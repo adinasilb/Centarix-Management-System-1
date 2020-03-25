@@ -609,7 +609,7 @@ namespace PrototypeWithAuth.Controllers
                     //test that this works
                     if (WithOrder)
                     {
-                        TempData["SendEmail"] = requestItemViewModel.Request.RequestID.ToString();
+                        return RedirectToAction("ConfirmEmailModal", new { id = requestItemViewModel.Request.RequestID });
                     }
                 }
                 catch (Exception ex)
