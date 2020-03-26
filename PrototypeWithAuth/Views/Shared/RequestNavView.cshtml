@@ -54,10 +54,18 @@
             break;
     }
 
+    //not using this right now --> see with Faige if we should put it back in
     var SendEmail = "0";
     if (TempData["SendEmail"] != null)
     {
         SendEmail = TempData["SendEmail"].ToString();
+    }
+
+    //redo --> not used
+    var CancelledEmail = false;
+    if (TempData["CancelledEmail"] != null && TempData["CancelledEmail"].ToString().Equals("True"))
+    {
+        CancelledEmail = true;
     }
 
 }
@@ -128,9 +136,9 @@
 
 @RenderSection("Scripts", required: false)
 <script>
-    
+
     $(document).ready(function () {
-        console.log("Requests nav view document is ready!");
+        @*console.log("Requests nav view document is ready!");
         var sendEmail = parseInt('@SendEmail'); //comes in as a string (even though originally an int and therefore must be converted.)
         console.log("send email " + sendEmail);
         if (sendEmail > 0) {
@@ -138,6 +146,13 @@
             var tab = "";
             var $itemUrl = "Requests/ConfirmEmailModal/?id=" + sendEmail;
             $.fn.CallPage(tab, $itemUrl, true);
+        }*@
+
+        //redo --> not used
+        var cancelledEmail = '@CancelledEmail';
+        if (cancelledEmail == "True") {
+            var tab = ""; //just keeping this on the side
+            var $itemUrl = "Requests/ModalView";
         }
     });
 

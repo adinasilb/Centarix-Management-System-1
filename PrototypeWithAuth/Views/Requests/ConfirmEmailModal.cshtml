@@ -1,8 +1,14 @@
 ﻿@model PrototypeWithAuth.Models.Request
-@{ 
+@{
     var SubjectName = "Order";
     @*New line not working*@
     var OrderText = "Hi, \n We would like to place an order for " + Model.Product.ProductName;
+    var IsBeingApproved = TempData["IsBeingApproved"].ToString(); //have to use string and not bool b/c it's tempdata
+    var blocked = false;
+    if (!User.IsInRole("Admin") && IsBeingApproved == "True")//added the isinrole for added security
+    {
+        blocked = true;
+    }
 }
 
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view">
@@ -13,19 +19,30 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
-        <form action="mailto:@Model.Product.Vendor.OrderEmail ?Subject= @SubjectName&body=@OrderText" method="post" enctype="application/x-www-form-urlencoded">
-            <div class="modal-body">
-                Please review the text &amp; confirm:
-                <hr />
-                @OrderText
-            </div>
+        @if (blocked)
+        {
+            <span>Only admins have access to this page</span>
+            @Html.ActionLink("Continue", "Index", "Requests");
+        }
+        else
+        {
+            <form action="mailto:@Model.Product.Vendor.OrderEmail ?Subject= @SubjectName&body=@OrderText" method="post" enctype="application/x-www-form-urlencoded">
+                <div class="modal-body">
+                    @if (IsBeingApproved == "True")
+                    {
+                        <h4>Would you like to approve this Request for @Model.Product.ProductName ?</h4>
+                    }
+                    @OrderText
+                </div>
 
-            <div class="modal-footer">
-                <input type="submit" class="btn btn-success" value="Confirm & Send Email" />
-                @*FAIGE: should we have a return to request?*@
-                <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
-            </div>
-        </form>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="Confirm & Send Email" />
+                    @*FAIGE: should we have a return to request?*@
+                    @Html.ActionLink("Cancel", "ModalView", "Requests", new { @id = Model.RequestID, @CancelledEmail = true });
+                    <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
+                </div>
+            </form>
+        }
 
     </div>
 </div>

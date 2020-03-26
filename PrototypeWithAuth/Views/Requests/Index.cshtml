@@ -141,7 +141,7 @@
                         //this is a nested if b/c if user can't approve then i still don't want it to go the the else
                         if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
                         {
-                            <button class="btn btn-link">Approve</button>
+                            @Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });
                         }
                     }
                     else if (item.RequestStatusID == 2)

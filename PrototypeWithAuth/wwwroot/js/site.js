@@ -134,9 +134,16 @@ $("#subsubunit-amount").change(function () {
     console.log("Subsubunit amount changed");
     $.fn.GetSubSubUnitPrice();
 });
+//when sum is put in in dollars
 $("#sumDollars").change(function () {
     $.fn.ChangeUnitAndSum();
 });
+//when sum is put in in shekel
+$("#sumShekel").change(function () {
+    var $sumDollars = $(this).val * $("#Request_ExchangeRate"); //NEED TO DO THIS AGAIN AFTER THE EXCHANGE RATE IS CHANGED
+    $('input[name="sumDollars"]').val($sumDollars);
+    $.fn.ChangeUnitAndSum;
+})
 $("#vatInShekel").change(function () {
     console.log("Vat changed");
     $.fn.ChangeVAT();
@@ -261,6 +268,20 @@ $("#priceTab").click(function () {
     }
     if ($("#vatInShekel").val()) {
         $.fn.ChangeVAT();
+    }
+});
+
+//change what is inputted (dollar vs shekel when changing this)
+//not changing values b/c that will be done when the sum is put in
+$("#currency").change(function () {
+    console.log("currency type changed to " + $(this).val());
+    if ($(this).val() == "shekel") {
+        $("#sumDollar").attr("disabled", true);
+        $("#sumShekel").attr("disabled", false);
+    }
+    else if ($(this).val() == "dollar") {
+        $("#sumDollar").attr("disabled", false);
+        $("#sumShekel").attr("disabled", true);
     }
 });
 

@@ -31,6 +31,7 @@
                 @if (TempData["ErrorMessage"] != null)
                 {
                     <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                    <br />
                 }
                 <div class="form-group">
                     <h4><label asp-for="Request.Product.ProductName" class="control-label">@Type Request : </label> </h4>
@@ -326,7 +327,7 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                         <label asp-for="Request.Cost" class="control-label"></label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input asp-for="Request.Cost" class="form-control" id="sumDollars" />
+                                            <input asp-for="Request.Cost" class="form-control" id="sumDollars" name="sumDollars" />
                                         </div>
                                     </div>
                                 </div>

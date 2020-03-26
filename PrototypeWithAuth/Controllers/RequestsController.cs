@@ -17,6 +17,8 @@ using PrototypeWithAuth.ViewModels;
 using X.PagedList;
 using Microsoft.AspNetCore.Hosting;
 using System.Net.Mail;
+using System.Net.Http;
+using System.Net;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -38,13 +40,18 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, bool CancelledEmail = false)
         {
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest);
 
             TempData["RequestStatusID"] = RequestStatusID;
             var SidebarTitle = AppUtility.RequestSidebarEnum.None;
+
+            if (CancelledEmail)
+            {
+                TempData["CancelledEmail"] = true;
+            }
 
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
@@ -365,7 +372,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * START MODAL VIEW COPY
          */
-        public async Task<IActionResult> ModalView(int? id, bool NewRequestFromProduct = false)
+        public async Task<IActionResult> ModalView(int? id, bool NewRequestFromProduct = false, bool CancelledEmail = false)
         {
             string ModalViewType = "";
             if (id == null)
@@ -420,6 +427,53 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Request.ProductID = request.ProductID;
                 requestItemViewModel.Request.Product = request.Product;
 
+            }
+            else if (CancelledEmail)
+            {
+                Request requestToDelete = _context.Requests.Where(r => r.RequestID == id).FirstOrDefault();
+                Comment commentToDelete = _context.Comments.Where(c => c.RequestID == requestToDelete.RequestID).FirstOrDefault(); //will only be one b/c for now only adding one comment at a time
+                requestItemViewModel.Request = new Request
+                {
+                    ProductID = requestToDelete.ProductID, //ask Faige how to handle this
+                    //parent id will be new- dealt below
+                    LocationID = requestToDelete.LocationID,
+                    //request status dealt with below
+                    Unit = requestToDelete.Unit,
+                    UnitTypeID = requestToDelete.UnitTypeID,
+                    SubUnit = requestToDelete.SubUnit,
+                    SubUnitTypeID = requestToDelete.SubUnitTypeID,
+                    SubSubunit = requestToDelete.SubSubunit,
+                    SubSubUnitTypeID = requestToDelete.SubSubUnitTypeID,
+                    //skipping unitsordered and unitsinstock
+                    Quantity = requestToDelete.Quantity,
+                    Cost = requestToDelete.Cost,
+                    CatalogNumber = requestToDelete.CatalogNumber,
+                    SerialNumber = requestToDelete.SerialNumber,
+                    URL = requestToDelete.URL
+                };
+                requestItemViewModel.Request.ParentRequest = new ParentRequest();
+                requestItemViewModel.Request.RequestStatus = new RequestStatus();
+                requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
+
+                //if you are creating a new one set the dates to today to prevent problems in the front end
+                //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
+                //(already imported it)
+                requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
+                requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
+                ModalViewType = "Create";
+
+                //have to cascade delete the comment first
+                if (commentToDelete != null)
+                {
+                    _context.Comments.Remove(commentToDelete);
+                    _context.SaveChanges();
+                }
+                
+                //check if the product was new too or just leave it?????????????
+                _context.Requests.Remove(requestToDelete);
+                _context.SaveChanges();
+
+                //NEED TO NOW PASS THE REQUEST IN
             }
             else
             {
@@ -524,6 +578,15 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
+            //in case we need to return to the modal view
+            requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
+            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
+            requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+            requestItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
+            //redo the unit types when seeded
+            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
+
             //declared outside the if b/c it's used farther down to (for parent request the new comment too)
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
@@ -550,7 +613,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             //in case we need to redirect to action
-            TempData["ModalView"] = true;
+            //TempData["ModalView"] = true;
             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
 
             var context = new ValidationContext(requestItemViewModel.Request, null, null);
@@ -614,8 +677,10 @@ namespace PrototypeWithAuth.Controllers
                 }
                 catch (Exception ex)
                 {
-                    TempData["ErrorMessage"] = ex.ToString();
-                    return RedirectToAction("Index");
+                    //ModelState.AddModelError();
+                    ViewData["ModalViewType"] = "Create";
+                    TempData["ErrorMessage"] = ex.InnerException.ToString();
+                    return View(requestItemViewModel);
                 }
             }
             else
@@ -641,9 +706,17 @@ namespace PrototypeWithAuth.Controllers
          * BEGIN SEND EMAIL
          */
 
-        public async Task<IActionResult> ConfirmEmailModal(int? id)
+        public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
         {
             Request request = await _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).Include(r => r.Product.Vendor).FirstOrDefaultAsync();
+            if (IsBeingApproved)
+            {
+                TempData["IsBeingApproved"] = true;
+            }
+            else
+            {
+                TempData["IsBeingApproved"] = false;
+            }
             return View(request);
         }
 
