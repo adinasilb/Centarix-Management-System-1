@@ -32,6 +32,7 @@ $("#vendorList").change(function () {
 
 $.fn.ChangeVendorBusinessId = function (vendorid) {
     var newBusinessID = "";
+
     //will throw an error if its a null value so tests it here
     if (vendorid > 0) {
         //load the url of the Json Get from the controller
@@ -79,41 +80,104 @@ $("#priceTab").click(function () {
     }
 });
 
+$("#currency").change(function () {
+    $.fn.EnableSumDollarsOrShekel();
+});
+
+$("#Request_ExchangeRate").change(function () {
+    $.fn.ChangeSumDollarsAndSumShekel();
+    $.fn.CalculateUnitAmounts();
+    $.fn.CalculateSubUnitAmounts(); //do we need an if statement here?
+    $.fn.CalculateSubSubUnitAmounts(); //do we need an if statement here?
+    $.fn.CalculateTotalPlusVat();
+});
+
+$("#unit-amount").change(function () {
+    $.fn.CalculateUnitAmounts();
+    $.fn.CalculateSubUnitAmounts(); //do we need an if statement here?
+    $.fn.CalculateSubSubUnitAmounts(); //do we need an if statement here?
+});
+
+$("#unit-type").change(function () {
+    $.fn.OpenSubUnits();
+    $.fn.ChangeSubUnitDropdown();
+});
+
+$("#subunit-amount").change(function () {
+    $.fn.CalculateSubUnitAmounts();
+    $.fn.CalculateSubSubUnitAmounts();
+});
+
+$("#subunit-type").change(function () {
+    $.fn.OpenSubSubUnits();
+    $.fn.ChangeSubSubUnitDropdown();
+});
+
+$("#subsubunit-amount").change(function () {
+    $.fn.CalculateSubSubUnitAmounts();
+});
+
+$("#sumShekel").change(function () {
+    $.fn.ChangeSumDollarsAndSumShekel(); //make sure this is right here
+    $.fn.CalculateUnitAmounts(); //if statement?
+    $.fn.CalculateSubUnitAmounts(); //ifstatement?
+    $.fn.CalculateSubSubUnitAmounts(); //ifstatement?
+    $.fn.CalculateTotalPlusVat();
+});
+
+$("#vatInShekel").change(function () {
+    $.fn.CalculateTotalPlusVat();
+});
+
 //Calculate unit amounts
 $.fn.CalculateUnitAmounts = function () {
-
+    console.log("Calculating unit amounts");
+    console.log("Done");
 };
-//calculate sub unit amounts
+//calculate sub unit amountss
 $.fn.CalculateSubUnitAmounts = function () {
-
+    console.log("Calculating sub unit amounts");
+    console.log("Done");
 };
 //calculate sub sub unit amounts
 $.fn.CalculateSubSubUnitAmounts = function () {
-
+    console.log("Calculating sub sub unit amouts");
+    console.log("Done");
 };
 //Open subunits
 $.fn.OpenSubUnits = function () {
-
+    console.log("open sub units");
+    console.log("Done");
 };
 //open sub sub units 
 $.fn.OpenSubSubUnits = function () {
-
+    console.log("open sub sub units");
+    console.log("Done");
 };
 //change subunit dropdown
 $.fn.ChangeSubUnitDropdown = function () {
-
+    console.log("change sub unit dropdown");
+    console.log("Done");
 };
 //change sub sub unit dropdown
 $.fn.ChangeSubSubUnitDropdown = function () {
-
+    console.log("change sub sub unit dropdown");
+    console.log("Done");
 };
 //calculate total + vat
 $.fn.CalculateTotalPlusVat = function () {
-
+    console.log("calculate total plus vat");
+    console.log("Done");
 };
 //enable or disable sumdollars and sumshekel
 $.fn.EnableSumDollarsOrShekel = function () {
-
+    console.log("enable or disable sumdollars and sumshekel");
+    console.log("Done");
+}
+//change sumDollars and sumSHekel
+$.fn.ChangeSumDollarsAndSumShekel = function () {
+    console.log("changing sumdollars and sumshekel");
+    console.log("done!");
 }
 
 
