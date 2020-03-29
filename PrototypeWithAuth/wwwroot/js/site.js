@@ -73,9 +73,9 @@ $("#priceTab").click(function () {
     }
     if ($("#subsubunit-amount").val() && $("#subsubunit-type").val()) {
         $.fn.CalculateSubSubUnitAmounts();
-   $.fn.
     }
     if ($("#vatInShekel").val()) {
+        $.fn.CalculateTotalPlusVat();
     }
 });
 
@@ -111,7 +111,10 @@ $.fn.ChangeSubSubUnitDropdown = function () {
 $.fn.CalculateTotalPlusVat = function () {
 
 };
+//enable or disable sumdollars and sumshekel
+$.fn.EnableSumDollarsOrShekel = function () {
 
+}
 
 
 ////change expected supply days automatically
