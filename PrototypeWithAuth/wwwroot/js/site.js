@@ -48,198 +48,6 @@ $.fn.ChangeVendorBusinessId = function (vendorid) {
     //put the business id into the form
 }
 
-//PRICE PAGE ON MODAL VIEW//
-
-$("#unit-type").change(function () {
-    $.fn.OpenSubUnits();
-});
-
-$.fn.OpenSubUnits = function () {
-    var selected = $(':selected', $("#unit-type"));
-    var optgroup = selected.closest('optgroup').attr('label');
-
-    if (selected.val() != "") {
-        console.log("inside the if");
-        $(".RequestSubunitCard .form-control").prop('disabled', false);
-    }
-    //needed to do an else if b/c it wasn't entering the else for some reason
-    else if (selected.val() == "") {
-        console.log("inside the else");
-        $(".RequestSubunitCard .form-control").prop('disabled', true);
-        $(".RequestSubsubunitCard .form-control").prop('disabled', true);
-    }
-    //the following is based on the fact that the unit types and parents are seeded with primary key values
-
-    //take out the sub sub units??
-
-    switch (optgroup) {
-        case "Units":
-            $("#subunit-type optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-            $("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-            break;
-        case "Weight/Volume":
-            $("#subunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-            $("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-            break;
-        case "Test":
-            $("#subunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-            $("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-            break;
-    }
-}
-
-$("#subunit-type").change(function () {
-    $.fn.OpenSubSubUnits();
-});
-
-$.fn.OpenSubSubUnits = function () {
-    var selected = $(':selected', $("#subunit-type"));
-    var optgroup = selected.closest('optgroup').attr('label');
-    console.log("Unit type changed " + optgroup);
-
-    if (selected > "") {
-        $(".RequestSubsubunitCard .form-control").attr('disabled', false);
-    }
-    else {
-        $(".RequestSubsubunitCard .form-control").attr('disabled', true);
-    }
-    //the following is based on the fact that the unit types and parents are seeded with primary key values
-    switch (optgroup) {
-        case "Units":
-            $("#subsubunit-type optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-            $("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-            break;
-        case "Weight/Volume":
-            $("#subsubunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-            $("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-            break;
-        case "Test":
-            $("#subsubunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-            $("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-            break;
-    }
-}
-
-
-//Automatic updates on prices and sums for Modal View --> Pricing
-$("#unit-amount").change(function () {
-    $.fn.ChangeUnitAndSum();
-});
-$("#subunit-amount").change(function () {
-    console.log("Subunit amount changed");
-    $.fn.GetSubUnitPrice();
-    $.fn.GetSubSubUnitPrice();
-});
-$("#subsubunit-amount").change(function () {
-    console.log("Subsubunit amount changed");
-    $.fn.GetSubSubUnitPrice();
-});
-//when sum is put in in dollars
-$("#sumDollars").change(function () {
-    $.fn.ChangeUnitAndSum();
-});
-//when sum is put in in shekel
-$("#sumShekel").change(function () {
-    var $sumDollars = $(this).val * $("#Request_ExchangeRate"); //NEED TO DO THIS AGAIN AFTER THE EXCHANGE RATE IS CHANGED
-    $('input[name="sumDollars"]').val($sumDollars);
-    $.fn.ChangeUnitAndSum;
-})
-$("#vatInShekel").change(function () {
-    console.log("Vat changed");
-    $.fn.ChangeVAT();
-});
-$.fn.ChangeUnitAndSum = function () {
-    var $unitAmt = $("#unit-amount").val();
-    var $sumDollars = $("#sumDollars").val();
-    if ($sumDollars != Infinity && $sumDollars != NaN) {
-        $unitSumDollars = $sumDollars / $unitAmt;
-    }
-    console.log("Unit sum in dollars: " + $unitSumDollars);
-    $('input[name="unit-price-dollars"]').val($unitSumDollars);
-    $.fn.ChangeShekalim();
-    $.fn.GetSubUnitPrice();
-    $.fn.GetSubSubUnitPrice();
-}
-$.fn.ChangeShekalim = function () {
-    var $exchangeRate = $("#Request_ExchangeRate").val();
-    //change the sum
-    $sumDollars = $("#sumDollars").val();
-    $sumShekel = $sumDollars * $exchangeRate;
-    $('input[name="sumShekel"').val($sumShekel);
-
-    //change the unit
-    $unitPriceDollars = $("#unit-price-dollars").val();
-    $unitPriceShekel = $unitPriceDollars * $exchangeRate;
-    $('input[name="unit-price-shekel"]').val($unitPriceShekel);
-
-    //change the subunit 
-    $subunitPriceDollars = $("#subunit-price-dollars").val();
-    $subunitPriceShekel = $subunitPriceDollars * $exchangeRate;
-    $('input[name="subunit-price-shekel"]').val($subunitPriceShekel);
-
-    //change the subsubunit
-    $subsubunitPriceDollars = $("#subsubunit-price-dollars").val();
-    $subsubunitPriceShekel = $subsubunitPriceDollars * $exchangeRate;
-    $('input[name="subsubunit-price-shekel"]').val($subsubunitPriceShekel);
-
-    $.fn.ChangeVAT();
-}
-
-//CURRENTLY NOT WORKING
-$.fn.ChangeVAT = function () {
-    var $exchangeRate = $("#Request_ExchangeRate").val();
-    var vatInShekel = $("#vatInShekel").val();
-    console.log("vat in shekel: " + vatInShekel);
-    var sumShekel = $("#sumShekel").val();
-    console.log("sum in shekel: " + sumShekel);
-    var $sumPlusVatShekel = parseInt(sumShekel) + parseInt(vatInShekel);
-    console.log("sum plus vat in shekel: " + $sumPlusVatShekel);
-    if ($sumPlusVatShekel != Infinity && $sumPlusVatShekel != NaN) {
-        $('input[name="SumPlusVat-Shekel"]').val($sumPlusVatShekel);
-    }
-    //IS THIS THE BEST WAY OF DOING IT OR SHOULD I CONVERT THE INPUT I JUST DID??
-    var vatInDollars = vatInShekel / $exchangeRate;
-    console.log("Vat in dollars: " + vatInDollars);
-    var $sumPlusVatDollars = parseInt($("#sumDollars").val()) + parseInt(vatInDollars);
-    console.log("sum plus vat in dollars: " + $sumPlusVatDollars);
-    if ($sumPlusVatDollars != Infinity && $sumPlusVatDollars != NaN) {
-        $('input[name="SumPlusVat-Dollar"]').val($sumPlusVatDollars);
-    }
-    console.log("-----------------------------------");
-}
-
-//get price for subunits
-$.fn.GetSubUnitPrice = function () {
-    var $exchangeRate = $("#Request_ExchangeRate").val();
-    var subunitpricedollars = $("#unit-price-dollars").val() / $("#subunit-amount").val();
-    console.log("subunit price dollars " + subunitpricedollars);
-    var subunitpriceshekel = subunitpricedollars * $exchangeRate;
-    console.log("subunit price shekel " + subunitpriceshekel);
-    if (subunitpricedollars != Infinity && subunitpricedollars != NaN) {
-        $('input[name="subunit-price-dollars"]').val(subunitpricedollars);
-    }
-    if (subunitpriceshekel != Infinity && subunitpriceshekel != NaN) {
-        $('input[name="subunit-price-shekel"]').val(subunitpriceshekel);
-    }
-}
-
-//get price for subsubunits
-$.fn.GetSubSubUnitPrice = function () {
-    var $exchangeRate = $("#Request_ExchangeRate").val();
-    var subsubunitpricedollars = $("#subunit-price-dollars").val() / $("#subsubunit-amount").val();
-    console.log("subsubunit price dollars " + subsubunitpricedollars);
-    var subsubunitpriceshekel = subsubunitpricedollars * $exchangeRate;
-    console.log("subsubunit price shekel " + subsubunitpriceshekel);
-    if (subsubunitpricedollars != Infinity && subsubunitpricedollars != NaN) {
-        $('input[name="subsubunit-price-dollars"]').val(subsubunitpricedollars);
-    }
-    if (subsubunitpriceshekel != Infinity && subsubunitpriceshekel != NaN) {
-        $('input[name="subsubunit-price-shekel"]').val(subsubunitpriceshekel);
-    }
-}
-
-
-//load the vendor business id with the vendor business id corresponding to the newly selected vendor from the vendor list
 
 //view documents on modal view
 $(".view-docs").click(function (clickEvent) {
@@ -250,40 +58,61 @@ $(".view-docs").click(function (clickEvent) {
     $(".images-header").html(title + " Documents Uploaded:");
 });
 
+//PRICE PAGE ON MODAL VIEW//
 //on opening of the price tag see if subunits and subsubunits should be enabled
 $("#priceTab").click(function () {
-    console.log("price tab clicked!");
     if ($("#unit-amount").val() && $("#unit-type").val()) {
+        $.fn.CalculateUnitAmounts();
         $.fn.OpenSubUnits();
-        $.fn.ChangeUnitAndSum();
+        $.fn.ChangeSubUnitDropdown();
     }
     if ($("#subunit-amount").val() && $("#subunit-type").val()) {
-        console.log("sub unit amount was filled out!");
+        $.fn.CalculateSubUnitAmounts();
         $.fn.OpenSubSubUnits();
-        $.fn.GetSubUnitPrice();
+        $.fn.ChangeSubSubUnitDropdown();
     }
     if ($("#subsubunit-amount").val() && $("#subsubunit-type").val()) {
-        console.log("sub sub unit amount was filled out!");
-        $.fn.GetSubSubUnitPrice();
+        $.fn.CalculateSubSubUnitAmounts();
+   $.fn.
     }
     if ($("#vatInShekel").val()) {
-        $.fn.ChangeVAT();
     }
 });
 
-//change what is inputted (dollar vs shekel when changing this)
-//not changing values b/c that will be done when the sum is put in
-$("#currency").change(function () {
-    console.log("currency type changed to " + $(this).val());
-    if ($(this).val() == "shekel") {
-        $("#sumDollar").attr("disabled", true);
-        $("#sumShekel").attr("disabled", false);
-    }
-    else if ($(this).val() == "dollar") {
-        $("#sumDollar").attr("disabled", false);
-        $("#sumShekel").attr("disabled", true);
-    }
-});
+//Calculate unit amounts
+$.fn.CalculateUnitAmounts = function () {
+
+};
+//calculate sub unit amounts
+$.fn.CalculateSubUnitAmounts = function () {
+
+};
+//calculate sub sub unit amounts
+$.fn.CalculateSubSubUnitAmounts = function () {
+
+};
+//Open subunits
+$.fn.OpenSubUnits = function () {
+
+};
+//open sub sub units 
+$.fn.OpenSubSubUnits = function () {
+
+};
+//change subunit dropdown
+$.fn.ChangeSubUnitDropdown = function () {
+
+};
+//change sub sub unit dropdown
+$.fn.ChangeSubSubUnitDropdown = function () {
+
+};
+//calculate total + vat
+$.fn.CalculateTotalPlusVat = function () {
+
+};
+
+
 
 ////change expected supply days automatically
 //$("#Request_ExpectedSupplyDays").change(function () {
