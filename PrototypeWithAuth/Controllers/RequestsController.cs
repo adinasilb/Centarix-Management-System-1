@@ -427,6 +427,12 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Request.ProductID = request.ProductID;
                 requestItemViewModel.Request.Product = request.Product;
 
+                var paymentsList = _context.Payments
+                    .Include(p => p.CompanyAccount) //check if it works without this
+                    .Include(p => p.CompanyAccount.PaymentType)
+                    .Where(p => p.ParentRequestID == request.ParentRequest.ParentRequestID);
+                requestItemViewModel.OldPayments = paymentsList;
+
             }
             else if (CancelledEmail)
             {
