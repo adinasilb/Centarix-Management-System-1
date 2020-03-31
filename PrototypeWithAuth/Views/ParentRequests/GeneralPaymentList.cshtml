@@ -62,14 +62,14 @@
                 </thead>
                 @{int total = 0;}
 
-                @foreach (var item in group@*.GroupBy(item => item.OrderDate.Month)*@)
+                @foreach (var item in group)
 {
 total++;
 //int index = 0;
 @if (total.Equals(group.Count()))
 {
     <h6 id = @item.OrderDate.Year>
-        @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.@*ElementAt(index).*@OrderDate.Month) [@total]
+        @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.OrderDate.Month) [@total]
     </h6>
 }
 <tr>
@@ -100,12 +100,12 @@ total++;
         <a asp-action="Details" asp-route-id="@item.ParentRequestID">Details</a> |
     </td>
 </tr>
-//index++;
+
 
 }
             </table>
         }
     </div>
 </div>
-    </div>
+   
 

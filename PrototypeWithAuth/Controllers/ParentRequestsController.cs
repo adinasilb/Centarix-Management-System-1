@@ -105,32 +105,217 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> GeneralPaymentList()
         {
 
-            //var model = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.Vendor)
-            //    .GroupBy(o => new
-            //    {
-            //        Month = o.OrderDate.Month,
-            //        Year = o.OrderDate.Year
-            //    })
-            //    .Select(g => new OrderByDateViewModel
-            //    {
-            //        Month = g.Key.Month,
-            //        Year = g.Key.Year,
-            //        Total = g.Count()
-            //    })
-            //    .OrderByDescending(a => a.Year)
-            //    .ThenByDescending(a => a.Month)
-            //    .ToList();
-
-            //return View(await model.ToListAsync());
             IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.Vendor);
 
             var fullParentRequestsListByDate = fullParentRequestsList
-                        //.GroupBy(f => f.OrderDate.Month) 
                         .OrderByDescending(f => f.OrderDate.Date)
                         .ThenBy(f => f.OrderDate.TimeOfDay);
-            //.GroupBy(f => f.OrderDate.Year);
             return View(await fullParentRequestsListByDate.ToListAsync());
         }
+        //public async Task<IActionResult> ExpensesPaymentList2()
+        //{
+        //IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory);
+        //var fullParentRequestsListByCategoryAndDescendingDate = fullParentRequestsList
+
+        //        .OrderByDescending(fPR => fPR.OrderDate.Date)
+        //        .ThenBy(fPR => fPR.OrderDate.TimeOfDay);
+        //     var orders = db.Orders.Include(o => o.Product)
+        //.GroupBy(o => o.Product.Category.Name)
+        //.Select(cat => cat.FirstOrDefault());
+
+        //var products = db.Orders.Include(o => o.Product);
+
+        //return View(Tuple.Create(orders.ToList(), products.ToList()));
+
+        //var fullParentRequestsListByMonth = _context.ParentRequests.Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory);
+        //fullParentRequestsListByMonth
+        //    .GroupBy(fPR => fPR.OrderDate.Month);
+        //    ExpensesPaymentListViewModel expensesPaymentListViewModel = new ExpensesPaymentListViewModel
+        //    {
+        //        ParentCategories = /*await*/ _context.ParentCategories/*.ToListAsync()*/,
+        //        ParentRequests = /*await */fullParentRequestsListByMonth/*.ToListAsync()*/
+        //    };
+        //)
+        //.ToList();
+
+        //ExpensesPaymentListViewModel expensesPaymentListViewModel = new ExpensesPaymentListViewModel
+        //{
+        //    ParentCategories = await _context.ParentCategories.ToListAsync(),
+        //    ParentRequests = await fullParentRequestsListByCategoryAndDescendingDate.ToListAsync()
+        //};
+
+        /*        return View(expensesPaymentListViewModel*/  /* await fullParentRequestsListByCategoryAndDescendingDate.ToListAsync()/*await fullParentRequestsListByMonth*//*);*/
+
+
+
+        //}
+        //public ActionResult ExpensesPaymentList()
+        //{
+        //    var model = _context.Requests.Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(r => r.ParentCategory)
+        //        .AsEnumerable()
+        //        .GroupBy(r => new
+        //        {
+        //            ParentCategory = r.Product.ProductSubcategory.ParentCategory,
+
+
+        //        })
+        //        .Select(g => new ExpensesPaymentListViewModel
+        //        {
+
+        //            ParentCategory = g.Key.ParentCategory,
+        //            Total = g.Sum(r => r.Cost)
+
+        //        })
+
+        //        .ToList();
+
+        //    return View(model);
+        //}
+
+
+
+
+        public async Task<IActionResult> ExpensesPaymentList()
+        {
+            var requests = _context.Requests.Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(r => r.ParentCategory);
+            var res = from request in requests
+                      group request by new { request.ParentRequest.OrderDate.Month, request.Product.ProductSubcategory.ParentCategory };
+
+            return View(await model.ToListAsync());
+        }
+
+
+
+
+        //public async Task<IActionResult> ExpensesPaymentList()
+        //{
+
+        //    var model = _context.Requests.Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(r => r.ParentCategory)
+        //        .GroupBy(r => new
+        //        {
+        //            Month = r.ParentRequest.OrderDate.Month,
+        //            Year = r.ParentRequest.OrderDate.Year,
+
+
+        //        })
+
+        //        .Select(g => new MonthlyTotalsViewModel
+        //        {
+        //            Month = g.Key.Month,
+        //            Year = g.Key.Year,
+        //            GrandTotal = g.Sum(r => r.Cost)
+
+        //        })
+        //        .OrderByDescending(a => a.Year)
+        //        .ThenByDescending(a => a.Month)
+        //        .ToList();
+
+        //    return View(await model.ToListAsync());
+        //}
+
+        //       public async Task<IActionResult> ExpensesPaymentList()
+        //       {
+        //           var categoryGrouping = _context.Requests.Include(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory)
+        //               .GroupBy(r => new
+        //               {
+        //                   Category = r.Product.ProductSubcategory.ParentCategory,
+        //                   Month = r.ParentRequest.OrderDate.Month,
+        //                   Year = r.ParentRequest.OrderDate.Year
+        //               })
+        //               .Select
+        //               (x => new 
+        //               {
+        //                   Category = x.First().Product.ProductSubcategory.ParentCategory,
+        //                   Amount = x.Sum(y => y.Cost),
+        //                   Month = x.Key.Month,
+        //                   Year = x.Key.Year
+
+
+
+        //               });
+        //           var categories = _context.ParentCategories;
+        //           var categoryCount = categories.Count();
+        //           var categoryIDs = categories.Select(x => x.ParentCategoryID).ToList();
+
+        //var model = new MonthlyTotalsViewModel
+        //{
+        //   Month 
+        //}
+
+        //           return View(await model.ToListAsync());
+        //       }
+
+        //public ActionResult ExpensesPaymentList(DateTime startDate, int months)
+        //{
+        //    // Get the start and end dates
+        //    startDate = new DateTime(startDate.Year, startDate.Month, 1); // ensure first day of month
+        //    DateTime endDate = startDate.AddMonths(months + 1);
+        //    // Initialize the model
+        //    List<ExpensesPaymentListViewModel> model = new List<ExpensesPaymentListViewModel>();
+        //    // Filter the data and group by client
+        //    var data = _context.Requests/*.Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory)*/
+        //        .Where(r => r.ParentRequest.OrderDate >= startDate && r.ParentRequest.OrderDate < endDate)
+        //        .GroupBy(r => r.Product.ProductSubcategory.ParentCategory);
+        //    // Create a ExpensesPaymentListViewModel for each parentCategory group
+        //    foreach (var parentCategoryGroup in data)
+        //    {
+        //        ExpensesPaymentListViewModel summary = new ExpensesPaymentListViewModel(startDate, months)
+        //        {
+        //            ParentCategory = parentCategoryGroup.Key,
+        //            GrandTotal = (decimal)parentCategoryGroup.Sum(x => x.Cost)
+        //        };
+        //        // Group by month/year
+        //        foreach (var monthGroup in parentCategoryGroup.GroupBy(x => new { Month = x.ParentRequest.OrderDate.Month, Year = x.ParentRequest.OrderDate.Year }))
+        //        {
+        //            // Get the index of the month
+        //            int index = ((monthGroup.Key.Year - startDate.Year) * 12) + monthGroup.Key.Month - startDate.Month;
+        //            summary.MonthlyTotals[index].Amount = (decimal)monthGroup.First().Cost; // or .Sum(m => m.First().Requests.FirstOrDefault().Cost) if there are multiple invoives per month
+        //        }
+        //        model.Add(summary);
+        //    }
+        //    return View(model);
+        //}
+
+        //public ActionResult ExpensesPaymentList()
+        //{
+        //    var data = _context.ParentRequests.Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory)
+        //       .GroupBy(pr => pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory);
+        //    foreach
+        //}
+
+        //    public ActionResult ExpensesPaymentList()
+        //    {
+        //        var parentCategoriesIDs = _context.ParentCategories;
+        //        //var date = new DateTime(0001, 1, 1);
+        //        var list = _context.ParentRequests.Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory);
+        //        //var filtered = list.Where(x => x.OrderDate >= date && x.OrderDate < date.AddMonths(1));
+        //        var grouped = list.GroupBy(x => new { category = x.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory }).Select(x => new
+        //        {
+        //            Category = x.First().Requests.First().Product.ProductSubcategory.ParentCategory,
+        //            Amount = x.Sum(y => y.Requests.First().Cost)
+        //        });
+        //        var categories = _context.ParentCategories;
+        //        var categoryCount = categories.Count();
+        //        var categoryIDs = categories.Select(x => x.ParentCategoryID).ToList();
+        //        var model = new MonthlyTotalsViewModel()
+        //        {
+        //            //Date = date,
+        //            Categories = categories.Select(x => x.ParentCategoryDescription),
+        //            Payments = new List<ExpensesPaymentListViewModel>()
+        //        };
+
+        //            ExpensesPaymentListViewModel payment = new ExpensesPaymentListViewModel (categoryCount);
+        //            foreach (var item in grouped)
+        //            {
+        //                int index = categoryIDs.IndexOf(item.Category.ParentCategoryID);
+        //                payment.Amounts[index] = (decimal)item.Amount;
+        //                payment.Total += (decimal)item.Amount;
+        //            }
+        //            model.Payments.Add(payment);
+
+
+        //        return View(model);
+        //}
 
 
         // GET: ParentRequests/Details/5
