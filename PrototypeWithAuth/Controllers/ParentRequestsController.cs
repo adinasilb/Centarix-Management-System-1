@@ -181,9 +181,22 @@ namespace PrototypeWithAuth.Controllers
             var res = from request in requests
                       group request by new { request.ParentRequest.OrderDate.Month, request.Product.ProductSubcategory.ParentCategory };
 
-            return View(await model.ToListAsync());
+            return View(await res.ToListAsync()/*await model.ToListAsync()*/);
         }
 
+
+        public async Task<IActionResult> ExpensesList()
+        {
+            //get them all by date month
+
+            var requestsSortedByDate = _context.Requests.Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory)
+                .GroupBy(r =>  r.ParentRequest).Select(r => new List<Request>(r));
+            foreach(var r in requestsSortedByDate)
+            {
+                r.ToString();
+            }
+            return View();
+        }
 
 
 

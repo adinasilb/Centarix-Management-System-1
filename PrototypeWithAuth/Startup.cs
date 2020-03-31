@@ -105,8 +105,8 @@ namespace PrototypeWithAuth
                 endpoints.MapRazorPages();
             });
             CreateRoles(serviceProvider).Wait();
-           
-        
+
+
         }
 
         //Seed database with new roles
@@ -127,7 +127,7 @@ namespace PrototypeWithAuth
                 }
             }
             var poweruser = new ApplicationUser();
-            poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
+            poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
 
             await UserManager.AddToRoleAsync(poweruser, "Admin");
 

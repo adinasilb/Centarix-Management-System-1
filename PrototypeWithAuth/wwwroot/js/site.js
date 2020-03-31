@@ -24,6 +24,33 @@ $("#parentlist").change(function () {
 	});
 });
 
+//payments on the price modal -cascading dropdown choice with json
+$(".paymentType").change(function () {
+	var paymentTypeId = $(this).val();
+	var url = "/Requests/GetCompanyAccountList";
+	var paymentTypeId = $(this).attr("id");
+	console.log("payment type id: " + paymentTypeId);
+	var firstNum = paymentTypeId.charAt(12);
+	var secondNum = paymentTypeId.charAt(13);
+	var numId = firstNum;
+	if (secondNum != "_") {
+		numId = firstNum + secondNum;
+	}
+	var companyAccountId = "NewPayments_" + numId + "__CompanyAccount";
+
+	$.getJSON(url, { paymentTypeId: paymentTypeId }, function (data) {
+		console.log("in json");
+		var item = "";
+		$("#" + companyAccountId).empty();
+		$.each(data, function (i, companyAccount) {
+			console.log(companyAccount.companyAccountId)
+			item += '<option value="' + companyAccount.companyAccountId + '">' + companyAccount.companyAccountNum + ' - hello</option>'
+			console.log(item);
+		});
+		$("#" + companyAccountId).html(item);
+	});
+});
+
 $("#vendorList").change(function () {
 	//get the new vendor id selected
 	var vendorid = $("#vendorList").val();

@@ -75,7 +75,7 @@
                             @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Cart", "Cart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" })
+                            @Html.ActionLink("Cart", "AddToCart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" })
                         </li>
                     </ul>
                 </div>
