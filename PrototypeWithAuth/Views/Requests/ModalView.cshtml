@@ -384,9 +384,9 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label asp-for="Request.Payments" class="control-label"></label>
-                                        <input asp-for="Request.Payments" class="form-control" />
-                                        <span asp-validation-for="Request.Payments" class="text-danger"></span>
+                                        <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
+                                        <input asp-for="Request.ParentRequest.Installments" class="form-control" />
+                                        <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-8 rounded card p-3">
@@ -400,7 +400,7 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                             </tr>
                                         </thead>
                                         @{var originalInvoiceDate = Model.Request.ParentRequest.InvoiceDate; }
-                                        @for (var i = 1; i <= Model.Request.Payments; i++)
+                                        @for (var i = 1; i <= Model.Request.ParentRequest.Installments; i++)
                                         {
                                             var newMonth = originalInvoiceDate.AddMonths(i);
                                             if (newMonth <= DateTime.Now)

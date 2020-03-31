@@ -126,7 +126,7 @@ namespace PrototypeWithAuth
                 }
             }
             var poweruser = new ApplicationUser();
-            poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+            poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
 
             await UserManager.AddToRoleAsync(poweruser, "Admin");
 
