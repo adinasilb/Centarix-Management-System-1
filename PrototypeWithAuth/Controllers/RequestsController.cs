@@ -386,7 +386,8 @@ namespace PrototypeWithAuth.Controllers
             var requeststatuses = await _context.RequestStatuses.ToListAsync();
             //redo the unit types when seeded
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-
+            var paymenttypes = await _context.PaymentTypes.ToListAsync();
+            var companyaccounts = await _context.CompanyAccounts.ToListAsync();
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
@@ -394,7 +395,9 @@ namespace PrototypeWithAuth.Controllers
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 RequestStatuses = requeststatuses,
-                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription")
+                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
+                PaymentTypes = paymenttypes,
+                CompanyAccounts = companyaccounts
             };
 
             if (id == 0)
@@ -484,33 +487,6 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 ModalViewType = "Edit";
-
-                //ASK FAIGE IF THIS COULD BE DONE IN A BETTER WAY (like both requests together?)
-                //Add in payments that may or may not be in the table
-                Request request = _context.Requests.Include(r => r.ParentRequest).Where(r => r.RequestID == id).SingleOrDefault();
-                if (!request.ParentRequest.Payed)
-                {
-                    //check later if should be order by or order by descending
-                    IEnumerable<Payment> payments = _context.Payments.Where(p => p.ParentRequestID == request.ParentRequestID).OrderBy(p => p.PaymentDate);
-                    if (payments.Count() == request.ParentRequest.Installments)
-                    {
-                        //insert payed = true into database
-                        //do we need this here?
-                    }
-                    else
-                    {
-                        if (payments.Count() == 0 || payments.Last().PaymentDate.Month < DateTime.Now.Month)
-                        {
-                            int installmentsLeft = (Int32)request.ParentRequest.Installments - payments.Count();
-                            for (var i = 0; i < installmentsLeft; i++)
-                            {
-                                Payment newPayment = new Payment();
-                                newPayment.PaymentDate = request.ParentRequest.InvoiceDate.AddMonths(installmentsLeft - i);
-                                _context.Add(newPayment);
-                            }
-                        }
-                    }
-                }
 
                 requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
                     .Include(r => r.ParentRequest)

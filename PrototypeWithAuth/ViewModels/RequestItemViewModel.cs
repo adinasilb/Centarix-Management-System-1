@@ -23,6 +23,8 @@ namespace PrototypeWithAuth.ViewModels
         public Comment NewComment { get; set; }
         public IEnumerable<Payment> OldPayments { get; set; }
         public List<Payment> NewPayments { get; set; }
+        public IEnumerable<PaymentType> PaymentTypes { get; set; }
+        public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
         public Request Request { get; set; } // requests already include the product, we do not need to include a seperate product
 
     }
