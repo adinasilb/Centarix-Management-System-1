@@ -13,6 +13,10 @@ namespace PrototypeWithAuth.ViewModels
         public int Month { get; set; }
         public int Year { get; set; }
         public double GrandTotal { get; set; }
+        public double PlasticsTotal { get; set; }
+        public double ReagentsTotal { get; set; }
+        public double ProprietyTotal { get; set; }
+        public double ReusableTotal { get; set; }
         //public List<Request> ExpensesByCatgeory { get; set; }
         // public ParentCategory ParentCategory { get; set; } //for expense view model
         // public double Total { get; set; }//for expense view model

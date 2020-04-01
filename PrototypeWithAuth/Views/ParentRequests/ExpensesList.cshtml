@@ -1,4 +1,4 @@
-﻿
+﻿@model PrototypeWithAuth.ViewModels.ExpensesListViewModel
 @{
     ViewData["Title"] = "ExpensesList";
     Layout = "~/Views/Shared/PaymentView.cshtml";
@@ -6,3 +6,42 @@
 
 <h1>ExpensesList</h1>
 
+<table class="table table-bordered">
+    <tr>
+        <th>
+            Month - Year
+        </th>
+        <th>
+            Plastics
+        </th>
+        <th>
+            Reagents
+        </th>
+        <th>
+            Proprietry
+        </th>
+        <th>
+            Reusable
+        </th>
+    </tr>
+    @foreach(var item in Model.monthlyTotals)
+    {
+        <tr>
+            <td>
+                @item.Month - @item.Year
+            </td>
+            <td>
+                @item.PlasticsTotal
+            </td>
+            <td>
+                @item.ReagentsTotal
+            </td>
+            <td>
+                @item.ProprietyTotal
+            </td>
+            <td>
+                @item.ReusableTotal
+            </td>
+        </tr>
+    }
+</table>

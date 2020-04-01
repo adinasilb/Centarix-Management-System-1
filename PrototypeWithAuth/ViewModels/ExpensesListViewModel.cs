@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
     public class ExpensesListViewModel
     {
-        List<ParentCategory> ParentCategories { get; set; }
-        List<IDictionary<DateTime, Double>> RequestSumsByMonthYear { get; set; } //change to dictionary
+        public List<MonthlyTotalsViewModel> monthlyTotals { get; set; }
     }
 }

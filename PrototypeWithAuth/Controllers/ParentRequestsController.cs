@@ -187,15 +187,30 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> ExpensesList()
         {
-            //get them all by date month
+            List<MonthlyTotalsViewModel> monthlyTotals = new List<MonthlyTotalsViewModel>();
 
-            var requestsSortedByDate = _context.Requests.Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory)
-                .GroupBy(r =>  r.ParentRequest).Select(r => new List<Request>(r));
-            foreach(var r in requestsSortedByDate)
+            var requestsByMonthAndYear = _context.Requests.Select(r => new { Year = r.ParentRequest.OrderDate.Year, Month = r.ParentRequest.OrderDate.Month }).Distinct();
+            var year = requestsByMonthAndYear.FirstOrDefault().Year;
+            foreach (var req in requestsByMonthAndYear)
             {
-                r.ToString();
+                var requestsinMonthAndYear = _context.Requests.Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(p => p.ParentCategory).Where(r => r.ParentRequest.OrderDate.Year == req.Year).Where(r => r.ParentRequest.OrderDate.Month == req.Month).ToList();
+                MonthlyTotalsViewModel monthlyTotalsViewModel = new MonthlyTotalsViewModel();
+                monthlyTotalsViewModel.Month = req.Month;
+                monthlyTotalsViewModel.Year = req.Year;
+                monthlyTotalsViewModel.GrandTotal = requestsinMonthAndYear.Sum(r => r.Cost);
+                monthlyTotalsViewModel.PlasticsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 1).AsEnumerable().Sum(m => m.Cost);
+                monthlyTotalsViewModel.ReagentsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 2).AsEnumerable().Sum(m => m.Cost);
+                monthlyTotalsViewModel.ProprietyTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 3).AsEnumerable().Sum(m => m.Cost);
+                monthlyTotalsViewModel.ReusableTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 4).AsEnumerable().Sum(m => m.Cost);
+                monthlyTotals.Add(monthlyTotalsViewModel);
             }
-            return View();
+
+            ExpensesListViewModel expensesListViewModel = new ExpensesListViewModel
+            {
+                monthlyTotals = monthlyTotals
+            };
+
+            return View(expensesListViewModel);
         }
 
 
