@@ -1,0 +1,177 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestsSearchViewModel
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/View.cshtml";
+}
+<div class="container">
+    <h1>Search</h1>
+    <form action="" method="post" enctype="multipart/form-data" >
+        <div class="row">
+            <div class="col-md-2">
+                <img src="" />
+            </div>
+            <div class="col-md-7">
+                <div class="form-group">
+                    <label asp-for="Request.Product.ProductName" class="control-label"></label>
+                    <input asp-for="Request.Product.ProductName" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <input type="submit" class="btn btn-outline-secondary" />
+            </div>
+        </div>
+        <div class="row">
+            Item
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label asp-for="Request.Product.ProductSubcategory.ParentCategoryID" class="control-label"></label>
+                    @Html.DropDownListFor(
+                        X => X.Request.Product.ProductSubcategory.ParentCategoryID,
+                        new SelectList(
+                            Model.ParentCategories,
+                            "ParentCategoryID",
+                            "ParentCategoryDescription"),
+                        "Please select a category",
+                        new { @class = "form-control", @id = "parentlist" })
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label asp-for="Request.Product.ProductSubcategoryID" class="control-label"></label>
+                    <select asp-for="Request.Product.ProductSubcategoryID" class="form-control" id="sublist" />
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    @*placeholder*@
+                    <label class="control-label">Project</label>
+                    <select name="Project">
+                        <option>Select a project</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    @*placeholder*@
+                    <label class="control-label">Sub Project</label>
+                    <select name="Project" class="form-control">
+                        <option>Select a sub project</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label asp-for="Request.Product.VendorID" class="control-label"></label>
+                    @Html.DropDownListFor(
+                        x => x.Request.Product.VendorID,
+                        new SelectList(
+                            Model.Vendors,
+                            dataValueField: "VendorID",
+                            dataTextField: "VendorEnName"),
+                        optionLabel: "Select A Vendor",
+                        htmlAttributes: new { @class = "form-control", @id = "vendorList" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    @* IN MIDDLE *@
+                    <label class="control-label">Vendor ID</label>
+                    <label class="vendorBusinessId form-control-plaintext" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
+                    <input asp-for="Request.ParentRequest.OrderNumber" class="form-control" />
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
+                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
+                    <input asp-for="Request.ParentRequest.InvoiceNumber" class="form-control" />
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
+                    <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Request.CatalogNumber" class="control-label"></label>
+                    <input asp-for="Request.CatalogNumber" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Request.URL" class="control-label"></label>
+                <input asp-for="Request.URL" class="form-control" />
+            </div>
+            <div class="col-md-3">
+                <label class="control-label">End Date</label>
+                @*@{
+                    //get this just to return the date (not the time)
+                    //adding the amount of months of the warranty to the invoice date
+                    var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                }*@
+                @*<input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext" disabled="disabled" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
+                    <input asp-for="Request.ExpectedSupplyDays" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                @{
+                    //get this just to return the date (not the time)
+                    //adding the amount of months of the expected supply days to the invoice date
+                    var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
+                }
+                <div class="form-group">
+                    <label class="control-label">Expected supply date</label>
+                    <input value="@endSupplyDate" class="form-control-plaintext" disabled="disabled" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Request.URL" class="control-label"></label>
+                    <input asp-for="Request.URL" type="date" class="form-control datepicker" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">From Date</label>
+                    <input asp-for="FromDate" type="date" class="form-control datepicker" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">To Date</label>
+                    <input asp-for="ToDate" type="date" class="form-control datepicker" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

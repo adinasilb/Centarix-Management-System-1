@@ -31,6 +31,8 @@ namespace PrototypeWithAuth.Controllers
         //take this out?
         private readonly List<Request> _cartRequests = new List<Request>();
 
+        private IQueryable<Request> _searchList = Enumerable.Empty<Request>().AsQueryable();
+
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
@@ -40,18 +42,13 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, bool CancelledEmail = false)
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest);
 
             TempData["RequestStatusID"] = RequestStatusID;
             var SidebarTitle = AppUtility.RequestSidebarEnum.None;
-
-            if (CancelledEmail)
-            {
-                TempData["CancelledEmail"] = true;
-            }
 
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
@@ -66,7 +63,11 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = PageType;
             //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
-            if (PageType == AppUtility.RequestPageTypeEnum.Request)
+            if (requestsSearchViewModel.ReturnRequests != null)
+            {
+                RequestsPassedIn = requestsSearchViewModel.ReturnRequests;
+            }
+            else if (PageType == AppUtility.RequestPageTypeEnum.Request)
             {
                 /*
                  * In order to combine all the requests each one needs to be in a separate list
@@ -116,7 +117,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             //now that the lists are created sort by vendor or subcategory
-            if (vendorID > 0)
+            if (vendorID > 0 && requestsSearchViewModel != null)
             {
                 RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
@@ -125,7 +126,7 @@ namespace PrototypeWithAuth.Controllers
                 SidebarTitle = AppUtility.RequestSidebarEnum.Vendor;
                 TempData["VendorID"] = vendorID;
             }
-            else if (subcategoryID > 0)
+            else if (subcategoryID > 0 && requestsSearchViewModel != null)
             {
                 RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
@@ -134,7 +135,7 @@ namespace PrototypeWithAuth.Controllers
                 SidebarTitle = AppUtility.RequestSidebarEnum.Type;
                 TempData["SubcategoryID"] = subcategoryID;
             }
-            else if (applicationUserID != null)
+            else if (applicationUserID != null && requestsSearchViewModel != null)
             {
                 RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
@@ -372,7 +373,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * START MODAL VIEW COPY
          */
-        public async Task<IActionResult> ModalView(int? id, bool NewRequestFromProduct = false, bool CancelledEmail = false)
+        public async Task<IActionResult> ModalView(int? id, bool NewRequestFromProduct = false)
         {
             string ModalViewType = "";
             if (id == null)
@@ -436,53 +437,6 @@ namespace PrototypeWithAuth.Controllers
                     .Where(p => p.ParentRequestID == request.ParentRequest.ParentRequestID);
                 requestItemViewModel.OldPayments = paymentsList;
 
-            }
-            else if (CancelledEmail)
-            {
-                Request requestToDelete = _context.Requests.Where(r => r.RequestID == id).FirstOrDefault();
-                Comment commentToDelete = _context.Comments.Where(c => c.RequestID == requestToDelete.RequestID).FirstOrDefault(); //will only be one b/c for now only adding one comment at a time
-                requestItemViewModel.Request = new Request
-                {
-                    ProductID = requestToDelete.ProductID, //ask Faige how to handle this
-                    //parent id will be new- dealt below
-                    LocationID = requestToDelete.LocationID,
-                    //request status dealt with below
-                    Unit = requestToDelete.Unit,
-                    UnitTypeID = requestToDelete.UnitTypeID,
-                    SubUnit = requestToDelete.SubUnit,
-                    SubUnitTypeID = requestToDelete.SubUnitTypeID,
-                    SubSubunit = requestToDelete.SubSubunit,
-                    SubSubUnitTypeID = requestToDelete.SubSubUnitTypeID,
-                    //skipping unitsordered and unitsinstock
-                    Quantity = requestToDelete.Quantity,
-                    Cost = requestToDelete.Cost,
-                    CatalogNumber = requestToDelete.CatalogNumber,
-                    SerialNumber = requestToDelete.SerialNumber,
-                    URL = requestToDelete.URL
-                };
-                requestItemViewModel.Request.ParentRequest = new ParentRequest();
-                requestItemViewModel.Request.RequestStatus = new RequestStatus();
-                requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
-
-                //if you are creating a new one set the dates to today to prevent problems in the front end
-                //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
-                //(already imported it)
-                requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
-                requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
-                ModalViewType = "Create";
-
-                //have to cascade delete the comment first
-                if (commentToDelete != null)
-                {
-                    _context.Comments.Remove(commentToDelete);
-                    _context.SaveChanges();
-                }
-                
-                //check if the product was new too or just leave it?????????????
-                _context.Requests.Remove(requestToDelete);
-                _context.SaveChanges();
-
-                //NEED TO NOW PASS THE REQUEST IN
             }
             else
             {
@@ -705,6 +659,102 @@ namespace PrototypeWithAuth.Controllers
 
         /*
          * END SEND EMAIL
+         */
+
+        /*
+         * BEGIN SEARCH
+         */
+        [HttpGet]
+        public async Task<IActionResult> Search()
+        {
+            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Search;
+
+            RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
+            {
+                ParentCategories = await _context.ParentCategories.ToListAsync(),
+                Vendors = await _context.Vendors.ToListAsync(),
+                Request = new Request(),
+                //check if we need this here
+            };
+
+            requestsSearchViewModel.Request.ParentRequest = new ParentRequest();
+
+            return View(requestsSearchViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Search(RequestsSearchViewModel requestsSearchViewModel)
+        {
+            IQueryable<Request> requestsSearched = _context.Requests.AsQueryable();
+            if (requestsSearchViewModel.Request.Product.ProductName != null)
+            {
+                requestsSearched = requestsSearched.Where(r => r.Product.ProductName == requestsSearchViewModel.Request.Product.ProductName);
+                foreach (var r in requestsSearched)
+                {
+                    var product = _context.Products.Where(m => m
+                    .ProductID == r.ProductID);
+                }
+            }
+            if (requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID != 0)
+            {
+                requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID);
+            }
+            if (requestsSearchViewModel.Request.Product.ProductSubcategoryID != 0)
+            {
+                requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID);
+            }
+            //check for project
+            //check for sub project
+            if (requestsSearchViewModel.Request.Product.VendorID != 0)
+            {
+                requestsSearched = requestsSearched.Where(r => r.Product.VendorID == requestsSearchViewModel.Request.Product.VendorID);
+            }
+            if (requestsSearchViewModel.Request.ParentRequest.OrderNumber != null)
+            {
+                requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderNumber == requestsSearchViewModel.Request.ParentRequest.OrderNumber);
+            }
+            if (requestsSearchViewModel.Request.ParentRequest.OrderDate != null) //should this be datetime.min?
+            {
+                requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderDate == requestsSearchViewModel.Request.ParentRequest.OrderDate);
+            }
+            if (requestsSearchViewModel.Request.ParentRequest.InvoiceNumber != null)
+            {
+                requestsSearched = requestsSearched.Where(r => r.ParentRequest.InvoiceNumber == requestsSearchViewModel.Request.ParentRequest.InvoiceNumber);
+            }
+            if (requestsSearchViewModel.Request.ParentRequest.InvoiceDate != null) //should this be datetime.min?
+            {
+                requestsSearched = requestsSearched.Where(r => r.ParentRequest.InvoiceDate == requestsSearchViewModel.Request.ParentRequest.InvoiceDate);
+            }
+            if (requestsSearchViewModel.Request.ExpectedSupplyDays != 0)//should this be on the parent request
+            {
+                requestsSearched = requestsSearched.Where(r => r.ExpectedSupplyDays == requestsSearchViewModel.Request.ExpectedSupplyDays);
+            }
+
+            //not sure what the to date and the from date are on????
+
+            bool IsRequest = true;
+            bool IsInventory = false;
+            bool IsAll = false;
+
+            var PageType = AppUtility.RequestPageTypeEnum.None;
+            if (IsRequest)
+            {
+                PageType = AppUtility.RequestPageTypeEnum.Request;
+            }
+            else if (IsInventory)
+            {
+                PageType = AppUtility.RequestPageTypeEnum.Inventory;
+            }
+            else if (IsInventory)
+            {
+                //find out what to do here
+            }
+            return RedirectToAction("Index", new { @PageType = PageType, @searchRequestsList = requestsSearched });
+        }
+
+
+        /*
+         * END SEARCH
          */
 
         /*
