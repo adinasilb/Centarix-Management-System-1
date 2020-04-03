@@ -55,6 +55,7 @@
                                 @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.Vendor.VendorEnName)
                             </th>
                             <th>
+
                                 @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Cost)
 
                             </th>
@@ -119,7 +120,8 @@
                             <th>
                                 @if (onlyOneRequest)
                                 {
-                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
+                                    @String.Format("{0:C}", item.Requests.FirstOrDefault().Cost)
+                                    @*@Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);*@
                                 }
                                 else
                                 {

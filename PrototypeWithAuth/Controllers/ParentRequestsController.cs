@@ -175,14 +175,14 @@ namespace PrototypeWithAuth.Controllers
 
 
 
-        public async Task<IActionResult> ExpensesPaymentList()
-        {
-            var requests = _context.Requests.Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(r => r.ParentCategory);
-            var res = from request in requests
-                      group request by new { request.ParentRequest.OrderDate.Month, request.Product.ProductSubcategory.ParentCategory };
+        //public async Task<IActionResult> ExpensesPaymentList()
+        //{
+        //    var requests = _context.Requests.Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(r => r.ParentCategory);
+        //    var res = from request in requests
+        //              group request by new { request.ParentRequest.OrderDate.Month, request.Product.ProductSubcategory.ParentCategory };
 
-            return View(await res.ToListAsync()/*await model.ToListAsync()*/);
-        }
+        //    return View(await res.ToListAsync()/*await model.ToListAsync()*/);
+        //}
 
 
         public async Task<IActionResult> ExpensesList()
