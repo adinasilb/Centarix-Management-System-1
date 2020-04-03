@@ -63,9 +63,9 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = PageType;
             //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
-            if (requestsSearchViewModel.ReturnRequests != null)
+            if (ViewData["ReturnRequests"] != null)
             {
-                RequestsPassedIn = requestsSearchViewModel.ReturnRequests;
+                RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
             }
             else if (PageType == AppUtility.RequestPageTypeEnum.Request)
             {
@@ -656,6 +656,13 @@ namespace PrototypeWithAuth.Controllers
             return View(request);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmailModal()
+        {
+            var r = 0;
+            return View();
+        }
+
 
         /*
          * END SEND EMAIL
@@ -689,11 +696,6 @@ namespace PrototypeWithAuth.Controllers
             if (requestsSearchViewModel.Request.Product.ProductName != null)
             {
                 requestsSearched = requestsSearched.Where(r => r.Product.ProductName == requestsSearchViewModel.Request.Product.ProductName);
-                foreach (var r in requestsSearched)
-                {
-                    var product = _context.Products.Where(m => m
-                    .ProductID == r.ProductID);
-                }
             }
             if (requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID != 0)
             {
@@ -713,7 +715,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderNumber == requestsSearchViewModel.Request.ParentRequest.OrderNumber);
             }
-            if (requestsSearchViewModel.Request.ParentRequest.OrderDate != null) //should this be datetime.min?
+            if (requestsSearchViewModel.Request.ParentRequest.OrderDate != DateTime.MinValue) //should this be datetime.min?
             {
                 requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderDate == requestsSearchViewModel.Request.ParentRequest.OrderDate);
             }
@@ -721,7 +723,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestsSearched = requestsSearched.Where(r => r.ParentRequest.InvoiceNumber == requestsSearchViewModel.Request.ParentRequest.InvoiceNumber);
             }
-            if (requestsSearchViewModel.Request.ParentRequest.InvoiceDate != null) //should this be datetime.min?
+            if (requestsSearchViewModel.Request.ParentRequest.InvoiceDate != DateTime.MinValue) //should this be datetime.min?
             {
                 requestsSearched = requestsSearched.Where(r => r.ParentRequest.InvoiceDate == requestsSearchViewModel.Request.ParentRequest.InvoiceDate);
             }
@@ -736,6 +738,8 @@ namespace PrototypeWithAuth.Controllers
             bool IsInventory = false;
             bool IsAll = false;
 
+            //also need to get the list smaller to just request or inventory
+
             var PageType = AppUtility.RequestPageTypeEnum.None;
             if (IsRequest)
             {
@@ -749,7 +753,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 //find out what to do here
             }
-            return RedirectToAction("Index", new { @PageType = PageType, @searchRequestsList = requestsSearched });
+
+            ViewData["ReturnRequests"] = requestsSearched;
+
+            return RedirectToAction("Index", new { @PageType = PageType});
         }
 
 
