@@ -63,46 +63,51 @@
                 @{int total = 0;}
 
                 @foreach (var item in group)
-{
-total++;
-//int index = 0;
-@if (total.Equals(group.Count()))
-{
-    <h6 id = @item.OrderDate.Year>
-        @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.OrderDate.Month) [@total]
-    </h6>
-}
-<tr>
+                {
+                    total++;
+                    //int index = 0;
+                    @if (total.Equals(group.Count()))
+                    {
+                        <h6 id=@item.OrderDate.Year>
+                            @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.OrderDate.Month) [@total]
+                        </h6>
+                        
+                    }
+                    var cult = System.Globalization.CultureInfo.CurrentCulture;
+                    <tr>
 
-    <td>
-        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@OrderNumber)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Product.ProductName)
-    </td>
-    <td>
-        @Html.DisplayFor(modeIteml => item.@*ElementAt(index).*@OrderDate)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Product.Vendor.VendorEnName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.@*ElementAt(index).*@Requests.FirstOrDefault().Cost)
-    </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modeIteml => item.OrderDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
+                        </td>
 
-    <td>
-        <a asp-action="Details" asp-route-id="@item.ParentRequestID">Details</a> |
-    </td>
-</tr>
+                        <td>
+                            @*@Html.DisplayFor(modelItem => String.Format("{0:C}", Convert.ToInt32(item.Requests.FirstOrDefault().Cost)))*@
+                            @String.Format("{0:C}", item.Requests.FirstOrDefault().Cost)
+                            @*@Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost)*@
+                        </td>
+
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.ParentRequestID">Details</a>
+                        </td>
+                    </tr>
 
 
-}
+                }
             </table>
         }
     </div>

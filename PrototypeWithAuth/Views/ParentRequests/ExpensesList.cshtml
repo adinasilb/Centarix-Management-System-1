@@ -1,4 +1,5 @@
-﻿@model PrototypeWithAuth.ViewModels.ExpensesListViewModel
+﻿@using System.Globalization;
+@model PrototypeWithAuth.ViewModels.ExpensesListViewModel
 @{
     ViewData["Title"] = "ExpensesList";
     Layout = "~/Views/Shared/PaymentView.cshtml";
@@ -9,7 +10,7 @@
 <table class="table table-bordered">
     <tr>
         <th>
-            Month - Year
+            Month
         </th>
         <th>
             Plastics
@@ -23,25 +24,34 @@
         <th>
             Reusable
         </th>
+        <th>
+            Total
+        </th>
     </tr>
-    @foreach(var item in Model.monthlyTotals)
+    @foreach (var item in Model.monthlyTotals)
     {
+        DateTime year = new DateTime(item.Year, 1, 1); //converting year into a datetime so we can format it to the last two digits - note that the last two parameters are a default value, jsut so that we can access the correct datetime method - there is no inhereit meaning in the last two "1"s
+
         <tr>
             <td>
-                @item.Month - @item.Year
+                @item.Month/@year.ToString("yy")
             </td>
             <td>
-                @item.PlasticsTotal
+                @String.Format("{0:C}", Convert.ToInt32(item.PlasticsTotal))
             </td>
             <td>
-                @item.ReagentsTotal
+                @String.Format("{0:C}", Convert.ToInt32(item.ReagentsTotal))
             </td>
             <td>
-                @item.ProprietyTotal
+                @String.Format("{0:C}", Convert.ToInt32(item.ProprietyTotal))
             </td>
             <td>
-                @item.ReusableTotal
+                @String.Format("{0:C}", Convert.ToInt32(item.ReusableTotal))
             </td>
+            <td>
+                @String.Format("{0:C}", Convert.ToInt32(item.GrandTotal))
+            </td>
+
         </tr>
     }
 </table>
