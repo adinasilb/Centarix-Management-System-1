@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            </nav>
+        </nav>
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
@@ -68,12 +68,58 @@
 
     </div>
 
+    <!-- The Modal -->
+    <div class="modal modal-view" id="myModal">
+    </div>
+
+
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true">
+
+
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+<script>
+    $(".load-vendor-search").on("click", function (e) {
+        console.log ("Hello world")
+        e.preventDefault();
+        e.stopPropagation();
+
+       
+        var $itemurl = "Vendors/Search ";
+        console.log ($itemurl)
+        $.fn.CallPage( $itemurl);
+        return false;
+    });
+
+
+    $.fn.CallPage = function ($itemurl) {
+        console.log("in function");
+        $.ajax({
+            async: true,
+            url: $itemurl,
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+     
+                //replaces the modal-view class with the ModalView view
+                $(".modal-view").html(data);
+                //turn off data dismiss by clicking out of the box and by pressing esc
+                $(".modal-view").modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                //shows the modal
+                $(".modal").modal('show');
+                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                $(".modal-backdrop").remove();
+
+            }
+        });
+</script>
