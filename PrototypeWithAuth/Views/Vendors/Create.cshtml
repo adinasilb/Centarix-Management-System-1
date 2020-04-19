@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    Layout = "~/Views/Shared/SuppliersNavView.cshtml";
 }
 
 <h1>Create</h1>
@@ -111,14 +111,20 @@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
 </div>
 
+@*<td>
+    <a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |
+    <a asp-action="Details" asp-route-id="@item.VendorID">Details</a> |
+    <a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>
+</td>*@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
+@*@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+}*@

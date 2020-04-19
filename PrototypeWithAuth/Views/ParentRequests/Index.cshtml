@@ -120,8 +120,8 @@
                             <th>
                                 @if (onlyOneRequest)
                                 {
-                                    @String.Format("{0:C}", item.Requests.FirstOrDefault().Cost)
-                                    @*@Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);*@
+                                    @*@String.Format("{0:C}", item.Requests.FirstOrDefault().Cost)*@
+                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
                                 }
                                 else
                                 {
