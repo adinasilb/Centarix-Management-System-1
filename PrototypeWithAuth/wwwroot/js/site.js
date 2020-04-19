@@ -18,7 +18,7 @@ $("#parentlist").change(function () {
 	var url = "/Requests/GetSubCategoryList";
 
 	$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-		var item = "";
+		var item = "<option value=''>Select Subcategory</option>";
 		$("#sublist").empty();
 		$.each(data, function (i, subCategory) {
 			item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
