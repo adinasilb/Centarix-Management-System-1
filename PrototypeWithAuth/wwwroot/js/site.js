@@ -9,6 +9,9 @@ function showmodal() {
 	$("#modal").modal('show');
 };
 
+//modal adjust scrollability/height
+$("#myModal").modal('handleUpdate');
+
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#parentlist").change(function () {
 	var parentCategoryId = $("#parentlist").val();
@@ -22,6 +25,47 @@ $("#parentlist").change(function () {
 		});
 		$("#sublist").html(item);
 	});
+});
+
+//insert the payment lines
+$("#Request_ParentRequest_Installments").change(function () {
+	var installments = $(this).val();
+	console.log("installments " + installments);
+	var countPrevInstallments = $(".companyAccountNum").length;
+	console.log("countPrevInstallments " + countPrevInstallments);
+	var difference = installments - countPrevInstallments;
+	console.log("difference " + difference);
+	if (difference > 0) { //installments were added
+		console.log("installments increased");
+		var increment = countPrevInstallments; //don't add one because it starts with zero
+		var htmlTR = "";
+		htmlTR += "<tr>";
+		htmlTR += "<td>";
+		htmlTR += '<input class="form-control" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="" />';
+		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
+		htmlTR += '</td>';       
+		htmlTR += '<td>';
+		htmlTR += '<select class="form-control paymentType" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
+		htmlTR += '<option value="1">Credit Card</option>';
+		htmlTR += '<option value="2">Bank Account</option>';
+		htmlTR += '</select>';
+		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
+		htmlTR += '</td>';
+		htmlTR += '<td>';
+		htmlTR += '<select class="form-control companyAccountNum" id="NewPayments_' + increment + '__CompanyAccount" name="NewPayments[' + increment + '].CompanyAccount"></select>';
+		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountNum" data-valmsg-replace="true"></span>';
+		htmlTR += '</td>';
+		htmlTR += '<td>';
+		htmlTR += '<input class="form-control" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
+		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
+		htmlTR += '</td>';
+		htmlTR += '</tr >';
+		$("body").append(htmlTR);
+		$(".payments-table tr:last").after(htmlTR);
+	}
+	else if (difference < 0) { //installments were removed
+		console.log("installments decreased");
+	}
 });
 
 //payments on the price modal -cascading dropdown choice with json

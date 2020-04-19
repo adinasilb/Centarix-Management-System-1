@@ -373,6 +373,33 @@ namespace PrototypeWithAuth.Controllers
         /*
          * START MODAL VIEW COPY
          */
+         public async Task<IActionResult> CreateModal()
+        {
+            var unitTypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel
+            {
+                ParentCategories = await _context.ParentCategories.ToListAsync(),
+                ProductSubcategories = await _context.ProductSubcategories.ToListAsync(),
+                Vendors = await _context.Vendors.ToListAsync(),
+                RequestStatuses = await _context.RequestStatuses.ToListAsync(),
+                PaymentTypes = await _context.PaymentTypes.ToListAsync(),
+                CompanyAccounts = await _context.CompanyAccounts.ToListAsync(),
+                UnitTypeList = new SelectList(unitTypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription")
+            };
+
+            requestItemViewModel.Request = new Request();
+            requestItemViewModel.Request.ParentRequest = new ParentRequest();
+            requestItemViewModel.Request.RequestStatus = new RequestStatus();
+            requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
+
+            //if you are creating a new one set the dates to today to prevent problems in the front end
+            //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
+            //(already imported it)
+            requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
+            requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
+
+            return View(requestItemViewModel);
+        }
         public async Task<IActionResult> ModalView(int? id, bool NewRequestFromProduct = false)
         {
             string ModalViewType = "";
@@ -403,18 +430,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (id == 0)
             {
-                ModalViewType = "Create";
-
-                requestItemViewModel.Request = new Request();
-                requestItemViewModel.Request.ParentRequest = new ParentRequest();
-                requestItemViewModel.Request.RequestStatus = new RequestStatus();
-                requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
-
-                //if you are creating a new one set the dates to today to prevent problems in the front end
-                //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
-                //(already imported it)
-                requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
-                requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
+                return RedirectToAction("CreateModal");
             }
             else if (NewRequestFromProduct)
             {
@@ -499,6 +515,14 @@ namespace PrototypeWithAuth.Controllers
             //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
             //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
             return PartialView(requestItemViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] 
+        public async Task<IActionResult> CreateModal(RequestItemViewModel requestItemViewModel)
+        {
+            //insert code here
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -690,7 +714,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public IActionResult Search(RequestsSearchViewModel requestsSearchViewModel)
+        public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
         {
             IQueryable<Request> requestsSearched = _context.Requests.AsQueryable();
             if (requestsSearchViewModel.Request.Product.ProductName != null)
@@ -743,20 +767,35 @@ namespace PrototypeWithAuth.Controllers
             var PageType = AppUtility.RequestPageTypeEnum.None;
             if (IsRequest)
             {
-                PageType = AppUtility.RequestPageTypeEnum.Request;
+                TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
             }
             else if (IsInventory)
             {
-                PageType = AppUtility.RequestPageTypeEnum.Inventory;
+                TempData["PageType"] = AppUtility.RequestPageTypeEnum.Inventory;
             }
-            else if (IsInventory)
+            else if (IsAll)
             {
-                //find out what to do here
+                TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
             }
 
-            ViewData["ReturnRequests"] = requestsSearched;
+            //ViewData["ReturnRequests"] = requestsSearched;
 
-            return RedirectToAction("Index", new { @PageType = PageType});
+
+            //Getting the page that is going to be seen (if no page was specified it will be one)
+            var pageNumber = page ?? 1;
+            var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
+            try
+            {
+                onePageOfProducts = await requestsSearched.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
+            }
+            catch (Exception ex)
+            {
+                //do something here 
+            }
+
+            TempData["Search"] = "True";
+
+            return View("Index", onePageOfProducts);
         }
 
 

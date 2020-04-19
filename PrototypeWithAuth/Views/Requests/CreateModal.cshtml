@@ -1,1 +1,636 @@
-﻿
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@{
+
+}
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view" role="document" style="max-height:100%; overflow-y:auto;">
+
+    <div class="modal-content d-inline-block">
+
+
+        <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Request.RequestID" />
+            <!-- Modal Header -->
+            <div class="modal-header border-bottom-0">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                    <br />
+                }
+                <div class="form-group">
+                    <h4><label asp-for="Request.Product.ProductName" class="control-label">New Request : </label> </h4>
+                    <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded" /></h4>
+                </div>
+                <span asp-validation-for="Request.Product.ProductName"></span>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="container-fluid div-tabs">
+
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
+                        <li><a data-toggle="tab" href="#location" class="btn btn-outline-secondary">Location</a></li>
+                        <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="priceTab">Price</a></li>
+                        <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
+                        <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
+                        <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="item" class="tab-pane fade in active">
+                            <h3>ITEM</h3>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                                        @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
+new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+"Select Category", new { @class = "form-control", @id = "parentlist" })
+                                        <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group sublist">
+                                        <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                                        @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
+new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+"Select Subcategory", new { @class = "form-control", @id = "sublist" })
+                                        <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Project:</label>
+                                        <select class="form-control"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Sub Project:</label>
+                                        <select class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="Request.Product.Vendor" class="control-label"></label>
+                                        @Html.DropDownListFor(
+vm => vm.Request.Product.VendorID,
+new SelectList(
+Model.Vendors,
+dataValueField: "VendorID",
+dataTextField: "VendorEnName"),
+optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+htmlAttributes: new { @class = "form-control", @id = "vendorList" }
+)
+                                        <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        @* IN MIDDLE *@
+                                        <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
+                                        <label class="vendorBusinessId form-control-plaintext" />
+                                        @*don't need a validation here because you it's not saving*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
+                                    <input asp-for="Request.ParentRequest.OrderNumber" class="form-control" />
+                                    <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
+                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control datepicker" />
+                                    <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
+                                    <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control" />
+                                    <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
+                                    <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control" />
+                                    <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label asp-for="Request.CatalogNumber" class="control-label"></label>
+                                    <input asp-for="Request.CatalogNumber" class="form-control" />
+                                    <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label asp-for="Request.Warranty" class="control-label"></label>
+                                    <input asp-for="Request.Warranty" class="form-control" />
+                                    <span asp-validation-for="Request.Warranty" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">End Date</label>
+                                    @*@{
+                                            //get this just to return the date (not the time)
+                                            //adding the amount of months of the warranty to the invoice date
+                                            var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                                        }*@
+                                    <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
+                                    <input asp-for="Request.ExpectedSupplyDays" class="form-control" />
+                                    <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    @{
+                                        //get this just to return the date (not the time)
+                                        //adding the amount of months of the expected supply days to the invoice date
+                                        var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
+                                    }
+                                    <label class="control-label">Expected supply date</label>
+                                    <input value="@endSupplyDate" class="form-control-plaintext" disabled="disabled" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="Request.URL" class="control-label"></label>
+                                    <input asp-for="Request.URL" class="form-control" />
+                                    <span asp-validation-for="Request.URL" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="location" class="tab-pane fade">
+                            <h3>LOCATION</h3>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                        <div id="price" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h3>PRICE</h3>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="currency" class="control-label">Currency</label>
+                                        <select id="currency" class="form-control">
+                                            <option value="dollar">&#127480; USD</option>
+                                            <option value="shekel">&#127480; NIS</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label asp-for="Request.ExchangeRate" class="control-label"></label>
+                                        <input asp-for="Request.ExchangeRate" class="form-control" />
+                                        <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-4 border rounded p-1 RequestUnitCard">
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.Unit" class="control-label"></label>
+                                            <input asp-for="Request.Unit" class="form-control" id="unit-amount" min="0" />
+                                            <span asp-validation-for="Request.Unit" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="Request.UnitType" class="control-label"></label>
+                                                @Html.DropDownListFor(
+vm => vm.Request.UnitTypeID,
+Model.UnitTypeList,
+"",
+htmlAttributes: new { @class = "form-control", @id = "unit-type" }
+)
+                                                <span asp-validation-for="Request.UnitType" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Price:</label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#36;</span>
+                                                    <input class="form-control" name="unit-price-dollars" id="unit-price-dollars" disabled />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#x20aa;</span>
+                                                    <input class="form-control" name="unit-price-shekel" id="unit-price-shekel" disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 border rounded p-1 RequestSubunitCard">
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.SubUnit" class="control-label"></label>
+                                            <input asp-for="Request.SubUnit" class="form-control" id="subunit-amount" min="0" disabled />
+                                            <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.SubUnitType" class="control-label"></label>
+                                            @Html.DropDownListFor(
+         vm => vm.Request.SubUnitTypeID,
+         Model.UnitTypeList,
+         "",
+         htmlAttributes: new { @class = "form-control", @id = "subunit-type", @disabled = "disabled" }
+     )
+                                            <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Price:</label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#36;</span>
+                                                    <input class="form-control" name="subunit-price-dollars" id="subunit-price-dollars" disabled />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#x20aa;</span>
+                                                    <input class="form-control" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 border rounded p-1 RequestSubsubunitCard">
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.SubSubunit" class="control-label"></label>
+                                            <input asp-for="Request.SubSubunit" class="form-control" id="subsubunit-amount" min="0" disabled />
+                                            <span asp-validation-for="Request.SubSubunit" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label asp-for="Request.SubSubUnitType" class="control-label"></label>
+                                            @Html.DropDownListFor(
+vm => vm.Request.SubSubUnitTypeID,
+Model.UnitTypeList,
+"",
+htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disabled = "disabled" }
+)
+                                            <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Price:</label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#36;</span>
+                                                    <input class="form-control" id="subsubunit-price-dollars" disabled />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#x20aa;</span>
+                                                    <input class="form-control" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label asp-for="Request.Cost" class="control-label"></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input asp-for="Request.Cost" class="form-control" id="sumDollars" name="sumDollars" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Sum:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input class="form-control" name="sumShekel" id="sumShekel" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">VAT</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input class="form-control" id="vatInShekel" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Sum:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input class="form-control" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Sum:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input class="form-control" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Discount:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Terms:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <label class="form-check-label"><input class="form-check-input" type="checkbox" />Paid</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
+                                        <input asp-for="Request.ParentRequest.Installments" class="form-control" />
+                                        <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 rounded card p-3">
+                                    <table class="table table-sm payments-table">
+                                        <thead class="thead-light rounded">
+                                            <tr>
+                                                <th>Payment Date</th>
+                                                <th>Payment Type</th>
+                                                <th>Account</th>
+                                                <th>Reference</th>
+                                            </tr>
+                                        </thead>
+                                        @{
+                                            if (true) // if edit
+                                            {
+                                                if (Model.Request.ParentRequest.Payments != null)
+                                                {
+                                                    foreach (Payment payment in Model.Request.ParentRequest.Payments)
+                                                    {
+                                                        <tr>
+                                                            <td>@payment.PaymentDate</td>
+                                                            <td>@payment.CompanyAccount.PaymentType.PaymentTypeDescription</td>
+                                                            <td>@payment.CompanyAccount.CompanyAccountNum</td>
+                                                            <td>@payment.PaymentID</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                                <span>IS EDIT</span>
+                                            }
+                                            if (true) // else if (create)
+                                            {
+                                                for (int x = 0; x < Model.Request.ParentRequest.Installments; x++)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <input asp-for="NewPayments[x].PaymentDate" class="form-control" />
+                                                            <span asp-validation-for="NewPayments[x].PaymentDate" class="text-danger"></span>
+                                                        </td>
+                                                        <td>
+                                                            @Html.DropDownListFor(
+                                                                model => model.NewPayments[x].CompanyAccount.PaymentType,
+                                                                new SelectList(
+                                                                Model.PaymentTypes,
+        dataValueField: "PaymentTypeID",
+        dataTextField: "PaymentTypeDescription"),
+        optionLabel: "Select A Payment Type ",
+        htmlAttributes: new { @class = "form-control paymentType" }
+                                                            )
+                                                            <span asp-validation-for="NewPayments[x].CompanyAccount.PaymentType" class="text-danger"></span>
+                                                        </td>
+                                                        <td>
+                                                            <select asp-for="NewPayments[x].CompanyAccount" class="form-control companyAccountNum"></select>
+                                                            <span asp-validation-for="NewPayments[x].CompanyAccount.CompanyAccountNum" class="text-danger"></span>
+                                                        </td>
+                                                        <td>
+                                                            <input asp-for="NewPayments[x].PaymentID" class="form-control" />
+                                                            <span asp-validation-for="NewPayments[x].PaymentID" class="text-danger"></span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                <span>IS CREATE</span>
+                                            }
+                                        }
+                                    </table>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Debt</label>
+                                        <input class="form-control-plaintext" value="Automatically calculate..." disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="documents" class="tab-pane fade">
+                            <h3>DOCUMENTS</h3>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label order-doc">Order Doc</label>
+                                    <div class="custom-file">
+                                        <input type="file" asp-for="OrderFiles" class="form-control custom-file-input" multiple />
+                                        <label class="custom-file-label">Choose File...</label>
+                                    </div>
+                                    @if (Model.OrderFileStrings != null)
+                                    {
+                                        <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
+                                    }
+                                    @*<div id="carousel" class="carousel ui-slider">
+                                            <ol class="carousel-indicators">
+                                            </ol>
+                                        </div>*@
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Invoice Doc</label>
+                                    <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Shipment Doc</label>
+                                    <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Quote Doc</label>
+                                    <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">Info Doc</label>
+                                    <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Pictures Doc</label>
+                                    <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Return Doc</label>
+                                    <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Credit Doc</label>
+                                    <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3 class="images-header"></h3>
+                                    <hr />
+                                    @if (Model.OrderFileStrings != null)
+                                    {
+                                        <div class="fill-images-orders">
+                                            <a href="@Model.OrderFileStrings[0]" target="_blank">Click to open</a>
+                                            <embed src="@Model.OrderFileStrings[0]" type="application/pdg" @*height="100%" width="100%"*@ />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div id="comments" class="tab-pane fade">
+                            <h3>COMMENTS</h3>
+                            @{
+                                if (Model.OldComments != null)
+                                {
+                                    foreach (Comment comment in Model.OldComments)
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card rounded">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                Insert Pic
+                                                                <img src="" />
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
+                                                                @comment.CommentText
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    }
+                                }
+                            }
+                            @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
+                            <div class="card rounded">
+                                <div class="card-body">
+                                    <div class="font-weight-bold">+NewComment</div>
+                                    <div class="form-group">
+                                        <label asp-for="NewComment.CommentText" class="control-label"></label>
+                                        <input asp-for="NewComment.CommentText" class="form-control" />
+                                        <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="order" class="tab-pane fade">
+                            <h3>ORDER</h3>
+                            <hr />
+                            <div class="form-group">
+                                @*you can only add to cart if you are creating a new one*@
+                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModal" class="btn btn-outline-primary" />
+                                    <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModal" class="btn btn-outline-primary" />
+                                    <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
+                               
+                                @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
+                                <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+            </div>
+
+            @*Begin Hidden Inputs:*@
+            @Html.HiddenFor(vm => vm.Request.ProductID)
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+            @Html.HiddenFor(vm => vm.Request.RequestStatusID)
+            @Html.HiddenFor(vm => vm.Request.ParentRequestID)
+            @*End Hidden Inputs*@
+
+            @*Hidden Input for Product Subcategory*@
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+        </form>
+
+
+    </div>
+
+
+</div>
+
+@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+@*This will work for the EDIT (putting in the already loaded product subcategory)*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        /*
+         * Including these js pieces from site.js b/c has issue always attaching
+         */
+
+        //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
+        $("#parentlist").change(function () {
+            var parentCategoryId = $("#parentlist").val();
+            var url = "/Requests/GetSubCategoryList";
+
+            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                var item = "";
+                $("#sublist").empty();
+                $.each(data, function (i, subCategory) {
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                });
+                $("#sublist").html(item);
+            });
+        });
+
+
+    </script>
+}

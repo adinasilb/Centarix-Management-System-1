@@ -17,6 +17,15 @@
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
+    bool search = false;
+    if (TempData["Search"] != null)
+    {
+        if (TempData["Search"].ToString() == "True")
+        {
+            search = true;
+        }
+    }
+
     int vendorID = 0; int subcategoryID = 0; string applicationUserID = null;
     if (TempData["VendorID"] != null)
     {
@@ -45,30 +54,41 @@
         Inventory = true;
     }
 
-    string newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
-    string orderedButtonText = "Ordered [" + TempData["AmountOrdered"].ToString() + "]";
-    string receivedButtonText = "Received [" + TempData["AmountReceived"].ToString() + "]";
+    string newButtonText = "";
+    string orderedButtonText = "";
+    string receivedButtonText = "";
 
-    string newActiveClass = "btn btn-outline-secondary text-dark new-button";
-    string orderedActiveClass = "btn btn-outline-secondary text-dark new-button";
-    string receivedActiveClass = "btn btn-outline-secondary text-dark new-button";
+    string newActiveClass = "";
+    string orderedActiveClass = "";
+    string receivedActiveClass = "";
 
-    //changing the classes for the action links based on the tempdata of request status
-    int requestStatusID = 0;
-    int.TryParse(TempData["RequestStatusID"].ToString(), out requestStatusID);
-    switch (requestStatusID)
+    if (!search)
     {
-        case 1:
-        case 4:
-        case 5:
-            newActiveClass = "btn btn-secondary text-dark new-button";
-            break;
-        case 2:
-            orderedActiveClass = "btn btn-secondary text-dark new-button";
-            break;
-        case 3:
-            receivedActiveClass = "btn btn-secondary text-dark new-button";
-            break;
+        newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
+        orderedButtonText = "Ordered [" + TempData["AmountOrdered"].ToString() + "]";
+        receivedButtonText = "Received [" + TempData["AmountReceived"].ToString() + "]";
+
+        newActiveClass = "btn btn-outline-secondary text-dark new-button";
+        orderedActiveClass = "btn btn-outline-secondary text-dark new-button";
+        receivedActiveClass = "btn btn-outline-secondary text-dark new-button";
+
+        //changing the classes for the action links based on the tempdata of request status
+        int requestStatusID = 0;
+        int.TryParse(TempData["RequestStatusID"].ToString(), out requestStatusID);
+        switch (requestStatusID)
+        {
+            case 1:
+            case 4:
+            case 5:
+                newActiveClass = "btn btn-secondary text-dark new-button";
+                break;
+            case 2:
+                orderedActiveClass = "btn btn-secondary text-dark new-button";
+                break;
+            case 3:
+                receivedActiveClass = "btn btn-secondary text-dark new-button";
+                break;
+        }
     }
 
 }
@@ -78,7 +98,7 @@
     <p>
         <a asp-action="Create">Create New</a>
     </p>*@
-@if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
+@if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
 {
     <div class="row">
         <div class="col-md-12">

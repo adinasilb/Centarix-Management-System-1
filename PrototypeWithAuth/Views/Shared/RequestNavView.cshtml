@@ -84,7 +84,7 @@
             {
                 <li class="nav-item">
                     @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
-                    <button class="btn btn-link text-dark load-product-details" value="0" data-target="item" data-backdrop="static" data-keyboard="false" href="item">Add Item</button>
+                    <button class="btn btn-link text-dark create-product-details" value="0" data-target="item" data-backdrop="static" data-keyboard="false" href="item">Add Item</button>
                 </li>
             }
             @if (Requests || Inventory)
@@ -126,7 +126,7 @@
 </div>
 
 <!-- The Modal -->
-<div class="modal modal-view" id="myModal">
+<div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request">
 </div>
 
 <!-- Confirm Email Modal -->
@@ -164,6 +164,16 @@
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $tab = e.target.hash;
         var $itemurl = "Requests/ModalView/?id=" + $(this).val();
+        $.fn.CallPage($tab, $itemurl);
+        return false;
+    });
+
+    $(".create-product-details").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $tab = e.target.hash;
+        var $itemurl = "Requests/CreateModal";
         $.fn.CallPage($tab, $itemurl);
         return false;
     });
@@ -247,6 +257,7 @@
                     //set the auto date for order date and invoice date to the current date
                     //console.log("About to enter the datepicker")
                     //$('.datepicker').datepicker();
+
                 }
 
             }
