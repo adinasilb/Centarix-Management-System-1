@@ -130,44 +130,43 @@ namespace PrototypeWithAuth.Controllers
             filteredVendors = filteredVendors
                 .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorEnName) || fv.VendorEnName.Contains(vendorSearchViewModel.Vendor.VendorEnName))
                  &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorHeName) || fv.VendorHeName.Contains(vendorSearchViewModel.Vendor.VendorHeName)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorHeName) || fv.VendorHeName.Contains(vendorSearchViewModel.Vendor.VendorHeName))
              &&
-            //really bizID should be here, but weird bug - o wrote out seperate where statement for bizID
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.ContactPerson) || fv.ContactPerson.Contains(vendorSearchViewModel.Vendor.ContactPerson)
+             (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBuisnessID) || fv.VendorBuisnessID.Contains(vendorSearchViewModel.Vendor.VendorBuisnessID))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.ContactEmail) || fv.ContactEmail.Contains(vendorSearchViewModel.Vendor.ContactEmail)
+
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.ContactPerson) || fv.ContactPerson.Contains(vendorSearchViewModel.Vendor.ContactPerson))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.ContactEmail) || fv.ContactEmail.Contains(vendorSearchViewModel.Vendor.ContactEmail))
             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.OrderEmail) || fv.OrderEmail.Contains(vendorSearchViewModel.Vendor.OrderEmail)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.OrderEmail) || fv.OrderEmail.Contains(vendorSearchViewModel.Vendor.OrderEmail))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorContactPhone1) || fv.VendorContactPhone1.Contains(vendorSearchViewModel.Vendor.VendorContactPhone1)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorContactPhone1) || fv.VendorContactPhone1.Contains(vendorSearchViewModel.Vendor.VendorContactPhone1))
               &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorContactPhone2) || fv.VendorContactPhone2.Contains(vendorSearchViewModel.Vendor.VendorContactPhone2)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorContactPhone2) || fv.VendorContactPhone2.Contains(vendorSearchViewModel.Vendor.VendorContactPhone2))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.Vendor.VendorFax)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.Vendor.VendorFax))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorCity) || fv.VendorCity.Contains(vendorSearchViewModel.Vendor.VendorCity)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorCity) || fv.VendorCity.Contains(vendorSearchViewModel.Vendor.VendorCity))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorStreet) || fv.VendorStreet.Contains(vendorSearchViewModel.Vendor.VendorStreet)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorStreet) || fv.VendorStreet.Contains(vendorSearchViewModel.Vendor.VendorStreet))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorZip) || fv.VendorZip.Contains(vendorSearchViewModel.Vendor.VendorZip)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorZip) || fv.VendorZip.Contains(vendorSearchViewModel.Vendor.VendorZip))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorWebsite) || fv.VendorWebsite.Contains(vendorSearchViewModel.Vendor.VendorWebsite)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorWebsite) || fv.VendorWebsite.Contains(vendorSearchViewModel.Vendor.VendorWebsite))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBank) || fv.VendorBank.Contains(vendorSearchViewModel.Vendor.VendorBank))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBankBranch) || fv.VendorBankBranch.Contains(vendorSearchViewModel.Vendor.VendorBankBranch)
-                 &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorAccountNum) || fv.VendorAccountNum.Contains(vendorSearchViewModel.Vendor.VendorAccountNum)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBankBranch) || fv.VendorBankBranch.Contains(vendorSearchViewModel.Vendor.VendorBankBranch))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorSwift) || fv.VendorSwift.Contains(vendorSearchViewModel.Vendor.VendorSwift)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorAccountNum) || fv.VendorAccountNum.Contains(vendorSearchViewModel.Vendor.VendorAccountNum))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBIC) || fv.VendorBIC.Contains(vendorSearchViewModel.Vendor.VendorBIC)
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorSwift) || fv.VendorSwift.Contains(vendorSearchViewModel.Vendor.VendorSwift))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorGoldAccount) || fv.VendorGoldAccount.Contains(vendorSearchViewModel.Vendor.VendorGoldAccount))))))))))))))))));
-            if (!String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBuisnessID))
-            {
-                filteredVendors = filteredVendors.Where(fv => fv.VendorBuisnessID.Contains(vendorSearchViewModel.Vendor.VendorBuisnessID));
-            }
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBIC) || fv.VendorBIC.Contains(vendorSearchViewModel.Vendor.VendorBIC))
+             &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorGoldAccount) || fv.VendorGoldAccount.Contains(vendorSearchViewModel.Vendor.VendorGoldAccount)));
+
 
             if (vendorSearchViewModel.SelectedParentCategoryID > 0)
             {

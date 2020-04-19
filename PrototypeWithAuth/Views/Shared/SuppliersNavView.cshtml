@@ -30,8 +30,10 @@
             <li class="nav-item">
                 @Html.ActionLink("Search Suppliers", "Search", "Vendors", new { }, new { @class = "btn btn-link text-dark" })
             </li>
+
             <li class="nav-item">
-                @Html.ActionLink("Search Suppliers2", "SearchVendor", "Vendors", new { }, new { @class = "btn btn-link text-dark" })
+                @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
+                <button class="btn btn-link text-dark load-vendor-search" data-backdrop="static" data-keyboard="false" href="item">Search Suppliers</button>
             </li>
         </ul>
         @*</nav>*@
