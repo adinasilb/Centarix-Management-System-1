@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    Layout = "~/Views/Shared/SuppliersNavView.cshtml";
 }
 
 <h1>Edit</h1>
@@ -117,9 +117,9 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="IndexForPayment">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+@*@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}     HAVE TO CORRECT THIS IN HERE AND IN CREATE
+}*@

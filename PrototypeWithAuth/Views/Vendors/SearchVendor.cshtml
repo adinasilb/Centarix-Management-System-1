@@ -1,0 +1,32 @@
+﻿@model PrototypeWithAuth.ViewModels.VendorSearchViewModel
+@{
+    ViewData["Title"] = "SearchVendor";
+    Layout = "~/Views/Shared/SuppliersNavView.cshtml";
+}
+
+<h1>SearchVendor</h1>
+       
+<div class="row">
+    <div class="col-6">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorEnName" class="control-label"></label>
+            <input asp-for="Vendor.VendorEnName" class="form-control" />
+        </div>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="Vendor.VendorHeName" class="control-label"></label>
+        <input asp-for="Vendor.VendorHeName" class="form-control" />
+    </div>
+    <div class="col-6">
+        <div class="form-group">
+            <label asp-for="Vendor.VendorBuisnessID" class="control-label"></label>
+            <input asp-for="Vendor.VendorBuisnessID" class="form-control" />
+        </div>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="Vendor.VendorContactPhone1" class="control-label"></label>
+        <input asp-for="Vendor.VendorContactPhone1" class="form-control" />
+    </div>
+</div>
+
+

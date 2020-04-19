@@ -1,0 +1,73 @@
+﻿@model IEnumerable<PrototypeWithAuth.Models.Vendor>
+@using PrototypeWithAuth.AppData
+
+@{
+    ViewData["Title"] = "IndexForPayment";
+    Layout = "~/Views/Shared/SuppliersNavView.cshtml";
+   // string pageType = TempData["PageType"].ToString();
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorEnName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorHeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorBuisnessID)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.OrderEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorContactPhone1)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorEnName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorHeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorBuisnessID)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorContactPhone1)
+                </td>
+                @*<td>
+
+                    @Html.ActionLink("orders", "Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)
+                </td>*@
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |*@
+                   | <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID">Details</a> |
+                    @*<a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

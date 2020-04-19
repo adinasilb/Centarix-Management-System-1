@@ -1,8 +1,8 @@
 ﻿@model PrototypeWithAuth.Models.Vendor
 
 @{
-    ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    ViewData["Title"] = "DetailsForPayment";
+    Layout = "~/Views/Shared/SuppliersNavView.cshtml";
 }
 
 <h1>Details</h1>
@@ -128,5 +128,7 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.VendorID">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model.VendorID">Delete</a> |
+    <a asp-action="IndexForPayment">Back to List</a>
 </div>
