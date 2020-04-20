@@ -668,7 +668,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
         {
-            Request request = await _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).Include(r => r.Product.Vendor).FirstOrDefaultAsync();
+            Request request = await _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).FirstOrDefaultAsync();
             if (IsBeingApproved)
             {
                 TempData["IsBeingApproved"] = true;

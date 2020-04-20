@@ -87,19 +87,15 @@
 </html>
 <script>
     $(".load-vendor-search").on("click", function (e) {
-        console.log ("Hello world")
         e.preventDefault();
         e.stopPropagation();
-
-       
-        var $itemurl = "Vendors/Search ";
-        console.log ($itemurl)
-        $.fn.CallPage( $itemurl);
+        var $itemurl = "Search";
+        $.fn.CallPage($itemurl);
         return false;
     });
 
 
-    $.fn.CallPage = function ($itemurl) {
+    $.fn.CallPage = function ( $itemurl,) {
         console.log("in function");
         $.ajax({
             async: true,
@@ -107,7 +103,7 @@
             type: 'GET',
             cache: false,
             success: function (data) {
-     
+                console.log("success!");
                 //replaces the modal-view class with the ModalView view
                 $(".modal-view").html(data);
                 //turn off data dismiss by clicking out of the box and by pressing esc
@@ -119,7 +115,7 @@
                 $(".modal").modal('show');
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
                 $(".modal-backdrop").remove();
-
             }
         });
+    }
 </script>

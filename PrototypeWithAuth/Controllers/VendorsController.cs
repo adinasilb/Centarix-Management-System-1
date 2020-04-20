@@ -118,7 +118,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             //return View(vendorSearchViewModel);
-            return View(vendorSearchViewModel);
+            return PartialView(vendorSearchViewModel);
         }
         // Post: Vendors/Search
         [HttpPost]
