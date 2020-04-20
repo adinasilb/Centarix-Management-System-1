@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -9,16 +10,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using X.PagedList;
 using Microsoft.AspNetCore.Hosting;
-using System.Net.Mail;
-using System.Net.Http;
-using System.Net;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -373,7 +373,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * START MODAL VIEW COPY
          */
-         public async Task<IActionResult> CreateModal()
+        public async Task<IActionResult> CreateModal()
         {
             var unitTypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel
@@ -518,7 +518,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] 
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateModal(RequestItemViewModel requestItemViewModel)
         {
             //insert code here
@@ -677,13 +677,27 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData["IsBeingApproved"] = false;
             }
+
+            string path = "wwwroot//OrderPDFs//" + request.RequestID + ".pdf";
+            //if (File.Exists(path))
+            //{
+            //    File.Delete(path);
+            //}
+            FileStream fs = new FileStream(path, FileMode.Create);
+            PdfWriter writer = new PdfWriter(fs, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            document.Add(new Paragraph("Vendor: " + request.Product.Vendor.VendorEnName));
+            document.Add(new Paragraph("City" + request.Product.Vendor.VendorCity));
+            document.Close();
+
             return View(request);
         }
 
         [HttpPost]
         public async Task<IActionResult> ConfirmEmailModal()
         {
-            var r = 0;
             return View();
         }
 

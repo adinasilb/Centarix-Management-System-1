@@ -27,19 +27,20 @@
         else
         {
             <form action="mailto:@Model.Product.Vendor.OrderEmail ?Subject= @SubjectName&body=@OrderText" method="post" enctype="application/x-www-form-urlencoded"></form>
-            <form action="" method="post" enctype="multipart/form-data"></form>
-            <div class="modal-body">
-                @if (IsBeingApproved == "True")
-                {
-                    <h4>Would you like to approve this Request for @Model.Product.ProductName ?</h4>
-                }
-                @OrderText
-            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    @if (IsBeingApproved == "True")
+                    {
+                        <h4>Would you like to approve this Request for @Model.Product.ProductName ?</h4>
+                    }
+                    @OrderText
+                </div>
 
-            <div class="modal-footer">
-                <input type="submit" class="btn btn-success" value="Confirm & Send Email" />
-                <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
-            </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="Confirm & Send Email" />
+                    <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
+                </div>
+            </form>
         }
 
     </div>
