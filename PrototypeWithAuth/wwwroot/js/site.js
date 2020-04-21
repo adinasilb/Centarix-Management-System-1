@@ -43,7 +43,7 @@ $("#Request_ParentRequest_Installments").change(function () {
 		htmlTR += "<td>";
 		htmlTR += '<input class="form-control" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="" />';
 		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
-		htmlTR += '</td>';       
+		htmlTR += '</td>';
 		htmlTR += '<td>';
 		htmlTR += '<select class="form-control paymentType" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
 		htmlTR += '<option value="1">Credit Card</option>';
@@ -403,11 +403,32 @@ LOCATIONS:
 
 var $sublocationCounter = 0;
 $.fn.AddSublocation = function () {
+	if ($sublocationCounter == 0 && !$(".nameSublocation").val()) {
+		$(".nameError").html("Please input a name first");
+		return;
+	}
+	else if (false) {
+		//check if last sublocation is blank and make sure any other spans are blank
+	}
+	//check that the one on top is filled out
+	else {
+		$("span").html("");
+	}
 	console.log("Location site.js");
 
+	var newSublocationID = 'Sublocations_' + $sublocationCounter + '_';
+	console.log("newSublocationID: " + newSublocationID);
+	var newSublocationName = 'Sublocations[' + $sublocationCounter + ']';
+	console.log("newSublocationName: " + newSublocationName);
 	var newSublocationClass = 'sublocationName' + $sublocationCounter;
-	var sublocationHtml = '<label class="control-label">Sublocation ' + $sublocationCounter + ':</label>'
-	sublocationHtml += '<input type="text" class="form-control" ' + newSublocationClass + '  />'
+	console.log("newSublocationClass: " + newSublocationClass);
+	var sublocationHtml = '<div class="col-md-4">';
+	sublocationHtml += '<label class="control-label">Sublocation ' + $sublocationCounter + ':</label>';
+	sublocationHtml += '<input type="text" class="form-control" id="' + newSublocationID + '" name="' + newSublocationName + '" class="' + newSublocationClass + '" />';
+	//sublocationHtml += '<input type="text" class="form-control" ' + newSublocationClass + '  />';
+	var spanClass = 'spanSublocation' + $sublocationCounter;
+	sublocationHtml += '<span class="text-danger ' + spanClass + '></span>"';
+	sublocationHtml += '</div>';
 	$(".addSublocation").append(sublocationHtml);
 	$(".addSublocation").show();
 	$sublocationCounter++;

@@ -1,17 +1,23 @@
-﻿@*
+﻿@model PrototypeWithAuth.ViewModels.AddLocationTypeViewModel
+@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view" role="document" style="max-height:100%; overflow-y:auto;">
     <div class="modal-content d-inline-block">
-        <form>
+        <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="modal-header">
                 <h4>MODAL ADD LOCATION TYPE</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
+            @*<input type="text" class="form-control" asp-for="Sublocations[0]" />
+            <input type="text" class="form-control" asp-for="Sublocations[1]" />*@
+
             <div class="modal-body">
                 <label class="control-label">Name:</label>
-                <input type="text" class="form-control" />
+                <input asp-for="Location" type="text" class="form-control nameSublocation" />
+                <span class="text-danger nameError"></span>
                 <br />
                 <div class="addSublocation">
                 </div>
@@ -19,7 +25,7 @@
             </div>
 
             <div class="modal-footer">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" asp-action="AddLocationType" />
                 <input type="button" value="Cancel" data-dismiss="modal" class="btn btn-primary" />
             </div>
         </form>
