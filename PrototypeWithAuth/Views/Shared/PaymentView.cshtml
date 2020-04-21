@@ -34,10 +34,7 @@
                             @Html.ActionLink("General", "GeneralPaymentList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "btn btn-link text-dark" })
                         </li>
                         <li class="nav-item nav-fill">
-                            @Html.ActionLink("Expenses", "ExpensesPaymentList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "btn btn-link text-dark" })
-                        </li>
-                        <li class="nav-item nav-fill">
-                            @Html.ActionLink("Adina-Expenses", "ExpensesList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "btn btn-link text-dark" })
+                            @Html.ActionLink("Expenses", "ExpensesList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "btn btn-link text-dark" })
                         </li>
                         <li class="nav-item nav-fill">
                             @Html.ActionLink("Suppliers", "IndexForPayment", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = "btn btn-link text-dark" })
