@@ -16,7 +16,7 @@ namespace PrototypeWithAuth.AppData
     {
 
         public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location }
-        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers} //these are all going to the ParentRequestIndex
+        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers } //these are all going to the ParentRequestIndex
         public enum RequestSidebarEnum { None, Type, Vendor, Owner, Location, Cart }
 
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
@@ -146,7 +146,7 @@ namespace PrototypeWithAuth.AppData
             public string NotificationListName;
             public int Amount;
         }
-        public static void CreateCsFile(string sNamespace, string currentLocation, string previousLocation, string futureLocation, IHostingEnvironment _hostingEnvironment)
+        public static void CreateCsFile(string sNamespace, string currentLocation, string previousLocation, string futureLocation, IHostingEnvironment _hostingEnvironment, string filePath)
         {
             CodeNamespace nameSpace = new CodeNamespace(sNamespace);
 
@@ -154,7 +154,7 @@ namespace PrototypeWithAuth.AppData
             nameSpace.Imports.Add(new CodeNamespaceImport("System.Linq"));
             nameSpace.Imports.Add(new CodeNamespaceImport("System.Text"));
             nameSpace.Imports.Add(new CodeNamespaceImport("System.ComponentModel.DataAnnotations"));
-            
+
             CodeTypeDeclaration cls = new CodeTypeDeclaration();
             cls.Name = currentLocation;
             cls.IsClass = true;
@@ -169,25 +169,32 @@ namespace PrototypeWithAuth.AppData
             primaryKeyProperty.Attributes = MemberAttributes.Public | MemberAttributes.Final;
             primaryKeyProperty.Name = currentLocation + "ID";
             primaryKeyProperty.Type = new CodeTypeReference(typeof(System.Int32));
-            primaryKeyProperty.Name += " { get; set; } //"; 
+            primaryKeyProperty.Name += " { get; set; } //";
             var attr = new CodeAttributeDeclaration(new CodeTypeReference(typeof(System.ComponentModel.DataAnnotations.RangeAttribute)));
             attr.Arguments.Add(new CodeAttributeArgument(new CodeTypeOfExpression(typeof(System.ComponentModel.DataAnnotations.KeyAttribute))));
             cls.CustomAttributes.Add(attr);
             cls.Members.Add(primaryKeyProperty);
 
-            CodeMemberField property = new CodeMemberField();
-            property.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-            property.Name = futureLocation;
-            property.Type = new CodeTypeReference(typeof(System.String));
-            property.Name += " { get; set; } //";
-            cls.Members.Add(property);
+            if (futureLocation != "")
+            {
+                CodeMemberField property = new CodeMemberField();
+                property.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+                property.Name = futureLocation;
+                property.Type = new CodeTypeReference(typeof(System.String));
+                property.Name += " { get; set; } //";
+                cls.Members.Add(property);
+            }
 
-            CodeMemberField propertyID = new CodeMemberField();
-            propertyID.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-            propertyID.Name = previousLocation + "ID";
-            propertyID.Type = new CodeTypeReference(typeof(System.Int32));
-            propertyID.Name += " { get; set; } //";
-            cls.Members.Add(propertyID);
+
+            if (previousLocation != "")
+            {
+                CodeMemberField propertyID = new CodeMemberField();
+                propertyID.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+                propertyID.Name = previousLocation + "ID";
+                propertyID.Type = new CodeTypeReference(typeof(System.Int32));
+                propertyID.Name += " { get; set; } //";
+                cls.Members.Add(propertyID);
+            }
 
             nameSpace.Types.Add(cls);
 
@@ -196,13 +203,6 @@ namespace PrototypeWithAuth.AppData
 
 
             CSharpCodeProvider provider = new CSharpCodeProvider();
-
-            string modelsFolder = Path.Combine(_hostingEnvironment.ContentRootPath, "Models");
-            string locationModelsFolder = Path.Combine(modelsFolder, "LocationModels");
-            //Directory.CreateDirectory(locationModelsFolder);
-            string newFileName = currentLocation + ".cs";
-            //check if it exists already and give them an error - IMPORTANT!!!
-            string filePath = Path.Combine(locationModelsFolder, newFileName);
 
             using (StreamWriter sw = new StreamWriter(filePath, false))
             {

@@ -47,6 +47,9 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult AddLocationType(AddLocationTypeViewModel addLocationTypeViewModel)
         {
 
+            string modelsFolder = Path.Combine(_hostingEnvironment.ContentRootPath, "Models");
+            string currentFolder = Path.Combine(modelsFolder, "LocationModels");
+
             for (int i = 0; i < addLocationTypeViewModel.Locations.Count; i++)
             {
                 var prevLocation = "";
@@ -61,15 +64,14 @@ namespace PrototypeWithAuth.Controllers
                     futureLocation = addLocationTypeViewModel.Locations[i + 1];
                 }
 
-                AppUtility.CreateCsFile("Models.LocationModels", currentLocation, prevLocation, futureLocation, _hostingEnvironment);
+                //Directory.CreateDirectory(locationModelsFolder);
+                string newFileName = currentLocation + ".cs";
+                //check if it exists already and give them an error - IMPORTANT!!!
+                string filePath = Path.Combine(currentFolder, newFileName);
 
-                //CodeNamespace locationModelsNamespace = new CodeNamespace("Models.LocationModels");
-                //nameSpace.Imports.Add(locationModelsNamespace);
+                AppUtility.CreateCsFile("Models.LocationModels", currentLocation, prevLocation, futureLocation, _hostingEnvironment, filePath);
 
-                //if (prevSub == "")
-                //{
-                //    //create property
-                //}
+                currentFolder = Path.Combine(currentFolder, currentLocation);
             }
 
 
