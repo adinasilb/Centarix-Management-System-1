@@ -96,9 +96,8 @@
                         </td>
 
                         <td>
-                            @*@Html.DisplayFor(modelItem => String.Format("{0:C}", Convert.ToInt32(item.Requests.FirstOrDefault().Cost)))*@
-                            @String.Format("{0:C}", item.Requests.FirstOrDefault().Cost)
-                            @*@Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost)*@
+                            
+                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost)
                         </td>
 
                         <td>
