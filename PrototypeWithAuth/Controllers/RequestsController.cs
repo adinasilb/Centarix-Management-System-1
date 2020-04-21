@@ -658,6 +658,12 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Cart");
         }
 
+        public ActionResult DownloadPDF(string filename)
+        {
+            return File(filename, "application/pdf");
+        }
+
+
         /*
          * END MODAL VIEW COPY
          */

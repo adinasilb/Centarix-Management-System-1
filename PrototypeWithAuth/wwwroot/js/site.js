@@ -394,3 +394,21 @@ $.fn.ChangeSumDollarsAndSumShekel = function () {
 //        date.setDate(0);
 //    }
 //};
+
+
+
+
+LOCATIONS:
+
+
+var $sublocationCounter = 0;
+$.fn.AddSublocation = function () {
+	console.log("Location site.js");
+
+	var newSublocationClass = 'sublocationName' + $sublocationCounter;
+	var sublocationHtml = '<label class="control-label">Sublocation ' + $sublocationCounter + ':</label>'
+	sublocationHtml += '<input type="text" class="form-control" ' + newSublocationClass + '  />'
+	$(".addSublocation").append(sublocationHtml);
+	$(".addSublocation").show();
+	$sublocationCounter++;
+}

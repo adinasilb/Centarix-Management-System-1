@@ -108,7 +108,8 @@
             @if (Inventory)
             {
                 <li class="nav-item">
-                    @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = location })
+                    @*Redo the location class in the controller*@
+                    @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = location })
                 </li>
             }
             @if (Cart)

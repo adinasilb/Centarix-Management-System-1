@@ -476,7 +476,11 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                     </div>
                                     @if (Model.OrderFileStrings != null)
                                     {
-                                <span>There are order files here!</span>
+                                        foreach(var o in Model.OrderFileStrings)
+                                        {
+                                            <button>Test</button>
+                                            <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
+                                        }
                                         <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                     }
                                     @*<div id="carousel" class="carousel ui-slider">

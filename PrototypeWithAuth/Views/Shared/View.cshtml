@@ -27,6 +27,7 @@
     string requestClass = initalClasses;
     string cartClass = initalClasses;
     string searchClass = initalClasses;
+    string locationClass = initalClasses;
     switch (pageType)
     {
         case AppUtility.RequestPageTypeEnum.Inventory:
@@ -40,6 +41,9 @@
             break;
         case AppUtility.RequestPageTypeEnum.Search:
             searchClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Location:
+            locationClass = initalClasses + currentClasses;
             break;
     }
 
@@ -79,10 +83,14 @@
                             @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @role = "button", @id= "request-link" /*why is the role and id here?*/ })
+                            @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
                         </li>
                         <li class="nav-item">
                             @Html.ActionLink("Cart", "AddToCart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
+                        </li>
+                        <li class="nav-item">
+                            @*Redo the location class in the controller*@
+                            @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = locationClass, @role="button", @id="request-link" })
                         </li>
                     </ul>
                 </div>
