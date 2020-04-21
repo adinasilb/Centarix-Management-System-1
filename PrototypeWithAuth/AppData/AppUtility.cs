@@ -4,6 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CSharp;
+using System.CodeDom;
+using System.CodeDom.Compiler;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace PrototypeWithAuth.AppData
 {
@@ -141,5 +146,71 @@ namespace PrototypeWithAuth.AppData
             public string NotificationListName;
             public int Amount;
         }
+        public static void CreateCsFile(string sNamespace, string currentLocation, string previousLocation, string futureLocation, IHostingEnvironment _hostingEnvironment)
+        {
+            CodeNamespace nameSpace = new CodeNamespace(sNamespace);
+
+            nameSpace.Imports.Add(new CodeNamespaceImport("System"));
+            nameSpace.Imports.Add(new CodeNamespaceImport("System.Linq"));
+            nameSpace.Imports.Add(new CodeNamespaceImport("System.Text"));
+            nameSpace.Imports.Add(new CodeNamespaceImport("System.ComponentModel.DataAnnotations"));
+            
+            CodeTypeDeclaration cls = new CodeTypeDeclaration();
+            cls.Name = currentLocation;
+            cls.IsClass = true;
+            cls.Attributes = MemberAttributes.Public;
+
+            ////check if this works
+            //var attribute = new CodeAttributeDeclaration(new
+            //    CodeTypeReference(typeof(System.ComponentModel.DataAnnotations.KeyAttribute)));
+            //cls.Members.Add(attribute);
+
+            CodeMemberField primaryKeyProperty = new CodeMemberField();
+            primaryKeyProperty.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+            primaryKeyProperty.Name = currentLocation + "ID";
+            primaryKeyProperty.Type = new CodeTypeReference(typeof(System.Int32));
+            primaryKeyProperty.Name += " { get; set; } //"; 
+            var attr = new CodeAttributeDeclaration(new CodeTypeReference(typeof(System.ComponentModel.DataAnnotations.RangeAttribute)));
+            attr.Arguments.Add(new CodeAttributeArgument(new CodeTypeOfExpression(typeof(System.ComponentModel.DataAnnotations.KeyAttribute))));
+            cls.CustomAttributes.Add(attr);
+            cls.Members.Add(primaryKeyProperty);
+
+            CodeMemberField property = new CodeMemberField();
+            property.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+            property.Name = futureLocation;
+            property.Type = new CodeTypeReference(typeof(System.String));
+            property.Name += " { get; set; } //";
+            cls.Members.Add(property);
+
+            CodeMemberField propertyID = new CodeMemberField();
+            propertyID.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+            propertyID.Name = previousLocation + "ID";
+            propertyID.Type = new CodeTypeReference(typeof(System.Int32));
+            propertyID.Name += " { get; set; } //";
+            cls.Members.Add(propertyID);
+
+            nameSpace.Types.Add(cls);
+
+            CodeCompileUnit compileUnit = new CodeCompileUnit();
+            compileUnit.Namespaces.Add(nameSpace);
+
+
+            CSharpCodeProvider provider = new CSharpCodeProvider();
+
+            string modelsFolder = Path.Combine(_hostingEnvironment.ContentRootPath, "Models");
+            string locationModelsFolder = Path.Combine(modelsFolder, "LocationModels");
+            //Directory.CreateDirectory(locationModelsFolder);
+            string newFileName = currentLocation + ".cs";
+            //check if it exists already and give them an error - IMPORTANT!!!
+            string filePath = Path.Combine(locationModelsFolder, newFileName);
+
+            using (StreamWriter sw = new StreamWriter(filePath, false))
+            {
+                IndentedTextWriter tw = new IndentedTextWriter(sw, "    ");
+                provider.GenerateCodeFromCompileUnit(compileUnit, tw, new CodeGeneratorOptions());
+                tw.Close();
+            }
+        }
+
     }
 }

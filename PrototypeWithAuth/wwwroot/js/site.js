@@ -401,7 +401,7 @@ $.fn.ChangeSumDollarsAndSumShekel = function () {
 LOCATIONS:
 
 
-var $sublocationCounter = 0;
+var $sublocationCounter = 1;
 $.fn.AddSublocation = function () {
 	if ($sublocationCounter == 0 && !$(".nameSublocation").val()) {
 		$(".nameError").html("Please input a name first");
@@ -416,9 +416,9 @@ $.fn.AddSublocation = function () {
 	}
 	console.log("Location site.js");
 
-	var newSublocationID = 'Sublocations_' + $sublocationCounter + '_';
+	var newSublocationID = 'Locations_' + $sublocationCounter + '_';
 	console.log("newSublocationID: " + newSublocationID);
-	var newSublocationName = 'Sublocations[' + $sublocationCounter + ']';
+	var newSublocationName = 'Locations[' + $sublocationCounter + ']';
 	console.log("newSublocationName: " + newSublocationName);
 	var newSublocationClass = 'sublocationName' + $sublocationCounter;
 	console.log("newSublocationClass: " + newSublocationClass);
