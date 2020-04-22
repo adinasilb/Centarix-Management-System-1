@@ -249,5 +249,35 @@ namespace PrototypeWithAuth.AppData
             }
         }
 
+        public static void AddToDBContext(string currentLocation, IHostingEnvironment _hostingEnvironment)
+        {
+            string lineToWrite = "        public DbSet<" + currentLocation + "> " + currentLocation + "s {get; set;}";
+            string fileRootPath = Path.Combine(_hostingEnvironment.ContentRootPath, "Data");
+            string filePath = Path.Combine(fileRootPath, "ApplicationDbContext.cs");
+            string tempPath = Path.Combine(fileRootPath, "TempDbContext.cs");
+
+            bool isWritten = false;
+            using (var writer = new StreamWriter(tempPath))
+            {
+                foreach(string line in File.ReadLines(filePath))
+                {
+                    if (!isWritten && line.StartsWith("        public DbSet"))
+                    {
+                        writer.WriteLine(lineToWrite);
+                        isWritten = true;
+                    }
+
+                    writer.WriteLine(line);
+
+                    //if statement if we should add a new line
+                }
+
+            }
+
+            File.Delete(filePath);
+            File.Move(tempPath, filePath);
+            //File.Delete(tempPath);
+        }
+
     }
 }

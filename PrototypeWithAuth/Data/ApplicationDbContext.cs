@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.Models.LocationModels;
 using PrototypeWithAuth.Data;
 using System.Linq;
 
@@ -19,6 +20,7 @@ namespace PrototypeWithAuth.Data
 
 
         }
+
         public DbSet<CompanyAccount> CompanyAccounts { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }

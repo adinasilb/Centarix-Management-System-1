@@ -74,6 +74,7 @@ namespace PrototypeWithAuth.Controllers
 
                 AppUtility.CreateCsFile("PrototypeWithAuth.Models.LocationModels", currentLocation, prevLocation, futureLocation, _hostingEnvironment, filePath);
 
+                AppUtility.AddToDBContext(currentLocation, _hostingEnvironment);
             }
 
 
