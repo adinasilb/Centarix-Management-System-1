@@ -436,8 +436,8 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                                                 Model.PaymentTypes,
         dataValueField: "PaymentTypeID",
         dataTextField: "PaymentTypeDescription"),
-        optionLabel: "Select A Payment Type ", 
-        htmlAttributes: new { @class = "form-control paymentType"}
+        optionLabel: "Select A Payment Type ",
+        htmlAttributes: new { @class = "form-control paymentType" }
                                                             )
                                                             <span asp-validation-for="NewPayments[x].CompanyAccount.PaymentType" class="text-danger"></span>
                                                         </td>
@@ -476,10 +476,11 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                     </div>
                                     @if (Model.OrderFileStrings != null)
                                     {
-                                        foreach(var o in Model.OrderFileStrings)
+                                        foreach (var o in Model.OrderFileStrings)
                                         {
                                             <button>Test</button>
-                                            <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
+                                            string newfile = o.Replace("\\", "/");
+                                            @Html.ActionLink("Download", "DownloadPDF", "Requests", new { filename = newfile })
                                         }
                                         <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                     }
