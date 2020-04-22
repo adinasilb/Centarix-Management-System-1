@@ -67,11 +67,13 @@ namespace PrototypeWithAuth.Controllers
                 //Directory.CreateDirectory(locationModelsFolder);
                 string newFileName = currentLocation + ".cs";
                 //check if it exists already and give them an error - IMPORTANT!!!
-                string filePath = Path.Combine(currentFolder, newFileName);
-
-                AppUtility.CreateCsFile("Models.LocationModels", currentLocation, prevLocation, futureLocation, _hostingEnvironment, filePath);
 
                 currentFolder = Path.Combine(currentFolder, currentLocation);
+                Directory.CreateDirectory(currentFolder);
+                string filePath = Path.Combine(currentFolder, newFileName);
+
+                AppUtility.CreateCsFile("PrototypeWithAuth.Models.LocationModels", currentLocation, prevLocation, futureLocation, _hostingEnvironment, filePath);
+
             }
 
 

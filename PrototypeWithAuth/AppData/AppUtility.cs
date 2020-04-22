@@ -9,6 +9,8 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using System.Reflection;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace PrototypeWithAuth.AppData
 {
@@ -153,6 +155,7 @@ namespace PrototypeWithAuth.AppData
             nameSpace.Imports.Add(new CodeNamespaceImport("System"));
             nameSpace.Imports.Add(new CodeNamespaceImport("System.Linq"));
             nameSpace.Imports.Add(new CodeNamespaceImport("System.Text"));
+            nameSpace.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
             nameSpace.Imports.Add(new CodeNamespaceImport("System.ComponentModel.DataAnnotations"));
 
             CodeTypeDeclaration cls = new CodeTypeDeclaration();
@@ -165,35 +168,69 @@ namespace PrototypeWithAuth.AppData
             //    CodeTypeReference(typeof(System.ComponentModel.DataAnnotations.KeyAttribute)));
             //cls.Members.Add(attribute);
 
+            //CodeMemberField dataAnnotationsKey = new CodeMemberField();
+            //dataAnnotationsKey.Name = "[Key] //";
+            //cls.Members.Add("[Key]");
+
             CodeMemberField primaryKeyProperty = new CodeMemberField();
             primaryKeyProperty.Attributes = MemberAttributes.Public | MemberAttributes.Final;
             primaryKeyProperty.Name = currentLocation + "ID";
             primaryKeyProperty.Type = new CodeTypeReference(typeof(System.Int32));
             primaryKeyProperty.Name += " { get; set; } //";
-            var attr = new CodeAttributeDeclaration(new CodeTypeReference(typeof(System.ComponentModel.DataAnnotations.RangeAttribute)));
-            attr.Arguments.Add(new CodeAttributeArgument(new CodeTypeOfExpression(typeof(System.ComponentModel.DataAnnotations.KeyAttribute))));
-            cls.CustomAttributes.Add(attr);
+
+
+            // Create the attribute declaration for the property.
+            var attr = new CodeAttributeDeclaration("Key"/*new CodeTypeReference(typeof(System.ComponentModel.DataAnnotations.KeyAttribute))*/);
+            primaryKeyProperty.CustomAttributes.Add(attr);
+            //var attr = new CodeAttributeDeclaration(new CodeTypeReference(typeof(System.ComponentModel.DataAnnotations.RangeAttribute)));
+            //attr.Arguments.Add(new CodeAttributeArgument(new CodeTypeOfExpression(typeof(System.ComponentModel.DataAnnotations.KeyAttribute))));
+            //cls.CustomAttributes.Add(attr);
             cls.Members.Add(primaryKeyProperty);
 
-            if (futureLocation != "")
-            {
-                CodeMemberField property = new CodeMemberField();
-                property.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-                property.Name = futureLocation;
-                property.Type = new CodeTypeReference(typeof(System.String));
-                property.Name += " { get; set; } //";
-                cls.Members.Add(property);
-            }
-
-
+            //foreign key to parent class
             if (previousLocation != "")
             {
+                //CodeMemberField constant = new CodeMemberField(new CodeTypeReference(typeof(System.String)), "[Required]");
+                //constant.Attributes = MemberAttributes.Const;
+                //constant.InitExpression = new CodePrimitiveExpression(0x0000AE77);
+                //cls.Members.Add(constant);
+
+                //CodeSnippetStatement dataAnnotationsReq = new CodeSnippetStatement();
+                //dataAnnotationsReq.Value = "[Required] //";
+                //cls.Members.Add(dataAnnotationsReq);
+
+                //Foreign key id
                 CodeMemberField propertyID = new CodeMemberField();
                 propertyID.Attributes = MemberAttributes.Public | MemberAttributes.Final;
                 propertyID.Name = previousLocation + "ID";
                 propertyID.Type = new CodeTypeReference(typeof(System.Int32));
                 propertyID.Name += " { get; set; } //";
+
+
+                // Create the attribute declaration for the property.
+                var attr2 = new CodeAttributeDeclaration("Required"/*new CodeTypeReference(typeof(System.ComponentModel.DataAnnotations.RequiredAttribute))*/);
+                propertyID.CustomAttributes.Add(attr2);
                 cls.Members.Add(propertyID);
+
+
+                //Foreign key property
+                CodeMemberField propPrevLocation = new CodeMemberField();
+                propPrevLocation.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+                propPrevLocation.Name = previousLocation;
+                propPrevLocation.Type = new CodeTypeReference(previousLocation);
+                propPrevLocation.Name += " { get; set; } //";
+                cls.Members.Add(propPrevLocation);
+            }
+
+            //property (which refers to the nested folder) inside of current class
+            if (futureLocation != "")
+            {
+                CodeMemberField property = new CodeMemberField();
+                property.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+                property.Name = futureLocation;
+                property.Type = new CodeTypeReference("IEnumerable<" + futureLocation + ">");
+                property.Name += " { get; set; } //";
+                cls.Members.Add(property);
             }
 
             nameSpace.Types.Add(cls);

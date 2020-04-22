@@ -7,18 +7,22 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Models.LocationModels {
+namespace PrototypeWithAuth.Models.LocationModels {
     using System;
     using System.Linq;
     using System.Text;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     
     
-    [System.ComponentModel.DataAnnotations.RangeAttribute(typeof(System.ComponentModel.DataAnnotations.KeyAttribute))]
-    public class closet {
+    public class drawer {
         
-        public int closetID { get; set; } //;
+        [Key()]
+        public int drawerID { get; set; } //;
         
-        public string shelf { get; set; } //;
+        [Required()]
+        public int freezerID { get; set; } //;
+        
+        public freezer freezer { get; set; } //;
     }
 }
