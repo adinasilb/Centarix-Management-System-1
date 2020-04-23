@@ -479,7 +479,8 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                         foreach (var o in Model.OrderFileStrings)
                                         {
                                             <button>Test</button>
-                                            string newfile = o.Replace("\\", "/");
+                                            int dotIndex = o.IndexOf(".");
+                                            string newfile = o.Substring(0, dotIndex);
                                             @Html.ActionLink("Download", "DownloadPDF", "Requests", new { filename = newfile })
                                         }
                                         <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
