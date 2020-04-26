@@ -28,7 +28,18 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult AddLocation()
         {
-            return PartialView();
+            AddLocationViewModel addLocationViewModel = new AddLocationViewModel
+            {
+                locationsTier1Models = _context.LocationsTier1Models
+            };
+
+
+            return PartialView(addLocationViewModel);
+        }
+        [HttpPost]
+        public IActionResult AddLocation(AddLocationViewModel addLocationViewModel)
+        {
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

@@ -19,6 +19,8 @@ namespace PrototypeWithAuth.Models.LocationsTierInstantiation
 
         public IEnumerable<LocationsTier2Instance> LocationsTier2Instances { get; set; }
 
+        [Required, MaxLength(50)]
+        [Display(Name = "Name:")]
         public string LocationsTier1InstanceAbrv { get; set; }
     }
 }

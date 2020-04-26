@@ -1,9 +1,11 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model PrototypeWithAuth.ViewModels.AddLocationViewModel
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view" role="document" style="max-height:100%; overflow-y:auto;">
     <div class="modal-content d-inline-block">
         <form>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="modal-header">
                 <h4>MODAL ADD LOCATION</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -11,21 +13,28 @@
 
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="control-label">Name:</label>
-                    <input type="text" class="form-control" />
-                    <label class="control-label">Type:</label>
-                    <select type="text" class="form-control">
-                    </select>
-                </div>
-                <button class="btn btn-dark load-add-location-type">Add Location Type</button>
-            </div>
+                    <label asp-for="locationsTier1Instance.LocationsTier1InstanceAbrv" class="control-label" > </label>
+                    <input  asp-for="locationsTier1Instance.LocationsTier1InstanceAbrv" type="text" class="form-control" />
 
-            <div class="modal-footer">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <input type="button" value="Cancel" data-dismiss="modal" class="btn btn-primary" />
-            </div>
-        </form>
+                </div>
+                <div class="form-group">
+                    <label asp-for="locationsTier1Models" class="control-label"></label>
+                    @Html.DropDownListFor(m => m.locationsTier1Instance.LocationsTier1ModelID,
+                    new SelectList(Model.locationsTier1Models, "LocationsTier1ModelID", "LocationsTier1ModelDescription"),
+                    "Select Type", new { @class = "form-control" })
+                    <span asp-validation-for="locationsTier1Instance.LocationsTier1ModelID" class="text-danger"></span>
+                </div>
+                
+            
+            <button class="btn btn-dark load-add-location-type">Add Location Type</button>
     </div>
+
+    <div class="modal-footer">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <input type="button" value="Cancel" data-dismiss="modal" class="btn btn-primary" />
+    </div>
+    </form>
+</div>
 </div>
 
 
