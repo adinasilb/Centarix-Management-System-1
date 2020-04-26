@@ -22,10 +22,6 @@ namespace PrototypeWithAuth.Data
         }
 
       
-        public DbSet<adsf> adsfs {get; set;}
-        public DbSet<desk> desks {get; set;}
-        public DbSet<shelf> shelfs {get; set;}
-        public DbSet<Freezer> Freezers {get; set;}
         public DbSet<CompanyAccount> CompanyAccounts { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
