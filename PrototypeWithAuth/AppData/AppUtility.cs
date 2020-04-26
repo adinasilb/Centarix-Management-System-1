@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.AppData
     {
 
         public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location }
-        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers} //these are all going to the ParentRequestIndex
+        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers } //these are all going to the ParentRequestIndex
         public enum RequestSidebarEnum { None, Type, Vendor, Owner, Location, Cart }
 
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
@@ -141,5 +141,18 @@ namespace PrototypeWithAuth.AppData
             public string NotificationListName;
             public int Amount;
         }
+
+        //public static int InsertToLocationTierModelReturnForiegnKey() 
+        //{
+        // LocationsTier1Model locationsTier1Model = new LocationsTier1Model();
+        //locationsTier1Model.LocationsTier1ModelDescription = addLocationTypeViewModel.Sublocations[i];
+        //                locationsTier1Model.LocationsTier1ModelAbbreviation = addLocationTypeViewModel.Sublocations[i].Substring(0,1);
+        //_context.Add(locationsTier1Model);
+        //                _context.SaveChanges();
+        //                var ltm = _context.LocationsTier1Models.Where(m => m.LocationsTier1ModelDescription == addLocationTypeViewModel.Sublocations[i]).FirstOrDefault();
+        //foriegnKey = ltm.LocationsTier1ModelID;
+        //}
+
     }
+
 }

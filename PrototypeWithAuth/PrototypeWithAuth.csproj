@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\LocationModels\**" />
+    <Content Remove="Models\LocationModels\**" />
+    <EmbeddedResource Remove="Models\LocationModels\**" />
+    <None Remove="Models\LocationModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Data\Migrations\20200130075438_PopulateParentCategory.cs" />
     <Compile Remove="Data\Migrations\20200130075438_PopulateParentCategory.Designer.cs" />
     <Compile Remove="Data\Migrations\20200221071910_addTablesRequestAndRequestStat.cs" />
@@ -45,7 +52,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Models\LocationModels\" />
     <Folder Include="wwwroot\files\" />
     <Folder Include="wwwroot\OrderPDFs\" />
   </ItemGroup>

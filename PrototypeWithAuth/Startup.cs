@@ -43,14 +43,14 @@ namespace PrototypeWithAuth
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-               
 
-            
+
+
 
             services.AddControllersWithViews();
             services.AddRazorPages();
-           // in order to be able to customize the aspnetcore identity
-            
+            // in order to be able to customize the aspnetcore identity
+
             services.AddMvc(config => //this creates a global authorzation - meaning only registered users can use view the application
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -67,7 +67,7 @@ namespace PrototypeWithAuth
         {
             if (env.IsDevelopment())
             {
-                
+
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseStaticFiles();
@@ -90,11 +90,11 @@ namespace PrototypeWithAuth
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-           //app.UseStaticFiles();
+            //app.UseStaticFiles();
 
             //app.UseRouting();
 
-           // app.UseAuthentication();
+            // app.UseAuthentication();
             //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -109,7 +109,7 @@ namespace PrototypeWithAuth
 
         }
 
-        //Seed database with new roles
+        // Seed database with new roles
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
@@ -127,9 +127,12 @@ namespace PrototypeWithAuth
                 }
             }
             var poweruser = new ApplicationUser();
-            poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+            poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
 
             await UserManager.AddToRoleAsync(poweruser, "Admin");
+        }
+    }
+} 
 
             // var poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
             // //{
@@ -146,30 +149,30 @@ namespace PrototypeWithAuth
             //         await UserManager.AddToRoleAsync(poweruser, "Admin");
             //     }
             // }
-        }
+            //  }
 
-        /* private async Task CreateRoles(IServiceProvider serviceProvider)
-         {
-             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityUser>>(); 
-             var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();//replaced Idetntiy user with application user
-
-             IdentityResult roleResult;
-             //here in this line we are adding Admin Role
-             var roleCheck = await RoleManager.RoleExistsAsync("Admin");
-             if (!roleCheck)
+            /* private async Task CreateRoles(IServiceProvider serviceProvider)
              {
-                 //here in this line we are creating admin role and seed it to the database
-                 roleResult = await RoleManager.CreateAsync(new IdentityUser("Admin"));
-             }
-             //here we are assigning the Admin role to the User that we have registered above 
-             //Now, we are assinging admin role to this user("Ali@gmail.com"). When will we run this project then it will
-             //be assigned to that user.
-             IdentityUser user = await UserManager.FindByEmailAsync("faigew@gmail.com");
-             var User = new IdentityUser();
-             await UserManager.AddToRoleAsync(user, "Admin");
-         }*/
-    }
-}
+                 var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityUser>>(); 
+                 var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();//replaced Idetntiy user with application user
+
+                 IdentityResult roleResult;
+                 //here in this line we are adding Admin Role
+                 var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+                 if (!roleCheck)
+                 {
+                     //here in this line we are creating admin role and seed it to the database
+                     roleResult = await RoleManager.CreateAsync(new IdentityUser("Admin"));
+                 }
+                 //here we are assigning the Admin role to the User that we have registered above 
+                 //Now, we are assinging admin role to this user("Ali@gmail.com"). When will we run this project then it will
+                 //be assigned to that user.
+                 IdentityUser user = await UserManager.FindByEmailAsync("faigew@gmail.com");
+                 var User = new IdentityUser();
+                 await UserManager.AddToRoleAsync(user, "Admin");
+             }*/
+        
+
 /*              app.UseRouting();
                 app.UseAuthentication();
                 app.UseAuthorization();

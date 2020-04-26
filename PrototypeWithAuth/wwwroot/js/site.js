@@ -401,7 +401,7 @@ $.fn.ChangeSumDollarsAndSumShekel = function () {
 LOCATIONS:
 
 
-var $sublocationCounter = 0;
+var $sublocationCounter = 1;
 $.fn.AddSublocation = function () {
 	if ($sublocationCounter == 0 && !$(".nameSublocation").val()) {
 		$(".nameError").html("Please input a name first");

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200426075100_LocationTierModels")]
+    partial class LocationTierModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -424,151 +426,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationsTier5ModelID");
 
                     b.ToTable("LocationsTier6Models");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier1Instance", b =>
-                {
-                    b.Property<int>("LocationsTier1InstanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("LocationsTier1InstanceAbrv")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationsTier1ModelID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationsTier1InstanceID");
-
-                    b.HasIndex("LocationsTier1ModelID");
-
-                    b.ToTable("LocationsTier1Instance");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier2Instance", b =>
-                {
-                    b.Property<int>("LocationsTier2InstanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LocationsTier1InstanceID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocationsTier2InstanceAbrv")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationsTier2ModelID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationsTier2InstanceID");
-
-                    b.HasIndex("LocationsTier1InstanceID");
-
-                    b.HasIndex("LocationsTier2ModelID");
-
-                    b.ToTable("LocationsTier2Instance");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier3Instance", b =>
-                {
-                    b.Property<int>("LocationsTier3InstanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LocationsTier2InstanceID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocationsTier3InstanceAbrv")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationsTier3ModelID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationsTier3InstanceID");
-
-                    b.HasIndex("LocationsTier2InstanceID");
-
-                    b.HasIndex("LocationsTier3ModelID");
-
-                    b.ToTable("LocationsTier3Instance");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier4Instance", b =>
-                {
-                    b.Property<int>("LocationsTier4InstanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LocationsTier3InstanceID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocationsTier4InstanceAbrv")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationsTier4ModelID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationsTier4InstanceID");
-
-                    b.HasIndex("LocationsTier3InstanceID");
-
-                    b.HasIndex("LocationsTier4ModelID");
-
-                    b.ToTable("LocationsTier4Instance");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier5Instance", b =>
-                {
-                    b.Property<int>("LocationsTier5InstanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LocationsTier4InstanceID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocationsTier5InstanceAbrv")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationsTier5ModelID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationsTier5InstanceID");
-
-                    b.HasIndex("LocationsTier4InstanceID");
-
-                    b.HasIndex("LocationsTier5ModelID");
-
-                    b.ToTable("LocationsTier5Instance");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier6Instance", b =>
-                {
-                    b.Property<int>("LocationsTier6InstanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("LocationsTier5InstanceAbrv")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationsTier5InstanceID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LocationsTier6ModelID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationsTier6InstanceID");
-
-                    b.HasIndex("LocationsTier5InstanceID");
-
-                    b.HasIndex("LocationsTier6ModelID");
-
-                    b.ToTable("LocationsTier6Instance");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -1355,90 +1212,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.LocationsTier5Model", "LocationsTier5Model")
                         .WithMany("LocationsTier6Models")
                         .HasForeignKey("LocationsTier5ModelID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier1Instance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTier1Model", "LocationsTier1Model")
-                        .WithMany()
-                        .HasForeignKey("LocationsTier1ModelID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier2Instance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier1Instance", "LocationsTier1Instance")
-                        .WithMany("LocationsTier2Instances")
-                        .HasForeignKey("LocationsTier1InstanceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTier2Model", "LocationsTier2Model")
-                        .WithMany()
-                        .HasForeignKey("LocationsTier2ModelID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier3Instance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier2Instance", "LocationsTier2Instance")
-                        .WithMany("LocationsTier3Instances")
-                        .HasForeignKey("LocationsTier2InstanceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTier3Model", "LocationsTier3Model")
-                        .WithMany()
-                        .HasForeignKey("LocationsTier3ModelID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier4Instance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier3Instance", "LocationsTier3Instance")
-                        .WithMany("LocationsTier4Instances")
-                        .HasForeignKey("LocationsTier3InstanceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTier4Model", "LocationsTier4Model")
-                        .WithMany()
-                        .HasForeignKey("LocationsTier4ModelID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier5Instance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier4Instance", "LocationsTier4Instance")
-                        .WithMany("LocationsTier5Instances")
-                        .HasForeignKey("LocationsTier4InstanceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTier5Model", "LocationsTier5Model")
-                        .WithMany()
-                        .HasForeignKey("LocationsTier5ModelID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier6Instance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTierInstantiation.LocationsTier5Instance", "LocationsTier5Instance")
-                        .WithMany("LocationsTier6Instances")
-                        .HasForeignKey("LocationsTier5InstanceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.LocationsTier6Model", "LocationsTier6Model")
-                        .WithMany()
-                        .HasForeignKey("LocationsTier6ModelID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
