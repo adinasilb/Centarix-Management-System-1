@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -279,6 +279,81 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("PaymentTypeID");
 
                     b.ToTable("CompanyAccounts");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationModels.desk", b =>
+                {
+                    b.Property<int>("deskID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("tableID")
+                        .HasColumnType("int");
+
+                    b.HasKey("deskID");
+
+                    b.HasIndex("tableID");
+
+                    b.ToTable("desks");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationModels.drawer", b =>
+                {
+                    b.Property<int>("drawerID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("freezerID")
+                        .HasColumnType("int");
+
+                    b.HasKey("drawerID");
+
+                    b.HasIndex("freezerID");
+
+                    b.ToTable("drawers");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationModels.freezer", b =>
+                {
+                    b.Property<int>("freezerID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("freezerID");
+
+                    b.ToTable("freezers");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationModels.table", b =>
+                {
+                    b.Property<int>("tableID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("tableID");
+
+                    b.ToTable("tables");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationModels.tree", b =>
+                {
+                    b.Property<int>("treeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("drawerID")
+                        .HasColumnType("int");
+
+                    b.HasKey("treeID");
+
+                    b.HasIndex("drawerID");
+
+                    b.ToTable("trees");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -1020,6 +1095,33 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.PaymentType", "PaymentType")
                         .WithMany()
                         .HasForeignKey("PaymentTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationModels.desk", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.LocationModels.table", "table")
+                        .WithMany("desk")
+                        .HasForeignKey("tableID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationModels.drawer", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.LocationModels.freezer", "freezer")
+                        .WithMany("drawer")
+                        .HasForeignKey("freezerID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationModels.tree", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.LocationModels.drawer", "drawer")
+                        .WithMany("tree")
+                        .HasForeignKey("drawerID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

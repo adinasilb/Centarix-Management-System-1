@@ -1,16 +1,27 @@
 ﻿using PrototypeWithAuth.Models;
-using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
 using Microsoft.CSharp;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using System.Reflection;
-using Microsoft.VisualBasic.CompilerServices;
+using PrototypeWithAuth.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
+using System.Data.Entity.Migrations.Design;
+using Microsoft.EntityFrameworkCore.Design;
+using System.Diagnostics;
+using System.Configuration;
+using System.Data.Entity.Migrations;
+using System.Data.Entity.Infrastructure;
+using ICSharpCode.Decompiler.Util;
 
 namespace PrototypeWithAuth.AppData
 {
@@ -259,7 +270,7 @@ namespace PrototypeWithAuth.AppData
             bool isWritten = false;
             using (var writer = new StreamWriter(tempPath))
             {
-                foreach(string line in File.ReadLines(filePath))
+                foreach (string line in File.ReadLines(filePath))
                 {
                     if (!isWritten && line.StartsWith("        public DbSet"))
                     {
@@ -278,6 +289,13 @@ namespace PrototypeWithAuth.AppData
             File.Move(tempPath, filePath);
             //File.Delete(tempPath);
         }
+
+        public static void AddMigrationsUpdateDatabase(ApplicationDbContext _context, string migrationName)
+        {
+            _context.Database.Migrate();
+            _context.Database.EnsureCreated();
+        }
+
 
     }
 }

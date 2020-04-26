@@ -12,15 +12,18 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CSharp;
 using PrototypeWithAuth.ViewModels;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class LocationsController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
-        public LocationsController(IHostingEnvironment hostingEnvironment)
+        private readonly ApplicationDbContext _context;
+        public LocationsController(IHostingEnvironment hostingEnvironment, ApplicationDbContext context)
         {
             _hostingEnvironment = hostingEnvironment;
+            _context = context;
         }
         public IActionResult Index()
         {
@@ -39,6 +42,9 @@ namespace PrototypeWithAuth.Controllers
                 Locations = new List<string>()
             };
             addLocationTypeViewModel.Locations.Add("");
+
+            //verify there are no pending migrations and apply them first before adding in new classes
+
             return PartialView(addLocationTypeViewModel);
         }
 
@@ -46,6 +52,7 @@ namespace PrototypeWithAuth.Controllers
         [Obsolete]
         public IActionResult AddLocationType(AddLocationTypeViewModel addLocationTypeViewModel)
         {
+            //check if they exist first
 
             string modelsFolder = Path.Combine(_hostingEnvironment.ContentRootPath, "Models");
             string currentFolder = Path.Combine(modelsFolder, "LocationModels");
@@ -59,7 +66,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 var currentLocation = addLocationTypeViewModel.Locations[i];
                 var futureLocation = "";
-                if (i != (addLocationTypeViewModel.Locations.Count-1))
+                if (i != (addLocationTypeViewModel.Locations.Count - 1))
                 {
                     futureLocation = addLocationTypeViewModel.Locations[i + 1];
                 }
@@ -77,6 +84,9 @@ namespace PrototypeWithAuth.Controllers
                 AppUtility.AddToDBContext(currentLocation, _hostingEnvironment);
             }
 
+            string migrationName = string.Join("", addLocationTypeViewModel.Locations) + "trial";
+            
+            AppUtility.AddMigrationsUpdateDatabase(_context, migrationName);
 
             //CSharpCodeProvider csharpcodeprovider = new CSharpCodeProvider();
 
