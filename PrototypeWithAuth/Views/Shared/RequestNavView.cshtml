@@ -190,6 +190,17 @@
         return false;
     });
 
+    $(".load-receive-and-location").on("click", function (e) {
+        console.log("in order details");
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $tab = e.target.hash;
+        var $itemurl = "Requests/ReceivedModal";
+        $.fn.CallPage($tab, $itemurl);
+        return false;
+    });
+
     $.fn.CallPage = function ($tab, $itemurl, isEmail = false) {
         console.log("in function");
         $.ajax({
