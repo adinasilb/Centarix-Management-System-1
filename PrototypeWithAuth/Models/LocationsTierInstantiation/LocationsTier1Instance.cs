@@ -17,6 +17,7 @@ namespace PrototypeWithAuth.Models.LocationsTierInstantiation
         public int LocationsTier1ModelID { get; set; }
         public LocationsTier1Model LocationsTier1Model { get; set; }
 
+        //list of lists - need a matrix  
         public IEnumerable<LocationsTier2Instance> LocationsTier2Instances { get; set; }
 
         [Required, MaxLength(50)]
