@@ -824,7 +824,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmEmailModal()
         {
-            return View();
+            return RedirectToAction("Index");
         }
 
 

@@ -26,10 +26,10 @@
         }
         else
         {
-            <form action="mailto:@Model.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText" method="post" enctype="application/x-www-form-urlencoded">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
-            @*</form>
-            <form action="" method="post" enctype="multipart/form-data">*@
+                @*</form>
+                    <form action="" method="post" enctype="multipart/form-data">*@
                 <div class="modal-body">
                     @if (IsBeingApproved == "True")
                     {
@@ -38,8 +38,10 @@
                     @OrderText
                 </div>
 
+                mailto:@Model.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText
+
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-success" value="Confirm & Send Email" />
+                    <input type="submit" class="btn btn-success" asp-action="ConfirmEmailModal" value="Confirm & Send Email" href="mailto:@Model.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText" />
                     <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
                 </div>
             </form>

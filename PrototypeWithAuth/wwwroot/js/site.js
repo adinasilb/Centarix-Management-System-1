@@ -149,6 +149,7 @@ $("#priceTab").click(function () {
 	if ($("#vatInShekel").val()) {
 		$.fn.CalculateTotalPlusVat();
 	}
+	$(".sumDollars").val('');
 });
 
 $("#currency").change(function () {
