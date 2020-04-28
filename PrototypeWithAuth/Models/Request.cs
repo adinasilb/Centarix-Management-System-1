@@ -19,8 +19,15 @@ namespace PrototypeWithAuth.Models
         public int? LocationID { get; set; } // if status is recieved; then LocationID is required (have to make a custom rule)
         public int? RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }
+        public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
+
+        [ForeignKey("ApplicationUserID")]
+        public ApplicationUser ApplicationUserReceiver { get; set; }
         public uint? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit
         public uint? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
+
+        public bool IsDeleted { get; set; } // check if this request's parentrequets requests are deleted - if so give parent request true for is deleted
+        public bool IsApproved { get; set; } 
         public uint Unit { get; set; } //largest unit the request comes in - amount of unit
         //public int Unit { get; set; }
 
@@ -43,6 +50,8 @@ namespace PrototypeWithAuth.Models
         public uint Quantity { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
+        
+        
         public double Cost { get; set; }
         
 
@@ -60,7 +69,8 @@ namespace PrototypeWithAuth.Models
         public string RequestComment { get; set; } //can take this out - Adina
 
         [DataType(DataType.Date)]
-        public DateTime ArrivalDate { get; set; } 
+        public DateTime ArrivalDate { get; set; }
+        
 
 
     }
