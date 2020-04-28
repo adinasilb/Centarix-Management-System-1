@@ -109,7 +109,7 @@ namespace PrototypeWithAuth.Controllers
             else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
             {
                 //partial and clarify?
-                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusDescription == "RecievedAndIsInventory");
+                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3);
             }
             else
             {
