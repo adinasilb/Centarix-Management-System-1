@@ -33,9 +33,10 @@ namespace PrototypeWithAuth.Controllers
         {
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel
             {
-                LocationTypesDepthOfZero = _context.LocationTypes.Where(lt => lt.Depth == 0)
+                LocationTypesDepthOfZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
+                LocationInstances = new List<LocationInstance>()
             };
-
+            addLocationViewModel.LocationInstances.Add(new LocationInstance());
             return PartialView(addLocationViewModel);
         }
         [HttpPost]
@@ -43,8 +44,11 @@ namespace PrototypeWithAuth.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                _context.Add(addLocationViewModel.LocationInstance);
+                foreach(var item in addLocationViewModel.LocationInstances)
+                {
+                    //add reference to parent
+                    _context.Add(item);
+                }
                 _context.SaveChanges();
                 //for now all redirects are outside if, but realy error should be outside if and only redirect if in if-statment
             }

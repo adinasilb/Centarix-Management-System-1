@@ -10,6 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     public class AddLocationViewModel
     {
         public IEnumerable<LocationType> LocationTypesDepthOfZero { get; set; }
-        public LocationInstance LocationInstance { get; set; }
+        public List<LocationInstance> LocationInstances { get; set; }
     }
 }

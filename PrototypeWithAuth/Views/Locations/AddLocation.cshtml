@@ -12,16 +12,16 @@
 
             <div class="modal-body">
                 <div class="form-group">
-                    <label asp-for="LocationInstance.LocationInstanceName" class="control-label"> </label>
-                    <input asp-for="LocationInstance.LocationInstanceName" type="text" class="form-control" />
+                    <label asp-for="LocationInstances[0].LocationInstanceName" class="control-label"> </label>
+                    <input asp-for="LocationInstances[0].LocationInstanceName" type="text" class="form-control" />
 
                 </div>
                 <div class="form-group">
                     <label asp-for="LocationTypesDepthOfZero" class="control-label"></label>
-                    @Html.DropDownListFor(m => m.LocationInstance.LocationTypeID,
+                    @Html.DropDownListFor(m => m.LocationInstances[0].LocationTypeID,
                     new SelectList(Model.LocationTypesDepthOfZero, "LocationTypeID", "LocationTypeName"),
                     "Select Type", new { @class = "form-control" })
-                    <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger"></span>
+                    <span asp-validation-for="LocationInstances[0].LocationTypeID" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-12 divSublocations">

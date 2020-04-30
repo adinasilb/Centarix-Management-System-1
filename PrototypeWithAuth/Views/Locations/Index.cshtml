@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/ManageLocationView.cshtml";
 }
 
+<script src="~/js/site.js" asp-append-version="true"></script>
 <h1>Index</h1>
 <div class="row">
     <button class="btn btn-block text-dark load-add-location" data-target="item" data-backdrop="static" data-keyboard="false" href="item">Add Location</button>
@@ -18,7 +19,7 @@
                 <tr>
 
                     <th>
-                       @Html.DisplayNameFor(item => item.FirstOrDefault().LocationInstanceName)
+                        @Html.DisplayNameFor(item => item.FirstOrDefault().LocationInstanceName)
 
                     </th>
                 </tr>

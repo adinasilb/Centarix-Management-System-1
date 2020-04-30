@@ -447,7 +447,7 @@ $.fn.AddSublocation = function () {
 
 
 //AJAX partial view submit for addLocations --> Sublocations
-$("#LocationInstance_LocationTypeID").change(function () {
+$("#LocationInstances_0__LocationTypeID").change(function () {
 	var myDiv = $(".divSublocations");
 	var selectedId = $(this).children("option:selected").val();
 	console.log("selectedId: " + selectedId);

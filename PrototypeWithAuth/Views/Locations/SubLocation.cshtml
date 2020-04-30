@@ -9,6 +9,7 @@
 @foreach (var item in Model.LocationTypes)
 {
     <div class="form-group">
+        @*<input asp-for="Model.LocationInstances[1]" />*@
         @Html.DisplayFor(modelItem => item.LocationTypeName)
     </div>
     @*<td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
