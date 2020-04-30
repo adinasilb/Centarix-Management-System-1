@@ -68,6 +68,20 @@ $("#Request_ParentRequest_Installments").change(function () {
 	}
 });
 
+
+////Location Add View - Change dropdownlist
+//$("LocationInstance_LocationTypeID").change(function () {
+//	console.log("entered js got json function");
+//	var locationTypeID = $(this).val();
+//	var url = "/Locations/GetChildrenTypes";
+//	$.getJSON(url, { LocationTypeID: locationTypeId }, function (data) {
+//		console.log("in location instance json");
+//		$.each(data, function (i, locationType) {
+//			htmlChildType = '<div class='
+//		});
+//	});
+//});
+
 //payments on the price modal -cascading dropdown choice with json
 $(".paymentType").change(function () {
 	var paymentTypeId = $(this).val();
