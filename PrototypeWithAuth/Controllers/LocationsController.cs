@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 
@@ -122,27 +123,57 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet] //send a json to that the subcategory list is filered
-        public JsonResult GetChildrenTypes(int LocationTypeID)
+        [HttpGet]
+        public IActionResult SubLocation(int ParentLocationTypeID)
         {
-            bool go = true;
+            SubLocationViewModel subLocationViewModel = new SubLocationViewModel(); bool go = true;
             List<LocationType> listOfChildrenTypes = new List<LocationType>();
             while (go)
             {
-                var currentRecord = _context.LocationTypes.Where(lt => lt.LocationTypeParentID == LocationTypeID).FirstOrDefault();
+                var currentRecord = _context.LocationTypes.Where(lt => lt.LocationTypeParentID == ParentLocationTypeID).FirstOrDefault();
                 if (currentRecord != null)
                 {
                     listOfChildrenTypes.Add(currentRecord);
-                    LocationTypeID = currentRecord.LocationTypeID;
+                    ParentLocationTypeID = currentRecord.LocationTypeID;
                 }
                 else
                 {
                     go = false;
                 }
             }
-            return Json(listOfChildrenTypes);
-
+            subLocationViewModel.LocationTypes = listOfChildrenTypes;
+            if (AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView(subLocationViewModel);
+            }
+            else
+            {
+                return View(subLocationViewModel);
+            }
+            //return View();
         }
+
+        //[HttpGet] //send a json to that the subcategory list is filered
+        //public JsonResult GetChildrenTypes(int LocationTypeID)
+        //{
+        //    bool go = true;
+        //    List<LocationType> listOfChildrenTypes = new List<LocationType>();
+        //    while (go)
+        //    {
+        //        var currentRecord = _context.LocationTypes.Where(lt => lt.LocationTypeParentID == LocationTypeID).FirstOrDefault();
+        //        if (currentRecord != null)
+        //        {
+        //            listOfChildrenTypes.Add(currentRecord);
+        //            LocationTypeID = currentRecord.LocationTypeID;
+        //        }
+        //        else
+        //        {
+        //            go = false;
+        //        }
+        //    }
+        //    return Json(listOfChildrenTypes);
+
+        //}
 
 
     }

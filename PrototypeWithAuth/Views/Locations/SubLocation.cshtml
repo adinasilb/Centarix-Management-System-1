@@ -1,0 +1,17 @@
+﻿@model PrototypeWithAuth.ViewModels.SubLocationViewModel
+
+@*@if (Model.locationsTier2Models != null)
+    {
+        Html.DropDownListFor()
+    }*@
+
+
+@foreach (var item in Model.LocationTypes)
+{
+    <div class="form-group">
+        @Html.DisplayFor(modelItem => item.LocationTypeName)
+    </div>
+    @*<td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+    <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName)</td>*@
+
+}

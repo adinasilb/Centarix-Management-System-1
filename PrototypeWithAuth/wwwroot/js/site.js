@@ -443,3 +443,43 @@ $.fn.AddSublocation = function () {
 	$(".addSublocation").show();
 	$sublocationCounter++;
 }
+
+
+
+//AJAX partial view submit for addLocations --> Sublocations
+$("#LocationInstance_LocationTypeID").change(function () {
+	var myDiv = $(".divSublocations");
+	var selectedId = $(this).children("option:selected").val();
+	console.log("selectedId: " + selectedId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/SubLocation/?ParentLocationTypeID=" + selectedId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {
+			this.html(result);
+		}
+	});
+	//$(document).ajaxStart(function () {
+	//	$("#loading").show();
+	//});
+
+	//$(document).ajaxComplete(function () {
+	//	$("#loading").hide();
+	//});
+});
+	//.on("change", function (e) {
+	//e.preventDefault();
+	////show loading gif
+	////$("#loading").show();
+	//$.ajax({
+	//	url: this.action,
+	//	type: this.method,
+	//	data: $(this).serialize(), //getting a model and serializing it
+	//	success: function (data) {
+	//		$("#divSublocations").html(data); //passing the model into dvResults
+	//		//$("#loading").hide(); //hides the loading gif
+	//	}
+	//})
+//})

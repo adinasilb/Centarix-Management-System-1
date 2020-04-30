@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Models;
+﻿using Microsoft.AspNetCore.Http;
+using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -153,6 +154,17 @@ namespace PrototypeWithAuth.AppData
         //foriegnKey = ltm.LocationsTier1ModelID;
         //}
 
+
+        //.NetCore does not have the function .IsAjaxRequest so we took a similar function created online to do the same thing
+        public static bool IsAjaxRequest(this HttpRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (request.Headers != null)
+                return request.Headers["X-Requested-With"] == "XMLHttpRequest";
+            return false;
+        }
     }
 
 }
