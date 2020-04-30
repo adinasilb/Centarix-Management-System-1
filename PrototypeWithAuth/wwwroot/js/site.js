@@ -219,21 +219,23 @@ $("#vatInShekel").change(function () {
 
 //Calculate unit amounts
 $.fn.CalculateUnitAmounts = function () {
-	console.log("Calculating unit amounts");
 	var $unitAmounts = $("#unit-amount").val();
 	var $sumDollars = $("#Request_Cost").val();
-	console.log("sumDollars: " + $sumDollars);
 	var $exchangeRate = $("#Request_ExchangeRate").val();
 	$unitSumDollars = $sumDollars / $unitAmounts;
-	$('input[name="unit-price-dollars"]').val($unitSumDollars);
+	$inputBox = $('input[name="unit-price-dollars"]');
+	console.log("Using function show results: $unitSumDollars = " + $unitSumDollars);
+	$.fn.ShowResults($inputBox, $unitSumDollars);
+	console.log("back in calculate amounts");
+	//$('input[name="unit-price-dollars"]').val($unitSumDollars);
 	$unitSumShekel = $unitSumDollars * $exchangeRate;
-	console.log("unitSumShekel: " + $unitSumShekel);
-	$('input[name="unit-price-shekel"').val($unitSumShekel);
-	console.log("Done");
+	$inputBox2 = $('input[name="unit-price-shekel"]');
+	console.log("Using function show results: $unitSumShekel = " + $unitSumShekel);
+	$.fn.ShowResults($inputBox2, $unitSumShekel);
+	//$('input[name="unit-price-shekel"').val($unitSumShekel);
 };
 //calculate sub unit amountss
 $.fn.CalculateSubUnitAmounts = function () {
-	console.log("Calculating sub unit amounts");
 	var $subUnitAmounts = $("#subunit-amount").val();
 	var $unitPriceDollars = $("#unit-price-dollars").val();
 	var $exchangeRate = $("#Request_ExchangeRate").val();
@@ -241,27 +243,19 @@ $.fn.CalculateSubUnitAmounts = function () {
 	$('input[name="subunit-price-dollars"]').val($subUnitSumDollars);
 	$subUnitSumShekel = $subUnitSumDollars * $exchangeRate;
 	$('input[name="subunit-price-shekel"').val($unitSumShekel);
-	console.log("Done");
 };
 //calculate sub sub unit amounts
 $.fn.CalculateSubSubUnitAmounts = function () {
-	console.log("Calculating sub sub unit amouts");
 	var $subSubUnitAmounts = $("#subsubunit-amount").val();
-	console.log("subsubunitamounts: " + $subSubUnitAmounts);
 	var $subUnitPriceDollars = $("#subunit-price-dollars").val();
-	console.log("subunitpricedollars: " + $subUnitPriceDollars);
 	var $exchangeRate = $("#Request_ExchangeRate").val();
 	$subSubUnitSumDollars = $subUnitPriceDollars / $subSubUnitAmounts;
-	console.log("subsubunitsumdollars: " + $subSubUnitSumDollars);
 	$('input[name="subsubunit-price-dollars"]').val($subSubUnitSumDollars);
 	$subSubUnitSumShekel = $subSubUnitSumDollars * $exchangeRate;
-	console.log("subsubunitsumshekel: " + $subSubUnitSumShekel);
 	$('input[name="subsubunit-price-shekel"').val($subSubUnitSumShekel);
-	console.log("Done");
 };
 //Open subunits
 $.fn.OpenCloseSubUnits = function () {
-	console.log("open sub units");
 	var selected = $(':selected', $("#unit-type"));
 	if (selected > "") {
 		$(".RequestSubunitCard .form-control").attr('disabled', false);
@@ -270,11 +264,9 @@ $.fn.OpenCloseSubUnits = function () {
 		$(".RequestSubunitCard .form-control").prop('disabled', true);
 		$(".RequestSubsubunitCard .form-control").prop('disabled', true);
 	}
-	console.log("Done");
 };
 //open sub sub units 
 $.fn.OpenCloseSubSubUnits = function () {
-	console.log("open sub sub units");
 	var selected = $(':selected', $("#subunit-type"));
 	if (selected > "") {
 		$(".RequestSubsubunitCard .form-control").attr('disabled', false);
@@ -282,11 +274,9 @@ $.fn.OpenCloseSubSubUnits = function () {
 	else {
 		$(".RequestSubsubunitCard .form-control").attr('disabled', true);
 	}
-	console.log("Done");
 };
 //change subunit dropdown
 $.fn.ChangeSubUnitDropdown = function (optgroup) {
-	console.log("change sub unit dropdown");
 	//the following is based on the fact that the unit types and parents are seeded with primary key values
 	switch (optgroup) {
 		case "Units":
@@ -302,11 +292,9 @@ $.fn.ChangeSubUnitDropdown = function (optgroup) {
 			$("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
 			break;
 	}
-	console.log("Done");
 };
 //change sub sub unit dropdown
 $.fn.ChangeSubSubUnitDropdown = function (optgroup) {
-	console.log("change sub sub unit dropdown");
 	switch (optgroup) {
 		case "Units":
 			$("#subsubunit-type optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
@@ -321,31 +309,21 @@ $.fn.ChangeSubSubUnitDropdown = function (optgroup) {
 			$("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
 			break;
 	}
-	console.log("Done");
 };
 //calculate total + vat
 $.fn.CalculateTotalPlusVat = function () {
-	console.log("calculate total plus vat");
 	var $exchangeRate = $("#Request_ExchangeRate").val();
-	console.log("$exchangeRate: " + $exchangeRate);
 	var vatInShekel = $("#vatInShekel").val();
-	console.log("vatInShekel:" + vatInShekel);
 	var sumShekel = $("#sumShekel").val();
-	console.log("sumShekel: " + sumShekel);
 	var $sumPlusVatShekel = parseInt(sumShekel) + parseInt(vatInShekel);
-	console.log("$sumPlusVatShekel: " + $sumPlusVatShekel);
 	$('input[name="SumPlusVat-Shekel"]').val($sumPlusVatShekel);
 	//IS THIS THE BEST WAY OF DOING IT OR SHOULD I CONVERT THE INPUT I JUST DID??
 	var vatInDollars = vatInShekel / $exchangeRate;
-	console.log("vatInShekel: " + vatInShekel);
 	var $sumPlusVatDollars = parseInt($("#Request_Cost").val()) + parseInt(vatInDollars);
-	console.log("$sumPlusVatDollars: " + $sumPlusVatDollars);
 	$('input[name="SumPlusVat-Dollar"]').val($sumPlusVatDollars);
-	console.log("Done");
 };
 //enable or disable sumdollars and sumshekel
 $.fn.EnableSumDollarsOrShekel = function () {
-	console.log("enable or disable sumdollars and sumshekel");
 	var currencyType = $("#currency").val();
 	switch (currencyType) {
 		case "dollar":
@@ -357,11 +335,9 @@ $.fn.EnableSumDollarsOrShekel = function () {
 			$("#Request_Cost").prop("disabled", true);
 			break;
 	}
-	console.log("Done");
 }
 //change sumDollars and sumSHekel
 $.fn.ChangeSumDollarsAndSumShekel = function () {
-	console.log("changing sumdollars and sumshekel");
 	var $exchangeRate = $("#Request_ExchangeRate").val();
 	if ($("#Request_Cost").prop("disabled")) {
 		console.log("sum dollars disabled");
@@ -370,15 +346,23 @@ $.fn.ChangeSumDollarsAndSumShekel = function () {
 		$('input[name="sumDollars"]').val($sumDollars);
 	}
 	else if ($("#sumShekel").prop("disabled")) {
-		console.log("sum shekel disabled");
+		console.log("sum shekel disabled and going into the function");
 		var $sumDollars = $("#Request_Cost").val();
 		var $sumShekel = $sumDollars * $exchangeRate;
+		$sumShekelsInputBox = $('input[name="sumShekel"]');
+		console.log("$sumShekel: " + $sumShekel);
 		$('input[name="sumShekel"]').val($sumShekel);
+		//$.fn.ShowResults($sumShekelsInputBox, $sumShekel);
+		//$('input[name="sumShekel"]').val($sumShekel);
 	}
 	else {
 		console.log("oops none are disabled");
 	}
-	console.log("done!");
+}
+
+$.fn.ShowResults = function ($inputBox, $value) {
+	var theResult = isFinite($value) && $value || "";
+	$inputBox.val(theResult);
 }
 
 
