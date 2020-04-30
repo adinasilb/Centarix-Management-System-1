@@ -5,14 +5,21 @@
         Html.DropDownListFor()
     }*@
 
-
+@{ 
+    //instantiated this with -1 and not 0 because it was only letting me increment it on top of the form group and not below (for some wierd reason)
+    var i = -1;
+} 
 @foreach (var item in Model.LocationTypes)
 {
+    i++;
     <div class="form-group">
-        @*<input asp-for="Model.LocationInstances[1]" />*@
         @Html.DisplayFor(modelItem => item.LocationTypeName)
+        <br />
+        <label asp-for="LocationInstances[i].Height" class="control-label"></label>
+        <input asp-for="LocationInstances[i].Height" class="form-control" />
+        <label asp-for="LocationInstances[i].Width" class="control-label"></label>
+        <input asp-for="LocationInstances[i].Width" class="form-control" />
     </div>
-    @*<td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
-    <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName)</td>*@
-
+    
+    
 }

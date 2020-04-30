@@ -40,7 +40,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(addLocationViewModel);
         }
         [HttpPost]
-        public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel)
+        public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel, SubLocationViewModel subLocationViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -146,6 +146,11 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             subLocationViewModel.LocationTypes = listOfChildrenTypes;
+            subLocationViewModel.LocationInstances = new List<LocationInstance>();
+            foreach (var item in subLocationViewModel.LocationTypes)
+            {
+                subLocationViewModel.LocationInstances.Add(new LocationInstance());
+            }
             if (AppUtility.IsAjaxRequest(Request))
             {
                 return PartialView(subLocationViewModel);

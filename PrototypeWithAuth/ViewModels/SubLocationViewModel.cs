@@ -9,5 +9,6 @@ namespace PrototypeWithAuth.ViewModels
     public class SubLocationViewModel
     {
         public IEnumerable<LocationType> LocationTypes { get; set; }
+        public List<LocationInstance> LocationInstances { get; set; }
     }
 }
