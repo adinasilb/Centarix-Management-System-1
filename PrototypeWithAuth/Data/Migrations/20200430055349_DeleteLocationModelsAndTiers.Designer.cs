@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200430055349_DeleteLocationModelsAndTiers")]
+    partial class DeleteLocationModelsAndTiers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -279,65 +281,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("PaymentTypeID");
 
                     b.ToTable("CompanyAccounts");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
-                {
-                    b.Property<int>("LocationInstanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Height")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocationInstanceName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("LocationInstanceParentID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LocationTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Width")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationInstanceID");
-
-                    b.HasIndex("LocationInstanceParentID");
-
-                    b.HasIndex("LocationTypeID");
-
-                    b.ToTable("LocationInstances");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationType", b =>
-                {
-                    b.Property<int>("LocationTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Depth")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LocationTypeChildID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocationTypeName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("LocationTypeParentID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationTypeID");
-
-                    b.HasIndex("LocationTypeChildID");
-
-                    b.HasIndex("LocationTypeParentID");
-
-                    b.ToTable("LocationTypes");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -1095,33 +1038,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("PaymentTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationInstance", "LocationInstanceParent")
-                        .WithMany()
-                        .HasForeignKey("LocationInstanceParentID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.LocationType", "LocationType")
-                        .WithMany()
-                        .HasForeignKey("LocationTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationType", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationType", "LocationTypeChild")
-                        .WithMany()
-                        .HasForeignKey("LocationTypeChildID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.LocationType", "LocationTypeParent")
-                        .WithMany()
-                        .HasForeignKey("LocationTypeParentID")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>

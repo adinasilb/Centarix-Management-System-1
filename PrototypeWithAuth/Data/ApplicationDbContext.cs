@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
-using PrototypeWithAuth.Models.LocationsTierInstantiation;
+
 
 
 namespace PrototypeWithAuth.Data
@@ -21,18 +21,8 @@ namespace PrototypeWithAuth.Data
 
 
         }
-        public DbSet<LocationsTier1Instance> LocationsTier1Instance { get; set; }
-        public DbSet<LocationsTier2Instance> LocationsTier2Instance { get; set; }
-        public DbSet<LocationsTier3Instance> LocationsTier3Instance { get; set; }
-        public DbSet<LocationsTier4Instance> LocationsTier4Instance { get; set; }
-        public DbSet<LocationsTier5Instance> LocationsTier5Instance { get; set; }
-        public DbSet<LocationsTier6Instance> LocationsTier6Instance { get; set; }
-        public DbSet<LocationsTier1Model> LocationsTier1Models { get; set; }
-        public DbSet<LocationsTier2Model> LocationsTier2Models { get; set; }
-        public DbSet<LocationsTier3Model> LocationsTier3Models { get; set; }
-        public DbSet<LocationsTier4Model> LocationsTier4Models { get; set; }
-        public DbSet<LocationsTier5Model> LocationsTier5Models { get; set; }
-        public DbSet<LocationsTier6Model> LocationsTier6Models { get; set; }
+        public DbSet<LocationInstance> LocationInstances { get; set; }
+        public DbSet<LocationType> LocationTypes { get; set; }
         public DbSet<CompanyAccount> CompanyAccounts { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
@@ -50,9 +40,28 @@ namespace PrototypeWithAuth.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //set locationInstances to have self referncing fk
+            modelBuilder.Entity<LocationInstance>()
+                .HasOne(li => li.LocationInstanceParent)
+                .WithMany()
+                .HasForeignKey(lip => lip.LocationInstanceParentID);
+
+
+            //set locationTypes to have self referncing fks
+            modelBuilder.Entity<LocationType>()
+                .HasOne(lt => lt.LocationTypeParent)
+                .WithMany()
+                .HasForeignKey(ltp => ltp.LocationTypeParentID);
+
+            modelBuilder.Entity<LocationType>()
+               .HasOne(lt => lt.LocationTypeChild)
+               .WithMany()
+               .HasForeignKey(ltc => ltc.LocationTypeChildID);
+
+
+
             // configures one-to-many relationship between Inventory and InventorySubcategories
-            
-           
             modelBuilder.Entity<ProductSubcategory>()
             .HasOne<ParentCategory>(ps => ps.ParentCategory)
             .WithMany(pc => pc.ProductSubcategories)

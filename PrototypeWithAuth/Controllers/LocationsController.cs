@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+
 using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
@@ -23,24 +24,47 @@ namespace PrototypeWithAuth.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<LocationInstance> locationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth == 0);
+            return View(locationInstances);
         }
         [HttpGet]
         public IActionResult AddLocation()
         {
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel
             {
-                locationsTier1Models = _context.LocationsTier1Models
+                LocationTypesDepthOfZero = _context.LocationTypes.Where(lt => lt.Depth == 0)
             };
-
 
             return PartialView(addLocationViewModel);
         }
         [HttpPost]
-        public IActionResult AddLocation(AddLocationViewModel addLocationViewModel)
+        public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel)
         {
+            if (ModelState.IsValid)
+            {
+
+                _context.Add(addLocationViewModel.LocationInstance);
+                _context.SaveChanges();
+                //for now all redirects are outside if, but realy error should be outside if and only redirect if in if-statment
+            }
             return RedirectToAction("Index");
         }
+        //[HttpGet]
+        //public IActionResult SubLocation(LocationsTier1Model locationsTier1Model)
+        //{
+        //    SubLocationViewModel subLocationViewModel = new SubLocationViewModel
+        //    {
+        //        locationsTier2Models = _context.LocationsTier2Models.Where(lt2 => lt2.LocationsTier1ModelID == locationsTier1Model.LocationsTier1ModelID),
+
+
+        //    };
+
+        //    subLocationViewModel.locationsTier3Models = _context.LocationsTier3Models.Where(lt3 => lt3.LocationsTier2ModelID == subLocationViewModel.locationsTier2Models.First().LocationsTier2ModelID);
+        //    subLocationViewModel.locationsTier4Models = _context.LocationsTier4Models.Where(lt4 => lt4.LocationsTier3ModelID == subLocationViewModel.locationsTier3Models.First().LocationsTier3ModelID);
+        //    subLocationViewModel.locationsTier5Models = _context.LocationsTier5Models.Where(lt5 => lt5.LocationsTier4ModelID == subLocationViewModel.locationsTier4Models.First().LocationsTier4ModelID);
+        //    subLocationViewModel.locationsTier6Models = _context.LocationsTier6Models.Where(lt6 => lt6.LocationsTier5ModelID == subLocationViewModel.locationsTier5Models.First().LocationsTier5ModelID);
+        //    return PartialView(subLocationViewModel);
+        //}
 
         [HttpGet]
         public IActionResult AddLocationType()
@@ -56,77 +80,68 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public IActionResult AddLocationType(AddLocationTypeViewModel addLocationTypeViewModel)
         {
-            int foriegnKey = 0; //retain primary key to be a foriegn key for next model
-            for (int i = 0; i < addLocationTypeViewModel.Sublocations.Count; i++) 
+            int foriegnKeyParent = 0; //retain primary key to be a foriegn key for next model
+            
+            for (int i = 0; i < addLocationTypeViewModel.Sublocations.Count; i++)
             {
-                switch (i)
+                if (i == 0)
                 {
-                    case 0:
-                        LocationsTier1Model locationsTier1Model = new LocationsTier1Model();
-                        locationsTier1Model.LocationsTier1ModelDescription = addLocationTypeViewModel.Sublocations[i];
-                        locationsTier1Model.LocationsTier1ModelAbbreviation = addLocationTypeViewModel.Sublocations[i].Substring(0,1);
-                        _context.Add(locationsTier1Model);
-                        _context.SaveChanges();
-                        var ltm = _context.LocationsTier1Models.Where(m => m.LocationsTier1ModelDescription == addLocationTypeViewModel.Sublocations[i]).FirstOrDefault();
-                        foriegnKey = ltm.LocationsTier1ModelID;
-                            break;
-                    case 1:
-                        LocationsTier2Model locationsTier2Model = new LocationsTier2Model();
-                        locationsTier2Model.LocationsTier2ModelDescription = addLocationTypeViewModel.Sublocations[i];
-                        locationsTier2Model.LocationsTier2ModelAbbreviation = addLocationTypeViewModel.Sublocations[i].Substring(0, 1);
-                        locationsTier2Model.LocationsTier1ModelID = foriegnKey;
-                        _context.Add(locationsTier2Model);
-                        _context.SaveChanges();
-                        var ltm2 = _context.LocationsTier2Models.Where(m => m.LocationsTier2ModelDescription == addLocationTypeViewModel.Sublocations[i]).FirstOrDefault();
-                        foriegnKey = ltm2.LocationsTier2ModelID;
-                        break;
-                    case 2:
-                        LocationsTier3Model locationsTier3Model = new LocationsTier3Model();
-                        locationsTier3Model.LocationsTier3ModelDescription = addLocationTypeViewModel.Sublocations[i];
-                        locationsTier3Model.LocationsTier3ModelAbbreviation = addLocationTypeViewModel.Sublocations[i].Substring(0, 1);
-                        locationsTier3Model.LocationsTier2ModelID = foriegnKey;
-                        _context.Add(locationsTier3Model);
-                        _context.SaveChanges();
-                        var ltm3 = _context.LocationsTier3Models.Where(m => m.LocationsTier3ModelDescription == addLocationTypeViewModel.Sublocations[i]).FirstOrDefault();
-                        foriegnKey = ltm3.LocationsTier3ModelID;
-                        break;
-                    case 3:
-                        LocationsTier4Model locationsTier4Model = new LocationsTier4Model();
-                        locationsTier4Model.LocationsTier4ModelDescription = addLocationTypeViewModel.Sublocations[i];
-                        locationsTier4Model.LocationsTier4ModelAbbreviation = addLocationTypeViewModel.Sublocations[i].Substring(0, 1);
-                        locationsTier4Model.LocationsTier3ModelID = foriegnKey;
-                        _context.Add(locationsTier4Model);
-                        _context.SaveChanges();
-                        var ltm4 = _context.LocationsTier4Models.Where(m => m.LocationsTier4ModelDescription == addLocationTypeViewModel.Sublocations[i]).FirstOrDefault();
-                        foriegnKey = ltm4.LocationsTier4ModelID;
-                        break;
-                    case 4:
-                        LocationsTier5Model locationsTier5Model = new LocationsTier5Model();
-                        locationsTier5Model.LocationsTier5ModelDescription = addLocationTypeViewModel.Sublocations[i];
-                        locationsTier5Model.LocationsTier5ModelAbbreviation = addLocationTypeViewModel.Sublocations[i].Substring(0, 1);
-                        locationsTier5Model.LocationsTier5ModelID = foriegnKey;
-                        _context.Add(locationsTier5Model);
-                        _context.SaveChanges();
-                        var ltm5 = _context.LocationsTier5Models.Where(m => m.LocationsTier5ModelDescription == addLocationTypeViewModel.Sublocations[i]).FirstOrDefault();
-                        foriegnKey = ltm5.LocationsTier5ModelID;
-                        break;
-                    case 5:
-                        LocationsTier6Model locationsTier6Model = new LocationsTier6Model();
-                        locationsTier6Model.LocationsTier6ModelDescription = addLocationTypeViewModel.Sublocations[i];
-                        locationsTier6Model.LocationsTier6ModelAbbreviation = addLocationTypeViewModel.Sublocations[i].Substring(0, 1);
-                        locationsTier6Model.LocationsTier5ModelID = foriegnKey;
-                        _context.Add(locationsTier6Model);
-                        _context.SaveChanges();
-                        var ltm6 = _context.LocationsTier6Models.Where(m => m.LocationsTier6ModelDescription == addLocationTypeViewModel.Sublocations[i]).FirstOrDefault();
-                        foriegnKey = ltm6.LocationsTier6ModelID;
-                        break;
-
-
-
+                    var listOfLocationNames = _context.LocationTypes.Where(lt => lt.LocationTypeName == addLocationTypeViewModel.Sublocations[0]).Where(lt => lt.Depth == 0).ToList();
+                    if (listOfLocationNames.Count > 0 )
+                    {
+                        AddLocationTypeViewModel addLocationTypeViewModelErrorDoubleName = new AddLocationTypeViewModel();
+                        return View(addLocationTypeViewModelErrorDoubleName);
+                    }
                 }
+
+                LocationType locationType = new LocationType()
+                {
+                    LocationTypeName = addLocationTypeViewModel.Sublocations[i],
+                    Depth = i
+                };
                 
-            }
+                if (foriegnKeyParent > 0)
+                {
+                    locationType.LocationTypeParentID = foriegnKeyParent;
+                }
+                _context.Add(locationType);
+                _context.SaveChanges();
+                if (foriegnKeyParent > 0)
+                {
+                    var prevRecord = _context.LocationTypes.Where(pr => pr.LocationTypeID == foriegnKeyParent).FirstOrDefault();
+                    prevRecord.LocationTypeChildID = locationType.LocationTypeID;
+                    _context.Update(locationType);
+                    _context.SaveChanges();
+                }
+                foriegnKeyParent = locationType.LocationTypeID;
+
+            };
+
+
+
             return RedirectToAction("Index");
+        }
+
+        [HttpGet] //send a json to that the subcategory list is filered
+        public JsonResult GetChildrenTypes(int LocationTypeID)
+        {
+            bool go = true;
+            List<LocationType> listOfChildrenTypes = new List<LocationType>();
+            while (go)
+            {
+                var currentRecord = _context.LocationTypes.Where(lt => lt.LocationTypeParentID == LocationTypeID).FirstOrDefault();
+                if (currentRecord != null)
+                {
+                    listOfChildrenTypes.Add(currentRecord);
+                    LocationTypeID = currentRecord.LocationTypeID;
+                }
+                else
+                {
+                    go = false;
+                }
+            }
+            return Json(listOfChildrenTypes);
+
         }
 
 

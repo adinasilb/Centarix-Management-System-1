@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<LocationInstance>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/ManageLocationView.cshtml";
@@ -12,7 +12,31 @@
 <div class="row">
     <div class="col-md-6 border">
         <br />
-        List Placeholder
+
+        <table class="table table-sm">
+            <thead>
+                <tr>
+
+                    <th>
+                       @Html.DisplayNameFor(item => item.FirstOrDefault().LocationInstanceName)
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LocationInstanceName)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+
+        </table>
+
     </div>
     <div class="col-md-6 border">
         <button class="btn btn-block">Zoom In</button>
