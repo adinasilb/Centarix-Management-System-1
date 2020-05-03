@@ -487,7 +487,7 @@ $("#LocationInstance_LocationTypeID").change(function () {
 $(".load-sublocation-view").click(function () {
 	var myDiv = $(".colTwoSublocations");
 	var parentId = $(this).val();
-	console.log("selectedId: " + selectedId);
+	console.log("about to call ajax with a parentid of: " + parentId);
 	$.ajax({
 		//IMPORTANT: ADD IN THE ID
 		url: "/Locations/SublocationIndex/?parentId=" + parentId,

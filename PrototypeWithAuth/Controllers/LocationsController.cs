@@ -53,7 +53,7 @@ namespace PrototypeWithAuth.Controllers
                     go = false;
                 }
             }
-            return PartialView();
+            return PartialView(sublocationInstances);
         }
 
         [HttpGet]
