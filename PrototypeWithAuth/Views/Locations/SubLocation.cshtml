@@ -1,25 +1,25 @@
 ﻿@model PrototypeWithAuth.ViewModels.SubLocationViewModel
 
-@*@if (Model.locationsTier2Models != null)
-    {
-        Html.DropDownListFor()
-    }*@
-
-@{ 
-    //instantiated this with -1 and not 0 because it was only letting me increment it on top of the form group and not below (for some wierd reason)
-    var i = -1;
-} 
+@{
+    var i = 0;
+}
 @foreach (var item in Model.LocationTypes)
+
 {
-    i++;
-    <div class="form-group">
+    <div class=" form-group">
         @Html.DisplayFor(modelItem => item.LocationTypeName)
         <br />
         <label asp-for="LocationInstances[i].Height" class="control-label"></label>
-        <input asp-for="LocationInstances[i].Height" class="form-control" />
+        <input asp-for="LocationInstances[i].Height" class=" form-control" />
+
         <label asp-for="LocationInstances[i].Width" class="control-label"></label>
         <input asp-for="LocationInstances[i].Width" class="form-control" />
+       
+        <input asp-for="LocationInstances[i].LocationTypeID" class=" form-control" value="@item.LocationTypeID" type="hidden" />
+        @*<input id="LocationInstances_0__LocationTypeID" name="LocationInstances[0].LocationTypeID" type="hidden" value=@item.LocationTypeID />*@
+
+        @*@Html.HiddenFor(m => m.LocationInstances[i].LocationTypeID, new { Value = item.LocationTypeID })*@
     </div>
-    
-    
+    i++;
+
 }

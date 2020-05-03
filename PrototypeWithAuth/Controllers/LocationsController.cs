@@ -23,10 +23,16 @@ namespace PrototypeWithAuth.Controllers
         {
             _context = context;
         }
+        [HttpGet]
         public IActionResult Index()
         {
-            IEnumerable<LocationInstance> locationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth == 0);
-            return View(locationInstances);
+            LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
+            {
+                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0),
+                SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0)
+            };
+            
+            return View(locationIndexViewModel);
         }
         [HttpGet]
         public IActionResult AddLocation()
@@ -34,42 +40,34 @@ namespace PrototypeWithAuth.Controllers
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel
             {
                 LocationTypesDepthOfZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
-                LocationInstances = new List<LocationInstance>()
+                LocationInstance = new LocationInstance()
             };
-            addLocationViewModel.LocationInstances.Add(new LocationInstance());
+            
             return PartialView(addLocationViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel, SubLocationViewModel subLocationViewModel)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) //make sure this allows for sublocations to be binded
             {
-                foreach(var item in addLocationViewModel.LocationInstances)
-                {
+                
                     //add reference to parent
-                    _context.Add(item);
-                }
+                _context.Add(addLocationViewModel.LocationInstance);
                 _context.SaveChanges();
+                int parentLocationID = addLocationViewModel.LocationInstance.LocationInstanceID;
+                foreach ( var sublocationInstance in subLocationViewModel.LocationInstances) 
+                {
+                    sublocationInstance.LocationInstanceParentID = parentLocationID;
+                    _context.Add(sublocationInstance);
+                    _context.SaveChanges();
+                    parentLocationID = sublocationInstance.LocationInstanceID;
+                }
+              
                 //for now all redirects are outside if, but realy error should be outside if and only redirect if in if-statment
             }
             return RedirectToAction("Index");
         }
-        //[HttpGet]
-        //public IActionResult SubLocation(LocationsTier1Model locationsTier1Model)
-        //{
-        //    SubLocationViewModel subLocationViewModel = new SubLocationViewModel
-        //    {
-        //        locationsTier2Models = _context.LocationsTier2Models.Where(lt2 => lt2.LocationsTier1ModelID == locationsTier1Model.LocationsTier1ModelID),
-
-
-        //    };
-
-        //    subLocationViewModel.locationsTier3Models = _context.LocationsTier3Models.Where(lt3 => lt3.LocationsTier2ModelID == subLocationViewModel.locationsTier2Models.First().LocationsTier2ModelID);
-        //    subLocationViewModel.locationsTier4Models = _context.LocationsTier4Models.Where(lt4 => lt4.LocationsTier3ModelID == subLocationViewModel.locationsTier3Models.First().LocationsTier3ModelID);
-        //    subLocationViewModel.locationsTier5Models = _context.LocationsTier5Models.Where(lt5 => lt5.LocationsTier4ModelID == subLocationViewModel.locationsTier4Models.First().LocationsTier4ModelID);
-        //    subLocationViewModel.locationsTier6Models = _context.LocationsTier6Models.Where(lt6 => lt6.LocationsTier5ModelID == subLocationViewModel.locationsTier5Models.First().LocationsTier5ModelID);
-        //    return PartialView(subLocationViewModel);
-        //}
+       
 
         [HttpGet]
         public IActionResult AddLocationType()
@@ -161,29 +159,6 @@ namespace PrototypeWithAuth.Controllers
             }
             //return View();
         }
-
-        //[HttpGet] //send a json to that the subcategory list is filered
-        //public JsonResult GetChildrenTypes(int LocationTypeID)
-        //{
-        //    bool go = true;
-        //    List<LocationType> listOfChildrenTypes = new List<LocationType>();
-        //    while (go)
-        //    {
-        //        var currentRecord = _context.LocationTypes.Where(lt => lt.LocationTypeParentID == LocationTypeID).FirstOrDefault();
-        //        if (currentRecord != null)
-        //        {
-        //            listOfChildrenTypes.Add(currentRecord);
-        //            LocationTypeID = currentRecord.LocationTypeID;
-        //        }
-        //        else
-        //        {
-        //            go = false;
-        //        }
-        //    }
-        //    return Json(listOfChildrenTypes);
-
-        //}
-
 
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LocationInstance>
+﻿@model PrototypeWithAuth.ViewModels.LocationIndexViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/ManageLocationView.cshtml";
@@ -19,20 +19,52 @@
                 <tr>
 
                     <th>
-                        @Html.DisplayNameFor(item => item.FirstOrDefault().LocationInstanceName)
+                        @Html.DisplayNameFor(item => item.LocationsDepthOfZero.FirstOrDefault().LocationInstanceName)
 
                     </th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+
+                @foreach (var item in Model.LocationsDepthOfZero)
                 {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.LocationInstanceName)
+                            @{
+                                bool hasChildLocation = true;
+                                while (hasChildLocation)
+                                {
+                                    bool childLocationFound = false;
+                                    foreach (var subLocationItem in Model.SubLocationInstances)
+                                    {
+                                        if (subLocationItem.LocationInstanceParentID == item.LocationInstanceID)
+                                        {
+                                            childLocationFound = true;
+                                            <ul>
+                                                <li>
+                                                    @Html.DisplayFor(modelSubLocationItem => subLocationItem.LocationInstanceName)
+                                                </li>
+                                            </ul>
+                                            continue; //make sure this breaks out of just foreach
+                                        }
+
+
+                                    }
+                                    if (childLocationFound == false)
+                                        hasChildLocation = false;
+
+                                };
+
+
+                            }
+
+
                         </td>
                     </tr>
-                }
+                 }
+
+
             </tbody>
 
 
