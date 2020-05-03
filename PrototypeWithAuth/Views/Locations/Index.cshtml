@@ -30,12 +30,7 @@
                 {
                 <tr>
                     <td>
-                        @Html.ActionLink(
-                            linkText: item.LocationInstanceName,
-                            actionName: "Details",
-                            //continue on making details a partial view
-                            routeValues: new { id = item.LocationInstanceID }
-                        )
+                        <button class="btn btn-block load-sublocation-view" value="@item.LocationInstanceID">@item.LocationInstanceName</button>
                     </td>
                     
                 </tr>
@@ -48,7 +43,7 @@
         </table>
 
     </div>
-    <div class="col-md-3 border colTwo">
+    <div class="col-md-3 border colTwoSublocations">
 
     </div>
     <div class="col-md-6 border">

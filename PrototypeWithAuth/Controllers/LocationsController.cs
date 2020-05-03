@@ -34,6 +34,28 @@ namespace PrototypeWithAuth.Controllers
             
             return View(locationIndexViewModel);
         }
+
+        [HttpGet]
+        public IActionResult SublocationIndex(int parentId)
+        {
+            List<LocationInstance> sublocationInstances = new List<LocationInstance>();
+            bool go = true;
+            while (go)
+            {
+                LocationInstance location = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentId).FirstOrDefault();
+                if (location != null)
+                {
+                    sublocationInstances.Add(location);
+                    parentId = location.LocationInstanceID;
+                }
+                else
+                {
+                    go = false;
+                }
+            }
+            return PartialView();
+        }
+
         [HttpGet]
         public IActionResult AddLocation()
         {

@@ -484,6 +484,18 @@ $("#LocationInstance_LocationTypeID").change(function () {
 	//})
 //})
 
-$(".depthZeroInstance").hover(function () {
-	$(".depthZeroInstance").addClass("bg-dark");
+$(".load-sublocation-view").click(function () {
+	var myDiv = $(".colTwoSublocations");
+	var parentId = $(this).val();
+	console.log("selectedId: " + selectedId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/SublocationIndex/?parentId=" + parentId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {
+			this.html(result);
+		}
+	});
 });
