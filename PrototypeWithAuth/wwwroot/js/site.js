@@ -483,3 +483,7 @@ $("#LocationInstance_LocationTypeID").change(function () {
 	//	}
 	//})
 //})
+
+$(".depthZeroInstance").hover(function () {
+	$(".depthZeroInstance").addClass("bg-dark");
+});
