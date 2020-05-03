@@ -11,7 +11,7 @@
 </div>
 <br />
 <div class="row">
-    <div class="col-md-6 border">
+    <div class="col-md-3 border colOne">
         <br />
 
         <table class="table table-sm">
@@ -28,46 +28,22 @@
 
                 @foreach (var item in Model.LocationsDepthOfZero)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.LocationInstanceName)
-                            @{
-                                bool hasChildLocation = true;
-                                while (hasChildLocation)
-                                {
-                                    bool childLocationFound = false;
-                                    foreach (var subLocationItem in Model.SubLocationInstances)
-                                    {
-                                        if (subLocationItem.LocationInstanceParentID == item.LocationInstanceID/*(subLocationItem.LocationInstanceID - 1)*/)
-                                        {
-                                            <ul>
-                                                <li>
-                                                    @Html.DisplayFor(modelSubLocationItem => subLocationItem.LocationInstanceName)
-                                                </li>
-                                            </ul>
 
-                                        continue;//make sure this breaks out of just foreach
-                                    }
-
-
-
-                                }
-                                if (childLocationFound == false)
-                                    hasChildLocation = false;
-                                };
-
-                                }
-
-
-                        </td>
-                    </tr>
-                 }
-
+                <tr>
+                    <td>
+                        <button class="btn btn-block load-sublocation-view" value="@item.LocationInstanceID">@item.LocationInstanceName</button>
+                    </td>
+                    
+                </tr>
+                }
 
             </tbody>
 
 
         </table>
+
+    </div>
+    <div class="col-md-3 border colTwoSublocations">
 
     </div>
     <div class="col-md-6 border">

@@ -73,8 +73,10 @@ namespace PrototypeWithAuth.Controllers
         {
             if (ModelState.IsValid) //make sure this allows for sublocations to be binded
             {
-                
-                    //add reference to parent
+
+                //add reference to parent
+                addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
+                addLocationViewModel.LocationInstance.Width = subLocationViewModel.LocationInstances[0].Width;
                 _context.Add(addLocationViewModel.LocationInstance);
                 _context.SaveChanges();
                 int parentLocationID = addLocationViewModel.LocationInstance.LocationInstanceID;
