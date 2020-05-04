@@ -12,10 +12,13 @@ namespace PrototypeWithAuth.Models
         public int LocationInstanceID { get; set; }
         public int LocationTypeID { get; set; }
         public LocationType LocationType { get; set; }
+        public int? RequestID { get; set; }
+        public Request Request { get; set; }
         public int? LocationInstanceParentID { get; set; }
         public LocationInstance LocationInstanceParent { get; set; }
         public int Height { get; set; }
         public int Width { get; set; }
         public string LocationInstanceName { get; set; }
+        public string Place { get; set; }
     }
 }
