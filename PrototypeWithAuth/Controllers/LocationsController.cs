@@ -69,6 +69,42 @@ namespace PrototypeWithAuth.Controllers
 
             return PartialView(addLocationViewModel);
         }
+
+        [HttpGet]
+        public IActionResult SubLocation(int ParentLocationTypeID)
+        {
+            SubLocationViewModel subLocationViewModel = new SubLocationViewModel(); bool go = true;
+            List<LocationType> listOfChildrenTypes = new List<LocationType>();
+            while (go)
+            {
+                var currentRecord = _context.LocationTypes.Where(lt => lt.LocationTypeParentID == ParentLocationTypeID).FirstOrDefault();
+                if (currentRecord != null)
+                {
+                    listOfChildrenTypes.Add(currentRecord);
+                    ParentLocationTypeID = currentRecord.LocationTypeID;
+                }
+                else
+                {
+                    go = false;
+                }
+            }
+            subLocationViewModel.LocationTypes = listOfChildrenTypes;
+            subLocationViewModel.LocationInstances = new List<LocationInstance>();
+            foreach (var item in subLocationViewModel.LocationTypes)
+            {
+                subLocationViewModel.LocationInstances.Add(new LocationInstance());
+            }
+            if (AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView(subLocationViewModel);
+            }
+            else
+            {
+                return View(subLocationViewModel);
+            }
+            //return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel, SubLocationViewModel subLocationViewModel)
         {
@@ -95,7 +131,7 @@ namespace PrototypeWithAuth.Controllers
 
                 for(int z=0; z<subLocationViewModel.LocationInstances.Count; z++)/*var locationInstance in subLocationViewModel.LocationInstances*/ //for each level in the sublevels
                 {
-                    string typeName = nameAbbreviation + _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[z].LocationTypeID)
+                    string typeName = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[z].LocationTypeID)
                         .FirstOrDefault().LocationTypeName.Substring(0, 1);
                     string place = "";
                     int parentId = 0;
@@ -106,10 +142,12 @@ namespace PrototypeWithAuth.Controllers
                     if (first)
                     {
                         parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
+                        typeName = nameAbbreviation + typeName;
                     }
                     else
                     {
                         parentId = placeholderInstanceIds[z][0]; //get the first id in the list in the depth before
+                        typeName = nameAbbreviation + typeName; //NEEDS TO BE DONE BETTER
                     }
                     for (int x=0; x < subLocationViewModel.LocationInstances[z].Height; x++)
                     {
@@ -117,10 +155,21 @@ namespace PrototypeWithAuth.Controllers
                         for (int y=0; y < subLocationViewModel.LocationInstances[z].Width; y++)
                         {
                             //add number to place
-                            LocationInstance newSublocationInstance = new LocationInstance();
-                        //change the depth?? in an if statement if it finished the last one??
+                            string currentName = typeName + (x + y + 1).ToString(); //add number to the type x + y is the current number but is zero based so add one
+                            LocationInstance newSublocationInstance = new LocationInstance()
+                            {
+                                LocationInstanceName = currentName,
+                                LocationInstanceParentID = parentId,
+                                Height = height,
+                                Width = width
+                            };
+                            //_context.add(newSublocationInstance)
+                            //_context.sync();
+                            //add id and name to the lists
+                            //change the depth?? in an if statement if it finished the last one??
                         }
                     }
+                    //parent id = next parent id
                 }
 
                 //while (!completed)
@@ -270,41 +319,6 @@ namespace PrototypeWithAuth.Controllers
 
 
             return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public IActionResult SubLocation(int ParentLocationTypeID)
-        {
-            SubLocationViewModel subLocationViewModel = new SubLocationViewModel(); bool go = true;
-            List<LocationType> listOfChildrenTypes = new List<LocationType>();
-            while (go)
-            {
-                var currentRecord = _context.LocationTypes.Where(lt => lt.LocationTypeParentID == ParentLocationTypeID).FirstOrDefault();
-                if (currentRecord != null)
-                {
-                    listOfChildrenTypes.Add(currentRecord);
-                    ParentLocationTypeID = currentRecord.LocationTypeID;
-                }
-                else
-                {
-                    go = false;
-                }
-            }
-            subLocationViewModel.LocationTypes = listOfChildrenTypes;
-            subLocationViewModel.LocationInstances = new List<LocationInstance>();
-            foreach (var item in subLocationViewModel.LocationTypes)
-            {
-                subLocationViewModel.LocationInstances.Add(new LocationInstance());
-            }
-            if (AppUtility.IsAjaxRequest(Request))
-            {
-                return PartialView(subLocationViewModel);
-            }
-            else
-            {
-                return View(subLocationViewModel);
-            }
-            //return View();
         }
 
     }
