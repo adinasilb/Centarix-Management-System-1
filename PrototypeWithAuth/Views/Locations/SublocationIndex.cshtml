@@ -1,12 +1,22 @@
-﻿@model List<LocationInstance>
+﻿@model PrototypeWithAuth.ViewModels.SublocationIndexViewModel
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-
-@foreach(var locationInstance in Model)
+<script src="~/js/site.js" asp-append-version="true"></script>
+@if (Model.PrevLocationInstance != null)
 {
-    <span>@locationInstance.LocationInstanceName</span>
-        <br />
-    @*l.LocationInstanceName.ToString();*@
+    <button class="btn btn-block load-sublocation-view" value="@Model.PrevLocationInstance.LocationInstanceParentID">@Model.PrevLocationInstance.LocationInstanceName</button>
+    <hr />
 }
+<table class="table table-sm">
+    @foreach (var locationInstance in Model.SublocationInstances)
+    {
+        <tr>
+            <td>
+                <button class="btn btn-block load-sublocation-view" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
+            </td>
+        </tr>
+        @*l.LocationInstanceName.ToString();*@
+    }
+</table>

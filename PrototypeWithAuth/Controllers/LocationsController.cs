@@ -40,22 +40,40 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult SublocationIndex(int parentId)
         {
-            List<LocationInstance> sublocationInstances = new List<LocationInstance>();
-            bool go = true;
-            while (go)
+            SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
             {
-                LocationInstance location = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentId).FirstOrDefault();
-                if (location != null)
-                {
-                    sublocationInstances.Add(location);
-                    parentId = location.LocationInstanceID;
-                }
-                else
-                {
-                    go = false;
-                }
+                SublocationInstances = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentId)
+            };
+            //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
+            LocationInstance parentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentId).FirstOrDefault();
+            int depth = _context.LocationTypes.Where(x => x.LocationTypeID == parentLocationInstance.LocationTypeID).FirstOrDefault().Depth;
+            if (depth > 0)
+            {
+                sublocationIndexViewModel.PrevLocationInstance = parentLocationInstance;
             }
-            return PartialView(sublocationInstances);
+            //List<LocationInstance> sublocationInstances = new List<LocationInstance>();
+            //bool go = true;
+            //while (go)
+            //{
+            //    LocationInstance location = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentId).FirstOrDefault();
+            //    if (location != null)
+            //    {
+            //        sublocationInstances.Add(location);
+            //        parentId = location.LocationInstanceID;
+            //    }
+            //    else
+            //    {
+            //        go = false;
+            //    }
+            //}
+            return PartialView(sublocationIndexViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult VisualLocations(int VisualContainerId)
+        {
+            LocationInstance locationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault();
+            return PartialView(locationInstance);
         }
 
         [HttpGet]

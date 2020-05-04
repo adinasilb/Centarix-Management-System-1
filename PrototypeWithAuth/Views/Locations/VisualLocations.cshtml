@@ -1,0 +1,26 @@
+﻿@model LocationInstance
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+Name:
+@Model.LocationInstanceName
+
+Columns:
+@Model.Height
+
+Rows:
+@Model.Width
+
+<br />
+<table class="table table-sm border">
+    @for (int X = 0; X < Model.Height; X++)
+    {
+        <tr>
+            @for (int y = 0; y < Model.Width; y++)
+            {
+                <td class="border"><br /></td>
+            }
+        </tr>
+    }
+</table>

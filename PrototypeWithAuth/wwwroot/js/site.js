@@ -469,22 +469,46 @@ $("#LocationInstance_LocationTypeID").change(function () {
 	//	$("#loading").hide();
 	//});
 });
-	//.on("change", function (e) {
-	//e.preventDefault();
-	////show loading gif
-	////$("#loading").show();
-	//$.ajax({
-	//	url: this.action,
-	//	type: this.method,
-	//	data: $(this).serialize(), //getting a model and serializing it
-	//	success: function (data) {
-	//		$("#divSublocations").html(data); //passing the model into dvResults
-	//		//$("#loading").hide(); //hides the loading gif
-	//	}
-	//})
+//.on("change", function (e) {
+//e.preventDefault();
+////show loading gif
+////$("#loading").show();
+//$.ajax({
+//	url: this.action,
+//	type: this.method,
+//	data: $(this).serialize(), //getting a model and serializing it
+//	success: function (data) {
+//		$("#divSublocations").html(data); //passing the model into dvResults
+//		//$("#loading").hide(); //hides the loading gif
+//	}
+//})
 //})
 
+//loadSublocationView = function () {
+//	$(".load-sublocation-view").removeClass("bg-secondary");
+//	$(this).addClass("bg-secondary");
+//	var myDiv = $(".colTwoSublocations");
+//	//myDiv.empty();
+//	var parentId = $(this).val();
+//	console.log("2fx about to call ajax with a parentid of: " + parentId);
+//	$.ajax({
+//		//IMPORTANT: ADD IN THE ID
+//		url: "/Locations/SublocationIndex/?parentId=" + parentId,
+//		type: 'GET',
+//		cache: false,
+//		context: myDiv,
+//		success: function (result) {
+//			this.html(result);
+//		}
+//	});
+//}
+
 $(".load-sublocation-view").click(function () {
+	//add or remove the background class in col 1
+	$(".load-sublocation-view").removeClass("bg-secondary");
+	$(this).addClass("bg-secondary");
+
+	//fill up col 2 with the next one
 	var myDiv = $(".colTwoSublocations");
 	var parentId = $(this).val();
 	console.log("about to call ajax with a parentid of: " + parentId);
@@ -494,6 +518,20 @@ $(".load-sublocation-view").click(function () {
 		type: 'GET',
 		cache: false,
 		context: myDiv,
+		success: function (result) {
+			this.html(result);
+		}
+	});
+
+	//fill up col three with the visual
+	var visualDiv = $(".VisualBoxColumn");
+	var visualContainerId = $(this).val();
+	console.log("about to call ajax with a visual container id of: " + visualContainerId);
+	$.ajax({
+		url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
+		type: 'GET',
+		cache: false,
+		context: visualDiv,
 		success: function (result) {
 			this.html(result);
 		}
