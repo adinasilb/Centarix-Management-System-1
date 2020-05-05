@@ -276,6 +276,9 @@
 
                     //console.log("about to get set the hidden fors in the modal view to remember where the user was");
 
+                    if (TempData["TempPage"] != null) {
+                        $("#Page").val(parseInt(TempData["TempPage"]));
+                    }
                     $("#SubCategoryID").val(13);
 
                     //IN THE FUTURE: USE DATEPICKER (CODE BELOW- PARTIAL)
