@@ -12,16 +12,16 @@
 @*Need to add security here*@
 
 <div class="text-center">
-    <h6>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h6>
-    <div class="btn-group">
-        <button type="submit" class="button btn btn-outline-secondary">Protocols</button>
+    <h4>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h4>
+    <div class="btn-group mt-5">
+        <button type="submit" class="btn btn-success">Protocols</button>
         &nbsp;
-        @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-outline-secondary" })
+        @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-info ml-4" })
         &nbsp;
-        @Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn btn-outline-secondary" })
+        @Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn btn-primary ml-4" })
         &nbsp;
-        <button type="submit" class="button btn btn-outline-secondary">Biomarkers</button>
+        <button type="submit" class="btn btn-danger ml-4">Biomarkers</button>
         &nbsp;
-        @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-outline-secondary" })
+        @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-secondary ml-4" })
     </div>
 </div>

@@ -77,3 +77,23 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+/*Dani's added CSS */
+.login-field {
+    border: 1.5px solid black;
+    border-radius: 2px;
+    font-size:1.2em;
+    padding: 1.2em 1em;
+}
+
+.login-button {
+    padding: 5px 50px;
+    line-height: 120%;
+    font-size: 90%;
+    text-transform: uppercase;
+    border-radius: 2px;
+    font-weight:600;
+    background-color: #db2127;
+    color: white;
+    
+}
+
