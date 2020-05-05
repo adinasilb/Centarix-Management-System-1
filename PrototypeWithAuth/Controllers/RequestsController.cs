@@ -790,12 +790,12 @@ namespace PrototypeWithAuth.Controllers
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
-                    //return View(requestItemViewModel);
+                    return View(requestItemViewModel);
                 }
             }
             else
             {
-                //return View(requestItemViewModel);
+                return View(requestItemViewModel);
             }
             //return RedirectToAction("Index");
             return RedirectToAction("Index", new

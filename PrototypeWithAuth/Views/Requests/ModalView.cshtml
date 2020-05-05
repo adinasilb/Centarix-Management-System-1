@@ -70,12 +70,12 @@
 
             }
 
-            @Html.HiddenFor(model => model.SubCategoryID, tempPage);
-            @Html.HiddenFor(model => model.RequestStatusID, RequestStatusID);
-            @Html.HiddenFor(model => model.SubCategoryID, tempSubcategoryID);
-            @Html.HiddenFor(model => model.VendorID, tempVendorID);
-            @Html.HiddenFor(model => model.ApplicationUserID, tempApplicationUserID);
-            @Html.HiddenFor(model => model.PageType, tempPageType);
+            @Html.HiddenFor(model => model.SubCategoryID, tempPage)
+            @Html.HiddenFor(model => model.RequestStatusID, RequestStatusID)
+            @Html.HiddenFor(model => model.SubCategoryID, tempSubcategoryID)
+            @Html.HiddenFor(model => model.VendorID, tempVendorID)
+            @Html.HiddenFor(model => model.ApplicationUserID, tempApplicationUserID)
+            @Html.HiddenFor(model => model.PageType, tempPageType)
 
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
