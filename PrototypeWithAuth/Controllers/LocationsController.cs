@@ -207,9 +207,13 @@ namespace PrototypeWithAuth.Controllers
                         for (int x = 0; x < subLocationViewModel.LocationInstances[z].Height; x++)
                         {
                             //add letter to place
+                            int unicode = x + 65;
+                            char character = (char)unicode;
+                            place = character.ToString();
                             for (int y = 0; y < subLocationViewModel.LocationInstances[z].Width; y++)
                             {
                                 //add number to place
+                                string FullPlace = place + (y+1).ToString();
                                 string currentName = attachedName + (typeNumber).ToString(); //add number to the type x + y is the current number but is zero based so add one
                                 typeNumber++; //increment this
                                 LocationInstance newSublocationInstance = new LocationInstance()
@@ -218,8 +222,8 @@ namespace PrototypeWithAuth.Controllers
                                     LocationInstanceParentID = parentId,
                                     Height = height,
                                     Width = width,
-                                    LocationTypeID = typeId
-                                    //add in place
+                                    LocationTypeID = typeId,
+                                    Place = FullPlace 
                                 };
                                 _context.Add(newSublocationInstance);
                                 _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
