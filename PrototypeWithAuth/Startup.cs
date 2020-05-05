@@ -109,7 +109,7 @@ namespace PrototypeWithAuth
 
         }
 
-        // Seed database with new roles
+        //Seed database with new roles
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
@@ -127,7 +127,7 @@ namespace PrototypeWithAuth
                 }
             }
             var poweruser = new ApplicationUser();
-            poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+            poweruser = await UserManager.FindByEmailAsync("dani@gmail.com");
 
             await UserManager.AddToRoleAsync(poweruser, "Admin");
         }
