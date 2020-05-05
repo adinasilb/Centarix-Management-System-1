@@ -6,6 +6,7 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -27,5 +28,15 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
         public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
 
+
+
+
+        //The following properties are for remembering where you are on the request Index to follow through to the right page
+        public int? Page { get; set; }
+        public int RequestStatusID { get; set; }
+        public int SubCategoryID { get; set; }
+        public int VendorID { get; set; }
+        public string ApplicationUserID { get; set; }
+        public AppUtility.RequestPageTypeEnum PageType { get; set; }
     }
 }

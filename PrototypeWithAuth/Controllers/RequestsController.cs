@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Hosting;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -41,7 +42,9 @@ namespace PrototypeWithAuth.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
+        [HttpGet]
         // GET: Requests
+        //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
             //instantiate your list of requests to pass into the index
@@ -151,6 +154,24 @@ namespace PrototypeWithAuth.Controllers
             TempData["AmountReceived"] = receivedCount;
 
             TempData["SidebarTitle"] = SidebarTitle;
+
+
+            //TRY USING TEMP DATA TO REMEMBER WHERE THE PAGE IS
+
+            /*int?*/
+            TempData["TempPage"] = page;
+            /*int*/
+            TempData["TempRequestStatusID"] = RequestStatusID;
+            /*int*/
+            TempData["TempSubcategoryID"] = subcategoryID;
+            /*int*/
+            TempData["TempVendorID"] = vendorID;
+            /*string*/
+            TempData["TempApplicationUserID"] = applicationUserID;
+            /*AppUtility.RequestPageTypeEnum*/
+            TempData["TempPageType"] = PageType;
+            /*RequestsSearchViewModel?*/
+            //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
 
             //Getting the page that is going to be seen (if no page was specified it will be one)
             var pageNumber = page ?? 1;
@@ -296,79 +317,79 @@ namespace PrototypeWithAuth.Controllers
 
         //POST: Requests/Edit/5
         //This is not being used right now --> delete 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(RequestItemViewModel addNewItemViewModel)
-        {
-            //same logic as create controller
-            addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
-            addNewItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
-            addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
-            addNewItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(RequestItemViewModel addNewItemViewModel)
+        //{
+        //    //same logic as create controller
+        //    addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
+        //    addNewItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
+        //    addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+        //    addNewItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
 
-            addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
-            addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
-            addNewItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
+        //    addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
+        //    addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
+        //    addNewItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
 
-            var context = new ValidationContext(addNewItemViewModel.Request, null, null);
-            var results = new List<ValidationResult>();
-            if (Validator.TryValidateObject(addNewItemViewModel.Request, context, results, true))
-            {
-                try
-                {
-                    _context.Update(addNewItemViewModel.Request.Product);
-                    _context.Update(addNewItemViewModel.Request);
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    return await ModalView(addNewItemViewModel.Request.RequestID);
-                }
-            }
-            else
-            {
-                return await ModalView(addNewItemViewModel.Request.RequestID);
-            }
-            return RedirectToAction("Index");
-        }
+        //    var context = new ValidationContext(addNewItemViewModel.Request, null, null);
+        //    var results = new List<ValidationResult>();
+        //    if (Validator.TryValidateObject(addNewItemViewModel.Request, context, results, true))
+        //    {
+        //        try
+        //        {
+        //            _context.Update(addNewItemViewModel.Request.Product);
+        //            _context.Update(addNewItemViewModel.Request);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return await ModalView(addNewItemViewModel.Request.RequestID);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return await ModalView(addNewItemViewModel.Request.RequestID);
+        //    }
+        //    return RedirectToAction("Index");
+        //}
 
 
         // GET: Requests/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var request = await _context.Requests
-                .Include(r => r.ParentRequest.ApplicationUser)
-                .Include(r => r.Product)
-                .Include(r => r.RequestStatus)
-                .FirstOrDefaultAsync(m => m.RequestID == id);
-            if (request == null)
-            {
-                return NotFound();
-            }
+        //    var request = await _context.Requests
+        //        .Include(r => r.ParentRequest.ApplicationUser)
+        //        .Include(r => r.Product)
+        //        .Include(r => r.RequestStatus)
+        //        .FirstOrDefaultAsync(m => m.RequestID == id);
+        //    if (request == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(request);
-        }
+        //    return View(request);
+        //}
 
-        // POST: Requests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var request = await _context.Requests.FindAsync(id);
-            _context.Requests.Remove(request);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //// POST: Requests/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var request = await _context.Requests.FindAsync(id);
+        //    _context.Requests.Remove(request);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
-        private bool RequestExists(int id)
-        {
-            return _context.Requests.Any(e => e.RequestID == id);
-        }
+        //private bool RequestExists(int id)
+        //{
+        //    return _context.Requests.Any(e => e.RequestID == id);
+        //}
 
         /*
          * START MODAL VIEW COPY
@@ -646,6 +667,15 @@ namespace PrototypeWithAuth.Controllers
 
             //insert code here
             return RedirectToAction("Index");
+            //return RedirectToAction("Index", new
+            //{
+            //    page = requestItemViewModel.Page,
+            //    requestStatusID = requestItemViewModel.RequestStatusID,
+            //    subcategoryID = requestItemViewModel.SubCategoryID,
+            //    vendorID = requestItemViewModel.VendorID,
+            //    applicationUserID = requestItemViewModel.ApplicationUserID,
+            //    PageType = requestItemViewModel.PageType
+            //});
         }
 
         [HttpPost]
@@ -760,14 +790,23 @@ namespace PrototypeWithAuth.Controllers
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
-                    return View(requestItemViewModel);
+                    //return View(requestItemViewModel);
                 }
             }
             else
             {
-                return View(requestItemViewModel);
+                //return View(requestItemViewModel);
             }
-            return RedirectToAction("Index");
+            //return RedirectToAction("Index");
+            return RedirectToAction("Index", new
+            {
+                page = requestItemViewModel.Page,
+                requestStatusID = requestItemViewModel.RequestStatusID,
+                subcategoryID = requestItemViewModel.SubCategoryID,
+                vendorID = requestItemViewModel.VendorID,
+                applicationUserID = requestItemViewModel.ApplicationUserID,
+                PageType = requestItemViewModel.PageType
+            });
         }
 
 

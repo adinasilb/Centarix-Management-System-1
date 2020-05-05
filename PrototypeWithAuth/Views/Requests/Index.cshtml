@@ -16,6 +16,39 @@
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+    /*
+     * BEGIN REMEMBERING DATA
+     */
+    if (TempData["TempPage"] != null)
+    {
+        TempData["TempPage"] = TempData["TempPage"];
+    }
+    if (TempData["TempRequestStatusID"] != null)
+    {
+        TempData["TempRequestStatusID"] = TempData["TempRequestStatusID"];
+    }
+    if (TempData["TempSubcategoryID"] != null)
+    {
+        TempData["TempSubcategoryID"] = TempData["TempSubcategoryID"];
+    }
+    if (TempData["TempVendorID"] != null)
+    {
+        TempData["TempVendorID"] = TempData["TempVendorID"];
+    }
+    if (TempData["TempApplicationUserID"] != null)
+    {
+        TempData["TempApplicationUserID"] = TempData["TempApplicationUserID"];
+    }
+    if (TempData["TempPageType"] != null)
+    {
+        TempData["TempPageType"] = TempData["TempPageType"];
+    }
+    /*RequestsSearchViewModel?
+    TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;*/
+    /*
+     * BEGIN REMEMBERING DATA
+     * follow through on the modals these will be remembered on top
+     */
 
     bool search = false;
     if (TempData["Search"] != null)
@@ -101,19 +134,29 @@
 @if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
 {
     <div class="row">
-        <div class="col-md-12">
-            <ul class="list-inline">
-                <li class="list-inline-item nav-fill active">
-                    @Html.ActionLink(newButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = newActiveClass })
-                </li>
-                <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })
-                </li>
-                <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })
-                </li>
-            </ul>
-        </div>
+    <div class="col-md-12">
+        <ul class="list-inline">
+            <li class="list-inline-item nav-fill active">
+                @Html.ActionLink(newButtonText, "Index", "Requests", new
+                {
+                    @applicationUserID = applicationUserID,
+                    @vendorID = vendorID,
+                    @subcategoryID = subcategoryID,
+                    @RequestStatusID = 1,
+                    @PageType = AppUtility.RequestPageTypeEnum.Request
+            }, new
+                {
+                    @class = newActiveClass
+            })
+            </li>
+            <li class="list-inline-item nav-fill">
+                @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })
+            </li>
+            <li class="list-inline-item nav-fill">
+                @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })
+            </li>
+        </ul>
+    </div>
     </div>
 }
 <table class="table table-striped">
@@ -126,7 +169,7 @@
             @*Later on should have a better location...*@
             @if (Inventory)
             {
-                <th>@Html.DisplayNameFor(m => m[0].Product.LocationID)</th>
+                <th> @Html.DisplayNameFor(m => m[0].Product.LocationID) </th>
             }
             <th>@Html.DisplayNameFor(m => m[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
             <th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>
@@ -141,48 +184,53 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>Product Image</td>
-                <td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName)</td>
-                <td>Placeholder</td> @*Computed column?*@
-                @*Later on should have a better location...*@
-                @if (Inventory)
-                {
-                    <th>@Html.DisplayFor(m => m[0].Product.LocationID)</th>
-                }
-                <td>@Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription)</td>
-                <td>@Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName)</td>
-                <td>@Html.DisplayFor(modelItem => item.ParentRequest.OrderDate)</td>
-                @*here for testing purposes*@
-                <td>@Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusDescription)</td>
-                <td>
-                    @if (item.RequestStatusID == 1)
-                    {
-                        //this is a nested if b/c if user can't approve then i still don't want it to go the the else
-                        if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
-                        {
-                            @Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });
-                        }
-                    }
-                    else if (item.RequestStatusID == 2)
-                    {
-                        <button class="btn btn-link  load-receive-and-location">Receive</button>
-                    }
-                    else
-                    {
-                        @*work on getting the correct syntax to create a new product with*@
-                        <button class="btn btn-link load-order-details" value="@item.RequestID">Order</button>
-                    }
-                </td>
-                <td>
-                    <!-- Button to Open the Modal -->
-                    <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">Edit</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <td> Product Image </td>
 
-<!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+            <td> @Html.DisplayFor(modelItem => item.Product.ProductName) </td>
+
+            <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
+
+            <td> Placeholder </td> @*Computed column?*@
+            @*Later on should have a better location...*@
+            @if (Inventory)
+            {
+                <th> @Html.DisplayFor(m => m[0].Product.LocationID) </th>
+            }
+            <td> @Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription) </td>
+            <td> @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName) </td>
+
+            <td> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
+            @*here for testing purposes*@
+            <td> @Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusDescription) </td>
+
+            <td>
+            @if (item.RequestStatusID == 1)
+            {
+                //this is a nested if b/c if user can't approve then i still don't want it to go the the else
+                if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
+                {
+                    @Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });
+                }
+            }
+            else if (item.RequestStatusID == 2)
+            {
+                <button class="btn btn-link  load-receive-and-location">Receive</button>
+            }
+            else
+            {
+                @*work on getting the correct syntax to create a new product with*@
+                <button class="btn btn-link load-order-details" value="@item.RequestID">Order</button>
+            }
+            </td>
+        <td>
+            <!-- Button to Open the Modal -->
+            <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">Edit</button>
+        </td>
+        </tr>
+    }
+        </tbody>
+    </table>
+
+    <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
 

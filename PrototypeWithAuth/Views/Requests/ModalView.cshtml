@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+@using PrototypeWithAuth.AppData
 
 @{
     string Type = ViewData["ModalViewType"].ToString();
@@ -13,7 +14,6 @@
             edit = true;
             break;
     }
-
 }
 
 <script src="~/js/site.js" asp-append-version="true"></script>
@@ -24,6 +24,60 @@
 
 
         <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            @{
+
+                /*
+                 * BEGIN REMEMBERING DATA
+                 */
+                int? tempPage = null;
+                if (TempData["TempPage"] != null)
+                {
+                    tempPage = (Int32)TempData["TempPage"];
+                    //Html.HiddenFor(model => model.Page, tempPage);
+                }
+                int RequestStatusID = 1;
+                if (TempData["TempRequestStatusID"] != null)
+                {
+                    RequestStatusID = (Int32)TempData["TempRequestStatusID"];
+                }
+                int tempSubcategoryID = 0;
+                if (TempData["TempSubcategoryID"] != null)
+                {
+                    tempSubcategoryID = (Int32)TempData["TempSubcategoryID"];
+                    //Html.HiddenFor(model => model.SubCategoryID, tempSubcategoryID);
+                }
+                int tempVendorID = 0;
+                if (TempData["TempVendorID"] != null)
+                {
+                    tempVendorID = (Int32)TempData["TempVendorID"];
+                }
+                string tempApplicationUserID = null;
+                if (TempData["TempApplicationUserID"] != null)
+                {
+                    tempApplicationUserID = TempData["TempApplicationUserID"].ToString();
+                }
+                AppUtility.RequestPageTypeEnum tempPageType = AppUtility.RequestPageTypeEnum.Request;
+                if (TempData["TempPageType"] != null)
+                {
+                    tempPageType = (AppUtility.RequestPageTypeEnum)TempData["TempPageType"];
+                }
+                /*RequestsSearchViewModel?
+                TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;*/
+                /*
+                 * BEGIN REMEMBERING DATA
+                 * these are sent in to the viewmodel follow through to the controller
+                 */
+
+            }
+
+            @Html.HiddenFor(model => model.SubCategoryID, tempPage);
+            @Html.HiddenFor(model => model.RequestStatusID, RequestStatusID);
+            @Html.HiddenFor(model => model.SubCategoryID, tempSubcategoryID);
+            @Html.HiddenFor(model => model.VendorID, tempVendorID);
+            @Html.HiddenFor(model => model.ApplicationUserID, tempApplicationUserID);
+            @Html.HiddenFor(model => model.PageType, tempPageType);
+
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="@Model.Request.RequestID" />
             <!-- Modal Header -->
@@ -153,10 +207,10 @@ htmlAttributes: new { @class = "form-control", @id = "vendorList" }
                                 <div class="col-md-3">
                                     <label class="control-label">End Date</label>
                                     @*@{
-                                            //get this just to return the date (not the time)
-                                            //adding the amount of months of the warranty to the invoice date
-                                            var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                                        }*@
+                                    //get this just to return the date (not the time)
+                                    //adding the amount of months of the warranty to the invoice date
+                                    var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                                }*@
                                     <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext" disabled="disabled" />
                                 </div>
                             </div>
@@ -437,8 +491,8 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                                                 Model.PaymentTypes,
         dataValueField: "PaymentTypeID",
         dataTextField: "PaymentTypeDescription"),
-        optionLabel: "Select A Payment Type ", 
-        htmlAttributes: new { @class = "form-control paymentType"}
+        optionLabel: "Select A Payment Type ",
+        htmlAttributes: new { @class = "form-control paymentType" }
                                                             )
                                                             <span asp-validation-for="NewPayments[x].CompanyAccount.PaymentType" class="text-danger"></span>
                                                         </td>
@@ -477,7 +531,7 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                     </div>
                                     @if (Model.OrderFileStrings != null)
                                     {
-                                        foreach(var o in Model.OrderFileStrings)
+                                        foreach (var o in Model.OrderFileStrings)
                                         {
                                             <button>Test</button>
                                             <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
@@ -485,9 +539,9 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                                         <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                     }
                                     @*<div id="carousel" class="carousel ui-slider">
-                                            <ol class="carousel-indicators">
-                                            </ol>
-                                        </div>*@
+                                    <ol class="carousel-indicators">
+                                    </ol>
+                                </div>*@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">Invoice Doc</label>
@@ -656,7 +710,6 @@ htmlAttributes: new { @class = "form-control", @id = "subsubunit-type", @disable
                 $("#sublist").html(item);
             });
         });
-
 
     </script>
 }
