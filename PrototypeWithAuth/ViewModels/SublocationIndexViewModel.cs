@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public IEnumerable<LocationInstance> SublocationInstances { get; set; }
         public LocationInstance PrevLocationInstance { get; set; }
+        public bool IsSmallestChild { get; set; }
     }
 }

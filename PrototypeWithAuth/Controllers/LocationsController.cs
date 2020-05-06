@@ -47,25 +47,20 @@ namespace PrototypeWithAuth.Controllers
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
             LocationInstance parentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentId).FirstOrDefault();
             int depth = _context.LocationTypes.Where(x => x.LocationTypeID == parentLocationInstance.LocationTypeID).FirstOrDefault().Depth;
+
+            /*
+             * Right now in the js validation it should not allow anything to be 0 x 0; therefore, we can test by depth and not by a has children method
+             */
             if (depth > 0)
             {
                 sublocationIndexViewModel.PrevLocationInstance = parentLocationInstance;
+                sublocationIndexViewModel.IsSmallestChild = false;
             }
-            //List<LocationInstance> sublocationInstances = new List<LocationInstance>();
-            //bool go = true;
-            //while (go)
-            //{
-            //    LocationInstance location = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentId).FirstOrDefault();
-            //    if (location != null)
-            //    {
-            //        sublocationInstances.Add(location);
-            //        parentId = location.LocationInstanceID;
-            //    }
-            //    else
-            //    {
-            //        go = false;
-            //    }
-            //}
+            else
+            {
+                //is this enough or should we actually check for children
+                sublocationIndexViewModel.IsSmallestChild = true;
+            }
             return PartialView(sublocationIndexViewModel);
         }
 
