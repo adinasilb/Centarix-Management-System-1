@@ -13,6 +13,7 @@
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
     @if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
@@ -69,15 +70,17 @@
 
     }
 
-    <div class="text-center container col-md-4 offset-md-4" style="padding: 4em">
-        @*this is temporary - need to add Centarix logo and motto here*@
-        <h1><span style="color:red; font-size:1.5em;">&#8734 </span><span style="color:red;">CENTA</span>RIX</h1>
-        <h5 class="mb-5">Fight Aging or Die Trying</h5>
-        
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<div class="text-center container col-md-7 offset-md-2.5" style="padding: 4em">
+
+    <img width="400" class="mb-3" src="~/images/css/Centarix Logo.png" alt="Centarix Logo" />
+
+    <h4 class="mb-5">Fight Aging or Die Trying</h4>
+   
+
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
     
     <footer class="border-top footer text-muted">
         <div class="container">
