@@ -6,15 +6,24 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 @if (Model.PrevLocationInstance != null)
 {
-    <button class="btn btn-block load-sublocation-view" value="@Model.PrevLocationInstance.LocationInstanceParentID">@Model.PrevLocationInstance.LocationInstanceName</button>
-    <hr />
+    <button class="btn btn-outline-secondary load-sublocation-view" value="@Model.PrevLocationInstance.LocationInstanceParentID">@Model.PrevLocationInstance.LocationInstanceName</button>
+    <br />
+    <br />
 }
 <table class="table table-sm">
     @foreach (var locationInstance in Model.SublocationInstances)
     {
         <tr>
             <td>
-                <button class="btn btn-block load-sublocation-view" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
+                @if (Model.IsSmallestChild)
+                {
+                    //in the futur this button should point to the location to see or insert a request
+                    <button class="btn btn-block" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
+                }
+                else
+                {
+                    <button class="btn btn-block load-sublocation-view" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
+                }
             </td>
         </tr>
         @*l.LocationInstanceName.ToString();*@

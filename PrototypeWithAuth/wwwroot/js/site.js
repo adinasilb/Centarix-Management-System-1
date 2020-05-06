@@ -434,7 +434,7 @@ $.fn.AddSublocation = function () {
 	console.log("newSublocationClass: " + newSublocationClass);
 	var sublocationHtml = '<div class="col-md-4">';
 	sublocationHtml += '<label class="control-label">Sublocation ' + $sublocationCounter + ':</label>';
-	sublocationHtml += '<input type="number" min="0" class="form-control" id="' + newSublocationID + '" name="' + newSublocationName + '" class="' + newSublocationClass + '" />';
+	sublocationHtml += '<input type="number" min="1" class="form-control" id="' + newSublocationID + '" name="locationRowColumn" class="' + newSublocationClass + '" />';
 	//sublocationHtml += '<input type="text" class="form-control" ' + newSublocationClass + '  />';
 	var spanClass = 'spanSublocation' + $sublocationCounter;
 	sublocationHtml += '<span class="text-danger ' + spanClass + '></span>"';
@@ -443,7 +443,6 @@ $.fn.AddSublocation = function () {
 	$(".addSublocation").show();
 	$sublocationCounter++;
 }
-
 
 
 //AJAX partial view submit for addLocations --> Sublocations
@@ -469,39 +468,8 @@ $("#LocationInstance_LocationTypeID").change(function () {
 	//	$("#loading").hide();
 	//});
 });
-//.on("change", function (e) {
-//e.preventDefault();
-////show loading gif
-////$("#loading").show();
-//$.ajax({
-//	url: this.action,
-//	type: this.method,
-//	data: $(this).serialize(), //getting a model and serializing it
-//	success: function (data) {
-//		$("#divSublocations").html(data); //passing the model into dvResults
-//		//$("#loading").hide(); //hides the loading gif
-//	}
-//})
-//})
 
-//loadSublocationView = function () {
-//	$(".load-sublocation-view").removeClass("bg-secondary");
-//	$(this).addClass("bg-secondary");
-//	var myDiv = $(".colTwoSublocations");
-//	//myDiv.empty();
-//	var parentId = $(this).val();
-//	console.log("2fx about to call ajax with a parentid of: " + parentId);
-//	$.ajax({
-//		//IMPORTANT: ADD IN THE ID
-//		url: "/Locations/SublocationIndex/?parentId=" + parentId,
-//		type: 'GET',
-//		cache: false,
-//		context: myDiv,
-//		success: function (result) {
-//			this.html(result);
-//		}
-//	});
-//}
+
 
 $(".load-sublocation-view").click(function () {
 	//add or remove the background class in col 1

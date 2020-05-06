@@ -56,9 +56,14 @@ namespace PrototypeWithAuth.Controllers
                 sublocationIndexViewModel.PrevLocationInstance = parentLocationInstance;
                 sublocationIndexViewModel.IsSmallestChild = false;
             }
-            else
+            var locationType = _context.LocationTypes.Where(x => x.LocationTypeID == sublocationIndexViewModel.SublocationInstances.FirstOrDefault().LocationTypeID).FirstOrDefault();
+            if (locationType.LocationTypeChildID != null)
             {
                 //is this enough or should we actually check for children
+                sublocationIndexViewModel.IsSmallestChild = false;
+            }
+            else
+            {
                 sublocationIndexViewModel.IsSmallestChild = true;
             }
             return PartialView(sublocationIndexViewModel);
@@ -67,8 +72,15 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult VisualLocations(int VisualContainerId)
         {
-            LocationInstance locationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault();
-            return PartialView(locationInstance);
+            VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
+            {
+                ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault()
+            };
+            visualLocationsViewModel.ChildrenLocationInstances =
+                _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
+                .Include(m => m.RequestLocationInstances).ToList();
+
+            return PartialView(visualLocationsViewModel);
         }
 
         [HttpGet]
@@ -208,7 +220,7 @@ namespace PrototypeWithAuth.Controllers
                             for (int y = 0; y < subLocationViewModel.LocationInstances[z].Width; y++)
                             {
                                 //add number to place
-                                string FullPlace = place + (y+1).ToString();
+                                string FullPlace = place + (y + 1).ToString();
                                 string currentName = attachedName + (typeNumber).ToString(); //add number to the type x + y is the current number but is zero based so add one
                                 typeNumber++; //increment this
                                 LocationInstance newSublocationInstance = new LocationInstance()
@@ -218,7 +230,7 @@ namespace PrototypeWithAuth.Controllers
                                     Height = height,
                                     Width = width,
                                     LocationTypeID = typeId,
-                                    Place = FullPlace 
+                                    Place = FullPlace
                                 };
                                 _context.Add(newSublocationInstance);
                                 _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END

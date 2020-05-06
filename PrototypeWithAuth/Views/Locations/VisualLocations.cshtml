@@ -1,27 +1,48 @@
-﻿@model LocationInstance
+﻿@model PrototypeWithAuth.ViewModels.VisualLocationsViewModel
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
 @*Name:
-@Model.LocationInstanceName
+    @Model.LocationInstanceName
 
-Columns:
-@Model.Height
+    Columns:
+    @Model.Height
 
-Rows:
-@Model.Width*@
+    Rows:
+    @Model.Width*@
 
 <button class="btn btn-dark">Zoom In</button>
 <br />
 <table class="table table-sm border">
-    @for (int X = 0; X < Model.Height; X++)
+    @{
+        int z = -1;
+    }
+    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
     {
-        <tr>
-            @for (int y = 0; y < Model.Width; y++)
+    <tr>
+        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+        {
+            z++;
+            var backgroundClass = "border";
+            var innerHtml = "NONE";
+            @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
             {
-                <td class="border"><br /></td>
+                if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                {
+                    backgroundClass += " bg-secondary";
+                }
+                innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceID.ToString();
             }
-        </tr>
+             <td class="@backgroundClass">@innerHtml</td>
+            @*<td class="border">
+                @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
+                {
+                    <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
+                    z++;
+                }
+            </td>*@
+        }
+    </tr>
     }
 </table>
