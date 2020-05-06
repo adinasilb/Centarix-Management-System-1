@@ -58,6 +58,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" />
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
@@ -72,7 +73,7 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <div class="container-fluid justify-content-start float-left d-inline-block" style="width:auto">
-                    <h1><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Centarix</a></h1>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix Logo only.png" height="30" alt="Logo" /></a>
                 </div>
                 <div class="container-fluid">
                     <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left">
@@ -98,7 +99,7 @@
                     <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</a>
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</a>
                             </li>
                             <li class="nav-item">
                                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

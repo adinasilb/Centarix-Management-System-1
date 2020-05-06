@@ -76,9 +76,9 @@
         <div>@TempData["SuccessMessage"].ToString()</div>
     }
 }
-<div class="row">
-    <div class="col-md-2 border-right">
-        @*<nav class="navbar flex-grow-1">*@
+<div style="display: flex">
+    <div style="width: 100px; padding: 5px" class="border-right">
+        @*<nav class="navbar flex-grow-1">*@ 
         <ul class="nav flex-column nav-pills nav-stacked">
             @if (Requests || Inventory)
             {
@@ -121,7 +121,8 @@
         </ul>
         @*</nav>*@
     </div>
-    <div class="col-md-10 border-left">
+    <div style="flex-grow: 1" class="border-left">
+        <!--class="col-md-10 border-left"-->
         @RenderBody()
     </div>
 </div>
