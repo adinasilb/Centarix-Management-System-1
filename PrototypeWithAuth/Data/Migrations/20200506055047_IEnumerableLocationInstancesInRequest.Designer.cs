@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200506055047_IEnumerableLocationInstancesInRequest")]
+    partial class IEnumerableLocationInstancesInRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,6 +305,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Place")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RequestID")
+                        .HasColumnType("int");
+
                     b.Property<int>("Width")
                         .HasColumnType("int");
 
@@ -311,6 +316,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationInstanceParentID");
 
                     b.HasIndex("LocationTypeID");
+
+                    b.HasIndex("RequestID");
 
                     b.ToTable("LocationInstances");
                 });
@@ -735,21 +742,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Requests");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
-                {
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LocationInstanceID")
-                        .HasColumnType("int");
-
-                    b.HasKey("RequestID", "LocationInstanceID");
-
-                    b.HasIndex("LocationInstanceID");
-
-                    b.ToTable("RequestLocationInstance");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestStatus", b =>
                 {
                     b.Property<int>("RequestStatusID")
@@ -1124,6 +1116,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("LocationTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany("LocationInstances")
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationType", b =>
@@ -1224,21 +1221,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UnitTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationInstance", "LocationInstance")
-                        .WithMany("RequestLocationInstances")
-                        .HasForeignKey("LocationInstanceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany("RequestLocationInstances")
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.UnitType", b =>

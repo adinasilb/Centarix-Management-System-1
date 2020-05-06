@@ -16,7 +16,7 @@ namespace PrototypeWithAuth.Models
         public Product Product { get; set; }
         public int ParentRequestID { get; set; }
         public ParentRequest ParentRequest { get; set; }
-        public int? LocationID { get; set; } // if status is recieved; then LocationID is required (have to make a custom rule)
+        public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public int? RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }
         public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
@@ -50,11 +50,7 @@ namespace PrototypeWithAuth.Models
         public uint Quantity { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
-        
-        
         public double Cost { get; set; }
-        
-
         public string CatalogNumber { get; set; }
         public string SerialNumber { get; set; }
         public string URL { get; set; }
