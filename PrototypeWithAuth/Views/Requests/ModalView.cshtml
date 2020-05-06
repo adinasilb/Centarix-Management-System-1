@@ -24,58 +24,16 @@
 
 
         <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-            @{
-
-                /*
-                 * BEGIN REMEMBERING DATA
-                 */
-                int? tempPage = null;
-                if (TempData["TempPage"] != null)
-                {
-                    tempPage = (Int32)TempData["TempPage"];
-                    //Html.HiddenFor(model => model.Page, tempPage);
-                }
-                int RequestStatusID = 1;
-                if (TempData["TempRequestStatusID"] != null)
-                {
-                    RequestStatusID = (Int32)TempData["TempRequestStatusID"];
-                }
-                int tempSubcategoryID = 0;
-                if (TempData["TempSubcategoryID"] != null)
-                {
-                    tempSubcategoryID = (Int32)TempData["TempSubcategoryID"];
-                    //Html.HiddenFor(model => model.SubCategoryID, tempSubcategoryID);
-                }
-                int tempVendorID = 0;
-                if (TempData["TempVendorID"] != null)
-                {
-                    tempVendorID = (Int32)TempData["TempVendorID"];
-                }
-                string tempApplicationUserID = null;
-                if (TempData["TempApplicationUserID"] != null)
-                {
-                    tempApplicationUserID = TempData["TempApplicationUserID"].ToString();
-                }
-                AppUtility.RequestPageTypeEnum tempPageType = AppUtility.RequestPageTypeEnum.Request;
-                if (TempData["TempPageType"] != null)
-                {
-                    tempPageType = (AppUtility.RequestPageTypeEnum)TempData["TempPageType"];
-                }
-                /*RequestsSearchViewModel?
-                TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;*/
-                /*
-                 * BEGIN REMEMBERING DATA
-                 * these are sent in to the viewmodel follow through to the controller
-                 */
-
-            }
-
-            @Html.HiddenFor(model => model.Page, tempPage)
-            @Html.HiddenFor(model => model.RequestStatusID, RequestStatusID)
-            @Html.HiddenFor(model => model.SubCategoryID, tempSubcategoryID)
-            @Html.HiddenFor(model => model.VendorID, tempVendorID)
-            @Html.HiddenFor(model => model.ApplicationUserID, tempApplicationUserID)
-            @Html.HiddenFor(model => model.PageType, tempPageType)
+            
+            @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
+            @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
+            @Html.HiddenFor(model => model.Page)
+            @Html.HiddenFor(model => model.RequestStatusID)
+            @Html.HiddenFor(model => model.SubCategoryID)
+            @Html.HiddenFor(model => model.VendorID)
+            @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
+            @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
+            @*Requests search view model*@
 
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

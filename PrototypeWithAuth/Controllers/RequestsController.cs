@@ -169,7 +169,7 @@ namespace PrototypeWithAuth.Controllers
             /*string*/
             TempData["TempApplicationUserID"] = applicationUserID;
             /*AppUtility.RequestPageTypeEnum*/
-            TempData["TempPageType"] = PageType;
+            TempData["TempPageType"] = (int)PageType;
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
 
@@ -798,6 +798,7 @@ namespace PrototypeWithAuth.Controllers
                 return View(requestItemViewModel);
             }
             //return RedirectToAction("Index");
+            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
             return RedirectToAction("Index", new
             {
                 page = requestItemViewModel.Page,
@@ -805,7 +806,7 @@ namespace PrototypeWithAuth.Controllers
                 subcategoryID = requestItemViewModel.SubCategoryID,
                 vendorID = requestItemViewModel.VendorID,
                 applicationUserID = requestItemViewModel.ApplicationUserID,
-                PageType = requestItemViewModel.PageType
+                PageType = requestPageTypeEnum
             });
         }
 

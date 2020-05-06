@@ -231,7 +231,7 @@
                 $(".modal").modal('show');
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
                 $(".modal-backdrop").remove();
-                if (!isEmail) {
+                if (!isEmail) { //SET BOOLEAN TO MODAL VIEW NOT ISEMAIL
                     /* Following line should set the correct data-target tab to open ----> not working right now */
                     //$('.nav-tabs a[href="' + $tab + '"]').tab - pane('show');
                     var selectedTab = 0;
@@ -276,10 +276,13 @@
 
                     //console.log("about to get set the hidden fors in the modal view to remember where the user was");
 
-                    if (TempData["TempPage"] != null) {
-                        $("#Page").val(parseInt(TempData["TempPage"]));
-                    }
-                    $("#SubCategoryID").val(13);
+                    $("#Page").val(parseInt(@TempData["TempPage"]));
+                    $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
+                    $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
+                    $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
+                    $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
+                    console.log("PageType:" + @TempData["TempPageType"]);
+                    $("#PageType").val(@TempData["TempPageType"]);
 
                     //IN THE FUTURE: USE DATEPICKER (CODE BELOW- PARTIAL)
 

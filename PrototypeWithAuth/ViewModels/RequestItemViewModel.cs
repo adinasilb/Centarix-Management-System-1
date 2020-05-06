@@ -37,6 +37,6 @@ namespace PrototypeWithAuth.ViewModels
         public int SubCategoryID { get; set; }
         public int VendorID { get; set; }
         public string ApplicationUserID { get; set; }
-        public AppUtility.RequestPageTypeEnum PageType { get; set; }
+        public int /*AppUtility.RequestPageTypeEnum*/ PageType { get; set; }
     }
 }
