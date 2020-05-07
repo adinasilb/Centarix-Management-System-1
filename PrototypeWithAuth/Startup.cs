@@ -48,7 +48,14 @@ namespace PrototypeWithAuth
 
 
             services.AddControllersWithViews();
-            services.AddRazorPages();
+
+
+            // Enable Razor pages, but in the Debug configuration, compile the views at runtime, for ease of development
+            IMvcBuilder builder = services.AddRazorPages();
+#if DEBUG
+            builder.AddRazorRuntimeCompilation();
+#endif            
+            
             // in order to be able to customize the aspnetcore identity
 
             services.AddMvc(config => //this creates a global authorzation - meaning only registered users can use view the application
