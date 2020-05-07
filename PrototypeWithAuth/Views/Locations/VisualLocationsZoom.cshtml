@@ -1,0 +1,34 @@
+﻿@model PrototypeWithAuth.ViewModels.VisualLocationsViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+
+<button class="btn btn-dark">Zoom In</button>
+<br />
+<table class="table table-sm border">
+    @{
+        int z = -1;
+    }
+    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+    {
+        <tr>
+            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+            {
+                z++;
+                var backgroundClass = "border";
+                var innerHtml = "NONE";
+                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                {
+                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                    {
+                        backgroundClass += " bg-secondary";
+                    }
+                    innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceID.ToString();
+                }
+                <td class="@backgroundClass">@innerHtml</td>
+            }
+        </tr>
+    }
+</table>
