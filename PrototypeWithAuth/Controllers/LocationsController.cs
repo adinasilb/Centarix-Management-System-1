@@ -84,6 +84,20 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        public IActionResult VisualLocationsZoom(int VisualContainerId)
+        {
+            VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
+            {
+                ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault()
+            };
+            visualLocationsViewModel.ChildrenLocationInstances =
+                _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
+                .Include(m => m.RequestLocationInstances).ToList();
+
+            return PartialView(visualLocationsViewModel);
+        }
+
+        [HttpGet]
         public IActionResult AddLocation()
         {
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel

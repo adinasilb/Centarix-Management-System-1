@@ -469,7 +469,9 @@ $("#LocationInstance_LocationTypeID").change(function () {
 	//});
 });
 
-
+$(".visual-locations-zoom").on("click", function (e) {
+	console.log("called visual locations click with an id of: " + $(this).val());
+});
 
 $(".load-sublocation-view").click(function () {
 	//add or remove the background class in col 1
@@ -479,7 +481,7 @@ $(".load-sublocation-view").click(function () {
 	//fill up col 2 with the next one
 	var myDiv = $(".colTwoSublocations");
 	var parentId = $(this).val();
-	console.log("about to call ajax with a parentid of: " + parentId);
+	//console.log("about to call ajax with a parentid of: " + parentId);
 	$.ajax({
 		//IMPORTANT: ADD IN THE ID
 		url: "/Locations/SublocationIndex/?parentId=" + parentId,
@@ -494,7 +496,7 @@ $(".load-sublocation-view").click(function () {
 	//fill up col three with the visual
 	var visualDiv = $(".VisualBoxColumn");
 	var visualContainerId = $(this).val();
-	console.log("about to call ajax with a visual container id of: " + visualContainerId);
+	//console.log("about to call ajax with a visual container id of: " + visualContainerId);
 	$.ajax({
 		url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
 		type: 'GET',

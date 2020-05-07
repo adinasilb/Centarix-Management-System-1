@@ -12,7 +12,10 @@
     Rows:
     @Model.Width*@
 
-<button class="btn btn-dark">Zoom In</button>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+
+<button class="btn btn-dark visual-locations-zoom" value="@Model.ParentLocationInstance.LocationInstanceID">Zoom In</button>
 <br />
 <table class="table table-sm border">
     @{
@@ -20,29 +23,29 @@
     }
     @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
     {
-    <tr>
-        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-        {
-            z++;
-            var backgroundClass = "border";
-            var innerHtml = "NONE";
-            @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+        <tr>
+            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
             {
-                if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                z++;
+                var backgroundClass = "border";
+                var innerHtml = "NONE";
+                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                 {
-                    backgroundClass += " bg-secondary";
+                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                    {
+                        backgroundClass += " bg-secondary";
+                    }
+                    innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceID.ToString();
                 }
-                innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceID.ToString();
+                <td class="@backgroundClass">@innerHtml</td>
+                @*<td class="border">
+                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
+                        {
+                            <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
+                            z++;
+                        }
+                    </td>*@
             }
-             <td class="@backgroundClass">@innerHtml</td>
-            @*<td class="border">
-                @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
-                {
-                    <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
-                    z++;
-                }
-            </td>*@
-        }
-    </tr>
+        </tr>
     }
 </table>
