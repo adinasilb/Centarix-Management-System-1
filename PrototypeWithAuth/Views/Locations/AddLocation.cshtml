@@ -24,21 +24,17 @@
                     <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger"></span>
                 </div>
 
-                //TEST
-                <div class="form-group">
-                    <label class="control-label">Test:</label>
-                    <input type="number" min="1" class="form-control" rangelength="(2,4)" />
-                </div>
-
                 <div class="col-md-12 divSublocations">
                 </div>
 
-                <button class="btn btn-dark load-add-location-type">Add Location Type</button>
             </div>
 
             <div class="modal-footer">
                 <input type="submit" value="Save" asp-action="AddLocation" class="btn btn-primary" />
                 <input type="button" value="Cancel" data-dismiss="modal" class="btn btn-primary" />
+                <hr />
+
+                <button class="btn btn-link load-add-location-type">Add Location Type</button>
             </div>
         </form>
     </div>
