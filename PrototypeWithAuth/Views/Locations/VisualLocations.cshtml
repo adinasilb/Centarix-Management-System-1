@@ -34,8 +34,8 @@
                     if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
                     {
                         backgroundClass += " bg-secondary";
+                        innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
                     }
-                    innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceID.ToString();
                 }
                 <td class="@backgroundClass">@innerHtml</td>
                 @*<td class="border">

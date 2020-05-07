@@ -16,23 +16,30 @@
                 }
                 @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
                 {
-                    <tr>
-                        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                <tr>
+                    @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                    {
+                        z++;
+                        var backgroundClass = "border";
+                        var innerHtml = "NONE";
+                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                         {
-                            z++;
-                            var backgroundClass = "border";
-                            var innerHtml = "NONE";
-                            @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                            if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
                             {
-                                if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
-                                {
-                                    backgroundClass += " bg-secondary";
-                                }
-                                innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceID.ToString();
+                                backgroundClass += " bg-secondary";
+                                innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+                                var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
+                                <td class="@backgroundClass">
+                                    @Html.ActionLink(innerHtml, "ModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-link" })
+                                </td>
                             }
-                            <td class="@backgroundClass">@innerHtml</td>
+                            else
+                            {
+                                <td class="@backgroundClass">@innerHtml</td>
+                            }
                         }
-                    </tr>
+                    }
+                </tr>
                 }
             </table>
         </div>

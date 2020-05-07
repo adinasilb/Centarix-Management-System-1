@@ -78,7 +78,7 @@ namespace PrototypeWithAuth.Controllers
             };
             visualLocationsViewModel.ChildrenLocationInstances =
                 _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
-                .Include(m => m.RequestLocationInstances).ToList();
+                .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
 
             return PartialView(visualLocationsViewModel);
         }
@@ -92,7 +92,7 @@ namespace PrototypeWithAuth.Controllers
             };
             visualLocationsViewModel.ChildrenLocationInstances =
                 _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
-                .Include(m => m.RequestLocationInstances).ToList();
+                .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
 
             return PartialView(visualLocationsViewModel);
         }
