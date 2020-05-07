@@ -30,7 +30,7 @@
                                 innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
                                 var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
                                 <td class="@backgroundClass">
-                                    @Html.ActionLink(innerHtml, "ModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-link" })
+                                    @Html.ActionLink(innerHtml, "ModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block" })
                                 </td>
                             }
                             else

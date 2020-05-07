@@ -535,7 +535,14 @@ namespace PrototypeWithAuth.Controllers
             //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
             //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
             //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
-            return PartialView(requestItemViewModel);
+            if (AppUtility.IsAjaxRequest(this.Request))
+            {
+                return PartialView(requestItemViewModel);
+            }
+            else
+            {
+                return View(requestItemViewModel);
+            }
         }
 
         [HttpPost]
