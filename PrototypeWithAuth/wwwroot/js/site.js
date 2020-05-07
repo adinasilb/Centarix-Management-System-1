@@ -470,7 +470,31 @@ $("#LocationInstance_LocationTypeID").change(function () {
 });
 
 $(".visual-locations-zoom").on("click", function (e) {
-	console.log("called visual locations click with an id of: " + $(this).val());
+	console.log("called visual locations zoom with an id of: " + $(this).val());
+	var myDiv = $(".location-modal-view");
+	console.log("myDiv: " + myDiv);
+	var parentId = $(this).val();
+	//console.log("about to call ajax with a parentid of: " + parentId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/VisualLocationsZoom/?VisualContainerId=" + parentId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {
+			this.html(result); 
+			//turn off data dismiss by clicking out of the box and by pressing esc
+			myDiv.modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+			//shows the modal
+			myDiv.modal('show');
+			//bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+			$(".modal-backdrop").remove();
+
+		}
+	});
 });
 
 $(".load-sublocation-view").click(function () {
