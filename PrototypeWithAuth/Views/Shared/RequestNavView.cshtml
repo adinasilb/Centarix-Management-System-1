@@ -77,47 +77,61 @@
     }
 }
 <div style="display: flex">
-    <div style="width: 100px; padding: 5px" class="border-right">
+    <div style="width: 120px; padding: 10px" class="navbar navbar-light bg-white border-right text-center border-right">
         @*<nav class="navbar flex-grow-1">*@ 
         <ul class="nav flex-column nav-pills nav-stacked">
             @if (Requests || Inventory)
             {
-                <li class="nav-item">
+                <li class="nav-item mt-3 mb-3">
+                    <i class="fas fa-plus-circle"></i><br />
                     @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
                     <button class="btn btn-link text-dark create-product-details" value="0" data-target="item" data-backdrop="static" data-keyboard="false" href="item">Add Item</button>
                 </li>
             }
             @if (Requests || Inventory)
             {
-                <li class="nav-item">
+                <li class="nav-item mt-3 mb-3">
+                    <i class="fas fa-shapes"></i><br />
                     @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageType }, new { @class = type })
                 </li>
             }
             @if (Requests || Inventory)
             {
-                <li class="nav-item">
+                <li class="nav-item mt-3 mb-3">
+                    <i class="fas fa-store"></i><br />
                     @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageType }, new { @class = vendor })
                 </li>
             }
             @if (Requests || Inventory)
             {
-                <li class="nav-item">
+                <li class="nav-item mt-3 mb-3">
+                    <i class="far fa-smile"></i><br />
                     @Html.ActionLink("Owner", "Index", "ApplicationUsers", new { @PageType = pageType }, new { @class = owner }) @*have to create contorller for application user?*@
                 </li>
             }
             @if (Inventory)
             {
-                <li class="nav-item">
+                <li class="nav-item mt-3 mb-3">
                     @*Redo the location class in the controller*@
                     @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = location })
                 </li>
             }
             @if (Cart)
             {
-                <li class="nav-item">
+                <li class="nav-item mt-3 mb-3">
                     <a class=@cart>Cart</a>
                 </li>
             }
+            @*<<<<< just added in for effect >>>>>*@
+
+            <li class="nav-item mt-3 mb-3">
+                <i class="fas fa-map-marker-alt"></i><br />
+                <a class=@cart>Location</a>
+            </li>
+            <li class="nav-item mt-3 mb-3">
+                <i class="fas fa-shopping-cart"></i><br />
+                <a class=@cart>Cart</a>
+            </li>
         </ul>
         @*</nav>*@
     </div>
