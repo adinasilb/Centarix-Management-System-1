@@ -169,6 +169,16 @@
         return false;
     });
 
+    $(".load-product-edit").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $tab = e.target.hash;
+        var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+        $.fn.CallPage($tab, $itemurl);
+        return false;
+    });
+
     $(".create-product-details").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
