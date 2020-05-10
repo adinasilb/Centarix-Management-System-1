@@ -62,7 +62,7 @@
                                         <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
 new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-"Select Category", new { @class = "form-control-plaintext border-bottom ", @id = "parentlist" })
+"Select Category", new { @class = "form-control-plaintext border-bottom ", @id = "parentlist", @disabled="disabled" })
                                         <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -71,14 +71,15 @@ new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescri
                                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
 new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-"Select Subcategory", new { @class = "form-control-plaintext border-bottom ", @id = "sublist" })
+"Select Subcategory", new { @class = "form-control-plaintext border-bottom ", @id = "sublist", @disabled="disabled" })
                                         <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">Project:</label>
-                                        <select class="form-control-plaintext border-bottom "></select>
+                                        <select class="form-control-plaintext border-bottom " disabled></select>
+                                        @*Impt when creating the dropdownlistfor carry over the disabled attribute*@
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +87,8 @@ new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubca
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">Sub Project:</label>
-                                        <select class="form-control-plaintext border-bottom "></select>
+                                        <select class="form-control-plaintext border-bottom " disabled></select>
+                                        @*Impt when creating the dropdownlistfor carry over the disabled attribute*@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -589,14 +591,14 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 @*you can only add to cart if you are creating a new one*@
                                 @if (true) //if is create
                                 {
-                                    <input type="submit" name="OrderType" value="Order" asp-action="ModalView" class="btn btn-outline-primary" />
-                                    <input type="submit" name="OrderType" value="Without Order" asp-action="ModalView" class="btn btn-outline-primary" />
+                                    <input type="submit" name="OrderType" value="Order" asp-action="ReOrderModalView" class="btn btn-outline-primary" />
+                                    <input type="submit" name="OrderType" value="Without Order" asp-action="ReOrderModalView" class="btn btn-outline-primary" />
                                     <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
                                 }
                                 else
                                 {
                                     //not sure if we need the name=OrderType here b/c it's just editing details
-                                    <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
+                                    <input type="submit" name="OrderType" value="Save" asp-action="ReOrderModalView" class="btn btn-outline-primary" />
                                 }
                                 @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>

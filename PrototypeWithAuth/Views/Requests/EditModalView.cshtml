@@ -590,14 +590,14 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 @*you can only add to cart if you are creating a new one*@
                                 @if (false) //if is create
                                 {
-                                    <input type="submit" name="OrderType" value="Order" asp-action="ModalView" class="btn btn-outline-primary" />
-                                    <input type="submit" name="OrderType" value="Without Order" asp-action="ModalView" class="btn btn-outline-primary" />
+                                    <input type="submit" name="OrderType" value="Order" asp-action="EditModalView" class="btn btn-outline-primary" />
+                                    <input type="submit" name="OrderType" value="Without Order" asp-action="Editta" class="btn btn-outline-primary" />
                                     <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
                                 }
                                 else
                                 {
                                     //not sure if we need the name=OrderType here b/c it's just editing details
-                                    <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
+                                    <input type="submit" name="OrderType" value="Save" asp-action="EditModalView" class="btn btn-outline-primary" />
                                 }
                                 @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>

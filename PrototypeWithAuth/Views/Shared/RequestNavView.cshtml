@@ -167,7 +167,7 @@
         var cancelledEmail = '@CancelledEmail';
         if (cancelledEmail == "True") {
             var tab = ""; //just keeping this on the side
-            var $itemUrl = "Requests/ModalView";
+            var $itemUrl = "Requests/DetailsModalView";
         }
     });
 
@@ -178,7 +178,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $tab = e.target.hash;
-        var $itemurl = "Requests/ModalView/?id=" + $(this).val();
+        var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
         $.fn.CallPage($tab, $itemurl);
         return false;
     });
@@ -198,7 +198,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $tab = e.target.hash;
-        var $itemurl = "Requests/CreateModal";
+        var $itemurl = "Requests/CreateModalView";
         $.fn.CallPage($tab, $itemurl);
         return false;
     });

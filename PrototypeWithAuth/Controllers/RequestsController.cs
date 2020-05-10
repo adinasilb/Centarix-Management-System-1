@@ -394,7 +394,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * START MODAL VIEW COPY
          */
-        public async Task<IActionResult> CreateModal()
+        public async Task<IActionResult> CreateModalView()
         {
             var unitTypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel
@@ -421,7 +421,7 @@ namespace PrototypeWithAuth.Controllers
 
             return View(requestItemViewModel);
         }
-        public async Task<IActionResult> ModalView(int? id, bool NewRequestFromProduct = false)
+        public async Task<IActionResult> DetailsModalView(int? id, bool NewRequestFromProduct = false)
         {
             //string ModalViewType = "";
             if (id == null)
@@ -451,7 +451,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (id == 0)
             {
-                return RedirectToAction("CreateModal");
+                return RedirectToAction("CreateModalView");
             }
             else if (NewRequestFromProduct)
             {
@@ -545,7 +545,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateModal(RequestItemViewModel requestItemViewModel, string OrderType)
+        public async Task<IActionResult> CreateModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //initializing the boolean here
             //b/c need to check if the requestID is 0 but then pass in the new request ID
@@ -685,7 +685,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ModalView(RequestItemViewModel requestItemViewModel, string OrderType)
+        public async Task<IActionResult> DetailsModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //initializing the boolean here
             //b/c need to check if the requestID is 0 but then pass in the new request ID
@@ -859,7 +859,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (id == 0)
             {
-                return RedirectToAction("CreateModal");
+                return RedirectToAction("CreateModalView");
             }
             else if (NewRequestFromProduct)
             {
@@ -1115,7 +1115,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (id == 0)
             {
-                return RedirectToAction("CreateModal");
+                return RedirectToAction("CreateModalView");
             }
             else if (NewRequestFromProduct)
             {
