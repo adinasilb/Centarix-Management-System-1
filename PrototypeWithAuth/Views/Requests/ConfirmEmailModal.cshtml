@@ -38,7 +38,7 @@
                     @OrderText
                 </div>
 
-                mailto:@Model.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText
+                <span> mailto: @Model.ParentRequest.ApplicationUser.Email ?Subject= @SubjectName&body=@OrderText</span>
 
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-success" asp-action="ConfirmEmailModal" value="Confirm & Send Email" href="mailto:@Model.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText" />

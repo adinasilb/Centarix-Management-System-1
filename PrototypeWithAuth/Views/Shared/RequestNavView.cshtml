@@ -195,7 +195,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $tab = e.target.hash;
-        var $itemurl = "Requests/ModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
+        var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
         $.fn.CallPage($tab, $itemurl);
         return false;
     });

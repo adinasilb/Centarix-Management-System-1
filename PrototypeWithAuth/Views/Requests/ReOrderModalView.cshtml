@@ -1,6 +1,21 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
 
+@{
+    string Type = ViewData["ModalViewType"].ToString();
+    bool create = false;
+    bool edit = false;
+    switch (Type)
+    {
+        case "Create":
+            create = true;
+            break;
+        case "Edit":
+            edit = true;
+            break;
+    }
+}
+
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
@@ -10,6 +25,7 @@
 
 
         <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            REORDER MODAL VIEW
 
             @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
             @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -32,8 +48,8 @@
                     <br />
                 }
                 <div class="form-group">
-                    <h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>
-                    <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext" /></h4>
+                    <h4><label asp-for="Request.Product.ProductName" class="control-label">@Type Request : </label> </h4>
+                    <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded" /></h4>
                 </div>
                 <span asp-validation-for="Request.Product.ProductName"></span>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -62,7 +78,7 @@
                                         <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
 new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-"Select Category", new { @class = "form-control-plaintext border-bottom", @id = "parentlist", @disabled = "disabled" })
+"Select Category", new { @class = "form-control-plaintext border-bottom ", @id = "parentlist" })
                                         <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -71,14 +87,14 @@ new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescri
                                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
 new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-"Select Subcategory", new { @class = "form-control-plaintext border-bottom", @id = "sublist", @disabled = "disabled" })
+"Select Subcategory", new { @class = "form-control-plaintext border-bottom ", @id = "sublist" })
                                         <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">Project:</label>
-                                        <select class="form-control-plaintext border-bottom" disabled></select>
+                                        <select class="form-control-plaintext border-bottom "></select>
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +102,7 @@ new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubca
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">Sub Project:</label>
-                                        <select class="form-control-plaintext border-bottom" disabled></select>
+                                        <select class="form-control-plaintext border-bottom "></select>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -99,7 +115,7 @@ Model.Vendors,
 dataValueField: "VendorID",
 dataTextField: "VendorEnName"),
 optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "vendorList", @disabled = "disabled" }
+htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList" }
 )
                                         <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                     </div>
@@ -108,7 +124,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                                     <div class="form-group">
                                         @* IN MIDDLE *@
                                         <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                                        <label class="vendorBusinessId form-control-plaintext border-bottom" />
+                                        <label class="vendorBusinessId form-control-plaintext border-bottom -plaintext" />
                                         @*don't need a validation here because you it's not saving*@
                                     </div>
                                 </div>
@@ -116,36 +132,36 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                             <div class="row">
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
+                                    <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
+                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" />
                                     <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control-plaintext border-bottom" disabled />
+                                    <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
                                 </div>
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom" disabled />
+                                    <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                                    <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom" disabled />
+                                    <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
                                     <label asp-for="Request.Warranty" class="control-label"></label>
-                                    <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom" disabled />
+                                    <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.Warranty" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
@@ -155,13 +171,13 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                                             //adding the amount of months of the warranty to the invoice date
                                             var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                                         }*@
-                                    <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
+                                    <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
                                     <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                    <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom" disabled />
+                                    <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
@@ -171,11 +187,11 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                                         var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
                                     }
                                     <label class="control-label">Expected supply date</label>
-                                    <input value="@endSupplyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
+                                    <input value="@endSupplyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                 </div>
                                 <div class="col-md-4">
                                     <label asp-for="Request.URL" class="control-label"></label>
-                                    <input asp-for="Request.URL" class="form-control-plaintext border-bottom" disabled />
+                                    <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.URL" class="text-danger"></span>
                                 </div>
                             </div>
@@ -192,7 +208,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="currency" class="control-label">Currency</label>
-                                        <select id="currency" class="form-control-plaintext border-bottom" disabled>
+                                        <select id="currency" class="form-control-plaintext border-bottom">
                                             <option value="dollar">&#127480; USD</option>
                                             <option value="shekel">&#127480; NIS</option>
                                         </select>
@@ -201,7 +217,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label asp-for="Request.ExchangeRate" class="control-label"></label>
-                                        <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom" disabled />
+                                        <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -212,7 +228,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.Unit" class="control-label"></label>
-                                            <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" id="unit-amount" min="0" disabled />
+                                            <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " id="unit-amount" min="0" />
                                             <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6">
@@ -222,7 +238,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
 vm => vm.Request.UnitTypeID,
 Model.UnitTypeList,
 "",
-htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "unit-type", @disabled="disabled" }
+htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "unit-type" }
 )
                                                 <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                             </div>
@@ -234,13 +250,13 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "un
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control-plaintext border-bottom" name="unit-price-dollars" id="unit-price-dollars" disabled />
+                                                    <input class="form-control-plaintext border-bottom " name="unit-price-dollars" id="unit-price-dollars" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input class="form-control-plaintext border-bottom" name="unit-price-shekel" id="unit-price-shekel" disabled />
+                                                    <input class="form-control-plaintext border-bottom " name="unit-price-shekel" id="unit-price-shekel" disabled />
                                                 </div>
                                             </div>
                                         </div>
@@ -250,7 +266,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "un
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.SubUnit" class="control-label"></label>
-                                            <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" id="subunit-amount" min="0" disabled />
+                                            <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom " id="subunit-amount" min="0" disabled />
                                             <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6 form-group">
@@ -259,7 +275,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "un
          vm => vm.Request.SubUnitTypeID,
          Model.UnitTypeList,
          "",
-         htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "subunit-type", @disabled = "disabled" }
+         htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "subunit-type", @disabled = "disabled" }
      )
                                             <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                         </div>
@@ -270,13 +286,13 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "un
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" disabled />
+                                                    <input class="form-control-plaintext border-bottom " name="subunit-price-dollars" id="subunit-price-dollars" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                                    <input class="form-control-plaintext border-bottom " name="subunit-price-shekel" id="subunit-price-shekel" disabled />
                                                 </div>
                                             </div>
                                         </div>
@@ -286,7 +302,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "un
                                     <div class="row">
                                         <div class="col-md-6 form-group">
                                             <label asp-for="Request.SubSubunit" class="control-label"></label>
-                                            <input asp-for="Request.SubSubunit" class="form-control-plaintext border-bottom" id="subsubunit-amount" min="0" disabled />
+                                            <input asp-for="Request.SubSubunit" class="form-control-plaintext border-bottom " id="subsubunit-amount" min="0" disabled />
                                             <span asp-validation-for="Request.SubSubunit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6 form-group">
@@ -295,7 +311,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "un
 vm => vm.Request.SubSubUnitTypeID,
 Model.UnitTypeList,
 "",
-htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "subsubunit-type", @disabled = "disabled" }
+htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "subsubunit-type", @disabled = "disabled" }
 )
                                             <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                         </div>
@@ -306,13 +322,13 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control-plaintext border-bottom" id="subsubunit-price-dollars" disabled />
+                                                    <input class="form-control-plaintext border-bottom " id="subsubunit-price-dollars" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
+                                                    <input class="form-control-plaintext border-bottom " name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
                                                 </div>
                                             </div>
                                         </div>
@@ -325,8 +341,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                         <label asp-for="Request.Cost" class="control-label"></label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" name="sumDollars" disabled />
-                                                        @*id="sumDollars" name="sumDollars"*@
+                                            <input asp-for="Request.Cost" class="form-control-plaintext border-bottom " name="sumDollars" />@*id="sumDollars" name="sumDollars"*@
                                         </div>
                                         <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                     </div>
@@ -336,7 +351,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                         <label class="control-label">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input class="form-control-plaintext border-bottom" name="sumShekel" id="sumShekel" disabled />
+                                            <input class="form-control-plaintext border-bottom " name="sumShekel" id="sumShekel" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -345,7 +360,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                         <label asp-for="Request.VAT" class="control-label"></label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input asp-for="Request.VAT" class="form-control-plaintext border-bottom id="vatInShekel" disabled />
+                                            <input asp-for="Request.VAT" class="form-control-plaintext border-bottom -plaintext id="vatInShekel" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -354,7 +369,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                         <label class="control-label">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input class="form-control-plaintext border-bottom" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                                            <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -363,7 +378,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                         <label class="control-label">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input class="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                            <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -389,7 +404,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.Installments" class="form-control-plaintext border-bottom" />
+                                        <input asp-for="Request.ParentRequest.Installments" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -404,7 +419,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                             </tr>
                                         </thead>
                                         @{
-                                            if (true) //originally was is (edit) but the edit variable was taken out
+                                            if (edit)
                                             {
                                                 if (Model.Request.ParentRequest.Payments != null)
                                                 {
@@ -426,7 +441,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                                 {
                                                     <tr>
                                                         <td>
-                                                            <input asp-for="NewPayments[x].PaymentDate" class="form-control-plaintext border-bottom" />
+                                                            <input asp-for="NewPayments[x].PaymentDate" class="form-control-plaintext border-bottom " />
                                                             <span asp-validation-for="NewPayments[x].PaymentDate" class="text-danger"></span>
                                                         </td>
                                                         <td>
@@ -437,16 +452,16 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
         dataValueField: "PaymentTypeID",
         dataTextField: "PaymentTypeDescription"),
         optionLabel: "Select A Payment Type ",
-        htmlAttributes: new { @class = "form-control-plaintext border-bottom paymentType" }
+        htmlAttributes: new { @class = "form-control-plaintext border-bottom  paymentType" }
                                                             )
                                                             <span asp-validation-for="NewPayments[x].CompanyAccount.PaymentType" class="text-danger"></span>
                                                         </td>
                                                         <td>
-                                                            <select asp-for="NewPayments[x].CompanyAccount" class="form-control-plaintext border-bottom companyAccountNum"></select>
+                                                            <select asp-for="NewPayments[x].CompanyAccount" class="form-control-plaintext border-bottom  companyAccountNum"></select>
                                                             <span asp-validation-for="NewPayments[x].CompanyAccount.CompanyAccountNum" class="text-danger"></span>
                                                         </td>
                                                         <td>
-                                                            <input asp-for="NewPayments[x].PaymentID" class="form-control-plaintext border-bottom" />
+                                                            <input asp-for="NewPayments[x].PaymentID" class="form-control-plaintext border-bottom " />
                                                             <span asp-validation-for="NewPayments[x].PaymentID" class="text-danger"></span>
                                                         </td>
                                                     </tr>
@@ -459,7 +474,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label class="control-label">Debt</label>
-                                        <input class="form-control-plaintext border-bottom" value="Automatically calculate..." disabled />
+                                        <input class="form-control-plaintext border-bottom -plaintext" value="Automatically calculate..." disabled />
                                     </div>
                                 </div>
                             </div>
@@ -471,7 +486,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                 <div class="col-md-3">
                                     <label class="control-label order-doc">Order Doc</label>
                                     <div class="custom-file">
-                                        <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom custom-file-input" multiple />
+                                        <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" multiple />
                                         <label class="custom-file-label">Choose File...</label>
                                     </div>
                                     @if (Model.OrderFileStrings != null)
@@ -490,39 +505,39 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">Invoice Doc</label>
-                                    <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom-file" />
+                                    <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom -file" />
                                     <span class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">Shipment Doc</label>
-                                    <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom-file" />
+                                    <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom -file" />
                                     <span class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">Quote Doc</label>
-                                    <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom-file" />
+                                    <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom -file" />
                                     <span class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     <label class="control-label">Info Doc</label>
-                                    <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom-file" />
+                                    <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom -file" />
                                     <span class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">Pictures Doc</label>
-                                    <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom-file" />
+                                    <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom -file" />
                                     <span class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">Return Doc</label>
-                                    <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom-file" />
+                                    <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom -file" />
                                     <span class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">Credit Doc</label>
-                                    <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom-file" />
+                                    <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom -file" />
                                     <span class="text-danger"></span>
                                 </div>
                             </div>
@@ -577,21 +592,32 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                     <div class="font-weight-bold">+NewComment</div>
                                     <div class="form-group">
                                         <label asp-for="NewComment.CommentText" class="control-label"></label>
-                                        <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom" />
+                                        <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @*<div id="order" class="tab-pane fade">
+                        <div id="order" class="tab-pane fade">
                             <h3>ORDER</h3>
                             <hr />
                             <div class="form-group">
-                                <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
-
+                                @*you can only add to cart if you are creating a new one*@
+                                @if (create)
+                                {
+                                    <input type="submit" name="OrderType" value="Order" asp-action="ModalView" class="btn btn-outline-primary" />
+                                    <input type="submit" name="OrderType" value="Without Order" asp-action="ModalView" class="btn btn-outline-primary" />
+                                    <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
+                                }
+                                else
+                                {
+                                    //not sure if we need the name=OrderType here b/c it's just editing details
+                                    <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
+                                }
+                                @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
                             </div>
-                        </div>*@
+                        </div>
                     </div>
 
                 </div>
