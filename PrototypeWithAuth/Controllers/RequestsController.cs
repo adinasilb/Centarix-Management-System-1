@@ -423,7 +423,7 @@ namespace PrototypeWithAuth.Controllers
         }
         public async Task<IActionResult> ModalView(int? id, bool NewRequestFromProduct = false)
         {
-            string ModalViewType = "";
+            //string ModalViewType = "";
             if (id == null)
             {
                 return NotFound();
@@ -455,7 +455,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (NewRequestFromProduct)
             {
-                ModalViewType = "Create"; //?
+
 
                 requestItemViewModel.Request = new Request();
                 requestItemViewModel.Request.ParentRequest = new ParentRequest();
@@ -477,7 +477,6 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                ModalViewType = "Edit";
 
                 requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
                     .Include(r => r.ParentRequest)
@@ -531,7 +530,6 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-            ViewData["ModalViewType"] = ModalViewType;
             //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
             //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
             //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);

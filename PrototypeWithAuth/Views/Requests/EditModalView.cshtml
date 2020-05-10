@@ -1,20 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
 
-@{
-    string Type = ViewData["ModalViewType"].ToString();
-    bool create = false;
-    bool edit = false;
-    switch (Type)
-    {
-        case "Create":
-            create = true;
-            break;
-        case "Edit":
-            edit = true;
-            break;
-    }
-}
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
@@ -48,7 +34,7 @@
                     <br />
                 }
                 <div class="form-group">
-                    <h4><label asp-for="Request.Product.ProductName" class="control-label">@Type Request : </label> </h4>
+                    <h4><label asp-for="Request.Product.ProductName" class="control-label"> Request : </label> </h4>
                     <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded" /></h4>
                 </div>
                 <span asp-validation-for="Request.Product.ProductName"></span>
@@ -419,7 +405,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             </tr>
                                         </thead>
                                         @{
-                                            if (edit)
+                                            if (true) //if is edit
                                             {
                                                 if (Model.Request.ParentRequest.Payments != null)
                                                 {
@@ -603,7 +589,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             <hr />
                             <div class="form-group">
                                 @*you can only add to cart if you are creating a new one*@
-                                @if (create)
+                                @if (false) //if is create
                                 {
                                     <input type="submit" name="OrderType" value="Order" asp-action="ModalView" class="btn btn-outline-primary" />
                                     <input type="submit" name="OrderType" value="Without Order" asp-action="ModalView" class="btn btn-outline-primary" />
