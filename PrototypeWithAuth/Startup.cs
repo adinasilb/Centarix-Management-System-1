@@ -48,7 +48,14 @@ namespace PrototypeWithAuth
 
 
             services.AddControllersWithViews();
-            services.AddRazorPages();
+
+
+            // Enable Razor pages, but in the Debug configuration, compile the views at runtime, for ease of development
+            IMvcBuilder builder = services.AddRazorPages();
+#if DEBUG
+            builder.AddRazorRuntimeCompilation();
+#endif            
+            
             // in order to be able to customize the aspnetcore identity
 
             services.AddMvc(config => //this creates a global authorzation - meaning only registered users can use view the application
@@ -109,7 +116,7 @@ namespace PrototypeWithAuth
 
         }
 
-        // Seed database with new roles
+        //Seed database with new roles
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
@@ -127,7 +134,7 @@ namespace PrototypeWithAuth
                 }
             }
             var poweruser = new ApplicationUser();
-            poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+            poweruser = await UserManager.FindByEmailAsync("dani@gmail.com");
 
             await UserManager.AddToRoleAsync(poweruser, "Admin");
         }

@@ -66,8 +66,10 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    font-family: 'Roboto', sans-serif;
+
 }
 .footer {
   position: absolute;
@@ -77,3 +79,61 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+/* <<<<<Dani's added CSS below>>>>> */
+
+.login-field {
+    border: 1.5px solid black;
+    border-radius: 2px;
+    font-size:1.2em;
+    padding: 1.2em 1em;
+}
+
+.login-button {
+    padding: 5px 50px;
+    line-height: 120%;
+    font-size: 90%;
+    text-transform: uppercase;
+    border-radius: 2px;
+    font-weight:600;
+    background-color: #db2127;
+    color: white;
+}
+
+.ourNavBar li a { color: #333 }
+.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink { color: #30BCC9 !important }
+
+.module-buttons {
+    border-radius: 0.5em;
+    height: 8em;
+    width: 8em;
+    color: white;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+/*module button colors*/
+
+.clr-ord {
+    background-color: #30BCC9;
+}
+.clr-prot {
+    background-color: #00CA72;
+}
+.clr-ops {
+    background-color: #5F79E2;
+}
+.clr-bio {
+    background-color: #E95252;
+}
+.clr-lab {
+    background-color: #D5A522;
+}
+.clr-acc {
+    background-color: #A26FF0;
+}
+.clr-exp {
+    background-color: #E27933;
+}
+.clr-usrs {
+    background-color: #DB669D;
+}

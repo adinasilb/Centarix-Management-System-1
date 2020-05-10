@@ -22,7 +22,7 @@
 
     //passing the
     string initalClasses = "nav-link";
-    string currentClasses = " text-dark";
+    string currentClasses = " text-dark activeNavLink";
     string inventoryClass = initalClasses;
     string requestClass = initalClasses;
     string cartClass = initalClasses;
@@ -46,7 +46,6 @@
             locationClass = initalClasses + currentClasses;
             break;
     }
-
     /*Determine Active Nav Link END*/
 
 }
@@ -58,6 +57,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" />
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
@@ -70,28 +71,28 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 ourNavBar">
             <div class="container-fluid">
                 <div class="container-fluid justify-content-start float-left d-inline-block" style="width:auto">
-                    <h1><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Centarix</a></h1>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix Logo only.png" height="20" alt="Logo" /></a>
                 </div>
                 <div class="container-fluid">
-                    <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left">
-                        <li class="nav-item">
+                    <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left font-weight-bold">
+                        <li class="nav-item ml-5">
                             @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @role = "button", @id = "inventory-link" })
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item ml-5">
                             @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item ml-5">
                             @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item ml-5">
                             @Html.ActionLink("Cart", "AddToCart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item ml-5">
                             @*Redo the location class in the controller*@
-                            @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = locationClass, @role="button", @id="request-link" })
+                            @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = locationClass, @role = "button", @id = "request-link" })
                         </li>
                     </ul>
                 </div>
@@ -99,7 +100,7 @@
                     <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</a>
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</a>
                             </li>
                             <li class="nav-item">
                                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

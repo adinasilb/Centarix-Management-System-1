@@ -12,7 +12,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" />
+
 </head>
 <body>
     @if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
@@ -25,12 +28,13 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
 
-
+                    @*Need to remove "Hello!" and add profile picture. find out where to access images and database for profile*@
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</a>
                         </li>
                         <li class="nav-item">
+                            @*this is the only difference between the IFs. consider revising to tidy*@
                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })">
                                 <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
                             </form>
@@ -43,39 +47,43 @@
     }
     else if (SignInManager.IsSignedIn(User))
     {
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
 
 
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</a>
-                    </li>
-                    <li class="nav-item">
-                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                        </form>
-                    </li>
-                </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</a>
+                        </li>
+                        <li class="nav-item">
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
     }
 
-    <div class="text-center container">
-        <h1>Centarix</h1>
-        <h5>Fight Aging or Die Trying</h5>
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<div class="text-center container col-md-7 offset-2.5" style="padding: 4em">
 
+    <img style="width: 30em" class="mb-3" src="~/images/css/Centarix Logo.png" alt="Centarix Logo" />
+
+    <h4 class="mb-5">Fight Aging or Die Trying</h4>
+   
+
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+    
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

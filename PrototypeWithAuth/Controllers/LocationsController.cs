@@ -27,6 +27,9 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            // Added by Dani because to make CSS work better
+            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
+            
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
             {
                 //exclude the box and cell from locationsDepthOfZero
