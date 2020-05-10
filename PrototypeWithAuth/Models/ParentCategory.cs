@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.Models
         public int ParentCategoryID { get; set; }
 
         [Required]
+        [Display(Name = "Category")]
         public string ParentCategoryDescription { get; set; }
             
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }

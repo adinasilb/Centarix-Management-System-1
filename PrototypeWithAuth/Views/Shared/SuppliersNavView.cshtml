@@ -3,18 +3,6 @@
 @{
     ViewData["Title"] = "SuppliersNavView";
     Layout = "~/Views/Shared/PaymentView.cshtml";
-
-    //change enum to paymenmts enum , have to figure out how to filter accordingly
-
-    //AppUtility.RequestPageTypeEnum pageTypeString = AppUtility.RequestPageTypeEnum.None;
-    //if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Request))
-    //{
-    //    pageTypeString = AppUtility.RequestPageTypeEnum.Request;
-    //}
-    //else if (TempData["PageType"].Equals(AppUtility.RequestPageTypeEnum.Inventory))
-    //{
-    //    pageTypeString = AppUtility.RequestPageTypeEnum.Inventory;
-    //}
 }
 
 <div class="row">
@@ -28,11 +16,6 @@
                 @Html.ActionLink("New Supplier", "Create", "Vendors", new { }, new { @class = "btn btn-link text-dark" })
             </li>
             <li class="nav-item">
-                @Html.ActionLink("Search Suppliers", "Search", "Vendors", new { }, new { @class = "btn btn-link text-dark" })
-            </li>
-
-            <li class="nav-item">
-                @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
                 <button class="btn btn-link text-dark load-vendor-search" data-backdrop="static" data-keyboard="false">Search Suppliers</button>
             </li>
         </ul>

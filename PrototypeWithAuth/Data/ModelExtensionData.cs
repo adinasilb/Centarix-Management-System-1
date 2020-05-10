@@ -12,6 +12,7 @@ namespace PrototypeWithAuth.Data
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
+            //if any data is changed in parent categories - must edit parentRequestController monthly view models - had to hard code categories so if add any more have to adjust
             modelBuilder.Entity<ParentCategory>().HasData
            (
                new ParentCategory
