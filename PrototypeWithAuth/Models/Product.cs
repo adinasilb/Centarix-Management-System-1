@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.Models
         public int ProductID { get; set; }
 
         [Required]
-        [Display(Name = "Item Name")]
+        [Display(Name = "Item")]
         public string ProductName { get; set; }
 
         [Required] //vendor, or vendor id?
@@ -27,7 +27,6 @@ namespace PrototypeWithAuth.Models
         
         public ProductSubcategory ProductSubcategory { get; set; }
         public IEnumerable<Request> Requests { get; set; }
-        public int? LocationID { get; set; }
         public string Handeling { get; set; }
 
 
@@ -41,7 +40,7 @@ namespace PrototypeWithAuth.Models
 
         public string ProductComment { get; set; }
         
-        [Display(Name = "Item Image")]
+        [Display(Name = "Image")]
         public string ProductMedia { get; set; }
 
     }

@@ -130,7 +130,16 @@ namespace PrototypeWithAuth.Controllers
             List<MonthlyTotalsViewModel> monthlyTotals = new List<MonthlyTotalsViewModel>();
 
             var requestsByMonthAndYear = _context.Requests.Select(r => new { Year = r.ParentRequest.OrderDate.Year, Month = r.ParentRequest.OrderDate.Month }).Distinct();
-            var year = requestsByMonthAndYear.FirstOrDefault().Year;
+            int year;
+            if (_context.Requests.IsEmpty())
+            {
+                year = 0;
+            }
+            else
+            {
+                year = requestsByMonthAndYear.FirstOrDefault().Year;
+            }
+ 
             foreach (var req in requestsByMonthAndYear)
             {
                 var requestsinMonthAndYear = _context.Requests.Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(p => p.ParentCategory).Where(r => r.ParentRequest.OrderDate.Year == req.Year).Where(r => r.ParentRequest.OrderDate.Month == req.Month).ToList();

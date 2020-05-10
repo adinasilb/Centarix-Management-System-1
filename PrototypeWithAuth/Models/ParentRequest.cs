@@ -21,6 +21,8 @@ namespace PrototypeWithAuth.Models
 
         [DataType(DataType.Date)]
         public DateTime OrderDate { get; set; }
+        
+        [Display(Name = "No")]
         public int? OrderNumber { get; set; }
         public string InvoiceNumber { get; set; }
 

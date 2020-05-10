@@ -50,6 +50,7 @@ namespace PrototypeWithAuth.Models
         public uint Quantity { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Price")]
         public double Cost { get; set; }
         public string CatalogNumber { get; set; }
         public string SerialNumber { get; set; }
