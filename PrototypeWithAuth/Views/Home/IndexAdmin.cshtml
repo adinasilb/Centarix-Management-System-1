@@ -11,6 +11,8 @@
 }
 @*Need to add security here*@
 
+@*<<<< Module Selection Page >>>>*@
+
     <div class="text-center">
         <h4>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h4>
         <br />
@@ -44,8 +46,9 @@
             </div>
         </div>
 
+        @* <<<< old Index Options >>>>>
 
-        @*<div class="mt-5">
+        <div class="mt-5">
             <button type="submit" class="btn btn-success module-buttons">Protocols</button>
             &nbsp;
             @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-info module-buttons" })
@@ -55,6 +58,8 @@
             <button type="submit" class="btn btn-danger module-buttons">Biomarkers</button>
             &nbsp;
             @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-secondary module-buttons" })
-        </div>*@
+        </div>
+            
+            *@
 
     </div>
