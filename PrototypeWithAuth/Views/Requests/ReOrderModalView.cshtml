@@ -10,7 +10,6 @@
 
 
         <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-            REORDER MODAL VIEW
 
             @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
             @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -32,11 +31,11 @@
                     <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
                     <br />
                 }
-                <div class="form-group">
-                    <h4><label asp-for="Request.Product.ProductName" class="control-label"> Request : </label> </h4>
-                    <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded" /></h4>
-                </div>
-                <span asp-validation-for="Request.Product.ProductName"></span>
+            <div class="form-group">
+                <h4><label asp-for="Request.Product.ProductName" class="control-label"> Request : </label> </h4>
+                <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>
+                <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
+            </div>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
