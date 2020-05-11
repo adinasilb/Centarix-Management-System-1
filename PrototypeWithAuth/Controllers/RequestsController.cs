@@ -1584,15 +1584,6 @@ namespace PrototypeWithAuth.Controllers
             return Json(companyAccountList);
         }
 
-        [HttpGet]
-        public IActionResult ReceivedModalVisualLocations(int locationInstanceID)
-        {
-            ReceivedModalVisualLocationsViewModel receivedModalVisualLocationsViewModel = new ReceivedModalVisualLocationsViewModel()
-            {
-                locationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == locationInstanceID).FirstOrDefault()
-            };
-            return PartialView(receivedModalVisualLocationsViewModel);
-        }
 
     }
 }

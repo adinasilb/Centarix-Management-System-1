@@ -417,29 +417,5 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult SubLocationInstances(int locationTypeID = 0, int parentLocationInstanceID = 0)
-        {
-            SubLocationInstancesViewModel subLocationInstancesViewModel = new SubLocationInstancesViewModel();
-
-            if (locationTypeID > 0)
-            {
-                subLocationInstancesViewModel.ListLocationInstances = _context.LocationInstances.Where(m => m.LocationTypeID == locationTypeID).ToList();
-                //subLocationInstancesViewModel.LocationTypeName = _context.LocationTypes.Where(m => m.LocationTypeID == locationTypeID).FirstOrDefault().LocationTypeName;
-            }
-            else if (parentLocationInstanceID > 0)
-            {
-                subLocationInstancesViewModel.ListLocationInstances = _context.LocationInstances.Where(m => m.LocationInstanceParentID == parentLocationInstanceID).ToList();
-                
-            }
-
-            if (subLocationInstancesViewModel.ListLocationInstances == null || subLocationInstancesViewModel.ListLocationInstances.Any()){
-                subLocationInstancesViewModel.LocationTypeName = _context.LocationTypes
-                    .Where(m => m.LocationTypeID == subLocationInstancesViewModel.ListLocationInstances.FirstOrDefault().LocationTypeID)
-                    .FirstOrDefault().LocationTypeName;
-            }
-
-            return PartialView(subLocationInstancesViewModel);
-        }
     }
 }
