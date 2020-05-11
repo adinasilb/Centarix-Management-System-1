@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <PackageReference Include="itext7" Version="7.1.10" />
+    <PackageReference Include="MailKit" Version="2.6.0" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
@@ -51,10 +52,7 @@
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />
 
-	<PackageReference
-        Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
-        Version="3.1.0"
-        Condition="'$(Configuration)' == 'Debug'" />
+	<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.0" Condition="'$(Configuration)' == 'Debug'" />
 
   </ItemGroup>
 

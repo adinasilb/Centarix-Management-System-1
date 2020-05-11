@@ -13,6 +13,8 @@ namespace PrototypeWithAuth.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        internal readonly object AspNetUsers;
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

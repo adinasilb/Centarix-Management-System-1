@@ -20,6 +20,10 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MailKit.Net.Smtp;
+using MailKit;
+using MimeKit;
+using System.Linq.Expressions;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -1386,16 +1390,62 @@ namespace PrototypeWithAuth.Controllers
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "OrderPDFs");
             string uploadFile = Path.Combine(uploadFolder, requestThatIsApproved.RequestID.ToString() + ".pdf");
 
-            //the partial file name that we will search for (1- because we want the first one)
-            //creating the directory from the path made earlier
-
-            //string path = "wwwroot//OrderPDFs//" + requestThatIsApproved.RequestID + ".pdf";
-            //searching for the partial file name in the directory
-            // FileInfo orderfilesfound = uploadFolder1.GetFiles("*.*");
-            //checking if there were any files found before looping through them (to prevent an error)
             if (System.IO.File.Exists(uploadFile))
             {
-                //getting the file from the FileInfo[]
+                //instatiate mimemessage
+                var message = new MimeMessage();
+
+                //instantiate the body builder
+                var builder = new BodyBuilder();
+
+
+
+                var request = _context.Requests.Where(r => r.RequestID == requestThatIsApproved.RequestID).Include(r => r.ParentRequest).ThenInclude(r=>r.ApplicationUser).Include(r=>r.Product).ThenInclude(r=>r.Vendor).FirstOrDefault();
+                string ownerEmail = request.ParentRequest.ApplicationUser.Email;
+                string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
+                string ownerPassword = request.ParentRequest.ApplicationUser.PasswordHash;
+                string vendorEmail = request.Product.Vendor.OrderEmail;
+                string vendorName = request.Product.Vendor.VendorEnName;
+
+                //add a "From" Email
+                message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
+
+                // add a "To" Email
+                message.To.Add(new MailboxAddress(vendorName, vendorEmail));
+
+                //subject
+                message.Subject = "Order from Centarix to " + vendorName;
+
+                //body
+                builder.TextBody = @"Please see attached order" + "\n" + "Thank you";
+                builder.Attachments.Add(uploadFile);
+
+                message.Body = builder.ToMessageBody();
+
+                bool wasSent = false;
+
+                using (var client = new SmtpClient())
+                {
+                    
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate(ownerEmail, "FakeUser@123"); // set up two step authentication and get app password
+                    try
+                    {
+                        client.Send(message);
+                        wasSent = true;
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+          
+                    client.Disconnect(true);
+                    if (wasSent)
+                    {
+                        request.RequestStatusID = 2;
+                        await _context.SaveChangesAsync();
+                    }
+                    
+                }
                 return RedirectToAction("Index");
             }
 
