@@ -1350,7 +1350,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * BEGIN SEND EMAIL
          */
-
+         [HttpGet]
         public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
         {
             Request request = await _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).FirstOrDefaultAsync();
@@ -1377,11 +1377,12 @@ namespace PrototypeWithAuth.Controllers
             document.Add(new Paragraph("City" + request.Product.Vendor.VendorCity));
             document.Close();
 
+
             return View(request);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmEmailModal()
+        public async Task<IActionResult> ConfirmEmailModal(Request requestThatIsApproved)
         {
             return RedirectToAction("Index");
         }
