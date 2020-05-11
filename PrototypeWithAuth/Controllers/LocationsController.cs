@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
@@ -29,7 +30,7 @@ namespace PrototypeWithAuth.Controllers
         {
             // Added by Dani because to make CSS work better
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
-            
+
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
             {
                 //exclude the box and cell from locationsDepthOfZero
@@ -415,5 +416,30 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index");
         }
 
+
+        [HttpGet]
+        public IActionResult SubLocationInstances(int locationTypeID = 0, int parentLocationInstanceID = 0)
+        {
+            SubLocationInstancesViewModel subLocationInstancesViewModel = new SubLocationInstancesViewModel();
+
+            if (locationTypeID > 0)
+            {
+                subLocationInstancesViewModel.ListLocationInstances = _context.LocationInstances.Where(m => m.LocationTypeID == locationTypeID).ToList();
+                //subLocationInstancesViewModel.LocationTypeName = _context.LocationTypes.Where(m => m.LocationTypeID == locationTypeID).FirstOrDefault().LocationTypeName;
+            }
+            else if (parentLocationInstanceID > 0)
+            {
+                subLocationInstancesViewModel.ListLocationInstances = _context.LocationInstances.Where(m => m.LocationInstanceParentID == parentLocationInstanceID).ToList();
+                
+            }
+
+            if (subLocationInstancesViewModel.ListLocationInstances == null || subLocationInstancesViewModel.ListLocationInstances.Any()){
+                subLocationInstancesViewModel.LocationTypeName = _context.LocationTypes
+                    .Where(m => m.LocationTypeID == subLocationInstancesViewModel.ListLocationInstances.FirstOrDefault().LocationTypeID)
+                    .FirstOrDefault().LocationTypeName;
+            }
+
+            return PartialView(subLocationInstancesViewModel);
+        }
     }
 }

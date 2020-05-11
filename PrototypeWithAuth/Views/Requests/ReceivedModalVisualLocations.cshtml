@@ -1,0 +1,15 @@
+﻿@model PrototypeWithAuth.ViewModels.ReceivedModalVisualLocationsViewModel
+
+@Model.locationInstance.LocationInstanceName
+
+<table class="table table-bordered">
+    @for (int x = 1; x <= Model.locationInstance.Height; x++)
+    {
+        <tr>
+            @for (int y = 1; y <= Model.locationInstance.Width; y++)
+            {
+                <td>---</td>
+            }
+        </tr>
+    }
+</table>

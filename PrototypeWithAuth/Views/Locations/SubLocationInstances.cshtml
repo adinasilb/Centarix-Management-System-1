@@ -1,25 +1,12 @@
-﻿@model PrototypeWithAuth.ViewModels.SubLocationViewModel
+﻿@model PrototypeWithAuth.ViewModels.SubLocationInstancesViewModel
 
-@{
-    var i = 0;
-}
-@foreach (var item in Model.LocationTypes)
-
+@if (Model.ListLocationInstances == null || Model.ListLocationInstances.Any())
 {
-    <div class=" form-group">
-        @Html.DisplayFor(modelItem => item.LocationTypeName)
-        <br />
-        <label asp-for="LocationInstances[i].Height" class="control-label"></label>
-        <input asp-for="LocationInstances[i].Height" class=" form-control" />
-
-        <label asp-for="LocationInstances[i].Width" class="control-label"></label>
-        <input asp-for="LocationInstances[i].Width" class="form-control" />
-
-        <input asp-for="LocationInstances[i].LocationTypeID" class=" form-control" value="@item.LocationTypeID" type="hidden" />
-        @*<input id="LocationInstances_0__LocationTypeID" name="LocationInstances[0].LocationTypeID" type="hidden" value=@item.LocationTypeID />*@
-
-        @*@Html.HiddenFor(m => m.LocationInstances[i].LocationTypeID, new { Value = item.LocationTypeID })*@
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <div class="col-md-12">
+        <label class="control-label">@Model.LocationTypeName:</label>
+        @Html.DropDownListFor(m => m.locationInstanceSelected,
+            new SelectList(Model.ListLocationInstances, "LocationInstanceID", "LocationInstanceName"),
+        "Select " + Model.LocationTypeName, new { @class = "form-control-plaintext border-bottom locationInstanceName" })
     </div>
-    i++;
-
 }

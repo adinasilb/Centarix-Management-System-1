@@ -8,6 +8,8 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class SubLocationInstancesViewModel
     {
-        public List<List<LocationInstance>> ListLocationInstances { get; set; }
+        public List<LocationInstance> ListLocationInstances { get; set; }
+        public string LocationTypeName { get; set; } //this is just so that its clear to the user what to select in the front end
+        public int locationInstanceSelected { get; set; }
     }
 }

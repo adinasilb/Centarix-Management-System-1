@@ -453,7 +453,7 @@ $("#locationTypeDepthZero").change(function () {
 	console.log("selectedId: " + selectedId);
 	$.ajax({
 		//IMPORTANT: ADD IN THE ID
-		url: "/Locations/SubLocation/?ParentLocationTypeID=" + selectedId,
+		url: "/Locations/SubLocationInstances/?locationTypeID=" + selectedId,
 		type: 'GET',
 		cache: false,
 		context: myDiv,
@@ -461,6 +461,42 @@ $("#locationTypeDepthZero").change(function () {
 			this.html(result);
 		}
 	});
+	//$(document).ajaxStart(function () {
+	//	$("#loading").show();
+	//});
+
+	//$(document).ajaxComplete(function () {
+	//	$("#loading").hide();
+	//});
+});
+
+//AjAx for next list with parent instance id
+$(".locationInstanceName").change(function () {
+	console.log("changed the next location type");
+	var selectionDiv = $(".divSublocations");
+	var visualDiv = $(".visualView");
+	//selectionDiv.html(""); //NEED TO IMPLEMENT THIS SOMEWHERE ELSE!!!
+	var selectedId = $(this).children("option:selected").val();
+	console.log("selectedId: " + selectedId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/SubLocationInstances/?parentLocationInstanceID=" + selectedId,
+		type: 'GET',
+		cache: false,
+		context: selectionDiv,
+		success: function (result) {
+			this.append(result);
+		}
+	});
+	$.ajax({
+		url: "/Requests/ReceivedModalVisualLocations/?locationInstanceID=" + selectedId,
+		type: 'GET',
+		cache: false,
+		context: visualDiv,
+		success: function (result) {
+			this.html(result);
+		}
+	})
 	//$(document).ajaxStart(function () {
 	//	$("#loading").show();
 	//});

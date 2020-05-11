@@ -13,5 +13,7 @@ namespace PrototypeWithAuth.ViewModels
         public int LocationTypeID { get; set; }//this is just here for now so we have a place to store the dropdownlistfor but I don't know if we actually needs to save it b/c we don't need to access it
         public IEnumerable<LocationType> locationTypesDepthZero { get; set; }
         public List<LocationInstance> locationInstancesSelected { get; set; }
+
+        public List<SubLocationInstancesViewModel> subLocationInstancesViewModels {get; set;}
     }
 }

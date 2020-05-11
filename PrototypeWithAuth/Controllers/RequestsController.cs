@@ -1554,7 +1554,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel)
+        public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, SubLocationInstancesViewModel subLocationInstancesViewModel)
         {
             return RedirectToAction("Index");
         }
@@ -1584,7 +1584,15 @@ namespace PrototypeWithAuth.Controllers
             return Json(companyAccountList);
         }
 
-
+        [HttpGet]
+        public IActionResult ReceivedModalVisualLocations(int locationInstanceID)
+        {
+            ReceivedModalVisualLocationsViewModel receivedModalVisualLocationsViewModel = new ReceivedModalVisualLocationsViewModel()
+            {
+                locationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == locationInstanceID).FirstOrDefault()
+            };
+            return PartialView(receivedModalVisualLocationsViewModel);
+        }
 
     }
 }
