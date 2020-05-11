@@ -12,13 +12,12 @@
             @foreach (var group in Model.GroupBy(m => m.OrderDate.Year))
             {
 
-                <li class="nav-item">
+            <li class="nav-item">
+                <a href="#@group.Key">
+                    @group.Key
 
-                    <a href="#@Model.ElementAt(yearCount).OrderDate.Year">
-                        @Model.ElementAt(yearCount).OrderDate.Year@*.ToString("yyyy",
-                CultureInfo.CreateSpecificCulture("en-US"))*@
                     </a>
-                </li>
+            </li>
                 yearCount++;
             }
         </ul>
