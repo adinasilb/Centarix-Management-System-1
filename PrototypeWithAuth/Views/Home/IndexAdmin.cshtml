@@ -17,31 +17,33 @@
         <h4>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h4>
         <br />
         <br />
-        <div class="row">
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-6 mb-4">@Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn module-buttons clr-ord" })</div>
-                    <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-prot"><i class="fas fa-at fa-lg"></i><br />Protocols</a></div>
+        <div class="container col-md-10 offset-1">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6 mb-4">@Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn module-buttons clr-ord" })</div>
+                        <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-prot"><i class="fas fa-at fa-lg"></i><br />Protocols</a></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-ops"><i class="far fa-building fa-lg"></i><br />Operations</a></div>
+                        <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-bio"><i class="fas fa-dna fa-lg"></i><br />Biomarkers</a></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-ops"><i class="far fa-building fa-lg"></i><br />Operations</a></div>
-                    <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-bio"><i class="fas fa-dna fa-lg"></i><br />Biomarkers</a></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-lab"><i class="fas fa-flask fa-lg"></i><br />Lab Management</a></div>
+                        <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-acc"><i class="fas fa-chart-bar fa-lg"></i><br />Accounting</a></div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-lab"><i class="fas fa-flask fa-lg"></i><br />Lab Management</a></div>
-                    <div class="col-6 mb-4"><a href="" class="btn module-buttons clr-acc"><i class="fas fa-chart-bar fa-lg"></i><br />Accounting</a></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-6 mb-4">@Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn module-buttons clr-exp" })</div>
-                    <div class="col-6 mb-4">@Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn module-buttons clr-usrs" })</div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6 mb-4">@Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn module-buttons clr-exp" })</div>
+                        <div class="col-6 mb-4">@Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn module-buttons clr-usrs" })</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,7 +61,7 @@
             &nbsp;
             @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-secondary module-buttons" })
         </div>
-            
-            *@
+
+        *@
 
     </div>
