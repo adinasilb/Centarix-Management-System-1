@@ -102,38 +102,22 @@ body {
 .ourNavBar li a { color: #333 }
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink { color: #30BCC9 !important }
 
-.module-buttons {
-    border-radius: 0.5em;
-    height: 8em;
-    width: 8em;
-    color: white;
-    display: table-cell;
-    vertical-align: middle;
+.main-btn-img {
+    width: 9em;
+    
 }
 
-/*module button colors*/
+a.bold-hover-effects {
+    color: black !important;
+}
 
-.clr-ord {
-    background-color: #30BCC9;
+a.bold-hover-effects:hover {
+    color: black !important;
+    text-decoration: none;
+    font-weight: bold;
 }
-.clr-prot {
-    background-color: #00CA72;
+
+.module-button span {
+    font-size: 1.25em;
 }
-.clr-ops {
-    background-color: #5F79E2;
-}
-.clr-bio {
-    background-color: #E95252;
-}
-.clr-lab {
-    background-color: #D5A522;
-}
-.clr-acc {
-    background-color: #A26FF0;
-}
-.clr-exp {
-    background-color: #E27933;
-}
-.clr-usrs {
-    background-color: #DB669D;
-}
+

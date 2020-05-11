@@ -13,9 +13,10 @@
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> @*need to have decompressed full css file and set the apend tag to true in any file that doesnt hve or inherit from this file*@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> 
+    @*need to have decompressed full css file and set the apend tag to true in any file that doesnt hve or inherit from this file*@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/site.css" />
+    
 
 
 
@@ -34,7 +35,7 @@
                     @*Need to remove "Hello!" and add profile picture. find out where to access images and database for profile*@
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</a>
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName <img width="60px" style="border-radius: 30px;" src="~/images/css/default_user_image.png" alt="Alternate Text" /></a>
                         </li>
                         <li class="nav-item">
                             @*this is the only difference between the IFs. consider revising to tidy*@
@@ -77,9 +78,9 @@
 
 <div class="text-center container col-md-7 offset-2.5" style="padding: 4em">
 
-    <img style="width: 30em" class="mb-3" src="~/images/css/Centarix Logo.png" alt="Centarix Logo" />
-
-    <h4 class="mb-5">Fight Aging or Die Trying</h4>
+    <img style="width:30em; max-width: 100%" class="mb-3" src="~/images/css/Centarix Logo.png" alt="Centarix Logo" />
+    <br /><br />
+    <h2 style="color:#DB2127; font-weight:600" class="mb-5">Fight Aging or Die Trying</h2>
    
 
     <main role="main" class="pb-3">
