@@ -1403,8 +1403,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 return RedirectToAction("Error");
             }
-           
-           
+
+
         }
 
 
@@ -1543,8 +1543,14 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<IActionResult> ReceivedModal()
         {
-            ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel();
-            return View();
+            ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
+            {
+                locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
+                locationInstancesSelected = new List<LocationInstance>()
+            };
+            receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
+
+            return View(receivedLocationViewModel);
         }
 
         [HttpPost]

@@ -444,6 +444,34 @@ $.fn.AddSublocation = function () {
 	$sublocationCounter++;
 }
 
+//AJAX for received modal
+$("#locationTypeDepthZero").change(function () {
+	console.log("changed the original location type");
+	var myDiv = $(".divSublocations");
+	myDiv.html("");
+	var selectedId = $(this).children("option:selected").val();
+	console.log("selectedId: " + selectedId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/SubLocation/?ParentLocationTypeID=" + selectedId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {
+			this.html(result);
+		}
+	});
+	//$(document).ajaxStart(function () {
+	//	$("#loading").show();
+	//});
+
+	//$(document).ajaxComplete(function () {
+	//	$("#loading").hide();
+	//});
+});
+
+
+
 
 //AJAX partial view submit for addLocations --> Sublocations
 $("#LocationInstance_LocationTypeID").change(function () {
