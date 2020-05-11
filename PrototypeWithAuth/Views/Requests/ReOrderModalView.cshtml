@@ -101,7 +101,7 @@ Model.Vendors,
 dataValueField: "VendorID",
 dataTextField: "VendorEnName"),
 optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList" }
+htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList", @disabled="disabled" }
 )
                                         <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                     </div>
@@ -110,7 +110,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                     <div class="form-group">
                                         @* IN MIDDLE *@
                                         <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                                        <label class="vendorBusinessId form-control-plaintext border-bottom -plaintext" />
+                                        <label class="vendorBusinessId form-control-plaintext border-bottom" />
                                         @*don't need a validation here because you it's not saving*@
                                     </div>
                                 </div>
