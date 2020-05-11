@@ -1350,7 +1350,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * BEGIN SEND EMAIL
          */
-         [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
         {
             Request request = await _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).FirstOrDefaultAsync();
@@ -1384,7 +1384,29 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmEmailModal(Request requestThatIsApproved)
         {
-            return RedirectToAction("Index");
+
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "OrderPDFs");
+            string uploadFile = Path.Combine(uploadFolder, requestThatIsApproved.RequestID.ToString() + ".pdf");
+
+            //the partial file name that we will search for (1- because we want the first one)
+            //creating the directory from the path made earlier
+
+            //string path = "wwwroot//OrderPDFs//" + requestThatIsApproved.RequestID + ".pdf";
+            //searching for the partial file name in the directory
+            // FileInfo orderfilesfound = uploadFolder1.GetFiles("*.*");
+            //checking if there were any files found before looping through them (to prevent an error)
+            if (System.IO.File.Exists(uploadFile))
+            {
+                //getting the file from the FileInfo[]
+                return RedirectToAction("Index");
+            }
+
+            else
+            {
+                return RedirectToAction("Error");
+            }
+           
+           
         }
 
 
