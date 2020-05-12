@@ -4,6 +4,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "_LoginView";
+    //Layout = "~/Views/Shared/_GeneralView.cshtml";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -13,10 +14,10 @@
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> 
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @*need to have decompressed full css file and set the apend tag to true in any file that doesnt hve or inherit from this file*@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    
+
 
 
 
@@ -24,6 +25,7 @@
 <body>
     @if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
     {
+        @*<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })"> </form>*@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -47,6 +49,7 @@
                 </div>
             </div>
         </nav>
+
 
     }
     else if (SignInManager.IsSignedIn(User))
@@ -76,18 +79,18 @@
 
     }
 
-<div class="text-center container col-md-7 offset-2.5" style="padding: 4em">
+    <div class="text-center container col-md-7 offset-2.5" style="padding: 4em">
 
-    <img style="width:30em; max-width: 100%" class="mb-3" src="~/images/css/Centarix Logo.png" alt="Centarix Logo" />
-    <br /><br />
-    <h2 style="color:#DB2127; font-weight:600" class="mb-5">Fight Aging or Die Trying</h2>
-   
+        <img style="width:30em; max-width: 100%" class="mb-3" src="~/images/css/Centarix Logo.png" alt="Centarix Logo" />
+        <br /><br />
+        <h2 style="color:#DB2127; font-weight:600" class="mb-5">Fight Aging or Die Trying</h2>
 
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
-    
+
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
