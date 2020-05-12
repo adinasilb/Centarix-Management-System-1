@@ -1,0 +1,21 @@
+﻿@model PrototypeWithAuth.ViewModels.ReceivedModalSublocationsViewModel
+
+@for(int i= 0; i < Model.locationTypeNames.Count;i++)
+{
+    string selectClass = "form-control-plaintext border-bottom sLI selectLocationInstance" + i;
+    <div class="form-group">
+        <label class="control-label">@Model.locationTypeNames[i]</label>
+        @if (i == 0){
+            @Html.DropDownListFor(m => m.locationInstancesSelected[i],
+           new SelectList(Model.locationInstancesDepthZero, "LocationInstanceID", "LocationInstanceName"),
+    "Select " + Model.locationTypeNames[i], new { @class = selectClass, @id = Model.locationTypeNames[i] })
+        }
+        else
+        {
+            <select asp-for="locationInstancesSelected[i]" class="@selectClass" id="@Model.locationTypeNames[i]">
+
+            </select>
+        }
+    </div>
+    <br />
+}

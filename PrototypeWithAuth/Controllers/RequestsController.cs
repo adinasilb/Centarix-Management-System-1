@@ -1603,10 +1603,40 @@ namespace PrototypeWithAuth.Controllers
             return View(receivedLocationViewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, SubLocationInstancesViewModel subLocationInstancesViewModel)
+        [HttpGet]
+        public IActionResult ReceivedModalSublocations(int LocationTypeID)
         {
-            return RedirectToAction("Index");
+            ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
+            {
+                locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID),
+                locationTypeNames = new List<string>(),
+                locationInstancesSelected = new List<LocationInstance>()
+            };
+            bool finished = false;
+            int locationTypeIDLoop = LocationTypeID;
+            while (!finished)
+            {
+                //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
+                var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
+                string nextTYpeName = nextType.LocationTypeName;
+                int? tryNewLocationType = nextType.LocationTypeChildID;
+                //add it to the list in the viewmodel
+                receivedModalSublocationsViewModel.locationTypeNames.Add(nextTYpeName);
+
+                //while we're still looping through we'll instantiate the locationInstancesSelected so we can have dropdownlistfors on the view
+                receivedModalSublocationsViewModel.locationInstancesSelected.Add(new LocationInstance());
+
+                if (tryNewLocationType == null)
+                {
+                    //if its not null we can convert it and pass it in
+                    finished = true;
+                }
+                else
+                {
+                    locationTypeIDLoop = (Int32)tryNewLocationType;
+                }
+            }
+            return PartialView(receivedModalSublocationsViewModel);
         }
 
 

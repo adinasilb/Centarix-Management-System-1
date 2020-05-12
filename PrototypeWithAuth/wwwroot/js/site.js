@@ -444,6 +444,34 @@ $.fn.AddSublocation = function () {
 	$sublocationCounter++;
 }
 
+//AJAX load full partial view for modalview manage locations
+$("#locationTypeDepthZero").change(function () {
+	var myDiv = $(".divSublocations");
+	var selectedId = $(this).children("option:selected").val();
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + selectedId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {
+			this.html(result);
+		}
+	});
+	//$(document).ajaxStart(function () {
+	//	$("#loading").show();
+	//});
+
+	//$(document).ajaxComplete(function () {
+	//	$("#loading").hide();
+	//});
+});
+
+//Received Modal => fill up the next selectLocationInstance with the right selections
+$(".sLI").change(function () {
+	console.log("changed the select location instance");
+});
+
 
 //AJAX partial view submit for addLocations --> Sublocations
 $("#LocationInstance_LocationTypeID").change(function () {

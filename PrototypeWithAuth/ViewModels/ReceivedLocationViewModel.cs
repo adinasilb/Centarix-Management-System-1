@@ -14,6 +14,6 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<LocationType> locationTypesDepthZero { get; set; }
         public List<LocationInstance> locationInstancesSelected { get; set; }
 
-        public List<SubLocationInstancesViewModel> subLocationInstancesViewModels {get; set;}
+        //public List<SubLocationInstancesViewModel> subLocationInstancesViewModels {get; set;}
     }
 }
