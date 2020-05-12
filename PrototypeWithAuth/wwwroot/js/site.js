@@ -468,8 +468,10 @@ $("#locationTypeDepthZero").change(function () {
 });
 
 //Received Modal => fill up the next selectLocationInstance with the right selections
-$(".sLI").change(function () {
+$(".SLI").change(function () {
 	console.log("changed the select location instance");
+	var name = $(this).attr('name');
+	console.log("name: " + name);
 });
 
 

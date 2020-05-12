@@ -6,7 +6,7 @@
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view" role="document" style="max-height:100%; overflow-y:auto;">
     <div class="modal-content d-inline-block">
 
-        <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" id="ReceivedModalForm">
+        <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="modal-header border-bottom-0">
                 @if (TempData["ErrorMessage"] != null)
@@ -18,22 +18,23 @@
             </div>
             <div class="modal-body modal-dialog-scrollable">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label class="control-label" asp-for="locationTypesDepthZero"></label>
                             @Html.DropDownListFor(m => m.LocationTypeID,
-                                new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-                                "Select Type", new
-                                {
-                                    onchange = @"
-                                            var form = document.forms[0];
-                                            form.action='ReceivedModal';
-                                            form.submit();"
-                                ,
-                                @class = "form-control-plaintext border-bottom ",
-                                @id = "locationTypeDepthZero"
-                                })
+new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
+"Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="divSublocations">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="visualView">
+
                     </div>
                 </div>
             </div>
