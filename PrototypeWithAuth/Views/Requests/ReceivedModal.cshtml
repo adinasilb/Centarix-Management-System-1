@@ -16,26 +16,26 @@
                 }
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-dialog-scrollable">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-10">
                         <div class="form-group">
-
+                            <label class="control-label" asp-for="locationTypesDepthZero"></label>
+                            @Html.DropDownListFor(m => m.LocationTypeID,
+new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
+"Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
                         </div>
                     </div>
-                    <div class="col-md-3">
-
-                    </div>
-                    <div class="col-md-2">
-
-                    </div>
-                    <div class="col-md-2">
-
-                    </div>
-                    <div class="col-md-2">
-
-                    </div>
                 </div>
+                <div class="divSublocations">
+
+                </div>
+                <div class="visualView">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" asp-action="ReceivedModal" class="btn btn-secondary" />
             </div>
         </form>
 

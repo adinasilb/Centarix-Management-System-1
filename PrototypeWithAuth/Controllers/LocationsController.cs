@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
@@ -29,7 +30,7 @@ namespace PrototypeWithAuth.Controllers
         {
             // Added by Dani because to make CSS work better
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
-            
+
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
             {
                 //exclude the box and cell from locationsDepthOfZero
@@ -414,6 +415,7 @@ namespace PrototypeWithAuth.Controllers
 
             return RedirectToAction("Index");
         }
+
 
     }
 }
