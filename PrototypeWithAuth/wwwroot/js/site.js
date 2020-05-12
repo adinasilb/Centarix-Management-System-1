@@ -472,19 +472,38 @@ $(".SLI").change(function () {
 	var name = $(this).attr('name');
 	var number = name.charAt(name.length - 2);
 	var place = parseInt(number);
+
 	var nextSelectClass = name.replace(place.toString(), (place + 1).toString());
+	var nextSelect = $("select[name='" + nextSelectClass + "']");
 
 	var selectedId = $(this).children("option:selected").val();
+	var url = "/Requests/GetSublocationInstancesList/?locationInstanceParentID=" + selectedId;
+
+	//$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+	//	var item = "<option value=''>Select Subcategory</option>";
+	//	$("#sublist").empty();
+	//	$.each(data, function (i, subCategory) {
+	//		item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+	//	});
+	//	$("#sublist").html(item);
+	//});
 
 	if (nextSelect) { //check if nextSelect check is working
-		//get JSON and add value
-		nextSelect.append("<option value='1'>1</option>");
+		$.getJSON(url, function (result) {
+			var item = "<option>Select Location Instance</option>";
+			$.each(result.item, function (i, field) {
+				console.log("id: " + field.LocationInstanceID);
+				console.log("name: " + field.LocationInstanceName);
+				console.log("place: " + field.Place);
+				item += '<option value="' + field.LocationInstanceID + '">' + field.LocationInstanceName + '</option>'
+			});
+			console.log(item);
+			nextSelect.html(item);
+		});
 	}
 	else {
 		console.log("in the else unfortunately... :( ");
 	}
-
-	//IMPT!!! if farther above take off all the future ones
 
 });
 
