@@ -1664,6 +1664,13 @@ namespace PrototypeWithAuth.Controllers
             return Json(companyAccountList);
         }
 
+        [HttpGet]
+        public JsonResult GetSublocationInstancesList(int locationInstanceParentID)
+        {
+            var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentID).ToList();
+            return Json(locationInstanceList);
+        }
+
 
     }
 }

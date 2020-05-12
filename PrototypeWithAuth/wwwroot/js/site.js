@@ -469,9 +469,23 @@ $("#locationTypeDepthZero").change(function () {
 
 //Received Modal => fill up the next selectLocationInstance with the right selections
 $(".SLI").change(function () {
-	console.log("changed the select location instance");
 	var name = $(this).attr('name');
-	console.log("name: " + name);
+	var number = name.charAt(name.length - 2);
+	var place = parseInt(number);
+	var nextSelectClass = name.replace(place.toString(), (place + 1).toString());
+
+	var selectedId = $(this).children("option:selected").val();
+
+	if (nextSelect) { //check if nextSelect check is working
+		//get JSON and add value
+		nextSelect.append("<option value='1'>1</option>");
+	}
+	else {
+		console.log("in the else unfortunately... :( ");
+	}
+
+	//IMPT!!! if farther above take off all the future ones
+
 });
 
 
@@ -512,7 +526,7 @@ $(".visual-locations-zoom").on("click", function (e) {
 		cache: false,
 		context: myDiv,
 		success: function (result) {
-			this.html(result); 
+			this.html(result);
 			//turn off data dismiss by clicking out of the box and by pressing esc
 			myDiv.modal({
 				backdrop: 'static',
