@@ -6,7 +6,7 @@
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view" role="document" style="max-height:100%; overflow-y:auto;">
     <div class="modal-content d-inline-block">
 
-        <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+        <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" id="ReceivedModalForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="modal-header border-bottom-0">
                 @if (TempData["ErrorMessage"] != null)
@@ -22,16 +22,19 @@
                         <div class="form-group">
                             <label class="control-label" asp-for="locationTypesDepthZero"></label>
                             @Html.DropDownListFor(m => m.LocationTypeID,
-new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-"Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
+                                new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
+                                "Select Type", new
+                                {
+                                    onchange = @"
+                                            var form = document.forms[0];
+                                            form.action='ReceivedModal';
+                                            form.submit();"
+                                ,
+                                @class = "form-control-plaintext border-bottom ",
+                                @id = "locationTypeDepthZero"
+                                })
                         </div>
                     </div>
-                </div>
-                <div class="divSublocations">
-
-                </div>
-                <div class="visualView">
-
                 </div>
             </div>
             <div class="modal-footer">
