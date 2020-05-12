@@ -5,6 +5,46 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
     Layout = null;
+
+    /*
+     * Determine Active Nav Link START
+     * using the
+     */
+
+    //initializing pageType to None just in case none is passed in we don't want to disable any buttons unnecessarily (can take this out in the future if we are sure that we don't need it)
+    var pageType = AppUtility.RequestPageTypeEnum.None;
+
+    //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
+    if (TempData["PageType"] != null)
+    {
+        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+    }
+
+    //passing the
+    string initalClasses = "nav-link";
+    string currentClasses = " text-dark activeNavLink";
+    string notificationsClass = initalClasses;
+    string generalClass = initalClasses;
+    string expensesClass = initalClasses;
+    string suppliersClass = initalClasses;
+    switch (pageType)
+    {
+        case AppUtility.RequestPageTypeEnum.Inventory:
+            notificationsClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Request:
+            generalClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Cart:
+            expensesClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Search:
+            suppliersClass = initalClasses + currentClasses;
+            break;
+
+    }
+    /*Determine Active Nav Link END*/
+
 }
 
 <!DOCTYPE html>
@@ -20,24 +60,24 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 ourNavBar">
+            @*<div class="container-fluid">*@
                 <div class="container-fluid justify-content-start float-left d-inline-block" style="width:auto">
-                    <h1><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix Logo only.png" height="20" alt="Logo" /></a></h1>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix Logo only.png" height="20" alt="Logo" /></a>
                 </div>
                 <div class="container-fluid">
-                    <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left">
-                        <li class="nav-item nav-fill">
-                            @Html.ActionLink("Notifications", "Index", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = "btn btn-link text-dark" })
+                    <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left font-weight-bold">
+                        <li class="nav-item ml-5">
+                            @Html.ActionLink("Notifications", "Index", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = notificationsClass })
                         </li>
-                        <li class="nav-item nav-fill">
-                            @Html.ActionLink("General", "GeneralPaymentList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "btn btn-link text-dark" })
+                        <li class="nav-item ml-5">
+                            @Html.ActionLink("General", "GeneralPaymentList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = generalClass })
                         </li>
-                        <li class="nav-item nav-fill">
-                            @Html.ActionLink("Expenses", "ExpensesList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "btn btn-link text-dark" })
+                        <li class="nav-item ml-5">
+                            @Html.ActionLink("Expenses", "ExpensesList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = expensesClass })
                         </li>
-                        <li class="nav-item nav-fill">
-                            @Html.ActionLink("Suppliers", "IndexForPayment", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = "btn btn-link text-dark" })
+                        <li class="nav-item ml-5">
+                            @Html.ActionLink("Suppliers", "IndexForPayment", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = suppliersClass })
                         </li>
                     </ul>
                 </div>
@@ -45,7 +85,7 @@
                     <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</a>
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</a>
                             </li>
                             <li class="nav-item">
                                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -55,7 +95,7 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+            @*</div>*@
         </nav>
     </header>
     <div class="container-fluid">
