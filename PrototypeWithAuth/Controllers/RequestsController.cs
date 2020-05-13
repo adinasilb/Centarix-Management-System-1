@@ -1665,9 +1665,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetSublocationInstancesList(int locationInstanceParentID)
+        public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
         {
-            var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentID).ToList();
+            var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentId).ToList();
             return Json(locationInstanceList);
         }
 

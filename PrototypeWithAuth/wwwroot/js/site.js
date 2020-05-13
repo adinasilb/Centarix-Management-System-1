@@ -476,8 +476,19 @@ $(".SLI").change(function () {
 	var nextSelectClass = name.replace(place.toString(), (place + 1).toString());
 	var nextSelect = $("select[name='" + nextSelectClass + "']");
 
-	var selectedId = $(this).children("option:selected").val();
-	var url = "/Requests/GetSublocationInstancesList/?locationInstanceParentID=" + selectedId;
+	//var selectedId = $(this).children("option:selected").val();
+	//var url = "/Requests/GetSublocationInstancesList";/*/?locationInstanceParentID=" + selectedId;*/
+	var locationInstanceParentId = $(this).children("option:selected").val();
+	var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
+
+	//$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+	//	var item = "<option value=''>Select Subcategory</option>";
+	//	$("#sublist").empty();
+	//	$.each(data, function (i, subCategory) {
+	//		item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+	//	});
+	//	$("#sublist").html(item);
+	//});
 
 	//$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
 	//	var item = "<option value=''>Select Subcategory</option>";
@@ -489,9 +500,10 @@ $(".SLI").change(function () {
 	//});
 
 	if (nextSelect) { //check if nextSelect check is working
-		$.getJSON(url, function (result) {
+		console.log("in next select");
+		$.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
 			var item = "<option>Select Location Instance</option>";
-			$.each(result.item, function (i, field) {
+			$.each(result, function (i, field) {
 				console.log("id: " + field.LocationInstanceID);
 				console.log("name: " + field.LocationInstanceName);
 				console.log("place: " + field.Place);
