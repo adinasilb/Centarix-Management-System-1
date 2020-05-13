@@ -469,49 +469,52 @@ $("#locationTypeDepthZero").change(function () {
 
 //Received Modal => fill up the next selectLocationInstance with the right selections
 $(".SLI").change(function () {
+
+
+	//ONE ---> GET THE NEXT DROPDOWNLIST
+
 	var name = $(this).attr('name');
 	var number = name.charAt(name.length - 2);
 	var place = parseInt(number);
 
+	console.log("")
 	var nextSelectClass = name.replace(place.toString(), (place + 1).toString());
 	var nextSelect = $("select[name='" + nextSelectClass + "']");
 
-	//var selectedId = $(this).children("option:selected").val();
-	//var url = "/Requests/GetSublocationInstancesList";/*/?locationInstanceParentID=" + selectedId;*/
 	var locationInstanceParentId = $(this).children("option:selected").val();
 	var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
 
-	//$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-	//	var item = "<option value=''>Select Subcategory</option>";
-	//	$("#sublist").empty();
-	//	$.each(data, function (i, subCategory) {
-	//		item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-	//	});
-	//	$("#sublist").html(item);
-	//});
+	if (nextSelect.length) { //check if nextSelect check is working
 
-	//$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-	//	var item = "<option value=''>Select Subcategory</option>";
-	//	$("#sublist").empty();
-	//	$.each(data, function (i, subCategory) {
-	//		item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-	//	});
-	//	$("#sublist").html(item);
-	//});
 
-	if (nextSelect) { //check if nextSelect check is working
-		console.log("in next select");
+		var NotFinished = true;
+		var placeCounter = place + 1; //adding one to skip the select that we will fill in below
+		console.log("type of placecounter: " + typeof (placeCounter));
+		var newNextSelect = nextSelect;
+
+		//if the same one was selected jquery automatically deals with it
+		while (NotFinished) {
+			//var incrementedPlaceCounter = placeCounter + 1);
+			nextSelectClass = nextSelectClass.replace(placeCounter.toString(), (placeCounter + 1).toString());
+			newNextSelect = $("select[name='" + nextSelectClass + "']");
+			if (newNextSelect.length) {
+				newNextSelect.html("");
+			}
+			else {
+				NotFinished = false;
+			}
+			placeCounter++;
+		}
+
+
 		$.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
 			var item = "<option>Select Location Instance</option>";
 			$.each(result, function (i, field) {
-				console.log("id: " + field.LocationInstanceID);
-				console.log("name: " + field.LocationInstanceName);
-				console.log("place: " + field.Place);
-				item += '<option value="' + field.LocationInstanceID + '">' + field.LocationInstanceName + '</option>'
+				item += '<option value="' + field.locationInstanceID + '">' + field.locationInstanceName + '</option>'
 			});
-			console.log(item);
 			nextSelect.html(item);
 		});
+
 	}
 	else {
 		console.log("in the else unfortunately... :( ");
