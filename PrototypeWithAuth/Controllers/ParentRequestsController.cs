@@ -109,6 +109,9 @@ namespace PrototypeWithAuth.Controllers
                 ParentRequests = await ReturnParentRequestList.ToListAsync()
             };
 
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
+
 
             return View(paymentNotificationsViewModel);
         }
@@ -121,6 +124,11 @@ namespace PrototypeWithAuth.Controllers
             var fullParentRequestsListByDate = fullParentRequestsList
                         .OrderByDescending(f => f.OrderDate.Date)
                         .ThenBy(f => f.OrderDate.TimeOfDay);
+
+
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.General;
+
             return View(await fullParentRequestsListByDate.ToListAsync());
         }
 
@@ -158,6 +166,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 monthlyTotals = monthlyTotals
             };
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Expenses;
+
 
             return View(expensesListViewModel);
         }
@@ -179,6 +190,8 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
+            //Need tempdata for request nav view???
+
             return View(parentRequest);
         }
 
@@ -186,6 +199,9 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult Create()
         {
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
+
+            //need tempdata for requestnavview??
+
             return View();
         }
 
@@ -203,6 +219,7 @@ namespace PrototypeWithAuth.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", parentRequest.ApplicationUserID);
+            
             return View(parentRequest);
         }
 
@@ -220,6 +237,12 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", parentRequest.ApplicationUserID);
+
+
+            //tempdata page type for active tab link
+            //put it in
+
+
             return View(parentRequest);
         }
 

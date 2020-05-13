@@ -12,12 +12,12 @@
      */
 
     //initializing pageType to None just in case none is passed in we don't want to disable any buttons unnecessarily (can take this out in the future if we are sure that we don't need it)
-    var pageType = AppUtility.RequestPageTypeEnum.None;
+    var pageType = AppUtility.PaymentPageTypeEnum.None;
 
     //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
     if (TempData["PageType"] != null)
     {
-        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+        pageType = (AppUtility.PaymentPageTypeEnum)Enum.Parse(typeof(AppUtility.PaymentPageTypeEnum), TempData["PageType"].ToString());
     }
 
     //passing the
@@ -25,23 +25,18 @@
     string currentClasses = " text-dark activeNavLink";
     string notificationsClass = initalClasses;
     string generalClass = initalClasses;
-    string expensesClass = initalClasses;
     string suppliersClass = initalClasses;
     switch (pageType)
     {
-        case AppUtility.RequestPageTypeEnum.Inventory:
+        case AppUtility.PaymentPageTypeEnum.Notifications:
             notificationsClass = initalClasses + currentClasses;
             break;
-        case AppUtility.RequestPageTypeEnum.Request:
+        case AppUtility.PaymentPageTypeEnum.General:
             generalClass = initalClasses + currentClasses;
             break;
-        case AppUtility.RequestPageTypeEnum.Cart:
-            expensesClass = initalClasses + currentClasses;
-            break;
-        case AppUtility.RequestPageTypeEnum.Search:
+        case AppUtility.PaymentPageTypeEnum.Suppliers:
             suppliersClass = initalClasses + currentClasses;
             break;
-
     }
     /*Determine Active Nav Link END*/
 
@@ -72,9 +67,6 @@
                         </li>
                         <li class="nav-item ml-5">
                             @Html.ActionLink("General", "GeneralPaymentList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = generalClass })
-                        </li>
-                        <li class="nav-item ml-5">
-                            @Html.ActionLink("Expenses", "ExpensesList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = expensesClass })
                         </li>
                         <li class="nav-item ml-5">
                             @Html.ActionLink("Suppliers", "IndexForPayment", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = suppliersClass })

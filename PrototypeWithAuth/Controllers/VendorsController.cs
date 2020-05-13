@@ -43,9 +43,12 @@ namespace PrototypeWithAuth.Controllers
 
             //}
             //else
-            {
-                return View(await _context.Vendors.ToListAsync());
-            }
+            //{
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+
+            return View(await _context.Vendors.ToListAsync());
+            //}
         }
 
         // GET: Vendors/Details/5
@@ -79,6 +82,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 return NotFound();
             }
+
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
 
             return View(vendor);
         }
@@ -116,6 +122,9 @@ namespace PrototypeWithAuth.Controllers
                 // Requests = _context.Requests.ToList(),
                 //check if we need this here
             };
+
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
 
             //return View(vendorSearchViewModel);
             return PartialView(vendorSearchViewModel);
@@ -172,15 +181,15 @@ namespace PrototypeWithAuth.Controllers
             {
                 foreach (var v in filteredVendors)
                 {
-          
+
                     bool vendorContainsParentCategory = false;
-                    foreach (var p in _context.Products.Include( p => p.ProductSubcategory))
+                    foreach (var p in _context.Products.Include(p => p.ProductSubcategory))
                     {
                         //var psc = _context.ProductSubcategories.Where(psc => psc.ProductSubcategoryID == p.ProductSubcategoryID) //need to instatntaite subcategories before refrenceing to parent
                         if ((p.ProductSubcategory.ParentCategoryID == vendorSearchViewModel.SelectedParentCategoryID) && (p.VendorID == v.VendorID))
                         {
                             vendorContainsParentCategory = true;
-                           
+
                         }
                     }
                     if (!vendorContainsParentCategory)
@@ -206,6 +215,9 @@ namespace PrototypeWithAuth.Controllers
         // GET: Vendors/Create
         public IActionResult Create()
         {
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+
             return View();
         }
 
@@ -222,6 +234,8 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(IndexForPayment));
             }
+
+
             return View(vendor);
         }
 
@@ -238,6 +252,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 return NotFound();
             }
+
+
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+
             return View(vendor);
         }
 
