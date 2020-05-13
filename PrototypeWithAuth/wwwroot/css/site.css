@@ -100,7 +100,11 @@ body {
 }
 
 .ourNavBar li a { color: #333 }
-.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink { color: #30BCC9 !important }
+
+.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink {
+    
+    filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
+}
 
 .main-btn-img {
     width: 9em;

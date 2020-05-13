@@ -83,7 +83,7 @@
             @if (Requests || Inventory)
             {
                 <li class="nav-item mt-3 mb-3">
-                    <i class="fas fa-plus-circle"></i><br />
+                    <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="AddItem" /><br />
                     @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
                     <button class="btn btn-link text-dark create-product-details" value="0" data-target="item" data-backdrop="static" data-keyboard="false" href="item">Add Item</button>
                 </li>
@@ -91,40 +91,57 @@
             @if (Requests || Inventory)
             {
                 //Here is the proper way to do it
-                    <li class="nav-item mt-3 mb-3 @type">
-                        <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })"><img src="~/images/css/inventory/sidebar/type.png" alt="Type" /><br />Type</a>
-                    </li>
+                <li class="nav-item mt-3 mb-3 @type"> 
+                    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
+                </li>
+                // <i class="fas fa-shapes"></i>
 
-                    //now that its a picture and not an icon, it wont light up the same way as before..... :(
-                    
+                //but now that its a picture instead of an icon, it wont change color the same way as before..... :(
 
+                //old way
                 @*<li class="nav-item mt-3 mb-3">
-                    <i class="fas fa-shapes"></i><br />
-                    @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageType }, new { @class = type })
-                </li>*@
+                <i class="fas fa-shapes"></i><br />
+                @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageType }, new { @class = type })
+            </li>*@
             }
             @if (Requests || Inventory)
             {
-                <li class="nav-item mt-3 mb-3">
-                    <i class="fas fa-store"></i><br />
-                    @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageType }, new { @class = vendor })
+                //old way
+                @*<li class="nav-item mt-3 mb-3">
+                <i class="fas fa-store"></i><br />
+                @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageType }, new { @class = vendor })
+            </li>*@
+
+                <li class="nav-item mt-3 mb-3 @vendor">
+                    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
                 </li>
             }
             @if (Requests || Inventory)
             {
-                <li class="nav-item mt-3 mb-3">
-                    <i class="far fa-meh-blank"></i><br />
-                    @Html.ActionLink("Owner", "Index", "ApplicationUsers", new { @PageType = pageType }, new { @class = owner }) @*have to create contorller for application user?*@
+
+                @*<li class="nav-item mt-3 mb-3">
+                <i class="far fa-meh-blank"></i><br />
+                @/*Html.ActionLink("Owner", "Index", "ApplicationUsers", new { @PageType = pageType }, new { @class = owner })*/
+            </li>*@
+                @*have to create contorller for application user?*@
+
+                <li class="nav-item mt-3 mb-3 @owner">
+                    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType })"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
                 </li>
             }
             @if (Inventory)
             {
-                <li class="nav-item mt-3 mb-3">
-                    @*Redo the location class in the controller*@
+
+                @*Redo the location class in the controller*@
+                @*<li class="nav-item mt-3 mb-3">
                     <i class="fas fa-map-marker-alt"></i>
                     @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = location })
-                </li>
-            }
+                </li>*@
+
+            <li class="nav-item mt-3 mb-3 @location">
+                <a href="@Url.ActionLink("Index", "Locations", new { @PageType = location })"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Manage</a>
+            </li>
+        }
             @if (Cart)
             {
                 <li class="nav-item mt-3 mb-3">
@@ -132,7 +149,7 @@
                     <a class=@cart>Cart</a>
                 </li>
             }
-            
+
         </ul>
         @*</nav>*@
     </div>
