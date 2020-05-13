@@ -7,16 +7,26 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
-<table class="table">
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
+@*<table class="table">
+    <tbody>*@
+<div class="container">
+    <div class="row">
 
-                    @Html.ActionLink(item.ProductSubcategoryDescription, "Index", "Requests", new { @subcategoryID = @item.ProductSubcategoryID, @PageType = pagetype }, null)
-                </td>
-            </tr>
+
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+
+            if (i > 0 && i % 8 == 0)
+            {
+            @:</div><div class="row">
+            }
+            <div class="col">
+                <fieldset class="border">
+                    @Html.ActionLink(Model.ElementAt(i).ProductSubcategoryDescription, "Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)
+                </fieldset>
+            </div>
         }
-    </tbody>
-</table>
+
+
+    </div>
+</div>
