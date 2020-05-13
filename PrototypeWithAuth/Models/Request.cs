@@ -61,7 +61,7 @@ namespace PrototypeWithAuth.Models
 
         public double VAT = 0.17; // should this be coded into the model or should we set it elsewhere?
         public double ExchangeRate { get; set; } // holding the rate of exchange for this specic request
-        
+        public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
         public byte ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
         public string RequestComment { get; set; } //can take this out - Adina
 

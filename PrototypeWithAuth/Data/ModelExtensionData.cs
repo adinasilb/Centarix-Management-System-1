@@ -130,6 +130,7 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryDescription = "Measuring Instruments"
                 }
 
+
               );
             modelBuilder.Entity<RequestStatus>().HasData
           (
@@ -157,6 +158,12 @@ namespace PrototypeWithAuth.Data
                 {
                     RequestStatusID = 5,
                     RequestStatusDescription = "Clarify" // request page, under order
+                }
+                ,
+                new RequestStatus
+                {
+                    RequestStatusID = 6,
+                    RequestStatusDescription = "PayNow" // request page, under order
                 }
              );
             modelBuilder.Entity<UnitParentType>().HasData
