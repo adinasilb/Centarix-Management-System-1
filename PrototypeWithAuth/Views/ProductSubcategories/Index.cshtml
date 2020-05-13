@@ -7,10 +7,19 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
+@*<<<<<<<<<<<< This is the Types page divs >>>>>>>>>>>>>>>*@
+
 @*<table class="table">
     <tbody>*@
-<div class="container">
-    <div class="row">
+
+    @*<div class="d-flex">
+        <div>
+
+        </div>
+    </div>*@
+
+<div class="ml-4 text-center">
+    <div class="d-flex">
 
 
         @for (int i = 0; i < Model.Count(); i++)
@@ -18,15 +27,20 @@
 
             if (i > 0 && i % 8 == 0)
             {
-            @:</div><div class="row">
+            @:</div><div class="d-flex mt-5">
             }
-            <div class="col">
-                <fieldset class="border">
-                    @Html.ActionLink(Model.ElementAt(i).ProductSubcategoryDescription, "Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)
+            <div style="width:12.4%; min-width: 180px" class="px-3">
+                <fieldset class="border box-shadow rounded-lg py-2">
+                    @*@Html.ActionLink(Model.ElementAt(i).ProductSubcategoryDescription, "Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)*@
+
+                    <a href="@Url.ActionLink("Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)">
+                        <img class="rounded-sm" style="height:100px" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle"/> <br />@Model.ElementAt(i).ProductSubcategoryDescription
+                    </a>
+
                 </fieldset>
             </div>
         }
-
+                    
 
     </div>
 </div>
