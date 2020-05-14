@@ -410,6 +410,7 @@ namespace PrototypeWithAuth.Controllers
                 PaymentTypes = await _context.PaymentTypes.ToListAsync(),
                 CompanyAccounts = await _context.CompanyAccounts.ToListAsync(),
                 UnitTypeList = new SelectList(unitTypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription")
+                
             };
 
             requestItemViewModel.Request = new Request();

@@ -365,6 +365,11 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label class="control-label">Terms:</label>
+                                        @Html.DropDownListFor(
+                                                                model => model.Request.Terms,
+                                                                new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
+        htmlAttributes: new { @class = "form-control-plaintext border-bottom" }
+                                                            )
                                     </div>
                                 </div>
                                 <div class="col-md-2">

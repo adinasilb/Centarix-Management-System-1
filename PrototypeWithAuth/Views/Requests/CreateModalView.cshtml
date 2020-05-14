@@ -1,5 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
-
+@using PrototypeWithAuth.AppData 
 @{
 
 }
@@ -352,11 +352,16 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label class="control-label">Terms:</label>
+                                        @Html.DropDownListFor(
+                                                                model => model.Request.Terms,
+                                                                new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
+        htmlAttributes: new { @class = "form-control-plaintext border-bottom" }
+                                                            )
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="form-check">
-                                        <label class="form-check-label"><input class="form-check-input" type="checkbox" />Paid</label>
+                                    <div class="form-check ">
+                                        <label class="form-check-label"><input class="form-check-input ui-icon-check" type="checkbox" />Paid</label>
                                     </div>
                                 </div>
                             </div>

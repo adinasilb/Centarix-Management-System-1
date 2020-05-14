@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
@@ -139,6 +140,20 @@ namespace PrototypeWithAuth.AppData
                 return request.Headers["X-Requested-With"] == "XMLHttpRequest";
             return false;
         }
+
+        public static List<SelectListItem> TermsSelectList()
+        {
+            List<SelectListItem> termsSelectList = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="0", Text="Pay Now" },
+                new SelectListItem() { Value="30", Text="30" },
+                new SelectListItem() { Value="45", Text="45" },
+                new SelectListItem() { Value="60", Text="60" }
+            };
+            //SelectList termsSelectList = new SelectList(dictSelectList);
+            return termsSelectList;
+        }
+
     }
 
 }
