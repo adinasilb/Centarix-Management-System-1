@@ -6,6 +6,7 @@
 }
 @{
     double totalToPay = 0;
+    double totalPayNow = 0;
 }
 <div class="row">
     <div style="width: 100px;" class="col-md-2 border-right">
@@ -26,6 +27,9 @@
             <li class="nav-item">
                 <a href="#@Model.TitleList.ElementAt(4).Key">@Model.TitleList.ElementAt(4).Key <br />[@Model.TitleList.ElementAt(4).Value] </a>
             </li>
+            <li class="nav-item">
+                <a href="#@Model.TitleList.ElementAt(5).Key">@Model.TitleList.ElementAt(5).Key <br />[@Model.TitleList.ElementAt(5).Value] </a>
+            </li>
         </ul>
         @*</nav>*@
     </div>
@@ -33,13 +37,17 @@
         @for (int index = 0; index < Model.TitleList.Count; index++)
         {
             var currentTitle = Model.TitleList.ElementAt(index);
-            <h6 id="@currentTitle.Key">
-                @currentTitle.Key [@currentTitle.Value]   
-                @if (index == 0)
-                {
-                    <span>&emsp; Total: </span><span class="totalToPay"></span>
-                }
-            </h6>
+        <h6 id="@currentTitle.Key">
+            @currentTitle.Key [@currentTitle.Value]
+            @if (index == 0)
+            {
+                <span>&emsp; Total: </span><span class="totalToPay"></span>
+            }
+            @if (index == 5)
+            {
+                <span>&emsp; Total: </span><span class="totalPayNow"></span>
+            }
+        </h6>
             <br />
             <table class="table">
                 <thead>
@@ -130,6 +138,10 @@
                             {
                                 totalToPay += item.Requests.FirstOrDefault().Cost;
                             }
+                            else if (index == 5)
+                            {
+                                totalPayNow += item.Requests.FirstOrDefault().Cost;
+                            }
                             @if (onlyOneRequest)
                             {
                                 @*@String.Format("{0:C}", item.Requests.FirstOrDefault().Cost)*@
@@ -159,6 +171,7 @@
 
         function () {
             $(".totalToPay").html("@String.Format("{0:C}", totalToPay)");
+            $(".totalPayNow").html("@String.Format("{0:C}", totalPayNow)");
         }
 
     );
