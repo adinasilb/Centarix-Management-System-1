@@ -643,18 +643,91 @@ namespace PrototypeWithAuth.Controllers
                     if (requestItemViewModel.OrderFiles != null) //test for more than one???
                     {
                         var x = 1;
-                        foreach (IFormFile orderFile in requestItemViewModel.OrderFiles)
-                            foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
-                            {
-                                //create file
-                                string folderPath = Path.Combine(requestFolder, "Orders");
-                                Directory.CreateDirectory(folderPath);
-                                string uniqueFileName = x + orderfile.FileName;
-                                string filePath = Path.Combine(folderPath, uniqueFileName);
-                                orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
-                                x++;
-                            }
+                        foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Orders");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + orderfile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
                     }
+                    if (requestItemViewModel.InvoiceFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile invoiceFile in requestItemViewModel.InvoiceFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Invoices");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + invoiceFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            invoiceFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.ShipmentFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile shipmentFile in requestItemViewModel.ShipmentFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Shipments");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + shipmentFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            shipmentFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.QuoteFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile quoteFile in requestItemViewModel.QuoteFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Quotes");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + quoteFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            quoteFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.InfoFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Info");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + infoFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            infoFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.PictureFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Pictures");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + pictureFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            pictureFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+
+                    //not dealing with RETURNS AND CREDITS here b/c disabled on the frontend
+
+
                     //test that this works
                     if (WithOrder)
                     {
@@ -776,17 +849,16 @@ namespace PrototypeWithAuth.Controllers
                     if (requestItemViewModel.OrderFiles != null) //test for more than one???
                     {
                         var x = 1;
-                        foreach (IFormFile orderFile in requestItemViewModel.OrderFiles)
-                            foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
-                            {
-                                //create file
-                                string folderPath = Path.Combine(requestFolder, "Orders");
-                                Directory.CreateDirectory(folderPath);
-                                string uniqueFileName = x + orderfile.FileName;
-                                string filePath = Path.Combine(folderPath, uniqueFileName);
-                                orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
-                                x++;
-                            }
+                        foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Orders");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + orderfile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
                     }
                     //test that this works
                     if (WithOrder)
@@ -829,6 +901,10 @@ namespace PrototypeWithAuth.Controllers
 
         public ActionResult DownloadPDF(string filename)
         {
+            //string filename = orderFileInfo.FullName.ToString();
+            string concatShortFilename = "inline; filename=" +
+                filename.Substring(filename.LastIndexOf("\\") + 2); //follow through with this
+            Response.Headers.Add("Content-Disposition", concatShortFilename);
             return File(filename, "application/pdf");
         }
 
@@ -865,28 +941,28 @@ namespace PrototypeWithAuth.Controllers
             {
                 return RedirectToAction("CreateModalView");
             }
-            else if (NewRequestFromProduct)
-            {
-                ModalViewType = "Create"; //?
+            //else if (NewRequestFromProduct)
+            //{
+            //    ModalViewType = "Create"; //?
 
-                requestItemViewModel.Request = new Request();
-                requestItemViewModel.Request.ParentRequest = new ParentRequest();
-                requestItemViewModel.Request.RequestStatus = new RequestStatus();
-                requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
+            //    requestItemViewModel.Request = new Request();
+            //    requestItemViewModel.Request.ParentRequest = new ParentRequest();
+            //    requestItemViewModel.Request.RequestStatus = new RequestStatus();
+            //    requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
 
-                var request = _context.Requests
-                    .Include(r => r.Product)
-                    .SingleOrDefault(x => x.RequestID == id);
-                requestItemViewModel.Request.ProductID = request.ProductID;
-                requestItemViewModel.Request.Product = request.Product;
+            //    var request = _context.Requests
+            //        .Include(r => r.Product)
+            //        .SingleOrDefault(x => x.RequestID == id);
+            //    requestItemViewModel.Request.ProductID = request.ProductID;
+            //    requestItemViewModel.Request.Product = request.Product;
 
-                var paymentsList = _context.Payments
-                    .Include(p => p.CompanyAccount) //check if it works without this
-                    .Include(p => p.CompanyAccount.PaymentType)
-                    .Where(p => p.ParentRequestID == request.ParentRequest.ParentRequestID);
-                requestItemViewModel.OldPayments = paymentsList;
+            //    var paymentsList = _context.Payments
+            //        .Include(p => p.CompanyAccount) //check if it works without this
+            //        .Include(p => p.CompanyAccount.PaymentType)
+            //        .Where(p => p.ParentRequestID == request.ParentRequest.ParentRequestID);
+            //    requestItemViewModel.OldPayments = paymentsList;
 
-            }
+            //}
             else
             {
                 ModalViewType = "Edit";
@@ -925,16 +1001,17 @@ namespace PrototypeWithAuth.Controllers
                     DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
                     //searching for the partial file name in the directory
                     FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.OrderFilesFound = orderfilesfound;
                     //checking if there were any files found before looping through them (to prevent an error)
-                    requestItemViewModel.OrderFileStrings = new List<string>();
-                    if (orderfilesfound[0].Exists)
-                    {
-                        //getting the file from the FileInfo[]
-                        foreach (FileInfo file in orderfilesfound)
-                        {
-                            requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
-                        }
-                    }
+                    //requestItemViewModel.OrderFileStrings = new List<string>();
+                    //if (orderfilesfound[0].Exists)
+                    //{
+                    //    //getting the file from the FileInfo[]
+                    //    foreach (FileInfo file in orderfilesfound)
+                    //    {
+                    //        requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
+                    //    }
+                    //}
                 }
 
                 if (requestItemViewModel.Request == null)
@@ -1046,17 +1123,16 @@ namespace PrototypeWithAuth.Controllers
                     if (requestItemViewModel.OrderFiles != null) //test for more than one???
                     {
                         var x = 1;
-                        foreach (IFormFile orderFile in requestItemViewModel.OrderFiles)
-                            foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
-                            {
-                                //create file
-                                string folderPath = Path.Combine(requestFolder, "Orders");
-                                Directory.CreateDirectory(folderPath);
-                                string uniqueFileName = x + orderfile.FileName;
-                                string filePath = Path.Combine(folderPath, uniqueFileName);
-                                orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
-                                x++;
-                            }
+                        foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Orders");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + orderfile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
                     }
                     //test that this works
                     if (WithOrder)
@@ -1302,17 +1378,16 @@ namespace PrototypeWithAuth.Controllers
                     if (requestItemViewModel.OrderFiles != null) //test for more than one???
                     {
                         var x = 1;
-                        foreach (IFormFile orderFile in requestItemViewModel.OrderFiles)
-                            foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
-                            {
-                                //create file
-                                string folderPath = Path.Combine(requestFolder, "Orders");
-                                Directory.CreateDirectory(folderPath);
-                                string uniqueFileName = x + orderfile.FileName;
-                                string filePath = Path.Combine(folderPath, uniqueFileName);
-                                orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
-                                x++;
-                            }
+                        foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Orders");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + orderfile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
                     }
                     //test that this works
                     if (WithOrder)

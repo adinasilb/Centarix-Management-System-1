@@ -77,7 +77,7 @@ namespace PrototypeWithAuth
 
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseStaticFiles();
+                app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
                 app.UseRouting();
                 app.UseAuthentication();
                 app.UseAuthorization();

@@ -32,11 +32,11 @@
                     <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
                     <br />
                 }
-            <div class="form-group">
-                <h4><label asp-for="Request.Product.ProductName" class="control-label"> Request : </label> </h4>
-                <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" /></h4>
-                <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <h4><label asp-for="Request.Product.ProductName" class="control-label"> Request : </label> </h4>
+                    <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" /></h4>
+                    <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
+                </div>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -122,7 +122,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                 </div>
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" disabled/>
+                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" disabled />
                                     <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                 </div>
                             </div>
@@ -223,7 +223,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
 vm => vm.Request.UnitTypeID,
 Model.UnitTypeList,
 "",
-htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "unit-type"}
+htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "unit-type" }
 )
                                                 <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                             </div>
@@ -345,7 +345,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                         <label asp-for="Request.VAT" class="control-label"></label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input asp-for="Request.VAT" class="form-control-plaintext border-bottom -plaintext id="vatInShekel" disabled />
+                                            <input asp-for="Request.VAT" class="form-control-plaintext border-bottom id="vatInShekel" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -474,15 +474,23 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                         <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" multiple />
                                         <label class="custom-file-label">Choose File...</label>
                                     </div>
-                                    @if (Model.OrderFileStrings != null)
+                                    @if (Model.OrderFilesFound != null)
                                     {
-                                        foreach (var o in Model.OrderFileStrings)
+                                        foreach (var orderFileInfo in Model.OrderFilesFound)
                                         {
-                                            <button>Test</button>
-                                            <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
+                                            //var filename = orderFileInfo.FullName.ToString();
+                                            //    {
+                                            //        requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
+                                            //    }
+                                            @*<butston>Test</button>
+                                                <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>*@
+                                            <span>download link below</span>
+                                            <button asp-action="DownloadPDF" asp-route-filename="@orderFileInfo.FullName.ToString()" class="btn btn-link">DownloadBtn</button>
+                                            @Html.ActionLink("DownloadAl", "DownloadPDF", new { @filename = orderFileInfo }, new { @class = "btn btn-link" });
                                         }
-                                        <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                     }
+                                    <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
+                                    
                                     @*<div id="carousel" class="carousel ui-slider">
                                             <ol class="carousel-indicators">
                                             </ol>

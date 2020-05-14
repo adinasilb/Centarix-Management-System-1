@@ -7,6 +7,7 @@ using PrototypeWithAuth.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PrototypeWithAuth.AppData;
+using System.IO;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -19,7 +20,19 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
         public List<string> OrderFileStrings { get; set; }
-        public List<IFormFile> OrderFiles { get; set; }
+
+        //The PDFs that are passed into the controller:
+        public List<IFormFile> OrderFiles { get; set; } //this needs to be changed b/c it is the pdf created by the order
+        public List<IFormFile> InvoiceFiles { get; set; }
+        public List<IFormFile> ShipmentFiles { get; set; }
+        public List<IFormFile> QuoteFiles { get; set; }
+        public List<IFormFile> InfoFiles { get; set; }
+        public List<IFormFile> PictureFiles { get; set; }
+        public List<IFormFile> ReturnFiles { get; set; }
+        public List<IFormFile> CreditFiles { get; set; }
+
+
+        public FileInfo[] OrderFilesFound { get; set; }
         public IEnumerable<Comment> OldComments { get; set; }
         public Comment NewComment { get; set; }
         public IEnumerable<Payment> OldPayments { get; set; }
