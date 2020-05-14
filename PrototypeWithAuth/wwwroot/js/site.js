@@ -484,12 +484,11 @@ $(".SLI").change(function () {
 	var locationInstanceParentId = $(this).children("option:selected").val();
 	var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
 
-	if (nextSelect.length) { //check if nextSelect check is working
+	if (nextSelect.length) { //if there is another one
 
 
 		var NotFinished = true;
 		var placeCounter = place + 1; //adding one to skip the select that we will fill in below
-		console.log("type of placecounter: " + typeof (placeCounter));
 		var newNextSelect = nextSelect;
 
 		//if the same one was selected jquery automatically deals with it
@@ -516,11 +515,66 @@ $(".SLI").change(function () {
 		});
 
 	}
+	//else {
+	//	console.log("in the else unfortunately... :( ");
+	//}
+
+
+	//TWO ---> FILL VISUAL VIEW
+	var myDiv = $(".visualView");
+	if (locationInstanceParentId == 0) { //if zero was selected
+		console.log("selected was 0");
+		//check if there is a previous select box
+		var oldSelectClass = name.replace(place.toString(), (place - 1).toString());
+		var oldSelect = $("select[name='" + oldSelectClass + "']");
+		if (oldSelect.length) {
+			console.log("oldSelectClass " + oldSelectClass + " exists and refilling with that");
+			var oldSelected = $("." + oldSelect).children("option:selected").val();
+			console.log("oldSelected: " + oldSelected);
+			$.ajax({
+				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected,
+				type: 'GET',
+				cache: false,
+				context: myDiv,
+				success: function (result) {
+					this.html(result);
+				}
+			});
+		}
+		else {
+			console.log("oldSelectClass " + oldSelectClass + " does not exist and clearing");
+			myDiv.html("");
+		}
+	}
 	else {
-		console.log("in the else unfortunately... :( ");
+		console.log("regular visual");
+		$.ajax({
+			url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
+			type: 'GET',
+			cache: false,
+			context: myDiv,
+			success: function (result) {
+				this.html(result);
+			}
+		});
 	}
 
+
 });
+
+//$.fn.CallAjax() = function ($url, $div) {
+
+//	$.ajax({
+//		//IMPORTANT: ADD IN THE ID
+//		url: $url,
+//		type: 'GET',
+//		cache: false,
+//		context: $div,
+//		success: function (result) {
+//			this.html(result); //do we need to change this to $div?
+//		}
+//	});
+//};
 
 
 //AJAX partial view submit for addLocations --> Sublocations

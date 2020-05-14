@@ -1,0 +1,27 @@
+﻿@model PrototypeWithAuth.ViewModels.ReceivedModalVisualViewModel
+
+<table class="table table-sm border">
+    @{
+        int z = -1;
+    }
+    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+    {
+        <tr>
+            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+            {
+                z++;
+                var backgroundClass = "border";
+                var innerHtml = "NONE";
+                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                {
+                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                    {
+                        backgroundClass += " bg-secondary";
+                        innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+                    }
+                }
+                <td class="@backgroundClass">@innerHtml</td>
+            }
+        </tr>
+    }
+</table>

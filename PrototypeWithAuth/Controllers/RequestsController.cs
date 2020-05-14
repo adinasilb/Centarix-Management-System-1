@@ -1400,7 +1400,7 @@ namespace PrototypeWithAuth.Controllers
 
 
 
-                var request = _context.Requests.Where(r => r.RequestID == requestThatIsApproved.RequestID).Include(r => r.ParentRequest).ThenInclude(r=>r.ApplicationUser).Include(r=>r.Product).ThenInclude(r=>r.Vendor).FirstOrDefault();
+                var request = _context.Requests.Where(r => r.RequestID == requestThatIsApproved.RequestID).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).FirstOrDefault();
                 string ownerEmail = request.ParentRequest.ApplicationUser.Email;
                 string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
                 string ownerPassword = request.ParentRequest.ApplicationUser.PasswordHash;
@@ -1426,7 +1426,7 @@ namespace PrototypeWithAuth.Controllers
 
                 using (var client = new SmtpClient())
                 {
-                    
+
                     client.Connect("smtp.gmail.com", 587, false);
                     client.Authenticate(ownerEmail, "FakeUser@123"); // set up two step authentication and get app password
                     try
@@ -1437,14 +1437,14 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                     }
-          
+
                     client.Disconnect(true);
                     if (wasSent)
                     {
                         request.RequestStatusID = 2;
                         await _context.SaveChangesAsync();
                     }
-                    
+
                 }
                 return RedirectToAction("Index");
             }
@@ -1637,6 +1637,33 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             return PartialView(receivedModalSublocationsViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult ReceivedModalVisual(int LocationInstanceID)
+        {
+            ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
+            {
+                ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault()
+            };
+
+            if (receivedModalVisualViewModel.ParentLocationInstance != null)
+            {
+                receivedModalVisualViewModel.ChildrenLocationInstances =
+                    _context.LocationInstances.Where(m => m.LocationInstanceParentID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID)
+                    .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+
+                //return NotFound();
+            }
+            return PartialView(receivedModalVisualViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel)
+        {
+            //save
+
+            return RedirectToAction("Index");
         }
 
 
