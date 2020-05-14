@@ -123,7 +123,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                 </div>
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" />
+                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" disabled />
                                     <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                 </div>
                             </div>
@@ -142,7 +142,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                             <div class="row">
                                 <div class="col-md-6">
                                     <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                                    <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " />
+                                    <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " disabled />
                                     <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
@@ -152,12 +152,8 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">End Date</label>
-                                    @*@{
-                                            //get this just to return the date (not the time)
-                                            //adding the amount of months of the warranty to the invoice date
-                                            var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                                        }*@
-                                    <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                    @*no date in backend so set to zero*@
+                                    <input value="0000-00-00" name="WarrantyDate" class="form-control-plaintext border-bottom " disabled="disabled" />
                                 </div>
                             </div>
                             <div class="row">
@@ -166,18 +162,14 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                     <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                 </div>
+
                                 <div class="col-md-4">
-                                    @{
-                                        //get this just to return the date (not the time)
-                                        //adding the amount of months of the expected supply days to the invoice date
-                                        var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
-                                    }
                                     <label class="control-label">Expected supply date</label>
-                                    <input value="@endSupplyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                    <input value="0000-00-00" class="form-control-plaintext border-bottom datepicker" disabled="disabled" />
                                 </div>
                                 <div class="col-md-4">
                                     <label asp-for="Request.URL" class="control-label"></label>
-                                    <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
+                                    <input asp-for="Request.URL" class="form-control-plaintext border-bottom " disabled />
                                     <span asp-validation-for="Request.URL" class="text-danger"></span>
                                 </div>
                             </div>

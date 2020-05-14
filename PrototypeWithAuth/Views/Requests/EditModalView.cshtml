@@ -122,7 +122,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                 </div>
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" />
+                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" disabled/>
                                     <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                 </div>
                             </div>
@@ -172,7 +172,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                         var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
                                     }
                                     <label class="control-label">Expected supply date</label>
-                                    <input value="@endSupplyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                    <input value="@endSupplyDate" class="form-control-plaintext border-bottom " disabled="disabled" />
                                 </div>
                                 <div class="col-md-4">
                                     <label asp-for="Request.URL" class="control-label"></label>
