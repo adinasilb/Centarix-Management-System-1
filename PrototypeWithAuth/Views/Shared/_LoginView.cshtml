@@ -37,7 +37,7 @@
                     @*Need to add user profile picture from the DB. find out where to access images and database for profile*@
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName <img height="35px" src="~/images/css/profile_circle.png" alt="default user image" /></a>
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName <img height="30px" src="~/images/css/profile_circle.png" alt="default user image" /></a>
                         </li>
                         <li class="nav-item">
                             @*this is the only difference between the IFs. consider revising to tidy*@
@@ -65,7 +65,7 @@
 
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</a>
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName  <img height="30px" src="~/images/css/profile_circle.png" alt="default user image" /></a>
                         </li>
                         <li class="nav-item">
                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -80,7 +80,7 @@
     }
 
     <div class="text-center container col-md-7 offset-2.5" style="min-width:550px">
-
+        <br /><br /><br />
         <img style="width:30em; max-width: 100%; min-width:500px" class="mb-3" src="~/images/css/Centarix Logo.png" alt="Centarix Logo" />
         <br /><br />
         <h2 style="color:#DB2127; font-weight:600" class="mb-5">Fight Aging or Die Trying</h2>
