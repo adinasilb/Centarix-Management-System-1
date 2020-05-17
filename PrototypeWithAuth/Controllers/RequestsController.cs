@@ -1728,8 +1728,8 @@ namespace PrototypeWithAuth.Controllers
             if (receivedModalVisualViewModel.ParentLocationInstance != null)
             {
                 receivedModalVisualViewModel.ChildrenLocationInstances =
-                    _context.LocationInstances.Where(m => m.LocationInstanceParentID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID)
-                    .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+                    _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
+                    .Include(m => m.RequestLocationInstances).ToList();
 
                 //return NotFound();
             }
@@ -1751,10 +1751,10 @@ namespace PrototypeWithAuth.Controllers
                 //possibly save again
 
                 //this only works becaus allowing a one to many relationship with request and location
-                var requestLocationInstances = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID);
+                var requestLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().RequestLocationInstances;
 
 
-                if (locationInstance.IsFull && !requestLocationInstances.Any())
+                if (locationInstance.IsFull && requestLocationInstances == null)
                 {
                     RequestLocationInstance requestLocationInstance = new RequestLocationInstance()
                     {

@@ -16,12 +16,15 @@
             {
                 @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
                 @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
+                @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].IsFull);
+
                 if (Model.ChildrenLocationInstances[z].IsFull)
                 {
 
                     backgroundClass += " bg-secondary";
-                    innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
-                    <td class="@backgroundClass">@Html.CheckBoxFor(vm => vm.ChildrenLocationInstances[z].IsFull, new { @disabled = "disabled"})</td>
+                    //innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+                    <td class="@backgroundClass">@Html.CheckBoxFor(vm => vm.ChildrenLocationInstances[z].IsFull, new { @disabled = "disabled" })</td>
+
 
                 }
                 else
