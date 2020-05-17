@@ -83,17 +83,17 @@ body {
 
 .login-field {
     border: 1.5px solid black;
-    border-radius: 2px;
+    border-radius: 5px;
     font-size:1.2em;
     padding: 1.2em 1em;
 }
 
 .login-button {
-    padding: 5px 50px;
+    padding: 5px 30px;
     line-height: 120%;
     font-size: 90%;
     text-transform: uppercase;
-    border-radius: 2px;
+    border-radius: 3px;
     font-weight:600;
     background-color: #db2127;
     color: white;
@@ -104,6 +104,11 @@ body {
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink {
     
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
+}
+
+.ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
+    
+    filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
 }
 
 .main-btn-img {
@@ -123,5 +128,37 @@ a.bold-hover-effects:hover {
 
 .module-button span {
     font-size: 1.25em;
+}
+
+a.owner-link {
+    font-size:large;
+}
+
+table.table.table-headerspaced tbody:before {
+    content: "@";
+    display: block;
+    line-height: 1em;
+    text-indent: -99999px;
+    
+}
+
+table.table.table-noheaderlines thead th {
+    border-width: 0;
+}
+
+table.table tbody tr {
+    border: 2px solid lightgrey;
+}
+table.table td {
+    vertical-align:middle ;
+    margin-right:20px;
+}
+
+.vendor-list-item {
+    height:60px;
+}
+
+.inv-list-item {
+    height:120px;
 }
 

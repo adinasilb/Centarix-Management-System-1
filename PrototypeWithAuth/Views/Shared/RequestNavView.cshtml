@@ -83,9 +83,11 @@
             @if (Requests || Inventory)
             {
                 <li class="nav-item mt-3 mb-3">
-                    <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="AddItem" /><br />
+                    
                     @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
-                    <button class="btn btn-link text-dark create-product-details" value="0" data-target="item" data-backdrop="static" data-keyboard="false" href="item">Add Item</button>
+                    <button class="btn btn-link text-dark create-product-details" onclick="changePic('/images/css/inventory/sidebar/add_circle_colored.png')">
+                        <img id="sidebar-add-item" src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
+                    </button>
                 </li>
             }
             @if (Requests || Inventory)
@@ -167,9 +169,16 @@
 <div class="modal confirm-email-modal" id="myModal">
 </div>
 
+<script>
+    function changePic(a) {
+        document.getElementById("sidebar-add-item").src = a;
+    }</script>
 
 @RenderSection("Scripts", required: false)
 <script>
+
+    
+
 
     $(document).ready(function () {
         @*console.log("Requests nav view document is ready!");
