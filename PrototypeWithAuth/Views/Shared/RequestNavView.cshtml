@@ -280,6 +280,9 @@
                 });
                 //shows the modal
                 $(".modal").modal('show');
+                //$(".modal").on('show.bs.modal', function (e) {
+                //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
+                //})
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
                 $(".modal-backdrop").remove();
                 if (!isEmail) { //SET BOOLEAN TO MODAL VIEW NOT ISEMAIL

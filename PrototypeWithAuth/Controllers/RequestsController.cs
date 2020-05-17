@@ -411,7 +411,7 @@ namespace PrototypeWithAuth.Controllers
                 PaymentTypes = await _context.PaymentTypes.ToListAsync(),
                 CompanyAccounts = await _context.CompanyAccounts.ToListAsync(),
                 UnitTypeList = new SelectList(unitTypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription")
-                
+
             };
 
             requestItemViewModel.Request = new Request();
@@ -459,28 +459,28 @@ namespace PrototypeWithAuth.Controllers
             {
                 return RedirectToAction("CreateModalView");
             }
-            else if (NewRequestFromProduct)
-            {
+            //else if (NewRequestFromProduct)
+            //{
 
 
-                requestItemViewModel.Request = new Request();
-                requestItemViewModel.Request.ParentRequest = new ParentRequest();
-                requestItemViewModel.Request.RequestStatus = new RequestStatus();
-                requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
+            //    requestItemViewModel.Request = new Request();
+            //    requestItemViewModel.Request.ParentRequest = new ParentRequest();
+            //    requestItemViewModel.Request.RequestStatus = new RequestStatus();
+            //    requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
 
-                var request = _context.Requests
-                    .Include(r => r.Product)
-                    .SingleOrDefault(x => x.RequestID == id);
-                requestItemViewModel.Request.ProductID = request.ProductID;
-                requestItemViewModel.Request.Product = request.Product;
+            //    var request = _context.Requests
+            //        .Include(r => r.Product)
+            //        .SingleOrDefault(x => x.RequestID == id);
+            //    requestItemViewModel.Request.ProductID = request.ProductID;
+            //    requestItemViewModel.Request.Product = request.Product;
 
-                var paymentsList = _context.Payments
-                    .Include(p => p.CompanyAccount) //check if it works without this
-                    .Include(p => p.CompanyAccount.PaymentType)
-                    .Where(p => p.ParentRequestID == request.ParentRequest.ParentRequestID);
-                requestItemViewModel.OldPayments = paymentsList;
+            //    var paymentsList = _context.Payments
+            //        .Include(p => p.CompanyAccount) //check if it works without this
+            //        .Include(p => p.CompanyAccount.PaymentType)
+            //        .Where(p => p.ParentRequestID == request.ParentRequest.ParentRequestID);
+            //    requestItemViewModel.OldPayments = paymentsList;
 
-            }
+            //}
             else
             {
 
@@ -505,6 +505,25 @@ namespace PrototypeWithAuth.Controllers
                  *ike before but it's not recognizing the syntax
                 */
                 requestItemViewModel.OldComments = comments.ToList();
+
+                //locations:
+                //get the list of requestLocationInstances in this request
+                //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
+                var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).FirstOrDefault();
+                var requestLocationInstances = request1.RequestLocationInstances.ToList();
+                //if it has => (which it should once its in a details view)
+                if (requestLocationInstances.Any())
+                {
+                    //get the parent location instances of the first one
+                    //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
+                    requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    //need to test b/c the model is int? which is nullable
+                    if (requestItemViewModel.ParentLocationInstance != null)
+                    {
+                        //inserting list of childrenslocationinstances to show on the frontend
+                        requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID).ToList();
+                    }
+                }
 
                 //may be able to do this together - combining the path for the orders folders
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -1740,10 +1759,10 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             bool hasLocationInstances = false;
-            
+
             foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)
             {
-                
+
 
                 var tempLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
                 if (!tempLocationInstance.IsFull)//only putting in the locationInstance.IsFull if it's false b/c sometimes it doesn't pass in the true value so we can end up taking things out by mistake
@@ -1778,7 +1797,7 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(request);
                 _context.SaveChanges();
             }
-           
+
             return RedirectToAction("Index");
         }
 

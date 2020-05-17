@@ -31,11 +31,11 @@
                     <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
                     <br />
                 }
-            <div class="form-group">
-                <h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>
-                <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>
-                <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>
+                    <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>
+                    <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
+                </div>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -178,8 +178,50 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                             </div>
                         </div>
                         <div id="location" class="tab-pane fade">
-                            <h3>LOCATION</h3>
-                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            @if (Model.ChildrenLocationInstances.Any())
+                            {
+                                <table class="table table-sm border">
+                                    @{
+                                        int z = -1;
+                                    }
+                                    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+                                    {
+                                        <tr>
+                                            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                                            {
+                                                z++;
+                                                var backgroundClass = "border";
+                                                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                                                {
+                                                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
+                                                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
+
+                                                    if (Model.ChildrenLocationInstances[z].IsFull)
+                                                    {
+                                                        backgroundClass += " bg-secondary";
+                                                        <td class="@backgroundClass">
+                                                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled" })
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="@backgroundClass">
+                                                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false })
+                                                        </td>
+                                                    }
+
+                                                }
+
+                                            }
+                                        </tr>
+                                    }
+                                </table>
+                            }
+                            else
+                            {
+                                <span>No Locations</span>
+                                <button>Add Locations</button>
+                            }
                         </div>
                         <div id="price" class="tab-pane fade">
                             <div class="row">
@@ -219,7 +261,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
 vm => vm.Request.UnitTypeID,
 Model.UnitTypeList,
 "",
-htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "unit-type", @disabled="disabled" }
+htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "unit-type", @disabled = "disabled" }
 )
                                                 <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                             </div>
@@ -323,7 +365,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
                                             <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" name="sumDollars" disabled />
-                                                        @*id="sumDollars" name="sumDollars"*@
+                                            @*id="sumDollars" name="sumDollars"*@
                                         </div>
                                         <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                     </div>
@@ -377,7 +419,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                                         @Html.DropDownListFor(
                                                                 model => model.Request.Terms,
                                                                 new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-        htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled="disabled" }
+        htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
                                                             )
                                     </div>
                                 </div>
@@ -586,14 +628,14 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "su
                             </div>
                         </div>
                         @*<div id="order" class="tab-pane fade">
-                            <h3>ORDER</h3>
-                            <hr />
-                            <div class="form-group">
-                                <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
+                                <h3>ORDER</h3>
+                                <hr />
+                                <div class="form-group">
+                                    <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
 
-                                <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>*@
+                                    <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>*@
                     </div>
 
                 </div>

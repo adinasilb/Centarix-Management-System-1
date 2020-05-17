@@ -41,6 +41,8 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
         public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
 
+        public LocationInstance ParentLocationInstance { get; set; } //DO WE NEED THIS?????????
+        public List<LocationInstance> ChildrenLocationInstances { get; set; } //need this in a list b/c we need to 
 
 
 
