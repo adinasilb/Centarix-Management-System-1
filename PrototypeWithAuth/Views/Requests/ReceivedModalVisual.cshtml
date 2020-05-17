@@ -6,22 +6,33 @@
     }
     @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
     {
-        <tr>
-            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+    <tr>
+        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+        {
+            z++;
+            var backgroundClass = "border";
+            var innerHtml = "NONE";
+            @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
             {
-                z++;
-                var backgroundClass = "border";
-                var innerHtml = "NONE";
-                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
+                @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
+                if (Model.ChildrenLocationInstances[z].IsFull)
                 {
-                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
-                    {
-                        backgroundClass += " bg-secondary";
-                        innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
-                    }
+
+                    backgroundClass += " bg-secondary";
+                    innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+                    <td class="@backgroundClass">@Html.CheckBoxFor(vm => vm.ChildrenLocationInstances[z].IsFull, new { @disabled = "disabled"})</td>
+
                 }
-                <td class="@backgroundClass">@innerHtml</td>
+                else
+                {
+                    <td class="@backgroundClass">@Html.CheckBoxFor(vm => vm.ChildrenLocationInstances[z].IsFull)</td>
+                }
+
+
             }
-        </tr>
+
+        }
+    </tr>
     }
 </table>

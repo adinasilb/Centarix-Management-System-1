@@ -24,6 +24,7 @@ using MailKit.Net.Smtp;
 using MailKit;
 using MimeKit;
 using System.Linq.Expressions;
+using Org.BouncyCastle.Ocsp;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -1667,10 +1668,11 @@ namespace PrototypeWithAuth.Controllers
          */
 
         [HttpGet]
-        public async Task<IActionResult> ReceivedModal()
+        public async Task<IActionResult> ReceivedModal(int RequestID)
         {
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
             {
+                Request = _context.Requests.Where(r => r.RequestID == RequestID).FirstOrDefault(),
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>()
             };
@@ -1735,10 +1737,36 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel)
+        public IActionResult ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
-            //save
-
+            bool hasLocationInstances = false;
+            foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)
+            {
+                var tempLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
+                tempLocationInstance.IsFull = locationInstance.IsFull;
+                _context.Update(tempLocationInstance);
+                //possibly save again
+                if (locationInstance.IsFull)
+                {
+                    RequestLocationInstance requestLocationInstance = new RequestLocationInstance()
+                    {
+                        RequestID = receivedLocationViewModel.Request.RequestID,
+                        LocationInstanceID = locationInstance.LocationInstanceID,
+                        
+                    };
+                    _context.Add(requestLocationInstance);
+                    hasLocationInstances = true;
+                }
+                _context.SaveChanges();
+            }
+            if (hasLocationInstances)
+            {
+                var request = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID).FirstOrDefault();
+                request.RequestStatusID = 3;
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+           
             return RedirectToAction("Index");
         }
 

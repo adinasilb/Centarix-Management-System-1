@@ -221,12 +221,12 @@
                         }
                         else if (item.RequestStatusID == 2)
                         {
-                            <button class="btn btn-link  load-receive-and-location">Receive</button>
+                            <button class="btn btn-link  load-receive-and-location" value="@item.RequestID">Receive</button>
                         }
                         else
                         {
                             @*work on getting the correct syntax to create a new product with*@
-                            <button class="btn btn-link load-order-details" value="@item.RequestID">Order</button>
+                            <button class="btn btn-link load-order-details" value="@item.RequestID" >Order</button>
                         }
                     </td>
                     <td>
