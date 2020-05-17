@@ -6,36 +6,33 @@
     }
     @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
     {
-    <tr>
-        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-        {
-            z++;
-            var backgroundClass = "border";
-            var innerHtml = "NONE";
-            @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+        <tr>
+            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
             {
-                @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
-                @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
-                @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].IsFull);
-
-                if (Model.ChildrenLocationInstances[z].IsFull)
+                z++;
+                var backgroundClass = "border";
+                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                 {
+                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
+                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
 
-                    backgroundClass += " bg-secondary";
-                    //innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
-                    <td class="@backgroundClass">@Html.CheckBoxFor(vm => vm.ChildrenLocationInstances[z].IsFull, new { @disabled = "disabled" })</td>
-
+                    if (Model.ChildrenLocationInstances[z].IsFull)
+                    {
+                        backgroundClass += " bg-secondary";
+                        <td class="@backgroundClass">
+                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled" })
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="@backgroundClass">
+                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false })
+                        </td>
+                    }
 
                 }
-                else
-                {
-                    <td class="@backgroundClass">@Html.CheckBoxFor(vm => vm.ChildrenLocationInstances[z].IsFull)</td>
-                }
-
 
             }
-
-        }
-    </tr>
+        </tr>
     }
 </table>

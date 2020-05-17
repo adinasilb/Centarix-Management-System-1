@@ -1746,26 +1746,30 @@ namespace PrototypeWithAuth.Controllers
                 
 
                 var tempLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
-                tempLocationInstance.IsFull = locationInstance.IsFull;
-                _context.Update(tempLocationInstance);
-                //possibly save again
-
-                //this only works becaus allowing a one to many relationship with request and location
-                var requestLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().RequestLocationInstances;
-
-
-                if (locationInstance.IsFull && requestLocationInstances == null)
+                if (!tempLocationInstance.IsFull)//only putting in the locationInstance.IsFull if it's false b/c sometimes it doesn't pass in the true value so we can end up taking things out by mistake
                 {
-                    RequestLocationInstance requestLocationInstance = new RequestLocationInstance()
+                    tempLocationInstance.IsFull = locationInstance.IsFull;
+                    _context.Update(tempLocationInstance);
+                    //coule be later on we'll want to save here too
+
+                    //this only works because we're using a one to many relationship with request and locationinstance instead of a many to many
+                    var requestLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().RequestLocationInstances;
+
+                    //if it doesn't have any requestlocationinstances
+                    //WHY DO WE NEED THIS??????
+                    if (requestLocationInstances == null)
                     {
-                        RequestID = receivedLocationViewModel.Request.RequestID,
-                        LocationInstanceID = locationInstance.LocationInstanceID,
-                        
-                    };
-                    _context.Add(requestLocationInstance);
-                    hasLocationInstances = true;
+                        RequestLocationInstance requestLocationInstance = new RequestLocationInstance()
+                        {
+                            RequestID = receivedLocationViewModel.Request.RequestID,
+                            LocationInstanceID = locationInstance.LocationInstanceID,
+
+                        };
+                        _context.Add(requestLocationInstance);
+                        hasLocationInstances = true;
+                    }
+                    _context.SaveChanges();
                 }
-                _context.SaveChanges();
             }
             if (hasLocationInstances)
             {
