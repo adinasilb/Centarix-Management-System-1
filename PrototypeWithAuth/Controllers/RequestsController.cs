@@ -1233,18 +1233,18 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .SingleOrDefault(x => x.RequestID == id);
 
-                //check if this works once there are commments
-                var comments = Enumerable.Empty<Comment>();
-                comments = _context.Comments
-                    .Include(r => r.ApplicationUser)
-                    .Where(r => r.Request.RequestID == id);
-                //needs to be instantiated here so it doesn't throw an error if nothing is in it
-                /*
-                 *I think it should be an ienumerable and look like
-                 *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
-                 *ike before but it's not recognizing the syntax
-                */
-                requestItemViewModel.OldComments = comments.ToList();
+                ////check if this works once there are commments
+                //var comments = Enumerable.Empty<Comment>();
+                //comments = _context.Comments
+                //    .Include(r => r.ApplicationUser)
+                //    .Where(r => r.Request.RequestID == id);
+                ////needs to be instantiated here so it doesn't throw an error if nothing is in it
+                ///*
+                // *I think it should be an ienumerable and look like
+                // *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
+                // *ike before but it's not recognizing the syntax
+                //*/
+                //requestItemViewModel.OldComments = comments.ToList();
 
                 //may be able to do this together - combining the path for the orders folders
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");

@@ -580,33 +580,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                         </div>
                         <div id="comments" class="tab-pane fade">
                             <h3>COMMENTS</h3>
-                            @{
-                                if (Model.OldComments != null)
-                                {
-                                    foreach (Comment comment in Model.OldComments)
-                                    {
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="card rounded">
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <div class="col-md-2">
-                                                                Insert Pic
-                                                                <img src="" />
-                                                            </div>
-                                                            <div class="col-md-10">
-                                                                <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
-                                                                @comment.CommentText
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br />
-                                    }
-                                }
-                            }
+                            
                             @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
                             <div class="card rounded">
                                 <div class="card-body">

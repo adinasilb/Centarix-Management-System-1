@@ -50,7 +50,6 @@
                         <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="priceTab">Price</a></li>
                         <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
                         <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
-                        <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -596,24 +595,14 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 </div>
                             </div>
                         </div>
-                        <div id="order" class="tab-pane fade">
-                            <h3>ORDER</h3>
-                            <hr />
+                        <div class="modal-footer">
                             <div class="form-group">
                                 @*you can only add to cart if you are creating a new one*@
-                                @if (false) //if is create
-                                {
-                                    <input type="submit" name="OrderType" value="Order" asp-action="EditModalView" class="btn btn-outline-primary" />
-                                    <input type="submit" name="OrderType" value="Without Order" asp-action="Editta" class="btn btn-outline-primary" />
-                                    <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
-                                }
-                                else
-                                {
-                                    //not sure if we need the name=OrderType here b/c it's just editing details
+                                
                                     <input type="submit" name="OrderType" value="Save" asp-action="EditModalView" class="btn btn-outline-primary" />
-                                }
+                                
                                 @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
-                                <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
