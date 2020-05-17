@@ -1740,13 +1740,21 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             bool hasLocationInstances = false;
+            
             foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)
             {
+                
+
                 var tempLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
                 tempLocationInstance.IsFull = locationInstance.IsFull;
                 _context.Update(tempLocationInstance);
                 //possibly save again
-                if (locationInstance.IsFull)
+
+                //this only works becaus allowing a one to many relationship with request and location
+                var requestLocationInstances = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID);
+
+
+                if (locationInstance.IsFull && !requestLocationInstances.Any())
                 {
                     RequestLocationInstance requestLocationInstance = new RequestLocationInstance()
                     {

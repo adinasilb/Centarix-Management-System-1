@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.Data
 
 
         }
+        public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; }
         public DbSet<LocationInstance> LocationInstances { get; set; }
         public DbSet<LocationType> LocationTypes { get; set; }
         public DbSet<CompanyAccount> CompanyAccounts { get; set; }
