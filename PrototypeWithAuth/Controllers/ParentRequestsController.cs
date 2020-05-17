@@ -41,6 +41,7 @@ namespace PrototypeWithAuth.Controllers
             List<ParentRequest> DidntArriveList = new List<ParentRequest>();
             List<ParentRequest> PartialDeliveryList = new List<ParentRequest>();
             List<ParentRequest> ForClarification = new List<ParentRequest>();
+            List<ParentRequest> PayNow = new List<ParentRequest>();
 
 
             foreach (var parentRequest in fullParentRequestsList)
@@ -81,6 +82,15 @@ namespace PrototypeWithAuth.Controllers
                     }
                     
                 }
+                foreach (var request in parentRequest.Requests)
+                {
+                    if (request.RequestStatusID == 6) //Request Stat ID of 6 equals Clarify
+                    {
+                        PayNow.Add(request.ParentRequest);
+                        break;
+                    }
+
+                }
 
                 // if ordered, can also include if not  payed or if no invioce..
                 //partial,  can also include if not  payed or if no invioce..
@@ -94,7 +104,8 @@ namespace PrototypeWithAuth.Controllers
                 { "No Invoice", NoInvoiceList.Count },
                 { "Didn't Arrive", DidntArriveList.Count },
                 { "Partial Delivery", PartialDeliveryList.Count },
-                { "For Clarification", ForClarification.Count }
+                { "For Clarification", ForClarification.Count },
+                { "Pay Now", PayNow.Count }
             };
 
             ReturnParentRequestList.Add(NotPayedList);
@@ -102,6 +113,7 @@ namespace PrototypeWithAuth.Controllers
             ReturnParentRequestList.Add(DidntArriveList);
             ReturnParentRequestList.Add(PartialDeliveryList);
             ReturnParentRequestList.Add(ForClarification);
+            ReturnParentRequestList.Add(PayNow);
 
             PaymentNotificationsViewModel paymentNotificationsViewModel = new PaymentNotificationsViewModel
             {

@@ -19,5 +19,6 @@ namespace PrototypeWithAuth.Models
         public int Width { get; set; }
         public string LocationInstanceName { get; set; }
         public string Place { get; set; }
+        public bool IsFull { get; set; }
     }
 }
