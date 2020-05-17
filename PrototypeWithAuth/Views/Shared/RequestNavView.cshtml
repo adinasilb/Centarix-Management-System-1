@@ -85,9 +85,8 @@
                 <li class="nav-item mt-3 mb-3">
                     
                     @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
-                    <button class="btn btn-link text-dark create-product-details" onclick="changePic('/images/css/inventory/sidebar/add_circle_colored.png')">
-                        <img id="sidebar-add-item" src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
-                    </button>
+                    <button class="btn btn-link text-dark create-product-details" id="sidebar-add-item" onclick="addActive()">
+                        <img  src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item</button>
                 </li>
             }
             @if (Requests || Inventory)
@@ -170,9 +169,13 @@
 </div>
 
 <script>
-    function changePic(a) {
-        document.getElementById("sidebar-add-item").src = a;
-    }</script>
+    //function changePic(a) { document.getElementById("sidebar-add-item").src = a; }
+
+    function addActive() {
+        var item = document.getElementById("sidebar-add-item");
+        item.classList.add("activeNavLink");
+    }
+</script>
 
 @RenderSection("Scripts", required: false)
 <script>

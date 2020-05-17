@@ -40,7 +40,6 @@
                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName <img height="30px" src="~/images/css/profile_circle.png" alt="default user image" /></a>
                         </li>
                         <li class="nav-item">
-                            @*this is the only difference between the IFs. consider revising to tidy*@
                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })">
                                 <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
                             </form>
