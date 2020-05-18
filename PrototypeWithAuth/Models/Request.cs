@@ -49,7 +49,7 @@ namespace PrototypeWithAuth.Models
         public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
         public uint Quantity { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
         [Display(Name = "Price")]
         public double Cost { get; set; }
         public string CatalogNumber { get; set; }
