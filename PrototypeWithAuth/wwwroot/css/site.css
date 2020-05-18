@@ -3,8 +3,9 @@ for details on configuring this project to bundle and minify static web assets. 
 
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 .modal-body{
-    max-height: calc(100vh-210px);
-    overflow-y: auto;
+
+    /*max-height: calc(100vh-210px);
+    overflow-y: auto;*/
 }
 /*END ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 
@@ -164,5 +165,51 @@ table.table td {
 .container ul li a.active {
     /*color: #30BCC9;*/
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
-    background-color: white, !important;
+    
+}
+
+/*<<<< Modal Side Slide >>>>*/
+
+.modal.right .modal-dialog {
+    position: fixed;
+    margin: auto;
+    width: 40%;
+    height: 100%;
+    -webkit-transform: translate3d(0%, 0, 0);
+    -ms-transform: translate3d(0%, 0, 0);
+    -o-transform: translate3d(0%, 0, 0);
+    transform: translate3d(0%, 0, 0);
+}
+
+.modal.right .modal-content {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.modal.right .modal-body {
+    padding: 15px 15px 80px;
+}
+
+/*Right*/
+.modal.right.fade .modal-dialog {
+    right: -320px;
+    -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+    -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+    -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+    transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+
+.modal.right.fade.in .modal-dialog {
+    right: 0;
+}
+
+/* ----- MODAL STYLE ----- */
+.modal-content {
+    border-radius: 0;
+    border: none;
+}
+
+.modal-header {
+    border-bottom-color: #EEEEEE;
+    background-color: #FAFAFA;
 }

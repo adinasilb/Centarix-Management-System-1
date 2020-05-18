@@ -1,14 +1,25 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
-@using PrototypeWithAuth.AppData 
+@using PrototypeWithAuth.AppData
 @{
 
 }
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
+@*<<<< original div.modal-dialog >>>>*@
+
+
+
+    @*new added div*@
+    @*<div class="modal right fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+        <div class="modal-dialog modal-view" role="document">*@
+
+        <!--used to be 1st div, made to be 2nd.
+            took out [.modal-dialog-scrollable modal-lg & style="max-height:100%; overflow-y:auto;"]-->
+        <!-- end of slide modal edits -->
 <div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view" role="document" style="max-height:100%; overflow-y:auto;">
 
-    <div class="modal-content d-inline-block">
+    <div class="modal-content d-inline-block" style="background-color:whitesmoke;">
 
 
         <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
@@ -22,9 +33,9 @@
                     <br />
                 }
                 <div class="form-group">
-                    <h4><label asp-for="Request.Product.ProductName" class="control-label">New Request : </label> </h4>
+                    <h4><label asp-for="Request.Product.ProductName" class="control-label">New Request: </label> </h4>
 
-                    <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom " /></h4>
+                    <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" placeholder="(item name)" /></h4>
                     <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
                 </div>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -37,7 +48,7 @@
                     <div class="col-10 offset-1">
                         <ul id="modal-tabs" class="nav nav-tabs text-center">
                             <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link active"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
-                            <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link" id="priceTab"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
+                            <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
                             <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
                             <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
                             <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Order" /><br />Order</a></li>
@@ -54,12 +65,12 @@
                 <div class="container-fluid div-tabs">
 
                     @*<ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
-                    <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="priceTab">Price</a></li>
-                    <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
-                    <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
-                    <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
-                </ul>*@
+                            <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
+                            <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="priceTab">Price</a></li>
+                            <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
+                            <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
+                            <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
+                        </ul>*@
 
                     <div class="tab-content">
                         <div id="item" class="tab-pane fade in active">
@@ -587,9 +598,10 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3 class="images-header"></h3>
-                                    <hr />
+
                                     @if (Model.OrderFileStrings != null)
                                     {
+                                        <hr />
                                         <div class="fill-images-orders">
                                             <a href="@Model.OrderFileStrings[0]" target="_blank">Click to open</a>
                                             <embed src="@Model.OrderFileStrings[0]" type="application/pdg" @*height="100%" width="100%"*@ />
@@ -660,7 +672,6 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
 
 
 </div>
-
 @*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
 @*This will work for the EDIT (putting in the already loaded product subcategory)*@
 @section Scripts {
