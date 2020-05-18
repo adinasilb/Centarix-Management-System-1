@@ -183,7 +183,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                                 <h4>@Model.ParentLocationInstance.LocationInstanceName</h4> //this should be a link to the manage page for admins only
                                 <table class="table table-sm border">
                                     @{
-                                        int z = -1;
+                                        int z = -1; //initiated to -1 b/c it didn't let me put the z++ on the bottom of the fx. Really should be 0.
                                     }
                                     @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
                                     {
@@ -199,15 +199,22 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
 
                                                     if (Model.ChildrenLocationInstances[z].IsFull)
                                                     {
-                                                        backgroundClass += " bg-secondary";
+                                                        if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
+                                                        {
+                                                            backgroundClass += " bg-primary";
+                                                        }
+                                                        else
+                                                        {
+                                                            backgroundClass += " bg-secondary";
+                                                        }
                                                         <td class="@backgroundClass">
-                                                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled" })
+                                                            @Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName
                                                         </td>
                                                     }
                                                     else
                                                     {
                                                         <td class="@backgroundClass">
-                                                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false })
+                                                            Empty
                                                         </td>
                                                     }
 

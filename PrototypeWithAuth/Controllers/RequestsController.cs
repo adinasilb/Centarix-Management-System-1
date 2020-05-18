@@ -189,10 +189,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 //do something here 
             }
+
+
+
+
+
+
             return View(onePageOfProducts);
         }
-
-
 
 
         // GET: Requests/Details/5
@@ -523,12 +527,22 @@ namespace PrototypeWithAuth.Controllers
                     if (requestItemViewModel.ParentLocationInstance != null)
                     {
                         //inserting list of childrenslocationinstances to show on the frontend
-                        requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID).ToList();
+                        requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
+                            .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
+                            .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+                        //var x = 0; //place in cli
                         //requestItemViewModel.ChildrenLocationInstancesRequests = new List<Request>();
-                        //foreach(var li in requestItemViewModel.ChildrenLocationInstances)
+                        //foreach (var cli in requestItemViewModel.ChildrenLocationInstances)
                         //{
-                            
+                        //    var req = _context.Requests
+                        //        .Include(r => r.RequestLocationInstances.Select(rli => rli.LocationInstanceID == cli.LocationInstanceID)).Include(r => r.Product)
+                        //        .FirstOrDefault();
+                        //    if (req != null)
+                        //    {
+                        //        requestItemViewModel.ChildrenLocationInstancesRequests.Add(req);
+                        //    }
                         //}
+
                     }
                 }
 
@@ -1772,14 +1786,16 @@ namespace PrototypeWithAuth.Controllers
 
 
                 var tempLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
-                if (!tempLocationInstance.IsFull)//only putting in the locationInstance.IsFull if it's false b/c sometimes it doesn't pass in the true value so we can end up taking things out by mistake
+                if (!tempLocationInstance.IsFull && locationInstance.IsFull)//only putting in the locationInstance.IsFull if it's false b/c sometimes it doesn't pass in the true value so we can end up taking things out by mistake
                 {
                     tempLocationInstance.IsFull = locationInstance.IsFull;
                     _context.Update(tempLocationInstance);
                     //coule be later on we'll want to save here too
 
                     //this only works because we're using a one to many relationship with request and locationinstance instead of a many to many
-                    var requestLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().RequestLocationInstances;
+                    var requestLocationInstances = _context.LocationInstances
+                        .Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID)
+                        .FirstOrDefault().RequestLocationInstances;
 
                     //if it doesn't have any requestlocationinstances
                     //WHY DO WE NEED THIS??????
