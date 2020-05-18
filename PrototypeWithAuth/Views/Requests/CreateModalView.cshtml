@@ -15,7 +15,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="@Model.Request.RequestID" />
             <!-- Modal Header -->
-            <div class="modal-header border-bottom-0">
+            <div class="modal-header border-bottom-0 mb-3">
                 @if (TempData["ErrorMessage"] != null)
                 {
                     <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
@@ -23,28 +23,48 @@
                 }
                 <div class="form-group">
                     <h4><label asp-for="Request.Product.ProductName" class="control-label">New Request : </label> </h4>
+
                     <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom " /></h4>
                     <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
                 </div>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <br /><br />
+
+            </div>
+            @*moved the tabs into the modal header*@
+            <div class="container">
+                <div class="row">
+                    <div class="col-10 offset-1">
+                        <ul id="modal-tabs" class="nav nav-tabs text-center">
+                            <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link active"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
+                            <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link" id="priceTab"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
+                            <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
+                            <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
+                            <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Order" /><br />Order</a></li>
+                            <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><img src="~/images/css/inventory/add-item/archive.png" alt="Archive" /><br />Archive</a></li>
+                            <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><img src="~/images/css/inventory/add-item/history.png" alt="History" /><br />History</a></li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Modal body -->
             <div class="modal-body">
                 <div class="container-fluid div-tabs">
 
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
-                        <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="priceTab">Price</a></li>
-                        <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
-                        <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
-                        <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
-                    </ul>
+                    @*<ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
+                    <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="priceTab">Price</a></li>
+                    <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
+                    <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
+                    <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
+                </ul>*@
 
                     <div class="tab-content">
                         <div id="item" class="tab-pane fade in active">
-                            <h3>ITEM</h3>
-                            <hr />
+                            <strong>Item</strong>
+                            <br />
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -580,7 +600,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                         </div>
                         <div id="comments" class="tab-pane fade">
                             <h3>COMMENTS</h3>
-                            
+
                             @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
                             <div class="card rounded">
                                 <div class="card-body">
@@ -606,10 +626,18 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
                             </div>
                         </div>
-                    </div>
+                        <div id="archive" class="tab-pane fade">
+                            <h3>This is the Archive tab. As of yet there is nothing in the Archive.</h3>
+                        </div>
+                        <div id="history" class="tab-pane fade">
+                            <h3>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h3>
 
+                        </div>
+                    </div>
                 </div>
             </div>
+
+
 
             <!-- Modal footer -->
             <div class="modal-footer">

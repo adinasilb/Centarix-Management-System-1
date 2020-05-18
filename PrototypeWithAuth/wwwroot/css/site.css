@@ -101,8 +101,7 @@ body {
 
 .ourNavBar li a { color: #333 }
 
-.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink {
-    
+.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
 }
 
@@ -162,3 +161,8 @@ table.table td {
     height:120px;
 }
 
+.container ul li a.active {
+    /*color: #30BCC9;*/
+    filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
+    background-color: white, !important;
+}
