@@ -103,9 +103,10 @@ namespace PrototypeWithAuth.Controllers
                 { "To Pay", NotPayedList.Count },
                 { "No Invoice", NoInvoiceList.Count },
                 { "Didn't Arrive", DidntArriveList.Count },
+                { "Pay Now", PayNow.Count },
                 { "Partial Delivery", PartialDeliveryList.Count },
-                { "For Clarification", ForClarification.Count },
-                { "Pay Now", PayNow.Count }
+                { "For Clarification", ForClarification.Count }
+                
             };
 
             ReturnParentRequestList.Add(NotPayedList);

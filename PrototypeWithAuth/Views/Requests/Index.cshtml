@@ -195,8 +195,38 @@
 
                     <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
 
-                    <td> ('x' units...) </td> @*Computed column?*@
-                    @*Later on should have a better location...*@
+                    <td> 
+                        <ul style="list-style: none;">
+
+                            <li>
+                                @Html.DisplayFor(modelItem => item.Cost)
+                            </li>
+                            @if (item.Unit != null) 
+                            {
+                        <li>
+                            @Html.DisplayFor(modelItem => item.Unit)
+                            @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                        </li>
+                                @if (item.SubUnit != null)
+                                {
+                        <li>
+                            @Html.DisplayFor(modelItem => item.SubUnit)
+                            @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
+                        </li>
+                                    @if (item.SubSubunit != null)
+                                    {
+                        <li>
+                            @Html.DisplayFor(modelItem => item.SubSubunit)
+                            @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
+                        </li>
+                                    }
+                                }
+
+                            }
+                        </ul>
+                        </td> @*Computed column?*@
+                    
+    @*Later on should have a better location...*@
                     @if (Inventory)
                     {
                         <td> (Freezer, Shelf, box...) </td>

@@ -30,6 +30,7 @@
             <li class="nav-item">
                 <a href="#@Model.TitleList.ElementAt(5).Key">@Model.TitleList.ElementAt(5).Key <br />[@Model.TitleList.ElementAt(5).Value] </a>
             </li>
+
         </ul>
         @*</nav>*@
     </div>
@@ -43,7 +44,7 @@
             {
                 <span>&emsp; Total: </span><span class="totalToPay"></span>
             }
-            @if (index == 5)
+            @if (index == 3)
             {
                 <span>&emsp; Total: </span><span class="totalPayNow"></span>
             }
@@ -138,7 +139,7 @@
                             {
                                 totalToPay += item.Requests.FirstOrDefault().Cost;
                             }
-                            else if (index == 5)
+                            else if (index == 3)
                             {
                                 totalPayNow += item.Requests.FirstOrDefault().Cost;
                             }
