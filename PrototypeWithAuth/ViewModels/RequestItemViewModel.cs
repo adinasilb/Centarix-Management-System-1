@@ -43,6 +43,7 @@ namespace PrototypeWithAuth.ViewModels
 
         public LocationInstance ParentLocationInstance { get; set; } //DO WE NEED THIS?????????
         public List<LocationInstance> ChildrenLocationInstances { get; set; } //need this in a list b/c we need to 
+        public List<Request> ChildrenLocationInstancesRequests { get; set; } //loop through this to get the product name
 
 
 

@@ -178,8 +178,9 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                             </div>
                         </div>
                         <div id="location" class="tab-pane fade">
-                            @if (Model.ChildrenLocationInstances.Any())
+                            @if (Model.ChildrenLocationInstances != null && Model.ChildrenLocationInstances.Any())
                             {
+                                <h4>@Model.ParentLocationInstance.LocationInstanceName</h4> //this should be a link to the manage page for admins only
                                 <table class="table table-sm border">
                                     @{
                                         int z = -1;
