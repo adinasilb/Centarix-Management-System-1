@@ -165,7 +165,7 @@ $("#Request_ExchangeRate").change(function () {
 	$.fn.CalculateUnitAmounts();
 });
 //enable the units and subunits tabs
-$("#unit-amount").change(function () {
+$("#Request_Unit").change(function () {
 	$.fn.CheckEnableSubUnits();
 	console.log("unit amounts 1");
 	$.fn.CalculateUnitAmounts();
@@ -173,24 +173,26 @@ $("#unit-amount").change(function () {
 	$.fn.CalculateSubSubUnitAmounts(); //do we need an if statement here?
 
 });
-$("#unit-type").change(function () {
+$("#Request_UnitTypeID").change(function () {
 	console.log("unit type changed");
 	$.fn.CheckEnableSubUnits();
 });
 
-$("#subunit-amount").change(function () {
+$("#Request_SubUnit").change(function () {
 	$.fn.CheckEnableSubSubUnits();
 });
-$("#subunit-type").change(function () {
+$("#Request_SubUnitTypeID").change(function () {
 	$.fn.CheckEnableSubSubUnits();
 });
 
 $.fn.CheckEnableSubUnits = function () {
 	console.log("check enable subunits");
-	if ($("#unit-amount").val() > 0 && $("#unit-type").val()) {
+	if ($("Request_Unit").val() > 0 && $("#Request_UnitTypeID").val()) {
+		console.log("check enable subunits if");
 		$.fn.EnableSubUnits();
 	}
 	else {
+		console.log("check enable subunits else");
 		$.fn.DisableSubUnits();
 		$.fn.DisableSubSubUnits();
 	}
@@ -198,36 +200,38 @@ $.fn.CheckEnableSubUnits = function () {
 
 $.fn.CheckEnableSubSubUnits = function () {
 	console.log("check enable subsubunits");
-	if ($("#subunit-amount").val() > 0 && $("#subunit-type").val()) {
+	if ($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val()) {
+		console.log("check enable subsubunits if");
 		$.fn.EnableSubSubUnits();
 	}
 	else {
+		console.log("check enable subsubunits else");
 		$.fn.DisableSubSubUnits();
 	}
 };
 
 $.fn.EnableSubUnits = function () {
 	console.log(" enable subunits");
-	$(".RequestSubunitCard #subunit-amount").prop("disabled", false);
-	$(".RequestSubunitCard #subunit-type").prop("disabled", false);
+	$(".RequestSubunitCard #Request_SubUnit").prop("disabled", false);
+	$(".RequestSubunitCard #Request_SubUnitTypeID").prop("disabled", false);
 };
 
 $.fn.EnableSubSubUnits = function () {
-	console.log("check enable subsubunits");
-	$(".RequestSubsubunitCard #subsubunit-amount").prop("disabled", false);
-	$(".RequestSubsubunitCard #subsubunit-type").prop("disabled", false);
+	console.log(" enable subsubunits");
+	$(".RequestSubsubunitCard #Request_SubSubunit").prop("disabled", false);
+	$(".RequestSubsubunitCard #Request_SubSubUnitTypeID").prop("disabled", false);
 };
 
 $.fn.DisableSubUnits = function () {
 	console.log(" disable subunits");
-	$(".RequestSubunitCard #subunit-amount").prop("disabled", true);
-	$(".RequestSubunitCard #subunit-type").prop("disabled", true);
+	$(".RequestSubunitCard #Request_SubUnit").prop("disabled", true);
+	$(".RequestSubunitCard #Request_SubUnitTypeID").prop("disabled", true);
 };
 
 $.fn.DisableSubSubUnits = function () {
 	console.log(" disable subsubunits");
-	$(".RequestSubsubunitCard #subsubunit-amount").prop("disabled", true);
-	$(".RequestSubsubunitCard #subsubunit-type").prop("disabled", true);
+	$(".RequestSubsubunitCard #Request_SubSubunit").prop("disabled", true);
+	$(".RequestSubsubunitCard #Request_SubSubUnitTypeID").prop("disabled", true);
 };
 
 
@@ -275,7 +279,7 @@ $.fn.ChangeSumDollarsAndSumShekel = function () {
 
 //Calculate unit amounts
 $.fn.CalculateUnitAmounts = function () {
-	var $unitAmounts = $("#unit-amount").val();
+	var $unitAmounts = $("#Request_Unit").val();
 	console.log("$unitAmounts: " + $unitAmounts);
 	var $sumDollars = $("#Request_Cost").val();
 	console.log("Request_Cost: " + $sumDollars);
@@ -294,7 +298,7 @@ $.fn.CalculateUnitAmounts = function () {
 };
 //calculate sub unit amountss
 $.fn.CalculateSubUnitAmounts = function () {
-	var $subUnitAmounts = $("#subunit-amount").val();
+	var $subUnitAmounts = $("#Request_SubUnit").val();
 	console.log("$subUnitAmounts: " + $subUnitAmounts);
 	var $unitPriceDollars = $("#unit-price-dollars").val();
 	console.log("$unitPriceDollars: " + $unitPriceDollars);
@@ -311,7 +315,7 @@ $.fn.CalculateSubUnitAmounts = function () {
 };
 //calculate sub sub unit amounts
 $.fn.CalculateSubSubUnitAmounts = function () {
-	var $subSubUnitAmounts = $("#subsubunit-amount").val();
+	var $subSubUnitAmounts = $("#Request_SubSubunit").val();
 	console.log("$subSubUnitAmounts: " + $subSubUnitAmounts);
 	var $subUnitPriceDollars = $("#subunit-price-dollars").val();
 	console.log("$subUnitPriceDollars: " + $subUnitPriceDollars);

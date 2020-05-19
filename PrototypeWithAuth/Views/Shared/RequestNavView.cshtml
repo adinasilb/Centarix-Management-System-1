@@ -26,7 +26,7 @@
     }
 
     string originalNavClasses = "btn btn-link text-dark";
-    string activeClass = " font-weight-bold activeNavLink"; 
+    string activeClass = " font-weight-bold activeNavLink";
 
     string type = originalNavClasses;
     string vendor = originalNavClasses;
@@ -83,16 +83,17 @@
             @if (Requests || Inventory)
             {
                 <li class="nav-item mt-3 mb-3">
-                    
+
                     @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
                     <button class="btn btn-link text-dark create-product-details" id="sidebar-add-item" onclick="addActive()">
-                        <img  src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item</button>
+                        <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
+                    </button>
                 </li>
             }
             @if (Requests || Inventory)
             {
                 //Here is the proper way to do it
-                <li class="nav-item mt-3 mb-3 @type"> 
+                <li class="nav-item mt-3 mb-3 @type">
                     <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
                 </li>
                 // <i class="fas fa-shapes"></i>
@@ -101,17 +102,17 @@
 
                 //old way
                 @*<li class="nav-item mt-3 mb-3">
-                <i class="fas fa-shapes"></i><br />
-                @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageType }, new { @class = type })
-            </li>*@
+                        <i class="fas fa-shapes"></i><br />
+                        @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageType }, new { @class = type })
+                    </li>*@
             }
             @if (Requests || Inventory)
             {
                 //old way
                 @*<li class="nav-item mt-3 mb-3">
-                <i class="fas fa-store"></i><br />
-                @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageType }, new { @class = vendor })
-            </li>*@
+                        <i class="fas fa-store"></i><br />
+                        @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageType }, new { @class = vendor })
+                    </li>*@
 
                 <li class="nav-item mt-3 mb-3 @vendor">
                     <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
@@ -121,9 +122,9 @@
             {
 
                 @*<li class="nav-item mt-3 mb-3">
-                <i class="far fa-meh-blank"></i><br />
-                @/*Html.ActionLink("Owner", "Index", "ApplicationUsers", new { @PageType = pageType }, new { @class = owner })*/
-            </li>*@
+                        <i class="far fa-meh-blank"></i><br />
+                        @/*Html.ActionLink("Owner", "Index", "ApplicationUsers", new { @PageType = pageType }, new { @class = owner })*/
+                    </li>*@
                 @*have to create contorller for application user?*@
 
                 <li class="nav-item mt-3 mb-3 @owner">
@@ -135,14 +136,14 @@
 
                 @*Redo the location class in the controller*@
                 @*<li class="nav-item mt-3 mb-3">
-                    <i class="fas fa-map-marker-alt"></i>
-                    @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = location })
-                </li>*@
+                        <i class="fas fa-map-marker-alt"></i>
+                        @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = location })
+                    </li>*@
 
-            <li class="nav-item mt-3 mb-3 @location">
-                <a href="@Url.ActionLink("Index", "Locations", new { @PageType = location })"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Manage</a>
-            </li>
-        }
+                <li class="nav-item mt-3 mb-3 @location">
+                    <a href="@Url.ActionLink("Index", "Locations", new { @PageType = location })"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Manage</a>
+                </li>
+            }
             @if (Cart)
             {
                 <li class="nav-item mt-3 mb-3">
@@ -161,8 +162,7 @@
 </div>
 
 <!-- The Modal -->
-<div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request">
-</div>
+
 
 <!-- Confirm Email Modal -->
 <div class="modal confirm-email-modal" id="myModal">
@@ -180,7 +180,7 @@
 @RenderSection("Scripts", required: false)
 <script>
 
-    
+
 
 
     $(document).ready(function () {
@@ -207,7 +207,7 @@
 
 
         //close the modals on dismiss of them:
-        
+
 
     });
 
@@ -275,7 +275,9 @@
     });
 
     $.fn.CallPage = function ($tab, $itemurl, isEmail = false) {
-        console.log("in function");
+        console.log("in call page function");
+        //delete existing modals
+        $('.modal').replaceWith('');
         $.ajax({
             async: true,
             url: $itemurl,
@@ -283,11 +285,13 @@
             cache: false,
             success: function (data) {
                 console.log("success!");
+                var modal = $(data);
+                $('body').append(modal);
                 //replaces the modal-view class with the ModalView view
-                $(".modal-view").html(data);
+                //$(".modal-view").html(data);
                 //turn off data dismiss by clicking out of the box and by pressing esc
                 $(".modal-view").modal({
-                    backdrop: 'static',
+                    backdrop: false,
                     keyboard: false
                 });
                 //shows the modal
@@ -296,9 +300,9 @@
                 //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
                 //})
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                $(".modal-backdrop").remove();
+                //$(".modal-backdrop").remove();
                 //$('.modal').find('input').first().focus();
-                $(".modal").popover('hide');
+                //$(".modal").popover('hide')
                 if (!isEmail) { //SET BOOLEAN TO MODAL VIEW NOT ISEMAIL
                     /* Following line should set the correct data-target tab to open ----> not working right now */
                     //$('.nav-tabs a[href="' + $tab + '"]').tab - pane('show');

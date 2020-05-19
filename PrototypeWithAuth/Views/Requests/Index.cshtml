@@ -198,9 +198,6 @@
                     <td>
                         <ul style="list-style: none;">
 
-                            <li>
-                                @Html.DisplayFor(modelItem => item.Cost)
-                            </li>
                             @if (item.Unit != null)
                             {
                                 <li>
@@ -223,6 +220,10 @@
                                 }
 
                             }
+
+                            <li>
+                                @Html.DisplayFor(modelItem => item.Cost)
+                            </li>
                         </ul>
                     </td> @*Computed column?*@
 
