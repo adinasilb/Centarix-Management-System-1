@@ -147,10 +147,31 @@ $(".view-docs").click(function (clickEvent) {
 
 //PRICE PAGE ON MODAL VIEW//
 
+
+//on opening of the price tag see if subunits and subsubunits should be enabled
+$("#price-tab").on("click", function () {
+	console.log("$('#priceTab').click(function () {");
+	$.fn.CheckEnableSubUnits();
+	$.fn.CheckEnableSubSubUnits();
+});
+
+$("#currency").change(function () {
+	console.log("currency was changed");
+	$.fn.EnableSumDollarsOrShekel();
+});
+
+$("#Request_ExchangeRate").change(function () {
+	$.fn.ChangeSumDollarsAndSumShekel();
+	$.fn.CalculateUnitAmounts();
+});
 //enable the units and subunits tabs
 $("#unit-amount").change(function () {
-	console.log("unit amount changed");
 	$.fn.CheckEnableSubUnits();
+	console.log("unit amounts 1");
+	$.fn.CalculateUnitAmounts();
+	$.fn.CalculateSubUnitAmounts(); //do we need an if statement here?
+	$.fn.CalculateSubSubUnitAmounts(); //do we need an if statement here?
+
 });
 $("#unit-type").change(function () {
 	console.log("unit type changed");
@@ -209,23 +230,6 @@ $.fn.DisableSubSubUnits = function () {
 	$(".RequestSubsubunitCard #subsubunit-type").prop("disabled", true);
 };
 
-//on opening of the price tag see if subunits and subsubunits should be enabled
-$("#price-tab").on("click", function () {
-	console.log("$('#priceTab').click(function () {");
-	$.fn.CheckEnableSubUnits();
-	$.fn.CheckEnableSubSubUnits();
-});
-
-$("#currency").change(function () {
-	console.log("currency was changed");
-	$.fn.EnableSumDollarsOrShekel();
-});
-
-$("#Request_ExchangeRate").change(function () {
-	$.fn.ChangeSumDollarsAndSumShekel();
-	$.fn.CalculateUnitAmounts();
-});
-
 
 //enable or disable sumdollars and sumshekel
 $.fn.EnableSumDollarsOrShekel = function () {
@@ -236,12 +240,12 @@ $.fn.EnableSumDollarsOrShekel = function () {
 		case "dollar":
 			console.log("in case dollar");
 			$("#sumShekel").prop("disabled", true);
-			$("#sumDollars").prop("disabled", false);
+			$("#Request_Cost").prop("disabled", false);
 			break;
 		case "shekel":
 			console.log("in case shekel");
 			$("#sumShekel").prop("disabled", false);
-			$("#sumDollars").prop("disabled", true);
+			$("#Request_Cost").prop("disabled", true);
 			break;
 	}
 }
@@ -249,14 +253,14 @@ $.fn.EnableSumDollarsOrShekel = function () {
 //change sumDollars and sumSHekel
 $.fn.ChangeSumDollarsAndSumShekel = function () {
 	var $exchangeRate = $("#Request_ExchangeRate").val();
-	if ($("#sumDollars").prop("disabled")) {
+	if ($("#Request_Cost").prop("disabled")) {
 		var $sumShekel = $("#sumShekel").val();
 		var $sumDollars = $sumShekel / $exchangeRate;
-		$inputBox = $('input[name="sumDollars"]');
+		$inputBox = $('input[name="Request_Cost"]');
 		$.fn.ShowResults($inputBox, $sumDollars);
 	}
 	else if ($("#sumShekel").prop("disabled")) {
-		var $sumDollars = $("#sumDollars").val();
+		var $sumDollars = $("#Request_Cost").val();
 		var $sumShekel = $sumDollars * $exchangeRate;
 		$sumShekelsInputBox = $('input[name="sumShekel"]');
 		console.log("$sumShekel: " + $sumShekel);
@@ -272,21 +276,61 @@ $.fn.ChangeSumDollarsAndSumShekel = function () {
 //Calculate unit amounts
 $.fn.CalculateUnitAmounts = function () {
 	var $unitAmounts = $("#unit-amount").val();
-	var $sumDollars = $("#sumDollars").val();
+	console.log("$unitAmounts: " + $unitAmounts);
+	var $sumDollars = $("#Request_Cost").val();
+	console.log("Request_Cost: " + $sumDollars);
 	var $exchangeRate = $("#Request_ExchangeRate").val();
+	console.log("$exchangeRate: " + $exchangeRate);
 	$unitSumDollars = $sumDollars / $unitAmounts;
+	console.log("Request_Cost: " + $unitSumDollars);
 	$inputBox = $('input[name="unit-price-dollars"]');
 	$.fn.ShowResults($inputBox, $unitSumDollars);
 	//$('input[name="unit-price-dollars"]').val($unitSumDollars);
 	$unitSumShekel = $unitSumDollars * $exchangeRate;
+	console.log("$unitSumShekel: " + $unitSumShekel);
 	$inputBox2 = $('input[name="unit-price-shekel"]');
 	$.fn.ShowResults($inputBox2, $unitSumShekel);
 	//$('input[name="unit-price-shekel"').val($unitSumShekel);
 };
+//calculate sub unit amountss
+$.fn.CalculateSubUnitAmounts = function () {
+	var $subUnitAmounts = $("#subunit-amount").val();
+	console.log("$subUnitAmounts: " + $subUnitAmounts);
+	var $unitPriceDollars = $("#unit-price-dollars").val();
+	console.log("$unitPriceDollars: " + $unitPriceDollars);
+	var $exchangeRate = $("#Request_ExchangeRate").val();
+	console.log("$exchangeRate: " + $exchangeRate);
+	$subUnitSumDollars = $unitPriceDollars / $subUnitAmounts;
+	console.log("$subUnitSumDollars: " + $subUnitSumDollars);
+	$ipt = $('input[name="subunit-price-dollars"]');
+	$.fn.ShowResults($ipt, $subUnitSumDollars);
+	$subUnitSumShekel = $subUnitSumDollars * $exchangeRate;
+	console.log("$subUnitSumShekel: " + $subUnitSumShekel);
+	$ipt = $('input[name="subunit-price-shekel"');
+	$.fn.ShowResults($ipt, $subUnitSumShekel);
+};
+//calculate sub sub unit amounts
+$.fn.CalculateSubSubUnitAmounts = function () {
+	var $subSubUnitAmounts = $("#subsubunit-amount").val();
+	console.log("$subSubUnitAmounts: " + $subSubUnitAmounts);
+	var $subUnitPriceDollars = $("#subunit-price-dollars").val();
+	console.log("$subUnitPriceDollars: " + $subUnitPriceDollars);
+	var $exchangeRate = $("#Request_ExchangeRate").val();
+	console.log("$exchangeRate: " + $exchangeRate);
+	$subSubUnitSumDollars = $subUnitPriceDollars / $subSubUnitAmounts;
+	console.log("$subSubUnitSumDollars: " + $subSubUnitSumDollars);
+	$ipt = $('input[name="subsubunit-price-dollars"]');
+	$.fn.ShowResults($ipt, $subSubUnitSumDollars);
+	$subSubUnitSumShekel = $subSubUnitSumDollars * $exchangeRate;
+	console.log("$subSubUnitSumShekel: " + $subSubUnitSumShekel);
+	$ipt = $('input[name="subsubunit-price-shekel"');
+	$.fn.ShowResults($ipt, $subSubUnitSumShekel);
+};
+
 
 $.fn.ShowResults = function ($inputBox, $value) {
 	var theResult = isFinite($value) && $value || "";
-	$inputBox.val(theResult.toFixed(2));//should set it to 2 decimal places
+	$inputBox.val(theResult/*.toFixed(2)*/);//should set it to 2 decimal places
 }
 
 

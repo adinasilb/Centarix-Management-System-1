@@ -193,11 +193,6 @@ namespace PrototypeWithAuth.Controllers
                 //do something here 
             }
 
-
-
-
-
-
             return View(onePageOfProducts);
         }
 

@@ -306,7 +306,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control-plaintext border-bottom " id="subsubunit-price-dollars" disabled />
+                                                    <input class="form-control-plaintext border-bottom " id="subsubunit-price-dollars" name="subsubunit-price-dollars" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -325,7 +325,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                         <label asp-for="Request.Cost" class="control-label"></label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input asp-for="Request.Cost" class="form-control-plaintext border-bottom " name="sumDollars" />@*id="sumDollars" name="sumDollars"*@
+                                            <input asp-for="Request.Cost" class="form-control-plaintext border-bottom " />@*id="sumDollars" name="sumDollars"*@
                                         </div>
                                         <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                     </div>
@@ -599,7 +599,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             <div class="form-group">
                                 @*you can only add to cart if you are creating a new one*@
                                 
-                                    <input type="submit" data-dismiss="modal" name="OrderType" value="Save" asp-action="EditModalView" class="btn btn-outline-primary close-modal" />
+                                    <input type="submit" name="OrderType" value="Save" asp-action="EditModalView" class="btn btn-outline-primary close-modal" />
                                 
                                 @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
