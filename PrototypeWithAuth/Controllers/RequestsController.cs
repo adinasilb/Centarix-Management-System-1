@@ -53,7 +53,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
             //instantiate your list of requests to pass into the index
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest);
+            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser);
+               //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
             TempData["RequestStatusID"] = RequestStatusID;
             var SidebarTitle = AppUtility.RequestSidebarEnum.None;
