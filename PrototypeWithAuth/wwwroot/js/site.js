@@ -145,228 +145,116 @@ $(".view-docs").click(function (clickEvent) {
 });
 
 //PRICE PAGE ON MODAL VIEW//
+
+//enable the units and subunits tabs
+$("#unit-amount").change(function () {
+	$.fn.CheckEnableSubUnits();
+});
+$("#unit-type").change(function () {
+	$.fn.CheckEnableSubUnits();
+});
+
+$("#subunit-amount").change(function () {
+	$.fn.CheckEnableSubSubUnits();
+});
+$("#subunit-type").change(function () {
+	$.fn.CheckEnableSubSubUnits();
+});
+
+$.fn.CheckEnableSubUnits = function () {
+	if ($("#subunit-amount").val() > 0 && $("#subunit-type").val()) {
+		$.fn.EnableSubSubUnits();
+	}
+	else {
+		$.fn.DisableSubSubUnits();
+	}
+};
+
+$.fn.CheckEnableSubSubUnits = function () {
+	if ($("#unit-amount").val() > 0 && $("#unit-type").val()) {
+		console.log("unit amount has a val");
+		$.fn.EnableSubUnits();
+	}
+	else {
+		$.fn.DisableSubUnits();
+		$.fn.DisableSubSubUnits();
+	}
+};
+
+$.fn.EnableSubUnits = function () {
+	$(".RequestSubunitCard #subunit-amount").prop("disabled", false);
+	$(".RequestSubunitCard #subunit-type").prop("disabled", false);
+};
+
+$.fn.EnableSubSubUnits = function () {
+	$(".RequestSubsubunitCard #subsubunit-amount").prop("disabled", false);
+	$(".RequestSubsubunitCard #subsubunit-type").prop("disabled", false);
+};
+
+$.fn.DisableSubUnits = function () {
+	$(".RequestSubunitCard #subunit-amount").prop("disabled", true);
+	$(".RequestSubunitCard #subunit-type").prop("disabled", true);
+};
+
+$.fn.DisableSubSubUnits = function () {
+	$(".RequestSubsubunitCard #subsubunit-amount").prop("disabled", true);
+	$(".RequestSubsubunitCard #subsubunit-type").prop("disabled", true);
+};
+
 //on opening of the price tag see if subunits and subsubunits should be enabled
-$("#priceTab").click(function () {
-	console.log("price tab was clicked");
+$("#price-tab").on("click", function () {
+	console.log("$('#priceTab').click(function () {");
 	if ($("#unit-amount").val() && $("#unit-type").val()) {
 		console.log("unit amounts and unit types are there");
-		$.fn.CalculateUnitAmounts();
-		$.fn.OpenCloseSubUnits(); //figure out how to get selected
-		$.fn.ChangeSubUnitDropdown();
-	}
-	if ($("#subunit-amount").val() && $("#subunit-type").val()) {
-		console.log("subunit amounts and subunit types are there");
-		$.fn.CalculateSubUnitAmounts();
-		$.fn.OpenCloseSubSubUnits(); //figure out how to get selected
-		$.fn.ChangeSubSubUnitDropdown();
-	}
-	if ($("#subsubunit-amount").val() && $("#subsubunit-type").val()) {
-		console.log("subsubunit amounts and subunit types are there");
-		$.fn.CalculateSubSubUnitAmounts();
-	}
-	if ($("#Request_VAT").val() > "") {
-		$.fn.CalculateTotalPlusVat();
 	}
 });
 
 $("#currency").change(function () {
+	console.log("currency was changed");
 	$.fn.EnableSumDollarsOrShekel();
 });
 
 $("#Request_ExchangeRate").change(function () {
 	$.fn.ChangeSumDollarsAndSumShekel();
 	$.fn.CalculateUnitAmounts();
-	$.fn.CalculateSubUnitAmounts(); //do we need an if statement here?
-	$.fn.CalculateSubSubUnitAmounts(); //do we need an if statement here?
-	$.fn.CalculateTotalPlusVat();
 });
 
-$("#unit-amount").change(function () {
-	$.fn.CalculateUnitAmounts();
-	$.fn.CalculateSubUnitAmounts(); //do we need an if statement here?
-	$.fn.CalculateSubSubUnitAmounts(); //do we need an if statement here?
-});
 
-$("#unit-type").change(function () {
-	var selected = $(':selected', this);
-	console.log("selected " + selected);
-	var optgroup = selected.closest('optgroup').attr('label');
-	$.fn.OpenCloseSubUnits();
-	$.fn.ChangeSubUnitDropdown(optgroup);
-});
-
-$("#subunit-amount").change(function () {
-	$.fn.CalculateSubUnitAmounts();
-	$.fn.CalculateSubSubUnitAmounts();
-});
-
-$("#subunit-type").change(function () {
-	var selected = $(':selected', this);
-	var optgroup = selected.closest('optgroup').attr('label');
-	$.fn.OpenCloseSubSubUnits();
-	$.fn.ChangeSubSubUnitDropdown(optgroup);
-});
-
-$("#subsubunit-amount").change(function () {
-	$.fn.CalculateSubSubUnitAmounts();
-});
-
-$("#sumShekel").change(function () {
-	$.fn.ChangeSumDollarsAndSumShekel(); //make sure this is right here
-	$.fn.CalculateUnitAmounts(); //if statement?
-	$.fn.CalculateSubUnitAmounts(); //ifstatement?
-	$.fn.CalculateSubSubUnitAmounts(); //ifstatement?
-	$.fn.CalculateTotalPlusVat();
-});
-
-$("#Request_Cost").change(function () {
-	$.fn.ChangeSumDollarsAndSumShekel(); //make sure this is right here
-	$.fn.CalculateUnitAmounts(); //if statement?
-	$.fn.CalculateSubUnitAmounts(); //ifstatement?
-	$.fn.CalculateSubSubUnitAmounts(); //ifstatement?
-	$.fn.CalculateTotalPlusVat();
-});
-
-$("#vatInShekel").change(function () {
-	$.fn.CalculateTotalPlusVat();
-});
-
-//Calculate unit amounts
-$.fn.CalculateUnitAmounts = function () {
-	var $unitAmounts = $("#unit-amount").val();
-	var $sumDollars = $("#Request_Cost").val();
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	$unitSumDollars = $sumDollars / $unitAmounts;
-	$inputBox = $('input[name="unit-price-dollars"]');
-	console.log("Using function show results: $unitSumDollars = " + $unitSumDollars);
-	$.fn.ShowResults($inputBox, $unitSumDollars);
-	console.log("back in calculate amounts");
-	//$('input[name="unit-price-dollars"]').val($unitSumDollars);
-	$unitSumShekel = $unitSumDollars * $exchangeRate;
-	$inputBox2 = $('input[name="unit-price-shekel"]');
-	console.log("Using function show results: $unitSumShekel = " + $unitSumShekel);
-	$.fn.ShowResults($inputBox2, $unitSumShekel);
-	//$('input[name="unit-price-shekel"').val($unitSumShekel);
-};
-//calculate sub unit amountss
-$.fn.CalculateSubUnitAmounts = function () {
-	var $subUnitAmounts = $("#subunit-amount").val();
-	var $unitPriceDollars = $("#unit-price-dollars").val();
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	$subUnitSumDollars = $unitPriceDollars / $subUnitAmounts;
-	$('input[name="subunit-price-dollars"]').val($subUnitSumDollars);
-	$subUnitSumShekel = $subUnitSumDollars * $exchangeRate;
-	$('input[name="subunit-price-shekel"').val($unitSumShekel);
-};
-//calculate sub sub unit amounts
-$.fn.CalculateSubSubUnitAmounts = function () {
-	var $subSubUnitAmounts = $("#subsubunit-amount").val();
-	var $subUnitPriceDollars = $("#subunit-price-dollars").val();
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	$subSubUnitSumDollars = $subUnitPriceDollars / $subSubUnitAmounts;
-	$('input[name="subsubunit-price-dollars"]').val($subSubUnitSumDollars);
-	$subSubUnitSumShekel = $subSubUnitSumDollars * $exchangeRate;
-	$('input[name="subsubunit-price-shekel"').val($subSubUnitSumShekel);
-};
-//Open subunits
-$.fn.OpenCloseSubUnits = function () {
-	var selected = $(':selected', $("#unit-type"));
-	if (selected > "") {
-		$(".RequestSubunitCard .form-control").attr('disabled', false);
-	}
-	else { //else is in case they deleted it
-		$(".RequestSubunitCard .form-control").prop('disabled', true);
-		$(".RequestSubsubunitCard .form-control").prop('disabled', true);
-	}
-};
-//open sub sub units 
-$.fn.OpenCloseSubSubUnits = function () {
-	var selected = $(':selected', $("#subunit-type"));
-	if (selected > "") {
-		$(".RequestSubsubunitCard .form-control").attr('disabled', false);
-	}
-	else {
-		$(".RequestSubsubunitCard .form-control").attr('disabled', true);
-	}
-};
-//change subunit dropdown
-$.fn.ChangeSubUnitDropdown = function (optgroup) {
-	//the following is based on the fact that the unit types and parents are seeded with primary key values
-	switch (optgroup) {
-		case "Units":
-			$("#subunit-type optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-			$("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Weight/Volume":
-			$("#subunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Test":
-			$("#subunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#subunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-			break;
-	}
-};
-//change sub sub unit dropdown
-$.fn.ChangeSubSubUnitDropdown = function (optgroup) {
-	switch (optgroup) {
-		case "Units":
-			$("#subsubunit-type optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-			$("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Weight/Volume":
-			$("#subsubunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Test":
-			$("#subsubunit-type optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#subsubunit-type optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-			break;
-	}
-};
-//calculate total + vat
-$.fn.CalculateTotalPlusVat = function () {
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	var vatInShekel = $("#vatInShekel").val();
-	var sumShekel = $("#sumShekel").val();
-	var $sumPlusVatShekel = parseInt(sumShekel) + parseInt(vatInShekel);
-	$('input[name="SumPlusVat-Shekel"]').val($sumPlusVatShekel);
-	//IS THIS THE BEST WAY OF DOING IT OR SHOULD I CONVERT THE INPUT I JUST DID??
-	var vatInDollars = vatInShekel / $exchangeRate;
-	var $sumPlusVatDollars = parseInt($("#Request_Cost").val()) + parseInt(vatInDollars);
-	$('input[name="SumPlusVat-Dollar"]').val($sumPlusVatDollars);
-};
 //enable or disable sumdollars and sumshekel
 $.fn.EnableSumDollarsOrShekel = function () {
+	console.log("in enable sum dollars or shekel fx");
 	var currencyType = $("#currency").val();
+	console.log("currencyType: " + currencyType);
 	switch (currencyType) {
 		case "dollar":
+			console.log("in case dollar");
 			$("#sumShekel").prop("disabled", true);
-			$("#Request_Cost").prop("disabled", false);
+			$("#sumDollars").prop("disabled", false);
 			break;
 		case "shekel":
+			console.log("in case shekel");
 			$("#sumShekel").prop("disabled", false);
-			$("#Request_Cost").prop("disabled", true);
+			$("#sumDollars").prop("disabled", true);
 			break;
 	}
 }
+
 //change sumDollars and sumSHekel
 $.fn.ChangeSumDollarsAndSumShekel = function () {
 	var $exchangeRate = $("#Request_ExchangeRate").val();
-	if ($("#Request_Cost").prop("disabled")) {
-		console.log("sum dollars disabled");
+	if ($("#sumDollars").prop("disabled")) {
 		var $sumShekel = $("#sumShekel").val();
 		var $sumDollars = $sumShekel / $exchangeRate;
-		$('input[name="sumDollars"]').val($sumDollars);
+		$inputBox = $('input[name="sumDollars"]');
+		$.fn.ShowResults($inputBox, $sumDollars);
 	}
 	else if ($("#sumShekel").prop("disabled")) {
-		console.log("sum shekel disabled and going into the function");
-		var $sumDollars = $("#Request_Cost").val();
+		var $sumDollars = $("#sumDollars").val();
 		var $sumShekel = $sumDollars * $exchangeRate;
 		$sumShekelsInputBox = $('input[name="sumShekel"]');
 		console.log("$sumShekel: " + $sumShekel);
-		$('input[name="sumShekel"]').val($sumShekel);
-		//$.fn.ShowResults($sumShekelsInputBox, $sumShekel);
+		$inputBox = $('input[name="sumShekel"]');
+		$.fn.ShowResults($inputBox, $sumShekel);
 		//$('input[name="sumShekel"]').val($sumShekel);
 	}
 	else {
@@ -374,10 +262,26 @@ $.fn.ChangeSumDollarsAndSumShekel = function () {
 	}
 }
 
+//Calculate unit amounts
+$.fn.CalculateUnitAmounts = function () {
+	var $unitAmounts = $("#unit-amount").val();
+	var $sumDollars = $("#sumDollars").val();
+	var $exchangeRate = $("#Request_ExchangeRate").val();
+	$unitSumDollars = $sumDollars / $unitAmounts;
+	$inputBox = $('input[name="unit-price-dollars"]');
+	$.fn.ShowResults($inputBox, $unitSumDollars);
+	//$('input[name="unit-price-dollars"]').val($unitSumDollars);
+	$unitSumShekel = $unitSumDollars * $exchangeRate;
+	$inputBox2 = $('input[name="unit-price-shekel"]');
+	$.fn.ShowResults($inputBox2, $unitSumShekel);
+	//$('input[name="unit-price-shekel"').val($unitSumShekel);
+};
+
 $.fn.ShowResults = function ($inputBox, $value) {
 	var theResult = isFinite($value) && $value || "";
-	$inputBox.val(theResult);
+	$inputBox.val(theResult.toFixed(2));//should set it to 2 decimal places
 }
+
 
 
 ////change expected supply days automatically
