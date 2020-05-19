@@ -184,6 +184,10 @@
 
 
     $(document).ready(function () {
+
+        //close ALL modals here just in case:
+
+
         @*console.log("Requests nav view document is ready!");
         var sendEmail = parseInt('@SendEmail'); //comes in as a string (even though originally an int and therefore must be converted.)
         console.log("send email " + sendEmail);
@@ -200,6 +204,11 @@
             var tab = ""; //just keeping this on the side
             var $itemUrl = "Requests/DetailsModalView";
         }
+
+
+        //close the modals on dismiss of them:
+        
+
     });
 
     //Render a partial view inside of a modal
@@ -288,6 +297,8 @@
                 //})
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
                 $(".modal-backdrop").remove();
+                //$('.modal').find('input').first().focus();
+                $(".modal").popover('hide');
                 if (!isEmail) { //SET BOOLEAN TO MODAL VIEW NOT ISEMAIL
                     /* Following line should set the correct data-target tab to open ----> not working right now */
                     //$('.nav-tabs a[href="' + $tab + '"]').tab - pane('show');
@@ -350,6 +361,9 @@
                 }
 
             }
+            //error: function (/*request, status, error*/) {
+            //    console.log("ajax call went wrong:" /*+ request.responseText*/);
+            //}
         });
     }
 

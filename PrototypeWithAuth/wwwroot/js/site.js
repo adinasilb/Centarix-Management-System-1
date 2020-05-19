@@ -83,6 +83,7 @@ $("#Request_ParentRequest_Installments").change(function () {
 //});
 
 //payments on the price modal -cascading dropdown choice with json
+
 $(".paymentType").change(function () {
 	var paymentTypeId = $(this).val();
 	var url = "/Requests/GetCompanyAccountList";
@@ -148,9 +149,11 @@ $(".view-docs").click(function (clickEvent) {
 
 //enable the units and subunits tabs
 $("#unit-amount").change(function () {
+	console.log("unit amount changed");
 	$.fn.CheckEnableSubUnits();
 });
 $("#unit-type").change(function () {
+	console.log("unit type changed");
 	$.fn.CheckEnableSubUnits();
 });
 
@@ -162,17 +165,8 @@ $("#subunit-type").change(function () {
 });
 
 $.fn.CheckEnableSubUnits = function () {
-	if ($("#subunit-amount").val() > 0 && $("#subunit-type").val()) {
-		$.fn.EnableSubSubUnits();
-	}
-	else {
-		$.fn.DisableSubSubUnits();
-	}
-};
-
-$.fn.CheckEnableSubSubUnits = function () {
+	console.log("check enable subunits");
 	if ($("#unit-amount").val() > 0 && $("#unit-type").val()) {
-		console.log("unit amount has a val");
 		$.fn.EnableSubUnits();
 	}
 	else {
@@ -181,22 +175,36 @@ $.fn.CheckEnableSubSubUnits = function () {
 	}
 };
 
+$.fn.CheckEnableSubSubUnits = function () {
+	console.log("check enable subsubunits");
+	if ($("#subunit-amount").val() > 0 && $("#subunit-type").val()) {
+		$.fn.EnableSubSubUnits();
+	}
+	else {
+		$.fn.DisableSubSubUnits();
+	}
+};
+
 $.fn.EnableSubUnits = function () {
+	console.log(" enable subunits");
 	$(".RequestSubunitCard #subunit-amount").prop("disabled", false);
 	$(".RequestSubunitCard #subunit-type").prop("disabled", false);
 };
 
 $.fn.EnableSubSubUnits = function () {
+	console.log("check enable subsubunits");
 	$(".RequestSubsubunitCard #subsubunit-amount").prop("disabled", false);
 	$(".RequestSubsubunitCard #subsubunit-type").prop("disabled", false);
 };
 
 $.fn.DisableSubUnits = function () {
+	console.log(" disable subunits");
 	$(".RequestSubunitCard #subunit-amount").prop("disabled", true);
 	$(".RequestSubunitCard #subunit-type").prop("disabled", true);
 };
 
 $.fn.DisableSubSubUnits = function () {
+	console.log(" disable subsubunits");
 	$(".RequestSubsubunitCard #subsubunit-amount").prop("disabled", true);
 	$(".RequestSubsubunitCard #subsubunit-type").prop("disabled", true);
 };
@@ -204,9 +212,8 @@ $.fn.DisableSubSubUnits = function () {
 //on opening of the price tag see if subunits and subsubunits should be enabled
 $("#price-tab").on("click", function () {
 	console.log("$('#priceTab').click(function () {");
-	if ($("#unit-amount").val() && $("#unit-type").val()) {
-		console.log("unit amounts and unit types are there");
-	}
+	$.fn.CheckEnableSubUnits();
+	$.fn.CheckEnableSubSubUnits();
 });
 
 $("#currency").change(function () {

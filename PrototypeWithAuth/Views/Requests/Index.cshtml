@@ -195,38 +195,38 @@
 
                     <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
 
-                    <td> 
+                    <td>
                         <ul style="list-style: none;">
 
                             <li>
                                 @Html.DisplayFor(modelItem => item.Cost)
                             </li>
-                            @if (item.Unit != null) 
+                            @if (item.Unit != null)
                             {
-                        <li>
-                            @Html.DisplayFor(modelItem => item.Unit)
-                            @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
-                        </li>
+                                <li>
+                                    @Html.DisplayFor(modelItem => item.Unit)
+                                    @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                                </li>
                                 @if (item.SubUnit != null)
                                 {
-                        <li>
-                            @Html.DisplayFor(modelItem => item.SubUnit)
-                            @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
-                        </li>
+                                    <li>
+                                        @Html.DisplayFor(modelItem => item.SubUnit)
+                                        @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
+                                    </li>
                                     @if (item.SubSubunit != null)
                                     {
-                        <li>
-                            @Html.DisplayFor(modelItem => item.SubSubunit)
-                            @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
-                        </li>
+                                        <li>
+                                            @Html.DisplayFor(modelItem => item.SubSubunit)
+                                            @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
+                                        </li>
                                     }
                                 }
 
                             }
                         </ul>
-                        </td> @*Computed column?*@
-                    
-    @*Later on should have a better location...*@
+                    </td> @*Computed column?*@
+
+                    @*Later on should have a better location...*@
                     @if (Inventory)
                     {
                         <td> (Freezer, Shelf, box...) </td>
@@ -245,8 +245,8 @@
                             if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
                             {
                                 @Html.ActionLink("Approve Item?", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });
-                               
-                            
+
+
                             }
                         }
                         else if (item.RequestStatusID == 2)
@@ -256,13 +256,13 @@
                         else
                         {
                             @*work on getting the correct syntax to create a new product with*@
-                            <button class="btn btn-link load-order-details" value="@item.RequestID" >Order</button>
+                            <button class="btn btn-link load-order-details" value="@item.RequestID">Order</button>
                         }
                     </td>
                     <td>
                         <!-- Button to Open the Modal -->
                         <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item"> <img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /> </button>
-                        @*<button class="btn btn-link load-product-edit" value="@item.RequestID" data-target="item" href="item"> <img width="25px" src="~/images/css/inventory/icons/comments_selected.png" alt="Edit" /> </button>*@
+                        <button class="btn btn-link load-product-edit" value="@item.RequestID" data-target="item" href="item"> <img width="25px" src="~/images/css/inventory/icons/comments_selected.png" alt="Edit" /> </button>
                     </td>
                 </tr>
             }

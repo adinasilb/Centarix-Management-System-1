@@ -618,9 +618,9 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             <hr />
                             <div class="form-group">
                                 @*you can only add to cart if you are creating a new one*@
-                                <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="btn btn-outline-primary" />
-                                <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="btn btn-outline-primary" />
-                                <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
+                                <input type="submit" data-dismiss="modal" name="OrderType" value="Order" asp-action="CreateModalView" class="btn btn-outline-primary" />
+                                <input type="submit" data-dismiss="modal" name="OrderType" value="Without Order" asp-action="CreateModalView" class="btn btn-outline-primary" />
+                                <input type="submit" data-dismiss="modal" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
 
                                 @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>

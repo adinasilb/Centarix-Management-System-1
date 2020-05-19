@@ -184,7 +184,9 @@ namespace PrototypeWithAuth.Controllers
             var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
             try
             {
-                onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
+                onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                    .ToPagedListAsync(pageNumber, 25);
             }
             catch (Exception ex)
             {
