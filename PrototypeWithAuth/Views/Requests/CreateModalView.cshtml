@@ -6,20 +6,10 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-@*<<<< original div.modal-dialog >>>>*@
+@*(2nd modal div). REMOVED: .modal-dialog-scrollable, style="max-height:100%; overflow-y:auto;"*@
+<div class="modal-dialog modal-lg modal-view" role="document" style="overflow-y:auto;">
 
-
-
-    @*new added div*@
-    @*<div class="modal right fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
-        <div class="modal-dialog modal-view" role="document">*@
-
-        <!--used to be 1st div, made to be 2nd.
-            took out [.modal-dialog-scrollable modal-lg & style="max-height:100%; overflow-y:auto;"]-->
-        <!-- end of slide modal edits -->
-<div class="modal-dialog  modal-dialog-scrollable modal-lg  modal-view" role="document" style="max-height:100%; overflow-y:auto;">
-
-    <div class="modal-content d-inline-block" style="background-color:whitesmoke;">
+    <div class="modal-content d-inline-block" style="background-color:#FAFAFA;">
 
 
         <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
@@ -43,9 +33,9 @@
 
             </div>
             @*moved the tabs into the modal header*@
-            <div class="container">
+            <div class="container text-center">
                 <div class="row">
-                    <div class="col-10 offset-1">
+                    <div class="col-11 offset-1">
                         <ul id="modal-tabs" class="nav nav-tabs text-center">
                             <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link active"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
                             <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
@@ -74,12 +64,12 @@
 
                     <div class="tab-content">
                         <div id="item" class="tab-pane fade in active">
-                            <strong>Item</strong>
-                            <br />
+                            <strong style="font-size: 2em;">Item</strong>
+                            <br /><br />
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                                        <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label font-weight-bold"></label>
                                         @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
 new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
 "Select Category", new { @class = "form-control-plaintext border-bottom ", @id = "parentlist" })
@@ -88,7 +78,7 @@ new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescri
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group sublist">
-                                        <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                                        <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label font-weight-bold"></label>
                                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
 new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
 "Select Subcategory", new { @class = "form-control-plaintext border-bottom ", @id = "sublist" })
@@ -97,7 +87,7 @@ new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubca
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label">Project:</label>
+                                        <label class="control-label font-weight-bold">Project:</label>
                                         <select class="form-control-plaintext border-bottom "></select>
                                     </div>
                                 </div>
@@ -105,13 +95,13 @@ new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubca
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label">Sub Project:</label>
+                                        <label class="control-label font-weight-bold">Sub Project:</label>
                                         <select class="form-control-plaintext border-bottom "></select>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label asp-for="Request.Product.Vendor" class="control-label"></label>
+                                        <label asp-for="Request.Product.Vendor" class="control-label font-weight-bold"></label>
                                         @Html.DropDownListFor(
 vm => vm.Request.Product.VendorID,
 new SelectList(
@@ -127,7 +117,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         @* IN MIDDLE *@
-                                        <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
+                                        <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label font-weight-bold"></label>
                                         <label class="vendorBusinessId form-control-plaintext border-bottom " />
                                         @*don't need a validation here because you it's not saving*@
                                     </div>
@@ -135,12 +125,12 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
+                                    <label asp-for="Request.ParentRequest.OrderNumber" class="control-label font-weight-bold"></label>
                                     <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6">
-                                    <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
+                                    <label asp-for="Request.ParentRequest.OrderDate" class="control-label font-weight-bold"></label>
                                     @*starts off at today and disabled so can't change*@
                                     <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
                                     <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
@@ -148,45 +138,45 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
+                                    <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label font-weight-bold"></label>
                                     <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
                                 </div>
                                 <div class="col-md-6">
-                                    <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
+                                    <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label font-weight-bold"></label>
                                     <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label asp-for="Request.CatalogNumber" class="control-label"></label>
+                                    <label asp-for="Request.CatalogNumber" class="control-label font-weight-bold"></label>
                                     <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
-                                    <label asp-for="Request.Warranty" class="control-label"></label>
+                                    <label asp-for="Request.Warranty" class="control-label font-weight-bold"></label>
                                     <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.Warranty" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">End Date</label>
+                                    <label class="control-label font-weight-bold">End Date</label>
                                     @*no date in backend so set to zero*@
                                     <input value="0000-00-00" name="WarrantyDate" class="form-control-plaintext border-bottom " disabled="disabled" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
+                                    <label asp-for="Request.ExpectedSupplyDays" class="control-label font-weight-bold"></label>
                                     <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="control-label">Expected supply date</label>
+                                    <label class="control-label font-weight-bold">Expected supply date</label>
                                     <input value="0000-00-00" class="form-control-plaintext border-bottom datepicker" disabled="disabled" />
                                 </div>
                                 <div class="col-md-4">
-                                    <label asp-for="Request.URL" class="control-label"></label>
+                                    <label asp-for="Request.URL" class="control-label font-weight-bold"></label>
                                     <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.URL" class="text-danger"></span>
                                 </div>
@@ -195,11 +185,12 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                         <div id="price" class="tab-pane fade">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <h3>PRICE</h3>
+                                    <strong style="font-size:2em;">Price</strong>
+                                    <br /><br />
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label for="currency" class="control-label">Currency</label>
+                                        <label for="currency" class="control-label font-weight-bold">Currency</label>
                                         <select id="currency" class="form-control-plaintext border-bottom ">
                                             <option value="dollar">&#127480; USD</option>
                                             <option value="shekel">&#127480; NIS</option>
@@ -208,7 +199,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label asp-for="Request.ExchangeRate" class="control-label"></label>
+                                        <label asp-for="Request.ExchangeRate" class="control-label font-weight-bold"></label>
                                         <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
                                     </div>
@@ -219,13 +210,13 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "v
                                 <div class="col-md-4 border rounded p-1 RequestUnitCard">
                                     <div class="row">
                                         <div class="col-md-6 form-group">
-                                            <label asp-for="Request.Unit" class="control-label"></label>
+                                            <label asp-for="Request.Unit" class="control-label font-weight-bold"></label>
                                             <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " id="unit-amount" min="0" />
                                             <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label asp-for="Request.UnitType" class="control-label"></label>
+                                                <label asp-for="Request.UnitType" class="control-label font-weight-bold"></label>
                                                 @Html.DropDownListFor(
 vm => vm.Request.UnitTypeID,
 Model.UnitTypeList,
@@ -237,7 +228,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "u
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Price:</label>
+                                        <label class="control-label font-weight-bold">Price:</label>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="input-group">
@@ -257,12 +248,12 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "u
                                 <div class="col-md-4 border rounded p-1 RequestSubunitCard">
                                     <div class="row">
                                         <div class="col-md-6 form-group">
-                                            <label asp-for="Request.SubUnit" class="control-label"></label>
+                                            <label asp-for="Request.SubUnit" class="control-label font-weight-bold"></label>
                                             <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom " id="subunit-amount" min="0" disabled />
                                             <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6 form-group">
-                                            <label asp-for="Request.SubUnitType" class="control-label"></label>
+                                            <label asp-for="Request.SubUnitType" class="control-label font-weight-bold"></label>
                                             @Html.DropDownListFor(
          vm => vm.Request.SubUnitTypeID,
          Model.UnitTypeList,
@@ -273,7 +264,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "u
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Price:</label>
+                                        <label class="control-label font-weight-bold">Price:</label>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="input-group">
@@ -293,12 +284,12 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "u
                                 <div class="col-md-4 border rounded p-1 RequestSubsubunitCard">
                                     <div class="row">
                                         <div class="col-md-6 form-group">
-                                            <label asp-for="Request.SubSubunit" class="control-label"></label>
+                                            <label asp-for="Request.SubSubunit" class="control-label font-weight-bold"></label>
                                             <input asp-for="Request.SubSubunit" class="form-control-plaintext border-bottom " id="subsubunit-amount" min="0" disabled />
                                             <span asp-validation-for="Request.SubSubunit" class="text-danger"></span>
                                         </div>
                                         <div class="col-md-6 form-group">
-                                            <label asp-for="Request.SubSubUnitType" class="control-label"></label>
+                                            <label asp-for="Request.SubSubUnitType" class="control-label font-weight-bold"></label>
                                             @Html.DropDownListFor(
 vm => vm.Request.SubSubUnitTypeID,
 Model.UnitTypeList,
@@ -309,7 +300,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Price:</label>
+                                        <label class="control-label font-weight-bold">Price:</label>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="input-group">
@@ -330,7 +321,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label asp-for="Request.Cost" class="control-label"></label>
+                                        <label asp-for="Request.Cost" class="control-label font-weight-bold"></label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
                                             <input asp-for="Request.Cost" class="form-control-plaintext border-bottom " id="sumDollars" name="sumDollars" />
@@ -339,7 +330,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="control-label">Sum:</label>
+                                        <label class="control-label font-weight-bold">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
                                             <input class="form-control-plaintext border-bottom " name="sumShekel" id="sumShekel" disabled />
@@ -348,7 +339,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label">VAT</label>
+                                        <label class="control-label font-weight-bold">VAT</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
                                             <input class="form-control-plaintext border-bottom " id="vatInShekel" />
@@ -357,7 +348,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="control-label">Sum:</label>
+                                        <label class="control-label font-weight-bold">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
                                             <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
@@ -366,7 +357,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="control-label">Sum:</label>
+                                        <label class="control-label font-weight-bold">Sum:</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
                                             <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
@@ -377,12 +368,12 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="control-label">Discount:</label>
+                                        <label class="control-label font-weight-bold">Discount:</label>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="control-label">Terms:</label>
+                                        <label class="control-label font-weight-bold">Terms:</label>
                                         @Html.DropDownListFor(
                                                                 model => model.Request.Terms,
                                                                 new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
@@ -399,7 +390,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
+                                        <label asp-for="Request.ParentRequest.Installments" class="control-label font-weight-bold"></label>
                                         <input asp-for="Request.ParentRequest.Installments" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
                                     </div>
@@ -469,15 +460,15 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="control-label">Debt</label>
+                                        <label class="control-label font-weight-bold">Debt</label>
                                         <input class="form-control-plaintext border-bottom " value="Automatically calculate..." disabled />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div id="documents" class="tab-pane fade">
-                            <h3>DOCUMENTS</h3>
-                            <hr />
+                            <strong style="font-size:2em;">Documents</strong>
+                            <br /><br />
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="card">
@@ -491,7 +482,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             </div>
                                         </div>
                                     </div>
-                                    <label class="control-label text-center" style="width:100%;">Order</label>
+                                    <label class="control-label font-weight-bold text-center" style="width:100%;">Order</label>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card">
@@ -505,7 +496,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             </div>
                                         </div>
                                     </div>
-                                    <label class="control-label text-center" style="width:100%;">Invoice</label>
+                                    <label class="control-label font-weight-bold text-center" style="width:100%;">Invoice</label>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card">
@@ -519,7 +510,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             </div>
                                         </div>
                                     </div>
-                                    <label class="control-label text-center" style="width:100%;">Shipment</label>
+                                    <label class="control-label font-weight-bold text-center" style="width:100%;">Shipment</label>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card">
@@ -533,7 +524,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             </div>
                                         </div>
                                     </div>
-                                    <label class="control-label text-center" style="width:100%;">Quote</label>
+                                    <label class="control-label font-weight-bold text-center" style="width:100%;">Quote</label>
                                 </div>
                             </div>
                             <div class="row">
@@ -549,7 +540,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             </div>
                                         </div>
                                     </div>
-                                    <label class="control-label text-center" style="width:100%;">Info</label>
+                                    <label class="control-label font-weight-bold text-center" style="width:100%;">Info</label>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card">
@@ -563,7 +554,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             </div>
                                         </div>
                                     </div>
-                                    <label class="control-label text-center" style="width:100%;">Picture</label>
+                                    <label class="control-label font-weight-bold text-center" style="width:100%;">Picture</label>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card">
@@ -577,7 +568,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             </div>
                                         </div>
                                     </div>
-                                    <label class="control-label text-center" style="width:100%;">Return</label>
+                                    <label class="control-label font-weight-bold text-center" style="width:100%;">Return</label>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card">
@@ -591,7 +582,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                                             </div>
                                         </div>
                                     </div>
-                                    <label class="control-label text-center" style="width:100%;">Credit</label>
+                                    <label class="control-label font-weight-bold text-center" style="width:100%;">Credit</label>
                                 </div>
                             </div>
                             <hr />
@@ -611,14 +602,14 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             </div>
                         </div>
                         <div id="comments" class="tab-pane fade">
-                            <h3>COMMENTS</h3>
-
+                            <strong style="font-size:2em;">Comments</strong>
+                            <br /><br />
                             @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
                             <div class="card rounded">
                                 <div class="card-body">
                                     <div class="font-weight-bold">+NewComment</div>
                                     <div class="form-group">
-                                        <label asp-for="NewComment.CommentText" class="control-label"></label>
+                                        <label asp-for="NewComment.CommentText" class="control-label font-weight-bold"></label>
                                         <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
                                     </div>
@@ -626,8 +617,8 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             </div>
                         </div>
                         <div id="order" class="tab-pane fade">
-                            <h3>ORDER</h3>
-                            <hr />
+                            <strong style="font-size:2em;">Order</strong>
+                            <br /><br />
                             <div class="form-group">
                                 @*you can only add to cart if you are creating a new one*@
                                 <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="btn btn-outline-primary" />
@@ -639,10 +630,13 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "s
                             </div>
                         </div>
                         <div id="archive" class="tab-pane fade">
-                            <h3>This is the Archive tab. As of yet there is nothing in the Archive.</h3>
+                            <strong style="font-size:2em;">Archive</strong><br /><br />
+                            <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
                         </div>
                         <div id="history" class="tab-pane fade">
-                            <h3>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h3>
+                            <strong style="font-size:2em;">History</strong>
+                            <br /><br />
+                            <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
 
                         </div>
                     </div>
