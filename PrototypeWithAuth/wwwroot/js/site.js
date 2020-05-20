@@ -10,7 +10,7 @@ function showmodal() {
 };
 
 //modal adjust scrollability/height
-$("#myModal").modal('handleUpdate');
+//$("#myModal").modal('handleUpdate');
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#parentlist").change(function () {

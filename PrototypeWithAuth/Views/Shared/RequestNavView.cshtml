@@ -76,16 +76,25 @@
         <div>@TempData["SuccessMessage"].ToString()</div>
     }
 }
+
+
 <div style="display: flex">
     <div style="width: 100px; min-height:970px; padding: 10px" class="navbar d-md-block box-shadow navbar-light bg-white border-right text-center border-right ourNavBar">
         @*<nav class="navbar flex-grow-1">*@
         <ul class="nav flex-column nav-pills nav-stacked">
+
+            @*<li class="nav-item mt-3 mb-3">
+                    <button type="button" id="slidebar-modal" class="btn" data-toggle="modal" data-target="#right-slide-modal" onclick="addActive(id)">
+                        <i class="far fa-hand-point-right"></i><br /> Right Sidebar Modal
+                    </button>
+                </li>*@
+
             @if (Requests || Inventory)
             {
                 <li class="nav-item mt-3 mb-3">
 
                     @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
-                    <button class="btn btn-link text-dark create-product-details" id="sidebar-add-item" onclick="addActive()">
+                    <button class="btn btn-link text-dark create-product-details" id="sidebar-add-item" onclick="addActive(id)">
                         <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
                     </button>
                 </li>
@@ -161,7 +170,28 @@
     </div>
 </div>
 
+<!-- SlideRight Modal -->
+@*<div class="modal right fade" id="right-slide-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel2">Right Sidebar</h4>
+                </div>
+
+                <div class="modal-body">
+                    <h1>Why cant I see the whole line displayed in the same modal?!?!?!</h1>
+                </div>
+
+            </div>
+        </div>
+    </div>*@
+
 <!-- The Modal -->
+@*(first modal div) ADDED: .right .faid, tabindex="-1" *@
+<div class="modal right faid modal-view" id="myModal" role="dialog" aria-labelledby="Request">
+</div>
 
 
 <!-- Confirm Email Modal -->
@@ -171,10 +201,11 @@
 <script>
     //function changePic(a) { document.getElementById("sidebar-add-item").src = a; }
 
-    function addActive() {
-        var item = document.getElementById("sidebar-add-item");
+    function addActive(id) {
+        var item = document.getElementById(id);
         item.classList.add("activeNavLink");
     }
+
 </script>
 
 @RenderSection("Scripts", required: false)
