@@ -204,4 +204,6 @@ table.table td {
     right: 0;
 }
 
-
+.modal-content {
+    background-color: #FAFAFA;
+}
