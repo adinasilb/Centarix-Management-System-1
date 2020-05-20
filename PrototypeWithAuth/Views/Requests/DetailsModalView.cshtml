@@ -531,7 +531,7 @@
                                         {
                                             foreach (var o in Model.OrderFileStrings)
                                             {
-                                                <button>Test</button>
+                                                <a href="@o" target="_blank">Test</a>
                                                 <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
                                             }
                                             <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>

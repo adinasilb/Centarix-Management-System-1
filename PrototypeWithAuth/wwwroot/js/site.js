@@ -145,197 +145,85 @@ $(".view-docs").click(function (clickEvent) {
 	$(".images-header").html(title + " Documents Uploaded:");
 });
 
+
+
+
+
+
+
+
+
 //PRICE PAGE ON MODAL VIEW//
-
-
-//on opening of the price tag see if subunits and subsubunits should be enabled
-$("#price-tab").on("click", function () {
-	console.log("$('#priceTab').click(function () {");
-	$.fn.CheckEnableSubUnits();
-	$.fn.CheckEnableSubSubUnits();
+$("#price-tab").click(function () {
+	$.fn.CheckUnitsFilled();
+	$.fn.CalculateSum();
+	$.fn.CheckCurrency();
 });
 
-$("#currency").change(function () {
-	console.log("currency was changed");
-	$.fn.EnableSumDollarsOrShekel();
+$("#currency").change(function (e) {
+	$.fn.CheckCurrency();
 });
 
-$("#Request_ExchangeRate").change(function () {
-	$.fn.ChangeSumDollarsAndSumShekel();
-	$.fn.CalculateUnitAmounts();
-});
-//enable the units and subunits tabs
-$("#Request_Unit").change(function () {
-	$.fn.CheckEnableSubUnits();
-	console.log("unit amounts 1");
-	$.fn.CalculateUnitAmounts();
-	$.fn.CalculateSubUnitAmounts(); //do we need an if statement here?
-	$.fn.CalculateSubSubUnitAmounts(); //do we need an if statement here?
-
-});
-$("#Request_UnitTypeID").change(function () {
-	console.log("unit type changed");
-	$.fn.CheckEnableSubUnits();
-});
-
-$("#Request_SubUnit").change(function () {
-	$.fn.CheckEnableSubSubUnits();
-});
-$("#Request_SubUnitTypeID").change(function () {
-	$.fn.CheckEnableSubSubUnits();
-});
-
-$.fn.CheckEnableSubUnits = function () {
-	console.log("check enable subunits");
-	if ($("Request_Unit").val() > 0 && $("#Request_UnitTypeID").val()) {
-		console.log("check enable subunits if");
-		$.fn.EnableSubUnits();
+$.fn.CheckCurrency = function () {
+	var currencyType = $("#currency").val();
+	console.log("currencyType: " + currencyType);
+	console.log("request cost: " + $("#Request_Cost").val());
+	switch (currencyType) {
+		case "dollar":
+			$("#Request_Cost").prop("disabled", true);
+			$("#sum-dollars").prop("disabled", false);
+			break;
+		case "shekel":
+			$("#Request_Cost").prop("disabled", false);
+			$("#sum-dollars").prop("disabled", true);
+			break;
 	}
-	else {
-		console.log("check enable subunits else");
-		$.fn.DisableSubUnits();
-		$.fn.DisableSubSubUnits();
-	}
+	console.log("currencyType: " + currencyType);
+	console.log("request cost: " + $("#Request_Cost").val());
 };
 
-$.fn.CheckEnableSubSubUnits = function () {
-	console.log("check enable subsubunits");
-	if ($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val()) {
-		console.log("check enable subsubunits if");
-		$.fn.EnableSubSubUnits();
+$.fn.CheckUnitsFilled = function () {
+	if ($("#Request_Unit").val() && $("#Request_UnitTypeID").val()) {
+		console.log("checkunitsfilled: in if");
+		$.fn.EnableSubUnits();
+		$.fn.CalculateUnitAmounts();
 	}
 	else {
-		console.log("check enable subsubunits else");
-		$.fn.DisableSubSubUnits();
+		console.log("checkunitsfilled: in else");
 	}
 };
 
 $.fn.EnableSubUnits = function () {
-	console.log(" enable subunits");
-	$(".RequestSubunitCard #Request_SubUnit").prop("disabled", false);
-	$(".RequestSubunitCard #Request_SubUnitTypeID").prop("disabled", false);
+	console.log("enable subunits");
+	$("#Request_SubUnit").prop("disabled", false);
+	$("#Request_SubUnitTypeID").prop("disabled", false);
 };
 
-$.fn.EnableSubSubUnits = function () {
-	console.log(" enable subsubunits");
-	$(".RequestSubsubunitCard #Request_SubSubunit").prop("disabled", false);
-	$(".RequestSubsubunitCard #Request_SubSubUnitTypeID").prop("disabled", false);
-};
-
-$.fn.DisableSubUnits = function () {
-	console.log(" disable subunits");
-	$(".RequestSubunitCard #Request_SubUnit").prop("disabled", true);
-	$(".RequestSubunitCard #Request_SubUnitTypeID").prop("disabled", true);
-};
-
-$.fn.DisableSubSubUnits = function () {
-	console.log(" disable subsubunits");
-	$(".RequestSubsubunitCard #Request_SubSubunit").prop("disabled", true);
-	$(".RequestSubsubunitCard #Request_SubSubUnitTypeID").prop("disabled", true);
-};
-
-
-//enable or disable sumdollars and sumshekel
-$.fn.EnableSumDollarsOrShekel = function () {
-	console.log("in enable sum dollars or shekel fx");
-	var currencyType = $("#currency").val();
-	console.log("currencyType: " + currencyType);
-	switch (currencyType) {
-		case "dollar":
-			console.log("in case dollar");
-			$("#sumShekel").prop("disabled", true);
-			$("#Request_Cost").prop("disabled", false);
-			break;
-		case "shekel":
-			console.log("in case shekel");
-			$("#sumShekel").prop("disabled", false);
-			$("#Request_Cost").prop("disabled", true);
-			break;
-	}
-}
-
-//change sumDollars and sumSHekel
-$.fn.ChangeSumDollarsAndSumShekel = function () {
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	if ($("#Request_Cost").prop("disabled")) {
-		var $sumShekel = $("#sumShekel").val();
-		var $sumDollars = $sumShekel / $exchangeRate;
-		$inputBox = $('input[name="Request_Cost"]');
-		$.fn.ShowResults($inputBox, $sumDollars);
-	}
-	else if ($("#sumShekel").prop("disabled")) {
-		var $sumDollars = $("#Request_Cost").val();
-		var $sumShekel = $sumDollars * $exchangeRate;
-		$sumShekelsInputBox = $('input[name="sumShekel"]');
-		console.log("$sumShekel: " + $sumShekel);
-		$inputBox = $('input[name="sumShekel"]');
-		$.fn.ShowResults($inputBox, $sumShekel);
-		//$('input[name="sumShekel"]').val($sumShekel);
-	}
-	else {
-		console.log("oops none are disabled");
-	}
-}
-
-//Calculate unit amounts
 $.fn.CalculateUnitAmounts = function () {
-	var $unitAmounts = $("#Request_Unit").val();
-	console.log("$unitAmounts: " + $unitAmounts);
-	var $sumDollars = $("#Request_Cost").val();
-	console.log("Request_Cost: " + $sumDollars);
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	console.log("$exchangeRate: " + $exchangeRate);
-	$unitSumDollars = $sumDollars / $unitAmounts;
-	console.log("Request_Cost: " + $unitSumDollars);
-	$inputBox = $('input[name="unit-price-dollars"]');
-	$.fn.ShowResults($inputBox, $unitSumDollars);
-	//$('input[name="unit-price-dollars"]').val($unitSumDollars);
-	$unitSumShekel = $unitSumDollars * $exchangeRate;
-	console.log("$unitSumShekel: " + $unitSumShekel);
-	$inputBox2 = $('input[name="unit-price-shekel"]');
-	$.fn.ShowResults($inputBox2, $unitSumShekel);
-	//$('input[name="unit-price-shekel"').val($unitSumShekel);
+	console.log("calculate unit amounts");
 };
-//calculate sub unit amountss
-$.fn.CalculateSubUnitAmounts = function () {
-	var $subUnitAmounts = $("#Request_SubUnit").val();
-	console.log("$subUnitAmounts: " + $subUnitAmounts);
-	var $unitPriceDollars = $("#unit-price-dollars").val();
-	console.log("$unitPriceDollars: " + $unitPriceDollars);
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	console.log("$exchangeRate: " + $exchangeRate);
-	$subUnitSumDollars = $unitPriceDollars / $subUnitAmounts;
-	console.log("$subUnitSumDollars: " + $subUnitSumDollars);
-	$ipt = $('input[name="subunit-price-dollars"]');
-	$.fn.ShowResults($ipt, $subUnitSumDollars);
-	$subUnitSumShekel = $subUnitSumDollars * $exchangeRate;
-	console.log("$subUnitSumShekel: " + $subUnitSumShekel);
-	$ipt = $('input[name="subunit-price-shekel"');
-	$.fn.ShowResults($ipt, $subUnitSumShekel);
-};
-//calculate sub sub unit amounts
-$.fn.CalculateSubSubUnitAmounts = function () {
-	var $subSubUnitAmounts = $("#Request_SubSubunit").val();
-	console.log("$subSubUnitAmounts: " + $subSubUnitAmounts);
-	var $subUnitPriceDollars = $("#subunit-price-dollars").val();
-	console.log("$subUnitPriceDollars: " + $subUnitPriceDollars);
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	console.log("$exchangeRate: " + $exchangeRate);
-	$subSubUnitSumDollars = $subUnitPriceDollars / $subSubUnitAmounts;
-	console.log("$subSubUnitSumDollars: " + $subSubUnitSumDollars);
-	$ipt = $('input[name="subsubunit-price-dollars"]');
-	$.fn.ShowResults($ipt, $subSubUnitSumDollars);
-	$subSubUnitSumShekel = $subSubUnitSumDollars * $exchangeRate;
-	console.log("$subSubUnitSumShekel: " + $subSubUnitSumShekel);
-	$ipt = $('input[name="subsubunit-price-shekel"');
-	$.fn.ShowResults($ipt, $subSubUnitSumShekel);
+
+$.fn.CalculateSum = function () {
+	console.log("in calculate sum");
+	if ($("#sumDollars").prop("disabled")) {
+		console.log("sum dollars is disabled");
+	}
+	else if ($("#Request_Cost").prop("disabled")) {
+		console.log("sum shekels / request cost is disabled");
+	}
 };
 
 
-$.fn.ShowResults = function ($inputBox, $value) {
-	var theResult = isFinite($value) && $value || "";
-	$inputBox.val(theResult/*.toFixed(2)*/);//should set it to 2 decimal places
-}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -622,3 +510,30 @@ $(".load-sublocation-view").click(function () {
 		}
 	});
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//$(".close").click(function () {
+//	console.log("close");
+//	$(".modal").hide();
+//	$(".modal").modal('hide');
+//	$('.modal').replaceWith('');
+//	//$.ajax({
+//	//	async: true,
+//	//	url: "Locations/Index",
+//	//	type: 'GET',
+//	//	cache: false,
+//	//});
+//});

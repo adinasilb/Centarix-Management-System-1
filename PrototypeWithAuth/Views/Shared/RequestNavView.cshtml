@@ -267,6 +267,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/CreateModalView";
+        //var $itemurl = "Requests/DetailsModalView/?id=62";
         $.fn.CallPage($itemurl);
         return false;
     });

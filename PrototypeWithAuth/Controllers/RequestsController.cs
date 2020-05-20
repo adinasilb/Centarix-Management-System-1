@@ -54,7 +54,7 @@ namespace PrototypeWithAuth.Controllers
         {
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser);
-               //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
+            //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
             TempData["RequestStatusID"] = RequestStatusID;
             var SidebarTitle = AppUtility.RequestSidebarEnum.None;
@@ -403,22 +403,30 @@ namespace PrototypeWithAuth.Controllers
          */
         public async Task<IActionResult> CreateModalView()
         {
-            var unitTypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            RequestItemViewModel requestItemViewModel = new RequestItemViewModel
-            {
-                ParentCategories = await _context.ParentCategories.ToListAsync(),
-                ProductSubcategories = await _context.ProductSubcategories.ToListAsync(),
-                Vendors = await _context.Vendors.ToListAsync(),
-                RequestStatuses = await _context.RequestStatuses.ToListAsync(),
-                PaymentTypes = await _context.PaymentTypes.ToListAsync(),
-                CompanyAccounts = await _context.CompanyAccounts.ToListAsync(),
-                UnitTypeList = new SelectList(unitTypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription")
+            var parentcategories = await _context.ParentCategories.ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var vendors = await _context.Vendors.ToListAsync();
+            var requeststatuses = await _context.RequestStatuses.ToListAsync();
+           
+            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            var paymenttypes = await _context.PaymentTypes.ToListAsync();
+            var companyaccounts = await _context.CompanyAccounts.ToListAsync();
 
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
+            {
+                ParentCategories = parentcategories,
+                ProductSubcategories = productsubactegories,
+                Vendors = vendors,
+                RequestStatuses = requeststatuses,
+                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
+                PaymentTypes = paymenttypes,
+                CompanyAccounts = companyaccounts
             };
 
             requestItemViewModel.Request = new Request();
+            requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentRequest = new ParentRequest();
-            requestItemViewModel.Request.RequestStatus = new RequestStatus();
+            //DO WE NEED THIS LINE OR IS IT GIVING AN ERROR SOMETIMES
             requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
 
             //if you are creating a new one set the dates to today to prevent problems in the front end
@@ -427,7 +435,14 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
             requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
 
-            return View(requestItemViewModel);
+            if (AppUtility.IsAjaxRequest(this.Request))
+            {
+                return PartialView(requestItemViewModel);
+            }
+            else
+            {
+                return View(requestItemViewModel);
+            }
         }
         public async Task<IActionResult> DetailsModalView(int? id, bool NewRequestFromProduct = false)
         {
