@@ -4,116 +4,150 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/SuppliersNavView.cshtml";
 }
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; overflow-y:auto;">
 
-<h4>Vendor</h4>
-<hr />
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="VendorEnName" class="control-label"></label>
-                <input asp-for="VendorEnName" class="form-control" />
-                <span asp-validation-for="VendorEnName" class="text-danger"></span>
+        <div class="modal-content d-inline-block">
+            <h4>New supplier</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="VendorEnName" class="control-label"></label>
+                            <input asp-for="VendorEnName" class="form-control" />
+                            <span asp-validation-for="VendorEnName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="VendorHeName" class="control-label"></label>
+                            <input asp-for="VendorHeName" class="form-control" />
+                            <span asp-validation-for="VendorHeName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="VendorBuisnessID" class="control-label"></label>
+                            <input asp-for="VendorBuisnessID" class="form-control" />
+                            <span asp-validation-for="VendorBuisnessID" class="text-danger"></span>
+                        </div>
+
+
+                        <div class=" row">
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorCity" class="control-label"></label>
+                                <input asp-for="VendorCity" class="form-control" />
+                                <span asp-validation-for="VendorCity" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorStreet" class="control-label"></label>
+                                <input asp-for="VendorStreet" class="form-control" />
+                                <span asp-validation-for="VendorStreet" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorZip" class="control-label"></label>
+                                <input asp-for="VendorZip" class="form-control" />
+                                <span asp-validation-for="VendorZip" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class=" row">
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorContactPhone1" class="control-label"></label>
+                                <input asp-for="VendorContactPhone1" class="form-control" />
+                                <span asp-validation-for="VendorContactPhone1" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorContactPhone2" class="control-label"></label>
+                                <input asp-for="VendorContactPhone2" class="form-control" />
+                                <span asp-validation-for="VendorContactPhone2" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorFax" class="control-label"></label>
+                                <input asp-for="VendorFax" class="form-control" />
+                                <span asp-validation-for="VendorFax" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class=" row">
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="OrderEmail" class="control-label"></label>
+                                <input asp-for="OrderEmail" class="form-control" />
+                                <span asp-validation-for="OrderEmail" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="ContactEmail" class="control-label"></label>
+                                <input asp-for="ContactEmail" class="form-control" />
+                                <span asp-validation-for="ContactEmail" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorWebsite" class="control-label"></label>
+                                <input asp-for="VendorWebsite" class="form-control" />
+                                <span asp-validation-for="VendorWebsite" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class=" row">
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorBank" class="control-label"></label>
+                                <input asp-for="VendorBank" class="form-control" />
+                                <span asp-validation-for="VendorBank" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorBankBranch" class="control-label"></label>
+                                <input asp-for="VendorBankBranch" class="form-control" />
+                                <span asp-validation-for="VendorBankBranch" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="VendorAccountNum" class="control-label"></label>
+                                <input asp-for="VendorAccountNum" class="form-control" />
+                                <span asp-validation-for="VendorAccountNum" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class=" row">
+                            <div class="form-group col-md-6 ">
+                                <label asp-for="VendorSwift" class="control-label"></label>
+                                <input asp-for="VendorSwift" class="form-control" />
+                                <span asp-validation-for="VendorSwift" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="VendorBIC" class="control-label"></label>
+                                <input asp-for="VendorBIC" class="form-control" />
+                                <span asp-validation-for="VendorBIC" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="VendorGoldAccount" class="control-label"></label>
+                            <input asp-for="VendorGoldAccount" class="form-control" />
+                            <span asp-validation-for="VendorGoldAccount" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ContactPerson" class="control-label"></label>
+                            <input asp-for="ContactPerson" class="form-control" />
+                            <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <input type="submit" value="Search" class="btn btn-primary" />
+                        </div>
+
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="VendorHeName" class="control-label"></label>
-                <input asp-for="VendorHeName" class="form-control" />
-                <span asp-validation-for="VendorHeName" class="text-danger"></span>
-            </div>
-
-                <div class="form-group">
-                    <label asp-for="VendorBuisnessID" class="control-label"></label>
-                    <input asp-for="VendorBuisnessID" class="form-control" />
-                    <span asp-validation-for="VendorBuisnessID" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ContactPerson" class="control-label"></label>
-                    <input asp-for="ContactPerson" class="form-control" />
-                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ContactEmail" class="control-label"></label>
-                    <input asp-for="ContactEmail" class="form-control" />
-                    <span asp-validation-for="ContactEmail" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="OrderEmail" class="control-label"></label>
-                    <input asp-for="OrderEmail" class="form-control" />
-                    <span asp-validation-for="OrderEmail" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorContactPhone1" class="control-label"></label>
-                    <input asp-for="VendorContactPhone1" class="form-control" />
-                    <span asp-validation-for="VendorContactPhone1" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorContactPhone2" class="control-label"></label>
-                    <input asp-for="VendorContactPhone2" class="form-control" />
-                    <span asp-validation-for="VendorContactPhone2" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorFax" class="control-label"></label>
-                    <input asp-for="VendorFax" class="form-control" />
-                    <span asp-validation-for="VendorFax" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorCity" class="control-label"></label>
-                    <input asp-for="VendorCity" class="form-control" />
-                    <span asp-validation-for="VendorCity" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorStreet" class="control-label"></label>
-                    <input asp-for="VendorStreet" class="form-control" />
-                    <span asp-validation-for="VendorStreet" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorZip" class="control-label"></label>
-                    <input asp-for="VendorZip" class="form-control" />
-                    <span asp-validation-for="VendorZip" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorWebsite" class="control-label"></label>
-                    <input asp-for="VendorWebsite" class="form-control" />
-                    <span asp-validation-for="VendorWebsite" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorBank" class="control-label"></label>
-                    <input asp-for="VendorBank" class="form-control" />
-                    <span asp-validation-for="VendorBank" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorBankBranch" class="control-label"></label>
-                    <input asp-for="VendorBankBranch" class="form-control" />
-                    <span asp-validation-for="VendorBankBranch" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorAccountNum" class="control-label"></label>
-                    <input asp-for="VendorAccountNum" class="form-control" />
-                    <span asp-validation-for="VendorAccountNum" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorSwift" class="control-label"></label>
-                    <input asp-for="VendorSwift" class="form-control" />
-                    <span asp-validation-for="VendorSwift" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorBIC" class="control-label"></label>
-                    <input asp-for="VendorBIC" class="form-control" />
-                    <span asp-validation-for="VendorBIC" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VendorGoldAccount" class="control-label"></label>
-                    <input asp-for="VendorGoldAccount" class="form-control" />
-                    <span asp-validation-for="VendorGoldAccount" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                </div>
-
-        </form>
+        </div>
     </div>
-</div>
 
 
 @*@section Scripts {

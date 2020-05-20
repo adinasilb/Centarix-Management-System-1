@@ -4,54 +4,68 @@
     ViewData["Title"] = "ExpensesList";
     Layout = "~/Views/Shared/ExpensesNavView.cshtml";
 }
+    <div class="row">
+        <div style="width: 100px; height:900px" class="p-2 border-right box-shadow">
 
-<h1>ExpensesList</h1>
+            <ul class="nav flex-column nav-pills nav-stacked">
 
-<table class="table table-bordered">
-    <tr>
-        <th>
-            Month
-        </th>
-        <th>
-            Plastics
-        </th>
-        <th>
-            Reagents
-        </th>
-        <th>
-            Proprietry
-        </th>
-        <th>
-            Reusable
-        </th>
-        <th>
-            Total
-        </th>
-    </tr>
-    @foreach (var item in Model.monthlyTotals)
-    {
-        DateTime year = new DateTime(item.Year, 1, 1); //converting year into a datetime so we can format it to the last two digits - note that the last two parameters are a default value, jsut so that we can access the correct datetime method - there is no inhereit meaning in the last two "1"s
+                <li class="nav-item m-3">
+                       $summary
+                </li>
 
-        <tr>
-            <td>
-                @item.Month/@year.ToString("yy")
-            </td>
-            <td>
-                @String.Format("{0:C}", Convert.ToInt32(item.PlasticsTotal))
-            </td>
-            <td>
-                @String.Format("{0:C}", Convert.ToInt32(item.ReagentsTotal))
-            </td>
-            <td>
-                @String.Format("{0:C}", Convert.ToInt32(item.ProprietyTotal))
-            </td>
-            <td>
-                @String.Format("{0:C}", Convert.ToInt32(item.ReusableTotal))
-            </td>
-            <td>
-                @String.Format("{0:C}", Convert.ToInt32(item.GrandTotal))
-            </td>
+            </ul>
 
-        </tr>
-    }
-</table>
+
+        </div>
+        <div class="col-md-10 border-left">
+
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        Month
+                    </th>
+                    <th>
+                        Plastics
+                    </th>
+                    <th>
+                        Reagents
+                    </th>
+                    <th>
+                        Proprietry
+                    </th>
+                    <th>
+                        Reusable
+                    </th>
+                    <th>
+                        Total
+                    </th>
+                </tr>
+                @foreach (var item in Model.monthlyTotals)
+                {
+                    DateTime year = new DateTime(item.Year, 1, 1); //converting year into a datetime so we can format it to the last two digits - note that the last two parameters are a default value, jsut so that we can access the correct datetime method - there is no inhereit meaning in the last two "1"s
+
+                    <tr>
+                        <td>
+                            @item.Month/@year.ToString("yy")
+                        </td>
+                        <td>
+                            @String.Format("{0:C}", Convert.ToInt32(item.PlasticsTotal))
+                        </td>
+                        <td>
+                            @String.Format("{0:C}", Convert.ToInt32(item.ReagentsTotal))
+                        </td>
+                        <td>
+                            @String.Format("{0:C}", Convert.ToInt32(item.ProprietyTotal))
+                        </td>
+                        <td>
+                            @String.Format("{0:C}", Convert.ToInt32(item.ReusableTotal))
+                        </td>
+                        <td>
+                            @String.Format("{0:C}", Convert.ToInt32(item.GrandTotal))
+                        </td>
+
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
