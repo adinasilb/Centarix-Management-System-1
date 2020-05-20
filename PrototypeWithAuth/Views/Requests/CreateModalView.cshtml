@@ -33,35 +33,43 @@
 
                 </div>
                 @*moved the tabs into the modal header*@
-                <div class="container">
-                    <div class="row">
-                        <div class="col-10 offset-1">
-                            <ul id="modal-tabs" class="nav nav-tabs text-center">
-                                <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link active"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
-                                <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
-                                <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
-                                <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
-                                <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Order" /><br />Order</a></li>
-                                <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><img src="~/images/css/inventory/add-item/archive.png" alt="Archive" /><br />Archive</a></li>
-                                <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><img src="~/images/css/inventory/add-item/history.png" alt="History" /><br />History</a></li>
-                            </ul>
+                @*<div class="container">
+                        <div class="row">
+                            <div class="col-10 offset-1">
+                                <ul id="modal-tabs" class="nav nav-tabs text-center">
+                                    <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link active"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Order" /><br />Order</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><img src="~/images/css/inventory/add-item/archive.png" alt="Archive" /><br />Archive</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><img src="~/images/css/inventory/add-item/history.png" alt="History" /><br />History</a></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
+                    </div>*@
 
                 <!-- Modal body -->
                 <div class="modal-body">
                     <div class="container-fluid div-tabs">
 
-                        @*<ul class="nav nav-tabs">
-                                <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
-                                <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="priceTab">Price</a></li>
-                                <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
-                                <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
-                                <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
-                            </ul>*@
-
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <ul id="modal-tabs" class="nav nav-tabs text-center">
+                                        <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Order" /><br />Order</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><img src="~/images/css/inventory/add-item/archive.png" alt="Archive" /><br />Archive</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><img src="~/images/css/inventory/add-item/history.png" alt="History" /><br />History</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
                         <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
                                 <strong>Item</strong>
