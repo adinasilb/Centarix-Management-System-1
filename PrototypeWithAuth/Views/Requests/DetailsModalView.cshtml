@@ -59,11 +59,11 @@
                                 </div>
                             </div>
                         </div>
-
+                        <br />
                                     <div class="tab-content">
                                         <div id="item" class="tab-pane fade in active">
-                                            <h3>ITEM</h3>
-                                            <hr />
+                                            <strong style="font-size: 1.7em;">Item</strong>
+                                            <br /><hr /><br />
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
@@ -186,6 +186,8 @@
                                             </div>
                                         </div>
                                         <div id="location" class="tab-pane fade">
+                                            <strong style="font-size: 1.7em;">Location</strong>
+                                            <br /><hr /><br />
                                             @if (Model.ChildrenLocationInstances != null && Model.ChildrenLocationInstances.Any())
                                             {
                                                 <h4>@Model.ParentLocationInstance.LocationInstanceName</h4> //this should be a link to the manage page for admins only
@@ -235,14 +237,15 @@
                                             }
                                             else
                                             {
-                                                <span>No Locations</span>
+                                                <span>No Locations yet</span>
+                                                <br/>
                                                 <button>Add Locations</button>
                                             }
                                         </div>
                                         <div id="price" class="tab-pane fade">
                                             <div class="row">
                                                 <div class="col-md-8">
-                                                    <h3>PRICE</h3>
+                                                    <strong style="font-size: 1.7em;">Price</strong>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
@@ -261,7 +264,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr />
+                                            <br /><hr /><br />
                                             <div class="row">
                                                 <div class="col-md-4 border rounded p-1 RequestUnitCard">
                                                     <div class="row">
@@ -525,8 +528,9 @@
                                             </div>
                                         </div>
                                         <div id="documents" class="tab-pane fade">
-                                            <h3>DOCUMENTS</h3>
-                                            <hr />
+                                            <strong style="font-size: 1.7em;">Documents</strong>
+                                            <br /><hr /><br />
+
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <label class="control-label font-weight-bold order-doc">Order Doc</label>
@@ -544,9 +548,9 @@
                                                         <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                                     }
                                                     @*<div id="carousel" class="carousel ui-slider">
-                                        <ol class="carousel-indicators">
-                                        </ol>
-                                    </div>*@
+                    <ol class="carousel-indicators">
+                    </ol>
+                </div>*@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="control-label font-weight-bold">Invoice Doc</label>
@@ -603,7 +607,8 @@
                                             </div>
                                         </div>
                                         <div id="comments" class="tab-pane fade">
-                                            <h3>COMMENTS</h3>
+                                            <strong style="font-size: 1.7em;">Comments</strong>
+                                            <br /><hr /><br />
                                             @{
                                                 if (Model.OldComments != null)
                                                 {
@@ -632,7 +637,7 @@
                                                 }
                                             }
                                             @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
-                                            <div class="card rounded">
+                                            @*<div class="card rounded">
                                                 <div class="card-body">
                                                     <div class="font-weight-bold">+NewComment</div>
                                                     <div class="form-group">
@@ -642,7 +647,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>*@
+                                        @*removed because you shouldnt be able to add new comments in the View Modal, only see previous comments.*@
+
+
                                         @*<div id="order" class="tab-pane fade">
                             <h3>ORDER</h3>
                             <hr />
