@@ -232,7 +232,6 @@
         //redo --> not used
         var cancelledEmail = '@CancelledEmail';
         if (cancelledEmail == "True") {
-            var tab = ""; //just keeping this on the side
             var $itemUrl = "Requests/DetailsModalView";
         }
 
@@ -248,9 +247,8 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $tab = e.target.hash;
         var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
-        $.fn.CallPage($tab, $itemurl);
+        $.fn.CallPage($itemurl);
         return false;
     });
 
@@ -258,9 +256,9 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $tab = e.target.hash;
         var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
-        $.fn.CallPage($tab, $itemurl);
+        console.log("itemurl: " + $itemurl);
+        $.fn.CallPage($itemurl);
         return false;
     });
 
@@ -268,9 +266,8 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $tab = e.target.hash;
         var $itemurl = "Requests/CreateModalView";
-        $.fn.CallPage($tab, $itemurl);
+        $.fn.CallPage($itemurl);
         return false;
     });
 
@@ -279,9 +276,8 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $tab = e.target.hash;
         var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
-        $.fn.CallPage($tab, $itemurl);
+        $.fn.CallPage($itemurl);
         return false;
     });
 
@@ -289,9 +285,8 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $tab = e.target.hash;
         var $itemurl = "Requests/ReceivedModal?RequestID=" + $(this).val();
-        $.fn.CallPage($tab, $itemurl);
+        $.fn.CallPage($itemurl);
         return false;
     });
 
@@ -299,13 +294,12 @@
         console.log("inside of js-go-to-controller");
         e.preventDefault();
         e.stopPropagation();
-        var $tab = e.target.hash;
         var $itemurl = "Requests/ConfirmEmailModal";
-        $.fn.CallPage($tab, $itemurl);
+        $.fn.CallPage($itemurl);
         return false;
     });
 
-    $.fn.CallPage = function ($tab, $itemurl, isEmail = false) {
+    $.fn.CallPage = function ($itemurl, isEmail = false) {
         console.log("in call page function");
         //delete existing modals
         $('.modal').replaceWith('');
@@ -335,16 +329,8 @@
                 //$('.modal').find('input').first().focus();
                 //$(".modal").popover('hide')
                 if (!isEmail) { //SET BOOLEAN TO MODAL VIEW NOT ISEMAIL
-                    /* Following line should set the correct data-target tab to open ----> not working right now */
-                    //$('.nav-tabs a[href="' + $tab + '"]').tab - pane('show');
-                    var selectedTab = 0;
-                    var mytabs = $('.div-tabs ul li a').each(function (x, obj) {
-                        if (obj.hash.indexOf(location.hash) != -1 && location.hash != '') {
-                            selectedTab = x;
-                        }
-                    });
-                    $("#tabs").tab({ selected: selectedTab });
                     //document.ready for modal is done here --> setting up product subcategories
+                    $('.modal-content a:first').tab('show');
                     var parentCategoryId = $("#parentlist").val();
                     var subcategoryId1 = $("#sublist").val();
                     var url = "/Requests/GetSubCategoryList";
