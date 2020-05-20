@@ -187,7 +187,15 @@ $("#Request_SubUnitTypeID").change(function () {
 
 $.fn.CheckEnableSubUnits = function () {
 	console.log("check enable subunits");
-	if ($("Request_Unit").val() > 0 && $("#Request_UnitTypeID").val()) {
+	console.log("Request_Unit.val() : " + $("#Request_Unit").val());
+	console.log("Request_UnitTypeID.val() : " + $("#Request_UnitTypeID").val());
+	if ($("Request_Unit").val() > 0) {
+		console.log('if ($("Request_Unit").val() > 0)');
+	}
+	if ($("#Request_UnitTypeID").val() > 0) {
+		console.log('if ($("#Request_UnitTypeID").val() > 0)');
+	}
+	if ($("Request_Unit").val() > 0 && $("#Request_UnitTypeID").val() > 0) {
 		console.log("check enable subunits if");
 		$.fn.EnableSubUnits();
 	}
