@@ -4,12 +4,13 @@
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-<div class="modal modal-view  right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; overflow-y:auto;">
+<div class="modal modal-view right faid" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
+    <div class="modal-dialog modal-lg" role="document" style="max-height:100%;">
 
         <div class="modal-content d-inline-block">
+
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
@@ -33,24 +34,31 @@
                         <br />
                     }
                     <div class="form-group">
-                        <h4><label asp-for="Request.Product.ProductName" class="control-label"> Request : </label> </h4>
+                        <h4><label asp-for="Request.Product.ProductName" class="control-label font-weight-bold"> Request : </label> </h4>
                         <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" /></h4>
                         <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
                     </div>
-                    <button type="button" class="close close-modal" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close close-modal float-left" data-dismiss="modal">&times;</button>
                 </div>
 
                 <!-- Modal body -->
                 <div class="modal-body">
                     <div class="container-fluid div-tabs">
 
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
-                            <li><a data-toggle="tab" href="#location" class="btn btn-outline-secondary">Location</a></li>
-                            <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="price-tab">Price</a></li>
-                            <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
-                            <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
-                        </ul>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-10 offset-1">
+
+                                    <ul class="nav nav-tabs text-center">
+                                        <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Location" /><br />Location</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" href="#price" class="nav-link" id="price-tab"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
+                                        <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
@@ -471,163 +479,165 @@
                             </div>
 
 
-                            <div id="documents" class="tab-pane fade">
-                                <h3>DOCUMENTS</h3>
-                                <hr />
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="control-label order-doc">Order Doc</label>
-                                        <div class="custom-file">
-                                            <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" multiple />
-                                            <label class="custom-file-label">Choose File...</label>
-                                        </div>
-                                        @if (Model.OrderFilesFound != null)
+                        <div id="documents" class="tab-pane fade">
+                            <strong style="font-size: 1.7em;">Documents</strong>
+                            <br /><hr /><br />
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label font-weight-bold order-doc">Order Doc</label>
+                                    <div class="custom-file">
+                                        <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" multiple />
+                                        <label class="custom-file-label">Choose File...</label>
+                                    </div>
+                                    @if (Model.OrderFilesFound != null)
+                                    {
+                                        foreach (var orderFileInfo in Model.OrderFilesFound)
                                         {
-                                            foreach (var orderFileInfo in Model.OrderFilesFound)
-                                            {
-                                                //var filename = orderFileInfo.FullName.ToString();
-                                                //    {
-                                                //        requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
-                                                //    }
-                                                @*<butston>Test</button>
-                                                    <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>*@
-                                                <span>download link below</span>
-                                                <button asp-action="DownloadPDF" asp-route-filename="@orderFileInfo.FullName.ToString()" class="btn btn-link">DownloadBtn</button>
-                                                @Html.ActionLink("DownloadAl", "DownloadPDF", new { @filename = orderFileInfo }, new { @class = "btn btn-link" });
-                                            }
+                                            //var filename = orderFileInfo.FullName.ToString();
+                                            //    {
+                                            //        requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
+                                            //    }
+                                            @*<butston>Test</button>
+                        <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>*@
+                                            <span>download link below</span>
+                                            <button asp-action="DownloadPDF" asp-route-filename="@orderFileInfo.FullName.ToString()" class="btn btn-link">DownloadBtn</button>
+                                            @Html.ActionLink("DownloadAl", "DownloadPDF", new { @filename = orderFileInfo }, new { @class = "btn btn-link" });
                                         }
-                                        <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
+                                    }
+                                    <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
 
-                                        @*<div id="carousel" class="carousel ui-slider">
-                                                <ol class="carousel-indicators">
-                                                </ol>
-                                            </div>*@
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Invoice Doc</label>
-                                        <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Shipment Doc</label>
-                                        <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Quote Doc</label>
-                                        <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
+                                    @*<div id="carousel" class="carousel ui-slider">
+                    <ol class="carousel-indicators">
+                    </ol>
+                </div>*@
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="control-label">Info Doc</label>
-                                        <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Pictures Doc</label>
-                                        <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Return Doc</label>
-                                        <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Credit Doc</label>
-                                        <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
+                                <div class="col-md-3">
+                                    <label class="control-label font-weight-bold">Invoice Doc</label>
+                                    <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom -file" />
+                                    <span class="text-danger"></span>
                                 </div>
-                                <hr />
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h3 class="images-header"></h3>
-                                        <hr />
-                                        @if (Model.OrderFileStrings != null)
-                                        {
-                                            <div class="fill-images-orders">
-                                                <a href="@Model.OrderFileStrings[0]" target="_blank">Click to open</a>
-                                                <embed src="@Model.OrderFileStrings[0]" type="application/pdg" @*height="100%" width="100%"*@ />
-                                                <iframe src="@Model.OrderFileStrings[0]"></iframe>
-                                            </div>
-                                        }
-                                    </div>
+                                <div class="col-md-3">
+                                    <label class="control-label font-weight-bold">Shipment Doc</label>
+                                    <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom -file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label font-weight-bold">Quote Doc</label>
+                                    <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom -file" />
+                                    <span class="text-danger"></span>
                                 </div>
                             </div>
-                            <div id="comments" class="tab-pane fade">
-                                <h3>COMMENTS</h3>
-                                @{
-                                    if (Model.OldComments != null)
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label font-weight-bold">Info Doc</label>
+                                    <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom -file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label font-weight-bold">Pictures Doc</label>
+                                    <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom -file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label font-weight-bold">Return Doc</label>
+                                    <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom -file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label font-weight-bold">Credit Doc</label>
+                                    <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom -file" />
+                                    <span class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3 class="images-header"></h3>
+                                    <hr />
+                                    @if (Model.OrderFileStrings != null)
                                     {
-                                        foreach (Comment comment in Model.OldComments)
-                                        {
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="card rounded">
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    Insert Pic
-                                                                    <img src="" />
-                                                                </div>
-                                                                <div class="col-md-10">
-                                                                    <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
-                                                                    @comment.CommentText
-                                                                </div>
+                                        <div class="fill-images-orders">
+                                            <a href="@Model.OrderFileStrings[0]" target="_blank">Click to open</a>
+                                            <embed src="@Model.OrderFileStrings[0]" type="application/pdg" @*height="100%" width="100%"*@ />
+                                            <iframe src="@Model.OrderFileStrings[0]"></iframe>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div id="comments" class="tab-pane fade">
+                            <strong style="font-size: 1.7em;">Comments</strong>
+                            <br /><hr /><br />
+                            @{
+                                if (Model.OldComments != null)
+                                {
+                                    foreach (Comment comment in Model.OldComments)
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card rounded">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                Insert Pic
+                                                                <img src="" />
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
+                                                                @comment.CommentText
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <br />
-                                        }
+                                        </div>
+                                        <br />
                                     }
                                 }
-                                @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
-                                <div class="card rounded">
-                                    <div class="card-body">
-                                        <div class="font-weight-bold">+NewComment</div>
-                                        <div class="form-group">
-                                            <label asp-for="NewComment.CommentText" class="control-label"></label>
-                                            <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
-                                            <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
-                                        </div>
+                            }
+                            @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
+                            <div class="card rounded">
+                                <div class="card-body">
+                                    <div class="font-weight-bold">+NewComment</div>
+                                    <div class="form-group">
+                                        <label asp-for="NewComment.CommentText" class="control-label font-weight-bold"></label>
+                                        <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
+                                        <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <div class="form-group">
-                                    @*you can only add to cart if you are creating a new one*@
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                @*you can only add to cart if you are creating a new one*@
 
-                                    <input type="submit" name="OrderType" value="Save" asp-action="EditModalView" class="btn btn-outline-primary close-modal" />
+                                <input type="submit" name="OrderType" value="Save" asp-action="EditModalView" class="btn btn-outline-primary close-modal" />
 
-                                    @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
-                                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
-                                </div>
+                                @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
+                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
                             </div>
                         </div>
-
                     </div>
+
                 </div>
+                            </div>
 
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                </div>
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                            </div>
 
-                @*Begin Hidden Inputs:*@
-                @Html.HiddenFor(vm => vm.Request.ProductID)
-                @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
-                @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
-                @Html.HiddenFor(vm => vm.Request.RequestStatusID)
-                @Html.HiddenFor(vm => vm.Request.ParentRequestID)
-                @*End Hidden Inputs*@
+                            @*Begin Hidden Inputs:*@
+                            @Html.HiddenFor(vm => vm.Request.ProductID)
+                            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
+                            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+                            @Html.HiddenFor(vm => vm.Request.RequestStatusID)
+                            @Html.HiddenFor(vm => vm.Request.ParentRequestID)
+                            @*End Hidden Inputs*@
 
-                @*Hidden Input for Product Subcategory*@
-                @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
-            </form>
+                            @*Hidden Input for Product Subcategory*@
+                            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+</form>
 
         </div>
     </div>

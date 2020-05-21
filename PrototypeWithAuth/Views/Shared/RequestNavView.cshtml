@@ -83,17 +83,10 @@
         @*<nav class="navbar flex-grow-1">*@
         <ul class="nav flex-column nav-pills nav-stacked">
 
-            @*<li class="nav-item mt-3 mb-3">
-                    <button type="button" id="slidebar-modal" class="btn" data-toggle="modal" data-target="#right-slide-modal" onclick="addActive(id)">
-                        <i class="far fa-hand-point-right"></i><br /> Right Sidebar Modal
-                    </button>
-                </li>*@
-
             @if (Requests || Inventory)
             {
                 <li class="nav-item mt-3 mb-3">
 
-                    @*@Html.ActionLink("Add Item", "Create", "Products", new { }, new { @class = "btn btn-link text-dark" })*@
                     <button class="btn btn-link text-dark create-product-details" id="sidebar-add-item" onclick="addActive(id)">
                         <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
                     </button>
@@ -101,27 +94,13 @@
             }
             @if (Requests || Inventory)
             {
-                //Here is the proper way to do it
                 <li class="nav-item mt-3 mb-3 @type">
                     <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
                 </li>
-                // <i class="fas fa-shapes"></i>
-
-                //but now that its a picture instead of an icon, it wont change color the same way as before..... :(
-
-                //old way
-                @*<li class="nav-item mt-3 mb-3">
-                        <i class="fas fa-shapes"></i><br />
-                        @Html.ActionLink("Type", "Index", "ProductSubcategories", new { @PageType = pageType }, new { @class = type })
-                    </li>*@
+                
             }
             @if (Requests || Inventory)
             {
-                //old way
-                @*<li class="nav-item mt-3 mb-3">
-                        <i class="fas fa-store"></i><br />
-                        @Html.ActionLink("Vendor", "Index", "Vendors", new { @PageType = pageType }, new { @class = vendor })
-                    </li>*@
 
                 <li class="nav-item mt-3 mb-3 @vendor">
                     <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
@@ -129,11 +108,6 @@
             }
             @if (Requests || Inventory)
             {
-
-                @*<li class="nav-item mt-3 mb-3">
-                        <i class="far fa-meh-blank"></i><br />
-                        @/*Html.ActionLink("Owner", "Index", "ApplicationUsers", new { @PageType = pageType }, new { @class = owner })*/
-                    </li>*@
                 @*have to create contorller for application user?*@
 
                 <li class="nav-item mt-3 mb-3 @owner">
@@ -144,11 +118,6 @@
             {
 
                 @*Redo the location class in the controller*@
-                @*<li class="nav-item mt-3 mb-3">
-                        <i class="fas fa-map-marker-alt"></i>
-                        @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = location })
-                    </li>*@
-
                 <li class="nav-item mt-3 mb-3 @location">
                     <a href="@Url.ActionLink("Index", "Locations", new { @PageType = location })"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Manage</a>
                 </li>
@@ -170,26 +139,10 @@
     </div>
 </div>
 
-<!-- SlideRight Modal -->
-@*<div class="modal right fade" id="right-slide-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
 
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel2">Right Sidebar</h4>
-                </div>
-
-                <div class="modal-body">
-                    <h1>Why cant I see the whole line displayed in the same modal?!?!?!</h1>
-                </div>
-
-            </div>
-        </div>
-    </div>*@
 
 <!-- The Modal -->
-@*(first modal div) ADDED: .right .faid, tabindex="-1" *@
+@*(first modal div) ADDED: .right .faid, tabindex="-1" --> all modal divs now located in CreateModalView*@
 @*<div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request">
 </div>*@
 
@@ -199,13 +152,10 @@
 </div>
 
 <script>
-    //function changePic(a) { document.getElementById("sidebar-add-item").src = a; }
-
     function addActive(id) {
         var item = document.getElementById(id);
         item.classList.add("activeNavLink");
     }
-
 </script>
 
 @RenderSection("Scripts", required: false)
@@ -317,7 +267,7 @@
                 //$(".modal-view").html(data);
                 //turn off data dismiss by clicking out of the box and by pressing esc
                 $(".modal-view").modal({
-                    backdrop: false,
+                    backdrop: false, // -dani - i want this functionality, at least for now
                     keyboard: false
                 });
                 //shows the modal
