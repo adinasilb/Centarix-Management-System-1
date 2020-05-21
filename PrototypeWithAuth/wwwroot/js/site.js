@@ -158,7 +158,7 @@ $("#price-tab").click(function () {
 	$.fn.CheckUnitsFilled();
 	$.fn.CheckSubUnitsFilled();
 	//I don't think that we need $.fn.CheckSubSubUnitsFilled over here b/c we don't need to enable or disable anything and the CalculateSubSubUnits should already run
-	$.fn.CalculateSum();
+	$.fn.CalculateSumPlusVat();
 	$.fn.CheckCurrency();
 });
 
@@ -231,31 +231,27 @@ $.fn.CheckSubUnitsFilled = function () {
 }
 
 $.fn.EnableSubUnits = function () {
-	console.log("enable sub units");
 	$("#Request_SubUnit").prop("disabled", false);
 	$("#Request_SubUnitTypeID").prop("disabled", false);
 };
 
 $.fn.EnableSubSubUnits = function () {
-	console.log("enable sub sub units");
 	$("#Request_SubSubUnit").prop("disabled", false);
 	$("#Request_SubSubUnitTypeID").prop("disabled", false);
 };
 
 $.fn.DisableSubUnits = function () {
-	console.log("disable sub units");
 	$("#Request_SubUnit").prop("disabled", true);
 	$("#Request_SubUnitTypeID").prop("disabled", true);
 };
 
 $.fn.DisableSubSubUnits = function () {
-	console.log("disable sub sub units");
 	$("#Request_SubSubUnit").prop("disabled", true);
 	$("#Request_SubSubUnitTypeID").prop("disabled", true);
 };
 
 $.fn.CalculateUnitAmounts = function () {
-	console.log("calculate unit amounts");
+
 };
 
 $.fn.CalculateSubUnitAmounts = function () {
@@ -266,14 +262,18 @@ $.fn.CalculateSubSubUnitAmounts = function () {
 
 };
 
-$.fn.CalculateSum = function () {
+$.fn.CalculateSumPlusVat = function () {
 	var $exchangeRate = $("#Request_ExchangeRate").val();
 	var vatInShekel = $("#vatInShekel").val();
-	if ($("#sumDollars").prop("readonly")) {
-		console.log("sum dollars is readonly");
+	if ($("#sum-dollars").prop("disabled")) {
+		$sumDollars = $("#Request_Cost").val() * $exchangeRate;
+		$iptBox = $('input[name="sum-dollars"]');
+		$.fn.ShowResults($iptBox, $sumDollars);
 	}
 	else if ($("#Request_Cost").prop("readonly")) {
-		console.log("sum shekels / request cost is readonly");
+		$sumShekel = $("#sum-dollars").val() / $exchangeRate;
+		$iptBox = $("input[name='Request.Cost']");
+		$.fn.ShowResults($iptBox, $sumShekel);
 	}
 };
 
