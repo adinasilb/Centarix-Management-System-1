@@ -39,7 +39,7 @@ namespace PrototypeWithAuth.Models
         public int? SubUnitTypeID { get; set; }
         [ForeignKey("SubUnitTypeID")]
         public UnitType SubUnitType { get; set; }
-        public uint? SubSubunit { get; set; } // if this is not null, then it this is the smallest unit - amount of subsubunit
+        public uint? SubSubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subsubunit
 
         public int? SubSubUnitTypeID { get; set; }
 

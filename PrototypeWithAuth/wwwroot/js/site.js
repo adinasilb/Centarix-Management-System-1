@@ -156,6 +156,8 @@ $(".view-docs").click(function (clickEvent) {
 //PRICE PAGE ON MODAL VIEW//
 $("#price-tab").click(function () {
 	$.fn.CheckUnitsFilled();
+	$.fn.CheckSubUnitsFilled();
+	//I don't think that we need $.fn.CheckSubSubUnitsFilled over here b/c we don't need to enable or disable anything and the CalculateSubSubUnits should already run
 	$.fn.CalculateSum();
 	$.fn.CheckCurrency();
 });
@@ -173,61 +175,98 @@ $("Request_UnitTypeID").change(function () {
 });
 
 $("Request_SubUnit").change(function () {
-
+	$.fn.CheckSubUnitsFilled();
 });
 
 $("Request_SubUnitTypeID").change(function () {
+	$.fn.CheckSubUnitsFilled();
+});
 
+$("Request_SubSubUnit").change(function () {
+	$.fn.CheckSubUnitsFilled();
+});
+
+$("Request_SubSubUnitTypeID").change(function () {
+	$.fn.CheckSubUnitsFilled();
 });
 
 $.fn.CheckCurrency = function () {
 	var currencyType = $("#currency").val();
 	switch (currencyType) {
 		case "dollar":
-			$("#Request_Cost").prop("disabled", true);
-			$("#sum-dollars").prop("disabled", false);
+			$("#Request_Cost").prop("readonly", true);
+			$("#sum-dollars").prop("readonly", false);
 			break;
 		case "shekel":
-			$("#Request_Cost").prop("disabled", false);
-			$("#sum-dollars").prop("disabled", true);
+			$("#Request_Cost").prop("readonly", false);
+			$("#sum-dollars").prop("readonly", true);
 			break;
 	}
 };
 
 $.fn.CheckUnitsFilled = function () {
-	if ($("#Request_Unit").val() && $("#Request_UnitTypeID").val()) {
+	if ($("#Request_Unit").val() > 0 && $("#Request_UnitTypeID").val()) {
 		$.fn.EnableSubUnits();
 	}
 	else {
-		console.log("checkunitsfilled: in else");
+		$.fn.DisableSubUnits();
+		$.fn.DisableSubSubUnits();
 	}
 	$.fn.CalculateUnitAmounts();
-	//calculate sub units and sub sub units here too?
+	$.fn.CalculateSubUnitAmounts();
+	$.fn.CalculateSubSubUnitAmounts();
 };
 
+$.fn.CheckSubUnitsFilled = function () {
+	if ($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val()) {
+		$.fn.EnableSubSubUnits();
+	}
+	else {
+		$.fn.DisableSubSubUnits();
+	}
+	$.fn.CalculateSubUnitAmounts();
+	$.fn.CalculateSubSubUnitAmounts();
+}
+
 $.fn.EnableSubUnits = function () {
-	console.log("enable subunits");
 	$("#Request_SubUnit").prop("disabled", false);
 	$("#Request_SubUnitTypeID").prop("disabled", false);
 };
 
 $.EnableSubSubUnits = function () {
-
+	$("#Request_SubSubUnit").prop("disabled", false);
+	$("#Request_SubSubUnitTypeID").prop("disabled", false);
 };
 
-$
+$.fn.DisableSubUnits = function () {
+	$("#Request_SubUnit").prop("disabled", true);
+	$("#Request_SubUnitTypeID").prop("disabled", true);
+};
+
+$.fn.DisableSubSubUnits = function () {
+	$("#Request_SubSubUnit").prop("disabled", true);
+	$("#Request_SubSubUnitTypeID").prop("disabled", true);
+};
 
 $.fn.CalculateUnitAmounts = function () {
 	console.log("calculate unit amounts");
 };
 
+$.fn.CalculateSubUnitAmounts = function () {
+
+};
+
+$.fn.CalculateSubSubUnitAmounts = function () {
+
+};
+
 $.fn.CalculateSum = function () {
 	console.log("in calculate sum");
-	if ($("#sumDollars").prop("disabled")) {
-		console.log("sum dollars is disabled");
+	if ($("#sumDollars").prop("readonly")) {
+		console.log("sum dollars is readonly");
 	}
-	else if ($("#Request_Cost").prop("disabled")) {
-		console.log("sum shekels / request cost is disabled");
+	else if ($("#Request_Cost").prop("readonly")) {
+		console.log("sum shekels / request cost is readonly");
 	}
 };
 
