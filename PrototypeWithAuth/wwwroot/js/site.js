@@ -196,13 +196,13 @@ $.fn.CheckCurrency = function () {
 
 $.fn.CheckUnitsFilled = function () {
 	if ($("#Request_Unit").val() && $("#Request_UnitTypeID").val()) {
-		console.log("checkunitsfilled: in if");
 		$.fn.EnableSubUnits();
-		$.fn.CalculateUnitAmounts();
 	}
 	else {
 		console.log("checkunitsfilled: in else");
 	}
+	$.fn.CalculateUnitAmounts();
+	//calculate sub units and sub sub units here too?
 };
 
 $.fn.EnableSubUnits = function () {
@@ -210,6 +210,12 @@ $.fn.EnableSubUnits = function () {
 	$("#Request_SubUnit").prop("disabled", false);
 	$("#Request_SubUnitTypeID").prop("disabled", false);
 };
+
+$.EnableSubSubUnits = function () {
+
+};
+
+$
 
 $.fn.CalculateUnitAmounts = function () {
 	console.log("calculate unit amounts");
