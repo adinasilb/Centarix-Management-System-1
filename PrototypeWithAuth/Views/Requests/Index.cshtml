@@ -222,7 +222,12 @@
                             }
 
                             <li>
-                                @Html.DisplayFor(modelItem => item.Cost)
+                                @*@Html.DisplayFor(modelItem => item.Cost)*@
+                                @{ 
+                                    decimal cost = (decimal)item.Cost;
+                                    string formattedCost = cost.ToString("C02");
+                                }
+                                @formattedCost
                             </li>
                         </ul>
                     </td> @*Computed column?*@
