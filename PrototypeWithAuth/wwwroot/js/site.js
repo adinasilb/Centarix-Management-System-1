@@ -267,7 +267,8 @@ $.fn.CalculateSubSubUnitAmounts = function () {
 };
 
 $.fn.CalculateSum = function () {
-	console.log("in calculate sum");
+	var $exchangeRate = $("#Request_ExchangeRate").val();
+	var vatInShekel = $("#vatInShekel").val();
 	if ($("#sumDollars").prop("readonly")) {
 		console.log("sum dollars is readonly");
 	}
@@ -275,6 +276,14 @@ $.fn.CalculateSum = function () {
 		console.log("sum shekels / request cost is readonly");
 	}
 };
+
+$.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
+	var theResult = isFinite($value) && $value || "";
+	$inputBox.val(theResult);
+}
+
+
+
 
 
 
