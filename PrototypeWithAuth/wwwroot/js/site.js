@@ -166,27 +166,27 @@ $("#currency").change(function (e) {
 	$.fn.CheckCurrency();
 });
 
-$("Request_Unit").change(function () {
+$("#Request_Unit").change(function () {
 	$.fn.CheckUnitsFilled();
 });
 
-$("Request_UnitTypeID").change(function () {
+$("#Request_UnitTypeID").change(function () {
 	$.fn.CheckUnitsFilled();
 });
 
-$("Request_SubUnit").change(function () {
+$("#Request_SubUnit").change(function () {
 	$.fn.CheckSubUnitsFilled();
 });
 
-$("Request_SubUnitTypeID").change(function () {
+$("#Request_SubUnitTypeID").change(function () {
 	$.fn.CheckSubUnitsFilled();
 });
 
-$("Request_SubSubUnit").change(function () {
+$("#Request_SubSubUnit").change(function () {
 	$.fn.CheckSubUnitsFilled();
 });
 
-$("Request_SubSubUnitTypeID").change(function () {
+$("#Request_SubSubUnitTypeID").change(function () {
 	$.fn.CheckSubUnitsFilled();
 });
 
@@ -195,16 +195,17 @@ $.fn.CheckCurrency = function () {
 	switch (currencyType) {
 		case "dollar":
 			$("#Request_Cost").prop("readonly", true);
-			$("#sum-dollars").prop("readonly", false);
+			$("#sum-dollars").prop("disabled", false);
 			break;
 		case "shekel":
 			$("#Request_Cost").prop("readonly", false);
-			$("#sum-dollars").prop("readonly", true);
+			$("#sum-dollars").prop("disabled", true);
 			break;
 	}
 };
 
 $.fn.CheckUnitsFilled = function () {
+	console.log("in check units function");
 	if ($("#Request_Unit").val() > 0 && $("#Request_UnitTypeID").val()) {
 		$.fn.EnableSubUnits();
 	}
@@ -218,6 +219,7 @@ $.fn.CheckUnitsFilled = function () {
 };
 
 $.fn.CheckSubUnitsFilled = function () {
+	console.log("in check sub units function");
 	if ($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val()) {
 		$.fn.EnableSubSubUnits();
 	}
@@ -229,21 +231,25 @@ $.fn.CheckSubUnitsFilled = function () {
 }
 
 $.fn.EnableSubUnits = function () {
+	console.log("enable sub units");
 	$("#Request_SubUnit").prop("disabled", false);
 	$("#Request_SubUnitTypeID").prop("disabled", false);
 };
 
-$.EnableSubSubUnits = function () {
+$.fn.EnableSubSubUnits = function () {
+	console.log("enable sub sub units");
 	$("#Request_SubSubUnit").prop("disabled", false);
 	$("#Request_SubSubUnitTypeID").prop("disabled", false);
 };
 
 $.fn.DisableSubUnits = function () {
+	console.log("disable sub units");
 	$("#Request_SubUnit").prop("disabled", true);
 	$("#Request_SubUnitTypeID").prop("disabled", true);
 };
 
 $.fn.DisableSubSubUnits = function () {
+	console.log("disable sub sub units");
 	$("#Request_SubSubUnit").prop("disabled", true);
 	$("#Request_SubSubUnitTypeID").prop("disabled", true);
 };
