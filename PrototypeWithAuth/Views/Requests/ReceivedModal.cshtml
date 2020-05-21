@@ -4,60 +4,62 @@
 @model PrototypeWithAuth.ViewModels.ReceivedLocationViewModel
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-<div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; overflow-y:auto;">
-    <div class="modal-content d-inline-block">
+<div class="modal modal-view right faid" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; overflow-y:auto;">
+        <div class="modal-content d-inline-block">
 
-        <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-            @Html.HiddenFor(vm => vm.Request.RequestID)
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="modal-header border-bottom-0">
-                @if (TempData["ErrorMessage"] != null)
-                {
-                    <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
-                    <br />
-                }
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body modal-dialog-scrollable">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="control-label" asp-for="locationTypesDepthZero"></label>
-                            @Html.DropDownListFor(m => m.LocationTypeID,
-new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-"Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+                @Html.HiddenFor(vm => vm.Request.RequestID)
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-header border-bottom-0">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                        <br />
+                    }
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modal-dialog-scrollable">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label" asp-for="locationTypesDepthZero"></label>
+                                @Html.DropDownListFor(m => m.LocationTypeID,
+    new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
+    "Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="divSublocations">
+                        <div class="col-md-4">
+                            <div class="divSublocations">
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="visualView col-md-12 text-center">
+                        <div class="col-md-4">
+                            <div class="visualView col-md-12 text-center">
 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    @*<div class="divSublocations">
+                <div class="modal-body">
+                    <div class="row">
+                        @*<div class="divSublocations">
 
-                        </div>*@
+                            </div>*@
+                    </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    @*<div class="visualView col-md-12 text-center">
+                <div class="modal-body">
+                    <div class="row">
+                        @*<div class="visualView col-md-12 text-center">
 
-                        </div>*@
+                            </div>*@
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <input type="submit" asp-action="ReceivedModal" class="btn btn-secondary" />
-            </div>
-        </form>
+                <div class="modal-footer">
+                    <input type="submit" asp-action="ReceivedModal" class="btn btn-secondary" />
+                </div>
+            </form>
 
+        </div>
     </div>
 </div>
