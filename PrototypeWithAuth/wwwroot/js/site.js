@@ -251,22 +251,41 @@ $.fn.DisableSubSubUnits = function () {
 };
 
 $.fn.CalculateUnitAmounts = function () {
-
+	$unitSumShekel = parseFloat($("#Request_Cost").val()) / $("#Request_Unit").val();
+	$iptBox = $("input[name='unit-price-shekel']");
+	$.fn.ShowResults($iptBox, $unitSumShekel);
+	var $exchangeRate = $("#Request_ExchangeRate").val();
+	$unitSumDollars = $unitSumShekel / $exchangeRate;
+	$iptBox = $("input[name='unit-price-dollars']");
+	$.fn.ShowResults($iptBox, $unitSumDollars);
 };
 
 $.fn.CalculateSubUnitAmounts = function () {
-
+	$subUnitSumShekel = $("#unit-price-shekel").val() / $("#Request_SubUnit").val();
+	$iptBox = $("input[name='subunit-price-shekel']");
+	$.fn.ShowResults($iptBox, $subUnitSumShekel);
+	var $exchangeRate = $("#Request_ExchangeRate").val();
+	$subUnitSumDollars = $subUnitSumShekel / $exchangeRate;
+	$iptBox = $("input[name='subunit-price-dollars']");
+	$.fn.ShowResults($iptBox, $subUnitSumDollars);
 };
 
 $.fn.CalculateSubSubUnitAmounts = function () {
-
+	$subSubUnitSumShekel = $("#subunit-price-shekel").val() / $("#Request_SubSubUnit").val();
+	$iptBox = $("input[name='subsubunit-price-shekel']");
+	$.fn.ShowResults($iptBox, $subSubUnitSumShekel);
+	var $exchangeRate = $("#Request_ExchangeRate").val();
+	$subSubUnitSumDollars = $subSubUnitSumShekel / $exchangeRate;
+	$iptBox = $("input[name='subsubunit-price-dollars']");
+	$.fn.ShowResults($iptBox, $subSubUnitSumDollars);
 };
 
 $.fn.CalculateSumPlusVat = function () {
 	var $exchangeRate = $("#Request_ExchangeRate").val();
 	var vatInShekel = $("#Request_VAT").val();
+	console.log("$('#Request_Cost').val(): " + $("#Request_Cost").val());
 	if ($("#sum-dollars").prop("disabled")) {
-		$sumDollars = $("#Request_Cost").val() / $exchangeRate;
+		$sumDollars = parseFloat($("#Request_Cost").val()) / $exchangeRate;
 		$iptBox = $('input[name="sum-dollars"]');
 		$.fn.ShowResults($iptBox, $sumDollars);
 	}
@@ -275,7 +294,7 @@ $.fn.CalculateSumPlusVat = function () {
 		$iptBox = $("input[name='Request.Cost']");
 		$.fn.ShowResults($iptBox, $sumShekel);
 	}
-	$sumShekel = parseInt($("#Request_Cost").val());
+	$sumShekel = parseFloat($("#Request_Cost").val());
 	$vatOnshekel = $sumShekel * parseFloat(vatInShekel);
 	$sumTotalVatShekel = $sumShekel + $vatOnshekel;
 	$iptBox = $("input[name='sumPlusVat-Shekel']");
