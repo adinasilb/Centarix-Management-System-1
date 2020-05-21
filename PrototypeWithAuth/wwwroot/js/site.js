@@ -164,10 +164,24 @@ $("#currency").change(function (e) {
 	$.fn.CheckCurrency();
 });
 
+$("Request_Unit").change(function () {
+	$.fn.CheckUnitsFilled();
+});
+
+$("Request_UnitTypeID").change(function () {
+	$.fn.CheckUnitsFilled();
+});
+
+$("Request_SubUnit").change(function () {
+
+});
+
+$("Request_SubUnitTypeID").change(function () {
+
+});
+
 $.fn.CheckCurrency = function () {
 	var currencyType = $("#currency").val();
-	console.log("currencyType: " + currencyType);
-	console.log("request cost: " + $("#Request_Cost").val());
 	switch (currencyType) {
 		case "dollar":
 			$("#Request_Cost").prop("disabled", true);
@@ -178,8 +192,6 @@ $.fn.CheckCurrency = function () {
 			$("#sum-dollars").prop("disabled", true);
 			break;
 	}
-	console.log("currencyType: " + currencyType);
-	console.log("request cost: " + $("#Request_Cost").val());
 };
 
 $.fn.CheckUnitsFilled = function () {
