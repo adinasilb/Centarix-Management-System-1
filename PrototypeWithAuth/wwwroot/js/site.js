@@ -166,41 +166,65 @@ $("#currency").change(function (e) {
 
 $.fn.CheckCurrency = function () {
 	var currencyType = $("#currency").val();
-	console.log("currencyType: " + currencyType);
-	console.log("request cost: " + $("#Request_Cost").val());
 	switch (currencyType) {
 		case "dollar":
-			$("#Request_Cost").prop("disabled", true);
-			$("#sum-dollars").prop("disabled", false);
+			$("#Request_Cost").prop("readonly", true);
+			$("#sum-dollars").prop("readonly", false);
 			break;
 		case "shekel":
-			$("#Request_Cost").prop("disabled", false);
-			$("#sum-dollars").prop("disabled", true);
+			$("#Request_Cost").prop("readonly", false);
+			$("#sum-dollars").prop("readonly", true);
 			break;
 	}
-	console.log("currencyType: " + currencyType);
-	console.log("request cost: " + $("#Request_Cost").val());
 };
 
 $.fn.CheckUnitsFilled = function () {
 	if ($("#Request_Unit").val() && $("#Request_UnitTypeID").val()) {
 		console.log("checkunitsfilled: in if");
 		$.fn.EnableSubUnits();
-		$.fn.CalculateUnitAmounts();
 	}
 	else {
-		console.log("checkunitsfilled: in else");
+		$.fn.DisableSubUnits();
+		$.fn.DisableSubSubUnits();
 	}
+	$.fn.CalculateUnitAmounts();
+	//calculate sub units and sub sub units too?
+};
+
+$.fn.CheckSubUnitsFilled = function () {
+
 };
 
 $.fn.EnableSubUnits = function () {
-	console.log("enable subunits");
 	$("#Request_SubUnit").prop("disabled", false);
 	$("#Request_SubUnitTypeID").prop("disabled", false);
 };
 
+$.fn.EnableSubSubUnits = function () {
+	$("Request_SubSubUnit").prop("disabled", false);
+	$("Request_SubSubUnitTypeID").prop("disabled", false);
+};
+
+$.fn.DisableSubUnits = function () {
+	$("#Request_SubUnit").prop("disabled", true);
+	$("#Request_SubUnitTypeID").prop("disabled", true);
+};
+
+$.fn.DisableSubSubUnits = function () {
+	$("Request_SubSubUnit").prop("disabled", true);
+	$("Request_SubSubUnitTypeID").prop("disabled", true);
+};
+
 $.fn.CalculateUnitAmounts = function () {
 	console.log("calculate unit amounts");
+};
+
+$.fn.CalculateSubUnitAmounts = function () {
+
+};
+
+$.fn.CalculateSubSubUnitAmounts = function () {
+
 };
 
 $.fn.CalculateSum = function () {
