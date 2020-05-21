@@ -264,17 +264,25 @@ $.fn.CalculateSubSubUnitAmounts = function () {
 
 $.fn.CalculateSumPlusVat = function () {
 	var $exchangeRate = $("#Request_ExchangeRate").val();
-	var vatInShekel = $("#vatInShekel").val();
+	var vatInShekel = $("#Request_VAT").val();
 	if ($("#sum-dollars").prop("disabled")) {
-		$sumDollars = $("#Request_Cost").val() * $exchangeRate;
+		$sumDollars = $("#Request_Cost").val() / $exchangeRate;
 		$iptBox = $('input[name="sum-dollars"]');
 		$.fn.ShowResults($iptBox, $sumDollars);
 	}
 	else if ($("#Request_Cost").prop("readonly")) {
-		$sumShekel = $("#sum-dollars").val() / $exchangeRate;
+		$sumShekel = $("#sum-dollars").val() * $exchangeRate;
 		$iptBox = $("input[name='Request.Cost']");
 		$.fn.ShowResults($iptBox, $sumShekel);
 	}
+	$sumShekel = parseInt($("#Request_Cost").val());
+	$vatOnshekel = $sumShekel * parseFloat(vatInShekel);
+	$sumTotalVatShekel = $sumShekel + $vatOnshekel;
+	$iptBox = $("input[name='sumPlusVat-Shekel']");
+	$.fn.ShowResults($iptBox, $sumTotalVatShekel);
+	$sumTotalVatDollars = $sumTotalVatShekel / $exchangeRate;
+	$iptBox = $("input[name='sumPlusVat-Dollar']");
+	$.fn.ShowResults($iptBox, $sumTotalVatDollars);
 };
 
 $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
