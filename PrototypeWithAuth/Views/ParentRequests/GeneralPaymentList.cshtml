@@ -4,8 +4,8 @@
     ViewData["Title"] = "GeneralPaymentList";
     Layout = "~/Views/Shared/PaymentView.cshtml";
 }
-<div class="row">
-    <div style="width: 100px; height:900px" class="p-2 border-right box-shadow">
+<div style="display:flex">
+    <div style="width: 100px; height:900px" class="p-2 border-right box-shadow text-center">
         @*<nav class="navbar flex-grow-1">*@
         <ul class="nav flex-column nav-pills nav-stacked">
             @{int yearCount = 0;}
@@ -13,9 +13,8 @@
             {
 
                 <li class="nav-item m-3">
-                    <a href="#@group.Key">
-                        @group.Key
-
+                    <a href="#@group.Key"> 
+                        <strong style="color:#A26FF0;"> @group.Key </strong>  
                     </a>
                 </li>
                 yearCount++;
@@ -24,7 +23,7 @@
         @*</nav>*@
 
     </div>
-    <div class="col-md-10 border-left">
+    <div style="flex-grow:1;" class="col-md-10 border-left">
 
         @foreach (var group in Model.GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month }))
         {
@@ -100,7 +99,7 @@
                         </td>
 
                         <td>
-                            <a asp-action="Details" asp-route-id="@item.ParentRequestID">Details</a>
+                            <a asp-action="Details" asp-route-id="@item.ParentRequestID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /> </a>
                         </td>
                     </tr>
 

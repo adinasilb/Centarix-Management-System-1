@@ -112,16 +112,20 @@ body {
     filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
 }
 
+ul li.acc-sidebar.active {
+    filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
+}
+
 .main-btn-img {
     width: 9em;
-    
 }
 
 a.bold-hover-effects {
     color: black !important;
 }
 
-a.bold-hover-effects:hover {
+a.bold-hover-effects:hover, 
+ul li button.bold-hover-effects:hover {
     color: black !important;
     text-decoration: none;
     font-weight: bold;
