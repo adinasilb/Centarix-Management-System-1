@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -102,6 +103,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, manager")]
         public IActionResult AddLocation()
         {
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel
@@ -149,6 +151,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, manager")]
         public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel, SubLocationViewModel subLocationViewModel)
         {
             if (ModelState.IsValid) //make sure this allows for sublocations to be binded
