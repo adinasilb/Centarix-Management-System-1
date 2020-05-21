@@ -8,163 +8,161 @@
     double totalToPay = 0;
     double totalPayNow = 0;
 }
-<div class="row">
-    <div style="width: 150px;" class="p-2 border-right box-shadow">
-        @*<nav class="navbar flex-grow-1">*@
-        <ul class="nav flex-column nav-pills nav-stacked m-2">
-            <li class="nav-item">
-                <a href="#@Model.TitleList.ElementAt(0).Key">@Model.TitleList.ElementAt(0).Key <br />[@Model.TitleList.ElementAt(0).Value] </a>
-            </li>
-            <li class="nav-item">
-                <a href="#@Model.TitleList.ElementAt(1).Key">@Model.TitleList.ElementAt(1).Key <br />[@Model.TitleList.ElementAt(1).Value] </a>
-            </li>
-            <li class="nav-item">
-                <a href="#@Model.TitleList.ElementAt(2).Key">@Model.TitleList.ElementAt(2).Key <br />[@Model.TitleList.ElementAt(2).Value] </a>
-            </li>
-            <li class="nav-item">
-                <a href="#@Model.TitleList.ElementAt(3).Key">@Model.TitleList.ElementAt(3).Key <br />[@Model.TitleList.ElementAt(3).Value] </a>
-            </li>
-            <li class="nav-item">
-                <a href="#@Model.TitleList.ElementAt(4).Key">@Model.TitleList.ElementAt(4).Key <br />[@Model.TitleList.ElementAt(4).Value] </a>
-            </li>
-            <li class="nav-item">
-                <a href="#@Model.TitleList.ElementAt(5).Key">@Model.TitleList.ElementAt(5).Key <br />[@Model.TitleList.ElementAt(5).Value] </a>
-            </li>
+    <div style="display: flex">
+        <div style="width: 110px; font-size:small;" class="p-2 border-right box-shadow text-center ourNavBar">
+            <ul style="position:fixed; z-index:1;" class="nav flex-column nav-pills nav-stacked mb-lg-3">
+                <li class="nav-item mt-1 mb-4 acc-sidebar active">
+                    <a href="#@Model.TitleList.ElementAt(0).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/to_pay.png" alt="To Pay" /> <br /> @Model.TitleList.ElementAt(0).Key <br />[@Model.TitleList.ElementAt(0).Value] </a>
+                </li>
+                <li class="nav-item my-4 acc-sidebar">
+                    <a href="#@Model.TitleList.ElementAt(1).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/no_invoice.png" alt="No Invoice" /> <br /> @Model.TitleList.ElementAt(1).Key <br />[@Model.TitleList.ElementAt(1).Value] </a>
+                </li>
+                <li class="nav-item my-4 acc-sidebar">
+                    <a href="#@Model.TitleList.ElementAt(2).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/didnt_arrive.png" alt="Didnt Arrive" /> <br /> @Model.TitleList.ElementAt(2).Key <br />[@Model.TitleList.ElementAt(2).Value] </a>
+                </li>
+                <li class="nav-item my-4 acc-sidebar">
+                    <a href="#@Model.TitleList.ElementAt(3).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/pay_now.png" alt="Pay Now" /> <br /> @Model.TitleList.ElementAt(3).Key <br />[@Model.TitleList.ElementAt(3).Value] </a>
+                </li>
+                <li class="nav-item my-4 acc-sidebar">
+                    <a href="#@Model.TitleList.ElementAt(4).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/partial_delivery.png" alt="Partial Delivery" /> <br /> @Model.TitleList.ElementAt(4).Key <br />[@Model.TitleList.ElementAt(4).Value] </a>
+                </li>
+                <li class="nav-item my-4 acc-sidebar">
+                    <a href="#@Model.TitleList.ElementAt(5).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/for_clarification.png" alt="To Pay" /> <br /> @Model.TitleList.ElementAt(5).Key <br />[@Model.TitleList.ElementAt(5).Value] </a>
+                </li>
 
-        </ul>
-        @*</nav>*@
-    </div>
-    <div class="col-md-10 border-left">
-        @for (int index = 0; index < Model.TitleList.Count; index++)
-        {
-            var currentTitle = Model.TitleList.ElementAt(index);
-        <h6 id="@currentTitle.Key">
-            @currentTitle.Key [@currentTitle.Value]
-            @if (index == 0)
+            </ul>
+        </div>
+        <div style="flex-grow: 1" class="col-md-10 ml-3">
+            @for (int index = 0; index < Model.TitleList.Count; index++)
             {
-                <span>&emsp; Total: </span><span class="totalToPay"></span>
-            }
-            @if (index == 3)
-            {
-                <span>&emsp; Total: </span><span class="totalPayNow"></span>
-            }
-        </h6>
-            <br />
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderNumber)
-                        </th>
-
-                        <th>
-                            @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.Vendor.VendorEnName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Cost)
-
-                        </th>
-                    </tr>
-                </thead>
-
-
-
-                @foreach (var item in Model.ParentRequests.ElementAt(index)) //go through the full list but
-                {
-                    bool onlyOneRequest = true;
-                    if (item.Requests.Count() > 1)
+                var currentTitle = Model.TitleList.ElementAt(index);
+                <h5 id="@currentTitle.Key">
+                    <strong>@currentTitle.Key</strong> [@currentTitle.Value]
+                    @if (index == 0)
                     {
-                        onlyOneRequest = false;
+                        <span>&emsp; Total: </span><span class="totalToPay"></span>
+                    }
+                    @if (index == 3)
+                    {
+                        <span>&emsp; Total: </span><span class="totalPayNow"></span>
+                    }
+                </h5>
+                <br />
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderNumber)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.Vendor.VendorEnName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Cost)
+
+                            </th>
+                        </tr>
+                    </thead>
+
+
+
+                    @foreach (var item in Model.ParentRequests.ElementAt(index)) //go through the full list but
+                    {
+                        bool onlyOneRequest = true;
+                        if (item.Requests.Count() > 1)
+                        {
+                            onlyOneRequest = false;
+
+                        }
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderNumber)
+
+                            </td>
+                            <td>
+                                @if (onlyOneRequest)
+                                {
+
+                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName);
+                                }
+                                else
+                                {
+
+                                    @Html.DisplayFor(modelItem => item.ParentRequestID);
+                                }
+                            </td>
+
+                            <td>
+
+                                @Html.DisplayFor(modelItem => item.OrderDate)
+                            </td>
+                            <td>
+                                @if (onlyOneRequest)
+                                {
+                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.ParentRequestID);
+                                }
+                            </td>
+                            <td>
+                                @if (onlyOneRequest)
+                                {
+                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.ParentRequestID);
+                                }
+                            </td>
+                            <th>
+                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
+                            </th>
+                            <th>
+                                @if (index == 0) // 0 is the index for the TO Pay list
+                                {
+                                    totalToPay += item.Requests.FirstOrDefault().Cost;
+                                }
+                                else if (index == 3)
+                                {
+                                    totalPayNow += item.Requests.FirstOrDefault().Cost;
+                                }
+                                @if (onlyOneRequest)
+                                {
+                                    @*@String.Format("{0:C}", item.Requests.FirstOrDefault().Cost)*@
+                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
+                                }
+                                else
+                                {
+
+                                }
+                            </th>
+
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.ParentRequestID">Details</a>
+                            </td>
+                        </tr>
 
                     }
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OrderNumber)
-
-                        </td>
-                        <td>
-                            @if (onlyOneRequest)
-                            {
-
-                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName);
-                            }
-                            else
-                            {
-
-                                @Html.DisplayFor(modelItem => item.ParentRequestID);
-                            }
-                        </td>
-
-                        <td>
-
-                            @Html.DisplayFor(modelItem => item.OrderDate)
-                        </td>
-                        <td>
-                            @if (onlyOneRequest)
-                            {
-                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-                            }
-                            else
-                            {
-                                @Html.DisplayFor(modelItem => item.ParentRequestID);
-                            }
-                        </td>
-                        <td>
-                            @if (onlyOneRequest)
-                            {
-                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
-                            }
-                            else
-                            {
-                                @Html.DisplayFor(modelItem => item.ParentRequestID);
-                            }
-                        </td>
-                        <th>
-                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
-                        </th>
-                        <th>
-                            @if (index == 0) // 0 is the index for the TO Pay list
-                            {
-                                totalToPay += item.Requests.FirstOrDefault().Cost;
-                            }
-                            else if (index == 3)
-                            {
-                                totalPayNow += item.Requests.FirstOrDefault().Cost;
-                            }
-                            @if (onlyOneRequest)
-                            {
-                                @*@String.Format("{0:C}", item.Requests.FirstOrDefault().Cost)*@
-                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
-                            }
-                            else
-                            {
-
-                            }
-                        </th>
-
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.ParentRequestID">Details</a> |
-                        </td>
-                    </tr>
-
-                }
-            </table>
-            <br />
-        }
+                </table>
+                <br />
+            }
+        </div>
     </div>
-</div>
 <script type="text/javascript">
 
 
@@ -174,7 +172,28 @@
             $(".totalToPay").html("@String.Format("{0:C}", totalToPay)");
             $(".totalPayNow").html("@String.Format("{0:C}", totalPayNow)");
         }
-
     );
+
+    hide = true;
+    $('body').on("click", function () {
+        if (hide) $('.acc-sidebar').removeClass('active');
+        hide = true;
+    });
+
+    // add and remove .active
+    $('body').on('click', '.acc-sidebar', function () {
+
+        var self = $(this);
+
+        //if (self.hasClass('active')) {
+        //    $('.acc-sidebar').removeClass('active');
+        //    return false;
+        //}
+
+        $('.acc-sidebar').removeClass('active');
+
+        self.toggleClass('active');
+        hide = false;
+    });
 
 </script>
