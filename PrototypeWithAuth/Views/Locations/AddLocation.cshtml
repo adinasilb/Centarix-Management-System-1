@@ -30,11 +30,14 @@
             </div>
 
             <div class="modal-footer">
+
                 <input type="submit" value="Save" asp-action="AddLocation" class="btn btn-primary" />
                 <input type="button" value="Cancel" data-dismiss="modal" class="btn btn-primary" />
                 <hr />
-
+                @if (@User.IsInRole("Admin")||@User.IsInRole("Manager"))
+                {
                 <button class="btn btn-link load-add-location-type">Add Location Type</button>
+                }
             </div>
         </form>
     </div>

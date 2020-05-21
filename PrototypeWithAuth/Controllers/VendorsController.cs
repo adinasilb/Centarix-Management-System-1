@@ -33,22 +33,19 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Vendors
-        public async Task<IActionResult> IndexForPayment(/*string? filteredVendors*/)
+        public async Task<IActionResult> IndexForPayment()
         {
-            //if (filteredVendors != null)
-            //{
-            //    List<VendorListViewModel> vendorSearchViewModel = JsonConvert.DeserializeObject<List<VendorListViewModel>>(filteredVendors);
-            //    return View(filteredVendors.ToList());
-
-
-            //}
-            //else
-            //{
-            //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
 
             return View(await _context.Vendors.ToListAsync());
-            //}
+            
+        }
+        public async Task<IActionResult> IndexForLabManage()
+        {
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+
+            return View(await _context.Vendors.ToListAsync());
+
         }
 
         // GET: Vendors/Details/5
@@ -89,27 +86,7 @@ namespace PrototypeWithAuth.Controllers
             return View(vendor);
         }
 
-        //public async Task<IActionResult> SearchVendor(VendorSearchViewModel vendorSearchViewModel)
-        //{
-        //    IQueryable<Vendor> vendorsSearched = _context.Vendors.AsQueryable();
-        //    if (vendorSearchViewModel.Vendor.VendorEnName != null)
-        //    {
-        //        vendorsSearched = vendorsSearched.Where(v => v.VendorEnName == vendorSearchViewModel.Vendor.VendorEnName);
-        //    }
-        //    if (vendorSearchViewModel.Vendor.VendorHeName != null)
-        //    {
-        //        vendorsSearched = vendorsSearched.Where(v => v.VendorHeName == vendorSearchViewModel.Vendor.VendorHeName);
-        //    }
-        //    if (vendorSearchViewModel.Vendor.VendorBuisnessID != null)
-        //    {
-        //        vendorsSearched = vendorsSearched.Where(v => v.VendorBuisnessID == vendorSearchViewModel.Vendor.VendorBuisnessID);
-        //    }
-        //    if (vendorSearchViewModel.Vendor.VendorContactPhone1 != null)
-        //    {
-        //        vendorsSearched = vendorsSearched.Where(v => v.VendorContactPhone1 == vendorSearchViewModel.Vendor.VendorContactPhone1);
-        //    }
-        //    return View(vendorsSearched.ToListAsync());
-        //}
+     
         // GET: Vendors/Search
         [HttpGet]
         public IActionResult Search()
