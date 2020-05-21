@@ -211,3 +211,24 @@ table.table td {
 .modal-content {
     background-color: #FAFAFA;
 }
+
+.new-button {
+    padding: 5px 18px;
+    background-color: #fff;
+    color: #000;
+    font-size: 1rem;
+}
+
+    .new-button:hover {
+        /*background-color: #338f84;*/
+        color: #30BCC9;
+        border: 1px solid #30BCC9;
+        border-radius: 3px;
+        text-decoration: none;
+    }
+
+.new-button.active {
+    color: #30BCC9;
+    font-weight:500;
+    border-bottom: 4px solid #30BCC9;
+}
