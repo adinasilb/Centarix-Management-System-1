@@ -20,6 +20,7 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
         public List<string> OrderFileStrings { get; set; }
+        public List<string> InvoiceFileStrings { get; set; }
 
         //The PDFs that are passed into the controller:
         public List<IFormFile> OrderFiles { get; set; } //this needs to be changed b/c it is the pdf created by the order

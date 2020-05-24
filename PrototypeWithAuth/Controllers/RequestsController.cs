@@ -970,16 +970,22 @@ namespace PrototypeWithAuth.Controllers
                 //may be able to do this together - combining the path for the orders folders
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                 string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
-                string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
+                string uploadFolderOrders = Path.Combine(uploadFolder2, "Orders");
+                string uploadFolderInvoices = Path.Combine(uploadFolder2, "Invoices");
                 //the partial file name that we will search for (1- because we want the first one)
                 //creating the directory from the path made earlier
 
-                if (Directory.Exists(uploadFolder3))
+                if (Directory.Exists(uploadFolderOrders))
                 {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
                     //searching for the partial file name in the directory
                     FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                    requestItemViewModel.OrderFilesFound = orderfilesfound;
+                    requestItemViewModel.OrderFileStrings = new List<String>();
+                    foreach(var orderfile in orderfilesfound)
+                    {
+                        requestItemViewModel.OrderFileStrings.Add(orderfile.Name);
+                    }
+                    //requestItemViewModel.OrderFilesFound = orderfilesfound;
                     //checking if there were any files found before looping through them (to prevent an error)
                     //requestItemViewModel.OrderFileStrings = new List<string>();
                     //if (orderfilesfound[0].Exists)
@@ -990,6 +996,16 @@ namespace PrototypeWithAuth.Controllers
                     //        requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
                     //    }
                     //}
+                }
+                if (Directory.Exists(uploadFolderInvoices))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInvoices);
+                    FileInfo[] invoicefilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.InvoiceFileStrings = new List<string>();
+                    foreach(var invoicefile in invoicefilesfound)
+                    {
+                        requestItemViewModel.InvoiceFileStrings.Add(invoicefile.Name);
+                    }
                 }
 
                 if (requestItemViewModel.Request == null)
@@ -1419,12 +1435,13 @@ namespace PrototypeWithAuth.Controllers
             }
 
             string path1 = Path.Combine("wwwroot", "files");
-            string path2 = Path.Combine(request.RequestID.ToString());
-            string path = Path.Combine(path2, "Orders");
-            //string path = "wwwroot//" + request.RequestID + "//Orders";
-            //the following line will only create the directory (the request folder and the orders folder if they don't exist)
-            Directory.CreateDirectory(path);
-            FileStream fs = new FileStream(path, FileMode.Create);
+            string path2 = Path.Combine( path1, request.RequestID.ToString());
+            //create file
+            string folderPath = Path.Combine(path2, "Orders");
+            Directory.CreateDirectory(folderPath);
+            string uniqueFileName = "OrderPDF";
+            string filePath = Path.Combine(folderPath, uniqueFileName);
+            FileStream fs = new FileStream(filePath, FileMode.Create);
             PdfWriter writer = new PdfWriter(fs, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.SetTagged();

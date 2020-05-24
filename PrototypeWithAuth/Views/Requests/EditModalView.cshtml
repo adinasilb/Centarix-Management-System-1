@@ -487,7 +487,17 @@
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-body text-center pt-5" style="height:150px; width:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/order.png" alt="order" />
+                                                @if (Model.OrderFileStrings != null)
+                                                {
+                                                    foreach(var orderFile in Model.OrderFileStrings)
+                                                    {
+                                                        <button>View File @orderFile.FullName</button>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/images/css/inventory/add-item/other icons/order.png" alt="order" />
+                                                }
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -501,7 +511,17 @@
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-body">
-                                                Insert Image
+                                                @if (Model.InvoiceFileStrings != null)
+                                                {
+                                                    foreach (var invoiceFile in Model.InvoiceFileStrings)
+                                                    {
+                                                        <button>View File @invoiceFile</button>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>Insert Image</span>
+                                                }
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
