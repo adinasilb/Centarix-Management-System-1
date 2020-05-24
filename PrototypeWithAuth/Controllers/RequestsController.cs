@@ -187,10 +187,10 @@ namespace PrototypeWithAuth.Controllers
                 onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                     .ToPagedListAsync(pageNumber, 25);
-                
+
                 onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
 
-               
+
             }
             catch (Exception ex)
             {
@@ -335,7 +335,7 @@ namespace PrototypeWithAuth.Controllers
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
             var requeststatuses = await _context.RequestStatuses.ToListAsync();
-           
+
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
@@ -520,15 +520,9 @@ namespace PrototypeWithAuth.Controllers
             //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
             //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
             //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
-            if (AppUtility.IsAjaxRequest(this.Request))
-            {
-                TempData["IsPartial"] = true;
-                return PartialView(requestItemViewModel);
-            }
-            else
-            {
-                return View(requestItemViewModel);
-            }
+
+            return PartialView(requestItemViewModel);
+
         }
 
         [HttpPost]
@@ -1424,11 +1418,12 @@ namespace PrototypeWithAuth.Controllers
                 TempData["IsBeingApproved"] = false;
             }
 
-            string path = "wwwroot//" + request.RequestID;
-            //if (File.Exists(path))
-            //{
-            //    File.Delete(path);
-            //}
+            string path1 = Path.Combine("wwwroot", "files");
+            string path2 = Path.Combine(request.RequestID.ToString());
+            string path = Path.Combine(path2, "Orders");
+            //string path = "wwwroot//" + request.RequestID + "//Orders";
+            //the following line will only create the directory (the request folder and the orders folder if they don't exist)
+            Directory.CreateDirectory(path);
             FileStream fs = new FileStream(path, FileMode.Create);
             PdfWriter writer = new PdfWriter(fs, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfDocument pdfDocument = new PdfDocument(writer);

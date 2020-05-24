@@ -124,7 +124,15 @@
     });
 
 
-    $.fn.CallPage = function ( $itemurl,) {
+    $(".load-request-details").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
+        $.fn.CallPage($itemurl, "details");
+        return false;
+    });
+
+    $.fn.CallPage = function ( $itemurl, $Type = "") {
         console.log("in function");
         $.ajax({
             async: true,
@@ -144,6 +152,9 @@
                 $(".modal").modal('show');
                 //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
                 $(".modal-backdrop").remove();
+                if ($Type == "details") {
+                    $('.modal-content a:first').tab('show');
+                }
             }
         });
     }
