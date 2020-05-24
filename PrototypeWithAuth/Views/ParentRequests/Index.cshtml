@@ -8,9 +8,11 @@
     double totalToPay = 0;
     double totalPayNow = 0;
 }
+
     <div style="display: flex">
+        @*<<<<< Sidebar >>>>>*@
         <div style="width: 110px; font-size:small;" class="p-2 border-right box-shadow text-center ourNavBar">
-            <ul style="position:fixed; z-index:1;" class="nav flex-column nav-pills nav-stacked mb-lg-3">
+            <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3">
                 <li class="nav-item mt-1 mb-4 acc-sidebar active">
                     <a href="#@Model.TitleList.ElementAt(0).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/to_pay.png" alt="To Pay" /> <br /> @Model.TitleList.ElementAt(0).Key <br />[@Model.TitleList.ElementAt(0).Value] </a>
                 </li>
@@ -32,7 +34,8 @@
 
             </ul>
         </div>
-        <div style="flex-grow: 1" class="col-md-10 ml-3">
+        @*<<<< Content >>>>>*@
+        <div style="flex-grow: 1; position:relative;" class="col-md-10 ml-3">
             @for (int index = 0; index < Model.TitleList.Count; index++)
             {
                 var currentTitle = Model.TitleList.ElementAt(index);
