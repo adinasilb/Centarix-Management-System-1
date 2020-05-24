@@ -101,9 +101,10 @@
         orderedButtonText = "Ordered [" + TempData["AmountOrdered"].ToString() + "]";
         receivedButtonText = "Received [" + TempData["AmountReceived"].ToString() + "]";
 
-        newActiveClass = "btn btn-outline-secondary text-dark new-button";
-        orderedActiveClass = "btn btn-outline-secondary text-dark new-button";
-        receivedActiveClass = "btn btn-outline-secondary text-dark new-button";
+        //newActiveClass = "btn btn-outline-secondary text-dark new-button"; //used to be this...
+        newActiveClass = "new-button";
+        orderedActiveClass = "new-button";
+        receivedActiveClass = "new-button";
 
         //changing the classes for the action links based on the tempdata of request status
         int requestStatusID = 0;
@@ -113,13 +114,14 @@
             case 1:
             case 4:
             case 5:
-                newActiveClass = "btn btn-secondary text-dark new-button";
+                //newActiveClass = "btn btn-secondary text-dark new-button"; //used to be this...
+                newActiveClass = "new-button active";
                 break;
             case 2:
-                orderedActiveClass = "btn btn-secondary text-dark new-button";
+                orderedActiveClass = "new-button active";
                 break;
             case 3:
-                receivedActiveClass = "btn btn-secondary text-dark new-button";
+                receivedActiveClass = "new-button active";
                 break;
         }
     }
@@ -136,24 +138,34 @@
     <div class="row">
         <div class="col-md-12">
             <ul class="list-inline">
-                <li class="list-inline-item nav-fill active">
-                    @Html.ActionLink(newButtonText, "Index", "Requests", new
-                    {
-                        @applicationUserID = applicationUserID,
-                        @vendorID = vendorID,
-                        @subcategoryID = subcategoryID,
-                        @RequestStatusID = 1,
-                        @PageType = AppUtility.RequestPageTypeEnum.Request
-                }, new
-                    {
-                        @class = newActiveClass
-                })
+                <li class="list-inline-item active mx-2">
+
+                    <a class="@newActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="far fa-file-alt"></i> &nbsp;&nbsp;  @newButtonText </a>
+
+                    @*@Html.ActionLink(newButtonText, "Index", "Requests", new //used to be this...
+               {
+                   @applicationUserID = applicationUserID,
+                   @vendorID = vendorID,
+                   @subcategoryID = subcategoryID,
+                   @RequestStatusID = 1,
+                   @PageType = AppUtility.RequestPageTypeEnum.Request
+               },
+                new {
+                    @class = newActiveClass
+                })*@
                 </li>
-                <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })
+                <li class="list-inline-item ">
+
+                    <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="far fa-calendar-check"></i>  &nbsp;&nbsp; @orderedButtonText</a>
+
+                    @*@Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })*@
+
                 </li>
-                <li class="list-inline-item nav-fill">
-                    @Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })
+                <li class="list-inline-item ">
+
+                    <a class="@receivedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="fas fa-check"></i> &nbsp;&nbsp;  @receivedButtonText</a>
+
+                    @*@Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })*@
                 </li>
             </ul>
         </div>
