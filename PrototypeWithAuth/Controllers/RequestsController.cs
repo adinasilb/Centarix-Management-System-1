@@ -598,6 +598,7 @@ namespace PrototypeWithAuth.Controllers
             //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
             if (AppUtility.IsAjaxRequest(this.Request))
             {
+                TempData["IsPartial"] = true;
                 return PartialView(requestItemViewModel);
             }
             else
