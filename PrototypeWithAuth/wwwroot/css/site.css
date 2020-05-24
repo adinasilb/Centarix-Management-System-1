@@ -116,10 +116,6 @@ ul li.acc-sidebar.active {
     filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
 }
 
-.main-btn-img {
-    width: 9em;
-}
-
 a.bold-hover-effects {
     color: black !important;
 }
@@ -131,6 +127,20 @@ ul li button.bold-hover-effects:hover {
     font-weight: bold;
 }
 
+table tr td button.btn-link {
+    color:black;
+}
+
+table tr td button.btn-link:hover {
+    color:black;
+    font-weight:bold;
+}
+
+/*<<<< main menu images css >>>>*/
+.main-btn-img {
+    width: 9em;
+}
+
 .module-button span {
     font-size: 1.25em;
 }
@@ -139,6 +149,7 @@ a.owner-link {
     font-size:large;
 }
 
+/*<<<<< table body css >>>>>*/
 table.table.table-headerspaced tbody:before {
     content: "@";
     display: block;
@@ -167,10 +178,12 @@ table.table td {
     height:120px;
 }
 
-.container ul li a.active {
-    /*color: #30BCC9;*/
+/*modal table color-profile change*/
+a.nav-link { color: inherit }
+.container ul li a.nav-link.active {
+    background-color: transparent;
+    border-width:0;
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
-    
 }
 
 /*<<<< Modal Side Slide >>>>*/
@@ -197,7 +210,7 @@ table.table td {
 
 /*Right*/
 .modal.right.faid .modal-dialog {
-    right: -30px;
+    right: 0;
     -webkit-transition: opacity 0.5s linear, right 0.5s ease-out;
     -moz-transition: opacity 0.5s linear, right 0.5s ease-out;
     -o-transition: opacity 0.5s linear, right 0.5s ease-out;
@@ -205,7 +218,7 @@ table.table td {
 }
 
 .modal.right.faid.in .modal-dialog {
-    right: 0;
+    right:50px;
 }
 
 .modal-content {

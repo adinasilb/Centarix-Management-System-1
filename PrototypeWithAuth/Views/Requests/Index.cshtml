@@ -135,10 +135,10 @@
     </p>*@
 @if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
 {
-    <div class="row">
-        <div class="col-md-12">
+    <div class="row mt-5 ml-5">
+        <div class="">
             <ul class="list-inline">
-                <li class="list-inline-item active mx-2">
+                <li class="list-inline-item active mr-3">
 
                     <a class="@newActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="far fa-file-alt"></i> &nbsp;&nbsp;  @newButtonText </a>
 
@@ -154,7 +154,7 @@
                     @class = newActiveClass
                 })*@
                 </li>
-                <li class="list-inline-item ">
+                <li class="list-inline-item mr-3">
 
                     <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="far fa-calendar-check"></i>  &nbsp;&nbsp; @orderedButtonText</a>
 
@@ -203,8 +203,8 @@
                 <tr class="text-center inv-list-item">
                     <td> <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /> </td>
 
-                    <td> @Html.DisplayFor(modelItem => item.Product.ProductName) </td>
-
+                    <td> <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
+                    
                     <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
 
                     <td>
@@ -269,7 +269,7 @@
                         }
                         else if (item.RequestStatusID == 2)
                         {
-                            <button class="btn btn-link  load-receive-and-location" value="@item.RequestID">Receive</button>
+                            <button class="btn load-receive-and-location" value="@item.RequestID">Receive</button>
                         }
                         else
                         {
