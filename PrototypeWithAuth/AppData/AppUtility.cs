@@ -154,6 +154,28 @@ namespace PrototypeWithAuth.AppData
             return termsSelectList;
         }
 
+        public static string GetLastFourFiles(string longFileName)
+        {
+            bool fourthFound = false;
+            int counter = 0;
+            int place = longFileName.Length - 1;
+            while (!fourthFound)
+            {
+                string ch = longFileName.Substring(place, 1);
+                if (ch == "\\")
+                {
+                    counter++;
+                    if (counter == 4)
+                    {
+                        fourthFound = true;
+                    }
+                }
+                place--;
+            }
+            string newFileName = longFileName.Substring(place + 2, longFileName.Length - place - 2);
+            return newFileName;
+        }
+
     }
 
 }

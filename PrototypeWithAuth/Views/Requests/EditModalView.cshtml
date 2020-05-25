@@ -159,10 +159,10 @@
                                     <div class="col-md-3">
                                         <label class="control-label">End Date</label>
                                         @*@{
-                        //get this just to return the date (not the time)
-                        //adding the amount of months of the warranty to the invoice date
-                        var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                    }*@
+                                                //get this just to return the date (not the time)
+                                                //adding the amount of months of the warranty to the invoice date
+                                                var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                                            }*@
                                         <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                     </div>
                                 </div>
@@ -489,9 +489,9 @@
                                             <div class="card-body text-center pt-5" style="height:150px; width:150px;">
                                                 @if (Model.OrderFileStrings != null)
                                                 {
-                                                    foreach(var orderFile in Model.OrderFileStrings)
+                                                    foreach (var orderFile in Model.OrderFileStrings)
                                                     {
-                                                        <button>View File @orderFile.FullName</button>
+                                                        <button>View File @orderFile</button>
                                                     }
                                                 }
                                                 else
@@ -513,10 +513,31 @@
                                             <div class="card-body">
                                                 @if (Model.InvoiceFileStrings != null)
                                                 {
-                                                    foreach (var invoiceFile in Model.InvoiceFileStrings)
-                                                    {
-                                                        <button>View File @invoiceFile</button>
-                                                    }
+                                                    <div id="carouselSlidesControls" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators">
+                                                            <li data-target="#carouselSlidesControls" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#carouselSlidesControls" data-slide-to="1"></li>
+                                                            <li data-target="#carouselSlidesControls" data-slide-to="2"></li>
+                                                        </ol>
+                                                        <div class="carousel-inner">
+                                                            @{string carouselClasses = "carousel-item active";}
+                                                            @foreach (var invoiceFile in Model.InvoiceFileStrings)
+                                                            {
+                                                                <div class="@carouselClasses">
+                                                                    <a href="@invoiceFile" target="_blank" class="btn btn-link">@invoiceFile</a>
+                                                                </div>
+                                                                carouselClasses = "carousel-item";
+                                                            }
+                                                        </div>
+                                                        <a class="carousel-control-prev" href="#carouselSlidesControls" role="button" data-slide="prev">
+                                                            <span class="carousel-control-prev-icon" aria-hidden="true" style="color:#000000;"></span>
+                                                            <span class="sr-only">Prev</span>
+                                                        </a>
+                                                        <a class="carousel-control-next" href="#carouselSlidesControls" role="button" data-slide="next">
+                                                            <span class="carousel-control-next-icon" aria-hidden="true" style="color:#000000;"></span>
+                                                            <span class="sr-only">Next</span>
+                                                        </a>
+                                                    </div>
                                                 }
                                                 else
                                                 {
@@ -535,7 +556,17 @@
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-body">
-                                                Insert Image
+                                                @if (Model.ShipmentFileStrings != null)
+                                                {
+                                                    foreach (var shipmentFile in Model.ShipmentFileStrings)
+                                                    {
+                                                        <a href="@shipmentFile" target="_blank" class="btn btn-link">Open</a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>Insert Image</span>
+                                                }
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -549,7 +580,17 @@
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-body">
-                                                Insert Image
+                                                @if (Model.QuoteFileStrings != null)
+                                                {
+                                                    foreach (var quoteFile in Model.QuoteFileStrings)
+                                                    {
+                                                        <a href="@quoteFile" target="_blank" class="btn btn-link">Open</a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>Insert Image</span>
+                                                }
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -565,7 +606,17 @@
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-body">
-                                                Insert Image
+                                                @if (Model.InfoFileStrings != null)
+                                                {
+                                                    foreach (var infoFile in Model.InfoFileStrings)
+                                                    {
+                                                        <a href="@infoFile" target="_blank" class="btn btn-link">Open</a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>Insert Image</span>
+                                                }
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -579,7 +630,17 @@
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-body">
-                                                Insert Image
+                                                @if (Model.PictureFileStrings != null)
+                                                {
+                                                    foreach (var pictureFile in Model.PictureFileStrings)
+                                                    {
+                                                        <a href="@pictureFile" target="_blank" class="btn btn-link">Open</a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>Insert Image</span>
+                                                }
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -593,11 +654,21 @@
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-body">
-                                                Insert Image
+                                                @if (Model.ReturnFileStrings != null)
+                                                {
+                                                    foreach (var returnFile in Model.ReturnFileStrings)
+                                                    {
+                                                        <a href="@returnFile" target="_blank" class="btn btn-link">Open</a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>Insert Image</span>
+                                                }
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
-                                                    <input type="file" asp-for="ReturnFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
+                                                    <input type="file" asp-for="ReturnFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
                                                     <label class="custom-file-label">Choose File...</label>
                                                 </div>
                                             </div>
@@ -607,11 +678,21 @@
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-body">
-                                                Insert Image
+                                                @if (Model.CreditFileStrings != null)
+                                                {
+                                                    foreach (var creditFile in Model.CreditFileStrings)
+                                                    {
+                                                        <a href="@creditFile" target="_blank" class="btn btn-link">Open</a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>Insert Image</span>
+                                                }
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
-                                                    <input type="file" asp-for="CreditFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
+                                                    <input type="file" asp-for="CreditFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
                                                     <label class="custom-file-label">Choose File...</label>
                                                 </div>
                                             </div>

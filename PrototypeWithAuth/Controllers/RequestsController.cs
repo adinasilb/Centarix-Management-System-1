@@ -919,28 +919,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 return RedirectToAction("CreateModalView");
             }
-            //else if (NewRequestFromProduct)
-            //{
-            //    ModalViewType = "Create"; //?
-
-            //    requestItemViewModel.Request = new Request();
-            //    requestItemViewModel.Request.ParentRequest = new ParentRequest();
-            //    requestItemViewModel.Request.RequestStatus = new RequestStatus();
-            //    requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
-
-            //    var request = _context.Requests
-            //        .Include(r => r.Product)
-            //        .SingleOrDefault(x => x.RequestID == id);
-            //    requestItemViewModel.Request.ProductID = request.ProductID;
-            //    requestItemViewModel.Request.Product = request.Product;
-
-            //    var paymentsList = _context.Payments
-            //        .Include(p => p.CompanyAccount) //check if it works without this
-            //        .Include(p => p.CompanyAccount.PaymentType)
-            //        .Where(p => p.ParentRequestID == request.ParentRequest.ParentRequestID);
-            //    requestItemViewModel.OldPayments = paymentsList;
-
-            //}
             else
             {
                 ModalViewType = "Edit";
@@ -972,6 +950,12 @@ namespace PrototypeWithAuth.Controllers
                 string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
                 string uploadFolderOrders = Path.Combine(uploadFolder2, "Orders");
                 string uploadFolderInvoices = Path.Combine(uploadFolder2, "Invoices");
+                string uploadFolderShipments = Path.Combine(uploadFolder2, "Shipments");
+                string uploadFolderQuotes = Path.Combine(uploadFolder2, "Quotes");
+                string uploadFolderInfo = Path.Combine(uploadFolder2, "Info");
+                string uploadFolderPictures = Path.Combine(uploadFolder2, "Picture");
+                string uploadFolderReturns = Path.Combine(uploadFolder2, "Returns");
+                string uploadFolderCredits = Path.Combine(uploadFolder2, "Credits");
                 //the partial file name that we will search for (1- because we want the first one)
                 //creating the directory from the path made earlier
 
@@ -1004,7 +988,74 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.InvoiceFileStrings = new List<string>();
                     foreach(var invoicefile in invoicefilesfound)
                     {
-                        requestItemViewModel.InvoiceFileStrings.Add(invoicefile.Name);
+                        string newFileString = AppUtility.GetLastFourFiles(invoicefile.FullName);
+                        requestItemViewModel.InvoiceFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderShipments))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderShipments);
+                    FileInfo[] shipmentfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.ShipmentFileStrings = new List<string>();
+                    foreach(var shipmentfile in shipmentfilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(shipmentfile.FullName);
+                        requestItemViewModel.ShipmentFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderQuotes))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
+                    FileInfo[] quotefilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.QuoteFileStrings = new List<string>();
+                    foreach (var quotefile in quotefilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(quotefile.FullName);
+                        requestItemViewModel.QuoteFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderInfo))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInfo);
+                    FileInfo[] infofilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.InfoFileStrings = new List<string>();
+                    foreach (var infofile in infofilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(infofile.FullName);
+                        requestItemViewModel.InfoFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderPictures))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderPictures);
+                    FileInfo[] picturefilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.PictureFileStrings = new List<string>();
+                    foreach (var picturefile in picturefilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(picturefile.FullName);
+                        requestItemViewModel.PictureFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderReturns))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderReturns);
+                    FileInfo[] returnfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.ReturnFileStrings = new List<string>();
+                    foreach (var returnfile in returnfilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(returnfile.FullName);
+                        requestItemViewModel.ReturnFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderCredits))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderCredits);
+                    FileInfo[] creditfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.CreditFileStrings = new List<string>();
+                    foreach (var creditfile in creditfilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(creditfile.FullName);
+                        requestItemViewModel.CreditFileStrings.Add(newFileString);
                     }
                 }
 
@@ -1128,6 +1179,107 @@ namespace PrototypeWithAuth.Controllers
                             x++;
                         }
                     }
+                    if (requestItemViewModel.InvoiceFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile invoiceFile in requestItemViewModel.InvoiceFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Invoices");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + invoiceFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            invoiceFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.ShipmentFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile shipmentFile in requestItemViewModel.ShipmentFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Shipments");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + shipmentFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            shipmentFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.QuoteFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile quoteFile in requestItemViewModel.QuoteFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Quotes");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + quoteFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            quoteFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.InfoFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Info");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + infoFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            infoFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.PictureFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Pictures");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + pictureFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            pictureFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.ReturnFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile returnFile in requestItemViewModel.ReturnFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Returns");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + returnFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            returnFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+                    if (requestItemViewModel.CreditFiles != null) //test for more than one???
+                    {
+                        var x = 1;
+                        foreach (IFormFile creditFile in requestItemViewModel.CreditFiles)
+                        {
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, "Credits");
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = x + creditFile.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            creditFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                            x++;
+                        }
+                    }
+
+                    //not dealing with RETURNS AND CREDITS here b/c disabled on the frontend
+
                     //test that this works
                     if (WithOrder)
                     {
