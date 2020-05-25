@@ -485,7 +485,7 @@
 
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        <div class="card h-75">
                                             <div class="card-body text-center pt-5" style="height:150px; width:150px;">
                                                 @if (Model.OrderFileStrings != null)
                                                 {
@@ -506,18 +506,18 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Order</label>
+                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Order</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        <div class="card h-75">
                                             <div class="card-body">
-                                                @if (Model.InvoiceFileStrings != null)
+                                                @if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 1)
                                                 {
-                                                    <div id="carouselSlidesControls" class="carousel slide" data-ride="carousel">
-                                                        <ol class="carousel-indicators">
-                                                            <li data-target="#carouselSlidesControls" data-slide-to="0" class="active"></li>
-                                                            <li data-target="#carouselSlidesControls" data-slide-to="1"></li>
-                                                            <li data-target="#carouselSlidesControls" data-slide-to="2"></li>
+                                                    <div id="carousel-slides-invoice" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators" @*style="background-color:#000000"*@>
+                                                            <li data-target="#carousel-slides-invoice" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#carousel-slides-invoice" data-slide-to="1"></li>
+                                                            <li data-target="#carousel-slides-invoice" data-slide-to="2"></li>
                                                         </ol>
                                                         <div class="carousel-inner">
                                                             @{string carouselClasses = "carousel-item active";}
@@ -529,15 +529,23 @@
                                                                 carouselClasses = "carousel-item";
                                                             }
                                                         </div>
-                                                        <a class="carousel-control-prev" href="#carouselSlidesControls" role="button" data-slide="prev">
-                                                            <span class="carousel-control-prev-icon" aria-hidden="true" style="color:#000000;"></span>
-                                                            <span class="sr-only">Prev</span>
-                                                        </a>
-                                                        <a class="carousel-control-next" href="#carouselSlidesControls" role="button" data-slide="next">
-                                                            <span class="carousel-control-next-icon" aria-hidden="true" style="color:#000000;"></span>
-                                                            <span class="sr-only">Next</span>
-                                                        </a>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-prev" href="#carousel-slides-invoice" role="button" data-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Prev</span>
+                                                            </a>
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-next" href="#carousel-slides-invoice" role="button" data-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </div>
                                                     </div>
+                                                }
+                                                else if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count == 1)
+                                                {
+                                                    <a href="@Model.InvoiceFileStrings[0]" target="_blank" class="btn btn-link">@Model.InvoiceFileStrings[0]</a>
                                                 }
                                                 else
                                                 {
@@ -551,17 +559,46 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Invoice</label>
+                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Invoice</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        <div class="card h-75">
                                             <div class="card-body">
-                                                @if (Model.ShipmentFileStrings != null)
+                                                @if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 1)
                                                 {
-                                                    foreach (var shipmentFile in Model.ShipmentFileStrings)
-                                                    {
-                                                        <a href="@shipmentFile" target="_blank" class="btn btn-link">Open</a>
-                                                    }
+                                                    <div id="carousel-slides-shipment" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators">
+                                                            <li data-target="#carousel-slides-shipment" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#carousel-slides-shipment" data-slide-to="1"></li>
+                                                            <li data-target="#carousel-slides-shipment" data-slide-to="2"></li>
+                                                        </ol>
+                                                        <div class="carousel-inner">
+                                                            @{string carouselClasses = "carousel-item active";}
+                                                            @foreach (var shipmentFile in Model.ShipmentFileStrings)
+                                                            {
+                                                                <div class="@carouselClasses">
+                                                                    <a href="@shipmentFile" target="_blank" class="btn btn-link">@shipmentFile</a>
+                                                                </div>
+                                                                carouselClasses = "carousel-item";
+                                                            }
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-prev" href="#carousel-slides-shipment" role="button" data-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Prev</span>
+                                                            </a>
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-next" href="#carousel-slides-shipment" role="button" data-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count == 1)
+                                                {
+                                                    <a href="@Model.ShipmentFileStrings[0]" target="_blank" class="btn btn-link">@Model.ShipmentFileStrings[0]</a>
                                                 }
                                                 else
                                                 {
@@ -575,17 +612,46 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Shipment</label>
+                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Shipment</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        <div class="card h-75">
                                             <div class="card-body">
-                                                @if (Model.QuoteFileStrings != null)
+                                                @if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 1)
                                                 {
-                                                    foreach (var quoteFile in Model.QuoteFileStrings)
-                                                    {
-                                                        <a href="@quoteFile" target="_blank" class="btn btn-link">Open</a>
-                                                    }
+                                                    <div id="carousel-slides-quote" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators">
+                                                            <li data-target="#carousel-slides-quote" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#carousel-slides-quote" data-slide-to="1"></li>
+                                                            <li data-target="#carousel-slides-quote" data-slide-to="2"></li>
+                                                        </ol>
+                                                        <div class="carousel-inner">
+                                                            @{string carouselClasses = "carousel-item active";}
+                                                            @foreach (var quoteFile in Model.QuoteFileStrings)
+                                                            {
+                                                                <div class="@carouselClasses">
+                                                                    <a href="@quoteFile" target="_blank" class="btn btn-link">@quoteFile</a>
+                                                                </div>
+                                                                carouselClasses = "carousel-item";
+                                                            }
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-prev" href="#carousel-slides-quote" role="button" data-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Prev</span>
+                                                            </a>
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-next" href="#carousel-slides-quote" role="button" data-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count == 1)
+                                                {
+                                                    <a href="@Model.QuoteFileStrings[0]" target="_blank" class="btn btn-link">@Model.QuoteFileStrings[0]</a>
                                                 }
                                                 else
                                                 {
@@ -599,19 +665,48 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Quote</label>
+                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Quote</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        <div class="card h-75">
                                             <div class="card-body">
-                                                @if (Model.InfoFileStrings != null)
+                                                @if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 1)
                                                 {
-                                                    foreach (var infoFile in Model.InfoFileStrings)
-                                                    {
-                                                        <a href="@infoFile" target="_blank" class="btn btn-link">Open</a>
-                                                    }
+                                                    <div id="carousel-slides-info" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators">
+                                                            <li data-target="#carousel-slides-info" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#carousel-slides-info" data-slide-to="1"></li>
+                                                            <li data-target="#carousel-slides-info" data-slide-to="2"></li>
+                                                        </ol>
+                                                        <div class="carousel-inner">
+                                                            @{string carouselClasses = "carousel-item active";}
+                                                            @foreach (var infoFile in Model.InfoFileStrings)
+                                                            {
+                                                                <div class="@carouselClasses">
+                                                                    <a href="@infoFile" target="_blank" class="btn btn-link">@infoFile</a>
+                                                                </div>
+                                                                carouselClasses = "carousel-item";
+                                                            }
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-prev" href="#carousel-slides-info" role="button" data-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Prev</span>
+                                                            </a>
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-next" href="#carousel-slides-info" role="button" data-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count == 1)
+                                                {
+                                                    <a href="@Model.InfoFileStrings[0]" target="_blank" class="btn btn-link">@Model.InfoFileStrings[0]</a>
                                                 }
                                                 else
                                                 {
@@ -625,17 +720,46 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Info</label>
+                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Info</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        <div class="card h-75">
                                             <div class="card-body">
-                                                @if (Model.PictureFileStrings != null)
+                                                @if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 1)
                                                 {
-                                                    foreach (var pictureFile in Model.PictureFileStrings)
-                                                    {
-                                                        <a href="@pictureFile" target="_blank" class="btn btn-link">Open</a>
-                                                    }
+                                                    <div id="carousel-slides-picture" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators">
+                                                            <li data-target="#carousel-slides-picture" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#carousel-slides-picture" data-slide-to="1"></li>
+                                                            <li data-target="#carousel-slides-picture" data-slide-to="2"></li>
+                                                        </ol>
+                                                        <div class="carousel-inner">
+                                                            @{string carouselClasses = "carousel-item active";}
+                                                            @foreach (var pictureFile in Model.PictureFileStrings)
+                                                            {
+                                                                <div class="@carouselClasses">
+                                                                    <a href="@pictureFile" target="_blank" class="btn btn-link">@pictureFile</a>
+                                                                </div>
+                                                                carouselClasses = "carousel-item";
+                                                            }
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-prev" href="#carousel-slides-picture" role="button" data-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Prev</span>
+                                                            </a>
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-next" href="#carousel-slides-picture" role="button" data-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count == 1)
+                                                {
+                                                    <a href="@Model.PictureFileStrings[0]" target="_blank" class="btn btn-link">@Model.PictureFileStrings[0]</a>
                                                 }
                                                 else
                                                 {
@@ -649,17 +773,46 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Picture</label>
+                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Picture</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        <div class="card h-75">
                                             <div class="card-body">
-                                                @if (Model.ReturnFileStrings != null)
+                                                @if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 1)
                                                 {
-                                                    foreach (var returnFile in Model.ReturnFileStrings)
-                                                    {
-                                                        <a href="@returnFile" target="_blank" class="btn btn-link">Open</a>
-                                                    }
+                                                    <div id="carousel-slides-return" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators">
+                                                            <li data-target="#carousel-slides-return" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#carousel-slides-return" data-slide-to="1"></li>
+                                                            <li data-target="#carousel-slides-return" data-slide-to="2"></li>
+                                                        </ol>
+                                                        <div class="carousel-inner">
+                                                            @{string carouselClasses = "carousel-item active";}
+                                                            @foreach (var returnFile in Model.ReturnFileStrings)
+                                                            {
+                                                                <div class="@carouselClasses">
+                                                                    <a href="@returnFile" target="_blank" class="btn btn-link">@returnFile</a>
+                                                                </div>
+                                                                carouselClasses = "carousel-item";
+                                                            }
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-prev" href="#carousel-slides-return" role="button" data-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Prev</span>
+                                                            </a>
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-next" href="#carousel-slides-return" role="button" data-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count == 1)
+                                                {
+                                                    <a href="@Model.ReturnFileStrings[0]" target="_blank" class="btn btn-link">@Model.ReturnFileStrings[0]</a>
                                                 }
                                                 else
                                                 {
@@ -673,17 +826,46 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Return</label>
+                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Return</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        <div class="card h-75">
                                             <div class="card-body">
-                                                @if (Model.CreditFileStrings != null)
+                                                @if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 1)
                                                 {
-                                                    foreach (var creditFile in Model.CreditFileStrings)
-                                                    {
-                                                        <a href="@creditFile" target="_blank" class="btn btn-link">Open</a>
-                                                    }
+                                                    <div id="carousel-slides-credit" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators">
+                                                            <li data-target="#carousel-slides-credit" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#carousel-slides-credit" data-slide-to="1"></li>
+                                                            <li data-target="#carousel-slides-credit" data-slide-to="2"></li>
+                                                        </ol>
+                                                        <div class="carousel-inner">
+                                                            @{string carouselClasses = "carousel-item active";}
+                                                            @foreach (var creditFile in Model.CreditFileStrings)
+                                                            {
+                                                                <div class="@carouselClasses">
+                                                                    <a href="@creditFile" target="_blank" class="btn btn-link">@creditFile</a>
+                                                                </div>
+                                                                carouselClasses = "carousel-item";
+                                                            }
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-prev" href="#carousel-slides-credit" role="button" data-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Prev</span>
+                                                            </a>
+                                                        </div>
+                                                        <div style="background-color:#000000">
+                                                            <a class="carousel-control-next" href="#carousel-slides-credit" role="button" data-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:#000000"></span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count == 1)
+                                                {
+                                                    <a href="@Model.CreditFileStrings[0]" target="_blank" class="btn btn-link">@Model.CreditFileStrings[0]</a>
                                                 }
                                                 else
                                                 {
@@ -697,7 +879,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Credit</label>
+                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Credit</label>
                                     </div>
                                 </div>
                                 <hr />

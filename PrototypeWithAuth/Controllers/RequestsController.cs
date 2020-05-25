@@ -490,7 +490,7 @@ namespace PrototypeWithAuth.Controllers
                 //may be able to do this together - combining the path for the orders folders
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                 string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
-                string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
+                string uploadFolder3 = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
                 //the partial file name that we will search for (1- because we want the first one)
                 //creating the directory from the path made earlier
 
@@ -624,7 +624,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Orders");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + orderfile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -638,7 +638,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile invoiceFile in requestItemViewModel.InvoiceFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Invoices");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + invoiceFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -652,7 +652,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile shipmentFile in requestItemViewModel.ShipmentFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Shipments");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + shipmentFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -666,7 +666,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile quoteFile in requestItemViewModel.QuoteFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Quotes");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + quoteFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -680,7 +680,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Info");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Info.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + infoFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -694,7 +694,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Pictures");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + pictureFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -830,7 +830,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Orders");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + orderfile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -948,14 +948,14 @@ namespace PrototypeWithAuth.Controllers
                 //may be able to do this together - combining the path for the orders folders
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                 string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
-                string uploadFolderOrders = Path.Combine(uploadFolder2, "Orders");
-                string uploadFolderInvoices = Path.Combine(uploadFolder2, "Invoices");
-                string uploadFolderShipments = Path.Combine(uploadFolder2, "Shipments");
-                string uploadFolderQuotes = Path.Combine(uploadFolder2, "Quotes");
-                string uploadFolderInfo = Path.Combine(uploadFolder2, "Info");
-                string uploadFolderPictures = Path.Combine(uploadFolder2, "Picture");
-                string uploadFolderReturns = Path.Combine(uploadFolder2, "Returns");
-                string uploadFolderCredits = Path.Combine(uploadFolder2, "Credits");
+                string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+                string uploadFolderInvoices = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                string uploadFolderShipments = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
+                string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                string uploadFolderInfo = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Info.ToString());
+                string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
+                string uploadFolderReturns = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Returns.ToString());
+                string uploadFolderCredits = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Credits.ToString());
                 //the partial file name that we will search for (1- because we want the first one)
                 //creating the directory from the path made earlier
 
@@ -1171,7 +1171,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Orders");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + orderfile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -1185,7 +1185,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile invoiceFile in requestItemViewModel.InvoiceFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Invoices");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + invoiceFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -1199,7 +1199,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile shipmentFile in requestItemViewModel.ShipmentFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Shipments");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + shipmentFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -1213,7 +1213,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile quoteFile in requestItemViewModel.QuoteFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Quotes");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + quoteFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -1227,7 +1227,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Info");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Info.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + infoFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -1241,7 +1241,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Pictures");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + pictureFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -1255,7 +1255,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile returnFile in requestItemViewModel.ReturnFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Returns");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Returns.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + returnFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -1269,7 +1269,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile creditFile in requestItemViewModel.CreditFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Credits");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Credits.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + creditFile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -1394,7 +1394,7 @@ namespace PrototypeWithAuth.Controllers
                 //may be able to do this together - combining the path for the orders folders
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                 string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
-                string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
+                string uploadFolder3 = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
                 //the partial file name that we will search for (1- because we want the first one)
                 //creating the directory from the path made earlier
 
@@ -1527,7 +1527,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
                         {
                             //create file
-                            string folderPath = Path.Combine(requestFolder, "Orders");
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = x + orderfile.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -1589,7 +1589,7 @@ namespace PrototypeWithAuth.Controllers
             string path1 = Path.Combine("wwwroot", "files");
             string path2 = Path.Combine( path1, request.RequestID.ToString());
             //create file
-            string folderPath = Path.Combine(path2, "Orders");
+            string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
             Directory.CreateDirectory(folderPath);
             string uniqueFileName = "OrderPDF";
             string filePath = Path.Combine(folderPath, uniqueFileName);
