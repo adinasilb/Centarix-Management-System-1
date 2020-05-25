@@ -423,7 +423,7 @@
                                                     {
                                                         foreach (Payment payment in Model.Request.ParentRequest.Payments)
                                                         {
-                                                            <tr>
+                                                            <tr class="payment-line">
                                                                 <td>@payment.PaymentDate</td>
                                                                 <td>@payment.CompanyAccount.PaymentType.PaymentTypeDescription</td>
                                                                 <td>@payment.CompanyAccount.CompanyAccountNum</td>

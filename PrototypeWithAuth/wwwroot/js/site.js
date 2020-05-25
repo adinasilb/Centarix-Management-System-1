@@ -31,42 +31,66 @@ $("#parentlist").change(function () {
 $("#Request_ParentRequest_Installments").change(function () {
 	var installments = $(this).val();
 	console.log("installments " + installments);
-	var countPrevInstallments = $(".companyAccountNum").length;
+	var countPrevInstallments = $(".payment-line").length;
 	console.log("countPrevInstallments " + countPrevInstallments);
 	var difference = installments - countPrevInstallments;
 	console.log("difference " + difference);
-	if (difference > 0) { //installments were added
+
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth() + 1; //January is 0!
+
+	var yyyy = today.getFullYear();
+	if (dd < 10) { dd = '0' + dd }
+	if (mm < 10) { mm = '0' + mm }
+	today = yyyy + '-' + mm + '-' + dd;
+
+	if (difference > 0) { //installments were added ---- IMPT can only add one for now
 		console.log("installments increased");
-		var increment = countPrevInstallments; //don't add one because it starts with zero
-		var htmlTR = "";
-		htmlTR += "<tr>";
-		htmlTR += "<td>";
-		htmlTR += '<input class="form-control" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="" />';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
-		htmlTR += '</td>';
-		htmlTR += '<td>';
-		htmlTR += '<select class="form-control paymentType" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
-		htmlTR += '<option value="1">Credit Card</option>';
-		htmlTR += '<option value="2">Bank Account</option>';
-		htmlTR += '</select>';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
-		htmlTR += '</td>';
-		htmlTR += '<td>';
-		htmlTR += '<select class="form-control companyAccountNum" id="NewPayments_' + increment + '__CompanyAccount" name="NewPayments[' + increment + '].CompanyAccount"></select>';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountNum" data-valmsg-replace="true"></span>';
-		htmlTR += '</td>';
-		htmlTR += '<td>';
-		htmlTR += '<input class="form-control" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
-		htmlTR += '</td>';
-		htmlTR += '</tr >';
-		$("body").append(htmlTR);
-		$(".payments-table tr:last").after(htmlTR);
+
+		$.fn.AddNewPaymentLine(countPrevInstallments, today)
+
+		$.fn.AdjustPaymentDates();
 	}
 	else if (difference < 0) { //installments were removed
 		console.log("installments decreased");
 	}
 });
+
+$.fn.AddNewPaymentLine = function (countPrevInstallments, date) {
+	console.log("in function");
+	var increment = countPrevInstallments; //don't add one because it starts with zero
+	console.log("increment: " + increment)
+	var htmlTR = "";
+	htmlTR += "<tr class='payment-line'>";
+	htmlTR += "<td>";
+	htmlTR += '<input class="form-control" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
+	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
+	htmlTR += '</td>';
+	htmlTR += '<td>';
+	htmlTR += '<select class="form-control paymentType" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
+	htmlTR += '<option value="1">Credit Card</option>';
+	htmlTR += '<option value="2">Bank Account</option>';
+	htmlTR += '</select>';
+	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
+	htmlTR += '</td>';
+	htmlTR += '<td>';
+	htmlTR += '<select class="form-control companyAccountNum" id="NewPayments_' + increment + '__CompanyAccount" name="NewPayments[' + increment + '].CompanyAccount"></select>';
+	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountNum" data-valmsg-replace="true"></span>';
+	htmlTR += '</td>';
+	htmlTR += '<td>';
+	htmlTR += '<input class="form-control" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
+	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
+	htmlTR += '</td>';
+	htmlTR += '</tr >';
+	$("body").append(htmlTR);
+	$(".payments-table tr:last").after(htmlTR);
+
+};
+
+$.fn.AdjustPaymentDates = function () {
+
+};
 
 
 ////Location Add View - Change dropdownlist
