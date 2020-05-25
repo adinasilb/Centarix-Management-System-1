@@ -4,9 +4,10 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-<div class="modal modal-view right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view right faid" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog modal-lg " role="document" style="max-height:100%; width: 50%; max-width: 100%">
+    <div class="modal-dialog modal-lg border-left box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%"> 
+    @*style needed here to override bootstraps modal width limitations*@
 
         <div class="modal-content d-inline-block">
 
@@ -26,45 +27,70 @@
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
+
                 <!-- Modal Header -->
-                <div class="not-a-bootstrap-modal-header border-bottom-0" style="padding: 0.5em 6em">
+                <div class="not-a-bootstrap-modal-header border-bottom box-shadow" style="padding: 0.5em 6em">
+                    @*class needed here to override bootstraps modal limitations*@
+
                     @if (TempData["ErrorMessage"] != null)
                     {
                         <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
                     <div>
-                        <button type="button" data-dismiss="modal" style="font-size: 2em; color: #AAA; border-width: 0; background: transparent">&#x2B72;</button>
-                    </div>
+                        <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent"><img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" /></button>
+                    </div><br />
                     <div class="row">
-                        <div class="col-2">Image goes here</div>
-                        <div class="col-10">
+                        <div class="col-2"><img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /></div>
+                        <div class="col-9 ml-3">
                             <!--<h4><label asp-for="Request.Product.ProductName" class="control-label font-weight-bold"></label> </h4>-->
                             <!-- <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>  -->
-                            <h2>@Model.Request.Product.ProductName</h2>
+                            <h3>@Model.Request.Product.ProductName</h3>
                             <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
                         </div>
                     </div>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <div class="container-fluid div-tabs">
-
-                        <div class="container">
-                            <div>
-                                <div class="text-center">
-                                    <ul class="nav nav-tabs" style="display: inline-flex">
-                                        <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
-                                        <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Location" /><br />Location</a></li>
-                                        <li class="nav-item"><a data-toggle="tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
-                                        <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
-                                        <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
-                                        @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li> Commented out below*@
-                                    </ul>
-                                </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="container-fluid div-tabs text-center">
+                                <ul class="nav nav-tabs" style="display: inline-flex">
+                                    <li class="nav-item mr-5"><a data-toggle="tab" href="#item" class="nav-link"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
+                                    <li class="nav-item mx-4"><a data-toggle="tab" href="#location" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Location" /><br />Location</a></li>
+                                    <li class="nav-item mx-4"><a data-toggle="tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
+                                    <li class="nav-item mx-4"><a data-toggle="tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
+                                    <li class="nav-item ml-5"><a data-toggle="tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
+                                    @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li> Commented out below*@
+                                </ul>
                             </div>
                         </div>
+                        
+                    </div>
+                </div>
+
+                <!-- New Modal Body  
+                <div style="background: #F6F7F8; padding: 1em">
+                    <div style="background: #FFF; padding: 1em">
+                        REST OF MODAL GOES IN HERE PLEASE
+                    </div>
+                </div> -->
+
+                <!-- Modal body -->
+                <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
+                    <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 3em 4em; border: 2px solid #EAEAEB;">
+
+                        @*modal tabs, moved to the header*@
+                        <!--<div class="container">
+                            <div class="text-center">
+                                <ul class="nav nav-tabs " style="display: inline-flex">
+                                    <li class="nav-item ml-4 mr-5"><a data-toggle="tab" href="#item" class="nav-link"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
+                                    <li class="nav-item mx-5"><a data-toggle="tab" href="#location" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Location" /><br />Location</a></li>
+                                    <li class="nav-item mx-5"><a data-toggle="tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
+                                    <li class="nav-item mx-5"><a data-toggle="tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
+                                    <li class="nav-item ml-3"><a data-toggle="tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
+                                    @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li> Commented out below*@
+                                </ul>
+                            </div>
+                        </div>-->
                         <br />
                         <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
@@ -672,8 +698,8 @@
                     </div>
 
                     <!-- Modal footer -->
-                    <div class="modal-footer">
-                    </div>
+                    @*<div class="modal-footer">
+                    </div>*@
 
                     @*Begin Hidden Inputs:*@
                     @Html.HiddenFor(vm => vm.Request.ProductID)
@@ -687,11 +713,7 @@
                     @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
                 </div>
 
-                <div style="background: lightcyan; padding: 1em">
-                    <div style="background: #FFF; padding: 1em">
-                        REST OF MODAL GOES IN HERE PLEASE
-                    </div>
-                </div>
+
 
             </form>
 
