@@ -108,6 +108,17 @@ body {
     opacity: 0.54;
 }
 
+.opac87 {
+    color: black;
+    opacity:0.87;
+}
+
+.opac87:hover {
+    color: black;
+    opacity: 1;
+    text-decoration:none;
+}
+
 a.bold-hover-effects {
     color: black !important;
 }
@@ -119,7 +130,7 @@ ul li button.bold-hover-effects:hover {
     font-weight: bold;
 }
 
-.ourNavBar li a { color: #333 }
+.ourNavBar li a { /*color: #333*/ }
 
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     opacity: 1;
@@ -240,11 +251,13 @@ a.nav-link { color: inherit }
     padding: 5px 18px;
     background-color: #fff;
     color: #000;
+    opacity:0.87;
     font-size: 1.2rem;
 }
 
 .new-button:hover {
     /*background-color: #338f84;*/
+    opacity:1;
     color: #30BCC9;
     border: 1px solid #30BCC9;
     border-radius: 3px;
@@ -255,4 +268,4 @@ a.nav-link { color: inherit }
     color: #30BCC9;
     font-weight:500;
     border-bottom: 4px solid #30BCC9;
-}
+} /*going to have to add filter in order to change color on the intended images, unless chaya can come thru converting the pngs to icons!*/
