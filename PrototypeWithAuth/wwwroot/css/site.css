@@ -71,7 +71,7 @@ body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
     font-family: 'Roboto', sans-serif;
-
+    /*color: rgba(0,0,0,.87), !important;*/
 }
 .footer {
   position: absolute;
@@ -83,6 +83,7 @@ body {
 
 /* <<<<<Dani's added CSS below>>>>> */
 
+/*Login page buttons*/
 .login-field {
     border: 1.5px solid black;
     border-radius: 5px;
@@ -101,9 +102,23 @@ body {
     color: white;
 }
 
+/*navbar activeLink color-profile change*/
+a.bold-hover-effects {
+    color: black !important;
+    opacity: 0.54;
+}
+
+a.bold-hover-effects:hover,
+ul li button.bold-hover-effects:hover {
+    color: black !important;
+    text-decoration: none;
+    font-weight: bold;
+}
+
 .ourNavBar li a { color: #333 }
 
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
+    opacity: 1;
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
 }
 
@@ -116,17 +131,7 @@ ul li.acc-sidebar.active {
     filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
 }
 
-a.bold-hover-effects {
-    color: black !important;
-}
-
-a.bold-hover-effects:hover, 
-ul li button.bold-hover-effects:hover {
-    color: black !important;
-    text-decoration: none;
-    font-weight: bold;
-}
-
+/*table CSS*/
 table tr td button.btn-link {
     color:black;
 }
@@ -160,10 +165,12 @@ table.table.table-headerspaced tbody:before {
 
 table.table.table-noheaderlines thead th {
     border-width: 0;
+    font-weight:normal;
 }
 
 table.table tbody tr {
     border: 2px solid lightgrey;
+    
 }
 table.table td {
     vertical-align:middle ;
@@ -180,7 +187,7 @@ table.table td {
 
 /*modal table color-profile change*/
 a.nav-link { color: inherit }
-.container ul li a.nav-link.active {
+.container-fluid ul li a.nav-link.active {
     background-color: transparent;
     border-width:0;
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
@@ -191,7 +198,7 @@ a.nav-link { color: inherit }
 .modal.right .modal-dialog {
     position: fixed;
     margin: auto;
-    width: 1200em;
+    /*width: 1200em;*/
     height: 100%;
     -webkit-transform: translate3d(0%, 0, 0);
     -ms-transform: translate3d(0%, 0, 0);
@@ -222,23 +229,23 @@ a.nav-link { color: inherit }
 }
 
 .modal-content {
-    background-color: #FAFAFA;
+    /*background-color: #FAFAFA;*/
 }
 
 .new-button {
     padding: 5px 18px;
     background-color: #fff;
     color: #000;
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
-    .new-button:hover {
-        /*background-color: #338f84;*/
-        color: #30BCC9;
-        border: 1px solid #30BCC9;
-        border-radius: 3px;
-        text-decoration: none;
-    }
+.new-button:hover {
+    /*background-color: #338f84;*/
+    color: #30BCC9;
+    border: 1px solid #30BCC9;
+    border-radius: 3px;
+    text-decoration: none;
+}
 
 .new-button.active {
     color: #30BCC9;
