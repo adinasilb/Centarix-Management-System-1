@@ -58,7 +58,7 @@
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
@@ -77,7 +77,7 @@
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix Logo only.png" height="20" alt="Logo" /></a>
                 </div>
                 <div class="container-fluid">
-                    <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left font-weight-bold">
+                    <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500">
                         <li class="nav-item ml-5">
                             @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @role = "button", @id = "inventory-link" })
                         </li>
@@ -88,11 +88,11 @@
                             @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
                         </li>
                         <li class="nav-item ml-5">
-                            @Html.ActionLink("Cart", "AddToCart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
+                            @Html.ActionLink("Personal", "AddToCart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
                         </li>
                         <li class="nav-item ml-5">
                             @*Redo the location class in the controller*@
-                            @Html.ActionLink("Manage", "Index", "Locations", new { }, new { @class = locationClass, @role = "button", @id = "request-link" })
+                            @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = locationClass, @role = "button", @id = "request-link" })
                         </li>
                     </ul>
                 </div>
