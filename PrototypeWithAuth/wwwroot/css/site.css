@@ -103,9 +103,13 @@ body {
 }
 
 /*navbar activeLink color-profile change*/
+.opac54 {
+    color:black;
+    opacity: 0.54;
+}
+
 a.bold-hover-effects {
     color: black !important;
-    opacity: 0.54;
 }
 
 a.bold-hover-effects:hover,
