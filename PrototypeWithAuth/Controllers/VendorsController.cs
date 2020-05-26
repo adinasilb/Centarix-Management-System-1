@@ -58,6 +58,7 @@ namespace PrototypeWithAuth.Controllers
 
             var vendor = await _context.Vendors
                 .FirstOrDefaultAsync(m => m.VendorID == id);
+            
             if (vendor == null)
             {
                 return NotFound();
@@ -72,10 +73,19 @@ namespace PrototypeWithAuth.Controllers
             {
                 return NotFound();
             }
+            VendorDetailsViewModel vendorDetailsViewModel = new VendorDetailsViewModel
+            {
+                ParentCategories = _context.ParentCategories.ToList(),
+                Products = _context.Products.Where(p => p.VendorID == id).Include(p =>p.ProductSubcategory).ThenInclude(p => p.ParentCategory),
+                Vendors = _context.Vendors,
+                Vendor = await _context.Vendors.FirstOrDefaultAsync(m => m.VendorID == id),
+            // Requests = _context.Requests.ToList(),
+            //check if we need this here
+        };
+            
 
-            var vendor = await _context.Vendors
-                .FirstOrDefaultAsync(m => m.VendorID == id);
-            if (vendor == null)
+            
+            if (vendorDetailsViewModel.Vendor == null)
             {
                 return NotFound();
             }
@@ -83,7 +93,7 @@ namespace PrototypeWithAuth.Controllers
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
 
-            return View(vendor);
+            return View(vendorDetailsViewModel);
         }
 
      
@@ -96,15 +106,18 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategories = _context.ParentCategories.ToList(),
                 Vendors = _context.Vendors.ToList(),
                 Vendor = new Vendor()
-                // Requests = _context.Requests.ToList(),
-                //check if we need this here
+  
             };
 
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
 
             //return View(vendorSearchViewModel);
-            return PartialView(vendorSearchViewModel);
+            if (AppUtility.IsAjaxRequest(this.Request))
+                return PartialView(vendorSearchViewModel);
+            else
+                return View(vendorSearchViewModel);
+            
         }
         // Post: Vendors/Search
         [HttpPost]

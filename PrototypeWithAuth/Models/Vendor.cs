@@ -83,6 +83,7 @@ namespace PrototypeWithAuth.Models
 
         [Display(Name = "Gold Account")]
         public string VendorGoldAccount { get; set; }
+        public IEnumerable<Product> Products { get; set; }
 
 
     }
