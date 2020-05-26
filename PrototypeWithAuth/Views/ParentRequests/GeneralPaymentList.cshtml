@@ -69,7 +69,7 @@
                         <h6 id=@item.OrderDate.Year>
                             @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.OrderDate.Month) [@total]
                         </h6>
-                        
+
                     }
                     var cult = System.Globalization.CultureInfo.CurrentCulture;
                     <tr>
@@ -94,8 +94,13 @@
                         </td>
 
                         <td>
-                            
-                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost)
+                            @{
+                                decimal cost = (decimal)item.Requests.FirstOrDefault().Cost;
+                                string formattedCost = cost.ToString("C02");
+
+                                //Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
+                            }
+                            @formattedCost
                         </td>
 
                         <td>

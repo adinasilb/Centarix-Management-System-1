@@ -133,6 +133,10 @@
                                 @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
                             </th>
                             <th>
+                                @{ 
+                                    decimal cost = (decimal)item.Requests.FirstOrDefault().Cost;
+                                    string formattedCost = cost.ToString("C02");
+                                }
                                 @if (index == 0) // 0 is the index for the TO Pay list
                                 {
                                     totalToPay += item.Requests.FirstOrDefault().Cost;
@@ -143,8 +147,12 @@
                                 }
                                 @if (onlyOneRequest)
                                 {
-                                    @*@String.Format("{0:C}", item.Requests.FirstOrDefault().Cost)*@
-                                    @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
+
+                                    
+
+
+                                    @formattedCost;
+
                                 }
                                 else
                                 {
