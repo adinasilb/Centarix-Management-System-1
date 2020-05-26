@@ -71,7 +71,7 @@ body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
     font-family: 'Roboto', sans-serif;
-
+    /*color: rgba(0,0,0,.87), !important;*/
 }
 .footer {
   position: absolute;
@@ -83,6 +83,7 @@ body {
 
 /* <<<<<Dani's added CSS below>>>>> */
 
+/*Login page buttons*/
 .login-field {
     border: 1.5px solid black;
     border-radius: 5px;
@@ -101,9 +102,38 @@ body {
     color: white;
 }
 
-.ourNavBar li a { color: #333 }
+/*navbar activeLink color-profile change*/
+.opac54 {
+    color:black;
+    opacity: 0.54;
+}
+
+.opac87 {
+    color: black;
+    opacity:0.87;
+}
+
+.opac87:hover {
+    color: black;
+    opacity: 1;
+    text-decoration:none;
+}
+
+a.bold-hover-effects {
+    color: black !important;
+}
+
+a.bold-hover-effects:hover,
+ul li button.bold-hover-effects:hover {
+    color: black !important;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.ourNavBar li a { /*color: #333*/ }
 
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
+    opacity: 1;
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
 }
 
@@ -116,19 +146,19 @@ ul li.acc-sidebar.active {
     filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
 }
 
+/*table CSS*/
+table tr td button.btn-link {
+    color:black;
+}
+
+table tr td button.btn-link:hover {
+    color:black;
+    font-weight:bold;
+}
+
+/*<<<< main menu images css >>>>*/
 .main-btn-img {
     width: 9em;
-}
-
-a.bold-hover-effects {
-    color: black !important;
-}
-
-a.bold-hover-effects:hover, 
-ul li button.bold-hover-effects:hover {
-    color: black !important;
-    text-decoration: none;
-    font-weight: bold;
 }
 
 .module-button span {
@@ -139,6 +169,7 @@ a.owner-link {
     font-size:large;
 }
 
+/*<<<<< table body css >>>>>*/
 table.table.table-headerspaced tbody:before {
     content: "@";
     display: block;
@@ -149,10 +180,12 @@ table.table.table-headerspaced tbody:before {
 
 table.table.table-noheaderlines thead th {
     border-width: 0;
+    font-weight:normal;
 }
 
 table.table tbody tr {
     border: 2px solid lightgrey;
+    
 }
 table.table td {
     vertical-align:middle ;
@@ -167,10 +200,12 @@ table.table td {
     height:120px;
 }
 
-.container ul li a.active {
-    /*color: #30BCC9;*/
+/*modal table color-profile change*/
+a.nav-link { color: inherit }
+.container-fluid ul li a.nav-link.active {
+    background-color: transparent;
+    border-width:0;
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
-    
 }
 
 /*<<<< Modal Side Slide >>>>*/
@@ -178,7 +213,7 @@ table.table td {
 .modal.right .modal-dialog {
     position: fixed;
     margin: auto;
-    width: 1200em;
+    /*width: 1200em;*/
     height: 100%;
     -webkit-transform: translate3d(0%, 0, 0);
     -ms-transform: translate3d(0%, 0, 0);
@@ -197,7 +232,7 @@ table.table td {
 
 /*Right*/
 .modal.right.faid .modal-dialog {
-    right: -30px;
+    right: 0;
     -webkit-transition: opacity 0.5s linear, right 0.5s ease-out;
     -moz-transition: opacity 0.5s linear, right 0.5s ease-out;
     -o-transition: opacity 0.5s linear, right 0.5s ease-out;
@@ -205,30 +240,32 @@ table.table td {
 }
 
 .modal.right.faid.in .modal-dialog {
-    right: 0;
+    right:50px;
 }
 
 .modal-content {
-    background-color: #FAFAFA;
+    /*background-color: #FAFAFA;*/
 }
 
 .new-button {
     padding: 5px 18px;
     background-color: #fff;
     color: #000;
-    font-size: 1rem;
+    opacity:0.87;
+    font-size: 1.2rem;
 }
 
-    .new-button:hover {
-        /*background-color: #338f84;*/
-        color: #30BCC9;
-        border: 1px solid #30BCC9;
-        border-radius: 3px;
-        text-decoration: none;
-    }
+.new-button:hover {
+    /*background-color: #338f84;*/
+    opacity:1;
+    color: #30BCC9;
+    border: 1px solid #30BCC9;
+    border-radius: 3px;
+    text-decoration: none;
+}
 
 .new-button.active {
     color: #30BCC9;
     font-weight:500;
     border-bottom: 4px solid #30BCC9;
-}
+} /*going to have to add filter in order to change color on the intended images, unless chaya can come thru converting the pngs to icons!*/

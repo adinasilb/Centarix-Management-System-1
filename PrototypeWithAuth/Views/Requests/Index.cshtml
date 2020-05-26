@@ -135,26 +135,27 @@
     </p>*@
 @if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
 {
-    <div class="row">
-        <div class="col-md-12">
+    <div class="row mt-5 ml-5">
+        <div class="">
             <ul class="list-inline">
-                <li class="list-inline-item active mx-2">
+                <li class="list-inline-item active mr-3">
 
                     <a class="@newActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="far fa-file-alt"></i> &nbsp;&nbsp;  @newButtonText </a>
+                    @*<img src="~/images/css/inventory/icons/new_tab.png" alt="New" />*@
 
                     @*@Html.ActionLink(newButtonText, "Index", "Requests", new //used to be this...
-               {
-                   @applicationUserID = applicationUserID,
-                   @vendorID = vendorID,
-                   @subcategoryID = subcategoryID,
-                   @RequestStatusID = 1,
-                   @PageType = AppUtility.RequestPageTypeEnum.Request
-               },
-                new {
-                    @class = newActiveClass
-                })*@
+                        {
+                            @applicationUserID = applicationUserID,
+                            @vendorID = vendorID,
+                            @subcategoryID = subcategoryID,
+                            @RequestStatusID = 1,
+                            @PageType = AppUtility.RequestPageTypeEnum.Request
+                        },
+                         new {
+                             @class = newActiveClass
+                         })*@
                 </li>
-                <li class="list-inline-item ">
+                <li class="list-inline-item mr-3">
 
                     <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="far fa-calendar-check"></i>  &nbsp;&nbsp; @orderedButtonText</a>
 
@@ -172,7 +173,7 @@
     </div>
 }
 <div class="mx-5">
-    <table class="table table-headerspaced table-noheaderlines">
+    <table class="table table-headerspaced table-noheaderlines table-hover">
         <thead>
             <tr class="text-center">
                 @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>*@
@@ -203,7 +204,7 @@
                 <tr class="text-center inv-list-item">
                     <td> <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /> </td>
 
-                    <td> @Html.DisplayFor(modelItem => item.Product.ProductName) </td>
+                    <td> <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
 
                     <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
 
@@ -235,7 +236,7 @@
 
                             <li>
                                 @*@Html.DisplayFor(modelItem => item.Cost)*@
-                                @{ 
+                                @{
                                     decimal cost = (decimal)item.Cost;
                                     string formattedCost = cost.ToString("C02");
                                 }
@@ -269,7 +270,7 @@
                         }
                         else if (item.RequestStatusID == 2)
                         {
-                            <button class="btn btn-link  load-receive-and-location" value="@item.RequestID">Receive</button>
+                            <button class="btn load-receive-and-location" value="@item.RequestID">Receive</button>
                         }
                         else
                         {
@@ -278,9 +279,10 @@
                         }
                     </td>
                     <td>
-                        <!-- Button to Open the Modal -->
-                        <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item"> <img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /> </button>
-                        <button class="btn btn-link load-product-edit" value="@item.RequestID" data-target="item" href="item"> <img width="25px" src="~/images/css/inventory/icons/comments_selected.png" alt="Edit" /> </button>
+                        <!-- Button to Open the Modals -->
+                        @*<button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item"> <img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /> </button>*@
+                        @*no need now that the item name link to the details modal*@
+                        <button class="btn btn-link load-product-edit" value="@item.RequestID" data-target="item" href="item"> <img width="25" src="~/images/css/inventory/icons/comments_selected.png" alt="Edit" /> </button>
                     </td>
                 </tr>
             }
@@ -288,6 +290,7 @@
     </table>
 </div>
 
-<!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
+<!-- output a paging control that lets the user navigation to the previous page, next page, etc
 page @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
-
+    commented out for now, until can be CSSed back into place how shimon wants it
+-->
