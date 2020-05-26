@@ -326,82 +326,6 @@ namespace PrototypeWithAuth.Controllers
             return View(request);
         }
 
-        //POST: Requests/Edit/5
-        //This is not being used right now --> delete 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(RequestItemViewModel addNewItemViewModel)
-        //{
-        //    //same logic as create controller
-        //    addNewItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
-        //    addNewItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
-        //    addNewItemViewModel.Vendors = await _context.Vendors.ToListAsync();
-        //    addNewItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
-
-        //    addNewItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == addNewItemViewModel.Request.Product.VendorID);
-        //    addNewItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == addNewItemViewModel.Request.Product.ProductSubcategoryID);
-        //    addNewItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
-
-        //    var context = new ValidationContext(addNewItemViewModel.Request, null, null);
-        //    var results = new List<ValidationResult>();
-        //    if (Validator.TryValidateObject(addNewItemViewModel.Request, context, results, true))
-        //    {
-        //        try
-        //        {
-        //            _context.Update(addNewItemViewModel.Request.Product);
-        //            _context.Update(addNewItemViewModel.Request);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return await ModalView(addNewItemViewModel.Request.RequestID);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return await ModalView(addNewItemViewModel.Request.RequestID);
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-
-        // GET: Requests/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var request = await _context.Requests
-        //        .Include(r => r.ParentRequest.ApplicationUser)
-        //        .Include(r => r.Product)
-        //        .Include(r => r.RequestStatus)
-        //        .FirstOrDefaultAsync(m => m.RequestID == id);
-        //    if (request == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(request);
-        //}
-
-        //// POST: Requests/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var request = await _context.Requests.FindAsync(id);
-        //    _context.Requests.Remove(request);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //private bool RequestExists(int id)
-        //{
-        //    return _context.Requests.Any(e => e.RequestID == id);
-        //}
-
         /*
          * START MODAL VIEW COPY
          */
@@ -598,6 +522,7 @@ namespace PrototypeWithAuth.Controllers
             //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
             if (AppUtility.IsAjaxRequest(this.Request))
             {
+                TempData["IsPartial"] = true;
                 return PartialView(requestItemViewModel);
             }
             else
@@ -1499,7 +1424,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["IsBeingApproved"] = false;
             }
 
-            string path = "wwwroot//OrderPDFs//" + request.RequestID + ".pdf";
+            string path = "wwwroot//" + request.RequestID;
             //if (File.Exists(path))
             //{
             //    File.Delete(path);
