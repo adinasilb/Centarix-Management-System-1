@@ -8,7 +8,12 @@
 @if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
 {
     <div class="row">
-        <button class="btn btn-block text-dark load-add-location" data-target="item" data-backdrop="static" data-keyboard="false" href="item">Add Location</button>
+        <div class="col-2 offset-1">
+            <button class="inv-button load-add-location"  data-target="item" data-backdrop="static" data-keyboard="false" href="item">
+                Add Location
+            </button>
+        </div>
+        
     </div>
 }
 <br />

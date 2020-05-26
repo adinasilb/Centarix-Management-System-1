@@ -74,11 +74,11 @@ body {
     /*color: rgba(0,0,0,.87), !important;*/
 }
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
 }
 
 /* <<<<<Dani's added CSS below>>>>> */
@@ -100,6 +100,38 @@ body {
     font-weight:600;
     background-color: #db2127;
     color: white;
+}
+
+/*general buttons*/
+.cancel-button {
+    background-color: transparent;
+    border: 1px solid rgba(0,0,0,0.32);
+    border-radius: 3rem;
+    color: #30BCC9; /*inventory*/
+    font-weight: 500;
+    padding: 0.56rem 1rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+}
+
+.cancel-button:hover {
+    
+}
+
+.inv-button {
+
+    background-color: #30BCC9;
+    border: 1px solid #30BCC9;
+    border-radius:3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.7rem 1.5rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+}
+
+.inv-button:hover {
+    opacity: 0.87;
 }
 
 /*navbar activeLink color-profile change*/

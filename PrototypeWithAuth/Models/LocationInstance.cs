@@ -17,6 +17,7 @@ namespace PrototypeWithAuth.Models
         public LocationInstance LocationInstanceParent { get; set; }
         public int Height { get; set; }
         public int Width { get; set; }
+        [Display(Name = "Name")]
         public string LocationInstanceName { get; set; }
         public string Place { get; set; }
         public bool IsFull { get; set; }
