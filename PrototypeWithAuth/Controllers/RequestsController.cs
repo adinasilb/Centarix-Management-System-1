@@ -1591,7 +1591,7 @@ namespace PrototypeWithAuth.Controllers
             //create file
             string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
             Directory.CreateDirectory(folderPath);
-            string uniqueFileName = "OrderPDF";
+            string uniqueFileName = "OrderPDF.pdf";
             string filePath = Path.Combine(folderPath, uniqueFileName);
             FileStream fs = new FileStream(filePath, FileMode.Create);
             PdfWriter writer = new PdfWriter(fs, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
@@ -1609,11 +1609,11 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmEmailModal(Request requestThatIsApproved)
         {
-
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder1 = Path.Combine("~", "files");
+            string uploadFolder = Path.Combine("wwwroot", "files");
             string uploadFolder2 = Path.Combine(uploadFolder, requestThatIsApproved.RequestID.ToString());
-            string uploadFolder3 = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-            string uploadFile = Path.Combine(uploadFolder, "OrderPDF.pdf");
+            string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
+            string uploadFile = Path.Combine(uploadFolder3, "OrderPDF.pdf");
 
             if (System.IO.File.Exists(uploadFile))
             {

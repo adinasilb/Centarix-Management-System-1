@@ -64,6 +64,14 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\files\" />
+    <Folder Include="wwwroot\files\62\Orders\" />
+    <Folder Include="wwwroot\files\63\Orders\" />
+    <Folder Include="wwwroot\files\64\Orders\" />
+    <Folder Include="wwwroot\files\65\Orders\" />
+    <Folder Include="wwwroot\files\66\Orders\" />
+    <Folder Include="wwwroot\files\68\Orders\" />
+    <Folder Include="wwwroot\files\71\Orders\" />
+    <Folder Include="wwwroot\files\72\Orders\" />
   </ItemGroup>
 
 </Project>
