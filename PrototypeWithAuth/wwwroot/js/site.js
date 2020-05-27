@@ -678,7 +678,10 @@ $(".load-sublocation-view").click(function () {
 
 
 $("#documents-tab").click(function () {
-	console.log("hiding views");
+	$.fn.HideAllDocs();
+});
+
+$.fn.HideAllDocs = function () {
 	$(".orders-view").hide();
 	$(".invoices-view").hide();
 	$(".shipments-view").hide();
@@ -687,8 +690,40 @@ $("#documents-tab").click(function () {
 	$(".pictures-view").hide();
 	$(".returns-view").hide();
 	$(".credits-view").hide();
-});
+};
 
+$(".show-orders-view").click(function () {
+	$.fn.HideAllDocs();
+	$(".orders-view").show();
+});
+$(".show-invoices-view").click(function () {
+	$.fn.HideAllDocs();
+	$(".invoices-view").show();
+});
+$(".show-shipments-view").click(function () {
+	$.fn.HideAllDocs();
+	$(".shipments-view").show();
+});
+$(".show-quotes-view").click(function () {
+	$.fn.HideAllDocs();
+	$(".quotes-view").show();
+});
+$(".show-info-view").click(function () {
+	$.fn.HideAllDocs();
+	$(".info-view").show();
+});
+$(".show-pictures-view").click(function () {
+	$.fn.HideAllDocs();
+	$(".pictures-view").show();
+});
+$(".show-returns-view").click(function () {
+	$.fn.HideAllDocs();
+	$(".returns-view").show();
+});
+$(".show-credits-view").click(function () {
+	$.fn.HideAllDocs();
+	$(".credits-view").show();
+});
 
 
 
