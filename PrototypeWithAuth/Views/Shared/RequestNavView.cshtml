@@ -81,7 +81,7 @@
 <div style="display: flex">
     <div style="width: 100px; min-height:970px; padding: 10px; font-size:0.9rem;" class="navbar d-md-block box-shadow navbar-light bg-white border-right text-center border-right ourNavBar ">
         @*<nav class="navbar flex-grow-1">*@
-        <ul class="nav flex-column nav-pills nav-stacked" >
+        <ul class="nav flex-column nav-pills nav-stacked">
 
             @if (Requests || Inventory)
             {
@@ -97,7 +97,7 @@
                 <li class="nav-item bold-hover-effects mt-3 mb-3 @type">
                     <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })" class="bold-hover-effects opac54"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
                 </li>
-                
+
             }
             @if (Requests || Inventory)
             {
@@ -144,7 +144,7 @@
 <!-- The Modal -->
 @*(first modal div) ADDED: .right .faid, tabindex="-1" --> all modal divs now located in CreateModalView*@
 @*<div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request">
-</div>*@
+    </div>*@
 
 
 <!-- Confirm Email Modal -->
@@ -198,7 +198,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
-        $.fn.CallPage($itemurl);
+        $.fn.CallPage($itemurl, "details");
         return false;
     });
 
@@ -208,7 +208,7 @@
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
         console.log("itemurl: " + $itemurl);
-        $.fn.CallPage($itemurl);
+        $.fn.CallPage($itemurl, "edit");
         return false;
     });
 
@@ -218,7 +218,7 @@
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/CreateModalView";
         //var $itemurl = "Requests/DetailsModalView/?id=62";
-        $.fn.CallPage($itemurl);
+        $.fn.CallPage($itemurl, "create");
         return false;
     });
 
@@ -228,7 +228,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
-        $.fn.CallPage($itemurl);
+        $.fn.CallPage($itemurl, "reorder");
         return false;
     });
 
@@ -237,7 +237,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/ReceivedModal?RequestID=" + $(this).val();
-        $.fn.CallPage($itemurl);
+        $.fn.CallPage($itemurl, "received");
         return false;
     });
 
@@ -246,11 +246,11 @@
         e.preventDefault();
         e.stopPropagation();
         var $itemurl = "Requests/ConfirmEmailModal";
-        $.fn.CallPage($itemurl);
+        $.fn.CallPage($itemurl, "confirmemail");
         return false;
     });
 
-    $.fn.CallPage = function ($itemurl, isEmail = false) {
+    $.fn.CallPage = function ($itemurl, $type) {
         console.log("in call page function");
         //delete existing modals
         $('.modal').replaceWith('');
@@ -279,57 +279,19 @@
                 //$(".modal-backdrop").remove();
                 //$('.modal').find('input').first().focus();
                 //$(".modal").popover('hide')
-                if (!isEmail) { //SET BOOLEAN TO MODAL VIEW NOT ISEMAIL
-                    //document.ready for modal is done here --> setting up product subcategories
-                    $('.modal-content a:first').tab('show');
-                    var parentCategoryId = $("#parentlist").val();
-                    var subcategoryId1 = $("#sublist").val();
-                    var url = "/Requests/GetSubCategoryList";
-
-                    $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-                        var item = "";
-                        $.each(data, function (i, subCategory) {
-                            item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-                        });
-                        $("#sublist").html(item);
-                        $("#sublist").val(subcategoryId1).change();
-                    });
-
-                    //For the order files
-
-                    //goes into this function
-                    $(".custom-file-input").on("change", function () {
-                        var fileLabel = $(this).next(".custom-file-label");
-                        var files = $(this)[0].files;
-                        if (files.length > 1) {
-                            fileLabel.html(files.length + ' files selected');
-                        }
-                        else {
-                            fileLabel.html(files[0].name);
-                        }
-                    });
-
-                    //get the current vendor id (if loading an already existing product)
-                    var vendorid = $("#vendorList").val();
-                    //call a function to lad the vendor business id from the vendor id
-                    $.fn.ChangeVendorBusinessId(vendorid);
-
-                    //console.log("about to get set the hidden fors in the modal view to remember where the user was");
-
-                    $("#Page").val(parseInt(@TempData["TempPage"]));
-                    $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
-                    $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
-                    $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
-                    $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
-                    //console.log("PageType:" + @TempData["TempPageType"]);
-                    $("#PageType").val(@TempData["TempPageType"]);
-
-                    //IN THE FUTURE: USE DATEPICKER (CODE BELOW- PARTIAL)
-
-                    //set the auto date for order date and invoice date to the current date
-                    //console.log("About to enter the datepicker")
-                    //$('.datepicker').datepicker();
-
+                switch ($type) {
+                    case "details":
+                        $.fn.OnOpenModalView();
+                        break;
+                    case "edit":
+                        $.fn.OnOpenModalView();
+                        break;
+                    case "reorder":
+                        $.fn.OnOpenModalView();
+                        break;
+                    case "create":
+                        $.fn.OnOpenModalView();
+                        break;
                 }
 
             }
@@ -338,6 +300,53 @@
             //}
         });
     }
+
+    $.fn.OnOpenModalView = function () {
+        $('.modal-content a:first').tab('show');
+        var parentCategoryId = $("#parentlist").val();
+        var subcategoryId1 = $("#sublist").val();
+        var url = "/Requests/GetSubCategoryList";
+
+        $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+            var item = "";
+            $.each(data, function (i, subCategory) {
+                item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+            });
+            $("#sublist").html(item);
+            $("#sublist").val(subcategoryId1).change();
+        });
+
+        //For the order files
+
+        //goes into this function
+        $(".custom-file-input").on("change", function () {
+            var fileLabel = $(this).next(".custom-file-label");
+            var files = $(this)[0].files;
+            if (files.length > 1) {
+                fileLabel.html(files.length + ' files selected');
+            }
+            else {
+                fileLabel.html(files[0].name);
+            }
+        });
+
+        //get the current vendor id (if loading an already existing product)
+        var vendorid = $("#vendorList").val();
+        //call a function to lad the vendor business id from the vendor id
+        $.fn.ChangeVendorBusinessId(vendorid);
+
+        //console.log("about to get set the hidden fors in the modal view to remember where the user was");
+
+        $("#Page").val(parseInt(@TempData["TempPage"]));
+        $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
+        $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
+        $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
+        $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
+        //console.log("PageType:" + @TempData["TempPageType"]);
+        $("#PageType").val(@TempData["TempPageType"]);
+    }
+
+
 
     //$(".modal-view").on('show.bs.show.bs.modal', function (evt) {
     //    var button = $(evt.relatedTarget);

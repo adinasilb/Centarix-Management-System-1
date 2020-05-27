@@ -677,6 +677,17 @@ $(".load-sublocation-view").click(function () {
 
 
 
+$("#documents-tab").click(function () {
+	console.log("hiding views");
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
+});
 
 
 

@@ -261,7 +261,7 @@ namespace PrototypeWithAuth.Controllers
             //(already imported it)
             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
             requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
-          
+
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 return PartialView(requestItemViewModel);
@@ -864,7 +864,7 @@ namespace PrototypeWithAuth.Controllers
                     //searching for the partial file name in the directory
                     FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
                     requestItemViewModel.OrderFileStrings = new List<String>();
-                    foreach(var orderfile in orderfilesfound)
+                    foreach (var orderfile in orderfilesfound)
                     {
                         requestItemViewModel.OrderFileStrings.Add(orderfile.Name);
                     }
@@ -885,7 +885,7 @@ namespace PrototypeWithAuth.Controllers
                     DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInvoices);
                     FileInfo[] invoicefilesfound = DirectoryToSearch.GetFiles("*.*");
                     requestItemViewModel.InvoiceFileStrings = new List<string>();
-                    foreach(var invoicefile in invoicefilesfound)
+                    foreach (var invoicefile in invoicefilesfound)
                     {
                         string newFileString = AppUtility.GetLastFourFiles(invoicefile.FullName);
                         requestItemViewModel.InvoiceFileStrings.Add(newFileString);
@@ -896,7 +896,7 @@ namespace PrototypeWithAuth.Controllers
                     DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderShipments);
                     FileInfo[] shipmentfilesfound = DirectoryToSearch.GetFiles("*.*");
                     requestItemViewModel.ShipmentFileStrings = new List<string>();
-                    foreach(var shipmentfile in shipmentfilesfound)
+                    foreach (var shipmentfile in shipmentfilesfound)
                     {
                         string newFileString = AppUtility.GetLastFourFiles(shipmentfile.FullName);
                         requestItemViewModel.ShipmentFileStrings.Add(newFileString);
@@ -1486,7 +1486,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             string path1 = Path.Combine("wwwroot", "files");
-            string path2 = Path.Combine( path1, request.RequestID.ToString());
+            string path2 = Path.Combine(path1, request.RequestID.ToString());
             //create file
             string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
             Directory.CreateDirectory(folderPath);
@@ -1836,6 +1836,12 @@ namespace PrototypeWithAuth.Controllers
          * END RECEIVED MODAL
          */
 
+
+        [HttpGet]
+        public ActionResult DocumentView(List<String> FileNames)
+        {
+            return View();
+        }
 
         /*
          * JSONS
