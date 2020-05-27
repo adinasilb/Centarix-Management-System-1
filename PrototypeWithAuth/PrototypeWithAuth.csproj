@@ -74,4 +74,9 @@
     <Folder Include="wwwroot\files\72\Orders\" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Include="wwwroot\favicon_io\site.webmanifest" />
+  </ItemGroup>
+
 </Project>

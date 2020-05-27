@@ -2,12 +2,13 @@
 @*PrototypeWithAuth.Data.ApplicationUser*@
 
 @{
-    ViewData["Title"] = "RegisterUser";
+    ViewData["Title"] = "CMS Register User";
     Layout = "~/Views/Shared/_GeneralView.cshtml";
 }
 
 <h1>
-    @ViewData["Title"]
+    Register a new User
+    @*@ViewData["Title"]*@
 </h1>
 
 <div class="row">
@@ -18,13 +19,13 @@
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="FirstName"></label>
+                <label asp-for="FirstName">First Name</label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="LastName"></label>
+                <label asp-for="LastName">Last Name</label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
@@ -40,7 +41,7 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ConfirmPassword"></label>
+                <label asp-for="ConfirmPassword">Confirm Password</label>
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
