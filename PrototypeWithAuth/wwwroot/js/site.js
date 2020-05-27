@@ -694,35 +694,35 @@ $.fn.HideAllDocs = function () {
 
 $(".show-orders-view").click(function () {
 	$.fn.HideAllDocs();
-	$(".orders-view").show();
+	$(".orders-view").toggle();
 });
 $(".show-invoices-view").click(function () {
 	$.fn.HideAllDocs();
-	$(".invoices-view").show();
+	$(".invoices-view").toggle();
 });
 $(".show-shipments-view").click(function () {
 	$.fn.HideAllDocs();
-	$(".shipments-view").show();
+	$(".shipments-view").toggle();
 });
 $(".show-quotes-view").click(function () {
 	$.fn.HideAllDocs();
-	$(".quotes-view").show();
+	$(".quotes-view").toggle();
 });
 $(".show-info-view").click(function () {
 	$.fn.HideAllDocs();
-	$(".info-view").show();
+	$(".info-view").toggle();
 });
 $(".show-pictures-view").click(function () {
 	$.fn.HideAllDocs();
-	$(".pictures-view").show();
+	$(".pictures-view").toggle();
 });
 $(".show-returns-view").click(function () {
 	$.fn.HideAllDocs();
-	$(".returns-view").show();
+	$(".returns-view").toggle();
 });
 $(".show-credits-view").click(function () {
 	$.fn.HideAllDocs();
-	$(".credits-view").show();
+	$(".credits-view").toggle();
 });
 
 
