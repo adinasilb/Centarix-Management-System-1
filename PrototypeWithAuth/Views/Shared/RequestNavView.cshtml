@@ -267,7 +267,7 @@
                 //$(".modal-view").html(data);
                 //turn off data dismiss by clicking out of the box and by pressing esc
                 $(".modal-view").modal({
-                    backdrop: false,
+                    backdrop: true,
                     keyboard: false,
                 });
                 //shows the modal
@@ -321,7 +321,7 @@
                     $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
                     $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
                     $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
-                    console.log("PageType:" + @TempData["TempPageType"]);
+                    //console.log("PageType:" + @TempData["TempPageType"]);
                     $("#PageType").val(@TempData["TempPageType"]);
 
                     //IN THE FUTURE: USE DATEPICKER (CODE BELOW- PARTIAL)

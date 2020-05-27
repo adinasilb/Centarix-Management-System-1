@@ -1610,8 +1610,10 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmEmailModal(Request requestThatIsApproved)
         {
 
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "OrderPDFs");
-            string uploadFile = Path.Combine(uploadFolder, requestThatIsApproved.RequestID.ToString() + ".pdf");
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder2 = Path.Combine(uploadFolder, requestThatIsApproved.RequestID.ToString());
+            string uploadFolder3 = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+            string uploadFile = Path.Combine(uploadFolder, "OrderPDF.pdf");
 
             if (System.IO.File.Exists(uploadFile))
             {

@@ -416,9 +416,7 @@
                                                     <th>Reference</th>
                                                 </tr>
                                             </thead>
-                                            @{
-                                                if (true) //originally was is (edit) but the edit variable was taken out
-                                                {
+                                            @*@{
                                                     if (Model.Request.ParentRequest.Payments != null)
                                                     {
                                                         foreach (Payment payment in Model.Request.ParentRequest.Payments)
@@ -431,42 +429,7 @@
                                                             </tr>
                                                         }
                                                     }
-                                                    <span>IS EDIT</span>
-                                                }
-                                                if (true) // else if (create)
-                                                {
-                                                    for (int x = 0; x < Model.Request.ParentRequest.Installments; x++)
-                                                    {
-                                                        <tr>
-                                                            <td>
-                                                                <input asp-for="NewPayments[x].PaymentDate" class="form-control-plaintext border-bottom" />
-                                                                <span asp-validation-for="NewPayments[x].PaymentDate" class="text-danger"></span>
-                                                            </td>
-                                                            <td>
-                                                                @Html.DropDownListFor(
-                                                                    model => model.NewPayments[x].CompanyAccount.PaymentType,
-                                                                    new SelectList(
-                                                                    Model.PaymentTypes,
-            dataValueField: "PaymentTypeID",
-            dataTextField: "PaymentTypeDescription"),
-            optionLabel: "Select A Payment Type ",
-            htmlAttributes: new { @class = "form-control-plaintext border-bottom paymentType" }
-                                                                )
-                                                                <span asp-validation-for="NewPayments[x].CompanyAccount.PaymentType" class="text-danger"></span>
-                                                            </td>
-                                                            <td>
-                                                                <select asp-for="NewPayments[x].CompanyAccount" class="form-control-plaintext border-bottom companyAccountNum"></select>
-                                                                <span asp-validation-for="NewPayments[x].CompanyAccount.CompanyAccountNum" class="text-danger"></span>
-                                                            </td>
-                                                            <td>
-                                                                <input asp-for="NewPayments[x].PaymentID" class="form-control-plaintext border-bottom" />
-                                                                <span asp-validation-for="NewPayments[x].PaymentID" class="text-danger"></span>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                    <span>IS CREATE</span>
-                                                }
-                                            }
+                                            }*@
                                         </table>
                                     </div>
                                     <div class="col-md-2">
@@ -502,7 +465,7 @@
                                             <div class="card-footer">
                                                 <div class="custom-file">
                                                     <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                    <label class="custom-file-label">+</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -555,7 +518,7 @@
                                             <div class="card-footer">
                                                 <div class="custom-file">
                                                     <input type="file" asp-for="InvoiceFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                    <label class="custom-file-label">+</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -961,7 +924,6 @@
                 @*Begin Hidden Inputs:*@
                 @Html.HiddenFor(vm => vm.Request.ProductID)
                 @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
-                @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
                 @Html.HiddenFor(vm => vm.Request.RequestStatusID)
                 @Html.HiddenFor(vm => vm.Request.ParentRequestID)
                 @*End Hidden Inputs*@

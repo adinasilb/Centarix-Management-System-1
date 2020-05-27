@@ -27,6 +27,16 @@ $("#parentlist").change(function () {
 	});
 });
 
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1; //January is 0!
+var yyyy = today.getFullYear();
+console.log("43 yyyy: " + yyyy);
+console.log("44 mm: " + mm);
+console.log("45 dd: " + dd);
+
+var prevmm = mm;
+var prevyyyy = yyyy;
 //insert the payment lines
 $("#Request_ParentRequest_Installments").change(function () {
 	var installments = $(this).val();
@@ -36,31 +46,48 @@ $("#Request_ParentRequest_Installments").change(function () {
 	var difference = installments - countPrevInstallments;
 	console.log("difference " + difference);
 
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth() + 1; //January is 0!
 
-	var yyyy = today.getFullYear();
 	if (dd < 10) { dd = '0' + dd }
-	if (mm < 10) { mm = '0' + mm }
-	today = yyyy + '-' + mm + '-' + dd;
 
-	if (difference > 0) { //installments were added ---- IMPT can only add one for now
+
+	if (difference > 0) { 
 		console.log("installments increased");
+		var newIncrementNumber = countPrevInstallments;
+		for (x = difference; x > 0; x--) {
 
-		$.fn.AddNewPaymentLine(countPrevInstallments, today)
+			var newmm = 0;
+			var newyyyy = 0;
+			if (prevmm < 12) {
+				newmm = parseInt(prevmm);
+				newmm = newmm + 1;
+				newyyyy = prevyyyy;
+			}
+			else {
+				newyyyy = parseInt(prevyyyy) + 1;
+				newmm = 1;
+			}
+
+			if (newmm < 10) { newmm = '0' + newmm }
+
+			var paymentDate = newyyyy + '-' + newmm + '-' + dd;
+
+			prevyyyy = newyyyy;
+			prevmm = newmm;
+			$.fn.AddNewPaymentLine(newIncrementNumber, paymentDate);
+			newIncrementNumber++;
+		};
 
 		$.fn.AdjustPaymentDates();
 	}
 	else if (difference < 0) { //installments were removed
 		console.log("installments decreased");
+		for (x = difference; x < 0; x++) {
+			$(".payments-table tr:last").remove();
+		}
 	}
 });
 
-$.fn.AddNewPaymentLine = function (countPrevInstallments, date) {
-	console.log("in function");
-	var increment = countPrevInstallments; //don't add one because it starts with zero
-	console.log("increment: " + increment)
+$.fn.AddNewPaymentLine = function (increment, date) {
 	var htmlTR = "";
 	htmlTR += "<tr class='payment-line'>";
 	htmlTR += "<td>";
@@ -75,7 +102,9 @@ $.fn.AddNewPaymentLine = function (countPrevInstallments, date) {
 	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '<td>';
-	htmlTR += '<select class="form-control companyAccountNum" id="NewPayments_' + increment + '__CompanyAccount" name="NewPayments[' + increment + '].CompanyAccount"></select>';
+	var newPaymentsId = "NewPayments_" + increment + "__CompanyAccount";
+	var newPaymentsName = "NewPayments[" + increment + "].CompanyAccount";
+	htmlTR += '<select class="form-control companyAccountNum" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
 	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountNum" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '<td>';
@@ -83,9 +112,17 @@ $.fn.AddNewPaymentLine = function (countPrevInstallments, date) {
 	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '</tr >';
-	$("body").append(htmlTR);
+	//$("body").append(htmlTR);
 	$(".payments-table tr:last").after(htmlTR);
 
+	$.fn.AddAccountSelectList(newPaymentsName);
+
+};
+
+$.fn.AddAccountSelectList = function (newPaymentsName) {
+	//console.log("in add account select list with the name of : " + newPaymentsName);
+	var inputBox = $("input[name='" + newPaymentsName + "']");
+	inputBox.val("correct box");
 };
 
 $.fn.AdjustPaymentDates = function () {
@@ -404,7 +441,7 @@ $.fn.AddSublocation = function () {
 	console.log("newSublocationClass: " + newSublocationClass);
 	var sublocationHtml = '<div class="col-md-4">';
 	sublocationHtml += '<label class="control-label">Sublocation ' + $sublocationCounter + ':</label>';
-	sublocationHtml += '<input type="number" min="1" class="form-control" id="' + newSublocationID + '" name="locationRowColumn" class="' + newSublocationClass + '" />';
+	sublocationHtml += '<input type="text" class="form-control" id="' + newSublocationID + '" name="' + newSublocationName + '" class="' + newSublocationClass + '" />';
 	//sublocationHtml += '<input type="text" class="form-control" ' + newSublocationClass + '  />';
 	var spanClass = 'spanSublocation' + $sublocationCounter;
 	sublocationHtml += '<span class="text-danger ' + spanClass + '></span>"';
