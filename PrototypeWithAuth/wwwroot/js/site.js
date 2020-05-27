@@ -404,7 +404,7 @@ $.fn.AddSublocation = function () {
 	console.log("newSublocationClass: " + newSublocationClass);
 	var sublocationHtml = '<div class="col-md-4">';
 	sublocationHtml += '<label class="control-label">Sublocation ' + $sublocationCounter + ':</label>';
-	sublocationHtml += '<input type="number" min="1" class="form-control" id="' + newSublocationID + '" name="locationRowColumn" class="' + newSublocationClass + '" />';
+	sublocationHtml += '<input type="text" class="form-control" id="' + newSublocationID + '" name="' + newSublocationName +'" class="' + newSublocationClass + '" />';
 	//sublocationHtml += '<input type="text" class="form-control" ' + newSublocationClass + '  />';
 	var spanClass = 'spanSublocation' + $sublocationCounter;
 	sublocationHtml += '<span class="text-danger ' + spanClass + '></span>"';

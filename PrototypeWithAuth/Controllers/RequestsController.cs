@@ -222,109 +222,6 @@ namespace PrototypeWithAuth.Controllers
             return View(request);
         }
 
-        // GET: Requests/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
-        //    ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName");
-        //    ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID");
-        //    return View();
-        //}
-
-        // GET: Requests/Create
-        public async Task<IActionResult> CreateAsync() //need to correct to be for request
-        {
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName");
-            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID");
-            var parentCategories = _context.ParentCategories.ToList();
-            var productSubcategories = _context.ProductSubcategories.ToList();
-            var vendors = _context.Vendors.ToList();
-            var requeststatuses = _context.RequestStatuses.ToList();
-
-            RequestItemViewModel viewModel = new RequestItemViewModel
-            {
-                //pass the lists into the viewmodel to use on the front end
-                ParentCategories = parentCategories,
-                ProductSubcategories = productSubcategories,
-                Vendors = vendors,
-                RequestStatuses = requeststatuses,
-                //instantiate a new request
-                Request = new Request()
-            };
-
-            viewModel.Request.Product = new Product(); // have to instantaiate the product from the requests, because the viewModel relies on request.product to create the new product
-            viewModel.Request.ParentRequest = new ParentRequest();
-
-            //gets the user
-            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
-            //passes the user into the view model in the correct place
-            viewModel.Request.ParentRequest.ApplicationUserID = user.Id;
-
-            //adding a tempdata so the testing in the requestnavview layout page will work (better to create a base controller for temp data and store it there)
-            //https://stackoverflow.com/questions/37267586/how-to-check-condition-if-temp-data-has-value-in-every-controller
-            //if putting it here should get from somewhere and not just make it up...
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
-            return View(viewModel);
-        }
-
-        // POST: Requests/Create/ 
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        // Adina's code for creating and binding product model with request model in a single view, check that all errors are handled for.
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-
-        /*
-         * ParentRequest looks like it's working
-         * Create the cart and then check
-         */
-
-        public async Task<IActionResult> Create(RequestItemViewModel requestItemViewModel)
-        {
-            // view data is placed in the beginning in order to redirect when errors are caught, so need to have the info saved before handling the error
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", requestItemViewModel.Request.ParentRequest.ApplicationUserID);
-            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", requestItemViewModel.Request.ProductID);
-            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", requestItemViewModel.Request.RequestStatusID);
-
-            //inserting the vendor from the vendor id, the subcategory from the subcategory id and the application user from the application user id to test for the viewmodel validation
-            requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
-            requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
-            requestItemViewModel.Request.ParentRequest.ApplicationUser = _context.Users.FirstOrDefault(u => u.Id == requestItemViewModel.Request.ParentRequest.ApplicationUserID);
-
-            //using the dataannotations validator to test the updated object because modelstate.isvalid only looks at the stack trace that was passed in 
-            var context = new ValidationContext(requestItemViewModel.Request, null, null);
-            var results = new List<ValidationResult>();
-            if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
-            {
-                _context.Add(requestItemViewModel.Request.ParentRequest);
-                _context.Add(requestItemViewModel.Request);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(requestItemViewModel);
-        }
-
-
-        // GET: Requests/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var request = await _context.Requests.FindAsync(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", request.ParentRequest.ApplicationUserID);
-            ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", request.ProductID);
-            ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", request.RequestStatusID);
-            return View(request);
-        }
 
         /*
          * START MODAL VIEW COPY
@@ -356,13 +253,15 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequest = new ParentRequest();
             //DO WE NEED THIS LINE OR IS IT GIVING AN ERROR SOMETIMES
             requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
+            int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+            requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
 
             //if you are creating a new one set the dates to today to prevent problems in the front end
             //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
             //(already imported it)
             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
             requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
-
+          
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 return PartialView(requestItemViewModel);
@@ -1610,8 +1509,11 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmEmailModal(Request requestThatIsApproved)
         {
 
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "OrderPDFs");
-            string uploadFile = Path.Combine(uploadFolder, requestThatIsApproved.RequestID.ToString() + ".pdf");
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder2 = Path.Combine(uploadFolder, requestThatIsApproved.RequestID.ToString());
+            string uploadFolder3 = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+            string uploadFile = Path.Combine(uploadFolder3, "*.*");
+           // string uploadFile = Path.Combine(uploadFolder, requestThatIsApproved.RequestID.ToString() + ".pdf");
 
             if (System.IO.File.Exists(uploadFile))
             {
@@ -1627,7 +1529,7 @@ namespace PrototypeWithAuth.Controllers
                 string ownerEmail = request.ParentRequest.ApplicationUser.Email;
                 string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
                 string ownerPassword = request.ParentRequest.ApplicationUser.PasswordHash;
-                string vendorEmail = request.Product.Vendor.OrderEmail;
+                string vendorEmail = "shimon@centarix.com";//request.Product.Vendor.OrderEmail;
                 string vendorName = request.Product.Vendor.VendorEnName;
 
                 //add a "From" Email
@@ -1651,7 +1553,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, "FakeUser@123"); // set up two step authentication and get app password
+                    client.Authenticate(ownerEmail, "rxoz zvdz whao xowm");//"FakeUser@123"); // set up two step authentication and get app password
                     try
                     {
                         client.Send(message);

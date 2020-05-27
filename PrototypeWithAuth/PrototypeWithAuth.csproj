@@ -66,4 +66,9 @@
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Include="wwwroot\favicon_io\site.webmanifest" />
+  </ItemGroup>
+
 </Project>
