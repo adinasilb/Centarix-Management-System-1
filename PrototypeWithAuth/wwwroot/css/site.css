@@ -103,30 +103,30 @@ body {
 }
 
 /*general buttons*/
+
 .cancel-button {
     background-color: transparent;
     border: 1px solid rgba(0,0,0,0.32);
     border-radius: 3rem;
     color: #30BCC9; /*inventory*/
     font-weight: 500;
-    padding: 0.56rem 1rem;
+    padding: 0.56rem 1.5rem;
     font-size: 1.125rem;
     line-height: 1.5;
 }
 
 .cancel-button:hover {
-    
+    background-color: rgba(48,188,201,0.2);
 }
 
 .inv-button {
-
     background-color: #30BCC9;
     border: 1px solid #30BCC9;
-    border-radius:3rem;
+    border-radius: 3rem;
     color: white;
     font-weight: 500;
-    padding: 0.7rem 1.5rem;
-    font-size: 1.25rem;
+    padding: 0.56rem 1.5rem;
+    font-size: 1.125rem;
     line-height: 1.5;
 }
 
