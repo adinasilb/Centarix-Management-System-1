@@ -1,18 +1,24 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddLocationViewModel
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-<div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; overflow-y:auto;">
-    <div class="modal-content d-inline-block">
-        <form id="AddLocationForm" action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+<div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; overflow-y:auto; max-width: 30rem;">
+
+    <div class="modal-content d-inline-block" style="width:30rem;"> <!--HERE!-->
+
+        <form id="AddLocationForm" action="" method="post" enctype="multipart/form-data" style="        height: 100%;
+        overflow: auto;">
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="modal-header">
-                <h4>ADD LOCATION MODAL</h4>
+
+            <div class="no-modal-header">
+                @*<h4>ADD LOCATION MODAL</h4>*@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
             <div class="modal-body">
+
                 <div class="form-group">
-                    <label asp-for="LocationInstance.LocationInstanceName" class="control-label"> </label>
+                    <label asp-for="LocationInstance.LocationInstanceName" class="control-label"> </label> @*"Name"*@
                     <input asp-for="LocationInstance.LocationInstanceName" type="text" class="form-control" />
 
                 </div>
@@ -29,15 +35,16 @@
 
             </div>
 
-            <div class="modal-footer text-center">
+            <div class="modal-footer-no">
 
-                <input type="submit" value="Save" asp-action="AddLocation" class="inv-button float-left" />
-                <input type="button" value="Cancel" data-dismiss="modal" class="cancel-button" />
-                <hr />
-                @if (@User.IsInRole("Admin")||@User.IsInRole("Manager"))
+                <input type="submit" value="SAVE" asp-action="AddLocation" class="inv-button mx-3" />@*style="margin-right:11rem;"*@
+                @if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
                 {
-                <button class="btn btn-link load-add-location-type" style="color:#30BCC9;">Add Location Type</button>
+                    <button class="btn btn-link load-add-location-type float-none" style="color:#30BCC9;">[Add Location Type]</button>
                 }
+                <input type="button" value="CANCEL" data-dismiss="modal" class="cancel-button float-right mr-3 mb-3" />
+                <br />
+
             </div>
         </form>
     </div>
