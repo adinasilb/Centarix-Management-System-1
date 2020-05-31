@@ -1,8 +1,8 @@
-﻿@model PrototypeWithAuth.Models.Request
+﻿@model PrototypeWithAuth.ViewModels.ConfirmEmailViewModel
 @{
     var SubjectName = "Order";
     @*New line not working*@
-    var OrderText = "Hi, \n We would like to place an order for " + Model.Product.ProductName + "Forward this to: " + Model.Product.Vendor.OrderEmail;
+    var OrderText = "Hi, \n We would like to place an order for " + Model.Request.Product.ProductName + "Forward this to: " + Model.Request.Product.Vendor.OrderEmail;
     var IsBeingApproved = TempData["IsBeingApproved"].ToString(); //have to use string and not bool b/c it's tempdata
     var blocked = false;
     if (!User.IsInRole("Admin") && IsBeingApproved == "True")//added the isinrole for added security
@@ -27,21 +27,32 @@
         else
         {
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-                @Html.HiddenFor(m => m.RequestID)
+                @Html.HiddenFor(m => m.Request.RequestID)
+
+                @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
+                @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
+                @Html.HiddenFor(model => model.Page)
+                @Html.HiddenFor(model => model.RequestStatusID)
+                @Html.HiddenFor(model => model.SubCategoryID)
+                @Html.HiddenFor(model => model.VendorID)
+                @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
+                @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
+
+
                 @*</form>
                     <form action="" method="post" enctype="multipart/form-data">*@
                 <div class="modal-body">
                     @if (IsBeingApproved == "True")
                     {
-                        <h4>Would you like to approve this Request for @Model.Product.ProductName ?</h4>
+                        <h4>Would you like to approve this Request for @Model.Request.Product.ProductName ?</h4>
                     }
                     @OrderText
                 </div>
 
-                <span> mailto: @Model.ParentRequest.ApplicationUser.Email ?Subject= @SubjectName&body=@OrderText</span>
+                <span> mailto: @Model.Request.ParentRequest.ApplicationUser.Email ?Subject= @SubjectName&body=@OrderText</span>
 
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-success" asp-action="ConfirmEmailModal" value="Confirm & Send Email" href="mailto:@Model.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText" />
+                    <input type="submit" class="btn btn-success" asp-action="ConfirmEmailModal" value="Confirm & Send Email" href="mailto:@Model.Request.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText" />
                     <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
                 </div>
             </form>

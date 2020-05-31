@@ -7,24 +7,31 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <div class="modal modal-view right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%;">
-
         <div class="modal-content d-inline-block">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+
+                @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
+                @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
+                @Html.HiddenFor(model => model.Page)
+                @Html.HiddenFor(model => model.RequestStatusID)
+                @Html.HiddenFor(model => model.SubCategoryID)
+                @Html.HiddenFor(model => model.VendorID)
+                @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
+                @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
 
 
-        <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="@Model.Request.RequestID" />
-            <!-- Modal Header -->
-            <div class="modal-header border-bottom-0 mb-3">
-                @if (TempData["ErrorMessage"] != null)
-                {
-                    <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
-                    <br />
-                }
-                <div class="form-group">
-                    <h4><label asp-for="Request.Product.ProductName" class="control-label">New Request: </label> </h4>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="@Model.Request.RequestID" />
+                <!-- Modal Header -->
+                <div class="modal-header border-bottom-0 mb-3">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                        <br />
+                    }
+                    <div class="form-group">
+                        <h4><label asp-for="Request.Product.ProductName" class="control-label">New Request: </label> </h4>
 
                         <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" placeholder="(item name)" /></h4>
                         <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
@@ -75,7 +82,7 @@
                         <div class="tab-content border-dark">
                             <div id="item" class="tab-pane fade in active">
                                 <strong style="font-size: 1.7em;">Item</strong>
-                                <br /><hr /><br /> 
+                                <br /><hr /><br />
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -136,7 +143,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.OrderNumber" class="control-label font-weight-bold"></label>
-                                       <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom"  readonly />
+                                        <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" readonly />
                                         <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-6">
@@ -478,7 +485,7 @@
                             <div id="documents" class="tab-pane fade">
                                 <strong style="font-size: 1.7em;">Documents</strong>
                                 <br /><hr /><br />
-                                
+
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="card">
@@ -502,11 +509,11 @@
                                             <div class="card-footer">
                                                 <div class="custom-file">
                                                     @*<input type="file" id="exampleInputFile">
-                                                    <label for="exampleInputFile" data-browse="+"></label>*@
+                                                        <label for="exampleInputFile" data-browse="+"></label>*@
                                                     <label for="InvoiceFiles" class="btn btn-primary btn-block btn-outlined">+</label>
                                                     <input type="file" asp-for="InvoiceFiles" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
                                                     @*<input type="file" asp-for="InvoiceFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-        <label class="custom-file-label">Choose File...</label>*@
+                                                        <label class="custom-file-label">Choose File...</label>*@
                                                 </div>
                                             </div>
                                         </div>
@@ -617,7 +624,7 @@
                             <div id="comments" class="tab-pane fade">
                                 <strong style="font-size: 1.7em;">Comments</strong>
                                 <br /><hr /><br />
-                                      
+
                                 @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
                                 <div class="card rounded">
                                     <div class="card-body">
@@ -633,7 +640,7 @@
                             <div id="order" class="tab-pane fade">
                                 <strong style="font-size: 1.7em;">Order</strong>
                                 <br /><hr /><br />
-                                
+
                                 <div class="form-group">
                                     @*you can only add to cart if you are creating a new one*@
                                     <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="btn btn-outline-primary" />
@@ -644,15 +651,15 @@
                                     <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
-                        <div id="archive" class="tab-pane fade">
-                            <strong style="font-size:1.7em;">Archive</strong>
-                            <br /><hr /><br /> 
-                            <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
-                        </div>
-                        <div id="history" class="tab-pane fade">
-                            <strong style="font-size:1.7em;">History</strong>
-                            <br /><hr /><br />
-                            <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
+                            <div id="archive" class="tab-pane fade">
+                                <strong style="font-size:1.7em;">Archive</strong>
+                                <br /><hr /><br />
+                                <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
+                            </div>
+                            <div id="history" class="tab-pane fade">
+                                <strong style="font-size:1.7em;">History</strong>
+                                <br /><hr /><br />
+                                <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
 
                             </div>
                         </div>

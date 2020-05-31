@@ -641,16 +641,16 @@ namespace PrototypeWithAuth.Controllers
             }
 
             //insert code here
-            return RedirectToAction("Index");
-            //return RedirectToAction("Index", new
-            //{
-            //    page = requestItemViewModel.Page,
-            //    requestStatusID = requestItemViewModel.RequestStatusID,
-            //    subcategoryID = requestItemViewModel.SubCategoryID,
-            //    vendorID = requestItemViewModel.VendorID,
-            //    applicationUserID = requestItemViewModel.ApplicationUserID,
-            //    PageType = requestItemViewModel.PageType
-            //});
+            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+            return RedirectToAction("Index", new
+            {
+                page = requestItemViewModel.Page,
+                requestStatusID = requestItemViewModel.RequestStatusID,
+                subcategoryID = requestItemViewModel.SubCategoryID,
+                vendorID = requestItemViewModel.VendorID,
+                applicationUserID = requestItemViewModel.ApplicationUserID,
+                PageType = requestPageTypeEnum
+            });
         }
 
         [HttpPost]
@@ -1491,7 +1491,9 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
         {
-            Request request = await _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).FirstOrDefaultAsync();
+            Request request1 = await _context.Requests.Where(r => r.RequestID == id)
+                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).FirstOrDefaultAsync();
+
             if (IsBeingApproved)
             {
                 TempData["IsBeingApproved"] = true;
@@ -1502,7 +1504,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             string path1 = Path.Combine("wwwroot", "files");
-            string path2 = Path.Combine(path1, request.RequestID.ToString());
+            string path2 = Path.Combine(path1, request1.RequestID.ToString());
             //create file
             string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
             Directory.CreateDirectory(folderPath);
@@ -1525,44 +1527,48 @@ namespace PrototypeWithAuth.Controllers
             
             document.Add(subheader);
             // Add image
-            Image img = new Image(ImageDataFactory
-               .Create(@"C:/Users/faigi/Downloads/logo.png"))
-               .SetTextAlignment(TextAlignment.LEFT);
-            document.Add(img);
+            //Image img = new Image(ImageDataFactory
+            //   .Create(@"C:/Users/faigi/Downloads/logo.png"))
+            //   .SetTextAlignment(TextAlignment.LEFT);
+            //document.Add(img);
             // Line separator
             LineSeparator ls = new LineSeparator(new SolidLine());
             document.Add(ls);
             Paragraph p = new Paragraph();
-            p.Add(new Text("Purchase Order: " + request.ParentRequest.OrderNumber.ToString()))
+            p.Add(new Text("Purchase Order: " + request1.ParentRequest.OrderNumber.ToString()))
                 .SetTextAlignment(TextAlignment.LEFT)
                 .SetFontSize(20)
                 .SetBold();
-            p.Add(new Text(request.ParentRequest.OrderDate.ToString()))
+            p.Add(new Text(request1.ParentRequest.OrderDate.ToString()))
                 .SetTextAlignment(TextAlignment.RIGHT)
                 .SetFontSize(12)
                 .SetBold();
             document.Add(p);
             document.Add(ls);
             // Image logojpg = Image.GetInstance("C:/Users/faigi/Downloads/logo.png");
-            document.Add(new Paragraph(request.Product.Vendor.VendorEnName))
+            document.Add(new Paragraph(request1.Product.Vendor.VendorEnName))
                 .SetTextAlignment(TextAlignment.LEFT)
                 .SetFontSize(16)
                 .SetBold();
-            document.Add(new Paragraph("ID: "+ request.Product.Vendor.VendorBuisnessID +"\n"+request.Product.Vendor.VendorCity + "\n Tel: " + request.Product.Vendor.VendorContactPhone1))
+            document.Add(new Paragraph("ID: "+ request1.Product.Vendor.VendorBuisnessID +"\n"+request1.Product.Vendor.VendorCity + "\n Tel: " + request1.Product.Vendor.VendorContactPhone1))
                 .SetTextAlignment(TextAlignment.LEFT)
                 .SetFontSize(12);
             document.Close();
 
+            ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
+            {
+                Request = request1
+            };
 
-            return View(request);
+            return View(confirm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmEmailModal(Request requestThatIsApproved)
+        public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)
         {
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
-            string uploadFolder2 = Path.Combine(uploadFolder, requestThatIsApproved.RequestID.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder, confirmEmail.Request.RequestID.ToString());
             string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
             string uploadFile = Path.Combine(uploadFolder3, "OrderPDF.pdf");
 
@@ -1576,7 +1582,7 @@ namespace PrototypeWithAuth.Controllers
 
 
 
-                var request = _context.Requests.Where(r => r.RequestID == requestThatIsApproved.RequestID).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).FirstOrDefault();
+                var request = _context.Requests.Where(r => r.RequestID == confirmEmail.Request.RequestID).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).FirstOrDefault();
                 string ownerEmail = "shimon@centarix.com";// request.ParentRequest.ApplicationUser.Email;
                 string ownerUsername = "Shimon Meshi Zahav";//request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
                 string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
@@ -1624,7 +1630,17 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                 }
-                return RedirectToAction("Index");
+
+                AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)confirmEmail.PageType;
+                return RedirectToAction("Index", new
+                {
+                    page = confirmEmail.Page,
+                    requestStatusID = confirmEmail.RequestStatusID,
+                    subcategoryID = confirmEmail.SubCategoryID,
+                    vendorID = confirmEmail.VendorID,
+                    applicationUserID = confirmEmail.ApplicationUserID,
+                    PageType = requestPageTypeEnum
+                });
             }
 
             else
@@ -1882,7 +1898,17 @@ namespace PrototypeWithAuth.Controllers
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("Index");
+
+            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)receivedLocationViewModel.PageType;
+            return RedirectToAction("Index", new
+            {
+                page = receivedLocationViewModel.Page,
+                requestStatusID = receivedLocationViewModel.RequestStatusID,
+                subcategoryID = receivedLocationViewModel.SubCategoryID,
+                vendorID = receivedLocationViewModel.VendorID,
+                applicationUserID = receivedLocationViewModel.ApplicationUserID,
+                PageType = requestPageTypeEnum
+            });
         }
 
 
