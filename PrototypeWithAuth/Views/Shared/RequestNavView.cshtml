@@ -255,6 +255,14 @@
         e.preventDefault();
         e.stopPropagation();
         var $itemurl = "Requests/ConfirmEmailModal";
+        $.fn.CallPage($itemurl, "email");
+        return false;
+    });
+
+    $(".load-confirm-email").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
         $.fn.CallPage($itemurl, "confirmemail");
         return false;
     });
@@ -290,25 +298,31 @@
                 //$(".modal").popover('hide')
                 switch ($type) {
                     case "details":
+                        console.log('case "details":');
                         $.fn.OnOpenModalView();
                         $.fn.AddTempDataMemory();
                         break;
                     case "edit":
+                        console.log('case "edit":');
                         $.fn.OnOpenModalView();
                         $.fn.AddTempDataMemory();
                         break;
                     case "reorder":
+                        console.log('case "reorder":');
                         $.fn.OnOpenModalView();
                         $.fn.AddTempDataMemory();
                         break;
                     case "create":
+                        console.log('case "create":');
                         $.fn.OnOpenModalView();
                         $.fn.AddTempDataMemory();
                         break;
                     case "received":
+                        console.log('case "received":');
                         $.fn.AddTempDataMemory();
                         break;
                     case "confirmemail":
+                        console.log('case "confirmemail":');
                         $.fn.AddTempDataMemory();
                         break;
                 }
@@ -357,7 +371,7 @@
     }
 
     $.fn.AddTempDataMemory = function () {
-        //console.log("about to get set the hidden fors in the modal view to remember where the user was");
+        console.log("about to get set the hidden fors in the modal view to remember where the user was");
 
         $("#Page").val(parseInt(@TempData["TempPage"]));
         $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));

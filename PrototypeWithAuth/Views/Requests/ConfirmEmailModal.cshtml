@@ -11,52 +11,54 @@
     }
 }
 
-<div class="modal-dialog  modal-dialog-scrollable modal-lg">
-    <div class="modal-content d-inline-block">
+<div class="modal modal-view right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg">
+        <div class="modal-content d-inline-block">
 
-        <div class="modal-header border-bottom-0">
-            Confirm Email Modal!
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <div class="modal-header border-bottom-0">
+                Confirm Email Modal!
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            @if (blocked)
+            {
+                <span>Only admins have access to this page</span>
+                @Html.ActionLink("Continue", "Index", "Requests");
+            }
+            else
+            {
+                <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+                    @Html.HiddenFor(m => m.Request.RequestID)
+
+                    @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
+                    @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
+                    @Html.HiddenFor(model => model.Page)
+                    @Html.HiddenFor(model => model.RequestStatusID)
+                    @Html.HiddenFor(model => model.SubCategoryID)
+                    @Html.HiddenFor(model => model.VendorID)
+                    @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
+                    @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
+
+
+                    @*</form>
+                        <form action="" method="post" enctype="multipart/form-data">*@
+                    <div class="modal-body">
+                        @if (IsBeingApproved == "True")
+                        {
+                            <h4>Would you like to approve this Request for @Model.Request.Product.ProductName ?</h4>
+                        }
+                        @OrderText
+                    </div>
+
+                    <span> mailto: @Model.Request.ParentRequest.ApplicationUser.Email ?Subject= @SubjectName&body=@OrderText</span>
+
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-success" asp-action="ConfirmEmailModal" value="Confirm & Send Email" href="mailto:@Model.Request.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText" />
+                        <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
+                    </div>
+                </form>
+            }
+
         </div>
-
-        @if (blocked)
-        {
-            <span>Only admins have access to this page</span>
-            @Html.ActionLink("Continue", "Index", "Requests");
-        }
-        else
-        {
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-                @Html.HiddenFor(m => m.Request.RequestID)
-
-                @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
-                @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
-                @Html.HiddenFor(model => model.Page)
-                @Html.HiddenFor(model => model.RequestStatusID)
-                @Html.HiddenFor(model => model.SubCategoryID)
-                @Html.HiddenFor(model => model.VendorID)
-                @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
-                @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
-
-
-                @*</form>
-                    <form action="" method="post" enctype="multipart/form-data">*@
-                <div class="modal-body">
-                    @if (IsBeingApproved == "True")
-                    {
-                        <h4>Would you like to approve this Request for @Model.Request.Product.ProductName ?</h4>
-                    }
-                    @OrderText
-                </div>
-
-                <span> mailto: @Model.Request.ParentRequest.ApplicationUser.Email ?Subject= @SubjectName&body=@OrderText</span>
-
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-success" asp-action="ConfirmEmailModal" value="Confirm & Send Email" href="mailto:@Model.Request.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText" />
-                    <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
-                </div>
-            </form>
-        }
-
     </div>
 </div>
