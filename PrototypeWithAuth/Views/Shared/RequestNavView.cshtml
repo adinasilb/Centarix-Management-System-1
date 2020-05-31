@@ -267,6 +267,20 @@
         return false;
     });
 
+
+    $.fn.AddTempDataMemory = function () {
+        console.log("about to get set the hidden fors in the modal view to remember where the user was");
+
+        $("#Page").val(parseInt(@TempData["TempPage"]));
+        $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
+        $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
+        $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
+        $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
+        //console.log("PageType:" + @TempData["TempPageType"]);
+        $("#PageType").val(@TempData["TempPageType"]);
+    };
+
+
     $.fn.CallPage = function ($itemurl, $type) {
         console.log("in call page function");
         //delete existing modals
@@ -325,6 +339,10 @@
                         console.log('case "confirmemail":');
                         $.fn.AddTempDataMemory();
                         break;
+                    case "delete":
+                        console.log('case "delete":');
+                        $.fn.AddTempDataMemory();
+                        break;
                 }
 
             }
@@ -369,18 +387,6 @@
         $.fn.ChangeVendorBusinessId(vendorid);
 
     }
-
-    $.fn.AddTempDataMemory = function () {
-        console.log("about to get set the hidden fors in the modal view to remember where the user was");
-
-        $("#Page").val(parseInt(@TempData["TempPage"]));
-        $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
-        $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
-        $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
-        $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
-        //console.log("PageType:" + @TempData["TempPageType"]);
-        $("#PageType").val(@TempData["TempPageType"]);
-    };
 
 
 

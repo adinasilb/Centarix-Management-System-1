@@ -184,7 +184,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["TempPageType"] = (int)PageType;
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
-
+            
             //Getting the page that is going to be seen (if no page was specified it will be one)
             var pageNumber = page ?? 1;
             var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
@@ -221,18 +221,33 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            return View(request);
+            DeleteRequestViewModel deleteRequestViewModel = new DeleteRequestViewModel()
+            {
+                Request = request
+            };
+
+            return View(deleteRequestViewModel);
         }
         // POST: Vendors/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteModal(Request requestPasedIn)
+        public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel)
         {
-            var request = _context.Requests.Where(r => r.RequestID == requestPasedIn.RequestID).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID).FirstOrDefault();
             request.IsDeleted = true;
             _context.Update(request);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
+            return RedirectToAction("Index", new
+            {
+                page = deleteRequestViewModel.Page,
+                requestStatusID = deleteRequestViewModel.RequestStatusID,
+                subcategoryID = deleteRequestViewModel.SubCategoryID,
+                vendorID = deleteRequestViewModel.VendorID,
+                applicationUserID = deleteRequestViewModel.ApplicationUserID,
+                PageType = requestPageTypeEnum
+            });
         }
 
         // GET: Requests/Details/5
