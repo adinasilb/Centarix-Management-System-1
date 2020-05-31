@@ -283,6 +283,10 @@
                         @*<button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item"> <img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /> </button>*@
                         @*no need now that the item name link to the details modal*@
                         <button class="btn btn-link load-product-edit" value="@item.RequestID" data-target="item" href="item"> <img width="25" src="~/images/css/inventory/icons/comments_selected.png" alt="Edit" /> </button>
+                   
+                    </td>
+                    <td>
+                        <button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>
                     </td>
                 </tr>
             }

@@ -7,9 +7,21 @@
 
   <ItemGroup>
     <Compile Remove="Models\LocationModels\**" />
+    <Compile Remove="wwwroot\files\65\**" />
+    <Compile Remove="wwwroot\files\66\**" />
+    <Compile Remove="wwwroot\files\68\**" />
     <Content Remove="Models\LocationModels\**" />
+    <Content Remove="wwwroot\files\65\**" />
+    <Content Remove="wwwroot\files\66\**" />
+    <Content Remove="wwwroot\files\68\**" />
     <EmbeddedResource Remove="Models\LocationModels\**" />
+    <EmbeddedResource Remove="wwwroot\files\65\**" />
+    <EmbeddedResource Remove="wwwroot\files\66\**" />
+    <EmbeddedResource Remove="wwwroot\files\68\**" />
     <None Remove="Models\LocationModels\**" />
+    <None Remove="wwwroot\files\65\**" />
+    <None Remove="wwwroot\files\66\**" />
+    <None Remove="wwwroot\files\68\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,14 +76,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\files\" />
-    <Folder Include="wwwroot\files\62\Orders\" />
-    <Folder Include="wwwroot\files\63\Orders\" />
-    <Folder Include="wwwroot\files\64\Orders\" />
-    <Folder Include="wwwroot\files\65\Orders\" />
-    <Folder Include="wwwroot\files\66\Orders\" />
-    <Folder Include="wwwroot\files\68\Orders\" />
-    <Folder Include="wwwroot\files\71\Orders\" />
-    <Folder Include="wwwroot\files\72\Orders\" />
   </ItemGroup>
 
 
