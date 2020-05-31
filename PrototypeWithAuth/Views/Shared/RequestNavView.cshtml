@@ -222,6 +222,15 @@
         return false;
     });
 
+    $(".load-confirm-delete").on("click", function (e) {
+        console.log("in confirm delete");
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/DeleteModal/?id=" + $(this).val();
+        $.fn.CallPage($itemurl, "delete");
+        return false;
+    });
+
     $(".load-order-details").on("click", function (e) {
         console.log("in order details");
         e.preventDefault();

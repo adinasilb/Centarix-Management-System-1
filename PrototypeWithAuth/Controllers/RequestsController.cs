@@ -206,7 +206,7 @@ namespace PrototypeWithAuth.Controllers
             return View(onePageOfProducts);
         }
         [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> DeleteModal(int? id)
         {
             if (id == null)
             {
@@ -214,21 +214,23 @@ namespace PrototypeWithAuth.Controllers
             }
 
             var request = await _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
                 .FirstOrDefaultAsync(m => m.RequestID == id);
             if (request == null)
             {
                 return NotFound();
             }
 
-            return RedirectToAction(nameof(Index));
+            return View(request);
         }
         // POST: Vendors/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteModal(Request requestPasedIn)
         {
-            var request = await _context.Requests.FindAsync(id);
+            var request = _context.Requests.Where(r => r.RequestID == requestPasedIn.RequestID).FirstOrDefault();
             request.IsDeleted = true;
+            _context.Update(request);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }

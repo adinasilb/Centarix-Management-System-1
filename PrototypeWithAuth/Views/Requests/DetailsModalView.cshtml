@@ -1,13 +1,15 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
+@{
 
 
+}
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <div class="modal modal-view right faid" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog modal-lg border-left box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%"> 
-    @*style needed here to override bootstraps modal width limitations*@
+    <div class="modal-dialog modal-lg border-left box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
+        @*style needed here to override bootstraps modal width limitations*@
 
         <div class="modal-content d-inline-block">
 
@@ -63,17 +65,16 @@
                                 </ul>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
-                <!-- New Modal Body  
+                <!-- New Modal Body
                 <div style="background: #F6F7F8; padding: 1em">
                     <div style="background: #FFF; padding: 1em">
                         REST OF MODAL GOES IN HERE PLEASE
                     </div>
                 </div> -->
-
                 <!-- Modal body -->
                 <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
                     <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 3em 4em; border: 2px solid #EAEAEB;">
@@ -100,6 +101,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
     "Select Category", new { @class = "form-control-plaintext border-bottom", @id = "parentlist", @disabled = "disabled" })
@@ -586,9 +588,9 @@
                                             <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                         }
                                         @*<div id="carousel" class="carousel ui-slider">
-                                    <ol class="carousel-indicators">
-                                    </ol>
-                                </div>*@
+                                                <ol class="carousel-indicators">
+                                                </ol>
+                                            </div>*@
                                     </div>
                                     <div class="col-md-3">
                                         <label class="control-label">Invoice Doc</label>
@@ -676,28 +678,28 @@
                                 }
                                 @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
                                 @*<div class="card rounded">
-                                <div class="card-body">
-                                    <div class="font-weight-bold">+NewComment</div>
-                                    <div class="form-group">
-                                        <label asp-for="NewComment.CommentText" class="control-label"></label>
-                                        <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>*@
+                                            <div class="card-body">
+                                                <div class="font-weight-bold">+NewComment</div>
+                                                <div class="form-group">
+                                                    <label asp-for="NewComment.CommentText" class="control-label"></label>
+                                                    <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom" />
+                                                    <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
                                 @*removed because you shouldnt be able to add new comments in the View Modal, only see previous comments.*@
 
 
                                 @*<div id="order" class="tab-pane fade">
-                            <h3>ORDER</h3>
-                            <hr />
-                            <div class="form-group">
-                                <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
+                                        <h3>ORDER</h3>
+                                        <hr />
+                                        <div class="form-group">
+                                            <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
 
-                                <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>*@
+                                            <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>*@
                             </div>
 
                         </div>
@@ -705,7 +707,7 @@
 
                     <!-- Modal footer -->
                     @*<div class="modal-footer">
-                    </div>*@
+                        </div>*@
 
                     @*Begin Hidden Inputs:*@
                     @Html.HiddenFor(vm => vm.Request.ProductID)
