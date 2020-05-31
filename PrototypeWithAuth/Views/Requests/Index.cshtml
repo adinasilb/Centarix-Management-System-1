@@ -286,7 +286,8 @@
                    
                     </td>
                     <td>
-                        <button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.RequestID}, new { @class = "btn btn-link" })
+                        @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
                     </td>
                 </tr>
             }
