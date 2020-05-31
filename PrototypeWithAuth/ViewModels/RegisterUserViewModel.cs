@@ -35,5 +35,7 @@ namespace PrototypeWithAuth.ViewModels
         [Required]
         public string Role { get; set; }
 
+        [Required]
+        public string SecureAppPass { get; set; }
     }
 }

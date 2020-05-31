@@ -16,7 +16,9 @@ namespace PrototypeWithAuth.Data
         
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+        public string SecureAppPass { get; set; }
         public IEnumerable<ParentRequest> ParentRequests { get; set;}
+
 
 
         // public string URLPic { get; set; }

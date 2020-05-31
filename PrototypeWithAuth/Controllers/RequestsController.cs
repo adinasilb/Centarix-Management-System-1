@@ -19,12 +19,17 @@ using Microsoft.AspNetCore.Hosting;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.IO.Image;
+using iText.Kernel.Colors;
+
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MailKit.Net.Smtp;
 using MailKit;
 using MimeKit;
 using System.Linq.Expressions;
 using Org.BouncyCastle.Ocsp;
+using iText.Kernel.Pdf.Canvas.Draw;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -303,28 +308,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return RedirectToAction("CreateModalView");
             }
-            //else if (NewRequestFromProduct)
-            //{
 
-
-            //    requestItemViewModel.Request = new Request();
-            //    requestItemViewModel.Request.ParentRequest = new ParentRequest();
-            //    requestItemViewModel.Request.RequestStatus = new RequestStatus();
-            //    requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
-
-            //    var request = _context.Requests
-            //        .Include(r => r.Product)
-            //        .SingleOrDefault(x => x.RequestID == id);
-            //    requestItemViewModel.Request.ProductID = request.ProductID;
-            //    requestItemViewModel.Request.Product = request.Product;
-
-            //    var paymentsList = _context.Payments
-            //        .Include(p => p.CompanyAccount) //check if it works without this
-            //        .Include(p => p.CompanyAccount.PaymentType)
-            //        .Where(p => p.ParentRequestID == request.ParentRequest.ParentRequestID);
-            //    requestItemViewModel.OldPayments = paymentsList;
-
-            //}
             else
             {
 
@@ -492,6 +476,9 @@ namespace PrototypeWithAuth.Controllers
                 //requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 try
                 {
+                    //int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                    //requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
 
@@ -1497,8 +1484,44 @@ namespace PrototypeWithAuth.Controllers
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            document.Add(new Paragraph("Vendor: " + request.Product.Vendor.VendorEnName));
-            document.Add(new Paragraph("City" + request.Product.Vendor.VendorCity));
+            Paragraph header = new Paragraph("Centarix Biotech")
+                .SetTextAlignment(TextAlignment.RIGHT)
+                .SetFontSize(16)
+                .SetBold();
+            document.Add(header);
+            
+            Paragraph subheader = new Paragraph("ID: 51565512 \n Hamarpe 3, Jerusalem \n Tel: 073-7896888")
+                .SetTextAlignment(TextAlignment.RIGHT)
+                .SetFontSize(12);
+            
+            document.Add(subheader);
+            // Add image
+            Image img = new Image(ImageDataFactory
+               .Create(@"C:/Users/faigi/Downloads/logo.png"))
+               .SetTextAlignment(TextAlignment.LEFT);
+            document.Add(img);
+            // Line separator
+            LineSeparator ls = new LineSeparator(new SolidLine());
+            document.Add(ls);
+            Paragraph p = new Paragraph();
+            p.Add(new Text("Purchase Order: " + request.ParentRequest.OrderNumber.ToString()))
+                .SetTextAlignment(TextAlignment.LEFT)
+                .SetFontSize(20)
+                .SetBold();
+            p.Add(new Text(request.ParentRequest.OrderDate.ToString()))
+                .SetTextAlignment(TextAlignment.RIGHT)
+                .SetFontSize(12)
+                .SetBold();
+            document.Add(p);
+            document.Add(ls);
+            // Image logojpg = Image.GetInstance("C:/Users/faigi/Downloads/logo.png");
+            document.Add(new Paragraph(request.Product.Vendor.VendorEnName))
+                .SetTextAlignment(TextAlignment.LEFT)
+                .SetFontSize(16)
+                .SetBold();
+            document.Add(new Paragraph("ID: "+ request.Product.Vendor.VendorBuisnessID +"\n"+request.Product.Vendor.VendorCity + "\n Tel: " + request.Product.Vendor.VendorContactPhone1))
+                .SetTextAlignment(TextAlignment.LEFT)
+                .SetFontSize(12);
             document.Close();
 
 
@@ -1525,10 +1548,10 @@ namespace PrototypeWithAuth.Controllers
 
 
                 var request = _context.Requests.Where(r => r.RequestID == requestThatIsApproved.RequestID).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).FirstOrDefault();
-                string ownerEmail = request.ParentRequest.ApplicationUser.Email;
-                string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
-                string ownerPassword = request.ParentRequest.ApplicationUser.PasswordHash;
-                string vendorEmail = "shimon@centarix.com";//request.Product.Vendor.OrderEmail;
+                string ownerEmail = "shimon@centarix.com";// request.ParentRequest.ApplicationUser.Email;
+                string ownerUsername = "Shimon Meshi Zahav";//request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
+                string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
+                string vendorEmail = request.Product.Vendor.OrderEmail;
                 string vendorName = request.Product.Vendor.VendorEnName;
 
                 //add a "From" Email
@@ -1552,7 +1575,9 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, "rxoz zvdz whao xowm");//"FakeUser@123"); // set up two step authentication and get app password
+                    client.Authenticate(ownerEmail, "rxoz zvdz whao xowm");// ownerPassword);//
+
+                    //"FakeUser@123"); // set up two step authentication and get app password
                     try
                     {
                         client.Send(message);
