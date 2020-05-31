@@ -21,13 +21,13 @@
     <div class="col-md-3 border colOne">
         <br />
 
-        <table class="table table-sm">
+        <table class="table table-sm table-hover">
             <thead>
                 <tr>
 
                     <th>
                         @Html.DisplayNameFor(item => item.LocationsDepthOfZero.FirstOrDefault().LocationInstanceName)
-
+                        @*"Name"*@
                     </th>
                 </tr>
             </thead>
@@ -39,7 +39,7 @@
                     <tr>
                         <td>
                             <button class="btn btn-block load-sublocation-view" value="@item.LocationInstanceID">@item.LocationInstanceName</button>
-                        </td>
+                        </td> @*Freezer names*@
                     </tr>
                 }
 

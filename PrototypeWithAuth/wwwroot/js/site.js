@@ -638,8 +638,8 @@ $(".visual-locations-zoom").on("click", function (e) {
 
 $(".load-sublocation-view").click(function () {
 	//add or remove the background class in col 1
-	$(".load-sublocation-view").removeClass("bg-secondary");
-	$(this).addClass("bg-secondary");
+	$(".load-sublocation-view").removeClass("bg-light");
+	$(this).addClass("bg-light");
 
 	//fill up col 2 with the next one
 	var myDiv = $(".colTwoSublocations");
