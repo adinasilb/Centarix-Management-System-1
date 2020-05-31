@@ -1511,44 +1511,60 @@ namespace PrototypeWithAuth.Controllers
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            Paragraph header = new Paragraph("Centarix Biotech")
-                .SetTextAlignment(TextAlignment.RIGHT)
-                .SetFontSize(16)
-                .SetBold();
-            document.Add(header);
-            
-            Paragraph subheader = new Paragraph("ID: 51565512 \n Hamarpe 3, Jerusalem \n Tel: 073-7896888")
-                .SetTextAlignment(TextAlignment.RIGHT)
-                .SetFontSize(12);
-            
-            document.Add(subheader);
+            List<TabStop> tabstops = new List<TabStop>();
+            tabstops.Add(new TabStop(1000, TabAlignment.RIGHT));
+
+
+
             // Add image
+
             Image img = new Image(ImageDataFactory
-               .Create(@"C:/Users/faigi/Downloads/logo.png"))
-               .SetTextAlignment(TextAlignment.LEFT);
-            document.Add(img);
+              .Create(@"C:/Users/faigi/Downloads/logo.png"))
+
+                .Scale(0.16F, 0.15F);
+                //.SetFixedPosition(0.5F, 0.04F);
+
+            Paragraph header = new Paragraph("Centarix Biotech")
+                .SetFontSize(16);
+              
+            document.Add(new Paragraph().AddTabStops(tabstops)
+            .Add(img).Add(new Tab()).Add(header).SetBold());        
+
+            Paragraph subheader = new Paragraph("ID: 51565512 \n Hamarpe 3, Jerusalem \n Tel: 073-7896888")
+                .SetFontSize(12);
+
+            document.Add(new Paragraph().AddTabStops(tabstops)
+            .Add("").Add(new Tab()).Add(subheader));
+
+
             // Line separator
             LineSeparator ls = new LineSeparator(new SolidLine());
             document.Add(ls);
-            Paragraph p = new Paragraph();
-            p.Add(new Text("Purchase Order: " + request.ParentRequest.OrderNumber.ToString()))
-                .SetTextAlignment(TextAlignment.LEFT)
-                .SetFontSize(20)
-                .SetBold();
-            p.Add(new Text(request.ParentRequest.OrderDate.ToString()))
-                .SetTextAlignment(TextAlignment.RIGHT)
-                .SetFontSize(12)
-                .SetBold();
-            document.Add(p);
+            Paragraph PurchaseOrder = new Paragraph("Purchase Order: " + request.ParentRequest.OrderNumber.ToString()).SetBold().SetFontSize(20);
+            Paragraph OrderDate = new Paragraph(request.ParentRequest.OrderDate.ToString());
+            //p.Add(new Text("Purchase Order: " + request.ParentRequest.OrderNumber.ToString()))
+            //    .SetTextAlignment(TextAlignment.LEFT)
+            //    .SetFontSize(20);
+            ////.SetBold();
+            //p.Add(new Text(request.ParentRequest.OrderDate.ToString()))
+            //    .SetTextAlignment(TextAlignment.RIGHT)
+            //    .SetFontSize(12);
+            //.SetBold();
+
+            document.Add(new Paragraph().AddTabStops(tabstops)
+            .Add(PurchaseOrder).Add(new Tab()).Add(OrderDate));
+            //document.Add(p).SetBold();
             document.Add(ls);
             // Image logojpg = Image.GetInstance("C:/Users/faigi/Downloads/logo.png");
-            document.Add(new Paragraph(request.Product.Vendor.VendorEnName))
-                .SetTextAlignment(TextAlignment.LEFT)
-                .SetFontSize(16)
-                .SetBold();
-            document.Add(new Paragraph("ID: "+ request.Product.Vendor.VendorBuisnessID +"\n"+request.Product.Vendor.VendorCity + "\n Tel: " + request.Product.Vendor.VendorContactPhone1))
-                .SetTextAlignment(TextAlignment.LEFT)
-                .SetFontSize(12);
+            Paragraph Vendor = new Paragraph(request.Product.Vendor.VendorEnName)
+                .SetBold()
+                .SetFontSize(16);
+            Paragraph VendorInfo = new Paragraph("ID: " + request.Product.Vendor.VendorBuisnessID + "\n" + request.Product.Vendor.VendorCity + "\n Tel: " + request.Product.Vendor.VendorContactPhone1)
+                .SetFontSize(10);
+            document.Add(Vendor)
+                .SetTextAlignment(TextAlignment.LEFT);
+            document.Add(VendorInfo)
+                .SetTextAlignment(TextAlignment.LEFT);
             document.Close();
 
 
