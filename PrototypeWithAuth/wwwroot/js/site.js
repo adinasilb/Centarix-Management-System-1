@@ -675,7 +675,19 @@ $(".load-sublocation-view").click(function () {
 
 
 
-
+function changeTerms(checkbox) {
+	if (checkbox.checked) {
+		console.log("checked");
+		$("#Request_Terms").append(`<option value="${"0"}">${"Pay Now"}</option>`);;
+		$("#Request_Terms").val("0");
+		$("#Request_Terms").attr("disabled", true);
+	}
+	else {
+		console.log("unchecked");
+		$("#Request_Terms").attr("disabled", false);
+		$("#Request_Terms option[value='0']").remove();
+	}
+}
 
 $("#documents-tab").click(function () {
 	$.fn.HideAllDocs();
