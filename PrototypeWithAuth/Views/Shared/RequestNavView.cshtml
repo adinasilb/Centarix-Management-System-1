@@ -156,17 +156,8 @@
 <div class="modal confirm-email-modal" id="myModal">
 </div>
 
-<script>
-    function addActive(id) {
-        var item = document.getElementById(id);
-        item.classList.add("activeNavLink");
-    }
-</script>
-
 @RenderSection("Scripts", required: false)
 <script>
-
-
 
 
     $(document).ready(function () {
@@ -215,6 +206,7 @@
     });
 
     $(".load-product-edit").on("click", function (e) {
+        console.log("inside of load product edit")
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
@@ -280,7 +272,7 @@
     });
 
 
-    $.fn.AddTempDataMemory = function () {
+    function AddTempDataMemory() {
         console.log("about to get set the hidden fors in the modal view to remember where the user was");
 
         $("#Page").val(parseInt(@TempData["TempPage"]));
@@ -326,34 +318,34 @@
                     case "details":
                         console.log('case "details":');
                         $.fn.OnOpenModalView();
-                        $.fn.AddTempDataMemory();
+                        AddTempDataMemory();
                         break;
                     case "edit":
                         console.log('case "edit":');
                         $.fn.OnOpenModalView();
-                        $.fn.AddTempDataMemory();
+                        AddTempDataMemory();
                         break;
                     case "reorder":
                         console.log('case "reorder":');
                         $.fn.OnOpenModalView();
-                        $.fn.AddTempDataMemory();
+                        AddTempDataMemory();
                         break;
                     case "create":
                         console.log('case "create":');
                         $.fn.OnOpenModalView();
-                        $.fn.AddTempDataMemory();
+                        AddTempDataMemory();
                         break;
                     case "received":
                         console.log('case "received":');
-                        $.fn.AddTempDataMemory();
+                        AddTempDataMemory();
                         break;
                     case "confirmemail":
                         console.log('case "confirmemail":');
-                        $.fn.AddTempDataMemory();
+                        AddTempDataMemory();
                         break;
                     case "delete":
                         console.log('case "delete":');
-                        $.fn.AddTempDataMemory();
+                        AddTempDataMemory();
                         break;
                 }
 
@@ -407,5 +399,10 @@
     //    var modal = $(this);
     //    modal.find('[href="' + button.attr("href") + '"]').tab('show');
     //});
+
+    function addActive(id) {
+        var item = document.getElementById(id);
+        item.classList.add("activeNavLink");
+    }
 
 </script>

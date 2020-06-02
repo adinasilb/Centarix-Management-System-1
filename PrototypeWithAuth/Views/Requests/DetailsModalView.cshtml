@@ -16,6 +16,8 @@
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
+                @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
+
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
                 @Html.HiddenFor(model => model.Page)
@@ -44,11 +46,14 @@
                     </div><br />
                     <div class="row">
                         <div class="col-2"><img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /></div>
-                        <div class="col-9 ml-3">
+                        <div class="col-8 ml-3">
                             <!--<h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>-->
                             <!-- <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>  -->
                             <h3>@Model.Request.Product.ProductName</h3>
                             <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-link load-product-edit" value="@Model.Request.RequestID" data-target="item" href="item"> <img width="25" src="~/images/css/inventory/icons/comments_selected.png" alt="Edit" /> </button>
                         </div>
                     </div>
                     <br />
@@ -70,28 +75,28 @@
                 </div>
 
                 <!-- New Modal Body
-                <div style="background: #F6F7F8; padding: 1em">
-                    <div style="background: #FFF; padding: 1em">
-                        REST OF MODAL GOES IN HERE PLEASE
-                    </div>
-                </div> -->
+    <div style="background: #F6F7F8; padding: 1em">
+        <div style="background: #FFF; padding: 1em">
+            REST OF MODAL GOES IN HERE PLEASE
+        </div>
+    </div> -->
                 <!-- Modal body -->
                 <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
                     <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 3em 4em; border: 2px solid #EAEAEB;">
 
                         @*modal tabs, moved to the header*@
                         <!--<div class="container">
-                            <div class="text-center">
-                                <ul class="nav nav-tabs " style="display: inline-flex">
-                                    <li class="nav-item ml-4 mr-5"><a data-toggle="tab" href="#item" class="nav-link"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
-                                    <li class="nav-item mx-5"><a data-toggle="tab" href="#location" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Location" /><br />Location</a></li>
-                                    <li class="nav-item mx-5"><a data-toggle="tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
-                                    <li class="nav-item mx-5"><a data-toggle="tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
-                                    <li class="nav-item ml-3"><a data-toggle="tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
-                                    @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li> Commented out below*@
-                                </ul>
-                            </div>
-                        </div>-->
+                <div class="text-center">
+                    <ul class="nav nav-tabs " style="display: inline-flex">
+                        <li class="nav-item ml-4 mr-5"><a data-toggle="tab" href="#item" class="nav-link"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
+                        <li class="nav-item mx-5"><a data-toggle="tab" href="#location" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Location" /><br />Location</a></li>
+                        <li class="nav-item mx-5"><a data-toggle="tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
+                        <li class="nav-item mx-5"><a data-toggle="tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
+                        <li class="nav-item ml-3"><a data-toggle="tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
+                        @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li> Commented out below*@
+                    </ul>
+                </div>
+            </div>-->
                         <br />
                         <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
@@ -588,9 +593,9 @@
                                             <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                         }
                                         @*<div id="carousel" class="carousel ui-slider">
-                                                <ol class="carousel-indicators">
-                                                </ol>
-                                            </div>*@
+                                    <ol class="carousel-indicators">
+                                    </ol>
+                                </div>*@
                                     </div>
                                     <div class="col-md-3">
                                         <label class="control-label">Invoice Doc</label>
@@ -678,28 +683,28 @@
                                 }
                                 @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
                                 @*<div class="card rounded">
-                                            <div class="card-body">
-                                                <div class="font-weight-bold">+NewComment</div>
-                                                <div class="form-group">
-                                                    <label asp-for="NewComment.CommentText" class="control-label"></label>
-                                                    <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom" />
-                                                    <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>*@
+                                <div class="card-body">
+                                    <div class="font-weight-bold">+NewComment</div>
+                                    <div class="form-group">
+                                        <label asp-for="NewComment.CommentText" class="control-label"></label>
+                                        <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
                                 @*removed because you shouldnt be able to add new comments in the View Modal, only see previous comments.*@
 
 
                                 @*<div id="order" class="tab-pane fade">
-                                        <h3>ORDER</h3>
-                                        <hr />
-                                        <div class="form-group">
-                                            <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
+                            <h3>ORDER</h3>
+                            <hr />
+                            <div class="form-group">
+                                <input type="submit" name="OrderType" value="Save" asp-action="ModalView" class="btn btn-outline-primary" />
 
-                                            <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>*@
+                                <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>*@
                             </div>
 
                         </div>
@@ -707,7 +712,7 @@
 
                     <!-- Modal footer -->
                     @*<div class="modal-footer">
-                        </div>*@
+            </div>*@
 
                     @*Begin Hidden Inputs:*@
                     @Html.HiddenFor(vm => vm.Request.ProductID)

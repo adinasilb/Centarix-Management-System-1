@@ -755,3 +755,15 @@ $(".show-credits-view").click(function () {
 //	//	cache: false,
 //	//});
 //});
+
+
+$(".load-product-edit").on("click", function (e) {
+	console.log("inside of load product edit")
+	e.preventDefault();
+	e.stopPropagation();
+	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
+	var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+	console.log("itemurl: " + $itemurl);
+	$.fn.CallPage($itemurl, "edit");
+	return false;
+});
