@@ -67,7 +67,7 @@ namespace PrototypeWithAuth.Controllers
         {
             
             //instantiate your list of requests to pass into the index
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false);
+            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
             TempData["RequestStatusID"] = RequestStatusID;
@@ -1546,6 +1546,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * BEGIN SEND EMAIL
          */
+         //this could be used as a static function - for now we only need to convert the purchase order html into a pdf so it is located locally
         private async Task<string> RenderPartialViewToString(string viewName, object model)
         {
             if (string.IsNullOrEmpty(viewName))
@@ -1573,26 +1574,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        //public static Byte[] PdfSharpConvert(String html)
-        //{
-        //    Byte[] res = null;
-        //    using (MemoryStream ms = new MemoryStream())
-        //    {
-        //        var pdf = TheArtOfDev.HtmlRenderer.PdfSharp.PdfGenerator.GeneratePdf(html, PdfSharp.PageSize.A4);
-        //        pdf.Save(ms);
-        //        res = ms.ToArray();
-        //    }
-        //    return res;
-        //}
-        //public void CreatePdf(String baseUri, String src, String dest)
-        //{
-        //    ConverterProperties properties = new ConverterProperties();
-        //    properties.SetBaseUri(baseUri);
-        //    PdfWriter writer = new PdfWriter(dest,
-        //    new WriterProperties().SetFullCompressionMode(true));
-        //    HtmlConverter.ConvertToPdf(new FileStream(src, FileMode.Open), writer, properties);
-        //}
-
+        
         [HttpGet]
         public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
         {
@@ -1613,11 +1595,13 @@ namespace PrototypeWithAuth.Controllers
                 Request = request1,
 
             };
+
+            //render the purchase order view into a string using a the confirmEmailViewModel
             string renderedView = await RenderPartialViewToString("PurchaseOrderView", confirm);
 
 
            
-
+            //creating the path for the file to be saved
             string path1 = Path.Combine("wwwroot", "files");
             string path2 = Path.Combine(path1, request1.RequestID.ToString());
             //create file
@@ -1626,7 +1610,7 @@ namespace PrototypeWithAuth.Controllers
             string uniqueFileName = "OrderPDF.pdf";
             string filePath = Path.Combine(folderPath, uniqueFileName);
 
-             //instantiate a html to pdf converter object
+            //instantiate a html to pdf converter object
             HtmlToPdf converter = new HtmlToPdf();
 
             PdfDocument doc = new PdfDocument();
@@ -1634,10 +1618,9 @@ namespace PrototypeWithAuth.Controllers
             doc = converter.ConvertHtmlString(renderedView);
 
             // save pdf document
-            // save pdf document
             doc.Save(filePath);
 
-            //// close pdf document
+            // close pdf document
             doc.Close();
 
             return View(confirm);

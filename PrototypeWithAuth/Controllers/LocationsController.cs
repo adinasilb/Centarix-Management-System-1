@@ -26,6 +26,34 @@ namespace PrototypeWithAuth.Controllers
         {
             _context = context;
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> IndexForInventory()
+        {
+            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Inventory;
+
+            var locations = _context.LocationInstances
+                .Include(li => li.RequestLocationInstances).Where(li => li.LocationType.Depth == 0);
+
+            List<Request> RequestsIncluded = new List<Request>();
+            foreach (var location in locations)
+            {
+                foreach(var requestlocationinstance in location.RequestLocationInstances)
+                {
+                    RequestsIncluded.Add(_context.Requests.Where(r => r.RequestID == requestlocationinstance.RequestID).FirstOrDefault());
+                }
+            }
+
+            
+
+            LocationInventoryIndexViewModel locationInventoryIndexViewModel = new LocationInventoryIndexViewModel()
+            {
+                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0),
+            };
+            return View(await _context.LocationInstances.Include(li=> li.LocationType).ToListAsync()); 
+        }
+
+
         [HttpGet]
         public IActionResult Index()
         {

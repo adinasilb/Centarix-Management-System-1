@@ -1,0 +1,68 @@
+﻿@model IEnumerable<PrototypeWithAuth.Models.LocationInstance>
+    @{
+        ViewData["Title"] = "IndexForInventory";
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+        var pagetype = TempData["PageType"];
+    }
+
+ 
+    <div class="ml-5">
+        <table class="table table-headerspaced table-noheaderlines text-center">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().CompanyLocationID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().LocationInstanceName)
+                        
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().LocationType.LocationTypeName)
+                       
+                    </th>
+                    <th>
+                        Items
+                    </th>
+
+                    <th>
+                        Details
+                    </th>
+                   
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    @if (item.LocationInstanceParentID == null)
+                    {
+                        <tr class="table">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompanyLocationID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LocationInstanceName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LocationType.LocationTypeName)
+                            </td>
+                            <td>
+                                @*@Html.DisplayFor(modelItem => item.)
+        display how many itmes are in that parent location*@
+                                51
+                            </td>
+
+
+                            <td>
+                                @*<a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |*@
+                                <a asp-action="Index" asp-route-id="@item.LocationInstanceID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /></a>
+                                @*<a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>*@
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+        </table>
+    </div>

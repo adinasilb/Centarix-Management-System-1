@@ -22,5 +22,6 @@ namespace PrototypeWithAuth.Models
         public string LocationInstanceName { get; set; }
         public string Place { get; set; }
         public bool IsFull { get; set; }
+        public int CompanyLocationID { get; set; }
     }
 }
