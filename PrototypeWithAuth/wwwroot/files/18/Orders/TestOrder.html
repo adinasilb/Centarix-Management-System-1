@@ -1,16 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.ConfirmEmailViewModel
-@{
-    var SubjectName = "Order";
-    @*New line not working*@
-    var OrderText = "Hi, \n We would like to place an order for " + Model.Request.Product.ProductName + "Forward this to: " + Model.Request.Product.Vendor.OrderEmail;
-    var IsBeingApproved = TempData["IsBeingApproved"].ToString(); //have to use string and not bool b/c it's tempdata
-    var blocked = false;
-    if (!User.IsInRole("Admin") && IsBeingApproved == "True")//added the isinrole for added security
-    {
-        blocked = true;
-    }
-}
-
+﻿
 <div class="modal modal-view right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
     <div class="modal-dialog  modal-dialog-scrollable modal-lg">
         <div class="modal-content d-inline-block">
@@ -20,34 +8,20 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
-            @if (blocked)
-            {
-                <span>Only admins have access to this page</span>
-                @Html.ActionLink("Continue", "Index", "Requests");
-            }
-            else
-            {
                 <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-                    @Html.HiddenFor(m => m.Request.RequestID)
+                    <input data-val="true" data-val-required="The RequestID field is required." id="Request_RequestID" name="Request.RequestID" type="hidden" value="18" />
 
-                    @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
-                    @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
-                    @Html.HiddenFor(model => model.Page)
-                    @Html.HiddenFor(model => model.RequestStatusID)
-                    @Html.HiddenFor(model => model.SubCategoryID)
-                    @Html.HiddenFor(model => model.VendorID)
-                    @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
-                    @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
+                    <input id="Page" name="Page" type="hidden" value="" />
+                    <input data-val="true" data-val-required="The RequestStatusID field is required." id="RequestStatusID" name="RequestStatusID" type="hidden" value="0" />
+                    <input data-val="true" data-val-required="The SubCategoryID field is required." id="SubCategoryID" name="SubCategoryID" type="hidden" value="0" />
+                    <input data-val="true" data-val-required="The VendorID field is required." id="VendorID" name="VendorID" type="hidden" value="0" />
+                    <input id="ApplicationUserID" name="ApplicationUserID" type="hidden" value="" /> 
+                    <input data-val="true" data-val-required="The PageType field is required." id="PageType" name="PageType" type="hidden" value="0" /> 
 
 
-                    @*</form>
-                        <form action="" method="post" enctype="multipart/form-data">*@
                     <div class="modal-body">
-                        @if (IsBeingApproved == "True")
-                        {
-                            <h4>Would you like to approve this Request for @Model.Request.Product.ProductName ?</h4>
-                        }
-                        @OrderText
+                            <h4>Would you like to approve this Request for Agar10 ?</h4>
+                        Hi, &#xA; We would like to place an order for Agar10Forward this to: faigew@gmail.com
                     </div>
 
                     <span>
@@ -82,7 +56,7 @@
                                 </header>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h1>Purchase Order: @Model.Request.ParentRequest.OrderNumber</h1>
+                                        <h1>Purchase Order: 16</h1>
                                     </div>
                                     <div class="col-md-3 offset-2">
                                         <p id="date"></p>
@@ -92,18 +66,12 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="vendor-info">
-                                            <h3 style="font-weight: 700;">@Model.Request.Product.Vendor.VendorEnName</h3>
-                                            <span>ID: @Model.Request.Product.Vendor.VendorBuisnessID</span><br>
-                                            <span>@Model.Request.Product.Vendor.VendorCity</span><br>
-                                            <span>Tel: @Model.Request.Product.Vendor.VendorContactPhone1</span>
+                                            <h3 style="font-weight: 700;">Faige</h3>
+                                            <span>ID: 123456789</span><br>
+                                            <span></span><br>
+                                            <span>Tel: 0583286113</span>
                                         </div>
                                     </div>
-                                    @*<div class="col-md-3 offset-2">
-                    <div class="note-message">
-                        <h3>Please Note</h3>
-                        <span>We need this order by next Sunday. Thank you!</span>
-                    </div>
-                </div>*@
                                 </div>
                                 <br><br>
                                 <div class="row">
@@ -119,31 +87,29 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td style="font-weight: 500;">@Model.Request.SubUnit @Model.Request.Product.ProductName</td>
-                                                <td>@Model.Request.CatalogNumber</td>
-                                                <td>@Model.Request.Unit</td>
-                                                @{double unitPrice = (Model.Request.Cost) / (Model.Request.Unit);}
-                                                <td>@unitPrice</td>
-                                                <td>@Model.Request.Cost</td>
+                                                <td style="font-weight: 500;"> Agar10</td>
+                                                <td></td>
+                                                <td>0</td>
+                                                <td>NaN</td>
+                                                <td>0</td>
                                             </tr>
-
+                                         
                                             <tr>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td>Total</td>
-                                                <td>@Model.Request.Cost</td>
+                                                <td>0</td>
                                             </tr>
                                             <tr>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td>Discount @*@Html.DisplayFor(modelItem => Model.Request.)*@</td>
-                                                @*@{double discount = Model.Request.Cost * Model.Request.Discount; }*@
-                                                <td>@*discount*@</td>
+                                                <td>Discount </td>
+                                                <td></td>
 
                                             </tr>
-
+      
                                             <tr>
 
                                                 <td></td>
@@ -153,11 +119,10 @@
                                                 <td></td>
 
                                                 <td>Total Price</td>
-                                                @*@{ double totalWithDis = Model.Request.Cost - discount}*@
-                                                <td>@*@totalWithDis*@</td>
+                                                <td></td>
 
                                             </tr>
-
+      
                                             <tr>
 
                                                 <td></td>
@@ -167,32 +132,31 @@
                                                 <td></td>
 
                                                 <td>VAT [17%]</td>
-                                                @* @{ double vat = totalWithDis * Model.Request.VAT }*@
-                                                <td>@*@vat*@</td>
+                                                <td></td>
 
                                             </tr>
-
-                                            <tr>
-
-                                                <td></td>
-
-                                                <td></td>
-
-                                                <td></td>
-
-                                                <td style="font-weight: bold;">Total To Pay</td>
-
-                                                <td style="font-weight: bold;">@*@vat+totalWithDis*@</td>
-
-                                            </tr>
-
-                                        </tbody>
-
-                                    </table>
-
-                                </div>
-
-                                <div class="row">
+      
+                                                  <tr>
+      
+                                                      <td></td>
+      
+                                                      <td></td>
+      
+                                                      <td></td>
+      
+                                                      <td style="font-weight: bold;">Total To Pay</td>
+      
+                                                      <td style="font-weight: bold;"></td>
+      
+                                                  </tr>
+      
+                                              </tbody>
+      
+                                          </table>
+      
+                                      </div>
+      
+                                      <div class="row">
                                     <div class="col-3 offset-1">
                                         <div class="signature">
                                             <img src="C:/Users/danny/Desktop/OrderForm/images/logo_signature.png" alt="signature" width="300">
@@ -208,7 +172,7 @@
                                     <div class="col-md-12">
                                         <div class="payment-terms">
                                             <h3 style="font-weight: bold;">Payment Terms</h3>
-                                            <span>@Model.Request.Terms</span>
+                                            <span>0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -217,7 +181,7 @@
                                 <br>
                                 <footer class="footer text-center">
                                     <div class="purchase-order">
-                                        <span style="font-weight: 300;">Purchase Order @Model.Request.ParentRequest.OrderNumber</span>
+                                        <span style="font-weight: 300;">Purchase Order 16</span>
                                     </div>
                                     <div class="page-number">
                                         <span style="font-weight: 300;">page number: 1 of 1</span>
@@ -228,8 +192,8 @@
 
                             <script>
         var today = new Date();
-        var date = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
-        document.getElementById("date").innerHTML = date;
+                                                    var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+                                                    document.getElementById("date").innerHTML = date;
                             </script>
 
 
@@ -239,16 +203,14 @@
                             <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
                             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
                         </body>
-                        </html>
+                    </html>
                     </span>
-                    @*<span> mailto: @Model.Request.ParentRequest.ApplicationUser.Email ?Subject= @SubjectName&body=@OrderText</span>*@
 
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-success" asp-action="ConfirmEmailModal" value="Confirm & Send Email" href="mailto:@Model.Request.ParentRequest.ApplicationUser.Email?Subject= @SubjectName&body=@OrderText" />
-                        <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
+                        <input type="submit" class="btn btn-success" value="Confirm & Send Email" href="mailto:faigew@gmail.com?Subject= Order&body=Hi, &#xA; We would like to place an order for Agar10Forward this to: faigew@gmail.com" formaction="/Requests/ConfirmEmailModal" />
+                        <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>
                     </div>
-                </form>
-            }
+                <input name="__RequestVerificationToken" type="hidden" value="CfDJ8CtdafDl2oNOtojOlUgk3klIJ6zaQuqf7YhWIBXuJxT--cwFfGOWzX-xHezPsN3HltYZhiaQYWGKC9u1xKa5LEKGkWXvh5x3IoJ8BRfJGw0VJJGT7-uL1OlLaYxCqWtH0FKkpDOHGmqO91v1iSN9ZIRlKFRkQRMc6LzSC7e8op1AZIh6-XYMoFK9oN3L79foTw" /></form>
 
         </div>
     </div>

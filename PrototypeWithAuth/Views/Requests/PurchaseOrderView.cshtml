@@ -1,0 +1,198 @@
+﻿@model PrototypeWithAuth.ViewModels.ConfirmEmailViewModel
+@{
+    ViewData["Title"] = "PurchaseOrderView";
+    //Layout = "~/Views/Requests/ConfirmEmailModal.cshtml";
+}
+
+
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <title>Order Summary</title>
+</head>
+<body style="font-family: 'Roboto', sans-serif;">
+    <div style="padding:5rem">
+        <header class="page-header">
+            <div class="row">
+                <div class="col-md-6 company-logo">
+                    <img src="C:\Users\danny\Desktop\OrderForm\images\cetarix-logo.png" width="400" alt="Centarix Logo">
+                </div>
+                <div class="col-md-3 offset-2 company-info">
+                    <h3 style="font-weight: 700;">Centarix Biotech</h3>
+                    <span>ID: 51565512</span><br>
+                    <span>Hamarpeh 3, Jerusalem</span><br>
+                    <span>Tel: 073-7896888</span>
+                </div>
+            </div>
+            <hr>
+        </header>
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Purchase Order: @Model.Request.ParentRequest.OrderNumber</h1>
+            </div>
+            <div class="col-md-3 offset-2">
+                <p id="date"></p>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="vendor-info">
+                    <h3 style="font-weight: 700;">@Model.Request.Product.Vendor.VendorEnName</h3>
+                    <span>ID: @Model.Request.Product.Vendor.VendorBuisnessID</span><br>
+                    <span>@Model.Request.Product.Vendor.VendorCity</span><br>
+                    <span>Tel: @Model.Request.Product.Vendor.VendorContactPhone1</span>
+                </div>
+            </div>
+            @*<div class="col-md-3 offset-2">
+                    <div class="note-message">
+                        <h3>Please Note</h3>
+                        <span>We need this order by next Sunday. Thank you!</span>
+                    </div>
+                </div>*@
+        </div>
+        <br><br>
+        <div class="row">
+            <table class="table">
+                <thead style="background-color: #D0001C; color: #ffffff;">
+                    <tr>
+                        <th>Items</th>
+                        <th>ID</th>
+                        <th>Units</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 500;">@Model.Request.SubUnit @Model.Request.Product.ProductName</td>
+                        <td>@Model.Request.CatalogNumber</td>
+                        <td>@Model.Request.Unit</td>
+                        @{double unitPrice = (Model.Request.Cost) / (Model.Request.Unit);}
+                        <td>@unitPrice</td>
+                        <td>@Model.Request.Cost</td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Total</td>
+                        <td>@Model.Request.Cost</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Discount @*@Html.DisplayFor(modelItem => Model.Request.)*@</td>
+                        @*@{double discount = Model.Request.Cost * Model.Request.Discount; }*@
+                        <td>@*discount*@</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td></td>
+
+                        <td></td>
+
+                        <td></td>
+
+                        <td>Total Price</td>
+                        @*@{ double totalWithDis = Model.Request.Cost - discount}*@
+                        <td>@*@totalWithDis*@</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td></td>
+
+                        <td></td>
+
+                        <td></td>
+
+                        <td>VAT [17%]</td>
+                        @* @{ double vat = totalWithDis * Model.Request.VAT }*@
+                        <td>@*@vat*@</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td></td>
+
+                        <td></td>
+
+                        <td></td>
+
+                        <td style="font-weight: bold;">Total To Pay</td>
+
+                        <td style="font-weight: bold;">@*@vat+totalWithDis*@</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="row">
+            <div class="col-3 offset-1">
+                <div class="signature">
+                    <img src="C:/Users/danny/Desktop/OrderForm/images/logo_signature.png" alt="signature" width="300">
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="payment-terms">
+                    <h3 style="font-weight: bold;">Payment Terms</h3>
+                    <span>@Model.Request.Terms</span>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <footer class="footer text-center">
+            <div class="purchase-order">
+                <span style="font-weight: 300;">Purchase Order @Model.Request.ParentRequest.OrderNumber</span>
+            </div>
+            <div class="page-number">
+                <span style="font-weight: 300;">page number: 1 of 1</span>
+            </div>
+        </footer>
+    </div>
+
+
+    <script>
+        var today = new Date();
+        var date = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+        document.getElementById("date").innerHTML = date;
+    </script>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+</html>
+

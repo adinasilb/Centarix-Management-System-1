@@ -16,20 +16,22 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using X.PagedList;
 using Microsoft.AspNetCore.Hosting;
-using iText.Kernel.Pdf;
-using iText.Layout;
-using iText.Layout.Element;
-using iText.Layout.Properties;
-using iText.IO.Image;
-using iText.Kernel.Colors;
-
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MailKit.Net.Smtp;
 using MailKit;
 using MimeKit;
 using System.Linq.Expressions;
 using Org.BouncyCastle.Ocsp;
-using iText.Kernel.Pdf.Canvas.Draw;
+
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using SelectPdf;
+//using AspNetCore;
+//using iText.Kernel.Geom;
+//using PdfSharp;
+//using PdfSharp.Pdf;
+
+//using System.Web.Mvc;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -43,13 +45,19 @@ namespace PrototypeWithAuth.Controllers
         private readonly List<Request> _cartRequests = new List<Request>();
 
         private IQueryable<Request> _searchList = Enumerable.Empty<Request>().AsQueryable();
+        private ICompositeViewEngine _viewEngine;
 
-        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+        //public MyController(ICompositeViewEngine viewEngine)
+        //{
+        //    _viewEngine = viewEngine;
+        //}
+        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
         {
             _context = context;
             _userManager = userManager;
             //use the hosting environment for the file uploads
             _hostingEnvironment = hostingEnvironment;
+            _viewEngine = viewEngine;
         }
 
         [HttpGet]
@@ -1538,6 +1546,53 @@ namespace PrototypeWithAuth.Controllers
         /*
          * BEGIN SEND EMAIL
          */
+        private async Task<string> RenderPartialViewToString(string viewName, object model)
+        {
+            if (string.IsNullOrEmpty(viewName))
+                viewName = ControllerContext.ActionDescriptor.ActionName;
+
+            ViewData.Model = model;
+
+            using (var writer = new StringWriter())
+            {
+                ViewEngineResult viewResult =
+                    _viewEngine.FindView(ControllerContext, viewName, false);
+
+                ViewContext viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    ViewData,
+                    TempData,
+                    writer,
+                    new HtmlHelperOptions()
+                );
+
+                await viewResult.View.RenderAsync(viewContext);
+
+                return writer.GetStringBuilder().ToString();
+            }
+        }
+
+        //public static Byte[] PdfSharpConvert(String html)
+        //{
+        //    Byte[] res = null;
+        //    using (MemoryStream ms = new MemoryStream())
+        //    {
+        //        var pdf = TheArtOfDev.HtmlRenderer.PdfSharp.PdfGenerator.GeneratePdf(html, PdfSharp.PageSize.A4);
+        //        pdf.Save(ms);
+        //        res = ms.ToArray();
+        //    }
+        //    return res;
+        //}
+        //public void CreatePdf(String baseUri, String src, String dest)
+        //{
+        //    ConverterProperties properties = new ConverterProperties();
+        //    properties.SetBaseUri(baseUri);
+        //    PdfWriter writer = new PdfWriter(dest,
+        //    new WriterProperties().SetFullCompressionMode(true));
+        //    HtmlConverter.ConvertToPdf(new FileStream(src, FileMode.Open), writer, properties);
+        //}
+
         [HttpGet]
         public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
         {
@@ -1552,6 +1607,16 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData["IsBeingApproved"] = false;
             }
+            
+            ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
+            {
+                Request = request1,
+
+            };
+            string renderedView = await RenderPartialViewToString("PurchaseOrderView", confirm);
+
+
+           
 
             string path1 = Path.Combine("wwwroot", "files");
             string path2 = Path.Combine(path1, request1.RequestID.ToString());
@@ -1560,58 +1625,25 @@ namespace PrototypeWithAuth.Controllers
             Directory.CreateDirectory(folderPath);
             string uniqueFileName = "OrderPDF.pdf";
             string filePath = Path.Combine(folderPath, uniqueFileName);
-            FileStream fs = new FileStream(filePath, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fs, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfDocument pdfDocument = new PdfDocument(writer);
-            pdfDocument.SetTagged();
-            Document document = new Document(pdfDocument);
-            Paragraph header = new Paragraph("Centarix Biotech")
-                .SetTextAlignment(TextAlignment.RIGHT)
-                .SetFontSize(16)
-                .SetBold();
-            document.Add(header);
-            
-            Paragraph subheader = new Paragraph("ID: 51565512 \n Hamarpe 3, Jerusalem \n Tel: 073-7896888")
-                .SetTextAlignment(TextAlignment.RIGHT)
-                .SetFontSize(12);
-            
-            document.Add(subheader);
-            // Add image
-            //Image img = new Image(ImageDataFactory
-            //   .Create(@"C:/Users/faigi/Downloads/logo.png"))
-            //   .SetTextAlignment(TextAlignment.LEFT);
-            //document.Add(img);
-            // Line separator
-            LineSeparator ls = new LineSeparator(new SolidLine());
-            document.Add(ls);
-            Paragraph p = new Paragraph();
-            p.Add(new Text("Purchase Order: " + request1.ParentRequest.OrderNumber.ToString()))
-                .SetTextAlignment(TextAlignment.LEFT)
-                .SetFontSize(20)
-                .SetBold();
-            p.Add(new Text(request1.ParentRequest.OrderDate.ToString()))
-                .SetTextAlignment(TextAlignment.RIGHT)
-                .SetFontSize(12)
-                .SetBold();
-            document.Add(p);
-            document.Add(ls);
-            // Image logojpg = Image.GetInstance("C:/Users/faigi/Downloads/logo.png");
-            document.Add(new Paragraph(request1.Product.Vendor.VendorEnName))
-                .SetTextAlignment(TextAlignment.LEFT)
-                .SetFontSize(16)
-                .SetBold();
-            document.Add(new Paragraph("ID: "+ request1.Product.Vendor.VendorBuisnessID +"\n"+request1.Product.Vendor.VendorCity + "\n Tel: " + request1.Product.Vendor.VendorContactPhone1))
-                .SetTextAlignment(TextAlignment.LEFT)
-                .SetFontSize(12);
-            document.Close();
 
-            ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
-            {
-                Request = request1
-            };
+             //instantiate a html to pdf converter object
+            HtmlToPdf converter = new HtmlToPdf();
+
+            PdfDocument doc = new PdfDocument();
+            // create a new pdf document converting an url
+            doc = converter.ConvertHtmlString(renderedView);
+
+            // save pdf document
+            // save pdf document
+            doc.Save(filePath);
+
+            //// close pdf document
+            doc.Close();
 
             return View(confirm);
         }
+       
+      
 
         [HttpPost]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)

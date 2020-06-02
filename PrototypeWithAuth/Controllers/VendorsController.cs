@@ -56,15 +56,22 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var vendor = await _context.Vendors
-                .FirstOrDefaultAsync(m => m.VendorID == id);
-            
-            if (vendor == null)
+            VendorDetailsViewModel vendorDetailsViewModel = new VendorDetailsViewModel
+            {
+                ParentCategories = _context.ParentCategories.ToList(),
+                Products = _context.Products.Where(p => p.VendorID == id).Include(p => p.ProductSubcategory).ThenInclude(p => p.ParentCategory),
+                Vendors = _context.Vendors,
+                Vendor = await _context.Vendors.FirstOrDefaultAsync(m => m.VendorID == id),
+                // Requests = _context.Requests.ToList(),
+                //check if we need this here
+            };
+
+            if (vendorDetailsViewModel.Vendor == null)
             {
                 return NotFound();
             }
 
-            return View(vendor);
+            return View(vendorDetailsViewModel);
         }
         // GET: Vendors/Details/5
         public async Task<IActionResult> DetailsForPayment(int? id) // should not have to repeat this code - but for now just doing things quick
