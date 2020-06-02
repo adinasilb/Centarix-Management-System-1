@@ -5,6 +5,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
     string pageType = TempData["PageType"].ToString();
+    var pagetype = TempData["PageType"];
 }
 
 @*<p>
@@ -68,12 +69,16 @@
 
                         @Html.ActionLink("orders", "Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)
                     </td>-->
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.VendorID"><img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /></a>
+                <td>
 
-                        <!--| <a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a> -->
-                    </td>
+                    <a href="@Url.ActionLink("Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)"><img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /></a>
+                   
+
+                    @*<a asp-action="Details" asp-route-id="@item.VendorID"><img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /></a>*@
+
+                    <!--| <a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a> -->
+                </td>
                 </tr>
             }
         </tbody>

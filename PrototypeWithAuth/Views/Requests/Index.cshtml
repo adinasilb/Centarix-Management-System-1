@@ -194,7 +194,8 @@
                 <th>Owner</th>
                 <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
                 @*here for testing purposes*@
-                <th>@Html.DisplayNameFor(m => m[0].RequestStatus.RequestStatusDescription)</th>
+                
+                @*<th>@Html.DisplayNameFor(m => m[0].RequestStatus.RequestStatusDescription)</th>*@
                 <th></th>
                 <th></th>
             </tr>
@@ -256,7 +257,7 @@
 
                 <td> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
                 @*here for testing purposes*@
-                <td> @Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusDescription) </td>
+                @*<td> @Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusDescription) </td>*@
 
                 <td>
                     @if (item.RequestStatusID == 1)
