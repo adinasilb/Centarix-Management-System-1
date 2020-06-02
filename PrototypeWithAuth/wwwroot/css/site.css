@@ -185,6 +185,17 @@ body {
     text-decoration:none;
 }
 
+.expenses-color {
+    color: #E27933;
+    opacity: 0.87;
+}
+
+.expenses-color:hover {
+    color: #E27933;
+    opacity: 1;
+    text-decoration:none;
+}
+
 a.bold-hover-effects {
     color: black !important;
 }
@@ -196,7 +207,7 @@ ul li button.bold-hover-effects:hover {
     font-weight: bold;
 }
 
-.ourNavBar li a { /*color: #333*/ }
+/*.ourNavBar li a { color: #333 }*/
 
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     opacity: 1;
@@ -236,17 +247,17 @@ a.owner-link {
 }
 
 /*<<<<< table body css >>>>>*/
+table.table.table-noheaderlines thead th {
+    border-width: 0;
+    font-weight:normal;
+}
+
 table.table.table-headerspaced tbody:before {
     content: "@";
     display: block;
     line-height: 1em;
     text-indent: -99999px;
     
-}
-
-table.table.table-noheaderlines thead th {
-    border-width: 0;
-    font-weight:normal;
 }
 
 table.table tbody tr {
@@ -355,3 +366,5 @@ a.nav-link { color: inherit }
     border-right: 1px solid transparent;
     border-left: 2px solid #55F
 }*/
+
+
