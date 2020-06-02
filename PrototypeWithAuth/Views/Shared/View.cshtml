@@ -71,53 +71,52 @@
 
 </head>
 <body>
+    @*<<<<< Inventory/Requests Header >>>>>*@
     <header class="sticky-top">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 ourNavBar">
-            @*<div class="container-fluid">*@
-                <div class="container-fluid justify-content-start float-left d-inline-block" style="width:auto">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix Logo only.png" height="20" alt="Logo" /></a>
-                </div>
-                <div class="container-fluid">
-                    <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500">
-                        <li class="nav-item ml-5">
-                            @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @role = "button", @id = "inventory-link" })
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar">
+            <div class="container-fluid justify-content-start float-left d-inline-block pl-0" style="width:auto">
+                <a style="padding-left:0.85rem;" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix Logo only.png" height="20" alt="Logo" /></a>
+            </div>
+            <div class="container-fluid">
+                <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500">
+                    <li class="nav-item mx-4">
+                        @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @role = "button", @id = "inventory-link" })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @*Redo the location class in the controller*@
+                        @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = locationClass, @role = "button", @id = "request-link" })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @Html.ActionLink("Personal", "AddToCart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
+                    </li>
+                </ul>
+            </div>
+            <div class="container-fluid justify-content-end">
+                <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName  <img src="~/images/css/profile_circle_big.png" height="30px" alt="User image" /></a>
                         </li>
-                        <li class="nav-item ml-5">
-                            @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
-                        </li>
-                        <li class="nav-item ml-5">
-                            @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
-                        </li>
-                        <li class="nav-item ml-5">
-                            @Html.ActionLink("Personal", "AddToCart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
-                        </li>
-                        <li class="nav-item ml-5">
-                            @*Redo the location class in the controller*@
-                            @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = locationClass, @role = "button", @id = "request-link" })
+                        <li class="nav-item">
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
-                <div class="container-fluid justify-content-end">
-                    <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName  <img src="~/images/css/profile_circle_big.png" height="30px" alt="User image" /></a>
-                            </li>
-                            <li class="nav-item">
-                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            @*</div>*@
+            </div>
         </nav>
     </header>
     <!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
     <!--for now i am using an aside just to help me viuslly see thing on the side-->
 
-    <div class="container-fluid">
+    <div class="container-fluid pl-0">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
