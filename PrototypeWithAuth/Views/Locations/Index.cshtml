@@ -18,14 +18,14 @@
 }
 <br />
 <div class="row">
-    <div class="col-md-3 border colOne">
+    <div class="col-md-3 colOne pr-0">
         <br />
 
-        <table class="table table-sm table-hover">
+        <table class="table table-sm">
             <thead>
                 <tr>
 
-                    <th>
+                    <th class="text-center">
                         @Html.DisplayNameFor(item => item.LocationsDepthOfZero.FirstOrDefault().LocationInstanceName)
                         @*"Name"*@
                     </th>
@@ -36,8 +36,8 @@
                 @foreach (var item in Model.LocationsDepthOfZero)
                 {
 
-                    <tr>
-                        <td>
+                    <tr class="">
+                        <td class="">
                             <button class="btn btn-block load-sublocation-view" value="@item.LocationInstanceID">@item.LocationInstanceName</button>
                         </td> @*Freezer names*@
                     </tr>
@@ -49,7 +49,7 @@
         </table>
 
     </div>
-    <div class="col-md-3 border colTwoSublocations text-center">
+    <div class="col-md-3 colTwoSublocations text-center ">
 
     </div>
     <div class="col-md-6 border VisualBoxColumn">
