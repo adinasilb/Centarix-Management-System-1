@@ -124,7 +124,7 @@
 
                 @*Redo the location class in the controller*@
                 <li class="nav-item my-3 @location">
-                    <a href="@Url.ActionLink("Index", "Locations", new { @PageType = location })" class="bold-hover-effects opac54"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Location</a>
+                    <a href="@Url.ActionLink("IndexForInventory", "Locations", new { @PageType = location })" class="bold-hover-effects opac54"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Location</a>
                 </li>
             }
             @if (Cart)
