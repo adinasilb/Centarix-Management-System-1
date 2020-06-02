@@ -126,12 +126,12 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom " readonly />
                                         <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" disabled />
+                                        <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" readonly />
                                         <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                     </div>
                                 </div>
@@ -161,10 +161,10 @@
                                     <div class="col-md-3">
                                         <label class="control-label">End Date</label>
                                         @*@{
-                                                //get this just to return the date (not the time)
-                                                //adding the amount of months of the warranty to the invoice date
-                                                var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                                            }*@
+                        //get this just to return the date (not the time)
+                        //adding the amount of months of the warranty to the invoice date
+                        var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                    }*@
                                         <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                     </div>
                                 </div>
@@ -191,8 +191,61 @@
                                 </div>
                             </div>
                             <div id="location" class="tab-pane fade">
-                                <h3>LOCATION</h3>
-                                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <span style="font-size: 1.7em;">Location</span>
+                                <br /><hr /><br />
+                                @if (Model.ChildrenLocationInstances != null && Model.ChildrenLocationInstances.Any())
+                                {
+                                    <h4>@Model.ParentLocationInstance.LocationInstanceName</h4> //this should be a link to the manage page for admins only
+                                    <table class="table table-sm border">
+                                        @{
+                                            int z = -1; //initiated to -1 b/c it didn't let me put the z++ on the bottom of the fx. Really should be 0.
+                                        }
+                                        @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+                                        {
+                                            <tr>
+                                                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                                                {
+                                                    z++;
+                                                    var backgroundClass = "border";
+                                                    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                                                    {
+                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
+                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
+
+                                                        if (Model.ChildrenLocationInstances[z].IsFull)
+                                                        {
+                                                            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
+                                                            {
+                                                                backgroundClass += " bg-primary";
+                                                            }
+                                                            else
+                                                            {
+                                                                backgroundClass += " bg-secondary";
+                                                            }
+                                                            <td class="@backgroundClass">
+                                                                @Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="@backgroundClass">
+                                                                Empty
+                                                            </td>
+                                                        }
+
+                                                    }
+
+                                                }
+                                            </tr>
+                                        }
+                                    </table>
+                                }
+                                else
+                                {
+                                    <span>No Locations yet</span>
+                                    <br />
+                                    <button>Add Locations</button>
+                                }
                             </div>
                             <div id="price" class="tab-pane fade">
                                 <div class="row">
@@ -419,19 +472,19 @@
                                                 </tr>
                                             </thead>
                                             @*@{
-                                                        if (Model.Request.ParentRequest.Payments != null)
-                                                        {
-                                                            foreach (Payment payment in Model.Request.ParentRequest.Payments)
-                                                            {
-                                                                <tr class="payment-line">
-                                                                    <td>@payment.PaymentDate</td>
-                                                                    <td>@payment.CompanyAccount.PaymentType.PaymentTypeDescription</td>
-                                                                    <td>@payment.CompanyAccount.CompanyAccountNum</td>
-                                                                    <td>@payment.PaymentID</td>
-                                                                </tr>
-                                                            }
-                                                        }
-                                                }*@
+                                if (Model.Request.ParentRequest.Payments != null)
+                                {
+                                    foreach (Payment payment in Model.Request.ParentRequest.Payments)
+                                    {
+                                        <tr class="payment-line">
+                                            <td>@payment.PaymentDate</td>
+                                            <td>@payment.CompanyAccount.PaymentType.PaymentTypeDescription</td>
+                                            <td>@payment.CompanyAccount.CompanyAccountNum</td>
+                                            <td>@payment.PaymentID</td>
+                                        </tr>
+                                    }
+                                }
+                        }*@
                                         </table>
                                     </div>
                                     <div class="col-md-2">

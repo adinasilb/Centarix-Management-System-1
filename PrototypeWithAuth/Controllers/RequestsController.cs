@@ -988,6 +988,41 @@ namespace PrototypeWithAuth.Controllers
                         requestItemViewModel.CreditFileStrings.Add(newFileString);
                     }
                 }
+                //locations:
+                //get the list of requestLocationInstances in this request
+                //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
+                var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
+                var requestLocationInstances = request1.RequestLocationInstances.ToList();
+                //if it has => (which it should once its in a details view)
+                if (requestLocationInstances.Any())
+                {
+                    //get the parent location instances of the first one
+                    //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
+                    //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
+                    requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    //need to test b/c the model is int? which is nullable
+                    if (requestItemViewModel.ParentLocationInstance != null)
+                    {
+                        //inserting list of childrenslocationinstances to show on the frontend
+                        requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
+                            .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
+                            .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+                        //var x = 0; //place in cli
+                        //requestItemViewModel.ChildrenLocationInstancesRequests = new List<Request>();
+                        //foreach (var cli in requestItemViewModel.ChildrenLocationInstances)
+                        //{
+                        //    var req = _context.Requests
+                        //        .Include(r => r.RequestLocationInstances.Select(rli => rli.LocationInstanceID == cli.LocationInstanceID)).Include(r => r.Product)
+                        //        .FirstOrDefault();
+                        //    if (req != null)
+                        //    {
+                        //        requestItemViewModel.ChildrenLocationInstancesRequests.Add(req);
+                        //    }
+                        //}
+
+                    }
+                }
 
                 if (requestItemViewModel.Request == null)
                 {
