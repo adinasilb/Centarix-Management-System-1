@@ -512,7 +512,6 @@ namespace PrototypeWithAuth.Controllers
             //in case we need to redirect to action
             //TempData["ModalView"] = true;
             //why is this here?
-            TempData["RequestID"] = requestItemViewModel.Request.RequestID;
 
             var context = new ValidationContext(requestItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
@@ -647,7 +646,18 @@ namespace PrototypeWithAuth.Controllers
                     //test that this works
                     if (WithOrder)
                     {
-                        return RedirectToAction("ConfirmEmailModal", new { id = requestItemViewModel.Request.RequestID });
+                        TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+                        TempData["OpenConfirmEmailModal"] = true;
+                        AppUtility.RequestPageTypeEnum requestPageTypeEnum1 = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+                        return RedirectToAction("Index", new
+                        {
+                            page = requestItemViewModel.Page,
+                            requestStatusID = requestItemViewModel.RequestStatusID,
+                            subcategoryID = requestItemViewModel.SubCategoryID,
+                            vendorID = requestItemViewModel.VendorID,
+                            applicationUserID = requestItemViewModel.ApplicationUserID,
+                            PageType = requestPageTypeEnum1
+                        });
                     }
                 }
                 catch (Exception ex)

@@ -68,6 +68,11 @@
         CancelledEmail = true;
     }
 
+    if (TempData["RequestID"] == null)
+    {
+        TempData["RequestID"] = 0;
+    }
+
 }
 
 @{
@@ -165,6 +170,13 @@
 
 
     $(document).ready(function () {
+        if ($("#tdconfirmemail").val()) {
+            console.log("tdconfirm email .val() = 'true'");
+            $("#tdconfirmemail").hide();
+            var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&IsBeingApproved=true";
+            console.log("itemurl: " + $itemurl);
+            $.fn.CallPage($itemurl, "confirmemail");
+        }
 
         //close ALL modals here just in case:
 
