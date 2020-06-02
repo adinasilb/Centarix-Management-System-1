@@ -241,9 +241,17 @@ namespace PrototypeWithAuth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel)
         {
-            var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID)
+                .Include(r => r.RequestLocationInstances).FirstOrDefault();
             request.IsDeleted = true;
             _context.Update(request);
+            await _context.SaveChangesAsync();
+
+            foreach(var requestLocationInstance in request.RequestLocationInstances)
+            {
+                requestLocationInstance.IsDeleted = true;
+                _context.Update(requestLocationInstance);
+            }
             await _context.SaveChangesAsync();
 
             AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
