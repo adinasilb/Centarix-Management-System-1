@@ -163,10 +163,11 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
             {
-                LocationInstance holderRequestsPassedIn = _context.LocationInstances
+                LocationInstance rliList = _context.LocationInstances
                     .Include(li => li.AllRequestLocationInstances)
                     .Where(li => li.LocationInstanceID == parentLocationInstanceID).FirstOrDefault();
-                RequestsPassedIn = RequestsPassedIn.Where(r => holderRequestsPassedIn.AllRequestLocationInstances.Any(rli => rli.RequestID == r.RequestID));
+                RequestsPassedIn = RequestsPassedIn.Where(r => rliList.AllRequestLocationInstances.Select(rli => rli.RequestID).ToList().Contains(r.RequestID));
+                //RequestsPassedIn = RequestsPassedIn.Except(RequestsPassedIn.Where(r => rliList.RequestLocationInstances.se))
             }
 
 
@@ -252,7 +253,10 @@ namespace PrototypeWithAuth.Controllers
             foreach (var requestLocationInstance in request.RequestLocationInstances)
             {
                 requestLocationInstance.IsDeleted = true;
+                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
+                locationInstance.IsFull = false;
                 _context.Update(requestLocationInstance);
+                _context.Update(locationInstance);
             }
             await _context.SaveChangesAsync();
 
