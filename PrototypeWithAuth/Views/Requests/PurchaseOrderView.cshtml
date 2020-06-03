@@ -37,10 +37,10 @@
         </header>
         <div class="row">
             <div class="col-md-6">
-                <h1>Purchase Order: @Model.Request.ParentRequest.OrderNumber</h1>
+                <h3 style="font-weight: 700;">Purchase Order: @Model.Request.ParentRequest.OrderNumber</h3>
             </div>
-            <div class="col-md-3 offset-2">
-                <p id="date"></p>
+            <div class="col-md-3 offset-3">
+                <h5 style="font-weight:500" id="date"></h5>
             </div>
         </div>
         <hr>
@@ -53,14 +53,24 @@
                     <span>Tel: @Model.Request.Product.Vendor.VendorContactPhone1</span>
                 </div>
             </div>
+            @*Payment terms moved up from bottom*@
+            <div class="col-md-5 offset-1">
+                <div class="payment-terms">
+                    <h3 style="font-weight: bold;">Payment Terms</h3>
+                    <br />
+                    <span>- @Model.Request.Terms</span>
+                </div>
+            </div>
+            @*Note messages moved down to bottom*@
             @*<div class="col-md-3 offset-2">
-                    <div class="note-message">
-                        <h3>Please Note</h3>
-                        <span>We need this order by next Sunday. Thank you!</span>
-                    </div>
-                </div>*@
+            <div class="note-message">
+                <h3>Please Note</h3>
+                <span>We need this order by next Sunday. Thank you!</span>
+            </div>
+        </div>*@
         </div>
-        <br><br>
+        <br>
+        <br>
         <div class="row">
             <table class="table">
                 <thead style="background-color: #D0001C; color: #ffffff;">
@@ -96,87 +106,67 @@
                         <td>Discount @*@Html.DisplayFor(modelItem => Model.Request.)*@</td>
                         @*@{double discount = Model.Request.Cost * Model.Request.Discount; }*@
                         <td>@*discount*@</td>
-
                     </tr>
-
                     <tr>
-
                         <td></td>
-
                         <td></td>
-
                         <td></td>
-
                         <td>Total Price</td>
                         @*@{ double totalWithDis = Model.Request.Cost - discount}*@
                         <td>@*@totalWithDis*@</td>
-
                     </tr>
-
                     <tr>
-
                         <td></td>
-
                         <td></td>
-
                         <td></td>
-
                         <td>VAT [17%]</td>
                         @* @{ double vat = totalWithDis * Model.Request.VAT }*@
                         <td>@*@vat*@</td>
-
                     </tr>
-
                     <tr>
-
                         <td></td>
-
                         <td></td>
-
                         <td></td>
-
                         <td style="font-weight: bold;">Total To Pay</td>
-
                         <td style="font-weight: bold;">@*@vat+totalWithDis*@</td>
-
                     </tr>
-
                 </tbody>
-
             </table>
-
         </div>
-
+        <br />
+        <br />
         <div class="row">
             <div class="col-3 offset-1">
                 <div class="signature">
-                    <img src="C:/Users/danny/Desktop/OrderForm/images/logo_signature.png" alt="signature" width="300">
+                    <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="400">
                 </div>
             </div>
         </div>
-        <br>
-        <br>
-        <br>
         <br>
         <br>
         <div class="row">
             <div class="col-md-12">
-                <div class="payment-terms">
-                    <h3 style="font-weight: bold;">Payment Terms</h3>
-                    <span>@Model.Request.Terms</span>
+                @*Note message moved down from top*@
+                <div class="note-message">
+                    <h3>Please Note</h3>
+                    <span>We need this order by next Sunday. Thank you!</span>
                 </div>
+                @*Payments terms moved up next to vendor name*@
+                @*<div class="payment-terms">
+                <h3 style="font-weight: bold;">Payment Terms</h3>
+                <span>@Model.Request.Terms</span>
+            </div>*@
             </div>
         </div>
         <br>
         <br>
-        <br>
-        <footer class="footer text-center">
+        <footer class="footer text-center m-4">
             <div class="purchase-order">
                 <span style="font-weight: 300;">Purchase Order @Model.Request.ParentRequest.OrderNumber</span>
             </div>
-            <div class="page-number">
+            @*<div class="page-number">
                 <span style="font-weight: 300;">page number: 1 of 1</span>
-            </div>
+            </div>*@
         </footer>
     </div>
 
