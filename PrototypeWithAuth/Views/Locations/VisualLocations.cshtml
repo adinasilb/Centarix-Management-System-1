@@ -14,10 +14,10 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-
-<button class="btn btn-link visual-locations-zoom float-right zoon-in-btn" style="text-decoration:none;" value="@Model.ParentLocationInstance.LocationInstanceID"> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
+@*need to put indiv.rows here*@
+<button class="btn btn-link visual-locations-zoom float-left zoon-in-btn" style="text-decoration:none; font-size:1.2rem;" value="@Model.ParentLocationInstance.LocationInstanceID"> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
 <br />
-<table class="table table-sm border">
+<table class="table table-sm border table">
     @{
         int z = -1;
     }
@@ -27,7 +27,7 @@
             @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
             {
                 z++;
-                var backgroundClass = "border";
+                var backgroundClass = "";
                 var innerHtml = "NONE";
                 @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                 {
