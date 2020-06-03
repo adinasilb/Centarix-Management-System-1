@@ -31,7 +31,8 @@ namespace PrototypeWithAuth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //alow for acces to get Ihttpcontextaccessor, allowing for geting the base url of website
+           // services.AddHttpContextAccessor();
 
             //Set database Connection from application json file
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -134,7 +135,7 @@ namespace PrototypeWithAuth
                 }
             }
             var poweruser = new ApplicationUser();
-            poweruser = await UserManager.FindByEmailAsync("dani@gmail.com");
+            poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
 
             await UserManager.AddToRoleAsync(poweruser, "Admin");
         }
