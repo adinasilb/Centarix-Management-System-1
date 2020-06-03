@@ -372,11 +372,8 @@ a.nav-link { color: inherit }
 }*/
 
 .td-selected {
-    /*border-style: solid;
-    border-color: #30BCC9;
-    border-width: 3px 0px 3px 3px;*/
     background-color: rgba(48, 188, 201, 0.26);
-    width: 5000px;  
+    border-left: 3px solid #30BCC9;
 }
 
 table.table tr td button:focus { /*in order to remove button outine on focus. but may affect accessability so consider returning*/
