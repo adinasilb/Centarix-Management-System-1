@@ -9,6 +9,6 @@ namespace PrototypeWithAuth.ViewModels
     public class LocationInventoryIndexViewModel
     {
         public IEnumerable<LocationInstance> LocationsDepthOfZero { get; set; }
-        public Dictionary<, int> TitleList { get; set; }
+        public Dictionary<int, int> TitleList { get; set; }
     }
 }
