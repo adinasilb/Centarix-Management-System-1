@@ -258,10 +258,7 @@
                         <td>
                             @if (item.RequestLocationInstances != null)
                             {
-
-                                @Html.DisplayFor(modelItem => item.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent.LocationInstanceName)
                                 @Html.DisplayFor(modelItem => item.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName)
-
                             }
                         </td>
                     }

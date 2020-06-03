@@ -35,15 +35,6 @@ namespace PrototypeWithAuth.Controllers
             var locations = _context.LocationInstances
                 .Include(li => li.AllRequestLocationInstances).Where(li => li.LocationInstanceParentID == null);
 
-            //List<Request> RequestsIncluded = new List<Request>();
-            //foreach (var location in locations)
-            //{
-            //    foreach(var requestLocationInstance in location.RequestLocationInstances)
-            //    {
-            //        RequestsIncluded.Add(_context.Requests.Where(r => r.RequestID == requestlocationinstance.RequestID).FirstOrDefault());
-            //    }
-            //}
-
             LocationInventoryIndexViewModel locationInventoryIndexViewModel = new LocationInventoryIndexViewModel()
             {
                 LocationsDepthOfZero = locations

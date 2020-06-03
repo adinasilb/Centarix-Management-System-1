@@ -54,6 +54,7 @@ namespace PrototypeWithAuth.Controllers
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
+            
 
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
@@ -156,13 +157,14 @@ namespace PrototypeWithAuth.Controllers
                 SidebarTitle = AppUtility.RequestSidebarEnum.Owner;
                 TempData["ApplicationUserID"] = applicationUserID;
             }
-            //else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
-            //{
-            //    var holderRequestsPassedIn = _context.LocationInstances
-            //        .Include(li => li.AllRequestLocationInstances)
-            //        .Where(li => li.LocationInstanceID == parentLocationInstanceID).ToList();
-            //    var newRequestsPassedIn = holderRequestsPassedIn.
-            //}
+            else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
+            {
+                LocationInstance holderRequestsPassedIn = _context.LocationInstances
+                    .Include(li => li.AllRequestLocationInstances)
+                    .Where(li => li.LocationInstanceID == parentLocationInstanceID).FirstOrDefault();
+                RequestsPassedIn = RequestsPassedIn.Where(r => holderRequestsPassedIn.AllRequestLocationInstances.Any(rli => rli.RequestID == r.RequestID));
+            }
+
 
             //passing in the amounts to display in the top buttons
             TempData["AmountNew"] = newCount;
