@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.Models
         public int LocationTypeID { get; set; }
         public LocationType LocationType { get; set; }
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; }
+        public IEnumerable<RequestLocationInstance> AllRequestLocationInstances { get; set; } //refers to the ParentLocationInstanceID on the RLI
         public int? LocationInstanceParentID { get; set; }
         public LocationInstance LocationInstanceParent { get; set; }
         public int Height { get; set; }

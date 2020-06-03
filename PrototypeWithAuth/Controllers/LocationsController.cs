@@ -33,24 +33,22 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Inventory;
 
             var locations = _context.LocationInstances
-                .Include(li => li.RequestLocationInstances).Where(li => li.LocationType.Depth == 0);
+                .Include(li => li.AllRequestLocationInstances).Where(li => li.LocationInstanceParentID == null);
 
-            List<Request> RequestsIncluded = new List<Request>();
-            foreach (var location in locations)
-            {
-                foreach(var requestlocationinstance in location.RequestLocationInstances)
-                {
-                    RequestsIncluded.Add(_context.Requests.Where(r => r.RequestID == requestlocationinstance.RequestID).FirstOrDefault());
-                }
-            }
-
-            
+            //List<Request> RequestsIncluded = new List<Request>();
+            //foreach (var location in locations)
+            //{
+            //    foreach(var requestLocationInstance in location.RequestLocationInstances)
+            //    {
+            //        RequestsIncluded.Add(_context.Requests.Where(r => r.RequestID == requestlocationinstance.RequestID).FirstOrDefault());
+            //    }
+            //}
 
             LocationInventoryIndexViewModel locationInventoryIndexViewModel = new LocationInventoryIndexViewModel()
             {
-                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0),
+                LocationsDepthOfZero = locations
             };
-            return View(await _context.LocationInstances.Include(li=> li.LocationType).ToListAsync()); 
+            return View(locations); 
         }
 
 

@@ -11,6 +11,8 @@ namespace PrototypeWithAuth.Models
         public Request Request { get; set; }
         public int LocationInstanceID { get; set; }
         public LocationInstance LocationInstance { get; set; }
+        public int ParentLocationInstanceID { get; set; }
+        public LocationInstance ParentLocationInstance { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

@@ -55,6 +55,11 @@ namespace PrototypeWithAuth.Data
                 .WithMany(l => l.RequestLocationInstances)
                 .HasForeignKey(rl => rl.LocationInstanceID);
 
+            modelBuilder.Entity<RequestLocationInstance>()
+                .HasOne(rl => rl.ParentLocationInstance)
+                .WithMany(l => l.AllRequestLocationInstances)
+                .HasForeignKey(rl => rl.ParentLocationInstanceID);
+
 
             //set locationInstances to have self referncing fk
             modelBuilder.Entity<LocationInstance>()

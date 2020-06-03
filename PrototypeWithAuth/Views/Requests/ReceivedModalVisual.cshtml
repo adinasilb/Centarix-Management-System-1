@@ -14,6 +14,7 @@
                 @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                 {
                     @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
+                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID);
                     @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
 
                     if (Model.ChildrenLocationInstances[z].IsFull)

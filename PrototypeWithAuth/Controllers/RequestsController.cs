@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -16,22 +15,12 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using X.PagedList;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using MailKit.Net.Smtp;
-using MailKit;
 using MimeKit;
-using System.Linq.Expressions;
-using Org.BouncyCastle.Ocsp;
-
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SelectPdf;
-//using AspNetCore;
-//using iText.Kernel.Geom;
-//using PdfSharp;
-//using PdfSharp.Pdf;
-
-//using System.Web.Mvc;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -63,9 +52,9 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         // GET: Requests
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
-        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
-            
+
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
@@ -167,6 +156,13 @@ namespace PrototypeWithAuth.Controllers
                 SidebarTitle = AppUtility.RequestSidebarEnum.Owner;
                 TempData["ApplicationUserID"] = applicationUserID;
             }
+            //else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
+            //{
+            //    var holderRequestsPassedIn = _context.LocationInstances
+            //        .Include(li => li.AllRequestLocationInstances)
+            //        .Where(li => li.LocationInstanceID == parentLocationInstanceID).ToList();
+            //    var newRequestsPassedIn = holderRequestsPassedIn.
+            //}
 
             //passing in the amounts to display in the top buttons
             TempData["AmountNew"] = newCount;
@@ -192,7 +188,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["TempPageType"] = (int)PageType;
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
-            
+
             //Getting the page that is going to be seen (if no page was specified it will be one)
             var pageNumber = page ?? 1;
             var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
@@ -247,7 +243,7 @@ namespace PrototypeWithAuth.Controllers
             _context.Update(request);
             await _context.SaveChangesAsync();
 
-            foreach(var requestLocationInstance in request.RequestLocationInstances)
+            foreach (var requestLocationInstance in request.RequestLocationInstances)
             {
                 requestLocationInstance.IsDeleted = true;
                 _context.Update(requestLocationInstance);
@@ -1564,7 +1560,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * BEGIN SEND EMAIL
          */
-         //this could be used as a static function - for now we only need to convert the purchase order html into a pdf so it is located locally
+        //this could be used as a static function - for now we only need to convert the purchase order html into a pdf so it is located locally
         private async Task<string> RenderPartialViewToString(string viewName, object model)
         {
             if (string.IsNullOrEmpty(viewName))
@@ -1592,7 +1588,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        
+
         [HttpGet]
         public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
         {
@@ -1607,7 +1603,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData["IsBeingApproved"] = false;
             }
-            
+
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
                 Request = request1,
@@ -1618,7 +1614,7 @@ namespace PrototypeWithAuth.Controllers
             string renderedView = await RenderPartialViewToString("PurchaseOrderView", confirm);
 
 
-           
+
             //creating the path for the file to be saved
             string path1 = Path.Combine("wwwroot", "files");
             string path2 = Path.Combine(path1, request1.RequestID.ToString());
@@ -1643,8 +1639,8 @@ namespace PrototypeWithAuth.Controllers
 
             return View(confirm);
         }
-       
-      
+
+
 
         [HttpPost]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)
@@ -1870,6 +1866,13 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<IActionResult> ReceivedModal(int RequestID)
         {
+            //foreach(var li in _context.LocationInstances)
+            //{
+            //    li.IsFull = false;
+            //    _context.Update(li);
+            //}
+            //_context.SaveChanges();
+
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
             {
                 Request = _context.Requests.Where(r => r.RequestID == RequestID).FirstOrDefault(),
@@ -1943,7 +1946,20 @@ namespace PrototypeWithAuth.Controllers
 
             foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)
             {
-
+                bool flag = false;
+                LocationInstance parentLocationInstance = locationInstance;
+                while (!flag)
+                {
+                    var pli = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    if (pli != null)
+                    {
+                        parentLocationInstance = pli;
+                    }
+                    else
+                    {
+                        flag = true;
+                    }
+                }
 
                 var tempLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
                 if (!tempLocationInstance.IsFull && locationInstance.IsFull)//only putting in the locationInstance.IsFull if it's false b/c sometimes it doesn't pass in the true value so we can end up taking things out by mistake
@@ -1965,7 +1981,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             RequestID = receivedLocationViewModel.Request.RequestID,
                             LocationInstanceID = locationInstance.LocationInstanceID,
-
+                            ParentLocationInstanceID = parentLocationInstance.LocationInstanceID
                         };
                         _context.Add(requestLocationInstance);
                         hasLocationInstances = true;
