@@ -30,6 +30,9 @@ namespace PrototypeWithAuth.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         //take this out?
         private readonly IHostingEnvironment _hostingEnvironment;
+
+        //private readonly IHttpContextAccessor _Context;
+
         //take this out?
         private readonly List<Request> _cartRequests = new List<Request>();
 
@@ -40,8 +43,9 @@ namespace PrototypeWithAuth.Controllers
         //{
         //    _viewEngine = viewEngine;
         //}
-        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
+        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/)
         {
+            //_Context = Context;
             _context = context;
             _userManager = userManager;
             //use the hosting environment for the file uploads
@@ -1611,6 +1615,9 @@ namespace PrototypeWithAuth.Controllers
                 Request = request1,
 
             };
+            //base url needs to be declared - perhaps should be getting from js?
+            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
 
             //render the purchase order view into a string using a the confirmEmailViewModel
             string renderedView = await RenderPartialViewToString("PurchaseOrderView", confirm);
@@ -1631,7 +1638,7 @@ namespace PrototypeWithAuth.Controllers
 
             PdfDocument doc = new PdfDocument();
             // create a new pdf document converting an url
-            doc = converter.ConvertHtmlString(renderedView);
+            doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
             // save pdf document
             doc.Save(filePath);
