@@ -52,7 +52,8 @@ namespace PrototypeWithAuth.Controllers
                     UserName = registerUserViewModel.Email,
                     Email = registerUserViewModel.Email,
                     FirstName = registerUserViewModel.FirstName,
-                    LastName = registerUserViewModel.LastName
+                    LastName = registerUserViewModel.LastName,
+                    SecureAppPass = registerUserViewModel.SecureAppPass
                 };
             
                 var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
