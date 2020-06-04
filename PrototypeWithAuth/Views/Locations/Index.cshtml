@@ -18,10 +18,9 @@
 }
 <br />
 <div class="row">
-    <div class="col-md-3 colOne pr-0">
+    <div class="col-md-3 colOne pr-0 pl-4">
         <br />
-
-        <table class="table table-sm">
+        <table class="table table-sm table-hover">
             <thead>
                 <tr>
 
@@ -36,25 +35,22 @@
                 @foreach (var item in Model.LocationsDepthOfZero)
                 {
 
-                    <tr class="">
+                    <tr class="border-0">
                         <td class="">
-                            <button class="btn btn-block load-sublocation-view" value="@item.LocationInstanceID">@item.LocationInstanceName</button>
+                            <button class="btn btn-block load-sublocation-view clicked-button" value="@item.LocationInstanceID">@item.LocationInstanceName</button>
                         </td> @*Freezer names*@
                     </tr>
                 }
-
             </tbody>
-
 
         </table>
 
     </div>
-    <div class="col-md-3 colTwoSublocations text-center ">
+    <div class="col-md-3 colTwoSublocations text-center pl-0">
 
     </div>
-    <div class="col-md-6 border VisualBoxColumn">
-        @*<button class="btn btn-block">Zoom In</button>
-            Box Placeholder*@
+    <div class="col-md-6 VisualBoxColumn">
+
     </div>
 </div>
 

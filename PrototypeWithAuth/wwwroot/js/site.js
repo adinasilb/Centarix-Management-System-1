@@ -633,13 +633,18 @@ $(".visual-locations-zoom").on("click", function (e) {
 			$(".modal-backdrop").remove();
 
 		}
-	});
+	}); 
 });
+
+$(".clicked-button").click(function () {
+	$(".clicked-button").parent().removeClass("td-selected");
+	$(this).parent().addClass("td-selected");
+})
 
 $(".load-sublocation-view").click(function () {
 	//add or remove the background class in col 1
-	$(".load-sublocation-view").removeClass("bg-light");
-	$(this).addClass("bg-light");
+	//$(".load-sublocation-view").parent().removeClass("td-selected");
+	//$(this).parent().addClass("td-selected");
 
 	//fill up col 2 with the next one
 	var myDiv = $(".colTwoSublocations");
@@ -736,11 +741,6 @@ $(".show-credits-view").click(function () {
 	$.fn.HideAllDocs();
 	$(".credits-view").toggle();
 });
-
-
-
-
-
 
 
 //$(".close").click(function () {
