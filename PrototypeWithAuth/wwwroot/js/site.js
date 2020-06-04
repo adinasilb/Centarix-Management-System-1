@@ -31,9 +31,6 @@ var today = new Date();
 var dd = today.getDate();
 var mm = today.getMonth() + 1; //January is 0!
 var yyyy = today.getFullYear();
-console.log("43 yyyy: " + yyyy);
-console.log("44 mm: " + mm);
-console.log("45 dd: " + dd);
 
 var prevmm = mm;
 var prevyyyy = yyyy;
@@ -115,10 +112,12 @@ $.fn.AddNewPaymentLine = function (increment, date) {
 	//$("body").append(htmlTR);
 	$(".payments-table tr:last").after(htmlTR);
 
-	$.fn.AddAccountSelectList(newPaymentsName);
 
 };
 
+$(".paymentType").change(function (e) {
+	console.log("payment type changed");
+});
 
 
 $.fn.AdjustPaymentDates = function () {
