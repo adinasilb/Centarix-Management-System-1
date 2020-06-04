@@ -119,11 +119,7 @@ $.fn.AddNewPaymentLine = function (increment, date) {
 
 };
 
-$.fn.AddAccountSelectList = function (newPaymentsName) {
-	//console.log("in add account select list with the name of : " + newPaymentsName);
-	var inputBox = $("input[name='" + newPaymentsName + "']");
-	inputBox.val("correct box");
-};
+
 
 $.fn.AdjustPaymentDates = function () {
 
@@ -225,6 +221,27 @@ $("#price-tab").click(function () {
 
 $("#currency").change(function (e) {
 	$.fn.CheckCurrency();
+});
+
+$("#Request_ExchangeRate").change(function (e) {
+	$.fn.CalculateUnitAmounts();
+	$.fn.CalculateSubUnitAmounts();
+	$.fn.CalculateSubSubUnitAmounts();
+	$.fn.CalculateSumPlusVat();
+});
+
+$("#Request_Cost").change(function (e) {
+	$.fn.CalculateUnitAmounts();
+	$.fn.CalculateSubUnitAmounts();
+	$.fn.CalculateSubSubUnitAmounts();
+	$.fn.CalculateSumPlusVat();
+});
+
+$("#sum-dollars").change(function (e) {
+	$.fn.CalculateUnitAmounts();
+	$.fn.CalculateSubUnitAmounts();
+	$.fn.CalculateSubSubUnitAmounts();
+	$.fn.CalculateSumPlusVat();
 });
 
 $("#Request_Unit").change(function () {

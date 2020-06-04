@@ -1,6 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
-@*@inject SignInManager<ApplicationUser> SignInManager*@
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject SignInManager<ApplicationUser> SignInManager
 @{
 
 
@@ -53,7 +55,7 @@
                             <h3>@Model.Request.Product.ProductName</h3>
                             <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
                         </div>
-                        @if (true /*check if admin -sign in manager needs to be injected*/)
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                         {
                             <div class="col-1">
                                 <button class="btn btn-link load-product-edit" value="@Model.Request.RequestID" data-target="item" href="item"> <img width="25" src="~/images/css/inventory/icons/comments_selected.png" alt="Edit" /> </button>
@@ -67,7 +69,7 @@
                                 <ul class="nav nav-tabs" style="display: inline-flex">
                                     <li class="nav-item mr-4"><a data-toggle="tab" href="#item" class="nav-link"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
                                     <li class="nav-item mx-4"><a data-toggle="tab" href="#location" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Location" /><br />Location</a></li>
-                                    <li class="nav-item mx-4"><a data-toggle="tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
+                                    <li class="nav-item mx-4"><a data-toggle="tab" href="#price" id="price-tab" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
                                     <li class="nav-item mx-4"><a data-toggle="tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
                                     <li class="nav-item ml-4"><a data-toggle="tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
                                     @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li> Commented out below*@
@@ -299,7 +301,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="currency" class="control-label">Currency</label>
-                                            <select id="currency" class="form-control-plaintext border-bottom" disabled>
+                                            <select id="currency" asp-for="Request.Currency" class="form-control-plaintext border-bottom" disabled>
                                                 <option value="dollar">&#127480; USD</option>
                                                 <option value="shekel">&#127480; NIS</option>
                                             </select>
@@ -319,7 +321,7 @@
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label asp-for="Request.Unit" class="control-label"></label>
-                                                <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" id="unit-amount" min="0" disabled />
+                                                <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" min="0" disabled />
                                                 <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6">
@@ -329,7 +331,7 @@
     vm => vm.Request.UnitTypeID,
     Model.UnitTypeList,
     "",
-    htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "unit-type", @disabled = "disabled" }
+    htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
     )
                                                     <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                                 </div>
@@ -357,7 +359,7 @@
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label asp-for="Request.SubUnit" class="control-label"></label>
-                                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" id="subunit-amount" min="0" disabled />
+                                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
                                                 <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6 form-group">
@@ -366,7 +368,7 @@
              vm => vm.Request.SubUnitTypeID,
              Model.UnitTypeList,
              "",
-             htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "subunit-type", @disabled = "disabled" }
+             htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
          )
                                                 <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                             </div>
@@ -393,7 +395,7 @@
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" id="subsubunit-amount" min="0" disabled />
+                                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
                                                 <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6 form-group">
@@ -402,7 +404,7 @@
     vm => vm.Request.SubSubUnitTypeID,
     Model.UnitTypeList,
     "",
-    htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "subsubunit-type", @disabled = "disabled" }
+    htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
     )
                                                 <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                             </div>
@@ -429,21 +431,20 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label asp-for="Request.Cost" class="control-label"></label>
+                                            <label class="control-label">Sum:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
-                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" name="sumDollars" disabled />
-                                                @*id="sumDollars" name="sumDollars"*@
+                                                <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled />
                                             </div>
-                                            <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label">Sum:</label>
+                                            <label asp-for="Request.Cost" class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom" name="sumShekel" id="sumShekel" disabled />
+                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" disabled />
+                                                <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -452,7 +453,7 @@
                                             <label asp-for="Request.VAT" class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom id="vatInShekel" disabled />
+                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -493,7 +494,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-check">
-                                            <label class="form-check-label"><input class="form-check-input" type="checkbox" />Paid</label>
+                                            <label class="form-check-label"><input class="form-check-input" type="checkbox" disabled/>Paid</label>
                                         </div>
                                     </div>
                                 </div>

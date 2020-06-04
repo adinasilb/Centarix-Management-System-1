@@ -147,7 +147,7 @@ namespace PrototypeWithAuth.AppData
         {
             List<SelectListItem> termsSelectList = new List<SelectListItem>()
             {
-                new SelectListItem() { Value="0", Text="Pay Now" },
+                new SelectListItem() { Value="-1", Text="Paid" },
                 new SelectListItem() { Value="30", Text="30" },
                 new SelectListItem() { Value="45", Text="45" },
                 new SelectListItem() { Value="60", Text="60" }

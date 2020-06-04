@@ -28,6 +28,7 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         //take this out?
         private readonly IHostingEnvironment _hostingEnvironment;
 
@@ -43,11 +44,13 @@ namespace PrototypeWithAuth.Controllers
         //{
         //    _viewEngine = viewEngine;
         //}
-        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/)
+        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/)
         {
             //_Context = Context;
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
             //use the hosting environment for the file uploads
             _hostingEnvironment = hostingEnvironment;
             _viewEngine = viewEngine;
@@ -929,19 +932,9 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.OrderFileStrings = new List<String>();
                     foreach (var orderfile in orderfilesfound)
                     {
-                        requestItemViewModel.OrderFileStrings.Add(orderfile.Name);
+                        string newFileString = AppUtility.GetLastFourFiles(orderfile.FullName);
+                        requestItemViewModel.OrderFileStrings.Add(newFileString);
                     }
-                    //requestItemViewModel.OrderFilesFound = orderfilesfound;
-                    //checking if there were any files found before looping through them (to prevent an error)
-                    //requestItemViewModel.OrderFileStrings = new List<string>();
-                    //if (orderfilesfound[0].Exists)
-                    //{
-                    //    //getting the file from the FileInfo[]
-                    //    foreach (FileInfo file in orderfilesfound)
-                    //    {
-                    //        requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
-                    //    }
-                    //}
                 }
                 if (Directory.Exists(uploadFolderInvoices))
                 {
