@@ -5,20 +5,21 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <div class="row" style="height:3.62rem"> @*in order to align colOne and colTwo*@
+    <div class="row" style="height:4.55rem"> @*in order to align colOne and colTwo*@
         <div class="col-md-12">
             @if (Model.PrevLocationInstance != null)
             {
-                <button class="btn btn-outline-secondary load-sublocation-view" value="@Model.PrevLocationInstance.LocationInstanceParentID">@Model.PrevLocationInstance.LocationInstanceName</button>
-                <br />
+                //replaced 'btn btn-outline-secondary' with 'inv-button'
+            <button class="inv-button load-sublocation-view" value="@Model.PrevLocationInstance.LocationInstanceParentID"><i class="fas fa-undo-alt"></i> &nbsp; @Model.PrevLocationInstance.LocationInstanceName</button>
+                
                 <br />
             }
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-12 ">
-            <table class="table table-sm table-hover " style="background-color:rgba(48, 188, 201, 0.26);">
+        <div class="col-md-12 "> 
+            <table class="table table-sm table-hover " style="background-color:rgba(0, 0, 0, 0.03);">
                 @foreach (var locationInstance in Model.SublocationInstances)
                 {
                     <tr class="border-0"  >

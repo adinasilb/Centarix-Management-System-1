@@ -14,38 +14,48 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-@*need to put in div.rows and div.cols here*@
-<button class="btn btn-link visual-locations-zoom float-left zoon-in-btn" style="text-decoration:none; font-size:1.2rem;" value="@Model.ParentLocationInstance.LocationInstanceID"> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn visual-locations-zoom inv-link-clr float-lg-right" style="text-decoration:none; font-size:1.3rem;" value="@Model.ParentLocationInstance.LocationInstanceID"> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
+    </div>
+</div>
 <br />
-<table class="table table-sm border table">
-    @{
-        int z = -1;
-    }
-    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
-    {
-        <tr>
-            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-            {
-                z++;
-                var backgroundClass = "";
-                var innerHtml = "NONE";
-                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
-                {
-                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
-                    {
-                        backgroundClass += " bg-secondary";
-                        innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
-                    }
+<div class="row">
+    <div class="col-md-12">
+        <div class="container text-center" >
+            <table class="table table-sm border" style=" margin:auto;">
+                @{
+                    int z = -1;
                 }
-                <td class="@backgroundClass">@innerHtml</td>
-                @*<td class="border">
+                @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+                {
+                    <tr>
+                        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                        {
+                            z++;
+                            var backgroundClass = "";
+                            var innerHtml = "empty";
+                            @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                            {
+                                if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                                {
+                                    backgroundClass += " bg-info text-light";
+                                    innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+                                }
+                            }
+                            <td class="@backgroundClass" style="">@innerHtml</td>
+                            @*<td class="border">
                         @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
                         {
                             <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
                             z++;
                         }
                     </td>*@
-            }
-        </tr>
-    }
-</table>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+        
+    </div>
+</div>

@@ -5,7 +5,7 @@
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-<div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; overflow-y:auto;">
+<div class="modal-dialog  modal-dialog modal-lg" role="document" style="max-height:100%; max-width: 100%; width:80%; height:80%; overflow-y:auto;">
 
     <div class="modal-content d-inline-block">
 
@@ -13,40 +13,41 @@
 
             <div class="row">
                 <div class="col-12">
-                    <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent;" class="float-right">&times;</button>
+                    <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent; font-size:2rem;" class="float-right mb-2">&times;</button>
                 </div>
             </div>
 
-            <table class="table table-sm border">
+            <table class="table table-sm border visualzoom">
                 @{
                     int z = -1;
                 }
                 @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
                 {
-                <tr>
-                    @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-                    {
-                        z++;
-                        var backgroundClass = "border";
-                        var innerHtml = "NONE";
-                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                    <tr>
+                        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                         {
-                            if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                            z++;
+                            var backgroundClass = "border";
+                            var innerHtml = "empty";
+                            @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                             {
-                                backgroundClass += " bg-secondary";
-                                innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
-                                var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
-                                <td class="@backgroundClass">
-                                    @Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block" })
-                                </td>
-                            }
-                            else
-                            {
-                                <td class="@backgroundClass">@innerHtml</td>
+                                if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                                {
+                                    backgroundClass += " bg-info";
+                                    innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+                                    var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
+                                    <td style="height:70px; width:100px;" class="@backgroundClass">
+                                        @Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })
+                                        @*<a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class="btn btn-block text-light">@innerHtml <br /> [Details] <i class="icon-centarix-icons-09"></i> </a>*@
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="height:60px; width:90px; vertical-align:bottom;" class="@backgroundClass">@innerHtml</td>
+                                }
                             }
                         }
-                    }
-                </tr>
+                    </tr>
                 }
             </table>
         </div>
