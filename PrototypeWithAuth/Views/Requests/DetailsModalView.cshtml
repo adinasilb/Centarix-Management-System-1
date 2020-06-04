@@ -260,9 +260,9 @@
                                                         {
                                                             if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
                                                             {
-                                                                backgroundClass += " bg-primary";
+                                                                backgroundClass += " bg-info text-light text-center";
                                                             }
-                                                            else
+                                                            else //why is this else here? it seem to ever get used. 
                                                             {
                                                                 backgroundClass += " bg-secondary";
                                                             }
@@ -272,9 +272,7 @@
                                                         }
                                                         else
                                                         {
-                                                            <td class="@backgroundClass">
-                                                                Empty
-                                                            </td>
+                                                            <td class="@backgroundClass">empty</td>
                                                         }
 
                                                     }
