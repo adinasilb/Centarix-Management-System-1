@@ -47,7 +47,7 @@
                     </div><br />
                     <div class="row">
                         <div class="col-2"><img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /></div>
-                        <div class="col-8 ml-3">
+                        <div class="col-7">
                             <!--<h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>-->
                             <!-- <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>  -->
                             <h3>@Model.Request.Product.ProductName</h3>
@@ -55,8 +55,8 @@
                         </div>
                         @if (true /*check if admin -sign in manager needs to be injected*/)
                         {
-                            <div class="col-1">
-                                <button class="btn btn-link load-product-edit" value="@Model.Request.RequestID" data-target="item" href="item"> <img width="25" src="~/images/css/inventory/icons/comments_selected.png" alt="Edit" /> </button>
+                            <div class="col-2">
+                                <button class="btn inv-link-clr load-product-edit" value="@Model.Request.RequestID" data-target="item" href="item" style="font-size:1.5rem;">Edit <i style="font-size:1.2rem;" class="icon-create-24px"></i></button>
                             </div>
                         }
                     </div>
