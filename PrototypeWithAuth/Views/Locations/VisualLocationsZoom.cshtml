@@ -28,22 +28,24 @@
                         {
                             z++;
                             var backgroundClass = "border";
-                            var innerHtml = "empty";
+                           
+                            //var innerHtml = "empty";
                             @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                             {
                                 if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
                                 {
                                     backgroundClass += " bg-info";
-                                    innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+                                    var innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
                                     var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
-                                    <td style="height:70px; width:100px;" class="@backgroundClass">
-                                        @Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })
-                                        @*<a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class="btn btn-block text-light">@innerHtml <br /> [Details] <i class="icon-centarix-icons-09"></i> </a>*@
-                                    </td>
+                        <td style="height:70px; width:100px;" class="@backgroundClass">
+                            @Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })
+                            @*<a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class="btn btn-block text-light">@innerHtml <br /> [Details] <i class="icon-centarix-icons-09"></i> </a>*@
+                           <span style="color:white"> @Model.ChildrenLocationInstances[z].Place</span>
+                        </td>
                                 }
                                 else
                                 {
-                                    <td style="height:60px; width:90px; vertical-align:bottom;" class="@backgroundClass">@innerHtml</td>
+                    <td style="height:60px; width:90px; vertical-align:bottom;" class="@backgroundClass">@Model.ChildrenLocationInstances[z].Place</td>
                                 }
                             }
                         }

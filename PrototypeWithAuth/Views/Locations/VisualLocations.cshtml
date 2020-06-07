@@ -34,13 +34,19 @@
                         {
                             z++;
                             var backgroundClass = "";
-                            var innerHtml = "empty";
+                            var innerHtml = Model.ParentLocationInstance.Place;
                             @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                             {
                                 if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
                                 {
                                     backgroundClass += " bg-info text-light";
-                                    innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+
+                                    innerHtml = Model.ChildrenLocationInstances[z].Place;
+                                }
+                                else
+                                {
+                                    backgroundClass = "";
+                                    innerHtml = Model.ChildrenLocationInstances[z].Place;
                                 }
                             }
                             <td class="@backgroundClass" style="">@innerHtml</td>
