@@ -18,15 +18,15 @@
 }
 <br />
 <div class="row">
-    <div class="col-md-3 colOne pr-0 pl-4">
+    <div class="col-md-3 colOne pr-0 pl-5">
         <br />
-        <table class="table table-sm table-hover">
+        <table class="table table-sm table-noheaderlines table-headerspaced table-hover border">
             <thead>
                 <tr>
 
-                    <th class="text-center">
-                        @Html.DisplayNameFor(item => item.LocationsDepthOfZero.FirstOrDefault().LocationInstanceName)
-                        @*"Name"*@
+                    <th class="text-center font-weight-bold">
+                        Location Name
+                        @*@Html.DisplayNameFor(item => item.LocationsDepthOfZero.FirstOrDefault().LocationInstanceName)*@
                     </th>
                 </tr>
             </thead>

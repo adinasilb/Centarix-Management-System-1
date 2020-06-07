@@ -210,7 +210,7 @@
                 <tr class="text-center inv-list-item">
                     <td> <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /> </td>
 
-                    <td> <button class="btn btn-link load-product-details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
+                    <td> <button class="btn inv-link-clr load-product-details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
 
                     <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
 
@@ -275,22 +275,22 @@
                             {
                                 @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
 
-                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" class="btn btn-link load-confirm-email">Approve</button>
+                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" class="btn inv-link-clr load-confirm-email">Approve</button>
                             }
                         }
                         else if (item.RequestStatusID == 2)
                         {
-                            <button class="btn load-receive-and-location" value="@item.RequestID">Receive</button>
+                            <button class="btn inv-link-clr load-receive-and-location" value="@item.RequestID">Receive</button>
                         }
                         else
                         {
                             @*work on getting the correct syntax to create a new product with*@
-                            <button class="btn btn-link load-order-details" value="@item.RequestID">Order</button>
+                            <button class="btn inv-link-clr load-order-details" value="@item.RequestID">Order</button>
                         }
                     </td>
                     <td>
                         @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
-                        <button class="btn btn-link load-confirm-delete" value="@item.RequestID">Delete</button>
+                        <button class="btn inv-link-clr load-confirm-delete" value="@item.RequestID">Delete</button>
                         @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
                     </td>
                 </tr>

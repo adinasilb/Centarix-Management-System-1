@@ -49,7 +49,7 @@
                     </div><br />
                     <div class="row">
                         <div class="col-2"><img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /></div>
-                        <div class="col-8 ml-3">
+                        <div class="col-7">
                             <!--<h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>-->
                             <!-- <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>  -->
                             <h3>@Model.Request.Product.ProductName</h3>
@@ -57,8 +57,8 @@
                         </div>
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                         {
-                            <div class="col-1">
-                                <button class="btn btn-link load-product-edit" value="@Model.Request.RequestID" data-target="item" href="item"> <img width="25" src="~/images/css/inventory/icons/comments_selected.png" alt="Edit" /> </button>
+                            <div class="col-2">
+                                <button class="btn inv-link-clr load-product-edit" value="@Model.Request.RequestID" data-target="item" href="item" style="font-size:1.5rem;">Edit <i style="font-size:1.2rem;" class="icon-create-24px"></i></button>
                             </div>
                         }
                     </div>
@@ -71,8 +71,8 @@
                                     <li class="nav-item mx-4"><a data-toggle="tab" href="#location" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Location" /><br />Location</a></li>
                                     <li class="nav-item mx-4"><a data-toggle="tab" href="#price" id="price-tab" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
                                     <li class="nav-item mx-4"><a data-toggle="tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
-                                    <li class="nav-item ml-4"><a data-toggle="tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
-                                    @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li> Commented out below*@
+                                    <li class="nav-item ml-4"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
+                                    @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li> Commented out below - I guess because this is the DETAILS modal, so cant order from here.*@
                                 </ul>
                             </div>
                         </div>
@@ -262,9 +262,9 @@
                                                         {
                                                             if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
                                                             {
-                                                                backgroundClass += " bg-primary";
+                                                                backgroundClass += " bg-info text-light text-center";
                                                             }
-                                                            else
+                                                            else //why is this else here? it seem to ever get used. 
                                                             {
                                                                 backgroundClass += " bg-secondary";
                                                             }
@@ -274,9 +274,7 @@
                                                         }
                                                         else
                                                         {
-                                                            <td class="@backgroundClass">
-                                                                Empty
-                                                            </td>
+                                                            <td class="@backgroundClass">empty</td>
                                                         }
 
                                                     }

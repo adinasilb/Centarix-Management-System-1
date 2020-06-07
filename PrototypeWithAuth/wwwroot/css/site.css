@@ -168,6 +168,16 @@ body {
     opacity: 0.87;
 }
 
+.inv-link-clr {
+    color: black;
+}
+
+.inv-link-clr:hover {
+    font-weight: bold;
+    color: #30BCC9;
+    text-decoration: none;
+}
+
 /*navbar activeLink color-profile change*/
 .opac54 {
     color:black;
@@ -228,14 +238,14 @@ ul li.acc-sidebar.active {
 }
 
 /*table CSS*/
-table tr td button.btn-link {
+/*table tr td button.btn-link {
     color:black;
 }
 
 table tr td button.btn-link:hover {
     color:black;
     font-weight:bold;
-}
+}*/
 
 /*<<<< main menu images css >>>>*/
 .main-btn-img {
@@ -351,12 +361,12 @@ a.nav-link { color: inherit }
     border-bottom: 4px solid #30BCC9;
 } /*going to have to add filter in order to change color on the intended images, unless chaya can come thru converting the pngs to icons!*/
 
-.zoon-in-btn {
+.zoom-in-btn {
     color: black;
     text-decoration:none; 
 }
 
-.zoon-in-btn:hover {
+.zoom-in-btn:hover {
     color:black;
     font-weight:bold;
 }
@@ -372,8 +382,11 @@ a.nav-link { color: inherit }
 }*/
 
 .td-selected {
-    background-color: rgba(48, 188, 201, 0.26);
-    border-left: 3px solid #30BCC9;
+    z-index: 1;
+    width: 400px;
+    /*background-color: rgba(48, 188, 201, 0.18);*/
+    background-color: rgba(0, 0, 0, 0.03);
+    border-left: 5px solid #30BCC9;
 }
 
 table.table tr td button:focus { /*in order to remove button outine on focus. but may affect accessability so consider returning*/
@@ -386,12 +399,10 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
 }
 
 .VisualBoxColumn table.table tr td {
-    
-    line-height: 50px;
-    max-height: 300px;
-    min-width: 50px;
-    max-width: 400px;
-    vertical-align:bottom;
-    text-align:left;
-    border: 2px solid grey;
+    height: 80px;
+    width: 85px;
+    vertical-align: bottom;
+    text-align: left;
+    font-size:small;
+    border: 2px solid black;
 }
