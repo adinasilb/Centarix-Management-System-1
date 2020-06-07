@@ -45,6 +45,7 @@ $("#Request_ParentRequest_Installments").change(function () {
 
 
 	if (dd < 10) { dd = '0' + dd }
+	console.log("dd: " + dd);
 
 
 	if (difference > 0) { 
@@ -70,6 +71,7 @@ $("#Request_ParentRequest_Installments").change(function () {
 
 			prevyyyy = newyyyy;
 			prevmm = newmm;
+			console.log("payment date: " + paymentDate);
 			$.fn.AddNewPaymentLine(newIncrementNumber, paymentDate);
 			newIncrementNumber++;
 		};
@@ -117,17 +119,12 @@ $.fn.AddNewPaymentLine = function (increment, date) {
 
 //since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
 $(".payments-table").on("change", ".paymentType", function (e) {
-	console.log("payment type changed " + $(this).val());
 	var paymentTypeID = $(this).val();
 	var url = "/CompanyAccounts/GetAccountsByPaymentType";
 	var id = "" + $(this).attr('id');
-	console.log("id: " + id);
 	var number = id.substr(12, 1);
-	console.log("number: " + number);
 	var newid = "NewPayments_" + number + "__CompanyAccount";
-	console.log("newid: " + newid);
 	$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
-		console.log("in json get for company account");
 		var item = "";
 		$("#" + newid).empty();
 		$.each(data, function (i, companyAccount) {
