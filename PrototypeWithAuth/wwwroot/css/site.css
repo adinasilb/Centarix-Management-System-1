@@ -348,9 +348,9 @@ a.nav-link { color: inherit }
 
 .new-button:hover {
     /*background-color: #338f84;*/
-    opacity:1;
+    opacity: 1;
     color: #30BCC9;
-    border: 1px solid #30BCC9;
+    background-color: rgba(48, 188, 201,0.05);
     border-radius: 3px;
     text-decoration: none;
 }
@@ -429,7 +429,31 @@ table.table.visualzoom tr td a {
     max-height:50px;
     font-size:small;
     padding: 0;
-    /*width:20rem;*/
-
-    
+    /*width:20rem;*/   
 }
+
+.approve-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.approve-tooltip.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.approve-tooltip:hover.tooltiptext {
+    visibility: visible;
+}
+
+
