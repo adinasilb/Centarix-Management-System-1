@@ -115,8 +115,28 @@ $.fn.AddNewPaymentLine = function (increment, date) {
 
 };
 
-$(".paymentType").change(function (e) {
-	console.log("payment type changed");
+//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
+$(".payments-table").on("change", ".paymentType", function (e) {
+	console.log("payment type changed " + $(this).val());
+	var paymentTypeID = $(this).val();
+	var url = "/CompanyAccounts/GetAccountsByPaymentType";
+	var id = "" + $(this).attr('id');
+	console.log("id: " + id);
+	var number = id.substring(1, 12);
+	console.log("number: " + number);
+	var newid = "NewPayments_" + number + "__CompanyAccount";
+	console.log("newid: " + newid);
+	$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
+		console.log("in json get for company account");
+		var item = "";
+		$("#" + newid).empty();
+		$.each(data, function (i, companyAccount) {
+			console.log(companyAccount.companyAccountId)
+			item += '<option value="' + companyAccount.companyAccountId + '">' + companyAccount.companyAccountNum + '</option>'
+			console.log(item);
+		});
+		$("#" + newid).html(item);
+	});
 });
 
 

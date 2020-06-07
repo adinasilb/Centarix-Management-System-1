@@ -2040,12 +2040,12 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        [HttpGet]
-        public JsonResult GetCompanyAccountList(int PaymentTypeID)
-        {
-            var companyAccountList = _context.CompanyAccounts.Where(c => c.PaymentTypeID == PaymentTypeID).ToList();
-            return Json(companyAccountList);
-        }
+        //[HttpGet]
+        //public JsonResult GetCompanyAccountList(int PaymentTypeID)
+        //{
+        //    var companyAccountList = _context.CompanyAccounts.Where(c => c.PaymentTypeID == PaymentTypeID).ToList();
+        //    return Json(companyAccountList);
+        //}
 
         [HttpGet]
         public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
