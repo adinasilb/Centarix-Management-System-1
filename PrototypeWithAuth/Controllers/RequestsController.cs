@@ -1281,7 +1281,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         payment.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
                         payment.CompanyAccount = null;
-                        payment.Reference = "TEST";
+                        //payment.Reference = "TEST";
                         try
                         {
                             _context.Payments.Update(payment);
