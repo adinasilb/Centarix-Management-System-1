@@ -407,3 +407,16 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
     font-size:small;
     border: 2px solid black;
 }
+
+table.table.visualzoom tr td {
+    height: 78px;
+    width: 100px;
+    vertical-align: bottom;
+    text-align:left;
+    overflow:hidden;
+}
+
+table.table.visualzoom tr td a {
+    text-align: left;
+    vertical-align: top;
+}

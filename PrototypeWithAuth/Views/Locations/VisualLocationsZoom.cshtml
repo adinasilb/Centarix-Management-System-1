@@ -36,14 +36,14 @@
                                     backgroundClass += " bg-info";
                                     innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
                                     var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
-                                    <td style="height:78px; width:100px;" class="@backgroundClass">
-                                        @Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })
-                                        @*<a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class="btn btn-block text-light">@innerHtml <br /> [Details] <i class="icon-centarix-icons-09"></i> </a>*@
+                                    <td style="vertical-align:top;" class="@backgroundClass">
+                                        @*@Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })*@
+                                        <a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class="btn btn-block text-light">@innerHtml</a>
                                     </td>
                                 }
                                 else
                                 {
-                                    <td style="height:78px; width:100px; vertical-align:bottom;" class="@backgroundClass">@innerHtml</td>
+                                    <td style="" class="@backgroundClass">@innerHtml</td>
                                 }
                             }
                         }
