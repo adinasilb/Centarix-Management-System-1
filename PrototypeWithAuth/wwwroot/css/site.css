@@ -394,7 +394,7 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
 }
 
 /*removed , .VisualBoxColumn table.table tr*/
-.VisualBoxColumn table.table {
+.VisualBoxColumn table.table, .VisualBoxColumn table.table tr {
     width: auto;
     height: auto;
 }
@@ -408,15 +408,28 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
     border: 2px solid black;
 }
 
+table.table.visualzoom {
+    width:auto;
+    height:auto;
+}
+
 table.table.visualzoom tr td {
-    height: 78px;
-    width: 100px;
+    height: 80px;
+    width: 160px;
     vertical-align: bottom;
-    text-align:left;
-    overflow:hidden;
+    text-align: left;
+    overflow: hidden;
 }
 
 table.table.visualzoom tr td a {
     text-align: left;
     vertical-align: top;
+    overflow:hidden;
+    max-width:8rem;
+    max-height:50px;
+    font-size:small;
+    padding: 0;
+    /*width:20rem;*/
+
+    
 }
