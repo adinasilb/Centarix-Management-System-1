@@ -122,7 +122,7 @@ $(".payments-table").on("change", ".paymentType", function (e) {
 	var url = "/CompanyAccounts/GetAccountsByPaymentType";
 	var id = "" + $(this).attr('id');
 	console.log("id: " + id);
-	var number = id.substring(1, 12);
+	var number = id.substr(12, 1);
 	console.log("number: " + number);
 	var newid = "NewPayments_" + number + "__CompanyAccount";
 	console.log("newid: " + newid);
@@ -131,9 +131,7 @@ $(".payments-table").on("change", ".paymentType", function (e) {
 		var item = "";
 		$("#" + newid).empty();
 		$.each(data, function (i, companyAccount) {
-			console.log(companyAccount.companyAccountId)
-			item += '<option value="' + companyAccount.companyAccountId + '">' + companyAccount.companyAccountNum + '</option>'
-			console.log(item);
+			item += '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyAccountNum + '</option>'
 		});
 		$("#" + newid).html(item);
 	});
