@@ -19,9 +19,6 @@ namespace PrototypeWithAuth.Data
             : base(options)
         {
 
-
-
-
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
         public DbSet<LocationInstance> LocationInstances { get; set; }
@@ -45,11 +42,13 @@ namespace PrototypeWithAuth.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<RequestLocationInstance>()
-         .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
+                .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
+
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasOne(rl => rl.Request)
                 .WithMany(r => r.RequestLocationInstances)
                 .HasForeignKey(rl => rl.RequestID);
+
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasOne(rl => rl.LocationInstance)
                 .WithMany(l => l.RequestLocationInstances)
