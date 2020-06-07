@@ -403,6 +403,35 @@ namespace PrototypeWithAuth.Controllers
                 */
                 requestItemViewModel.OldComments = comments.ToList();
 
+                //GET PAYMENTS HERE
+                var payments = _context.Payments
+                    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+                    .Where(p => p.ParentRequestID == requestItemViewModel.Request.ParentRequestID).ToList();
+                requestItemViewModel.NewPayments = payments;
+
+                if (payments.Count > 0)
+                {
+                    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+                    var totalPaymentsToDate = 0;
+                    foreach (var payment in payments)
+                    {
+                        if (payment.PaymentDate <= DateTime.Now)
+                        {
+                            totalPaymentsToDate++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+                }
+                else
+                {
+                    requestItemViewModel.Debt = 0;
+                }
+
+
                 //locations:
                 //get the list of requestLocationInstances in this request
                 //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
@@ -1013,6 +1042,38 @@ namespace PrototypeWithAuth.Controllers
                         requestItemViewModel.CreditFileStrings.Add(newFileString);
                     }
                 }
+
+                //GET PAYMENTS HERE
+                var payments = _context.Payments
+                    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+                    .Where(p => p.ParentRequestID == requestItemViewModel.Request.ParentRequestID).ToList();
+                requestItemViewModel.NewPayments = payments;
+
+                if (payments.Count > 0)
+                {
+                    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+                    var totalPaymentsToDate = 0;
+                    foreach (var payment in payments)
+                    {
+                        if (payment.PaymentDate <= DateTime.Now)
+                        {
+                            totalPaymentsToDate++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+                }
+                else
+                {
+                    requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
+                }
+
+
+
+
                 //locations:
                 //get the list of requestLocationInstances in this request
                 //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
@@ -1277,19 +1338,22 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     //Saving the Payments - each one should come in with a 1) date 2) companyAccountID
-                    foreach (Payment payment in requestItemViewModel.NewPayments)
+                    if (requestItemViewModel.NewPayments != null)
                     {
-                        payment.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
-                        payment.CompanyAccount = null;
-                        //payment.Reference = "TEST";
-                        try
+                        foreach (Payment payment in requestItemViewModel.NewPayments)
                         {
-                            _context.Payments.Update(payment);
-                            await _context.SaveChangesAsync();
-                        }
-                        catch(Exception ex)
-                        {
+                            payment.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+                            payment.CompanyAccount = null;
+                            //payment.Reference = "TEST";
+                            try
+                            {
+                                _context.Payments.Update(payment);
+                                await _context.SaveChangesAsync();
+                            }
+                            catch (Exception ex)
+                            {
 
+                            }
                         }
                     }
                 }
@@ -1297,7 +1361,10 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
-                    TempData["ErrorMessage"] = ex.InnerException.ToString();
+                    if (ex.InnerException != null)
+                    {
+                        TempData["ErrorMessage"] = ex.InnerException.ToString();
+                    }
                     return View(requestItemViewModel);
                 }
             }
@@ -1365,11 +1432,6 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Request.ProductID = request.ProductID;
                 requestItemViewModel.Request.Product = request.Product;
 
-                var paymentsList = _context.Payments
-                    .Include(p => p.CompanyAccount) //check if it works without this
-                    .Include(p => p.CompanyAccount.PaymentType)
-                    .Where(p => p.ParentRequestID == request.ParentRequest.ParentRequestID);
-                requestItemViewModel.OldPayments = paymentsList;
 
             }
             else
@@ -1685,8 +1747,8 @@ namespace PrototypeWithAuth.Controllers
 
 
                 var request = _context.Requests.Where(r => r.RequestID == confirmEmail.Request.RequestID).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).FirstOrDefault();
-                string ownerEmail = "shimon@centarix.com";// request.ParentRequest.ApplicationUser.Email;
-                string ownerUsername = "Shimon Meshi Zahav";//request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
+                string ownerEmail = "adiansilberberg@gmail.com";// request.ParentRequest.ApplicationUser.Email;
+                string ownerUsername = "Adina Gayer";//request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
                 string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
                 string vendorEmail = request.Product.Vendor.OrderEmail;
                 string vendorName = request.Product.Vendor.VendorEnName;
@@ -1712,7 +1774,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, "rxoz zvdz whao xowm");// ownerPassword);//
+                    client.Authenticate(ownerEmail, "gmailpassword");// ownerPassword);//
 
                     //"FakeUser@123"); // set up two step authentication and get app password
                     try

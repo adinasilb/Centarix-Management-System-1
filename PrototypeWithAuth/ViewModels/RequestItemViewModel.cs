@@ -14,6 +14,7 @@ namespace PrototypeWithAuth.ViewModels
     //this is the model for the modal view - this views a specific request and details - CRU (D)
     public class RequestItemViewModel
     {
+        public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
@@ -42,11 +43,12 @@ namespace PrototypeWithAuth.ViewModels
         public FileInfo[] OrderFilesFound { get; set; }
         public IEnumerable<Comment> OldComments { get; set; }
         public Comment NewComment { get; set; }
-        public IEnumerable<Payment> OldPayments { get; set; }
+
         public List<Payment> NewPayments { get; set; }
+        public double Debt { get; set; } //shekel
         public IEnumerable<PaymentType> PaymentTypes { get; set; }
         public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
-        public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
+
 
         public LocationInstance ParentLocationInstance { get; set; } //DO WE NEED THIS?????????
         public List<LocationInstance> ChildrenLocationInstances { get; set; } //need this in a list b/c we need to 
