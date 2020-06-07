@@ -32,6 +32,8 @@ var dd = today.getDate();
 var mm = today.getMonth() + 1; //January is 0!
 var yyyy = today.getFullYear();
 
+if (dd < 10) { dd = '0' + dd }
+
 var prevmm = mm;
 var prevyyyy = yyyy;
 //insert the payment lines
@@ -44,7 +46,6 @@ $("#Request_ParentRequest_Installments").change(function () {
 	console.log("difference " + difference);
 
 
-	if (dd < 10) { dd = '0' + dd }
 	console.log("dd: " + dd);
 
 
@@ -101,10 +102,10 @@ $.fn.AddNewPaymentLine = function (increment, date) {
 	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '<td>';
-	var newPaymentsId = "NewPayments_" + increment + "__CompanyAccount";
-	var newPaymentsName = "NewPayments[" + increment + "].CompanyAccount";
+	var newPaymentsId = "NewPayments_" + increment + "__CompanyAccountID";
+	var newPaymentsName = "NewPayments[" + increment + "].CompanyAccountID";
 	htmlTR += '<select class="form-control companyAccountNum" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
-	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountNum" data-valmsg-replace="true"></span>';
+	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '<td>';
 	htmlTR += '<input class="form-control" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
@@ -123,7 +124,7 @@ $(".payments-table").on("change", ".paymentType", function (e) {
 	var url = "/CompanyAccounts/GetAccountsByPaymentType";
 	var id = "" + $(this).attr('id');
 	var number = id.substr(12, 1);
-	var newid = "NewPayments_" + number + "__CompanyAccount";
+	var newid = "NewPayments_" + number + "__CompanyAccountID";
 	$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
 		var item = "";
 		$("#" + newid).empty();
