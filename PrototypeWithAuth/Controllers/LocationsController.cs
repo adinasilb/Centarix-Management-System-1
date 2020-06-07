@@ -33,7 +33,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Inventory;
 
             var locations = _context.LocationInstances
-                .Include(li => li.AllRequestLocationInstances).Where(li => li.LocationInstanceParentID == null);
+                .Include(li => li.AllRequestLocationInstances).Where(li => li.LocationInstanceParentID == null).Include(li => li.LocationType);
 
             LocationInventoryIndexViewModel locationInventoryIndexViewModel = new LocationInventoryIndexViewModel()
             {
@@ -46,6 +46,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            
             // Added by Dani because to make CSS work better
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
 
@@ -187,11 +188,13 @@ namespace PrototypeWithAuth.Controllers
                 //{
                 //    addLocationViewModel.LocationInstance.LocationInstanceName
                 //};
+                int companyLocationNo = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo;
+
                 string nameAbbreviation = addLocationViewModel.LocationInstance.LocationInstanceName;
                 List<List<string>> namesPlaceholder = new List<List<string>>();
                 List<List<int>> placeholderInstanceIds = new List<List<int>>(); //may need to be a list of lists
                 bool first = true;
-
+        
                 int prevHeight = addLocationViewModel.LocationInstance.Height;
                 int prevWidth = addLocationViewModel.LocationInstance.Width;
                 for (int z = 0; z < subLocationViewModel.LocationInstances.Count; z++)/*var locationInstance in subLocationViewModel.LocationInstances*/ //for each level in the sublevels
@@ -211,6 +214,7 @@ namespace PrototypeWithAuth.Controllers
                     int width = 0;
                     if (z < subLocationViewModel.LocationInstances.Count - 1)
                     {
+                        
                         height = subLocationViewModel.LocationInstances[z + 1].Height;
                         width = subLocationViewModel.LocationInstances[z + 1].Width;
                     }
@@ -238,6 +242,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         if (first)
                         {
+                            //if this is the first level - locations with no parents
+                            companyLocationNo++;
+                            addLocationViewModel.LocationInstance.CompanyLocationNo = companyLocationNo;
                             parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
                             attachedName = nameAbbreviation + typeName;
                             first = false;

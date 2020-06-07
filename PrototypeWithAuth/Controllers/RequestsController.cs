@@ -1275,6 +1275,23 @@ namespace PrototypeWithAuth.Controllers
                     {
                         return RedirectToAction("ConfirmEmailModal", new { id = requestItemViewModel.Request.RequestID });
                     }
+
+                    //Saving the Payments - each one should come in with a 1) date 2) companyAccountID
+                    foreach (Payment payment in requestItemViewModel.NewPayments)
+                    {
+                        payment.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+                        payment.CompanyAccount = null;
+                        //payment.Reference = "TEST";
+                        try
+                        {
+                            _context.Payments.Update(payment);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch(Exception ex)
+                        {
+
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
