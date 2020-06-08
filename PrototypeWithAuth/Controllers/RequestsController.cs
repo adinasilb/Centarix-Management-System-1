@@ -1860,6 +1860,11 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page, int? requestStatID)
         {
             IQueryable<Request> requestsSearched = _context.Requests.AsQueryable();
+            if (requestsSearchViewModel.Inventory)
+            {
+            }
+
+
             if (requestsSearchViewModel.Request.Product.ProductName != null)
             {
                 requestsSearched = requestsSearched.Where(r => r.Product.ProductName == requestsSearchViewModel.Request.Product.ProductName);

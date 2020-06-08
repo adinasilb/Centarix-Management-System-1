@@ -5,212 +5,202 @@
 }
 @*<div class="modal modal-view  right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">*@
 
-<form action="" method="post" enctype="multipart/form-data">
-    <div class="row mt-5">
-        <div class="col-1 offset-1 mt-3">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="checkbox" class="custom-checkbox" asp-for="Inventory" />
-            <label asp-for="Inventory">Inventory</label><br />
-            <input type="checkbox" class="custom-checkbox" asp-for="Ordered" />
-            <label asp-for="Ordered">Ordered</label><br />
-            <input type="checkbox" class="custom-checkbox" asp-for="ForApproval" />
-            <label asp-for="ForApproval">ForApproval</label><br />
-            @*<input asp-for="RequestStatusID[i].Dispatched" />*@
-            @*@Html.CheckBoxFor(m => m.Inventory) <label for="@Model.Inventory">Inventory</label>
-        @Html.CheckBoxFor(m => m.Ordered) <label for="@Model.Ordered">Ordered</label>
-        @Html.CheckBoxFor(m => m.ForApproval) <label for="@Model.ForApproval">ForApproval</label>*@
-            @*<input type="checkbox" asp-for="Inventory" value="3">
-        <label for="3"> Inventory</label><br>
-          <input type="checkbox" asp-for="Ordered" value="2">
-          <label for="2"> Ordered</label><br>
-          <input type="checkbox" asp-for="ForApproval" value="1">
-          <label for="1"> For Approval</label><br>*@
-        </div>
+    <form action="" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row mt-5">
+            <div class="col-1 offset-1 mt-3">
+                <input type="checkbox" class="custom-checkbox" asp-for="Inventory" />
+                <label asp-for="Inventory">Inventory</label><br />
+                <input type="checkbox" class="custom-checkbox" asp-for="Ordered" />
+                <label asp-for="Ordered">Ordered</label><br />
+                <input type="checkbox" class="custom-checkbox" asp-for="ForApproval" />
+                <label asp-for="ForApproval">ForApproval</label><br />
+            </div>
 
-        <div class="card col-6 offset-1" style="width:700px">
-            <div class="card-body">
-                <h1>Search</h1>
-                <div class="row">
-                    <div class="col-md-2">
-                        <img src="" />
-                    </div>
-                    <div class="col-md-7">
-                        <div class="form-group">
-                            <label asp-for="Request.Product.ProductName" class="control-label"></label>
-                            <input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom" />
+            <div class="card col-6 offset-1" style="width:700px">
+                <div class="card-body">
+                    <h1>Search</h1>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <img src="" />
+                        </div>
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <label asp-for="Request.Product.ProductName" class="control-label"></label>
+                                <input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="submit" class="btn btn-outline-secondary" />
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <input type="submit" class="btn btn-outline-secondary" />
-                    </div>
-                </div>
-                @*<div class="row col-md-4">
+                    @*<div class="row col-md-4">
                         Item
                     </div>*@
-                <hr />
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Request.Product.ProductSubcategory.ParentCategoryID" class="control-label">Category</label>
-                            @Html.DropDownListFor(
-                                X => X.Request.Product.ProductSubcategory.ParentCategoryID,
-                                new SelectList(
-                                    Model.ParentCategories,
-                                    "ParentCategoryID",
-                                    "ParentCategoryDescription"),
-                                "Please select a category",
-                                new { @class = "form-control-plaintext border-bottom", @id = "parentlist" })
+                    <hr />
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="Request.Product.ProductSubcategory.ParentCategoryID" class="control-label">Category</label>
+                                @Html.DropDownListFor(
+                                    X => X.Request.Product.ProductSubcategory.ParentCategoryID,
+                                    new SelectList(
+                                        Model.ParentCategories,
+                                        "ParentCategoryID",
+                                        "ParentCategoryDescription"),
+                                    "Please select a category",
+                                    new { @class = "form-control-plaintext border-bottom", @id = "parentlist" })
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="Request.Product.ProductSubcategoryID" class="control-label">Subcategory</label>
+                                @*<select asp-for="Request.Product.ProductSubcategoryID" class="form-control-plaintext border-bottom" id="sublist" />*@
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                @*placeholder*@
+                                <label class="control-label">Project</label>
+                                <select name="Project" class="form-control-plaintext border-bottom">
+                                    <option>Select a project</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Request.Product.ProductSubcategoryID" class="control-label">Subcategory</label>
-                            @*<select asp-for="Request.Product.ProductSubcategoryID" class="form-control-plaintext border-bottom" id="sublist" />*@
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                @*placeholder*@
+                                <label class="control-label">Sub Project</label>
+                                <select name="Project" class="form-control-plaintext border-bottom">
+                                    <option>Select a sub project</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            @*placeholder*@
-                            <label class="control-label">Project</label>
-                            <select name="Project" class="form-control-plaintext border-bottom">
-                                <option>Select a project</option>
-                            </select>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="Request.Product.VendorID" class="control-label">Supplier</label>
+                                @Html.DropDownListFor(
+                                    x => x.Request.Product.VendorID,
+                                    new SelectList(
+                                        Model.Vendors,
+                                        dataValueField: "VendorID",
+                                        dataTextField: "VendorEnName"),
+                                    optionLabel: "Select A Supplier",
+                                    htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "vendorList" })
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            @*placeholder*@
-                            <label class="control-label">Sub Project</label>
-                            <select name="Project" class="form-control-plaintext border-bottom">
-                                <option>Select a sub project</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Request.Product.VendorID" class="control-label">Supplier</label>
-                            @Html.DropDownListFor(
-                                x => x.Request.Product.VendorID,
-                                new SelectList(
-                                    Model.Vendors,
-                                    dataValueField: "VendorID",
-                                    dataTextField: "VendorEnName"),
-                                optionLabel: "Select A Supplier",
-                                htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "vendorList" })
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            @* IN MIDDLE *@
-                            <label class="control-label">Supplier ID</label>
-                            @Html.DropDownListFor(
-                               x => x.Request.Product.VendorID,
-                               new SelectList(
-                                   Model.Vendors,
-                                   dataValueField: "VendorID",
-                                   dataTextField: "VendorBuisnessID"),
-                               optionLabel: "Select Supplier ID",
-                               htmlAttributes: new { @class = "form-control-plaintext border-bottom"/*, @id = "vendorList" */})
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @* IN MIDDLE *@
+                                <label class="control-label">Supplier ID</label>
+                                @Html.DropDownListFor(
+                                   x => x.Request.Product.VendorID,
+                                   new SelectList(
+                                       Model.Vendors,
+                                       dataValueField: "VendorID",
+                                       dataTextField: "VendorBuisnessID"),
+                                   optionLabel: "Select Supplier ID",
+                                   htmlAttributes: new { @class = "form-control-plaintext border-bottom"/*, @id = "vendorList" */})
 
-                            @*<label class="vendorBusinessId form-control-plaintext border-bottom" />*@
+                                @*<label class="vendorBusinessId form-control-plaintext border-bottom" />*@
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                            <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" />
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
+                                <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
+                                <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom" />
+                            </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                            <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom" />
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
+                                <input asp-for="Request.ParentRequest.InvoiceNumber" class="form-control-plaintext border-bottom" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
+                                <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
-                            <input asp-for="Request.ParentRequest.InvoiceNumber" class="form-control-plaintext border-bottom" />
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label asp-for="Request.CatalogNumber" class="control-label"></label>
+                                <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
-                            <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom" />
+                        <div class="col-md-3">
+                            <label asp-for="Request.Warranty" class="control-label"></label>
+                            <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom" />
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                            <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label asp-for="Request.Warranty" class="control-label"></label>
-                        <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="control-label">End Date</label>
-                        @*@{
+                        <div class="col-md-3">
+                            <label class="control-label">End Date</label>
+                            @*@{
                                 //get this just to return the date (not the time)
                                 //adding the amount of months of the warranty to the invoice date
                                 var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                             }*@
-                        @*<input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext" disabled="disabled" />*@
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label asp-for="Request.ExpectedSupplyDays" class="control-label">Expected supply days</label>
-                            <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom" />
+                            @*<input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext" disabled="disabled" />*@
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        @{
-                            //get this just to return the date (not the time)
-                            //adding the amount of months of the expected supply days to the invoice date
-                            var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
-                        }
-                        <div class="form-group">
-                            <label class="control-label">Expected supply date</label>
-                            <input value="@endSupplyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Request.ExpectedSupplyDays" class="control-label">Expected supply days</label>
+                                <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @{
+                                //get this just to return the date (not the time)
+                                //adding the amount of months of the expected supply days to the invoice date
+                                var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
+                            }
+                            <div class="form-group">
+                                <label class="control-label">Expected supply date</label>
+                                <input value="@endSupplyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Request.URL" class="control-label"></label>
+                                <input asp-for="Request.URL" class="form-control-plaintext border-bottom" />
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label asp-for="Request.URL" class="control-label"></label>
-                            <input asp-for="Request.URL" class="form-control-plaintext border-bottom" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">From Date</label>
+                                <input asp-for="FromDate" type="date" class="form-control-plaintext border-bottom" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">Until Date</label>
+                                <input asp-for="ToDate" type="date" class="form-control-plaintext border-bottom" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="control-label">From Date</label>
-                            <input asp-for="FromDate" type="date" class="form-control-plaintext border-bottom" />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="control-label">Until Date</label>
-                            <input asp-for="ToDate" type="date" class="form-control-plaintext border-bottom" />
-                        </div>
-                    </div>
+
                 </div>
 
             </div>
-
         </div>
-    </div>
 
 
-</form>
+    </form>
