@@ -246,17 +246,17 @@ $("#Request_ExchangeRate").change(function (e) {
 });
 
 $("#Request_Cost").change(function (e) {
+	$.fn.CalculateSumPlusVat();
 	$.fn.CalculateUnitAmounts();
 	$.fn.CalculateSubUnitAmounts();
 	$.fn.CalculateSubSubUnitAmounts();
-	$.fn.CalculateSumPlusVat();
 });
 
 $("#sum-dollars").change(function (e) {
+	$.fn.CalculateSumPlusVat();
 	$.fn.CalculateUnitAmounts();
 	$.fn.CalculateSubUnitAmounts();
 	$.fn.CalculateSubSubUnitAmounts();
-	$.fn.CalculateSumPlusVat();
 });
 
 $("#Request_Unit").change(function () {

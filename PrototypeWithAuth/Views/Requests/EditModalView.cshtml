@@ -472,20 +472,40 @@
                                                     <th>Reference</th>
                                                 </tr>
                                             </thead>
-                                            @*@{
-                                                        if (Model.Request.ParentRequest.Payments != null)
+                                            <tbody>
+                                                @{
+                                                    if (Model.NewPayments != null)
+                                                    {
+                                                        int counter = 0;
+                                                        foreach (var payment in Model.NewPayments)
                                                         {
-                                                            foreach (Payment payment in Model.Request.ParentRequest.Payments)
-                                                            {
-                                                                <tr class="payment-line">
-                                                                    <td>@payment.PaymentDate</td>
-                                                                    <td>@payment.CompanyAccount.PaymentType.PaymentTypeDescription</td>
-                                                                    <td>@payment.CompanyAccount.CompanyAccountNum</td>
-                                                                    <td>@payment.PaymentID</td>
-                                                                </tr>
-                                                            }
+                                                            <tr>
+                                                                <td>
+                                                                    <input asp-for="@payment.PaymentDate" class="form-control-plaintext border-bottom datepicker" />
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DropDownListFor(
+                                                                   m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
+                                                                   new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
+                                                                   , new { @class = "form-control-plaintext border-bottom" }
+                                                                   )
+                                                                    @*<input asp-for="@payment.CompanyAccount.PaymentType.PaymentTypeDescription" class="form-control-plaintext border-bottom" />*@
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DropDownListFor(
+                                                                   m => m.NewPayments[counter].CompanyAccountID,
+                                                                   new SelectList(Model.CompanyAccounts, "CompanyAccountID", "CompanyAccountNum"))
+                                                                    <input asp-for="@payment.CompanyAccount.CompanyAccountNum" class="form-control-plaintext border-bottom" />
+                                                                </td>
+                                                                <td>
+                                                                    <input asp-for="@payment.Reference" class="form-control-plaintext border-bottom" />
+                                                                </td>
+                                                            </tr>
+                                                            counter++;
                                                         }
-                                                }*@
+                                                    }
+                                                }
+                                            </tbody>
                                         </table>
                                     </div>
                                     <div class="col-md-2">
