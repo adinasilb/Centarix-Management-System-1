@@ -146,32 +146,20 @@
         <div class="">
             <ul class="list-inline">
                 <li class="list-inline-item active mr-3">
-
-                    <a class="@newActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="far fa-file-alt"></i> &nbsp;&nbsp;  @newButtonText </a>
+                    <a class="@newActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i style="font-size:1.4rem;" class="icon-centarix-icons-04"></i> &nbsp;&nbsp;  @newButtonText </a>
                     @*<img src="~/images/css/inventory/icons/new_tab.png" alt="New" />*@
 
-                    @*@Html.ActionLink(newButtonText, "Index", "Requests", new //used to be this...
-                        {
-                            @applicationUserID = applicationUserID,
-                            @vendorID = vendorID,
-                            @subcategoryID = subcategoryID,
-                            @RequestStatusID = 1,
-                            @PageType = AppUtility.RequestPageTypeEnum.Request
-                        },
-                         new {
-                             @class = newActiveClass
-                         })*@
+                    @*@Html.ActionLink(newButtonText, "Index", "Requests", new {@applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request}, new {@class = newActiveClass})*@
                 </li>
-                <li class="list-inline-item mr-3">
 
-                    <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="far fa-calendar-check"></i>  &nbsp;&nbsp; @orderedButtonText</a>
+                <li class="list-inline-item mr-3">
+                    <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-centarix-icons-03"></i>  &nbsp;&nbsp; @orderedButtonText</a>
 
                     @*@Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })*@
-
                 </li>
-                <li class="list-inline-item ">
 
-                    <a class="@receivedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="fas fa-check"></i> &nbsp;&nbsp;  @receivedButtonText</a>
+                <li class="list-inline-item ">
+                    <a class="@receivedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-done-24px"></i> &nbsp;&nbsp;  @receivedButtonText</a>
 
                     @*@Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })*@
                 </li>
@@ -275,22 +263,24 @@
                             {
                                 @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
 
-                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" class="btn inv-link-clr load-confirm-email">Approve</button>
+                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" class="btn inv-link-clr load-confirm-email "><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03"></i> </button> //approve
+
                             }
                         }
-                        else if (item.RequestStatusID == 2)
+                        else if (item.RequestStatusID == 2) 
                         {
-                            <button class="btn inv-link-clr load-receive-and-location" value="@item.RequestID">Receive</button>
+                            <button class="btn inv-link-clr load-receive-and-location" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px"></i></button> // receive
                         }
                         else
                         {
                             @*work on getting the correct syntax to create a new product with*@
-                            <button class="btn inv-link-clr load-order-details" value="@item.RequestID">Order</button>
+                            <button class="btn inv-link-clr load-order-details" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px"></i></button> // order
                         }
                     </td>
                     <td>
+                        <button class="btn inv-link-clr load-confirm-delete" value="@item.RequestID"><i style="font-size:2rem; color:#D0001C;" class="icon-delete-24px"></i></button> @*delete*@
+
                         @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
-                        <button class="btn inv-link-clr load-confirm-delete" value="@item.RequestID">Delete</button>
                         @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
                     </td>
                 </tr>

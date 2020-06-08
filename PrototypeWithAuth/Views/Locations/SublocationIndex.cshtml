@@ -27,6 +27,8 @@
                             @if (Model.IsSmallestChild)
                             {
                                 //in the futur this button should point to the location to see or insert a request
+                                @*shouldn't this be - " if {this is the SmallestChild} - then it SHOULDNT be a button...?
+                                <label value="@locationInstance.LocationInstanceID" style="vertical-align:middle;">@locationInstance.LocationInstanceName</label>*@
                                 <button class="btn btn-block" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
                             }
                             else

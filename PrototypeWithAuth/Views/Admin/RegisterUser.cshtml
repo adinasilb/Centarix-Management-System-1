@@ -54,7 +54,7 @@
                 @Html.DropDownListFor(m => m.Role, new SelectList(Model.Roles, "Name", "Name"), "Select Role", new { @class = "form-control" })
                 @Html.HiddenFor(m => m.Role) @*assigning the selected role to the view model role*@
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" style="background-color:#DB669D; border-width:0;" class="btn btn-lg btn-primary">Register</button>
         </form>
     </div>
 

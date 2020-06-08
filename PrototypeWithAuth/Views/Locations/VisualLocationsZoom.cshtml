@@ -5,7 +5,7 @@
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-<div class="modal-dialog  modal-dialog modal-lg" role="document" style="max-height:100%; max-width: 100%; width:80%; height:80%; overflow-y:auto;">
+<div class="modal-dialog  modal-dialog modal-lg" role="document" style="max-height:100%; max-width: 100%; width:90%; height:90%; overflow-y:auto;">
 
     <div class="modal-content d-inline-block">
 
@@ -13,11 +13,11 @@
 
             <div class="row">
                 <div class="col-12">
-                    <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent; font-size:2rem;" class="float-right mb-2">&times;</button>
+                    <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent; font-size:1.5rem; font-weight:bold;" class="float-right mb-2">&times;</button>
                 </div>
             </div>
 
-            <table class="table table-sm border visualzoom">
+            <table class="table table-sm border visualzoom" style="table-layout: fixed;">
                 @{
                     int z = -1;
                 }
@@ -28,8 +28,6 @@
                         {
                             z++;
                             var backgroundClass = "border";
-                           
-                            //var innerHtml = "empty";
                             @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                             {
                                 if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
@@ -37,15 +35,18 @@
                                     backgroundClass += " bg-info";
                                     var innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
                                     var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
-                        <td style="height:70px; width:100px;" class="@backgroundClass">
-                            @Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })
-                            @*<a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class="btn btn-block text-light">@innerHtml <br /> [Details] <i class="icon-centarix-icons-09"></i> </a>*@
-                           <span style="color:white"> @Model.ChildrenLocationInstances[z].Place</span>
-                        </td>
+                                    <td class="@backgroundClass">
+
+                                        @*@Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })*@
+
+                                        <a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class = "btn btn-block text-light pb-5">@innerHtml</a>
+
+                                       <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
+                                    </td>
                                 }
                                 else
                                 {
-                    <td style="height:60px; width:90px; vertical-align:bottom;" class="@backgroundClass">@Model.ChildrenLocationInstances[z].Place</td>
+                                    <td style="vertical-align:bottom;" class="@backgroundClass">@Model.ChildrenLocationInstances[z].Place</td>
                                 }
                             }
                         }
