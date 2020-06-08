@@ -461,7 +461,7 @@
                                             <input asp-for="Request.ParentRequest.Installments" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
                                         </div>
-                                        @if (Model.NewPayments != null)
+                                        @if (Model.NewPayments != null && Model.NewPayments.Any())
                                         {
                                             <script>
                                                 console.log("in script for installments disabled");
