@@ -19,10 +19,11 @@ namespace PrototypeWithAuth.Models
         public int Height { get; set; }
         public int Width { get; set; }
       
-        [Display(Name = "Name")]
+        [Display(Name = "Location")]
         public string LocationInstanceName { get; set; }
         public string Place { get; set; }
         public bool IsFull { get; set; }
+        [Display(Name = "No")]
         public int CompanyLocationNo { get; set; }
     }
 }

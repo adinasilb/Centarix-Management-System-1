@@ -12,6 +12,8 @@ namespace PrototypeWithAuth.Models
         [Key]
         //@FAIGE: should we add an abbreviation here (so there are no repeats in the instances abbreviations)?
         public int LocationTypeID { get; set; }
+
+        [Display(Name = "Type")]
         public string LocationTypeName { get; set; }
         public int? LocationTypeParentID { get; set; }
         public int? LocationTypeChildID { get; set; }
