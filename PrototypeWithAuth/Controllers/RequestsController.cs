@@ -1845,6 +1845,9 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategories = await _context.ParentCategories.ToListAsync(),
                 Vendors = await _context.Vendors.ToListAsync(),
                 Request = new Request(),
+                Inventory = false,
+                Ordered = false,
+                ForApproval = false
                 //check if we need this here
             };
 

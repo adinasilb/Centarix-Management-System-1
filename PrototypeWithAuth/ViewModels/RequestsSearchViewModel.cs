@@ -13,7 +13,11 @@ namespace PrototypeWithAuth.ViewModels
         public Request Request { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
-        
+
+        //booleans for request status
+        public bool Inventory { get; set; }
+        public bool Ordered { get; set; }
+        public bool ForApproval { get; set; }
 
         public IQueryable<Request> ReturnRequests { get; set; }
     }
