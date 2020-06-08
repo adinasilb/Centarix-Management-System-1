@@ -5,13 +5,12 @@
     Layout = "~/Views/Shared/PaymentView.cshtml";
 }
 <div style="display:flex">
-    <div style="width: 100px; height:900px" class="p-2 border-right box-shadow text-center">
-        @*<nav class="navbar flex-grow-1">*@
-        <ul class="nav flex-column nav-pills nav-stacked">
+    <div style="width: 100px; height:900px" class="p-2 border-right box-shadow text-center">  
+        @*<<<<< side navbar >>>>>*@
+        <ul class="nav flex-column nav-pills nav-stacked mt-4">
             @{int yearCount = 0;}
             @foreach (var group in Model.GroupBy(m => m.OrderDate.Year))
             {
-
                 <li class="nav-item m-3">
                     <a href="#@group.Key"> 
                         <strong style="color:#A26FF0;"> @group.Key </strong>  
@@ -20,19 +19,16 @@
                 yearCount++;
             }
         </ul>
-        @*</nav>*@
 
     </div>
-    <div style="flex-grow:1;" class="col-md-10 border-left">
+    <div style="flex-grow:1;" class="ml-4 mt-5">
+        <table class="table table-noheaderlines table-headerspaced">
+            @foreach (var group in Model.GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month }))
+            {
+                @*<h1>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName()</h1>*@
 
-        @foreach (var group in Model.GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month }))
-        {
-            @*<h1>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName()</h1>*@
-            <h1>
-            </h1>
-            <table class="table">
-                <thead>
-                    <tr>
+                <tbody>
+                    <tr style="border-color:transparent;">
                         <th>
                             @Html.DisplayNameFor(model => model.OrderNumber)
                         </th>
@@ -54,64 +50,66 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Cost)
                         </th>
-
-                        <th></th>
                     </tr>
-                </thead>
-                @{int total = 0;}
+                </tbody>
 
-                @foreach (var item in group)
-                {
-                    total++;
-                    //int index = 0;
-                    @if (total.Equals(group.Count()))
+                <tbody>
+
+                    @{int total = 0;}
+
+                    @foreach (var item in group)
                     {
-                        <h6 id=@item.OrderDate.Year>
-                            @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.OrderDate.Month) [@total]
-                        </h6>
+                        total++;
+                        //int index = 0;
+                        @if (total.Equals(group.Count()))
+                        {
+                            <h5 id=@item.OrderDate.Year>
+                                @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.OrderDate.Month) [@total]
+                            </h5>
+
+                        }
+                        var cult = System.Globalization.CultureInfo.CurrentCulture;
+                        <tr>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modeIteml => item.OrderDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
+                            </td>
+
+                            <td>
+                                @{
+                                    decimal cost = (decimal)item.Requests.FirstOrDefault().Cost;
+                                    string formattedCost = cost.ToString("C02");
+
+                                    //Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
+                                }
+                                @formattedCost
+                            </td>
+
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.ParentRequestID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /> </a>
+                            </td>
+                        </tr>
+
 
                     }
-                    var cult = System.Globalization.CultureInfo.CurrentCulture;
-                    <tr>
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OrderNumber)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modeIteml => item.OrderDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
-                        </td>
-
-                        <td>
-                            @{
-                                decimal cost = (decimal)item.Requests.FirstOrDefault().Cost;
-                                string formattedCost = cost.ToString("C02");
-
-                                //Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Cost);
-                            }
-                            @formattedCost
-                        </td>
-
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.ParentRequestID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /> </a>
-                        </td>
-                    </tr>
-
-
-                }
-            </table>
-        }
+                </tbody>
+            }
+        </table>
     </div>
 </div>
    
