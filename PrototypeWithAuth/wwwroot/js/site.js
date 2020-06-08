@@ -91,11 +91,11 @@ $.fn.AddNewPaymentLine = function (increment, date) {
 	var htmlTR = "";
 	htmlTR += "<tr class='payment-line'>";
 	htmlTR += "<td>";
-	htmlTR += '<input class="form-control" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
+	htmlTR += '<input class="form-control-plaintext border-bottom" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
 	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '<td>';
-	htmlTR += '<select class="form-control paymentType" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
+	htmlTR += '<select class="form-control-plaintext border-bottom paymentType" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
 	htmlTR += '<option value="1">Credit Card</option>';
 	htmlTR += '<option value="2">Bank Account</option>';
 	htmlTR += '</select>';
@@ -104,11 +104,11 @@ $.fn.AddNewPaymentLine = function (increment, date) {
 	htmlTR += '<td>';
 	var newPaymentsId = "NewPayments_" + increment + "__CompanyAccountID";
 	var newPaymentsName = "NewPayments[" + increment + "].CompanyAccountID";
-	htmlTR += '<select class="form-control companyAccountNum" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
+	htmlTR += '<select class="form-control-plaintext border-bottom companyAccountNum" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
 	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '<td>';
-	htmlTR += '<input class="form-control" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
+	htmlTR += '<input class="form-control-plaintext border-bottom" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
 	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '</tr >';

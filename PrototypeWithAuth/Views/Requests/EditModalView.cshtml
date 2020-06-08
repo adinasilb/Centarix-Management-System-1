@@ -461,6 +461,13 @@
                                             <input asp-for="Request.ParentRequest.Installments" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
                                         </div>
+                                        @if (Model.NewPayments != null)
+                                        {
+                                            <script>
+                                                console.log("in script for installments disabled");
+                                                $("#Request_ParentRequest_Installments").attr("disabled", true);
+                                            </script>
+                                        }
                                     </div>
                                     <div class="col-md-8 rounded card p-3">
                                         <table class="table table-sm payments-table">
@@ -479,7 +486,7 @@
                                                         int counter = 0;
                                                         foreach (var payment in Model.NewPayments)
                                                         {
-                                                            <tr>
+                                                            <tr class="payment-line">
                                                                 <td>
                                                                     <input asp-for="@payment.PaymentDate" class="form-control-plaintext border-bottom datepicker" />
                                                                 </td>
@@ -489,7 +496,6 @@
                                                                    new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
                                                                    , new { @class = "form-control-plaintext border-bottom" }
                                                                    )
-                                                                    @*<input asp-for="@payment.CompanyAccount.PaymentType.PaymentTypeDescription" class="form-control-plaintext border-bottom" />*@
                                                                 </td>
                                                                 <td>
                                                                     @Html.DropDownListFor(
@@ -501,6 +507,9 @@
                                                                 <td>
                                                                     <input asp-for="@payment.Reference" class="form-control-plaintext border-bottom" />
                                                                 </td>
+                                                                @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
+                                                                @Html.HiddenFor(m => m.NewPayments[counter].ParentRequestID)
+                                                                @Html.HiddenFor(m => m.NewPayments[counter].Reference)
                                                             </tr>
                                                             counter++;
                                                         }
@@ -512,7 +521,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label class="control-label">Debt</label>
-                                            <input class="form-control-plaintext border-bottom" value="Automatically calculate..." disabled />
+                                            <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
                                         </div>
                                     </div>
                                 </div>
