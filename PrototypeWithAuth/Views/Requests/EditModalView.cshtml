@@ -494,9 +494,10 @@
                                                                 <td>
                                                                     @Html.DropDownListFor(
                                                                    m => m.NewPayments[counter].CompanyAccountID,
-                                                                   new SelectList(Model.CompanyAccounts, "CompanyAccountID", "CompanyAccountNum"))
-                                                                    <input asp-for="@payment.CompanyAccount.CompanyAccountNum" class="form-control-plaintext border-bottom" />
-                                                                </td>
+                                                                   new SelectList(
+                                                                       Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
+                                                                   "CompanyAccountID", "CompanyAccountNum"),
+                                                                   new { @class = "form-control-plaintext border-bottom" })
                                                                 <td>
                                                                     <input asp-for="@payment.Reference" class="form-control-plaintext border-bottom" />
                                                                 </td>

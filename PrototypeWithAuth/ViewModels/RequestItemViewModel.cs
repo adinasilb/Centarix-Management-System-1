@@ -47,6 +47,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<Payment> NewPayments { get; set; }
         public double Debt { get; set; } //shekel
         public IEnumerable<PaymentType> PaymentTypes { get; set; }
+        public Dictionary<int, IEnumerable<CompanyAccount>> CompanyAccountListsByPaymentTypeID { get; set; }
         public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
 
 
