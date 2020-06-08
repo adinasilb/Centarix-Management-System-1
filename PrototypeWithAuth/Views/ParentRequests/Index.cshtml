@@ -36,25 +36,45 @@
         </ul>
     </div>
     @*<<<< Content >>>>>*@
-    <div style="flex-grow: 1; position:relative;" class="col-md-10 ml-3 mt-lg-4">
-        @for (int index = 0; index < Model.TitleList.Count; index++)
-        {
-            var currentTitle = Model.TitleList.ElementAt(index);
-            <h5 id="@currentTitle.Key">
-                <strong>@currentTitle.Key</strong> [@currentTitle.Value]
-                @if (index == 0)
-                {
-                    <span>&emsp; Total: </span><span class="totalToPay"></span>
-                }
-                @if (index == 3)
-                {
-                    <span>&emsp; Total: </span><span class="totalPayNow"></span>
-                }
-            </h5>
-            <br />
-            <table class="table table-noheaderlines table-headerspaced table-hover" style="width:1700px;">
-                <thead>
-                    <tr>
+    <div style="flex-grow: 1; position:relative;" class="ml-3 mt-lg-4">
+    
+        <table class="table table-noheaderlines table-headerspaced" >
+
+            @for (int index = 0; index < Model.TitleList.Count; index++)
+            {
+                var currentTitle = Model.TitleList.ElementAt(index);
+                <tbody>
+                    <tr style="border-color:transparent;">
+                        <th colspan="8" style="border-color:transparent;">
+                            <h5 id="@currentTitle.Key">
+                                <strong>@currentTitle.Key</strong> [@currentTitle.Value]
+                                @if (index == 0)
+                                {
+                                    <span>&emsp; Total: </span><span class="totalToPay"></span>
+                                }
+                                @if (index == 3)
+                                {
+                                    <span>&emsp; Total: </span><span class="totalPayNow"></span>
+                                }
+                            </h5>
+                        </th>
+                    </tr>
+                </tbody>
+                @*var currentTitle = Model.TitleList.ElementAt(index);
+                    <h5 id="@currentTitle.Key">
+                        <strong>@currentTitle.Key</strong> [@currentTitle.Value]
+                        @if (index == 0)
+                        {
+                            <span>&emsp; Total: </span><span class="totalToPay"></span>
+                        }
+                        @if (index == 3)
+                        {
+                            <span>&emsp; Total: </span><span class="totalPayNow"></span>
+                        }
+                    </h5>
+                    <br />*@
+                <tbody>
+                    <tr style="border-color:transparent;">
                         <th>
                             @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderNumber)
                         </th>
@@ -79,7 +99,7 @@
 
                         </th>
                     </tr>
-                </thead>
+                </tbody>
 
 
 
@@ -171,9 +191,10 @@
                     </tr>
 
                 }
-            </table>
-            <br />
-        }
+
+
+            }
+        </table>
     </div>
 </div>
 <script type="text/javascript">

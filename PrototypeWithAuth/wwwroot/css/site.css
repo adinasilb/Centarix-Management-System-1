@@ -261,7 +261,7 @@ a.owner-link {
 }
 
 /*<<<<< table body css >>>>>*/
-table.table.table-noheaderlines thead th {
+table.table.table-noheaderlines th {
     border-width: 0;
     font-weight:normal;
 }
