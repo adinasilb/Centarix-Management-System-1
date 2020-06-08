@@ -335,7 +335,7 @@ namespace PrototypeWithAuth.Controllers
             //(already imported it)
             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
             requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
-
+            
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 return PartialView(requestItemViewModel);
@@ -1854,7 +1854,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
+        public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page, int? requestStatID)
         {
             IQueryable<Request> requestsSearched = _context.Requests.AsQueryable();
             if (requestsSearchViewModel.Request.Product.ProductName != null)

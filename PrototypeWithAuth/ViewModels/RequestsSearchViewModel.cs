@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.ViewModels
         public Request Request { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
+        
 
         public IQueryable<Request> ReturnRequests { get; set; }
     }
