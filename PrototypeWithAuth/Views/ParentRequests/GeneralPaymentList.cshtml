@@ -12,9 +12,9 @@
             @{int yearCount = 0;}
             @foreach (var group in Model.GroupBy(m => m.OrderDate.Year))
             {
-                <li class="nav-item m-3">
+                <li class="nav-item text-dark m-3 acc-sidebar active">
                     <a href="#@group.Key"> 
-                        <strong style="color:#A26FF0;"> @group.Key </strong>  
+                        <strong> @group.Key </strong>  
                     </a>
                 </li>
                 yearCount++;
@@ -116,5 +116,30 @@
             
     </div>
 </div>
+
+
+<script>
+    hide = true;
+    $('body').on("click", function () {
+        if (hide) $('.acc-sidebar').removeClass('active');
+        hide = true;
+    });
+
+    // add and remove .active
+    $('body').on('click', '.acc-sidebar', function () {
+
+        var self = $(this);
+
+        //if (self.hasClass('active')) {
+        //    $('.acc-sidebar').removeClass('active');
+        //    return false;
+        //}
+
+        $('.acc-sidebar').removeClass('active');
+
+        self.toggleClass('active');
+        hide = false;
+    });
+</script>
    
 
