@@ -184,7 +184,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="currency" class="control-label">Currency</label>
-                                            <select id="currency" class="form-control-plaintext border-bottom">
+                                            <select id="currency" asp-for="Request.Currency" class="form-control-plaintext border-bottom">
                                                 <option value="dollar">&#127480; USD</option>
                                                 <option value="shekel">&#127480; NIS</option>
                                             </select>
@@ -204,7 +204,7 @@
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label asp-for="Request.Unit" class="control-label"></label>
-                                                <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " id="unit-amount" min="0" />
+                                                <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="0" />
                                                 <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6">
@@ -214,7 +214,7 @@
     vm => vm.Request.UnitTypeID,
     Model.UnitTypeList,
     "",
-    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "unit-type" }
+    htmlAttributes: new { @class = "form-control-plaintext border-bottom " }
     )
                                                     <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                                 </div>
@@ -242,7 +242,7 @@
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label asp-for="Request.SubUnit" class="control-label"></label>
-                                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom " id="subunit-amount" min="0" disabled />
+                                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
                                                 <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6 form-group">
@@ -251,7 +251,7 @@
              vm => vm.Request.SubUnitTypeID,
              Model.UnitTypeList,
              "",
-             htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "subunit-type", @disabled = "disabled" }
+             htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
          )
                                                 <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                             </div>
@@ -278,7 +278,7 @@
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom " id="subsubunit-amount" min="0" disabled />
+                                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
                                                 <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6 form-group">
@@ -287,7 +287,7 @@
     vm => vm.Request.SubSubUnitTypeID,
     Model.UnitTypeList,
     "",
-    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "subsubunit-type", @disabled = "disabled" }
+    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
     )
                                                 <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                             </div>
@@ -298,7 +298,7 @@
                                                 <div class="col-md-6">
                                                     <div class="input-group">
                                                         <span class="input-group-text">&#36;</span>
-                                                        <input class="form-control-plaintext border-bottom " id="subsubunit-price-dollars" disabled />
+                                                        <input class="form-control-plaintext border-bottom " name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -314,20 +314,20 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label asp-for="Request.Cost" class="control-label"></label>
+                                            <label class="control-label">Sum:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
-                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom " name="sumDollars" />@*id="sumDollars" name="sumDollars"*@
+                                                <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled />
                                             </div>
-                                            <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label">Sum:</label>
+                                            <label asp-for="Request.Cost" class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom " name="sumShekel" id="sumShekel" disabled />
+                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" />
+                                                <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -336,7 +336,7 @@
                                             <label asp-for="Request.VAT" class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom -plaintext id="vatInShekel" disabled />
+                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -399,57 +399,6 @@
                                                     <th>Reference</th>
                                                 </tr>
                                             </thead>
-                                            @{
-                                                if (true) //if is edit
-                                                {
-                                                    if (Model.Request.ParentRequest.Payments != null)
-                                                    {
-                                                        foreach (Payment payment in Model.Request.ParentRequest.Payments)
-                                                        {
-                                                            <tr>
-                                                                <td>@payment.PaymentDate</td>
-                                                                <td>@payment.CompanyAccount.PaymentType.PaymentTypeDescription</td>
-                                                                <td>@payment.CompanyAccount.CompanyAccountNum</td>
-                                                                <td>@payment.PaymentID</td>
-                                                            </tr>
-                                                        }
-                                                    }
-                                                    <span>IS EDIT</span>
-                                                }
-                                                if (true) // else if (create)
-                                                {
-                                                    for (int x = 0; x < Model.Request.ParentRequest.Installments; x++)
-                                                    {
-                                                        <tr>
-                                                            <td>
-                                                                <input asp-for="NewPayments[x].PaymentDate" class="form-control-plaintext border-bottom " />
-                                                                <span asp-validation-for="NewPayments[x].PaymentDate" class="text-danger"></span>
-                                                            </td>
-                                                            <td>
-                                                                @Html.DropDownListFor(
-                                                                    model => model.NewPayments[x].CompanyAccount.PaymentType,
-                                                                    new SelectList(
-                                                                    Model.PaymentTypes,
-            dataValueField: "PaymentTypeID",
-            dataTextField: "PaymentTypeDescription"),
-            optionLabel: "Select A Payment Type ",
-            htmlAttributes: new { @class = "form-control-plaintext border-bottom  paymentType" }
-                                                                )
-                                                                <span asp-validation-for="NewPayments[x].CompanyAccount.PaymentType" class="text-danger"></span>
-                                                            </td>
-                                                            <td>
-                                                                <select asp-for="NewPayments[x].CompanyAccount" class="form-control-plaintext border-bottom  companyAccountNum"></select>
-                                                                <span asp-validation-for="NewPayments[x].CompanyAccount.CompanyAccountNum" class="text-danger"></span>
-                                                            </td>
-                                                            <td>
-                                                                <input asp-for="NewPayments[x].PaymentID" class="form-control-plaintext border-bottom " />
-                                                                <span asp-validation-for="NewPayments[x].PaymentID" class="text-danger"></span>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                    <span>IS CREATE</span>
-                                                }
-                                            }
                                         </table>
                                     </div>
                                     <div class="col-md-2">
@@ -480,9 +429,9 @@
                                             <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                         }
                                         @*<div id="carousel" class="carousel ui-slider">
-                                    <ol class="carousel-indicators">
-                                    </ol>
-                                </div>*@
+                                                <ol class="carousel-indicators">
+                                                </ol>
+                                            </div>*@
                                     </div>
                                     <div class="col-md-3">
                                         <label class="control-label">Invoice Doc</label>

@@ -61,10 +61,10 @@ namespace PrototypeWithAuth.Controllers
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
-            
+
 
             //instantiate your list of requests to pass into the index
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).OrderBy(r =>r.ParentRequest.OrderDate);
+            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).OrderBy(r => r.ParentRequest.OrderDate);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
             TempData["RequestStatusID"] = RequestStatusID;
@@ -336,7 +336,7 @@ namespace PrototypeWithAuth.Controllers
             //(already imported it)
             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
             requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
-            
+
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 return PartialView(requestItemViewModel);
@@ -1438,6 +1438,8 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Request.ParentRequest = new ParentRequest();
                 requestItemViewModel.Request.RequestStatus = new RequestStatus();
                 requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
+                int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
 
                 var request = _context.Requests
                     .Include(r => r.Product)
@@ -1864,7 +1866,7 @@ namespace PrototypeWithAuth.Controllers
             int RSOrdered = 0;
             int RSNew = 0;
             IQueryable<Request> requestsSearched = _context.Requests.AsQueryable();
-           
+
             //convert the bools into thier corresponding IDs
             if (requestsSearchViewModel.Inventory)
             {
@@ -1882,7 +1884,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestsSearched = requestsSearched.Where(rs => rs.RequestStatusID == RSRecieved || rs.RequestStatusID == RSOrdered || rs.RequestStatusID == RSNew);
             }
-            
+
 
 
             if (requestsSearchViewModel.Request.Product.ProductName != null)
