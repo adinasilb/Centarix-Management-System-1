@@ -17,42 +17,46 @@
                 </div>
             </div>
 
-            <table class="table table-sm border visualzoom" style="table-layout: fixed;">
-                @{
-                    int z = -1;
-                }
-                @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
-                {
-                    <tr>
-                        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-                        {
-                            z++;
-                            var backgroundClass = "border";
-                            @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+            <div class="container-fluid" style="display:flex; justify-content:center;">
+                <table class="table table-sm border visualzoom" style="table-layout: fixed;">
+                    @{
+                        int z = -1;
+                    }
+                    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+                    {
+                        <tr>
+                            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                             {
-                                if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                                z++;
+                                var backgroundClass = "border";
+                                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                                 {
-                                    backgroundClass += " bg-info";
-                                    var innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
-                                    var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
-                                    <td class="@backgroundClass">
+                                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                                    {
+                                        backgroundClass += " bg-info";
+                                        var innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+                                        var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
+                                        <td class="@backgroundClass">
 
-                                        @*@Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })*@
+                                            @*@Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })*@
 
-                                        <a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class = "btn btn-block text-light pb-5">@innerHtml</a>
+                                            <a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class="btn btn-block text-light pb-5">@innerHtml</a>
 
-                                       <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td style="vertical-align:bottom;" class="@backgroundClass">@Model.ChildrenLocationInstances[z].Place</td>
+                                            <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="vertical-align:bottom;" class="@backgroundClass">@Model.ChildrenLocationInstances[z].Place</td>
+                                    }
                                 }
                             }
-                        }
-                    </tr>
-                }
-            </table>
+                        </tr>
+                    }
+                </table>
+            </div>
+            
+            
         </div>
     </div>
 
