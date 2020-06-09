@@ -1857,12 +1857,25 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page, int? requestStatID)
+        public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
         {
+            int RSRecieved = 0;
+            int RSOrdered = 0;
+            int RSNew = 0;
             IQueryable<Request> requestsSearched = _context.Requests.AsQueryable();
             if (requestsSearchViewModel.Inventory)
             {
+                RSRecieved = 3;
             }
+            if (requestsSearchViewModel.Ordered)
+            {
+                RSOrdered = 2;
+            }
+            if (requestsSearchViewModel.ForApproval)
+            {
+                RSNew = 1;
+            }
+            requestsSearched = requestsSearched.Where(rs => rs.RequestStatusID == RSRecieved || rs.RequestStatusID == RSOrdered || rs.RequestStatusID == RSNew);
 
 
             if (requestsSearchViewModel.Request.Product.ProductName != null)
