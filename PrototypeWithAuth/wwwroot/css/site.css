@@ -381,6 +381,7 @@ a.nav-link { color: inherit }
     border-left: 2px solid #55F
 }*/
 
+/*<<<< Location selected coloring >>>>*/
 .td-selected {
     z-index: 1;
     width: 400px;

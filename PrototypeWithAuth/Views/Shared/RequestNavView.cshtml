@@ -92,7 +92,7 @@
             {
                 <li class="nav-item my-3">
 
-                    <button class="btn btn-link opac54 create-product-details bold-hover-effects py-0" id="sidebar-add-item" onclick="addActive(id)">
+                    <button class="btn btn-link opac87 create-product-details bold-hover-effects py-0" id="sidebar-add-item" onclick="addActive(id)">
                         <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
                     </button>
                 </li>
@@ -100,7 +100,7 @@
             @if (Requests || Inventory)
             {
                 <li class="nav-item bold-hover-effects my-3 @type">
-                    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })" class="bold-hover-effects opac54"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
+                    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
                 </li>
 
             }
@@ -108,7 +108,7 @@
             {
 
                 <li class="nav-item my-3 @vendor">
-                    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })" class="bold-hover-effects opac54"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
+                    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
                 </li>
             }
             @if (Requests || Inventory)
@@ -116,7 +116,7 @@
                 @*have to create contorller for application user?*@
 
                 <li class="nav-item my-3 @owner">
-                    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType })" class="bold-hover-effects opac54"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
+                    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
                 </li>
             }
             @if (Inventory)
@@ -124,7 +124,7 @@
 
                 @*Redo the location class in the controller*@
                 <li class="nav-item my-3 @location">
-                    <a href="@Url.ActionLink("IndexForInventory", "Locations", new { @PageType = pageType })" class="bold-hover-effects opac54"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Location</a>
+                    <a href="@Url.ActionLink("IndexForInventory", "Locations", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Location</a>
                 </li>
             }
             @if (Cart)

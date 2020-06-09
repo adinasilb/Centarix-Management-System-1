@@ -5,7 +5,8 @@
     Layout = "~/Views/Shared/PaymentView.cshtml";
 }
 <div style="display:flex">
-    <div style="width: 100px; height:900px" class="p-2 border-right box-shadow text-center">  
+
+    <div style="width: 100px; height:930px" class="p-2 border-right box-shadow text-center">  
         @*<<<<< side navbar >>>>>*@
         <ul class="nav flex-column nav-pills nav-stacked mt-4">
             @{int yearCount = 0;}
@@ -21,37 +22,37 @@
         </ul>
 
     </div>
+    @*<<<< content >>>>>*@
     <div style="flex-grow:1;" class="ml-4 mt-5">
-        <table class="table table-noheaderlines table-headerspaced">
-            @foreach (var group in Model.GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month }))
-            {
-                @*<h1>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName()</h1>*@
 
-                <tbody>
-                    <tr style="border-color:transparent;">
-                        <th>
+        @foreach (var group in Model.GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month }))
+        {
+            <table class="table table-noheaderlines table-headerspaced table-hover" style="table-layout:fixed;">
+                <thead>
+                    <tr>
+                        <th style="width:8%;"> @*No*@
                             @Html.DisplayNameFor(model => model.OrderNumber)
                         </th>
-                        <th>
+                        <th style="width:25%;"> @*Item*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductName)
                         </th>
-                        <th>
+                        <th style="width:10%;"> @*OrderDate*@
                             @Html.DisplayNameFor(model => model.OrderDate)
                         </th>
-                        <th>
+                        <th style="width:10%;"> @*Category*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
                         </th>
-                        <th>
+                        <th style="width:10%;"> @*Type*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
                         </th>
-                        <th>
+                        <th style="width:15%;"> @*Supplier*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
                         </th>
-                        <th>
+                        <th style="width:15%;"> @*Price*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Cost)
                         </th>
                     </tr>
-                </tbody>
+                </thead>
 
                 <tbody>
 
@@ -108,9 +109,37 @@
 
                     }
                 </tbody>
-            }
-        </table>
+
+            </table>
+            <br />
+        }
+            
     </div>
 </div>
+
+
+<script>
+    hide = true;
+    $('body').on("click", function () {
+        if (hide) $('.acc-sidebar').removeClass('active');
+        hide = true;
+    });
+
+    // add and remove .active
+    $('body').on('click', '.acc-sidebar', function () {
+
+        var self = $(this);
+
+        //if (self.hasClass('active')) {
+        //    $('.acc-sidebar').removeClass('active');
+        //    return false;
+        //}
+
+        $('.acc-sidebar').removeClass('active');
+
+        self.toggleClass('active');
+        hide = false;
+    });
+</script>
    
 
