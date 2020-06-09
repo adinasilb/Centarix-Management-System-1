@@ -12,9 +12,9 @@
             @{int yearCount = 0;}
             @foreach (var group in Model.GroupBy(m => m.OrderDate.Year))
             {
-                <li class="nav-item text-dark m-3 acc-sidebar active">
+                <li class="nav-item m-3">
                     <a href="#@group.Key"> 
-                        <strong> @group.Key </strong>  
+                        <strong style="color:#A26FF0;"> @group.Key </strong>  
                     </a>
                 </li>
                 yearCount++;
@@ -27,28 +27,28 @@
 
         @foreach (var group in Model.GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month }))
         {
-            <table class="table table-noheaderlines table-headerspaced table-hover text-center" style="table-layout:fixed; width:100%;">
+            <table class="table table-noheaderlines table-headerspaced table-hover" style="table-layout:fixed;">
                 <thead>
                     <tr>
-                        <th>
+                        <th style="width:8%;"> @*No*@
                             @Html.DisplayNameFor(model => model.OrderNumber)
                         </th>
-                        <th>
+                        <th style="width:25%;"> @*Item*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductName)
                         </th>
-                        <th>
+                        <th style="width:10%;"> @*OrderDate*@
                             @Html.DisplayNameFor(model => model.OrderDate)
                         </th>
-                        <th>
+                        <th style="width:10%;"> @*Category*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
                         </th>
-                        <th>
+                        <th style="width:10%;"> @*Type*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
                         </th>
-                        <th>
+                        <th style="width:15%;"> @*Supplier*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
                         </th>
-                        <th>
+                        <th style="width:15%;"> @*Price*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Cost)
                         </th>
                     </tr>
