@@ -398,9 +398,10 @@ $.fn.CalculateSumPlusVat = function () {
 };
 
 $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
-	var theResult = isFinite($value) && $value || "";
-
-	$inputBox.val(theResult.toFixed(2));
+	var theResult = parseFloat($value);
+	theResult = theResult.toFixed(2);
+	theResult = isFinite(theResult) && theResult || "";
+	$inputBox.val(theResult);
 }
 
 
