@@ -403,22 +403,6 @@ $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that t
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ////change expected supply days automatically
 //$("#Request_ExpectedSupplyDays").change(function () {
 //    console.log("Request_expectedsupplydays changed!")
