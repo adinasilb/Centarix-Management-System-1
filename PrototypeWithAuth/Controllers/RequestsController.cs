@@ -1863,6 +1863,8 @@ namespace PrototypeWithAuth.Controllers
             int RSOrdered = 0;
             int RSNew = 0;
             IQueryable<Request> requestsSearched = _context.Requests.AsQueryable();
+           
+            //convert the bools into thier corresponding IDs
             if (requestsSearchViewModel.Inventory)
             {
                 RSRecieved = 3;
@@ -1875,12 +1877,16 @@ namespace PrototypeWithAuth.Controllers
             {
                 RSNew = 1;
             }
-            requestsSearched = requestsSearched.Where(rs => rs.RequestStatusID == RSRecieved || rs.RequestStatusID == RSOrdered || rs.RequestStatusID == RSNew);
+            if (requestsSearchViewModel.Inventory || requestsSearchViewModel.Ordered || requestsSearchViewModel.ForApproval) //if any of the checkboxes were selected then filter accordingly
+            {
+                requestsSearched = requestsSearched.Where(rs => rs.RequestStatusID == RSRecieved || rs.RequestStatusID == RSOrdered || rs.RequestStatusID == RSNew);
+            }
+            
 
 
             if (requestsSearchViewModel.Request.Product.ProductName != null)
             {
-                requestsSearched = requestsSearched.Where(r => r.Product.ProductName == requestsSearchViewModel.Request.Product.ProductName);
+                requestsSearched = requestsSearched.Where(r => r.Product.ProductName.Contains(requestsSearchViewModel.Request.Product.ProductName));
             }
             if (requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID != 0)
             {
@@ -1898,7 +1904,7 @@ namespace PrototypeWithAuth.Controllers
             }
             if (requestsSearchViewModel.Request.ParentRequest.OrderNumber != null)
             {
-                requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderNumber == requestsSearchViewModel.Request.ParentRequest.OrderNumber);
+                requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderNumber.ToString().Contains(requestsSearchViewModel.Request.ParentRequest.OrderNumber.ToString()));
             }
             if (requestsSearchViewModel.Request.ParentRequest.OrderDate != DateTime.MinValue) //should this be datetime.min?
             {
@@ -1906,7 +1912,7 @@ namespace PrototypeWithAuth.Controllers
             }
             if (requestsSearchViewModel.Request.ParentRequest.InvoiceNumber != null)
             {
-                requestsSearched = requestsSearched.Where(r => r.ParentRequest.InvoiceNumber == requestsSearchViewModel.Request.ParentRequest.InvoiceNumber);
+                requestsSearched = requestsSearched.Where(r => r.ParentRequest.InvoiceNumber.Contains(requestsSearchViewModel.Request.ParentRequest.InvoiceNumber));
             }
             if (requestsSearchViewModel.Request.ParentRequest.InvoiceDate != DateTime.MinValue) //should this be datetime.min?
             {
