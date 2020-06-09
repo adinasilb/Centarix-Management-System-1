@@ -222,12 +222,12 @@
                                     </div>
                                 </div>
                                 <hr /><br />
-                                <div class="row">
+                                <div class="row" id="edit">
                                     <div class="col-md-4 border rounded p-1 RequestUnitCard">
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label asp-for="Request.Unit" class="control-label font-weight-bold"></label>
-                                                <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " id="unit-amount" min="0" />
+                                                <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="0" />
                                                 <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6">
@@ -237,7 +237,7 @@
     vm => vm.Request.UnitTypeID,
     Model.UnitTypeList,
     "",
-    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "unit-type" }
+    htmlAttributes: new { @class = "form-control-plaintext border-bottom " }
     )
                                                     <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                                 </div>
@@ -265,7 +265,7 @@
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label asp-for="Request.SubUnit" class="control-label font-weight-bold"></label>
-                                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom " id="subunit-amount" min="0" disabled />
+                                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom " min="0" disabled />
                                                 <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6 form-group">
@@ -274,7 +274,7 @@
              vm => vm.Request.SubUnitTypeID,
              Model.UnitTypeList,
              "",
-             htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "subunit-type", @disabled = "disabled" }
+             htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
          )
                                                 <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                             </div>
@@ -301,7 +301,7 @@
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label asp-for="Request.SubSubUnit" class="control-label font-weight-bold"></label>
-                                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom " id="subsubunit-amount" min="0" disabled />
+                                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom " min="0" disabled />
                                                 <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6 form-group">
@@ -310,7 +310,7 @@
     vm => vm.Request.SubSubUnitTypeID,
     Model.UnitTypeList,
     "",
-    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "subsubunit-type", @disabled = "disabled" }
+    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
     )
                                                 <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                             </div>
@@ -337,34 +337,36 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label asp-for="Request.Cost" class="control-label font-weight-bold"></label>
+                                            <label class="control-label font-weight-bold"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
-                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom " id="sumDollars" name="sumDollars" />
+                                                <input  class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Sum:</label>
+                                            <label asp-for="Request.Cost" class="control-label font-weight-bold">Sum:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom " name="sumShekel" id="sumShekel" disabled />
+                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" disabled />
+                                                <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">VAT</label>
+                                            <label asp-for="Request.VAT" class="control-label font-weight-bold"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom " id="vatInShekel" />
+                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " />
+                                                <span class="text-danger" asp-validation-for="Request.VAT"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Sum:</label>
+                                            <label class="control-label font-weight-bold">Total + VAT:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
                                                 <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
@@ -398,8 +400,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <div class="form-check ">
-                                            <label class="form-check-label"><input class="form-check-input ui-icon-check" type="checkbox" />Paid</label>
+                                        <div class="form-check">
+                                            <label class="form-check-label"><input class="form-check-input" type="checkbox" id="paid_checkbox" onchange="changeTerms(this)" />Paid</label>
                                         </div>
                                     </div>
                                 </div>
@@ -477,7 +479,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label class="control-label font-weight-bold">Debt</label>
-                                            <input class="form-control-plaintext border-bottom " value="Automatically calculate..." disabled />
+                                            <input class="form-control-plaintext border-bottom " value="To Be Calculated" disabled />
                                         </div>
                                     </div>
                                 </div>

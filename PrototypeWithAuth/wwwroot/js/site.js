@@ -299,7 +299,7 @@ $.fn.CheckCurrency = function () {
 
 $.fn.CheckUnitsFilled = function () {
 	console.log("in check units function");
-	if ($("#Request_Unit").val() > 0 && $("#Request_UnitTypeID").val()) {
+	if ($("#edit #Request_Unit").val() > 0 && $("#edit #Request_UnitTypeID").val()) {
 		$.fn.EnableSubUnits();
 	}
 	else {
@@ -313,7 +313,7 @@ $.fn.CheckUnitsFilled = function () {
 
 $.fn.CheckSubUnitsFilled = function () {
 	console.log("in check sub units function");
-	if ($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val()) {
+	if ($("#edit #Request_SubUnit").val() > 0 && $("#edit #Request_SubUnitTypeID").val()) {
 		$.fn.EnableSubSubUnits();
 	}
 	else {
