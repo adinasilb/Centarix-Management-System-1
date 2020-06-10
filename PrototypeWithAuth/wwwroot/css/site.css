@@ -430,7 +430,6 @@ table.table.visualzoom tr td a {
     max-height:50px;
     font-size:small;
     padding: 0;
-    /*width:20rem;*/   
 }
 
 /*<<<< tooltip CSS >>>>*/
@@ -463,3 +462,10 @@ table.table.visualzoom tr td a {
 }
 /*end color-profile tooltip css*/
 
+.row table.table.confirm-table tr {
+    border:none;
+}
+
+.row table.table.confirm-table tr td {
+    border: 1px solid lightgrey;
+}

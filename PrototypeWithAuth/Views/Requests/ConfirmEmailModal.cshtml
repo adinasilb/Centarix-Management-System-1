@@ -91,11 +91,11 @@
                     <br>
                     <br>
                     <div class="row">
-                        <table class="table mb-0">
+                        <table class="table mb-0 confirm-table">
                             <thead style="background-color: #D0001C; color: #ffffff;">
                                 <tr>
                                     <th>Items</th>
-                                    <th>ID</th>
+                                    <th>SKU</th>
                                     <th>Units</th>
                                     <th>Price</th>
                                     <th>Total</th>
@@ -154,16 +154,20 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <br /><br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
                             <div class="signature">
-                                <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="350">
+                                <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250">
                             </div>
                         </div>
-                        <div class="col-5 offset-1 pr-0" style="padding-left:3.9rem;">
-                            <table class="table m-0">
+                        <div class="col-5 offset-1 pr-0" style="padding-left:4.25rem;">
+                            <table class="table m-0 confirm-table">
                                 <tr>
-                                    <td style="width:50%;">Total</td>
-                                    <td style="width:50%;">@Model.Request.Cost</td>
+                                    <td style="width:50.5%;">Total</td>
+                                    <td style="width:49.5%;">@Model.Request.Cost</td>
                                 </tr>
                                 <tr>
                                     <td>Discount @*@Html.DisplayFor(modelItem => Model.Request.)*@</td>
@@ -189,11 +193,13 @@
                     </div>
                     <br>
                     <br>
+                    <br>
+                    <br>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="payment-terms">
                                 <h3 style="font-weight: bold;">Payment Terms</h3>
-                                <span>@Model.Request.Terms</span>
+                                <span class="payment-terms">@Model.Request.Terms</span>
                             </div>
                         </div>
                     </div>
