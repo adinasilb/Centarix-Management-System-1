@@ -255,7 +255,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                                                             {
                                                                 backgroundClass += " bg-info text-light text-center";
                                                             }
-                                                            else //why is this else here? it seem to ever get used.
+                                                            else //why is this else here? it doesn't seem to ever get used.
                                                             {
                                                                 backgroundClass += " bg-secondary";
                                                             }
@@ -265,7 +265,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "ve
                                                         }
                                                         else
                                                         {
-                                                            <td class="@backgroundClass">empty</td>
+                                                            <td class="@backgroundClass"><span style="font-size:xx-small">empty</span></td>
                                                         }
 
                                                     }
