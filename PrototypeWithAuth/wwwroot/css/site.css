@@ -473,3 +473,7 @@ table.table.visualzoom tr td a {
 .row table.table.confirm-table tr td {
     border: 1px solid lightgrey;
 }
+
+.row table.table.confirm-table td.borderless-cell {
+    border-width:0px;
+}

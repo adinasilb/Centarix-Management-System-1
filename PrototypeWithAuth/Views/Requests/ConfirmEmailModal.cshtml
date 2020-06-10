@@ -110,49 +110,42 @@
                                     <td>@unitPrice</td>
                                     <td>@Model.Request.Cost</td>
                                 </tr>
-                                <!--<tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                <tr>
+                                    <td colspan="3" rowspan="5" class="borderless-cell">
+                                        <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
+                                    </td>
                                     <td>Total</td>
                                     <td>@Model.Request.Cost</td>
                                 </tr>
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    
                                     <td>Discount @*@Html.DisplayFor(modelItem => Model.Request.)*@</td>
                                     @*@{double discount = Model.Request.Cost * Model.Request.Discount; }*@
                                     <td>@*discount*@</td>
 
                                 </tr>
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    
                                     <td>Total Price</td>
                                     @*@{ double totalWithDis = Model.Request.Cost - discount}*@
                                     <td>@*@totalWithDis*@</td>
                                 </tr>
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    
                                     <td>VAT [17%]</td>
                                     @* @{ double vat = totalWithDis * Model.Request.VAT }*@
                                     <td>@*@vat*@</td>
                                 </tr>
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    
                                     <td style="font-weight: bold;">Total To Pay</td>
                                     <td style="font-weight: bold;">@*@vat+totalWithDis*@</td>
-                                </tr>-->
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="row">
+                    <!-- no longer necessary
+                        <div class="row">
                         <div class="col-6">
                             <br />
                             <br />
@@ -170,27 +163,27 @@
                                     <td style="width:49.5%;">@Model.Request.Cost</td>
                                 </tr>
                                 <tr>
-                                    <td>Discount @*@Html.DisplayFor(modelItem => Model.Request.)*@</td>
+                                    <td>Discount--> @*@Html.DisplayFor(modelItem => Model.Request.)*@<!--</td>-->
                                     @*@{double discount = Model.Request.Cost * Model.Request.Discount; }*@
-                                    <td>@*discount*@</td>
+                                    <!--<td>-->@*discount*@<!--</td>
                                 </tr>
                                 <tr>
-                                    <td>Total Price</td>
+                                    <td>Total Price</td>-->
                                     @*@{ double totalWithDis = Model.Request.Cost - discount}*@
-                                    <td>@*@totalWithDis*@</td>
+                                    <!--<td>-->@*@totalWithDis*@<!--</td>
                                 </tr>
                                 <tr>
-                                    <td>VAT [17%]</td>
+                                    <td>VAT [17%]</td>-->
                                     @* @{ double vat = totalWithDis * Model.Request.VAT }*@
-                                    <td>@*@vat*@</td>
+                                    <!--<td>-->@*@vat*@<!--</td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold;">Total To Pay</td>
-                                    <td style="font-weight: bold;">@*@vat+totalWithDis*@</td>
+                                    <td style="font-weight: bold;">-->@*@vat+totalWithDis*@<!--</td>
                                 </tr>
                             </table>
                         </div>
-                    </div>
+                    </div>-->
                     <br>
                     <br>
                     <br>
