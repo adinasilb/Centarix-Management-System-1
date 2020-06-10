@@ -56,7 +56,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Centarix Management System</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    <link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/mdb.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/style.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/addons/datatables.min.css" />
@@ -130,11 +131,10 @@
             &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 
 
-    
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/popper.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -146,12 +146,15 @@
     @*load jquery ui*@
     <script src="~/lib/jquery/jquery-ui.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>
 
-<script>
+@*<script>
     $(document).ready(function () {
         $('#dtBasicExample').DataTable();
         $('.dataTables_length').addClass('bs-select');
     });
-</script>
+</script>*@
