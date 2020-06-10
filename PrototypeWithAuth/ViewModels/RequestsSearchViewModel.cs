@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.ViewModels
         public Request Request { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
+        public DateTime WarrantyEndDate { get; set; } //needs to be calculated in the controller
 
         //booleans for request status
         public bool Inventory { get; set; }

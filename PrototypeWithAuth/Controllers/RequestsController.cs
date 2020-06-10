@@ -2175,6 +2175,5 @@ namespace PrototypeWithAuth.Controllers
             return Json(locationInstanceList);
         }
 
-
     }
 }

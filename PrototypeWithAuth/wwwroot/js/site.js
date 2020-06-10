@@ -784,3 +784,16 @@ $(".load-product-edit").on("click", function (e) {
 	$.fn.CallPage($itemurl, "edit");
 	return false;
 });
+
+
+
+/*REQUESTS SEARCH
+-------------------*/
+
+$("#request-search #vendorList").change(function () {
+	$("#request-search #vendorBusinessIDList").val($(this).val());
+});
+
+$("#request-search #vendorBusinessIDList").change(function () {
+	$("#request-search #vendorList").val($(this).val());
+});

@@ -27,14 +27,14 @@ namespace PrototypeWithAuth.Models
         public uint? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
 
         public bool IsDeleted { get; set; } // check if this request's parentrequets requests are deleted - if so give parent request true for is deleted
-        public bool IsApproved { get; set; } 
+        public bool IsApproved { get; set; }
         public uint Unit { get; set; } //largest unit the request comes in - amount of unit
         //public int Unit { get; set; }
 
         public int? UnitTypeID { get; set; }
         [ForeignKey("UnitTypeID")]
         public UnitType UnitType { get; set; }
-       // public int[] UnitTypes { get; set; }
+        // public int[] UnitTypes { get; set; }
         public uint? SubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subunit
         public int? SubUnitTypeID { get; set; }
         [ForeignKey("SubUnitTypeID")]
@@ -60,6 +60,16 @@ namespace PrototypeWithAuth.Models
 
         public byte Warranty { get; set; } // will need to cast it to datetime when calulating the end date, in the front end
 
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)] //computed in modelbuilder
+        //public DateTime WarrantyEndDate
+        //{
+        //    get
+        //    {
+        //        return this.ParentRequest.OrderDate.AddMonths(Warranty);
+        //    }
+        //    private set { }
+        //}
+
         public double VAT = 0.17; // should this be coded into the model or should we set it elsewhere?
         public double ExchangeRate { get; set; } // holding the rate of exchange for this specic request
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
@@ -68,7 +78,7 @@ namespace PrototypeWithAuth.Models
 
         [DataType(DataType.Date)]
         public DateTime ArrivalDate { get; set; }
-        
+
 
 
     }
