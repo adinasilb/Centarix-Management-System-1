@@ -9,7 +9,7 @@
 <div class="modal modal-view right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%;">
         <div class="modal-content d-inline-block">
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" id="createModalID">
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -21,7 +21,7 @@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
 
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
                 <!-- Modal Header -->
                 <div class="modal-header border-bottom-0 mb-3">
