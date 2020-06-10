@@ -52,7 +52,11 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label asp-for="Request.Product.ProductSubcategoryID" class="control-label">Subcategory</label>
-                            @*<select asp-for="Request.Product.ProductSubcategoryID" class="form-control-plaintext border-bottom" id="sublist" />*@
+                            @Html.DropDownListFor(
+                                vm => vm.Request.Product.ProductSubcategoryID,
+                                new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+                                "Select Subcategory", new { @class = "form-control-plaintext border-bottom ", @id = "sublist" })
+                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
