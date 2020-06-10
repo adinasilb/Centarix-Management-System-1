@@ -7,8 +7,12 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <div class="modal modal-view right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog modal-lg" role="document" style="max-height:100%;">
+
+    <div class="modal-dialog modal-lg border-left box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
+        @*style needed here to override bootstraps modal width limitations*@
+
         <div class="modal-content d-inline-block">
+
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
@@ -23,70 +27,57 @@
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
+
                 <!-- Modal Header -->
-                <div class="modal-header border-bottom-0 mb-3">
+                <div class="new-modal-header border-bottom box-shadow" style="padding: 0.5em 6em">
+                    @*class needed here to override bootstraps modal limitations*@
+
                     @if (TempData["ErrorMessage"] != null)
                     {
                         <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
+                    <div>
+                        <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent"><img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" /></button>
+                    </div>
+                    <br />
                     <div class="form-group">
                         <h4><label asp-for="Request.Product.ProductName" class="control-label">New Request: </label> </h4>
 
                         <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" placeholder="(item name)" /></h4>
                         <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
                     </div>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <br /><br />
-
-                </div>
-                @*moved the tabs into the modal header (sorta...)*@
-                @*<div class="container">
-                        <div class="row">
-                            <div class="col-10 offset-1">
-                                <ul id="modal-tabs" class="nav nav-tabs text-center">
-                                    <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link active"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Order" /><br />Order</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><img src="~/images/css/inventory/add-item/archive.png" alt="Archive" /><br />Archive</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><img src="~/images/css/inventory/add-item/history.png" alt="History" /><br />History</a></li>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 px-0">
+                            <div class="container-fluid div-tabs text-center">
+                                <ul id="modal-tabs" class="nav nav-tabs text-center container-fluid pr-0" style="display:inline-flex; justify-content:space-between;">
+                                    <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 1.8rem;"></i><br />Item</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 1.8rem;"></i><br />Price</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><i class="icon-attach_file-24px" style="font-size: 1.8rem;"></i><br />Documents</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><i class="icon-comment-24px" style="font-size: 1.8rem;"></i><br />Comments</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><i class="icon-archive-24px" style="font-size: 1.8rem;"></i><br />Archive</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 1.8rem;"></i><br />History</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"> <i class="icon-shopping_cart-24px" style="font-size: 1.8rem;"></i> <br />Order</a></li>
                                 </ul>
                             </div>
                         </div>
-
-                    </div>*@
+                    </div>
+                </div>
 
                 <!-- Modal body -->
-                <div class="modal-body">
-                    <div class="container-fluid div-tabs">
+                <div class="new- modal-body" style="background: #F6F7F8; padding: 1em">
+                    <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 3em 4em; border: 2px solid #EAEAEB;">
 
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-11 offset-0.5">
-
-                                    <ul id="modal-tabs" class="nav nav-tabs text-center">
-                                        <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link"><img src="~/images/css/inventory/add-item/item.png" alt="Item" /><br />Item</a></li>
-                                        <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><img src="~/images/css/inventory/add-item/price.png" alt="Price" /><br />Price</a></li>
-                                        <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><img src="~/images/css/inventory/add-item/documents.png" alt="Documents" /><br />Documents</a></li>
-                                        <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><img src="~/images/css/inventory/add-item/comments.png" alt="Comments" /><br />Comments</a></li>
-                                        <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"><img src="~/images/css/inventory/add-item/location.png" alt="Order" /><br />Order</a></li> @*this shouldnt be location, only for now*@
-                                        <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><img src="~/images/css/inventory/add-item/archive.png" alt="Archive" /><br />Archive</a></li>
-                                        <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><img src="~/images/css/inventory/add-item/history.png" alt="History" /><br />History</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <br />
-                        <div class="tab-content border-dark">
+                        <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
-                                <strong style="font-size: 1.7em;">Item</strong>
-                                <br /><hr /><br />
+                                <span style="font-size: 1.7em;">Item</span>
+                                <br />
+                                <br />
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label font-weight-bold"></label>
+                                            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
     "Select Category", new { @class = "form-control-plaintext border-bottom ", @id = "parentlist" })
@@ -95,7 +86,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group sublist">
-                                            <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label font-weight-bold"></label>
+                                            <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
     new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
     "Select Subcategory", new { @class = "form-control-plaintext border-bottom ", @id = "sublist" })
@@ -104,21 +95,22 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Project:</label>
+                                            <label class="control-label">Project:</label>
                                             <select class="form-control-plaintext border-bottom "></select>
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Sub Project:</label>
+                                            <label class="control-label">Sub Project:</label>
                                             <select class="form-control-plaintext border-bottom "></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label asp-for="Request.Product.Vendor" class="control-label font-weight-bold"></label>
+                                            <label asp-for="Request.Product.Vendor" class="control-label"></label>
                                             @Html.DropDownListFor(
     vm => vm.Request.Product.VendorID,
     new SelectList(
@@ -134,117 +126,123 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             @* IN MIDDLE *@
-                                            <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label font-weight-bold"></label>
+                                            <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
                                             <label class="vendorBusinessId form-control-plaintext border-bottom " />
                                             @*don't need a validation here because you it's not saving*@
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label asp-for="Request.ParentRequest.OrderNumber" class="control-label font-weight-bold"></label>
+                                        <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
                                         <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" readonly />
                                         <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-6">
-                                        <label asp-for="Request.ParentRequest.OrderDate" class="control-label font-weight-bold"></label>
+                                        <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
                                         @*starts off at today and disabled so can't change*@
                                         <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" readonly />
                                         <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label font-weight-bold"></label>
+                                        <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
                                         <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
                                     </div>
                                     <div class="col-md-6">
-                                        <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label font-weight-bold"></label>
+                                        <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
                                         <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label asp-for="Request.CatalogNumber" class="control-label font-weight-bold"></label>
+                                        <label asp-for="Request.CatalogNumber" class="control-label"></label>
                                         <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-3">
-                                        <label asp-for="Request.Warranty" class="control-label font-weight-bold"></label>
+                                        <label asp-for="Request.Warranty" class="control-label"></label>
                                         <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.Warranty" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label font-weight-bold">End Date</label>
+                                        <label class="control-label">End Date</label>
                                         @*no date in backend so set to zero*@
                                         <input value="0000-00-00" name="WarrantyDate" class="form-control-plaintext border-bottom " disabled="disabled" />
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label asp-for="Request.ExpectedSupplyDays" class="control-label font-weight-bold"></label>
+                                        <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
                                         <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label font-weight-bold">Expected supply date</label>
+                                        <label class="control-label">Expected supply date</label>
                                         <input value="0000-00-00" class="form-control-plaintext border-bottom datepicker" disabled="disabled" />
                                     </div>
                                     <div class="col-md-4">
-                                        <label asp-for="Request.URL" class="control-label font-weight-bold"></label>
+                                        <label asp-for="Request.URL" class="control-label"></label>
                                         <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.URL" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
+
                             <div id="price" class="tab-pane fade">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <strong style="font-size: 1.7em;">Price</strong>
+                                        <span style="font-size: 1.7em;">Price</span>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="currency" class="control-label font-weight-bold">Currency</label>
+                                            <label for="currency" class="control-label">Currency</label>
                                             <select id="currency" class="form-control-plaintext border-bottom ">
-                                                <option value="dollar">&#127480; USD</option>
-                                                <option value="shekel">&#127480; NIS</option>
+                                                <option value="dollar">&#36; USD</option>
+                                                <option value="shekel">&#x20aa; NIS</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label asp-for="Request.ExchangeRate" class="control-label font-weight-bold"></label>
+                                            <label asp-for="Request.ExchangeRate" class="control-label"></label>
                                             <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " />
                                             <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <hr /><br />
+                                <hr />
+                                <br />
                                 <div class="row" id="edit">
                                     <div class="col-md-4 border rounded p-1 RequestUnitCard">
                                         <div class="row">
                                             <div class="col-md-6 form-group">
-                                                <label asp-for="Request.Unit" class="control-label font-weight-bold"></label>
+                                                <label asp-for="Request.Unit" class="control-label"></label>
                                                 <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="0" />
                                                 <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label asp-for="Request.UnitType" class="control-label font-weight-bold"></label>
+                                                    <label asp-for="Request.UnitType" class="control-label"></label>
                                                     @Html.DropDownListFor(
-    vm => vm.Request.UnitTypeID,
-    Model.UnitTypeList,
-    "",
-    htmlAttributes: new { @class = "form-control-plaintext border-bottom " }
-    )
+                                                        vm => vm.Request.UnitTypeID,
+                                                        Model.UnitTypeList,
+                                                        "",
+                                                        htmlAttributes: new { @class = "form-control-plaintext border-bottom " }
+                                                        )
                                                     <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Price:</label>
+                                            <label class="control-label">Price:</label>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="input-group">
@@ -264,23 +262,23 @@
                                     <div class="col-md-4 border rounded p-1 RequestSubunitCard">
                                         <div class="row">
                                             <div class="col-md-6 form-group">
-                                                <label asp-for="Request.SubUnit" class="control-label font-weight-bold"></label>
+                                                <label asp-for="Request.SubUnit" class="control-label"></label>
                                                 <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom " min="0" disabled />
                                                 <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6 form-group">
-                                                <label asp-for="Request.SubUnitType" class="control-label font-weight-bold"></label>
+                                                <label asp-for="Request.SubUnitType" class="control-label"></label>
                                                 @Html.DropDownListFor(
-             vm => vm.Request.SubUnitTypeID,
-             Model.UnitTypeList,
-             "",
-             htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
-         )
+                                                    vm => vm.Request.SubUnitTypeID,
+                                                    Model.UnitTypeList,
+                                                    "",
+                                                    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
+                                                )
                                                 <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Price:</label>
+                                            <label class="control-label">Price:</label>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="input-group">
@@ -300,23 +298,23 @@
                                     <div class="col-md-4 border rounded p-1 RequestSubsubunitCard">
                                         <div class="row">
                                             <div class="col-md-6 form-group">
-                                                <label asp-for="Request.SubSubUnit" class="control-label font-weight-bold"></label>
+                                                <label asp-for="Request.SubSubUnit" class="control-label"></label>
                                                 <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom " min="0" disabled />
                                                 <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-6 form-group">
-                                                <label asp-for="Request.SubSubUnitType" class="control-label font-weight-bold"></label>
+                                                <label asp-for="Request.SubSubUnitType" class="control-label"></label>
                                                 @Html.DropDownListFor(
-    vm => vm.Request.SubSubUnitTypeID,
-    Model.UnitTypeList,
-    "",
-    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
-    )
+                                                vm => vm.Request.SubSubUnitTypeID,
+                                                Model.UnitTypeList,
+                                                "",
+                                                htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
+                                                )
                                                 <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Price:</label>
+                                            <label class="control-label">Price:</label>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="input-group">
@@ -334,19 +332,20 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold"></label>
+                                            <label class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
-                                                <input  class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
+                                                <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label asp-for="Request.Cost" class="control-label font-weight-bold">Sum:</label>
+                                            <label asp-for="Request.Cost" class="control-label">Sum:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" disabled />
@@ -356,7 +355,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label asp-for="Request.VAT" class="control-label font-weight-bold"></label>
+                                            <label asp-for="Request.VAT" class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " />
@@ -366,7 +365,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Total + VAT:</label>
+                                            <label class="control-label">Total + VAT:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
                                                 <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
@@ -375,7 +374,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Sum:</label>
+                                            <label class="control-label">Sum:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
@@ -383,15 +382,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Discount:</label>
+                                            <label class="control-label">Discount:</label>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Terms:</label>
+                                            <label class="control-label">Terms:</label>
                                             @Html.DropDownListFor(
                                                                     model => model.Request.Terms,
                                                                     new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
@@ -405,10 +405,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label asp-for="Request.ParentRequest.Installments" class="control-label font-weight-bold"></label>
+                                            <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
                                             <input asp-for="Request.ParentRequest.Installments" class="form-control-plaintext border-bottom " />
                                             <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
                                         </div>
@@ -478,21 +479,22 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label font-weight-bold">Debt</label>
+                                            <label class="control-label">Debt</label>
                                             <input class="form-control-plaintext border-bottom " value="To Be Calculated" disabled />
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div id="documents" class="tab-pane fade">
-                                <strong style="font-size: 1.7em;">Documents</strong>
+                                <span style="font-size: 1.7em;">Documents</span>
                                 <br /><hr /><br />
 
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="card">
-                                            <div class="card-body text-center pt-5" style="height:150px; width:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/order.png" alt="order" />
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/order.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -501,30 +503,30 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Order</label>
+                                        <label class="control-label text-center" style="width:100%;">Order</label>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="card">
-                                            <div class="card-body">
-                                                Insert Image
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/invoice.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
                                                     @*<input type="file" id="exampleInputFile">
-                                                        <label for="exampleInputFile" data-browse="+"></label>*@
+                                            <label for="exampleInputFile" data-browse="+"></label>*@
                                                     <label for="InvoiceFiles" class="btn btn-primary btn-block btn-outlined">+</label>
                                                     <input type="file" asp-for="InvoiceFiles" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
                                                     @*<input type="file" asp-for="InvoiceFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                        <label class="custom-file-label">Choose File...</label>*@
+                                            <label class="custom-file-label">Choose File...</label>*@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Invoice</label>
+                                        <label class="control-label text-center" style="width:100%;">Invoice</label>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="card">
-                                            <div class="card-body">
-                                                Insert Image
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/shipment.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -533,12 +535,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Shipment</label>
+                                        <label class="control-label text-center" style="width:100%;">Shipment</label>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="card">
-                                            <div class="card-body">
-                                                Insert Image
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/quote.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -547,14 +549,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Quote</label>
+                                        <label class="control-label text-center" style="width:100%;">Quote</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="card">
-                                            <div class="card-body">
-                                                Insert Image
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -563,12 +565,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Info</label>
+                                        <label class="control-label text-center" style="width:100%;">Info</label>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="card">
-                                            <div class="card-body">
-                                                Insert Image
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -577,12 +579,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Picture</label>
+                                        <label class="control-label text-center" style="width:100%;">Picture</label>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="card">
-                                            <div class="card-body">
-                                                Insert Image
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -591,12 +593,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Return</label>
+                                        <label class="control-label text-center" style="width:100%;">Return</label>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="card">
-                                            <div class="card-body">
-                                                Insert Image
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
@@ -605,7 +607,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center" style="width:100%;">Credit</label>
+                                        <label class="control-label text-center" style="width:100%;">Credit</label>
                                     </div>
                                 </div>
                                 <hr />
@@ -623,8 +625,9 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div id="comments" class="tab-pane fade">
-                                <strong style="font-size: 1.7em;">Comments</strong>
+                                <span style="font-size: 1.7em;">Comments</span>
                                 <br /><hr /><br />
 
                                 @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
@@ -632,38 +635,41 @@
                                     <div class="card-body">
                                         <div class="font-weight-bold">+NewComment</div>
                                         <div class="form-group">
-                                            <label asp-for="NewComment.CommentText" class="control-label font-weight-bold"></label>
+                                            <label asp-for="NewComment.CommentText" class="control-label"></label>
                                             <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
                                             <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div id="archive" class="tab-pane fade">
+                                <span style="font-size: 1.7em;">Archive</span>
+                                <br /><hr /><br />
+                                <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
+                            </div>
+
+                            <div id="history" class="tab-pane fade">
+                                <span style="font-size: 1.7em;">History</span>
+                                <br /><hr /><br />
+                                <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
+                            </div>
+
                             <div id="order" class="tab-pane fade">
-                                <strong style="font-size: 1.7em;">Order</strong>
+                                <span style="font-size: 1.7em;">Order</span>
                                 <br /><hr /><br />
 
                                 <div class="form-group">
                                     @*you can only add to cart if you are creating a new one*@
-                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="btn btn-outline-primary" />
-                                    <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="btn btn-outline-primary" />
-                                    <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
+                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="inv-button" />
+                                    <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="inv-button" />
+                                    <input type="submit" value="Add To Cart" asp-action="AddToCart" class="inv-button" />
 
                                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
-                                    <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
+                                    <button type="button" class="cancel-button float-right" data-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
-                            <div id="archive" class="tab-pane fade">
-                                <strong style="font-size:1.7em;">Archive</strong>
-                                <br /><hr /><br />
-                                <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
-                            </div>
-                            <div id="history" class="tab-pane fade">
-                                <strong style="font-size:1.7em;">History</strong>
-                                <br /><hr /><br />
-                                <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
 
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -671,8 +677,8 @@
 
 
                 <!-- Modal footer -->
-                <div class="modal-footer">
-                </div>
+                <!--<div class="modal-footer">
+                </div>-->
 
                 @*Begin Hidden Inputs:*@
                 @Html.HiddenFor(vm => vm.Request.ProductID)
@@ -687,38 +693,38 @@
             </form>
 
 
+            </div>
         </div>
+
     </div>
+    @*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+    @*This will work for the EDIT (putting in the already loaded product subcategory)*@
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-</div>
-@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
-@*This will work for the EDIT (putting in the already loaded product subcategory)*@
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <script type="text/javascript">
 
-    <script type="text/javascript">
+            /*
+             * Including these js pieces from site.js b/c has issue always attaching
+             */
 
-        /*
-         * Including these js pieces from site.js b/c has issue always attaching
-         */
+            //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
+            $("#parentlist").change(function () {
+                var parentCategoryId = $("#parentlist").val();
+                var url = "/Requests/GetSubCategoryList";
 
-        //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
-        $("#parentlist").change(function () {
-            var parentCategoryId = $("#parentlist").val();
-            var url = "/Requests/GetSubCategoryList";
-
-            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-                var item = "";
-                $("#sublist").empty();
-                $.each(data, function (i, subCategory) {
-                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                    var item = "";
+                    $("#sublist").empty();
+                    $.each(data, function (i, subCategory) {
+                        item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                    });
+                    $("#sublist").html(item);
                 });
-                $("#sublist").html(item);
             });
-        });
 
 
-    </script>
-}
+        </script>
+    }
 
 
