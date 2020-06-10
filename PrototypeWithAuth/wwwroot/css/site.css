@@ -178,9 +178,13 @@ body {
     text-decoration: none;
 }
 
+.hover-bold:hover {
+    font-weight:600;
+}
+
 /*navbar activeLink color-profile change*/
 .opac54 {
-    color:black;
+    color: black;
     opacity: 0.54;
 }
 
