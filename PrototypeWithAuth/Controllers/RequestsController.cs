@@ -2168,6 +2168,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public JsonResult GetParentCategory(int? ProductSubcategoryID)
         {
+            //try passing the whole list into js and doing the where there
             var parentCategory = _context.ProductSubcategories
                 .Include(ps => ps.ParentCategory)
                 .Where(ps => ps.ProductSubcategoryID == ProductSubcategoryID)
