@@ -63,26 +63,26 @@
    
                 <tbody>
                     <tr style="border-color:transparent;">
-                        <th>
+                        <th  style="width:8%;">
                             @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderNumber)
                         </th>
 
-                        <th>
+                        <th style="width:25%;">
                             @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductName)
                         </th>
-                        <th>
+                        <th style="width:10%;">
                             @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().OrderDate)
                         </th>
-                        <th>
+                        <th style="width:10%;">
                             @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
                         </th>
-                        <th>
+                        <th style="width:10%;">
                             @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
                         </th>
-                        <th>
+                        <th style="width:15%;">
                             @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Product.Vendor.VendorEnName)
                         </th>
-                        <th>
+                        <th style="width:15%;">
                             @Html.DisplayNameFor(model => model.ParentRequests.ElementAt(index).FirstOrDefault().Requests.FirstOrDefault().Cost)
 
                         </th>
@@ -141,10 +141,10 @@
                                 @Html.DisplayFor(modelItem => item.ParentRequestID);
                             }
                         </td>
-                        <th>
+                        <td>
                             @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
-                        </th>
-                        <th>
+                        </td>
+                        <td>
                             @{
                                 decimal cost = (decimal)item.Requests.FirstOrDefault().Cost;
                                 string formattedCost = cost.ToString("C02");
@@ -170,7 +170,7 @@
                             {
 
                             }
-                        </th>
+                        </td>
 
                         <td>
                             @*in the future this should be taking all requests and not just one*@

@@ -9,10 +9,12 @@ namespace PrototypeWithAuth.ViewModels
     public class RequestsSearchViewModel
     {
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
+        public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
         public Request Request { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
+        public DateTime WarrantyEndDate { get; set; } //needs to be calculated in the controller
 
         //booleans for request status
         public bool Inventory { get; set; }

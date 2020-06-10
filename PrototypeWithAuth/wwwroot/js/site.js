@@ -49,7 +49,7 @@ $("#Request_ParentRequest_Installments").change(function () {
 	console.log("dd: " + dd);
 
 
-	if (difference > 0) { 
+	if (difference > 0) {
 		console.log("installments increased");
 		var newIncrementNumber = countPrevInstallments;
 		for (x = difference; x > 0; x--) {
@@ -400,7 +400,7 @@ $.fn.CalculateSumPlusVat = function () {
 $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
 	var theResult = isFinite($value) && $value || "";
 
-	$inputBox.val(theResult/*.toFixed(2)*/);
+	$inputBox.val(theResult.toFixed(2));
 }
 
 
@@ -650,7 +650,7 @@ $(".visual-locations-zoom").on("click", function (e) {
 			$(".modal-backdrop").remove();
 
 		}
-	}); 
+	});
 });
 
 $(".clicked-button").click(function () {
@@ -783,4 +783,56 @@ $(".load-product-edit").on("click", function (e) {
 	console.log("itemurl: " + $itemurl);
 	$.fn.CallPage($itemurl, "edit");
 	return false;
+});
+
+
+
+/*REQUESTS SEARCH
+-------------------*/
+
+$("#request-search #vendorList").change(function () {
+	$("#request-search #vendorBusinessIDList").val($(this).val());
+});
+
+$("#request-search #vendorBusinessIDList").change(function () {
+	$("#request-search #vendorList").val($(this).val());
+});
+
+
+$("#request-search #parentlist").change(function () {
+	var parentCategoryId = $("#parentlist").val();
+	var url = "/Requests/GetSubCategoryList";
+	$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+		var item = "<option>Select Subcategory</option>";
+		$("#sublist").empty();
+		$.each(data, function (i, subCategory) {
+			item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+		});
+		$("#sublist").html(item);
+	});
+});
+
+$("#request-search #sublist").change(function () {
+	var productSubcategoryId = $(this).val();
+	console.log("productSubcategoryId: " + productSubcategoryId);
+	var url = "/Requests/GetParentCategory";
+	$.getJSON(url, { productSubcategoryId, productSubcategoryId }, function (data) {
+		console.log("came back from url");
+		console.log("data: " + data);
+		$.each(data, function (i, parentCategory) {
+			console.log("parentCategory.parentCategoryId: " + parentCategory.parentCategoryId);
+			$("#request-search #parentlist").val(parentCategory.parentCategoryId);
+		});
+	});
+	//var productSubcategoryId = $(this).val();
+	//console.log("productSubcategoryId: " + productSubcategoryId);
+	//var url = "/Requests/GetParentCategory";
+	//$.getJSON(url, { productSubcategoryId, productSubcategoryId }, function (data) {
+	//	console.log("inside of get json");
+	//	console.log("data: " + data);
+	//	$.each(data, function (i, parentCategory) { //not sure how to do just one and not a foreach loop - so i just did a foreach even tho only one is being returned
+	//		console.log("parentCategory.parentCategoryId: " + parentCategory.parentCategoryId);
+	//		$("request-search #parentlist").val(parentCategory.parentCategoryId);
+	//	});
+	//});
 });

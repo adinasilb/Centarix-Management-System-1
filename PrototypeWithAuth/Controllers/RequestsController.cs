@@ -1846,6 +1846,7 @@ namespace PrototypeWithAuth.Controllers
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
                 ParentCategories = await _context.ParentCategories.ToListAsync(),
+                ProductSubcategories = await _context.ProductSubcategories.ToListAsync(),
                 Vendors = await _context.Vendors.ToListAsync(),
                 Request = new Request(),
                 Inventory = false,
@@ -2153,13 +2154,28 @@ namespace PrototypeWithAuth.Controllers
          * JSONS
          */
 
-        [HttpGet] //send a json to that the subcategory list is filered
-        public JsonResult GetSubCategoryList(int ParentCategoryId)
+        [HttpGet] //send a json to that the subcategory list is filtered
+        public JsonResult GetSubCategoryList(int? ParentCategoryId)
         {
-            var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
+            var subCategoryList = _context.ProductSubcategories.ToList();
+            if (ParentCategoryId != null)
+            {
+                subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
+            }
             return Json(subCategoryList);
-
         }
+
+        [HttpGet]
+        public JsonResult GetParentCategory(int? ProductSubcategoryID)
+        {
+            //try passing the whole list into js and doing the where there
+            var parentCategory = _context.ProductSubcategories
+                .Include(ps => ps.ParentCategory)
+                .Where(ps => ps.ProductSubcategoryID == ProductSubcategoryID)
+                .FirstOrDefault().ParentCategory;
+            return Json(parentCategory);
+        }
+
 
         //[HttpGet]
         //public JsonResult GetCompanyAccountList(int PaymentTypeID)
@@ -2174,7 +2190,6 @@ namespace PrototypeWithAuth.Controllers
             var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentId).ToList();
             return Json(locationInstanceList);
         }
-
 
     }
 }

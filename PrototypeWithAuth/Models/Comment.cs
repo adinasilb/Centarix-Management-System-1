@@ -25,7 +25,7 @@ namespace PrototypeWithAuth.Models
         public DateTime CommentTimeStamp
         {
             get => commentTimeStamp;
-            set { } //should we take out the set? -ADINA
+            set { } 
         }
     }
 }
