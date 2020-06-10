@@ -40,7 +40,7 @@
             cartClass = initalClasses + currentClasses;
             break;
         case AppUtility.RequestPageTypeEnum.Search:
-            searchClass = initalClasses + currentClasses;
+            searchClass = initalClasses + currentClasses + " search-link";
             break;
         case AppUtility.RequestPageTypeEnum.Location:
             locationClass = initalClasses + currentClasses;
@@ -58,6 +58,7 @@
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/mdb.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/style.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/addons/datatables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
@@ -66,19 +67,10 @@
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
 
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery/dist/popper.min.js"></script>
     <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
-    <script src="~/lib/jquery/dist/mdb.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>
-
-
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @*load jquery ui*@
-    <script src="~/lib/jquery/jquery-ui.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-
+    <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 </head>
 <body>
     @*<<<<< Inventory/Requests Header >>>>>*@
@@ -140,6 +132,20 @@
     </footer>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+
+
+    
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/popper.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>
+
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @*load jquery ui*@
+    <script src="~/lib/jquery/jquery-ui.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 </body>
 </html>
 

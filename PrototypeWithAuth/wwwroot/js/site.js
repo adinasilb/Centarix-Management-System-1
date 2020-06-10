@@ -3,6 +3,8 @@
 
 // Write your JavaScript code.
 
+
+
 //global Exchange Rate variable (usd --> nis)
 
 function showmodal() {
