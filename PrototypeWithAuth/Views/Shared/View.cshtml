@@ -292,10 +292,10 @@
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/jquery.sticky.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/lightbox.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/ofi.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-date-time.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-date.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-time.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker.js"></script>
+    @*<script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-date-time.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-date.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-time.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker.js"></script>*@
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/scrollbar.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/toastr.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map-world-mill.js"></script>
@@ -321,5 +321,220 @@
         $('#dtBasicExample').DataTable();
         $('.dataTables_length').addClass('bs-select');
         $('.mdb-select').materialSelect();
+        $('.datepicker').pickadate();
     });
+
+
+     $(".load-product-details").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
+        $.fn.CallPage($itemurl, "details");
+        return false;
+    });
+
+    $(".load-product-edit").on("click", function (e) {
+        console.log("inside of load product edit")
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+        console.log("itemurl: " + $itemurl);
+        $.fn.CallPage($itemurl, "edit");
+        return false;
+    });
+
+    $(".create-product-details").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/CreateModalView";
+        //var $itemurl = "Requests/DetailsModalView/?id=62";
+        $.fn.CallPage($itemurl, "create");
+        return false;
+    });
+
+    $(".load-confirm-delete").on("click", function (e) {
+        console.log("in confirm delete");
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/DeleteModal/?id=" + $(this).val();
+        $.fn.CallPage($itemurl, "delete");
+        return false;
+    });
+
+    $(".load-order-details").on("click", function (e) {
+        console.log("in order details");
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
+        $.fn.CallPage($itemurl, "reorder");
+        return false;
+    });
+
+    $(".load-receive-and-location").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/ReceivedModal?RequestID=" + $(this).val();
+        $.fn.CallPage($itemurl, "received");
+        return false;
+    });
+
+    $(".js-go-to-controller").on("click", function (e) {
+        console.log("inside of js-go-to-controller");
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/ConfirmEmailModal";
+        $.fn.CallPage($itemurl, "email");
+        return false;
+    });
+
+    $(".load-confirm-email").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
+        $.fn.CallPage($itemurl, "confirmemail");
+        return false;
+    });
+
+
+    function AddTempDataMemory() {
+        console.log("about to get set the hidden fors in the modal view to remember where the user was");
+
+        $("#Page").val(parseInt(@TempData["TempPage"]));
+        $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
+        $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
+        $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
+        $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
+        //console.log("PageType:" + @TempData["TempPageType"]);
+        $("#PageType").val(@TempData["TempPageType"]);
+    };
+
+
+    $.fn.CallPage = function ($itemurl, $type) {
+        console.log("in call page function");
+        //delete existing modals
+        $('.modal').replaceWith('');
+        $(".modal-backdrop").remove();
+        $.ajax({
+            async: true,
+            url: $itemurl,
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                console.log("success!");
+                var modal = $(data);
+                $('body').append(modal);
+                //replaces the modal-view class with the ModalView view
+                //$(".modal-view").html(data);
+                //turn off data dismiss by clicking out of the box and by pressing esc
+                $(".modal-view").modal({
+                    backdrop: true,
+                    keyboard: false,
+                });
+                //shows the modal
+                $(".modal").modal('show');
+                //$(".modal").on('show.bs.modal', function (e) {
+                //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
+                //})
+                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                //$(".modal-backdrop").remove();
+                //$('.modal').find('input').first().focus();
+                //$(".modal").popover('hide')
+                switch ($type) {
+                    case "details":
+                        console.log('case "details":');
+                        $.fn.OnOpenModalView();
+                        AddTempDataMemory();
+                        break;
+                    case "edit":
+                        console.log('case "edit":');
+                        $.fn.OnOpenModalView();
+                        AddTempDataMemory();
+                        break;
+                    case "reorder":
+                        console.log('case "reorder":');
+                        $.fn.OnOpenModalView();
+                        AddTempDataMemory();
+                        break;
+                    case "create":
+                        console.log('case "create":');
+                        $.fn.OnOpenModalView();
+                        AddTempDataMemory();
+                        break;
+                    case "received":
+                        console.log('case "received":');
+                        AddTempDataMemory();
+                        break;
+                    case "confirmemail":
+                        console.log('case "confirmemail":');
+                        AddTempDataMemory();
+                        break;
+                    case "delete":
+                        console.log('case "delete":');
+                        AddTempDataMemory();
+                        break;
+                }
+
+            }
+            //error: function (/*request, status, error*/) {
+            //    console.log("ajax call went wrong:" /*+ request.responseText*/);
+            //}
+        });
+    }
+
+    $.fn.OnOpenModalView = function () {
+        $('.modal-content a:first').tab('show');
+        var parentCategoryId = $("#parentlist").val();
+        var subcategoryId1 = $("#sublist").val();
+        var url = "/Requests/GetSubCategoryList";
+
+        $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+            var item = "";
+            $.each(data, function (i, subCategory) {
+                item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+            });
+            $("#sublist").html(item);
+            $("#sublist").val(subcategoryId1).change();
+        });
+
+        //For the order files
+
+        //goes into this function
+        $(".custom-file-input").on("change", function () {
+            var fileLabel = $(this).next(".custom-file-label");
+            var files = $(this)[0].files;
+            if (files.length > 1) {
+                fileLabel.html(files.length + ' files selected');
+            }
+            else {
+                fileLabel.html(files[0].name);
+            }
+        });
+
+        //get the current vendor id (if loading an already existing product)
+        var vendorid = $("#vendorList").val();
+        //call a function to lad the vendor business id from the vendor id
+        $.fn.ChangeVendorBusinessId(vendorid);
+
+    }
+
+    $(".search-link").on("click", function () {
+        $('#request-search a:first').tab('show');
+    });
+
+
+    //$(".modal-view").on('show.bs.show.bs.modal', function (evt) {
+    //    var button = $(evt.relatedTarget);
+    //    var modal = $(this);
+    //    modal.find('[href="' + button.attr("href") + '"]').tab('show');
+    //});
+
+    function addActive(id) {
+        var item = document.getElementById(id);
+        item.classList.add("activeNavLink");
+    }
 </script>
