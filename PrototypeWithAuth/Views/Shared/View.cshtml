@@ -40,7 +40,7 @@
             cartClass = initalClasses + currentClasses;
             break;
         case AppUtility.RequestPageTypeEnum.Search:
-            searchClass = initalClasses + currentClasses;
+            searchClass = initalClasses + currentClasses + " search-link";
             break;
         case AppUtility.RequestPageTypeEnum.Location:
             locationClass = initalClasses + currentClasses;
@@ -56,19 +56,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Centarix Management System</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
+
+
+    @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
+    <!-- Bootstrap core CSS -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="~/lib/bootstrap/dist/css/mdb.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+
+
+
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/style.css">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/addons/datatables.min.css" />*@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @*load jquery ui*@
-    <script src="~/lib/jquery/jquery-ui.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/jquery/dist/popper.min.js"></script>
+        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
+        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 </head>
 <body>
     @*<<<<< Inventory/Requests Header >>>>>*@
@@ -128,7 +142,44 @@
             &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+
+
+    <!--  SCRIPTS  -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="~/js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
+
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown-searchable.min.js"></script>
+
+    @*<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
+        <script type="text/javascript" src="~/js/popper.min.js"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/popper.min.js"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>*@
+
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @*load jquery ui*@
+    <script src="~/lib/jquery/jquery-ui.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+
+    <script type="text/javascript" src="~/js/site.js" asp-append-version="true"></script>
+    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 </body>
 </html>
+
+<script>
+    $(document).ready(function () {
+        $('#dtBasicExample').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>

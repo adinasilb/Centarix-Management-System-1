@@ -2,6 +2,23 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
+
+
+.custom-box-shadow {
+    -webkit-box-shadow: -7px -7px 18px 0px rgba(153,153,153,1);
+    -moz-box-shadow: -7px -7px 18px 0px rgba(153,153,153,1);
+    box-shadow: -7px -7px 18px 0px rgba(153,153,153,1);
+}
+
+.checkbox-bottom-label {
+    content: "\A";
+}
+
+.checkbox-bottom-label::before {
+    content: "\A";
+    white-space: pre;
+}
+
 .vertical .carousel-inner {
     height: 100%;
 }
@@ -104,7 +121,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif !important;
     /*color: rgba(0,0,0,.87), !important;*/
 }
 .footer {
