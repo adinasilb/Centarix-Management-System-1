@@ -3,34 +3,28 @@
 @{
     var i = 0;
 }
-@foreach (var item in Model.LocationTypes)
 
-{
-            <div class="row">
-                <div class="col-4">
-                    <span style="line-height: 2.5;">@Html.DisplayFor(modelItem => item.LocationTypeName):</span>
-                </div>
-                <div class="col-8">
-                    <div class="form-inline">
-                        <div class="form-group mb-2">
-                            <label asp-for="LocationInstances[i].Height" class="control-label">Height: </label>&ensp;
-                            <input asp-for="LocationInstances[i].Height" class=" form-control" style="width:4rem;" />&emsp;
 
-                            <label asp-for="LocationInstances[i].Width" class="control-label">Width: </label>&ensp;
-                            <input asp-for="LocationInstances[i].Width" class="form-control" style="width:4rem;" />
+<div class="container" style="display:flex; justify-content:space-around;">
 
-                            <input asp-for="LocationInstances[i].LocationTypeID" class=" form-control" value="@item.LocationTypeID" type="hidden" />
-
-                            @*<input id="LocationInstances_0__LocationTypeID" name="LocationInstances[0].LocationTypeID" type="hidden" value=@item.LocationTypeID />*@
-
-                            @*@Html.HiddenFor(m => m.LocationInstances[i].LocationTypeID, new { Value = item.LocationTypeID })*@
-                        <hr />
-                        </div>
-                    </div>
+    @foreach (var item in Model.LocationTypes)
+    {
+        <div style="background-color: rgba(48, 188, 201, 0.06)
+    ">
+            <div>
+                <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => item.LocationTypeName):</span>
+            </div>
+            <div style="justify-content:center;">
+                <input asp-for="LocationInstances[i].Height" style="width:3rem;" />&nbsp;x&nbsp;<input asp-for="LocationInstances[i].Width" style="width:3rem;" />
+            </div>
+            <div style="justify-content:center;">
+                <div>
+                    <input asp-for="LocationInstances[i].LocationTypeID" value="@item.LocationTypeID" type="hidden" />
                 </div>
             </div>
 
-                
-    i++;
+        </div>
 
-}
+        i++;
+    }
+</div>
