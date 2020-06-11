@@ -4,9 +4,11 @@
 @model PrototypeWithAuth.ViewModels.ReceivedLocationViewModel
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-<div class="modal modal-view right faid" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; overflow-y:auto;">
-        <div class="modal-content d-inline-block">
+<div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; max-width:70rem; overflow-y:auto;">
+
+        <div class="modal-content d-inline-block" style="width:70rem;">
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(vm => vm.Request.RequestID)
@@ -37,10 +39,10 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="control-label" asp-for="locationTypesDepthZero"></label>
+                                <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
                                 @Html.DropDownListFor(m => m.LocationTypeID,
-    new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-    "Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
+                                new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
+                                "Select Type", new { @class = "form-control-plaintext border-bottom ", @id =        "locationTypeDepthZero" })
                             </div>
                         </div>
                         <div class="col-md-4">
