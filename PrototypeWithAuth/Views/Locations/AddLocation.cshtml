@@ -19,20 +19,20 @@
 
                 <div class="form-group">
                     <label asp-for="LocationInstance.LocationInstanceName" class="control-label"> </label> @*"Name"*@
-                    <input asp-for="LocationInstance.LocationInstanceName" type="text" class="form-control" />
+                    <input asp-for="LocationInstance.LocationInstanceName" type="text" class="form-control-plaintext border-bottom" />
 
                 </div>
                 <div class="form-group">
                     <label asp-for="LocationTypesDepthOfZero" class="control-label">Type of storage</label>
                     @Html.DropDownListFor(m => m.LocationInstance.LocationTypeID,
                     new SelectList(Model.LocationTypesDepthOfZero, "LocationTypeID", "LocationTypeName"),
-                    "Select Type", new { @class = "form-control" })
+                    "Select Type", new { @class = "form-control-plaintext border-bottom" })
                     <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-12 divSublocations">
                 </div>
-
+                <br />
             </div>
 
             <div class="modal-footer-no">

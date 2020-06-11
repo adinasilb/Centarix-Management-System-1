@@ -9,13 +9,12 @@
 
     @foreach (var item in Model.LocationTypes)
     {
-        <div style="background-color: rgba(48, 188, 201, 0.06)
-    ">
+        <div style="background-color: rgba(48, 188, 201, 0.06)">
             <div>
                 <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => item.LocationTypeName):</span>
             </div>
-            <div style="justify-content:center;">
-                <input asp-for="LocationInstances[i].Height" style="width:3rem;" />&nbsp;x&nbsp;<input asp-for="LocationInstances[i].Width" style="width:3rem;" />
+            <div class="form-inline" style="justify-content:center;">
+                <input asp-for="LocationInstances[i].Height" class="form-control-plaintext border-bottom" style="width:3rem;" /> &nbsp; x &nbsp;<input asp-for="LocationInstances[i].Width" class="form-control-plaintext border-bottom" style="width:3rem;" />
             </div>
             <div style="justify-content:center;">
                 <div>
