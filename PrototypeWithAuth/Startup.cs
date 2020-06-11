@@ -31,6 +31,7 @@ namespace PrototypeWithAuth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           
 
 
             //Set database Connection from application json file
@@ -64,7 +65,14 @@ namespace PrototypeWithAuth
                                  .RequireAuthenticatedUser()
                                  .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
+               // config.AllowValidatingTopLevelNodes = true;
             });
+
+            ////allow for data anotations validations
+            //services.AddMvcCore()
+            //   .AddDataAnnotations();
+            // //.AddMvcOptions(opt =>
+            // //       opt.Filters.Add<RequestFilterAttribute>());
 
             services.AddSession();
         }
