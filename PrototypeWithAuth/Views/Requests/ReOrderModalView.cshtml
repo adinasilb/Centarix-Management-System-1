@@ -38,6 +38,7 @@
                     <div>
                         <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent"><img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" /></button>
                     </div>
+                    <br />
                     <div class="form-group">
                         <h4><label asp-for="Request.Product.ProductName" class="control-label"> Request : </label> </h4>
                         <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>
@@ -62,21 +63,22 @@
                 </div>
 
                 <!-- Modal body -->
-                <div class="modal-body">
-                    <div class="container-fluid div-tabs">
+                <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
+                    <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 3em 4em; border: 2px solid #EAEAEB;">
 
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
-                            <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="price-tab">Price</a></li>
-                            <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
-                            <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
-                            <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
-                        </ul>
+                        @*<ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
+                <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="price-tab">Price</a></li>
+                <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
+                <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
+                <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
+            </ul>*@
 
                         <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
-                                <h3>ITEM</h3>
-                                <hr />
+                                <span style="font-size: 1.7em;">Item</span>
+                                <br />
+                                <br />
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -104,6 +106,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -136,6 +139,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
@@ -148,6 +152,7 @@
                                         <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
@@ -160,6 +165,7 @@
                                         <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
@@ -177,13 +183,13 @@
                                         <input value="0000-00-00" name="WarrantyDate" class="form-control-plaintext border-bottom " disabled="disabled" />
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
                                         <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                     </div>
-
                                     <div class="col-md-4">
                                         <label class="control-label">Expected supply date</label>
                                         <input value="0000-00-00" class="form-control-plaintext border-bottom datepicker" disabled="disabled" />
@@ -195,10 +201,11 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div id="price" class="tab-pane fade">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <h3>PRICE</h3>
+                                        <span style="font-size: 1.7em;">Price</span>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -218,6 +225,7 @@
                                     </div>
                                 </div>
                                 <hr />
+                                <br />
                                 <div class="row" id="edit">
                                     <div class="col-md-4 border rounded p-1 RequestUnitCard">
                                         <div class="row">
@@ -330,6 +338,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -378,6 +387,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -400,6 +410,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -428,69 +439,189 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div id="documents" class="tab-pane fade">
-                                <h3>DOCUMENTS</h3>
-                                <hr />
+                                <span style="font-size: 1.7em;">Documents</span>
+                                <br /><hr /><br />
+                                <!--<div class="row">
+        <div class="col-md-3">
+            <label class="control-label order-doc">Order Doc</label>
+            <div class="custom-file">
+                <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" multiple />
+                <label class="custom-file-label">Choose File...</label>
+            </div>
+            @if (Model.OrderFileStrings != null)
+            {
+                foreach (var o in Model.OrderFileStrings)
+                {
+                    <button>Test</button>
+                    <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
+                }
+                <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
+            }-->
+                                @*<div id="carousel" class="carousel ui-slider">
+            <ol class="carousel-indicators">
+            </ol>
+        </div>*@
+                                <!--</div>
+        <div class="col-md-3">
+            <label class="control-label">Invoice Doc</label>
+            <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom -file" />
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label class="control-label">Shipment Doc</label>
+            <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom -file" />
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label class="control-label">Quote Doc</label>
+            <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom -file" />
+            <span class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="control-label">Info Doc</label>
+            <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom -file" />
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label class="control-label">Pictures Doc</label>
+            <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom -file" />
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label class="control-label">Return Doc</label>
+            <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom -file" />
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label class="control-label">Credit Doc</label>
+            <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom -file" />
+            <span class="text-danger"></span>
+        </div>
+    </div>-->
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label class="control-label order-doc">Order Doc</label>
-                                        <div class="custom-file">
-                                            <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" multiple />
-                                            <label class="custom-file-label">Choose File...</label>
+                                        <div class="card">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/order.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file">
+                                                    <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
+                                                    <label class="custom-file-label">Choose File...</label>
+                                                </div>
+                                            </div>
                                         </div>
-                                        @if (Model.OrderFileStrings != null)
-                                        {
-                                            foreach (var o in Model.OrderFileStrings)
-                                            {
-                                                <button>Test</button>
-                                                <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
-                                            }
-                                            <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
-                                        }
-                                        @*<div id="carousel" class="carousel ui-slider">
-                                            <ol class="carousel-indicators">
-                                            </ol>
-                                        </div>*@
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label">Invoice Doc</label>
-                                        <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
+                                        <div class="card">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/invoice.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file">
+                                                    @*<input type="file" id="exampleInputFile">
+                            <label for="exampleInputFile" data-browse="+"></label>*@
+                                                    <label for="InvoiceFiles" class="btn btn-primary btn-block btn-outlined">+</label>
+                                                    <input type="file" asp-for="InvoiceFiles" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
+                                                    @*<input type="file" asp-for="InvoiceFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
+                            <label class="custom-file-label">Choose File...</label>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label">Shipment Doc</label>
-                                        <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
+                                        <div class="card">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/shipment.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file">
+                                                    <input type="file" asp-for="ShipmentFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
+                                                    <label class="custom-file-label">Choose File...</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label">Quote Doc</label>
-                                        <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
+                                        <div class="card">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/quote.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file">
+                                                    <input type="file" asp-for="QuoteFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
+                                                    <label class="custom-file-label">Choose File...</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label class="control-label">Info Doc</label>
-                                        <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
+                                        <div class="card">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file">
+                                                    <input type="file" asp-for="InfoFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
+                                                    <label class="custom-file-label">Choose File...</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Info</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label">Pictures Doc</label>
-                                        <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
+                                        <div class="card">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file">
+                                                    <input type="file" asp-for="PictureFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
+                                                    <label class="custom-file-label">Choose File...</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Picture</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label">Return Doc</label>
-                                        <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
+                                        <div class="card">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file">
+                                                    <input type="file" asp-for="ReturnFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
+                                                    <label class="custom-file-label">Choose File...</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Return</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label">Credit Doc</label>
-                                        <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
+                                        <div class="card">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file">
+                                                    <input type="file" asp-for="CreditFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
+                                                    <label class="custom-file-label">Choose File...</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Credit</label>
                                     </div>
                                 </div>
-                                <hr />
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h3 class="images-header"></h3>
@@ -507,7 +638,9 @@
                                 </div>
                             </div>
                             <div id="comments" class="tab-pane fade">
-                                <h3>COMMENTS</h3>
+                                <span style="font-size: 1.7em;">Comments</span>
+                                <br /><hr /><br />
+
                                 @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
                                 <div class="card rounded">
                                     <div class="card-body">
@@ -520,24 +653,36 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="archive" class="tab-pane fade">
+                                <span style="font-size: 1.7em;">Archive</span>
+                                <br /><hr /><br />
+                                <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
+                            </div>
+
+                            <div id="history" class="tab-pane fade">
+                                <span style="font-size: 1.7em;">History</span>
+                                <br /><hr /><br />
+                                <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
+                            </div>
+
                             <div id="order" class="tab-pane fade">
-                                <h3>ORDER</h3>
-                                <hr />
+                                <span style="font-size: 1.7em;">Order</span>
+                                <br /><hr /><br />
                                 <div class="form-group">
                                     @*you can only add to cart if you are creating a new one*@
                                     @if (true) //if is create
                                     {
-                                        <input type="submit" name="OrderType" value="Order" asp-action="ReOrderModalView" class="btn btn-outline-primary" />
-                                        <input type="submit" name="OrderType" value="Without Order" asp-action="ReOrderModalView" class="btn btn-outline-primary" />
-                                        <input type="submit" value="Add To Cart" asp-action="AddToCart" class="btn btn-outline-primary" />
+                                        <input type="submit" name="OrderType" value="Order" asp-action="ReOrderModalView" class="inv-button" />
+                                        <input type="submit" name="OrderType" value="Without Order" asp-action="ReOrderModalView" class="inv-button" />
+                                        <input type="submit" value="Add To Cart" asp-action="AddToCart" class="inv-button" />
                                     }
                                     else
                                     {
                                         //not sure if we need the name=OrderType here b/c it's just editing details
-                                        <input type="submit" name="OrderType" value="Save" asp-action="ReOrderModalView" class="btn btn-outline-primary" />
+                                        <input type="submit" name="OrderType" value="Save" asp-action="ReOrderModalView" class="inv-button" />
                                     }
                                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
-                                    <button type="button" class="btn btn-outline-danger close" data-dismiss="modal">Close</button>
+                                <button type="button" class="cancel-button float-right" data-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -546,8 +691,8 @@
                 </div>
 
                 <!-- Modal footer -->
-                <div class="modal-footer">
-                </div>
+                @*<div class="modal-footer">
+                </div>*@
 
                 @*Begin Hidden Inputs:*@
                 @Html.HiddenFor(vm => vm.Request.ProductID)
