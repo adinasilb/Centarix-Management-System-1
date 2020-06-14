@@ -4,9 +4,9 @@
 
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:30rem; overflow-y:auto;">
+    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:35rem; overflow-y:auto;">
 
-        <div class="modal-content d-inline-block" style="width:30rem;">
+        <div class="modal-content d-inline-block" style="width:35rem;">
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(model => model.Request.RequestID)
@@ -81,9 +81,9 @@
                     
                 </div>
 
-                <div class="modal-footer">
-                    <input type="submit" asp-action="DeleteModal" value="Confirm" class="inv-button float-left" />
-                    <button class="cancel-button float-right" data-dismiss="modal">Cancel</button>
+                <div class="modal-footer-nope" style="padding: 2em;">
+                    <input type="submit" asp-action="DeleteModal" value="Confirm" class="inv-button float-left mb-4" />
+                    <button class="cancel-button float-right mb-4" data-dismiss="modal">Cancel</button>
                 </div>
 
             </form>
