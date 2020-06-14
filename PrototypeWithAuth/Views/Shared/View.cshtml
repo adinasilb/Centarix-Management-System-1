@@ -169,10 +169,10 @@
 
 
     <!--  SCRIPTS  -->
-    <!-- JQuery -->
-    <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
     <script type="text/javascript" src="~/js/popper.min.js"></script>
+    <!-- JQuery -->
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <!-- Bootstrap core JavaScript -->
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
@@ -188,8 +188,8 @@
         <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>*@
 
 
-    <script src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script>
+    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script> @*getting an error without type=module*@
+    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script> @*getting an error without type=module*@
     <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/addons/datatables2.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/addons/directives.min.js"></script>
@@ -210,8 +210,8 @@
     <script src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown-searchable.min.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
+    <script type="module" src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
+    <script type="module" src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/modules/accordion-extended.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/modules/animations-extended.min.js"></script>
@@ -322,8 +322,12 @@
         $('.dataTables_length').addClass('bs-select');
         $('.mdb-select').materialSelect();
         $('.datepicker').pickadate();
+        $('#request-search a:first').tab('show'); @*I had to put this in here b/c otherwise it wasn't coming up on .search-link.click*@
     });
 
+    $(".search-link").on("click", function () {
+        $('#request-search a:first').tab('show');
+    });
 
      $(".load-product-details").on("click", function (e) {
         e.preventDefault();
@@ -523,7 +527,6 @@
     }
 
     $(".search-link").on("click", function () {
-        $('#request-search a:first').tab('show');
     });
 
 

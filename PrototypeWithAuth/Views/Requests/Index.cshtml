@@ -199,7 +199,7 @@
                 <tr class="text-center inv-list-item">
                     <td> <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /> </td>
 
-                    <td> <button class="btn inv-link-clr load-product-details" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
+                    <td> <button class="btn btn-flat inv-link-clr load-product-details" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
 
                     <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
 
@@ -264,23 +264,23 @@
                             {
                                 @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
 
-                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" data-title="approve" class="btn load-confirm-email "><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03"></i> </button> //approve
+                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" data-title="approve" class="btn btn-flat load-confirm-email "><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03"></i> </button> //approve
 
                             }
                         }
                         else if (item.RequestStatusID == 2) 
                         {
-                            <button class="btn load-receive-and-location" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px"></i></button> // receive
+                            <button class="btn btn-flat load-receive-and-location" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px"></i></button> // receive
                         }
                         else
                         {
                             @*work on getting the correct syntax to create a new product with*@
-                            <button class="btn load-order-details" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px"></i></button> // order
+                            <button class="btn btn-flat load-order-details" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px"></i></button> // order
                         }
                     @*</td>
                     <td>*@ 
                         @*did this to move the icons closer together, but for some reason it removes the tr border (?!)*@
-                        <button class="btn load-confirm-delete" data-title="delete" value="@item.RequestID"><i style="font-size:2rem;" class="icon-delete-24px"></i></button> @*delete*@
+                        <button class="btn btn-flat load-confirm-delete" data-title="delete" value="@item.RequestID"><i style="font-size:2rem;" class="icon-delete-24px"></i></button> @*delete*@
 
                         @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
                         @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
