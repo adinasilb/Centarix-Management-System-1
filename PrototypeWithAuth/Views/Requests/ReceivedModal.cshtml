@@ -6,9 +6,9 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; max-width:70rem; overflow-y:auto;">
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
 
-        <div class="modal-content d-inline-block" style="width:70rem;">
+        <div class="modal-content d-inline-block" style="width:90rem;">
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(vm => vm.Request.RequestID)
@@ -35,47 +35,129 @@
                     }
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <div class="modal-body modal-dialog-scrollable">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
-                                @Html.DropDownListFor(m => m.LocationTypeID,
-                                new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-                                "Select Type", new { @class = "form-control-plaintext border-bottom ", @id =        "locationTypeDepthZero" })
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="divSublocations">
 
+                <div class="new-modal-body" style="padding: 1rem 3rem;">
+                    <div class="row"> @*modal body row>*@
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-2">
+                                    <img src="~/images/css/inventory/Type/bottle.png" width="100" alt="Alternate Text" />
+                                </div>
+                                <div class="col-10">
+                                    <h4>Item Name - should be able to be pulled from modal...</h4>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Date Received</label>
+                                        <input class="form-control-plaintext border-bottom" value="dd/mm/YEAR" disabled />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Receiver</label>
+                                        <select class="form-control-plaintext border-bottom">
+                                            <option>Elena Bycoff</option>
+                                            <option>Faige Herman</option>
+                                            <option>Shimon Meshi-Zahav</option>
+                                            <option>Avital Modiin</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    @*<div class="row">
+                                        <label class="checktainer">
+                                            Arrived
+                                            <input type="checkbox" checked="checked">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        &emsp;
+                                        <label class="checktainer">
+                                            Claify
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        &emsp;
+                                        <label class="checktainer">
+                                            Partial
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>*@
+                                    <div class="form-group">
+                                        <label class="control-label">Arival Options</label>
+                                        <select class="form-control-plaintext border-bottom">
+                                            <option>Arived</option>
+                                            <option>Clarify</option>
+                                            <option>Partial</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row ">
+                                <div class="form-inline">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
+                                            @Html.DropDownListFor(m => m.LocationTypeID,
+                                            new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
+                                            "Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
+                                        </div>
+                                    </div>
+                                        
+                                    <div class="col-8">
+                                        <div class="divSublocations">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Location Details</label>
+                                        <input class="form-control-plaintext border-bottom" value="Notes...." />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-4">
                             <div class="visualView col-md-12 text-center">
 
                             </div>
+                            @*<img src="~/images/css/CheckboxGrid.png" width="100" alt="checkbox 101x10 grid" />*@
                         </div>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
+
+                    </div> @*1st row*@
+
+                </div> @*modal body*@
+
+                <!--<div class="modal-body">
+                    <div class="row">-->
                         @*<div class="divSublocations">
 
-                </div>*@
-                    </div>
+                        </div>*@
+                    <!--</div>
                 </div>
+
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="row">-->
                         @*<div class="visualView col-md-12 text-center">
 
-                </div>*@
-                    </div>
+                        </div>*@
+                    <!--</div>
+                </div>-->
+
+                <div class="new-modal-footer" style="display:flex; justify-content:center; padding: 1rem;">
+                    <input type="submit" asp-action="ReceivedModal" class="inv-button mr-3" value="Save" />
+                    <input type="button" value="Cancel" data-dismiss="modal" class="cancel-button ml-3" />
                 </div>
-                <div class="modal-footer">
-                    <input type="submit" asp-action="ReceivedModal" class="inv-button float-left" />
-                </div>
+
             </form>
 
-        </div>
+        </div> @*3 modal divs*@
     </div>
 </div>
