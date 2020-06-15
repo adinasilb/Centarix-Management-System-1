@@ -1846,6 +1846,9 @@ namespace PrototypeWithAuth.Controllers
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
                 ParentCategories = await _context.ParentCategories.ToListAsync(),
+                ProductSubcategories = await _context.ProductSubcategories.ToListAsync(),
+                Projects = await _context.Projects.ToListAsync(),
+                SubProjects = await _context.SubProjects.ToListAsync(),
                 Vendors = await _context.Vendors.ToListAsync(),
                 Request = new Request(),
                 Inventory = false,

@@ -34,39 +34,67 @@ namespace PrototypeWithAuth.Data
                 {
                     ParentCategoryID = 4,
                     ParentCategoryDescription = "Reusable"
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 5,
+                    ParentCategoryDescription = "Equipment"
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 6,
+                    ParentCategoryDescription = "Operation"
                 }
               );
             modelBuilder.Entity<ProductSubcategory>().HasData
               (
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 11,
+                    ProductSubcategoryID = 101,
                     ParentCategoryID = 1,
                     ProductSubcategoryDescription = "Tubes"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 12,
+                    ProductSubcategoryID = 102,
                     ParentCategoryID = 1,
                     ProductSubcategoryDescription = "Pipets"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 13,
+                    ProductSubcategoryID = 103,
                     ParentCategoryID = 1,
                     ProductSubcategoryDescription = "Tips"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 14,
+                    ProductSubcategoryID = 104,
                     ParentCategoryID = 1,
                     ProductSubcategoryDescription = "Dishes"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 15,
+                    ProductSubcategoryID = 105,
                     ParentCategoryID = 1,
                     ProductSubcategoryDescription = "Cell Culture Plates"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 106,
+                    ParentCategoryID = 1,
+                    ProductSubcategoryDescription = "Blood"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 107,
+                    ParentCategoryID = 1,
+                    ProductSubcategoryDescription = "3D Cells Grow"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 108,
+                    ParentCategoryID = 1,
+                    ProductSubcategoryDescription = "PCR Plates"
                 },
                 new ProductSubcategory
                 {

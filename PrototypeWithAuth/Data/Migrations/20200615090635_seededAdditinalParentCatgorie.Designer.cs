@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200615090635_seededAdditinalParentCatgorie")]
+    partial class seededAdditinalParentCatgorie
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -557,51 +559,33 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ProductSubcategoryID = 101,
+                            ProductSubcategoryID = 11,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Tubes"
                         },
                         new
                         {
-                            ProductSubcategoryID = 102,
+                            ProductSubcategoryID = 12,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Pipets"
                         },
                         new
                         {
-                            ProductSubcategoryID = 103,
+                            ProductSubcategoryID = 13,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Tips"
                         },
                         new
                         {
-                            ProductSubcategoryID = 104,
+                            ProductSubcategoryID = 14,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Dishes"
                         },
                         new
                         {
-                            ProductSubcategoryID = 105,
+                            ProductSubcategoryID = 15,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Cell Culture Plates"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 106,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Blood"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 107,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "3D Cells Grow"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 108,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "PCR Plates"
                         },
                         new
                         {
