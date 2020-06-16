@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.Data
@@ -48,7 +49,7 @@ namespace PrototypeWithAuth.Data
               );
             modelBuilder.Entity<ProductSubcategory>().HasData
               (
-                
+
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 101,
@@ -629,6 +630,80 @@ namespace PrototypeWithAuth.Data
              }
             );
 
+            modelBuilder.Entity<Project>().HasData
+            (
+                new Project
+                {
+                    ProjectID = 1,
+                    ProjectDescription = "Rejuvenation"
+                },
+                new Project
+                {
+                    ProjectID = 2,
+                    ProjectDescription = "Delivery Systems"
+                },
+                new Project
+                {
+                    ProjectID = 3,
+                    ProjectDescription = "Biomarkers"
+                },
+                new Project
+                {
+                    ProjectID = 4,
+                    ProjectDescription = "Clinical Trials"
+                },
+                new Project
+                {
+                    ProjectID = 5,
+                    ProjectDescription = "General"
+                }
+            );
+
+            modelBuilder.Entity<SubProject>().HasData
+            (
+                new SubProject
+                {
+                    SubProjectID = 101,
+                    ProjectID = 1,
+                    SubProjectDescription = "Epigenetic Rejuvenation"
+                },
+                new SubProject
+                {
+                    SubProjectID = 102,
+                    ProjectID = 1,
+                    SubProjectDescription = "Plasma Rejuvenation"
+                },
+                new SubProject
+                {
+                    SubProjectID = 201,
+                    ProjectID = 2,
+                    SubProjectDescription = "AAV"
+                },
+                new SubProject
+                {
+                    SubProjectID = 301,
+                    ProjectID = 3,
+                    SubProjectDescription = "Epigenetic Clock"
+                },
+                new SubProject
+                {
+                    SubProjectID = 302,
+                    ProjectID = 3,
+                    SubProjectDescription = "Telomere Measurement"
+                },
+                new SubProject
+                {
+                    SubProjectID = 401,
+                    ProjectID = 4,
+                    SubProjectDescription = "Biomarker Trial"
+                },
+                new SubProject
+                {
+                    SubProjectID = 501,
+                    ProjectID = 5,
+                    SubProjectDescription = "General"
+                }
+            );
 
 
         }

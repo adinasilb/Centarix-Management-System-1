@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200616061846_seedProjects")]
+    partial class seedProjects
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1211,50 +1213,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ProjectID");
 
                     b.ToTable("SubProjects");
-
-                    b.HasData(
-                        new
-                        {
-                            SubProjectID = 101,
-                            ProjectID = 1,
-                            SubProjectDescription = "Epigenetic Rejuvenation"
-                        },
-                        new
-                        {
-                            SubProjectID = 102,
-                            ProjectID = 1,
-                            SubProjectDescription = "Plasma Rejuvenation"
-                        },
-                        new
-                        {
-                            SubProjectID = 201,
-                            ProjectID = 2,
-                            SubProjectDescription = "AAV"
-                        },
-                        new
-                        {
-                            SubProjectID = 301,
-                            ProjectID = 3,
-                            SubProjectDescription = "Epigenetic Clock"
-                        },
-                        new
-                        {
-                            SubProjectID = 302,
-                            ProjectID = 3,
-                            SubProjectDescription = "Telomere Measurement"
-                        },
-                        new
-                        {
-                            SubProjectID = 401,
-                            ProjectID = 4,
-                            SubProjectDescription = "Biomarker Trial"
-                        },
-                        new
-                        {
-                            SubProjectID = 501,
-                            ProjectID = 5,
-                            SubProjectDescription = "General"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.UnitParentType", b =>
