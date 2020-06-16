@@ -98,18 +98,16 @@
                             </div>
                             <br />
                             <div class="row ">
-                                <div class="form-inline">
-                                    <div class="col-3">
-                                        <div class="form-group">
-                                            <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
-                                            @Html.DropDownListFor(m => m.LocationTypeID,
-                                            new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-                                            "Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
-                                        </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
+                                        @Html.DropDownListFor(m => m.LocationTypeID,
+                                        new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
+                                        "Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
                                     </div>
-                                    <div class="col-9">
-                                        <div class="divSublocations">
-                                        </div>
+                                </div>
+                                <div class="col-9">
+                                    <div class="divSublocations">
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +116,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label class="control-label">Location Details</label>
-                                        <input class="form-control-plaintext border-bottom" value="Notes...." />
+                                        <input class="form-control-plaintext border-bottom" placeholder="Notes..." />
                                     </div>
                                 </div>
                             </div>

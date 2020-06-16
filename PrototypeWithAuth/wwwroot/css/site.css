@@ -553,13 +553,37 @@ table.table.visualzoom tr td a {
 .checkbox label:before {
     border-radius: 3px;
 }
-*/
+
 input[type=checkbox]:checked {
     background-color: #30BCC9;
     color:white;
     text-align: center;
-    /*font-size: 15px;
-    line-height: 15px;*/
+    font-size: 15px;
+    line-height: 15px;
+}
+*/
+
+input[type=checkbox].css-checkbox {
+    display: none;
 }
 
+.css-label {
+    display: flex;
+    padding-left: 10px;
+    padding-top: 2px;
+    font-size: 1.3rem;
+    width: 30px;
+    height: 25px;
+    background-size: contain;
+    
+}
+
+input[type=checkbox].css-checkbox:checked ~ label.css-label {
+    background-position: 0 0;
+    /*background-color: #30BCC9;*/
+    color: #30BCC9;
+    background-image: url('../images/css/selected_box.png');
+    background-repeat: no-repeat;
+    background-size:contain;
+}
 
