@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200616055333_seedEquipmentProductSubcategories")]
+    partial class seedEquipmentProductSubcategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -794,180 +796,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ProductSubcategoryID = 508,
                             ParentCategoryID = 5,
                             ProductSubcategoryDescription = "Lab Furniture"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 601,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Computer"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 602,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Rent"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 603,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Communication"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 604,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Branding"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 605,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Travel"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 606,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Shipment"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 607,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Transportation"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 608,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Rennovation"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 609,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Bookkeeping"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 610,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Law Advisement"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 611,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Tax"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 612,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Books And Journal"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 613,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Regulations"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 614,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Clinical Regulation"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 615,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Conference"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 616,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Company Events"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 617,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Insurance"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 618,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "General"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 619,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Software"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 620,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Hotels"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 621,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Flight Tickets"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 622,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Scientific Advice"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 623,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Brokerage"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 624,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Business Advice"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 625,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Electric Appliances"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 626,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Safety"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 627,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Food"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 628,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Stationary"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 629,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Furniture"
                         });
                 });
 

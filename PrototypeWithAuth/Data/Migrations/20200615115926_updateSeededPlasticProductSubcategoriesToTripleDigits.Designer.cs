@@ -10,8 +10,8 @@ using PrototypeWithAuth.Data;
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200615092549_updateSeededPlasticsToTripleDigits")]
-    partial class updateSeededPlasticsToTripleDigits
+    [Migration("20200615115926_updateSeededPlasticProductSubcategoriesToTripleDigits")]
+    partial class updateSeededPlasticProductSubcategoriesToTripleDigits
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -561,49 +561,49 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 101,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tubes"
+                            ProductSubcategoryDescription = "3D Cells Grow"
                         },
                         new
                         {
                             ProductSubcategoryID = 102,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Pipets"
+                            ProductSubcategoryDescription = "PCR Plates"
                         },
                         new
                         {
                             ProductSubcategoryID = 103,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tips"
+                            ProductSubcategoryDescription = "Blood"
                         },
                         new
                         {
                             ProductSubcategoryID = 104,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Dishes"
+                            ProductSubcategoryDescription = "Cell Culture Plates"
                         },
                         new
                         {
                             ProductSubcategoryID = 105,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Cell Culture Plates"
+                            ProductSubcategoryDescription = "Dishes"
                         },
                         new
                         {
                             ProductSubcategoryID = 106,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Blood"
+                            ProductSubcategoryDescription = "Tips"
                         },
                         new
                         {
                             ProductSubcategoryID = 107,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "3D Cells Grow"
+                            ProductSubcategoryDescription = "Pipets"
                         },
                         new
                         {
                             ProductSubcategoryID = 108,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "PCR Plates"
+                            ProductSubcategoryDescription = "Tubes"
                         },
                         new
                         {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200615120806_deleteOldPlasticProductSubcategories")]
+    partial class deleteOldPlasticProductSubcategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -605,369 +607,63 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
-                            ProductSubcategoryID = 201,
+                            ProductSubcategoryID = 21,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Chemical Powder"
                         },
                         new
                         {
-                            ProductSubcategoryID = 202,
+                            ProductSubcategoryID = 22,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "DNA Enzyme"
                         },
                         new
                         {
-                            ProductSubcategoryID = 203,
+                            ProductSubcategoryID = 23,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Antibodies"
                         },
                         new
                         {
-                            ProductSubcategoryID = 204,
+                            ProductSubcategoryID = 24,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Cell Media"
                         },
                         new
                         {
-                            ProductSubcategoryID = 205,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Chemicals Solution"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 206,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Kit"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 207,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "PCR"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 208,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "ddPCR"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 209,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "RT-PCR"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 210,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Probes"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 211,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Oligo"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 212,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Media Supplement"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 213,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Plasmid Purification"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 301,
+                            ProductSubcategoryID = 31,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Virus"
                         },
                         new
                         {
-                            ProductSubcategoryID = 302,
+                            ProductSubcategoryID = 32,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Plasmid"
                         },
                         new
                         {
-                            ProductSubcategoryID = 303,
+                            ProductSubcategoryID = 33,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Primers"
                         },
                         new
                         {
-                            ProductSubcategoryID = 304,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Probes"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 401,
+                            ProductSubcategoryID = 41,
                             ParentCategoryID = 4,
                             ProductSubcategoryDescription = "Beaker"
                         },
                         new
                         {
-                            ProductSubcategoryID = 402,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Measuring"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 403,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Tube Holders"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 404,
+                            ProductSubcategoryID = 42,
                             ParentCategoryID = 4,
                             ProductSubcategoryDescription = "Buckets"
                         },
                         new
                         {
-                            ProductSubcategoryID = 405,
+                            ProductSubcategoryID = 43,
                             ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Cooling Racks"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 406,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "-196 Box"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 407,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "-80 Box"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 501,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Instrument"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 502,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Instrument Parts"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 503,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Instrument Check"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 504,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Instrument Fixing"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 505,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Instrument Calibration"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 506,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Instrument Warranty"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 507,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Lab Software"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 508,
-                            ParentCategoryID = 5,
-                            ProductSubcategoryDescription = "Lab Furniture"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 601,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Computer"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 602,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Rent"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 603,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Communication"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 604,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Branding"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 605,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Travel"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 606,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Shipment"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 607,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Transportation"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 608,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Rennovation"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 609,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Bookkeeping"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 610,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Law Advisement"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 611,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Tax"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 612,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Books And Journal"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 613,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Regulations"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 614,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Clinical Regulation"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 615,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Conference"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 616,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Company Events"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 617,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Insurance"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 618,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "General"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 619,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Software"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 620,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Hotels"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 621,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Flight Tickets"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 622,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Scientific Advice"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 623,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Brokerage"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 624,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Business Advice"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 625,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Electric Appliances"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 626,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Safety"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 627,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Food"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 628,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Stationary"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 629,
-                            ParentCategoryID = 6,
-                            ProductSubcategoryDescription = "Furniture"
+                            ProductSubcategoryDescription = "Measuring Instruments"
                         });
                 });
 
