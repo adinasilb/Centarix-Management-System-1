@@ -37,6 +37,26 @@
                 </div>
                 <div class="modal-body modal-dialog-scrollable">
                     <div class="row">
+                        <div class="col-3">
+                            <label asp-for="Request.ArrivalDate" class="control-label"></label>
+                            <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Request.ArrivalDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-3">
+                            <label asp-for="Request.ArrivalDate" class="control-label"></label>
+                            <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Request.ArrivalDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-6">
+                            <input type="radio" required asp-for="Request.RequestStatus" id="3" value="3" />
+                            <label for="3">Arrival</label>
+                            <input type="radio" required asp-for="Request.RequestStatus" id="5" value="5" />
+                            <label for="5">Clarify</label>
+                            <input type="radio" required asp-for="Request.RequestStatus" id="4" value="4" />
+                            <label for="4">Partial</label>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>

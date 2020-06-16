@@ -327,8 +327,12 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentRequest = new ParentRequest();
             //DO WE NEED THIS LINE OR IS IT GIVING AN ERROR SOMETIMES
+            int lastParentRequestOrderNum = 0;
             requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
-            int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+            if (_context.ParentRequests.Any())
+            {
+                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+            }
             requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
 
             //if you are creating a new one set the dates to today to prevent problems in the front end
