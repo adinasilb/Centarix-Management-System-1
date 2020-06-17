@@ -1430,84 +1430,30 @@ namespace PrototypeWithAuth.Controllers
                 CompanyAccounts = companyaccounts
             };
 
-            if (id == 0)
-            {
-                return RedirectToAction("CreateModalView");
-            }
-            else if (NewRequestFromProduct)
-            {
-                ModalViewType = "Create"; //?
+            ModalViewType = "Create"; //?
 
-                requestItemViewModel.Request = new Request();
-                requestItemViewModel.Request.ParentRequest = new ParentRequest();
-                requestItemViewModel.Request.RequestStatus = new RequestStatus();
-                requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
-                int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-                requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+            requestItemViewModel.Request = new Request();
+            requestItemViewModel.Request.ParentRequest = new ParentRequest();
+            requestItemViewModel.Request.RequestStatus = new RequestStatus();
+            requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
 
-                var request = _context.Requests
-                    .Include(r => r.Product)
-                    .SingleOrDefault(x => x.RequestID == id);
-                requestItemViewModel.Request.ProductID = request.ProductID;
-                requestItemViewModel.Request.Product = request.Product;
+            int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+            requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+
+            var request = _context.Requests
+                .Include(r => r.Product)
+                .SingleOrDefault(x => x.RequestID == id);
+            requestItemViewModel.Request.ProductID = request.ProductID;
+            requestItemViewModel.Request.Product = request.Product;
 
 
-            }
-            else
-            {
-                ModalViewType = "Edit";
 
-                requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
-                    .Include(r => r.ParentRequest)
-                    .Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.Product.ProductSubcategory.ParentCategory)
-                    .Include(r => r.RequestStatus)
-                    .Include(r => r.ParentRequest.ApplicationUser)
-                    .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
-                    .SingleOrDefault(x => x.RequestID == id);
+            //if you are creating a new one set the dates to today to prevent problems in the front end
+            //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
+            //(already imported it)
+            requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
+            requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
 
-                ////check if this works once there are commments
-                //var comments = Enumerable.Empty<Comment>();
-                //comments = _context.Comments
-                //    .Include(r => r.ApplicationUser)
-                //    .Where(r => r.Request.RequestID == id);
-                ////needs to be instantiated here so it doesn't throw an error if nothing is in it
-                ///*
-                // *I think it should be an ienumerable and look like
-                // *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
-                // *ike before but it's not recognizing the syntax
-                //*/
-                //requestItemViewModel.OldComments = comments.ToList();
-
-                //may be able to do this together - combining the path for the orders folders
-                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
-                string uploadFolder3 = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-                //the partial file name that we will search for (1- because we want the first one)
-                //creating the directory from the path made earlier
-
-                if (Directory.Exists(uploadFolder3))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
-                    //searching for the partial file name in the directory
-                    FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                    //checking if there were any files found before looping through them (to prevent an error)
-                    requestItemViewModel.OrderFileStrings = new List<string>();
-                    if (orderfilesfound[0].Exists)
-                    {
-                        //getting the file from the FileInfo[]
-                        foreach (FileInfo file in orderfilesfound)
-                        {
-                            requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
-                        }
-                    }
-                }
-
-                if (requestItemViewModel.Request == null)
-                {
-                    return NotFound();
-                }
-            }
 
             ViewData["ModalViewType"] = ModalViewType;
             //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
@@ -1766,7 +1712,7 @@ namespace PrototypeWithAuth.Controllers
 
 
                 var request = _context.Requests.Where(r => r.RequestID == confirmEmail.Request.RequestID).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).FirstOrDefault();
-                string ownerEmail = "adiansilberberg@gmail.com";// request.ParentRequest.ApplicationUser.Email;
+                string ownerEmail = "adinasilberberg@gmail.com";// request.ParentRequest.ApplicationUser.Email;
                 string ownerUsername = "Adina Gayer";//request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
                 string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
                 string vendorEmail = request.Product.Vendor.OrderEmail;
@@ -2011,9 +1957,13 @@ namespace PrototypeWithAuth.Controllers
             {
                 Request = _context.Requests.Where(r => r.RequestID == RequestID).FirstOrDefault(),
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
-                locationInstancesSelected = new List<LocationInstance>()
+                locationInstancesSelected = new List<LocationInstance>(),
+                ApplicationUsers = await _context.Users.ToListAsync()
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
+            var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            receivedLocationViewModel.Request.ApplicationUserReceiverID = currentUser.Id;
+            receivedLocationViewModel.Request.ArrivalDate = DateTime.Today;
 
             return View(receivedLocationViewModel);
         }
@@ -2123,14 +2073,28 @@ namespace PrototypeWithAuth.Controllers
                     _context.SaveChanges();
                 }
             }
-            if (hasLocationInstances)
+            if (hasLocationInstances && receivedLocationViewModel.Arrival)
             {
-                var request = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID).FirstOrDefault();
-                request.RequestStatusID = 3;
-                _context.Update(request);
-                _context.SaveChanges();
+                receivedLocationViewModel.Request.RequestStatusID = 3;
+            }
+            else if (receivedLocationViewModel.Clarify)
+            {
+                receivedLocationViewModel.Request.RequestStatusID = 5;
+            }
+            else if (receivedLocationViewModel.PartialDelivery)
+            {
+                receivedLocationViewModel.Request.RequestStatusID = 4;
             }
 
+            try
+            {
+                _context.Update(receivedLocationViewModel.Request);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                //do something here if it can't be saved
+            }
 
             AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)receivedLocationViewModel.PageType;
             return RedirectToAction("Index", new

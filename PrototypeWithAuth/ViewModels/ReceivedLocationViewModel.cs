@@ -14,6 +14,12 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<LocationType> locationTypesDepthZero { get; set; }
         public List<LocationInstance> locationInstancesSelected { get; set; }
         public Request Request { get; set; }
+        public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
+
+        //booleans for the checkboxes
+        public bool Arrival { get; set; }
+        public bool Clarify { get; set; }
+        public bool PartialDelivery { get; set; }
 
         //public List<SubLocationInstancesViewModel> subLocationInstancesViewModels {get; set;}
 

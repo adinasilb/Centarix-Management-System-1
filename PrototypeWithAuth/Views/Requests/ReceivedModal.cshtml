@@ -11,9 +11,37 @@
         <div class="modal-content d-inline-block" style="width:70rem;">
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+                @*the following hidden fors are here so i can do a request.save in for the info that is being given here.
+                    in the future might want to change it to loading the request from this request id and then adding in the values
+                    given here (done in the controller)*@
                 @Html.HiddenFor(vm => vm.Request.RequestID)
-
-
+                @Html.HiddenFor(vm => vm.Request.ProductID)
+                @Html.HiddenFor(vm => vm.Request.ParentRequestID)
+                @Html.HiddenFor(vm => vm.Request.RequestStatusID)
+                @Html.HiddenFor(vm => vm.Request.AmountWithInLocation)
+                @Html.HiddenFor(vm => vm.Request.AmountWithOutLocation)
+                @Html.HiddenFor(vm => vm.Request.IsDeleted)
+                @Html.HiddenFor(vm => vm.Request.IsApproved)
+                @Html.HiddenFor(vm => vm.Request.Unit)
+                @Html.HiddenFor(vm => vm.Request.UnitTypeID)
+                @Html.HiddenFor(vm => vm.Request.SubUnit)
+                @Html.HiddenFor(vm => vm.Request.SubUnitTypeID)
+                @Html.HiddenFor(vm => vm.Request.SubSubUnit)
+                @Html.HiddenFor(vm => vm.Request.SubSubUnitTypeID)
+                @Html.HiddenFor(vm => vm.Request.UnitsOrdered)
+                @Html.HiddenFor(vm => vm.Request.UnitsInStock)
+                @Html.HiddenFor(vm => vm.Request.Quantity)
+                @Html.HiddenFor(vm => vm.Request.Cost)
+                @Html.HiddenFor(vm => vm.Request.Currency)
+                @Html.HiddenFor(vm => vm.Request.CatalogNumber)
+                @Html.HiddenFor(vm => vm.Request.SerialNumber)
+                @Html.HiddenFor(vm => vm.Request.URL)
+                @Html.HiddenFor(vm => vm.Request.Warranty)
+                @Html.HiddenFor(vm => vm.Request.VAT)
+                @Html.HiddenFor(vm => vm.Request.ExchangeRate)
+                @Html.HiddenFor(vm => vm.Request.Terms)
+                @Html.HiddenFor(vm => vm.Request.ExpectedSupplyDays)
+                @Html.HiddenFor(vm => vm.Request.RequestComment) @*???????? THis should be taken out of the model....*@
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -36,43 +64,55 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body modal-dialog-scrollable">
-                    <div class="row">
-                        <div class="col-3">
-                            <label asp-for="Request.ArrivalDate" class="control-label"></label>
-                            <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" />
-                            <span asp-validation-for="Request.ArrivalDate" class="text-danger"></span>
-                        </div>
-                        <div class="col-3">
-                            <label asp-for="Request.ArrivalDate" class="control-label"></label>
-                            <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" />
-                            <span asp-validation-for="Request.ArrivalDate" class="text-danger"></span>
-                        </div>
-                        <div class="col-6">
-                            <input type="radio" required asp-for="Request.RequestStatus" id="3" value="3" />
-                            <label for="3">Arrival</label>
-                            <input type="radio" required asp-for="Request.RequestStatus" id="5" value="5" />
-                            <label for="5">Clarify</label>
-                            <input type="radio" required asp-for="Request.RequestStatus" id="4" value="4" />
-                            <label for="4">Partial</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
-                                @Html.DropDownListFor(m => m.LocationTypeID,
-                                new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-                                "Select Type", new { @class = "form-control-plaintext border-bottom ", @id =        "locationTypeDepthZero" })
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                <label asp-for="Request.ArrivalDate" class="control-label"></label>
+                                <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="Request.ArrivalDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-3">
+                                <label asp-for="Request.ApplicationUserReceiverID" class="control-label"></label>
+                                <select asp-for="Request.ApplicationUserReceiverID" class="form-control-plaintext border-bottom">
+                                    @foreach (var user in Model.ApplicationUsers)
+                                    {
+                                        <option value="@user.Id">@user.UserName</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Request.ApplicationUserReceiverID" class="text-danger"></span>
+                            </div>
+                            <div class="col-2 text-center">
+                                <input type="checkbox" asp-for="Arrival" class="custom-radio" />
+                                <label asp-for="Arrival">Arrival</label>
+                            </div>
+                            <div class="col-2 text-center">
+                                <input type="checkbox" asp-for="Clarify" class="custom-radio" />
+                                <label asp-for="Clarify">Clarify</label>
+                            </div>
+                            <div class="col-2 text-center">
+                                <input type="checkbox" asp-for="PartialDelivery" class="custom-radio" />
+                                <label asp-for="PartialDelivery">Partial Delivery</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="divSublocations">
-
+                        <br />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
+                                    @Html.DropDownListFor(m => m.LocationTypeID,
+                                    new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
+                                    "Select Type", new { @class = "form-control-plaintext border-bottom ", @id = "locationTypeDepthZero" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="visualView col-md-12 text-center">
+                            <div class="col-md-4">
+                                <div class="divSublocations">
 
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="visualView col-md-12 text-center">
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,14 +121,14 @@
                     <div class="row">
                         @*<div class="divSublocations">
 
-                </div>*@
+                            </div>*@
                     </div>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         @*<div class="visualView col-md-12 text-center">
 
-                </div>*@
+                            </div>*@
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -99,3 +139,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    $("input:checkbox").on('click', function () {
+        // in the handler, 'this' refers to the box clicked on
+        var $box = $(this);
+        if ($box.is(":checked")) {
+            // the name of the box is retrieved using the .attr() method
+            // as it is assumed and expected to be immutable
+            var group = "input:checkbox[name='" + $box.attr("name") + "']";
+            // the checked state of the group/box on the other hand will change
+            // and the current value is retrieved using .prop() method
+            $(group).prop("checked", false);
+            $box.prop("checked", true);
+        } else {
+            $box.prop("checked", false);
+        }
+    });
+</script>

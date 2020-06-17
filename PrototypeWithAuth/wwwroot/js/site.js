@@ -287,10 +287,12 @@ $.fn.CheckCurrency = function () {
 	var currencyType = $("#currency").val();
 	switch (currencyType) {
 		case "dollar":
+			console.log("dollar is enabled");
 			$("#Request_Cost").prop("readonly", true);
 			$("#sum-dollars").prop("disabled", false);
 			break;
 		case "shekel":
+			console.log("shekel is enabled");
 			$("#Request_Cost").prop("readonly", false);
 			$("#sum-dollars").prop("disabled", true);
 			break;

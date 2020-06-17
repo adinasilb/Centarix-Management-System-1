@@ -19,9 +19,9 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public int? RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }
-        public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
+        public string ApplicationUserReceiverID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
 
-        [ForeignKey("ApplicationUserID")]
+        [ForeignKey("ApplicationUserReceiverID")]
         public ApplicationUser ApplicationUserReceiver { get; set; }
         public uint? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit
         public uint? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.Models
         public string URL { get; set; }
         //public string ExpenseDescription { get; set; } - this is really the product name - so when view products, only return those with a specific subcategoryID,
 
-        public byte Warranty { get; set; } // will need to cast it to datetime when calulating the end date, in the front end
+        public byte Warranty { get; set; } // this is the amount of months of the warranty. the datetime when it ends will be calculated on the frontend (now it's from the date ordered, but should it be from the date received instead?)
 
         public double VAT = 0.17; // should this be coded into the model or should we set it elsewhere?
         public double ExchangeRate { get; set; } // holding the rate of exchange for this specic request
