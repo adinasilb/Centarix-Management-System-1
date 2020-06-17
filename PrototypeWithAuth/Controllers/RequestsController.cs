@@ -1413,8 +1413,10 @@ namespace PrototypeWithAuth.Controllers
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
-            var requeststatuses = await _context.RequestStatuses.ToListAsync();
-            //redo the unit types when seeded
+
+            //to the best of my knowledge we do not need a list of request status so I commented it out
+            //var requeststatuses = await _context.RequestStatuses.ToListAsync();
+
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
@@ -1424,7 +1426,6 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
-                RequestStatuses = requeststatuses,
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts
