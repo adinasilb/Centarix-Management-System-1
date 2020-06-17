@@ -493,7 +493,7 @@
 
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
-                                <br /><hr /><br />
+                                <br /><br />
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="card">
@@ -617,7 +617,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h3 class="images-header"></h3>
-                                        <hr />
+                                        <br />
                                         @if (Model.OrderFileStrings != null)
                                         {
                                             <div class="fill-images-orders">
@@ -631,7 +631,7 @@
 
                             <div id="comments" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Comments</span>
-                                <br /><hr /><br />
+                                <br /><br />
 
                                 @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
                                 <div class="card rounded">
@@ -648,28 +648,29 @@
 
                             <div id="archive" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Archive</span>
-                                <br /><hr /><br />
+                                <br />
+                                <br />
                                 <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
                             </div>
 
                             <div id="history" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">History</span>
-                                <br /><hr /><br />
+                                <br />
+                                <br />
                                 <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
                             </div>
 
                             <div id="order" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Order</span>
-                                <br /><hr /><br />
-
+                                <br />
+                                <br />
                                 <div class="form-group">
                                     @*you can only add to cart if you are creating a new one*@
-                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="inv-button" />
-                                    <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="inv-button" />
+                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="inv-button mr-1" />
+                                    <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="inv-button mr-1" />
                                     <input type="submit" value="Add To Cart" asp-action="AddToCart" class="inv-button" />
-
-                                    @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                     <button type="button" class="cancel-button float-right" data-dismiss="modal">Cancel</button>
+                                    @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 </div>
                             </div>
 
