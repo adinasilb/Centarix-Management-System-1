@@ -6,9 +6,9 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; max-width:70rem; overflow-y:auto;">
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
 
-        <div class="modal-content d-inline-block" style="width:70rem;">
+        <div class="modal-content d-inline-block" style="width:90rem;">
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @*the following hidden fors are here so i can do a request.save in for the info that is being given here.
@@ -124,8 +124,9 @@
                             </div>*@
                     </div>
                 </div>
+
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="row">-->
                         @*<div class="visualView col-md-12 text-center">
 
                             </div>*@
@@ -134,9 +135,10 @@
                 <div class="modal-footer">
                     <input type="submit" asp-action="ReceivedModal" class="btn btn-secondary" />
                 </div>
+
             </form>
 
-        </div>
+        </div> @*3 modal divs*@
     </div>
 </div>
 
