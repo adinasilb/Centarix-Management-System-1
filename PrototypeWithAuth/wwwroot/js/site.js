@@ -287,12 +287,10 @@ $.fn.CheckCurrency = function () {
 	var currencyType = $("#currency").val();
 	switch (currencyType) {
 		case "dollar":
-			console.log("dollar is enabled");
 			$("#Request_Cost").prop("readonly", true);
 			$("#sum-dollars").prop("disabled", false);
 			break;
 		case "shekel":
-			console.log("shekel is enabled");
 			$("#Request_Cost").prop("readonly", false);
 			$("#sum-dollars").prop("disabled", true);
 			break;
@@ -714,8 +712,19 @@ function changeTerms(checkbox) {
 	}
 }
 
-$("#documents-tab").click(function () {
+$(".documents-tab").click(function () {
+	console.log("documents tab clicked");
 	$.fn.HideAllDocs();
+	$.fn.CheckIfFileSelectsAreFull();
+});
+
+//the following is for the next girsa- but it doesn't work anyways
+
+$(".file-select").on("change", function () {
+	console.log("file was changed");
+	$cardDiv = $(this).closest('div .card');
+	console.log("cardDiv: " + $cardDiv);
+	$cardDiv.addClass("document-border");
 });
 
 $.fn.HideAllDocs = function () {

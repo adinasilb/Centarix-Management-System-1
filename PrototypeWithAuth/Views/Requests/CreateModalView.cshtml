@@ -96,7 +96,17 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Project:</label>
-                                            <select class="form-control-plaintext border-bottom "></select>
+                                            @Html.DropDownList(
+                                                "Project",
+                                                new SelectList(
+                                                    Model.Projects,
+                                                    "ProjectID",
+                                                    "ProjectDescription"
+                                                    ),
+                                                "Select Project",
+                                                new { @class = "form-control-plaintext border-bottom" }
+                                            )
+                                            <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +115,17 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            <select class="form-control-plaintext border-bottom "></select>
+                                            @Html.DropDownList(
+                                                "Sub Project",
+                                                new SelectList(
+                                                    Model.SubProjects,
+                                                    "SubProjectID",
+                                                    "SubProjectDescription"
+                                                    ),
+                                                "Select Sub Project",
+                                                new { @class = "form-control-plaintext border-bottom" }
+                                            )
+                                            <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -348,7 +368,7 @@
                                             <label asp-for="Request.Cost" class="control-label">Sum:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" disabled />
+                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" readonly />
                                                 <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
@@ -499,6 +519,8 @@
                                                 <div class="custom-file">
                                                     <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
                                                     <label class="custom-file-label">Choose File...</label>
+                                                    <label for="OrderFiles" class="btn btn-primary btn-block btn-outlined">+</label>
+                                                    <input type="file" asp-for="OrderFiles" class="file-select" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
                                                 </div>
                                             </div>
                                         </div>
@@ -511,12 +533,8 @@
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
-                                                    @*<input type="file" id="exampleInputFile">
-                                            <label for="exampleInputFile" data-browse="+"></label>*@
                                                     <label for="InvoiceFiles" class="btn btn-primary btn-block btn-outlined">+</label>
-                                                    <input type="file" asp-for="InvoiceFiles" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
-                                                    @*<input type="file" asp-for="InvoiceFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                            <label class="custom-file-label">Choose File...</label>*@
+                                                    <input type="file" asp-for="InvoiceFiles" class="file-select" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
                                                 </div>
                                             </div>
                                         </div>
@@ -609,19 +627,6 @@
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Credit</label>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h3 class="images-header"></h3>
-                                        <hr />
-                                        @if (Model.OrderFileStrings != null)
-                                        {
-                                            <div class="fill-images-orders">
-                                                <a href="@Model.OrderFileStrings[0]" target="_blank">Click to open</a>
-                                                <embed src="@Model.OrderFileStrings[0]" type="application/pdg" @*height="100%" width="100%"*@ />
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
                             </div>
 
                             <div id="comments" class="tab-pane fade">
@@ -677,7 +682,6 @@
                 <!-- Modal footer -->
                 <!--<div class="modal-footer">
                 </div>-->
-
                 @*Begin Hidden Inputs:*@
                 @Html.HiddenFor(vm => vm.Request.ProductID)
                 @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
@@ -691,38 +695,38 @@
             </form>
 
 
-            </div>
         </div>
-
     </div>
-    @*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
-    @*This will work for the EDIT (putting in the already loaded product subcategory)*@
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-        <script type="text/javascript">
+</div>
+@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+@*This will work for the EDIT (putting in the already loaded product subcategory)*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-            /*
-             * Including these js pieces from site.js b/c has issue always attaching
-             */
+    <script type="text/javascript">
 
-            //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
-            $("#parentlist").change(function () {
-                var parentCategoryId = $("#parentlist").val();
-                var url = "/Requests/GetSubCategoryList";
+        /*
+         * Including these js pieces from site.js b/c has issue always attaching
+         */
 
-                $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-                    var item = "";
-                    $("#sublist").empty();
-                    $.each(data, function (i, subCategory) {
-                        item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-                    });
-                    $("#sublist").html(item);
+        //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
+        $("#parentlist").change(function () {
+            var parentCategoryId = $("#parentlist").val();
+            var url = "/Requests/GetSubCategoryList";
+
+            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                var item = "";
+                $("#sublist").empty();
+                $.each(data, function (i, subCategory) {
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
                 });
+                $("#sublist").html(item);
             });
+        });
 
 
-        </script>
-    }
+    </script>
+}
 
 

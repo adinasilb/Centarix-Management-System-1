@@ -306,7 +306,8 @@ namespace PrototypeWithAuth.Controllers
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
-            var requeststatuses = await _context.RequestStatuses.ToListAsync();
+            var projects = await _context.Projects.ToListAsync();
+            var subprojects = await _context.SubProjects.ToListAsync();
 
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
@@ -317,7 +318,8 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
-                RequestStatuses = requeststatuses,
+                Projects = projects,
+                SubProjects = subprojects,
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts
@@ -1404,7 +1406,6 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> ReOrderModalView(int? id, bool NewRequestFromProduct = false)
         {
-            string ModalViewType = "";
             if (id == null)
             {
                 return NotFound();
@@ -1431,20 +1432,21 @@ namespace PrototypeWithAuth.Controllers
                 CompanyAccounts = companyaccounts
             };
 
-            ModalViewType = "Create"; //?
-
+            //initiating the  following models so that we can use them in an asp-for in the view
             requestItemViewModel.Request = new Request();
             requestItemViewModel.Request.ParentRequest = new ParentRequest();
-            requestItemViewModel.Request.RequestStatus = new RequestStatus();
+            //requestItemViewModel.Request.RequestStatus = new RequestStatus();
             requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
 
             int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
             requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
 
+            //getting the old request so we can load it with the correct product id
             var request = _context.Requests
                 .Include(r => r.Product)
                 .SingleOrDefault(x => x.RequestID == id);
             requestItemViewModel.Request.ProductID = request.ProductID;
+            //you need the following line b/c there is nowhere underneath there that 
             requestItemViewModel.Request.Product = request.Product;
 
 
@@ -1456,7 +1458,6 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
 
 
-            ViewData["ModalViewType"] = ModalViewType;
             //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
             //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
             //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
@@ -1576,7 +1577,14 @@ namespace PrototypeWithAuth.Controllers
                         return RedirectToAction("ConfirmEmailModal", new { id = requestItemViewModel.Request.RequestID });
                     }
                 }
-                catch (Exception ex)
+                catch (DbUpdateException ex)
+                {
+                    //ModelState.AddModelError();
+                    ViewData["ModalViewType"] = "Create";
+                    TempData["ErrorMessage"] = ex.InnerException.ToString();
+                    return View(requestItemViewModel);
+                }
+                catch(Exception ex)
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";

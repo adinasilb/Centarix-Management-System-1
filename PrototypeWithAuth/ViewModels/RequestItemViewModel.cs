@@ -20,6 +20,8 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
+        public IEnumerable<Project> Projects { get; set; }
+        public IEnumerable<SubProject> SubProjects { get; set; }
         public List<string> OrderFileStrings { get; set; }
         public List<string> InvoiceFileStrings { get; set; }
         public List<string> ShipmentFileStrings { get; set; }

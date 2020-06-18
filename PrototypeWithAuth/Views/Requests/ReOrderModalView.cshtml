@@ -13,13 +13,14 @@
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
+                @Html.HiddenFor(model => model.Request.ProductID)
+                @Html.HiddenFor(model => model.Request.Product.ProductSubcategory)
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
                 @Html.HiddenFor(model => model.Page)
                 @Html.HiddenFor(model => model.RequestStatusID)
                 @Html.HiddenFor(model => model.SubCategoryID)
-                @Html.HiddenFor(model => model.VendorID)
                 @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
                 @*Requests search view model*@
@@ -41,7 +42,7 @@
                     <br />
                     <div class="form-group">
                         <h4><label asp-for="Request.Product.ProductName" class="control-label"> Request : </label> </h4>
-                        <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>
+                        <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" readonly /></h4>
                         <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
                     </div>
                     <br />
@@ -67,12 +68,12 @@
                     <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 3em 4em; border: 2px solid #EAEAEB;">
 
                         @*<ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
-                <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="price-tab">Price</a></li>
-                <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
-                <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
-                <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
-            </ul>*@
+                                <li class="active"><a data-toggle="tab" href="#item" class="btn btn-outline-secondary">Item</a></li>
+                                <li><a data-toggle="tab" href="#price" class="btn btn-outline-secondary" id="price-tab">Price</a></li>
+                                <li><a data-toggle="tab" href="#documents" class="btn btn-outline-secondary">Documents</a></li>
+                                <li><a data-toggle="tab" href="#comments" class="btn btn-outline-secondary">Comments</a></li>
+                                <li><a data-toggle="tab" href="#order" class="btn btn-outline-secondary">Order</a></li>
+                            </ul>*@
 
                         <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
@@ -86,6 +87,7 @@
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
     "Select Category", new { @class = "form-control-plaintext border-bottom ", @id = "parentlist", @disabled = "disabled" })
+                                            @Html.HiddenFor(m => m.Request.Product.ProductSubcategory.ParentCategoryID)
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -95,6 +97,7 @@
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
     new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
     "Select Subcategory", new { @class = "form-control-plaintext border-bottom ", @id = "sublist", @disabled = "disabled" })
+                                            @Html.HiddenFor(m => m.Request.Product.ProductSubcategoryID)
                                             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -119,14 +122,15 @@
                                         <div class="form-group">
                                             <label asp-for="Request.Product.Vendor" class="control-label"></label>
                                             @Html.DropDownListFor(
-    vm => vm.Request.Product.VendorID,
-    new SelectList(
-    Model.Vendors,
-    dataValueField: "VendorID",
-    dataTextField: "VendorEnName"),
-    optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList", @disabled = "disabled" }
-    )
+                                                vm => vm.Request.Product.VendorID,
+                                                new SelectList(
+                                                    Model.Vendors,
+                                                    dataValueField: "VendorID",
+                                                    dataTextField: "VendorEnName"),
+                                                optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                                                htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList", @disabled = "disabled" }
+                                            )
+                                            @Html.HiddenFor(model => model.Request.Product.Vendor.VendorID)
                                             <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -148,7 +152,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" disabled />
+                                        <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" readonly />
                                         <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                     </div>
                                 </div>
@@ -169,7 +173,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                                        <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " disabled />
+                                        <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " readonly />
                                         <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-3">
@@ -196,7 +200,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label asp-for="Request.URL" class="control-label"></label>
-                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom " disabled />
+                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom " readonly />
                                         <span asp-validation-for="Request.URL" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -444,64 +448,64 @@
                                 <span style="font-size: 1.7em;">Documents</span>
                                 <br /><hr /><br />
                                 <!--<div class="row">
-        <div class="col-md-3">
-            <label class="control-label order-doc">Order Doc</label>
-            <div class="custom-file">
-                <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" multiple />
-                <label class="custom-file-label">Choose File...</label>
-            </div>
-            @if (Model.OrderFileStrings != null)
-            {
-                foreach (var o in Model.OrderFileStrings)
-                {
-                    <button>Test</button>
-                    <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
-                }
-                <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
-            }-->
+                                <div class="col-md-3">
+                                    <label class="control-label order-doc">Order Doc</label>
+                                    <div class="custom-file">
+                                        <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" multiple />
+                                        <label class="custom-file-label">Choose File...</label>
+                                    </div>
+                                    @if (Model.OrderFileStrings != null)
+                                    {
+                                        foreach (var o in Model.OrderFileStrings)
+                                        {
+                                            <button>Test</button>
+                                            <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
+                                        }
+                                        <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
+                                    }-->
                                 @*<div id="carousel" class="carousel ui-slider">
-            <ol class="carousel-indicators">
-            </ol>
-        </div>*@
+                                        <ol class="carousel-indicators">
+                                        </ol>
+                                    </div>*@
                                 <!--</div>
-        <div class="col-md-3">
-            <label class="control-label">Invoice Doc</label>
-            <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom -file" />
-            <span class="text-danger"></span>
-        </div>
-        <div class="col-md-3">
-            <label class="control-label">Shipment Doc</label>
-            <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom -file" />
-            <span class="text-danger"></span>
-        </div>
-        <div class="col-md-3">
-            <label class="control-label">Quote Doc</label>
-            <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom -file" />
-            <span class="text-danger"></span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-3">
-            <label class="control-label">Info Doc</label>
-            <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom -file" />
-            <span class="text-danger"></span>
-        </div>
-        <div class="col-md-3">
-            <label class="control-label">Pictures Doc</label>
-            <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom -file" />
-            <span class="text-danger"></span>
-        </div>
-        <div class="col-md-3">
-            <label class="control-label">Return Doc</label>
-            <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom -file" />
-            <span class="text-danger"></span>
-        </div>
-        <div class="col-md-3">
-            <label class="control-label">Credit Doc</label>
-            <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom -file" />
-            <span class="text-danger"></span>
-        </div>
-    </div>-->
+                                    <div class="col-md-3">
+                                        <label class="control-label">Invoice Doc</label>
+                                        <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom -file" />
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="control-label">Shipment Doc</label>
+                                        <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom -file" />
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="control-label">Quote Doc</label>
+                                        <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom -file" />
+                                        <span class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="control-label">Info Doc</label>
+                                        <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom -file" />
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="control-label">Pictures Doc</label>
+                                        <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom -file" />
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="control-label">Return Doc</label>
+                                        <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom -file" />
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="control-label">Credit Doc</label>
+                                        <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom -file" />
+                                        <span class="text-danger"></span>
+                                    </div>
+                                </div>-->
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="card">
@@ -525,11 +529,11 @@
                                             <div class="card-footer">
                                                 <div class="custom-file">
                                                     @*<input type="file" id="exampleInputFile">
-                            <label for="exampleInputFile" data-browse="+"></label>*@
+                                                        <label for="exampleInputFile" data-browse="+"></label>*@
                                                     <label for="InvoiceFiles" class="btn btn-primary btn-block btn-outlined">+</label>
                                                     <input type="file" asp-for="InvoiceFiles" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
                                                     @*<input type="file" asp-for="InvoiceFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                            <label class="custom-file-label">Choose File...</label>*@
+                                                        <label class="custom-file-label">Choose File...</label>*@
                                                 </div>
                                             </div>
                                         </div>
@@ -682,33 +686,14 @@
                                         <input type="submit" name="OrderType" value="Save" asp-action="ReOrderModalView" class="inv-button" />
                                     }
                                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
-                                <button type="button" class="cancel-button float-right" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="cancel-button float-right" data-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
-                <!-- Modal footer -->
-                @*<div class="modal-footer">
-                </div>*@
-
-                @*Begin Hidden Inputs:*@
-                @Html.HiddenFor(vm => vm.Request.ProductID)
-                @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
-                @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
-                @Html.HiddenFor(vm => vm.Request.RequestStatusID)
-                @Html.HiddenFor(vm => vm.Request.ParentRequestID)
-                @*End Hidden Inputs*@
-
-                @*Hidden Input for Product Subcategory*@
-                @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
             </form>
-
-
         </div>
-
     </div>
 </div>
 
