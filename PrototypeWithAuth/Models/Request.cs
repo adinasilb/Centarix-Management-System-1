@@ -10,12 +10,15 @@ namespace PrototypeWithAuth.Models
 {
     public class Request
     {
+        //IMPT: When adding in data validation make sure that you turn data-val off in the search
         [Key]
         public int RequestID { get; set; }
         public int ProductID { get; set; }
         public Product Product { get; set; }
         public int ParentRequestID { get; set; }
         public ParentRequest ParentRequest { get; set; }
+        public int SubProjectID { get; set; }
+        public SubProject SubProject { get; set; }
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public int? RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }
@@ -26,7 +29,7 @@ namespace PrototypeWithAuth.Models
         public uint? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit
         public uint? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
 
-        public bool IsDeleted { get; set; } // check if this request's parentrequets requests are deleted - if so give parent request true for is deleted
+        public bool IsDeleted { get; set; } // check if this request's parentrequests requests are deleted - if so give parent request true for is deleted
         public bool IsApproved { get; set; } 
         public uint Unit { get; set; } //largest unit the request comes in - amount of unit
         //public int Unit { get; set; }
@@ -53,6 +56,8 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Price")]
         public double Cost { get; set; } //this is always shekel no matter what currency is
         public string Currency { get; set; }
+
+        [Required]
         public string CatalogNumber { get; set; }
         public string SerialNumber { get; set; }
         public string URL { get; set; }

@@ -9,6 +9,7 @@ namespace PrototypeWithAuth.Models
 {
     public class Product
     {
+        //IMPT: When adding in data validation make sure that you turn data-val off in the search
         [Key]
         public int ProductID { get; set; }
 

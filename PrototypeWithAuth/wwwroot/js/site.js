@@ -29,6 +29,7 @@ $("#parentlist").change(function () {
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#Project").change(function () {
+	console.log("in project change");
 	var projectId = $(this).val();
 	var url = "/Requests/GetSubProjectList";
 
@@ -41,6 +42,25 @@ $("#Project").change(function () {
 		$("#SubProject").html(item);
 	});
 });
+
+
+//search forms- Redo js in newer versions
+$("#search-form #Project").change(function () {
+	console.log("changed project");
+});
+
+$("#search-form #SubProject").change(function () {
+	console.log("changed subproject");
+});
+
+$("#search-form #vendorList").change(function () {
+	$("#search-form #vendorBusinessIDList").val($(this).val());
+});
+
+$("#search-form #vendorBusinessIDList").change(function () {
+	$("#search-form #vendorList").val($(this).val());
+});
+
 
 var today = new Date();
 var dd = today.getDate();
@@ -448,7 +468,7 @@ $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that t
 
 
 
-LOCATIONS:
+//LOCATIONS:
 
 
 var $sublocationCounter = 1;

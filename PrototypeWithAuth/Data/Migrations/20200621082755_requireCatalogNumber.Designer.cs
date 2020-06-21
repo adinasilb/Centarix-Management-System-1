@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200621082755_requireCatalogNumber")]
+    partial class requireCatalogNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1072,9 +1074,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubProjectID")
-                        .HasColumnType("int");
-
                     b.Property<long?>("SubSubUnit")
                         .HasColumnType("bigint");
 
@@ -1117,8 +1116,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ProductID");
 
                     b.HasIndex("RequestStatusID");
-
-                    b.HasIndex("SubProjectID");
 
                     b.HasIndex("SubSubUnitTypeID");
 
@@ -1680,12 +1677,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Requests")
                         .HasForeignKey("RequestStatusID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.SubProject", "SubProject")
-                        .WithMany()
-                        .HasForeignKey("SubProjectID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.UnitType", "SubSubUnitType")
                         .WithMany()

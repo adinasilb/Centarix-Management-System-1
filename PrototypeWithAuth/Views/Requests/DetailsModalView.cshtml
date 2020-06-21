@@ -122,8 +122,17 @@
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label class="control-label">Project:</label>
-                                            <select class="form-control-plaintext border-bottom" disabled></select>
-                                            @*Impt when creating the dropdownlistfor carry over the disabled attribute*@
+                                            @Html.DropDownList(
+                                                "Project",
+                                                new SelectList(
+                                                    Model.Projects,
+                                                    "ProjectID",
+                                                    "ProjectDescription"
+                                                    ),
+                                                "Select Project",
+                                                new { @class = "form-control-plaintext border-bottom" }
+                                            )
+                                            <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -132,8 +141,8 @@
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            <select class="form-control-plaintext border-bottom" disabled></select>
-                                            @*Impt when creating the dropdownlistfor carry over the disabled attribute*@
+                                            <select id="SubProject" class="form-control-plaintext border-bottom"></select>
+                                            <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-4 px-4">

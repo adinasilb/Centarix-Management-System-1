@@ -5,7 +5,7 @@
 }
 @*<div class="modal modal-view  right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">*@
 
-<form action="" method="post" enctype="multipart/form-data">
+<form action="" method="post" enctype="multipart/form-data" id="search-form">
     <div style="display:flex;">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div style="width: 110px; min-height: 920px;" class="p-2 sidebar-shadow text-center p-3">
@@ -75,7 +75,7 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label @*asp-for=""*@ class="control-label">Project</label>
-                                <select @*asp-for="" data-val="false"*@ class="form-control-plaintext border-bottom">
+                                <select @*asp-for="" data-val="false"*@ class="form-control-plaintext border-bottom" id="Project">
                                     <option>Select a project</option>
                                     @foreach (var project in Model.Projects)
                                     {
@@ -89,7 +89,7 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label @*asp-for=""*@ class="control-label">Sub Project</label>
-                                <select @*asp-for="" data-val="false"*@ class="form-control-plaintext border-bottom">
+                                <select @*asp-for="" data-val="false"*@ class="form-control-plaintext border-bottom" id="SubProject">
                                     <option>Select a sub project</option>
                                     @foreach (var subProject in Model.SubProjects)
                                     {
@@ -114,7 +114,7 @@
                             <div class="form-group">
                                 @* IN MIDDLE *@
                                 <label class="control-label">Supplier ID</label>
-                                <select asp-for="Request.Product.Vendor.VendorBuisnessID" data-val="false" class="form-control-plaintext border-bottom">
+                                <select asp-for="Request.Product.Vendor.VendorBuisnessID" id="vendorBusinessIDList" data-val="false" class="form-control-plaintext border-bottom">
                                     <option>Select A Vendor ID</option>
                                     @foreach (var vendor in Model.Vendors)
                                     {
@@ -156,7 +156,7 @@
                         <div class="col-6 pr-md-4">
                             <div class="form-group">
                                 <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                                <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom" />
+                                <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom" data-val="false" />
                             </div>
                         </div>
                         <div class="col-md-3">

@@ -364,8 +364,9 @@ namespace PrototypeWithAuth.Controllers
 
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var projects = await _context.Projects.ToListAsync();
+            var subprojects = await _context.SubProjects.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
-            var requeststatuses = await _context.RequestStatuses.ToListAsync();
             //redo the unit types when seeded
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
@@ -375,8 +376,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
+                Projects = projects,
+                SubProjects = subprojects,
                 Vendors = vendors,
-                RequestStatuses = requeststatuses,
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts
@@ -900,8 +902,9 @@ namespace PrototypeWithAuth.Controllers
 
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var projects = await _context.Projects.ToListAsync();
+            var subprojects = await _context.SubProjects.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
-            var requeststatuses = await _context.RequestStatuses.ToListAsync();
             //redo the unit types when seeded
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
@@ -912,7 +915,8 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
-                RequestStatuses = requeststatuses,
+                Projects = projects,
+                SubProjects = subprojects,
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts
@@ -1416,6 +1420,8 @@ namespace PrototypeWithAuth.Controllers
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
+            var projects = await _context.Projects.ToListAsync();
+            var subprojects = await _context.SubProjects.ToListAsync();
 
             //to the best of my knowledge we do not need a list of request status so I commented it out
             //var requeststatuses = await _context.RequestStatuses.ToListAsync();
@@ -1429,6 +1435,8 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
+                Projects = projects,
+                SubProjects = subprojects,
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts
