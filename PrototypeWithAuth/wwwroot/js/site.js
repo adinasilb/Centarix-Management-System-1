@@ -27,6 +27,21 @@ $("#parentlist").change(function () {
 	});
 });
 
+//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
+$("#Project").change(function () {
+	var projectId = $(this).val();
+	var url = "/Requests/GetSubProjectList";
+
+	$.getJSON(url, { ProjectID: projectId }, function (data) {
+		var item = "<option value=''>Select Subcategory</option>";
+		$("#SubProject").empty();
+		$.each(data, function (i, subproject) {
+			item += '<option value="' + subproject.subProjectId + '">' + subproject.subProjectDescription + '</option>'
+		});
+		$("#SubProject").html(item);
+	});
+});
+
 var today = new Date();
 var dd = today.getDate();
 var mm = today.getMonth() + 1; //January is 0!
@@ -720,10 +735,14 @@ $(".documents-tab").click(function () {
 
 //the following is for the next girsa- but it doesn't work anyways
 
-$(".file-select").on("change", function () {
+$(".upload-file").click(function () {
+	$(".file-select").click();
+});
+
+$(".file-select").on("change", function (e) {
 	console.log("file was changed");
-	$cardDiv = $(this).closest('div .card');
-	console.log("cardDiv: " + $cardDiv);
+	$cardDiv = $(this).closest("div");
+	console.log("cardDiv: " + JSON.stringify($cardDiv));
 	$cardDiv.addClass("document-border");
 });
 

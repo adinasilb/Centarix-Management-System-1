@@ -10,6 +10,14 @@ for details on configuring this project to bundle and minify static web assets. 
     border: 2px solid rgba(0,0,0, .6);
 }
 
+/*the following allows you to disable select boxes and still pass on the value (readonly doesn't work on selects)
+    used in a class instead of the disabled attr
+*/
+.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
 .carousel.vertical .item {
     -webkit-transition: 0.6s ease-in-out top;
     -moz-transition: 0.6s ease-in-out top;

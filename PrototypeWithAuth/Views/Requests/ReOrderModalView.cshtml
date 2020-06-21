@@ -130,7 +130,7 @@
                                                 optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
                                                 htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList", @disabled = "disabled" }
                                             )
-                                            @Html.HiddenFor(model => model.Request.Product.Vendor.VendorID)
+                                            @Html.HiddenFor(model => model.Request.Product.VendorID)
                                             <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                         </div>
                                     </div>

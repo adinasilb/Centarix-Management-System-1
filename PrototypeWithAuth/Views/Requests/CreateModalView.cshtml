@@ -115,7 +115,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            @Html.DropDownList(
+                                            <select id="SubProject" class="form-control-plaintext border-bottom"></select>
+                                            @*@Html.DropDownList(
                                                 "Sub Project",
                                                 new SelectList(
                                                     Model.SubProjects,
@@ -124,7 +125,7 @@
                                                     ),
                                                 "Select Sub Project",
                                                 new { @class = "form-control-plaintext border-bottom" }
-                                            )
+                                            )*@
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
@@ -516,11 +517,9 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/order.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
-                                                    <label class="custom-file-label">Choose File...</label>
-                                                    <label for="OrderFiles" class="btn btn-primary btn-block btn-outlined">+</label>
-                                                    <input type="file" asp-for="OrderFiles" class="file-select" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
+                                                <div class="custom-file text-center">
+                                                    <label class="btn btn-block"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file" /></label>
+                                                    <input type="file" asp-for="OrderFiles" class="file-select" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -533,8 +532,8 @@
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file">
-                                                    <label for="InvoiceFiles" class="btn btn-primary btn-block btn-outlined">+</label>
-                                                    <input type="file" asp-for="InvoiceFiles" class="file-select" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
+                                                    <label for="InvoiceFiles" class="btn btn-primary btn-block btn-outlined"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file" /></label>
+                                                    <input type="file" asp-for="InvoiceFiles" class="file-select" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>
@@ -546,9 +545,9 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/shipment.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="ShipmentFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                <div class="custom-file text-center">
+                                                    <label for="ShipmentFiles" class="btn btn-primary"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file" /></label>
+                                                    <input type="file" asp-for="ShipmentFiles" class="file-select" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>

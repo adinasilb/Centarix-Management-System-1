@@ -20,7 +20,9 @@ using MimeKit;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SelectPdf;
-using Org.BouncyCastle.Asn1.X509;
+//using Org.BouncyCastle.Asn1.X509;
+//using System.Data.Entity.Validation;
+//using System.Data.Entity.Infrastructure;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -1574,7 +1576,18 @@ namespace PrototypeWithAuth.Controllers
                     //test that this works
                     if (WithOrder)
                     {
-                        return RedirectToAction("ConfirmEmailModal", new { id = requestItemViewModel.Request.RequestID });
+                        TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+                        TempData["OpenConfirmEmailModal"] = true;
+                        AppUtility.RequestPageTypeEnum requestPageTypeEnum1 = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+                        return RedirectToAction("Index", new
+                        {
+                            page = requestItemViewModel.Page,
+                            requestStatusID = requestItemViewModel.RequestStatusID,
+                            subcategoryID = requestItemViewModel.SubCategoryID,
+                            vendorID = requestItemViewModel.VendorID,
+                            applicationUserID = requestItemViewModel.ApplicationUserID,
+                            PageType = requestPageTypeEnum1
+                        });
                     }
                 }
                 catch (DbUpdateException ex)
@@ -1584,7 +1597,7 @@ namespace PrototypeWithAuth.Controllers
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
                     return View(requestItemViewModel);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
@@ -2139,6 +2152,13 @@ namespace PrototypeWithAuth.Controllers
             var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
             return Json(subCategoryList);
 
+        }
+
+        [HttpGet]
+        public JsonResult GetSubProjectList(int ProjectID)
+        {
+            var subprojectList = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID).ToList();
+            return Json(subprojectList);
         }
 
         //[HttpGet]
