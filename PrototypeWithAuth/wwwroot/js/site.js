@@ -733,15 +733,42 @@ $(".documents-tab").click(function () {
 	$.fn.CheckIfFileSelectsAreFull();
 });
 
-//the following is for the next girsa- but it doesn't work anyways
-
-$(".upload-file").click(function () {
-	$(".file-select").click();
-});
+//$(".upload-file-1").click(function () {
+//	console.log("file select clicked 1");
+//	$(".file-select-1").click();
+//});
+//$(".upload-file-2").click(function () {
+//	console.log("file select clicked 2");
+//	$(".file-select-2").click();
+//});
+//$(".upload-file-3").click(function () {
+//	console.log("file select clicked 3 ");
+//	$(".file-select-3").click();
+//});
+//$(".upload-file-4").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-4").click();
+//});
+//$(".upload-file-5").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-5").click();
+//});
+//$(".upload-file-6").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-6").click();
+//});
+//$(".upload-file-7").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-7").click();
+//});
+//$(".upload-file-8").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-8").click();
+//});
 
 $(".file-select").on("change", function (e) {
 	console.log("file was changed");
-	$cardDiv = $(this).closest("div");
+	$cardDiv = $(this).closest("div.card");
 	console.log("cardDiv: " + JSON.stringify($cardDiv));
 	$cardDiv.addClass("document-border");
 });
