@@ -17,8 +17,6 @@ namespace PrototypeWithAuth.Models
         public Product Product { get; set; }
         public int ParentRequestID { get; set; }
         public ParentRequest ParentRequest { get; set; }
-        public int SubProjectID { get; set; }
-        public SubProject SubProject { get; set; }
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public int? RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }

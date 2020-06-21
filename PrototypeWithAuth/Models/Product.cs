@@ -27,6 +27,8 @@ namespace PrototypeWithAuth.Models
         //[Required]
         
         public ProductSubcategory ProductSubcategory { get; set; }
+        public int SubProjectID { get; set; }
+        public SubProject SubProject { get; set; }
         public IEnumerable<Request> Requests { get; set; }
         public string Handeling { get; set; }
 
