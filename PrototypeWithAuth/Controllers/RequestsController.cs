@@ -484,22 +484,22 @@ namespace PrototypeWithAuth.Controllers
                 //the partial file name that we will search for (1- because we want the first one)
                 //creating the directory from the path made earlier
 
-                if (Directory.Exists(uploadFolder3))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
-                    //searching for the partial file name in the directory
-                    FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                    //checking if there were any files found before looping through them (to prevent an error)
-                    requestItemViewModel.OrderFileStrings = new List<string>();
-                    if (orderfilesfound[0].Exists)
-                    {
-                        //getting the file from the FileInfo[]
-                        foreach (FileInfo file in orderfilesfound)
-                        {
-                            requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
-                        }
-                    }
-                }
+                //if (Directory.Exists(uploadFolder3))
+                //{
+                //    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
+                //    //searching for the partial file name in the directory
+                //    FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                //    //checking if there were any files found before looping through them (to prevent an error)
+                //    requestItemViewModel.OrderFileStrings = new List<string>();
+                //    if (orderfilesfound[0].Exists)
+                //    {
+                //        //getting the file from the FileInfo[]
+                //        foreach (FileInfo file in orderfilesfound)
+                //        {
+                //            requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
+                //        }
+                //    }
+                //}
 
                 if (requestItemViewModel.Request == null)
                 {

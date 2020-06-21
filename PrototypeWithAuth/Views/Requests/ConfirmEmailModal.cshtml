@@ -9,12 +9,13 @@
     }
 }
 
-<div class="modal modal-view faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog  modal-dialog-scrollable modal-lg">
-        <div class="modal-content d-inline-block">
+<div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-            <div class="modal-header border-bottom-0">
-                Confirm Email
+    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:60rem; overflow-y:auto;">
+
+        <div class="modal-content d-inline-block" style="width:60rem;">
+
+            <div class="modal-header pb-0 border-bottom-0">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -38,24 +39,24 @@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
 
 
-                <div class="modal-body">
+                @*<div class="modal-body">
                     @if (IsBeingApproved == "True")
                     {
                         <h4>Would you like to approve this Request for @Model.Request.Product.ProductName ?</h4>
                     }
-                </div>
+                </div>*@
 
                 @*<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">*@
 
-                <div style="padding:2rem">
+                <div style="padding:1rem 2rem">
                     <header class="page-header">
                         <div class="row">
                             <div class="col-md-6 company-logo">
                                 <br />
                                 <img src="~/images/css/Centarix_Logo.png" width="400" alt="Centarix Logo">
                             </div>
-                            <div class="col-md-4 offset-2 company-info">
-                                <h3 style="font-weight: 700;">Centarix Biotech</h3>
+                            <div class="col-md-3 offset-3 pt-3 company-info">
+                                <span style="font-weight: 700; font-size:1.5rem;">Centarix Biotech</span><br>
                                 <span>ID: 51565512</span><br>
                                 <span>Hamarpeh 3, Jerusalem</span><br>
                                 <span>Tel: 073-7896888</span>
@@ -65,40 +66,39 @@
                     </header>
                     <div class="row">
                         <div class="col-6">
-                            <h3 style="font-weight: 700;">Purchase Order: @Model.Request.ParentRequest.OrderNumber</h3>
+                            <span style="font-weight: 700; font-size:2rem;">Purchase Order: @Model.Request.ParentRequest.OrderNumber</span>
                         </div>
-                        <div class="col-3 offset-3">
-                            <h5 style="font-weight:500" id="date"></h5>
+                        <div class="col-3 offset-3 text-center">
+                            <span style="font-weight:500" id="date"></span>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-4">
                             <div class="vendor-info">
-                                <h3 style="font-weight: 700;">@Model.Request.Product.Vendor.VendorEnName</h3>
+                                <span style="font-weight: 700; font-size:1.5rem;">@Model.Request.Product.Vendor.VendorEnName</span><br>
                                 <span>ID: @Model.Request.Product.Vendor.VendorBuisnessID</span><br>
                                 <span>@Model.Request.Product.Vendor.VendorCity</span><br>
                                 <span>Tel: @Model.Request.Product.Vendor.VendorContactPhone1</span>
                             </div>
                         </div>
-                        <div class="col-7 offset-1">
-                            <div class="note-message p-4 border">
-                                <h3 style="font-weight: 700;">Please Note</h3>
+                        <div class="col-6 offset-2">
+                            <div class="note-message p-4 pl-5">
+                                <span style="font-weight: 700; font-size:1.5rem;">Please Note</span><br>
                                 <span>We need this order by next Sunday. Thank you!</span>
                             </div>
                         </div>
                     </div>
                     <br>
-                    <br>
                     <div class="row">
-                        <table class="table mb-0 confirm-table">
+                        <table class="table confirm-table">
                             <thead style="background-color: #D0001C; color: #ffffff;">
                                 <tr>
-                                    <th>Items</th>
-                                    <th>SKU</th>
-                                    <th>Units</th>
-                                    <th>Price</th>
-                                    <th>Total</th>
+                                    <th style="width:40%;">Items</th>
+                                    <th style="width:20%;">SKU</th>
+                                    <th style="width:10%;">Units</th>
+                                    <th style="width:20%;">Price</th>
+                                    <th style="width:10%;">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -144,46 +144,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- no longer necessary as original table works
-                        <div class="row">
-                        <div class="col-6">
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                            <div class="signature">
-                                <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250">
-                            </div>
-                        </div>
-                        <div class="col-5 offset-1 pr-0" style="padding-left:4.25rem;">
-                            <table class="table m-0 confirm-table">
-                                <tr>
-                                    <td style="width:50.5%;">Total</td>
-                                    <td style="width:49.5%;">@Model.Request.Cost</td>
-                                </tr>
-                                <tr>
-                                    <td>Discount--> @*@Html.DisplayFor(modelItem => Model.Request.)*@<!--</td>-->
-                                    @*@{double discount = Model.Request.Cost * Model.Request.Discount; }*@
-                                    <!--<td>-->@*discount*@<!--</td>
-                                </tr>
-                                <tr>
-                                    <td>Total Price</td>-->
-                                    @*@{ double totalWithDis = Model.Request.Cost - discount}*@
-                                    <!--<td>-->@*@totalWithDis*@<!--</td>
-                                </tr>
-                                <tr>
-                                    <td>VAT [17%]</td>-->
-                                    @* @{ double vat = totalWithDis * Model.Request.VAT }*@
-                                    <!--<td>-->@*@vat*@<!--</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: bold;">Total To Pay</td>
-                                    <td style="font-weight: bold;">-->@*@vat+totalWithDis*@<!--</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>-->
                     <br>
                     <br>
                     <br>
@@ -191,16 +151,16 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="payment-terms">
-                                <h3 style="font-weight: bold;">Payment Terms</h3>
+                                <span style="font-weight:700; font-size:1.5rem;">Payment Terms</span><br>
                                 <span class="payment-terms">@Model.Request.Terms</span>
                             </div>
                         </div>
                     </div>
                     <br />
                     <br />
-                    <div class="modal-footer m-4">
-                        <input type="submit" class="btn btn-success" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
-                        <button class="btn btn-danger close" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
+                    <div class="modal-footer p-4" style="justify-content:space-evenly;">
+                        <input type="submit" class="inv-button" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
+                        <button class="cancel-button" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
                     </div>
                 </div>
 

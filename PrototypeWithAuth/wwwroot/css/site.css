@@ -93,6 +93,10 @@ html {
   box-shadow: 0 .25rem .5rem rgba(0, 0, 0, 0.3);  /*Dani - opacity 0.05 - 0.3; shortened vert: 0.75 - 0.5; 200608*/
 }
 
+.sidebar-shadow {
+    box-shadow: 0.2rem 0 0.2rem rgba(0, 0, 0, 0.3);
+}
+
 button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
@@ -146,11 +150,12 @@ body {
     background-color: transparent;
     border: 1px solid rgba(0,0,0,0.32);
     border-radius: 3rem;
-    color: #30BCC9; /*inventory*/
+    color: rgba(0,0,0,0.54);
     font-weight: 500;
     padding: 0.56rem 1.5rem;
     font-size: 1.125rem;
     line-height: 1.5;
+    text-transform: uppercase;
 }
 
 .cancel-button:hover {
@@ -166,6 +171,7 @@ body {
     padding: 0.56rem 1.5rem;
     font-size: 1.125rem;
     line-height: 1.5;
+    text-transform: uppercase;
 }
 
 .inv-button:hover {
@@ -239,10 +245,7 @@ ul li button.bold-hover-effects:hover {
 }
 
 ul li.acc-sidebar.active {
-    /*filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);*/
-    /*color: #A26FF0, !important;*/
-    /*this is a better result*/
-        filter: invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);
+    filter: invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);
 }
 
 /*table CSS*/
@@ -572,21 +575,21 @@ input[type=checkbox].css-checkbox {
 }
 
 .css-label {
-    display: flex;
-    padding-left: 10px;
-    padding-top: 2px;
-    font-size: 1.3rem;
-    width: 30px;
-    height: 25px;
+    width: 42px;
+    height: 42px;
+    font-size: 0.45rem;
+    padding-right: 26px;
+    padding-top: 28px;
+    background-image: url('../images/css/inventory/icons/cell_checkbox.png');
+    background-repeat: no-repeat;
     background-size: contain;
-    
+    margin-bottom: 0px;
 }
 
 input[type=checkbox].css-checkbox:checked ~ label.css-label {
     background-position: 0 0;
-    color: #30BCC9;
-    /*background-color: #30BCC9;*/
-    background-image: url('../images/css/selected_box.png');
+    color:white;
+    background-image: url('../images/css/inventory/icons/cell_checkbox_selected.png');
     background-repeat: no-repeat;
     background-size:contain;
 }
