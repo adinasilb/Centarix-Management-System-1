@@ -935,7 +935,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product.ProductSubcategory.ParentCategory)
                 .Include(r => r.RequestStatus)
                 .Include(r => r.ParentRequest.ApplicationUser)
-                .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .Include(r => r.Product.SubProject)
                 .SingleOrDefault(x => x.RequestID == id);
 
