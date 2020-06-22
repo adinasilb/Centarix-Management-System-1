@@ -472,65 +472,7 @@
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
                                 <br /><hr /><br />
-                                <!--<div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label order-doc">Order Doc</label>
-                                    <div class="custom-file">
-                                        <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" multiple />
-                                        <label class="custom-file-label">Choose File...</label>
-                                    </div>
-                                    @if (Model.OrderFileStrings != null)
-                                    {
-                                        foreach (var o in Model.OrderFileStrings)
-                                        {
-                                            <button>Test</button>
-                                            <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
-                                        }
-                                        <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
-                                    }-->
-                                @*<div id="carousel" class="carousel ui-slider">
-                                        <ol class="carousel-indicators">
-                                        </ol>
-                                    </div>*@
-                                <!--</div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Invoice Doc</label>
-                                        <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Shipment Doc</label>
-                                        <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Quote Doc</label>
-                                        <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="control-label">Info Doc</label>
-                                        <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Pictures Doc</label>
-                                        <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Return Doc</label>
-                                        <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control-label">Credit Doc</label>
-                                        <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom -file" />
-                                        <span class="text-danger"></span>
-                                    </div>
-                                </div>-->
+
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="card">
@@ -538,9 +480,9 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/order.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                <div class="custom-file text-center">
+                                                    <label for="OrderFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-1" /></label>
+                                                    <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -552,13 +494,9 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/invoice.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    @*<input type="file" id="exampleInputFile">
-                                                        <label for="exampleInputFile" data-browse="+"></label>*@
-                                                    <label for="InvoiceFiles" class="btn btn-primary btn-block btn-outlined">+</label>
-                                                    <input type="file" asp-for="InvoiceFiles" accept=".png, .jpg, .jpeg, .pdf" style="display: none">
-                                                    @*<input type="file" asp-for="InvoiceFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                        <label class="custom-file-label">Choose File...</label>*@
+                                                <div class="custom-file text-center">
+                                                    <label for="InvoiceFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-2" /></label>
+                                                    <input type="file" asp-for="InvoiceFiles" class="file-select file-select-2" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>
@@ -570,9 +508,9 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/shipment.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="ShipmentFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                <div class="custom-file text-center">
+                                                    <label for="ShipmentFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-3" /></label>
+                                                    <input type="file" asp-for="ShipmentFiles" class="file-select file-select-3" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>
@@ -584,9 +522,9 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/quote.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="QuoteFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                <div class="custom-file text-center">
+                                                    <label for="QuoteFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-4" /></label>
+                                                    <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>
@@ -600,9 +538,9 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="InfoFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                <div class="custom-file text-center">
+                                                    <label for="InfoFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-5" /></label>
+                                                    <input type="file" asp-for="InfoFiles" class="file-select file-select-5" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>
@@ -614,9 +552,9 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="PictureFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                <div class="custom-file text-center">
+                                                    <label for="PictureFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-6" /></label>
+                                                    <input type="file" asp-for="PictureFiles" class="file-select file-select-6" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>
@@ -628,9 +566,9 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="ReturnFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                <div class="custom-file text-center">
+                                                    <label for="ReturnFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-7" /></label>
+                                                    <input type="file" asp-for="ReturnFiles" class="file-select file-select-7" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>
@@ -642,27 +580,13 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="CreditFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
-                                                    <label class="custom-file-label">Choose File...</label>
+                                                <div class="custom-file text-center">
+                                                    <label for="CreditFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-8" /></label>
+                                                    <input type="file" asp-for="CreditFiles" class="file-select file-select-8" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Credit</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h3 class="images-header"></h3>
-                                        <hr />
-                                        @if (Model.OrderFileStrings != null)
-                                        {
-                                            <div class="fill-images-orders">
-                                                <a href="@Model.OrderFileStrings[0]" target="_blank">Click to open</a>
-                                                <embed src="@Model.OrderFileStrings[0]" type="application/pdg" @*height="100%" width="100%"*@ />
-                                                <iframe src="@Model.OrderFileStrings[0]"></iframe>
-                                            </div>
-                                        }
                                     </div>
                                 </div>
                             </div>

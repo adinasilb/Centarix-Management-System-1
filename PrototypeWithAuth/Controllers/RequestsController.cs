@@ -414,6 +414,110 @@ namespace PrototypeWithAuth.Controllers
                 */
                 requestItemViewModel.OldComments = comments.ToList();
 
+                //may be able to do this together - combining the path for the orders folders
+                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
+                string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+                string uploadFolderInvoices = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                string uploadFolderShipments = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
+                string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                string uploadFolderInfo = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Info.ToString());
+                string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
+                string uploadFolderReturns = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Returns.ToString());
+                string uploadFolderCredits = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Credits.ToString());
+                //the partial file name that we will search for (1- because we want the first one)
+                //creating the directory from the path made earlier
+
+                if (Directory.Exists(uploadFolderOrders))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
+                    //searching for the partial file name in the directory
+                    FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.OrderFileStrings = new List<String>();
+                    foreach (var orderfile in orderfilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(orderfile.FullName);
+                        requestItemViewModel.OrderFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderInvoices))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInvoices);
+                    FileInfo[] invoicefilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.InvoiceFileStrings = new List<string>();
+                    foreach (var invoicefile in invoicefilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(invoicefile.FullName);
+                        requestItemViewModel.InvoiceFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderShipments))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderShipments);
+                    FileInfo[] shipmentfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.ShipmentFileStrings = new List<string>();
+                    foreach (var shipmentfile in shipmentfilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(shipmentfile.FullName);
+                        requestItemViewModel.ShipmentFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderQuotes))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
+                    FileInfo[] quotefilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.QuoteFileStrings = new List<string>();
+                    foreach (var quotefile in quotefilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(quotefile.FullName);
+                        requestItemViewModel.QuoteFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderInfo))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInfo);
+                    FileInfo[] infofilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.InfoFileStrings = new List<string>();
+                    foreach (var infofile in infofilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(infofile.FullName);
+                        requestItemViewModel.InfoFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderPictures))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderPictures);
+                    FileInfo[] picturefilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.PictureFileStrings = new List<string>();
+                    foreach (var picturefile in picturefilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(picturefile.FullName);
+                        requestItemViewModel.PictureFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderReturns))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderReturns);
+                    FileInfo[] returnfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.ReturnFileStrings = new List<string>();
+                    foreach (var returnfile in returnfilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(returnfile.FullName);
+                        requestItemViewModel.ReturnFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderCredits))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderCredits);
+                    FileInfo[] creditfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.CreditFileStrings = new List<string>();
+                    foreach (var creditfile in creditfilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(creditfile.FullName);
+                        requestItemViewModel.CreditFileStrings.Add(newFileString);
+                    }
+                }
+
                 //GET PAYMENTS HERE
                 var payments = _context.Payments
                     .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
@@ -478,30 +582,6 @@ namespace PrototypeWithAuth.Controllers
 
                     }
                 }
-
-                //may be able to do this together - combining the path for the orders folders
-                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
-                string uploadFolder3 = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-                //the partial file name that we will search for (1- because we want the first one)
-                //creating the directory from the path made earlier
-
-                //if (Directory.Exists(uploadFolder3))
-                //{
-                //    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
-                //    //searching for the partial file name in the directory
-                //    FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                //    //checking if there were any files found before looping through them (to prevent an error)
-                //    requestItemViewModel.OrderFileStrings = new List<string>();
-                //    if (orderfilesfound[0].Exists)
-                //    {
-                //        //getting the file from the FileInfo[]
-                //        foreach (FileInfo file in orderfilesfound)
-                //        {
-                //            requestItemViewModel.OrderFileStrings.Add(file.FullName.ToString());
-                //        }
-                //    }
-                //}
 
                 if (requestItemViewModel.Request == null)
                 {
@@ -945,7 +1025,6 @@ namespace PrototypeWithAuth.Controllers
                 .ToListAsync();
             requestItemViewModel.SubProjects = subprojects;
 
-            //check if this works once there are commments
             var comments = Enumerable.Empty<Comment>();
             comments = _context.Comments
                 .Include(r => r.ApplicationUser)
@@ -1184,12 +1263,12 @@ namespace PrototypeWithAuth.Controllers
             //declared outside the if b/c it's used farther down to (for parent request the new comment too)
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
-            //checks if it's a new request
-            if (requestItemViewModel.Request.ParentRequestID == 0)
-            {
-                //use application user of whoever signed in
-                requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
-            }
+            //checks if it's a new request --> don't need this b/c edit won't be on something new
+            //if (requestItemViewModel.Request.ParentRequestID == 0)
+            //{
+            //    //use application user of whoever signed in
+            //    requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
+            //}
 
             //can we combine this with the one above?
             //if it's a new request need to put in a request status
@@ -1218,8 +1297,10 @@ namespace PrototypeWithAuth.Controllers
                  * only need this if using an existing product
                  */
                 requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
+                //requestItemViewModel.Request.Product.SubProjectID = requestItemViewModel.Request.Product.SubProject.SubProjectID;
                 try
                 {
+                    //_context.Update(requestItemViewModel.Request.Product);
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
 

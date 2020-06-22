@@ -795,6 +795,7 @@ $(".file-select").on("change", function (e) {
 });
 
 $.fn.HideAllDocs = function () {
+	console.log("hide all docs");
 	$(".orders-view").hide();
 	$(".invoices-view").hide();
 	$(".shipments-view").hide();
@@ -806,35 +807,83 @@ $.fn.HideAllDocs = function () {
 };
 
 $(".show-orders-view").click(function () {
-	$.fn.HideAllDocs();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
 	$(".orders-view").toggle();
 });
 $(".show-invoices-view").click(function () {
-	$.fn.HideAllDocs();
+	$(".orders-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
 	$(".invoices-view").toggle();
 });
 $(".show-shipments-view").click(function () {
-	$.fn.HideAllDocs();
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
 	$(".shipments-view").toggle();
 });
 $(".show-quotes-view").click(function () {
-	$.fn.HideAllDocs();
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
 	$(".quotes-view").toggle();
 });
 $(".show-info-view").click(function () {
-	$.fn.HideAllDocs();
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
 	$(".info-view").toggle();
 });
 $(".show-pictures-view").click(function () {
-	$.fn.HideAllDocs();
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
 	$(".pictures-view").toggle();
 });
 $(".show-returns-view").click(function () {
-	$.fn.HideAllDocs();
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".credits-view").hide();
 	$(".returns-view").toggle();
 });
 $(".show-credits-view").click(function () {
-	$.fn.HideAllDocs();
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
 	$(".credits-view").toggle();
 });
 

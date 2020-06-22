@@ -120,21 +120,22 @@
                                                     ),
                                                 "Select Sub Project",
                                                 new { @class = "form-control-plaintext border-bottom", id = "SubProject" }
-                                            )<span @*asp-validation-for=""*@ class="text-danger"></span>
+                                            )
+                                            <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="Request.Product.Vendor" class="control-label"></label>
                                             @Html.DropDownListFor(
-            vm => vm.Request.Product.VendorID,
-            new SelectList(
-            Model.Vendors,
-            dataValueField: "VendorID",
-            dataTextField: "VendorEnName"),
-            optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-            htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList" }
-            )
+                                                vm => vm.Request.Product.VendorID,
+                                                new SelectList(
+                                                Model.Vendors,
+                                                    dataValueField: "VendorID",
+                                                    dataTextField: "VendorEnName"),
+                                                    optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                                                htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList" }
+                                            )
                                             <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -687,217 +688,257 @@
                                         <br />
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <!--<div class="card h-75">-->
-                                        <div class="card">
+                                        @{
+                                            var orderCardClass = "card";
+                                            var boolOrders = false;
+                                            if (Model.OrderFileStrings != null)
+                                            {
+                                                orderCardClass = "card document-border";
+                                                boolOrders = true;
+                                            }
+                                        }
+                                        <div class="@orderCardClass">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/order.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple disabled />
-                                                    <label class="custom-file-label">+</label>
-                                                </div>
-                                                @{
-                                                    var btnOrdersClass = "btn show-orders-view ";
-                                                    if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
+                                                <div class="custom-file text-center">
+                                                    <label for="OrderFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-1 mr-5" /></label>
+                                                    <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    @if (boolOrders)
                                                     {
-                                                        btnOrdersClass += "btn-outline-primary";
+                                                        <a class="show-orders-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
                                                     }
                                                     else
                                                     {
-                                                        btnOrdersClass += "btn-link";
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
                                                     }
-                                                }
-                                                <a class="@btnOrdersClass">View</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Order</label>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        @{
+                                            var invoiceCardClass = "card";
+                                            var boolInvoice = false;
+                                            if (Model.InvoiceFileStrings != null)
+                                            {
+                                                invoiceCardClass = "card document-border";
+                                                boolInvoice = true;
+                                            }
+                                        }
+                                        <div class="@invoiceCardClass">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/invoice.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="InvoiceFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">+</label>
-                                                </div>
-                                                @{
-                                                    var btnInvoicesClass = "btn show-invoices-view ";
-                                                    if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
+                                                <div class="custom-file text-center">
+                                                    <label for="InvoiceFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-2 mr-5" /></label>
+                                                    <input type="file" asp-for="InvoiceFiles" class="file-select file-select-2" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
+                                                    @if (boolInvoice)
                                                     {
-                                                        btnInvoicesClass += "btn-outline-primary";
+                                                        <a class="show-invoices-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
                                                     }
                                                     else
                                                     {
-                                                        btnInvoicesClass += "btn-link";
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
                                                     }
-                                                }
-                                                <a class="@btnInvoicesClass">View</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Invoice</label>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        @{
+                                            var shipmentCardClass = "card";
+                                            var boolShipment = false;
+                                            if (Model.ShipmentFileStrings != null)
+                                            {
+                                                shipmentCardClass = "card document-border";
+                                                boolShipment = true;
+                                            }
+                                        }
+                                        <div class="@shipmentCardClass">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/shipment.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="ShipmentFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
-                                                </div>
-                                                @{
-                                                    var btnShipmentsClass = "btn show-shipments-view ";
-                                                    if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
+                                                <div class="custom-file text-center">
+                                                    <label for="ShipmentFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-3 mr-5" /></label>
+                                                    <input type="file" asp-for="ShipmentFiles" class="file-select file-select-3" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
+                                                    @if (boolShipment)
                                                     {
-                                                        btnShipmentsClass += "btn-outline-primary";
+                                                        <a class="show-shipments-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
                                                     }
                                                     else
                                                     {
-                                                        btnShipmentsClass += "btn-link";
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
                                                     }
-                                                }
-                                                <a class="@btnShipmentsClass">View</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Shipment</label>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        @{
+                                            var quoteCardClass = "card";
+                                            var boolQuote = false;
+                                            if (Model.QuoteFileStrings != null)
+                                            {
+                                                quoteCardClass = "card document-border";
+                                                boolQuote = true;
+                                            }
+                                        }
+                                        <div class="@quoteCardClass">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/quote.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="QuoteFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
-                                                </div>
-                                                @{
-                                                    var btnQuotesClass = "btn show-quotes-view ";
-                                                    if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
+                                                <div class="custom-file text-center">
+                                                    <label for="QuoteFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-4 mr-5" /></label>
+                                                    <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple >
+                                                    @if (boolQuote)
                                                     {
-                                                        btnQuotesClass += "btn-outline-primary";
+                                                        <a class="show-quotes-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
                                                     }
                                                     else
                                                     {
-                                                        btnQuotesClass += "btn-link";
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
                                                     }
-                                                }
-                                                <a class="@btnQuotesClass">View</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Quote</label>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        @{
+                                            var infoCardClass = "card";
+                                            var boolInfo = false;
+                                            if (Model.InfoFileStrings != null)
+                                            {
+                                                infoCardClass = "card document-border";
+                                                boolInfo = true;
+                                            }
+                                        }
+                                        <div class="@infoCardClass">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="InfoFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
-                                                </div>
-                                                @{
-                                                    var btnInfoClass = "btn show-info-view ";
-                                                    if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
+                                                <div class="custom-file text-center">
+                                                    <label for="InfoFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-5 mr-5" /></label>
+                                                    <input type="file" asp-for="InfoFiles" class="file-select file-select-5" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple >
+                                                    @if (boolInfo)
                                                     {
-                                                        btnInfoClass += "btn-outline-primary";
+                                                        <a class="show-info-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
                                                     }
                                                     else
                                                     {
-                                                        btnInfoClass += "btn-link";
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
                                                     }
-                                                }
-                                                <a class="@btnInfoClass">View</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Info</label>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Info</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        @{
+                                            var pictureCardClass = "card";
+                                            var boolPicture = false;
+                                            if (Model.PictureFileStrings != null)
+                                            {
+                                                pictureCardClass = "card document-border";
+                                                boolPicture = true;
+                                            }
+                                        }
+                                        <div class="@pictureCardClass">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="PictureFiles" class="form-control-plaintext border-bottom custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
-                                                </div>
-                                                @{
-                                                    var btnPicturesClass = "btn show-pictures-view ";
-                                                    if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
+                                                <div class="custom-file text-center">
+                                                    <label for="PictureFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-6 mr-5" /></label>
+                                                    <input type="file" asp-for="PictureFiles" class="file-select file-select-6" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple >
+                                                    @if (boolPicture)
                                                     {
-                                                        btnPicturesClass += "btn-outline-primary";
+                                                        <a class="show-pictures-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
                                                     }
                                                     else
                                                     {
-                                                        btnPicturesClass += "btn-link";
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
                                                     }
-                                                }
-                                                <a class="@btnPicturesClass">View</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Picture</label>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Picture</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        @{
+                                            var returnCardClass = "card";
+                                            var boolReturn = false;
+                                            if (Model.ReturnFileStrings != null)
+                                            {
+                                                returnCardClass = "card document-border";
+                                                boolReturn = true;
+                                            }
+                                        }
+                                        <div class="@returnCardClass">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="ReturnFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
-                                                </div>
-                                                @{
-                                                    var btnReturnsClass = "btn show-returns-view ";
-                                                    if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
+                                                <div class="custom-file text-center">
+                                                    <label for="ReturnFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-7 mr-5" /></label>
+                                                    <input type="file" asp-for="ReturnFiles" class="file-select file-select-7" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple >
+                                                    @if (boolReturn)
                                                     {
-                                                        btnReturnsClass += "btn-outline-primary";
+                                                        <a class="show-returns-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
                                                     }
                                                     else
                                                     {
-                                                        btnReturnsClass += "btn-link";
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
                                                     }
-                                                }
-                                                <a class="@btnReturnsClass">View</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Return</label>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Return</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="card">
+                                        @{
+                                            var creditCardClass = "card";
+                                            var boolCredit = false;
+                                            if (Model.CreditFileStrings != null)
+                                            {
+                                                creditCardClass = "card document-border";
+                                                boolCredit = true;
+                                            }
+                                        }
+                                        <div class="@creditCardClass">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <input type="file" asp-for="CreditFiles" class="form-control-plaintext border-bottom  custom-file-input" value="+" multiple />
-                                                    <label class="custom-file-label">Choose File...</label>
-                                                </div>
-                                                @{
-                                                    var btnCreditsClass = "btn show-credits-view ";
-                                                    if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
+                                                <div class="custom-file text-center">
+                                                    <label for="CreditFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-8 mr-5" /></label>
+                                                    <input type="file" asp-for="CreditFiles" class="file-select file-select-8" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple >
+                                                    @if (boolCredit)
                                                     {
-                                                        btnCreditsClass += "btn-outline-primary";
+                                                        <a class="show-credits-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
                                                     }
                                                     else
                                                     {
-                                                        btnCreditsClass += "btn-link";
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
                                                     }
-                                                }
-                                                <a class="@btnCreditsClass">View</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label class="control-label font-weight-bold text-center h-25" style="width:100%;">Credit</label>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Credit</label>
                                     </div>
                                 </div>
                             </div>

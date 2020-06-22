@@ -71,7 +71,7 @@
                                     <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 1.8rem;"></i><br />Item</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 1.8rem;"></i><br />Location</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#price" id="price-tab" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 1.8rem;"></i><br />Price</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link"><i class="icon-attach_file-24px" style="font-size: 1.8rem;"></i><br />Documents</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 1.8rem;"></i><br />Documents</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
                                     @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li>
                                         Commented out below - because this is the DETAILS modal, so cant order from here.*@
@@ -105,8 +105,8 @@
                                         <div class="form-group">
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-                                                new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-                                                "Select Category", new { @class = "form-control-plaintext border-bottom", @id = "parentlist", @disabled = "disabled" })
+         new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+         "Select Category", new { @class = "form-control-plaintext border-bottom", @id = "parentlist", @disabled = "disabled" })
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -114,8 +114,8 @@
                                         <div class="form-group sublist">
                                             <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-                                                new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-                                                "Select Subcategory", new { @class = "form-control-plaintext border-bottom", @id = "sublist", @disabled = "disabled" })
+         new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+         "Select Subcategory", new { @class = "form-control-plaintext border-bottom", @id = "sublist", @disabled = "disabled" })
                                             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -123,15 +123,15 @@
                                         <div class="form-group">
                                             <label class="control-label">Project:</label>
                                             @Html.DropDownListFor(
-                                                vm => vm.Request.Product.SubProject.ProjectID,
-                                                new SelectList(
-                                                    Model.Projects,
-                                                    "ProjectID",
-                                                    "ProjectDescription"
-                                                    ),
-                                                "Select Project",
-                                                new { @class = "form-control-plaintext border-bottom", @disabled="disabled" }
-                                            )
+         vm => vm.Request.Product.SubProject.ProjectID,
+         new SelectList(
+             Model.Projects,
+             "ProjectID",
+             "ProjectDescription"
+             ),
+         "Select Project",
+         new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
+     )
                                             @Html.HiddenFor(m => m.Request.Product.SubProject.ProjectID)
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
@@ -143,15 +143,15 @@
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
                                             @Html.DropDownListFor(
-                                                vm => vm.Request.Product.SubProjectID,
-                                                new SelectList(
-                                                    Model.SubProjects,
-                                                    "SubProjectID",
-                                                    "SubProjectDescription"
-                                                    ),
-                                                "Select Sub Project",
-                                                new { @class = "form-control-plaintext border-bottom", @disabled="disabled" }
-                                            )
+         vm => vm.Request.Product.SubProjectID,
+         new SelectList(
+             Model.SubProjects,
+             "SubProjectID",
+             "SubProjectDescription"
+             ),
+         "Select Sub Project",
+         new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
+     )
                                             @Html.HiddenFor(m => m.Request.Product.SubProjectID)
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
@@ -160,14 +160,14 @@
                                         <div class="form-group">
                                             <label asp-for="Request.Product.Vendor" class="control-label"></label>
                                             @Html.DropDownListFor(
-                                                vm => vm.Request.Product.VendorID,
-                                                new SelectList(
-                                                Model.Vendors,
-                                                dataValueField: "VendorID",
-                                                dataTextField: "VendorEnName"),
-                                                optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                                                htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "vendorList", @disabled = "disabled" }
-                                                )
+         vm => vm.Request.Product.VendorID,
+         new SelectList(
+         Model.Vendors,
+         dataValueField: "VendorID",
+         dataTextField: "VendorEnName"),
+         optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+         htmlAttributes: new { @class = "form-control-plaintext border-bottom", @id = "vendorList", @disabled = "disabled" }
+         )
                                             <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -340,11 +340,11 @@
                                                     <div class="form-group">
                                                         <label asp-for="Request.UnitType" class="control-label"></label>
                                                         @Html.DropDownListFor(
-                                                            vm => vm.Request.UnitTypeID,
-                                                            Model.UnitTypeList,
-                                                            "",
-                                                            htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
-                                                            )
+         vm => vm.Request.UnitTypeID,
+         Model.UnitTypeList,
+         "",
+         htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
+         )
                                                         <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                                     </div>
                                                 </div>
@@ -379,11 +379,11 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubUnitType" class="control-label"></label>
                                                     @Html.DropDownListFor(
-                                                        vm => vm.Request.SubUnitTypeID,
-                                                        Model.UnitTypeList,
-                                                        "",
-                                                        htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
-                                                        )
+         vm => vm.Request.SubUnitTypeID,
+         Model.UnitTypeList,
+         "",
+         htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
+         )
                                                     <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                                 </div>
                                             </div>
@@ -417,11 +417,11 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubSubUnitType" class="control-label"></label>
                                                     @Html.DropDownListFor(
-                                                        vm => vm.Request.SubSubUnitTypeID,
-                                                        Model.UnitTypeList,
-                                                        "",
-                                                        htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
-                                                        )
+         vm => vm.Request.SubSubUnitTypeID,
+         Model.UnitTypeList,
+         "",
+         htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
+         )
                                                     <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                                 </div>
                                             </div>
@@ -505,10 +505,10 @@
                                         <div class="form-group">
                                             <label class="control-label">Terms:</label>
                                             @Html.DropDownListFor(
-                             model => model.Request.Terms,
-                             new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-                                htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
-                                            )
+model => model.Request.Terms,
+new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
+htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
+     )
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -570,82 +570,398 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
-                                <br />
-                                <br />
-
-                                @*<div class="row">
-                                    <div class="col-md-3">
-                                        <label class="control-label order-doc">Order Doc</label>
-                                        <div class="custom-file">
-                                            <input type="file" asp-for="OrderFiles" class="form-control-plaintext border-bottom custom-file-input" multiple />
-                                            <label class="custom-file-label">Choose File...</label>
-                                        </div>
+                                <div class="row orders-view border rounded shadow text-center mb-5">
+                                    <div class="col-md-8 border-right border-dark">
+                                        Preview coming soon...
+                                    </div>
+                                    <div class="col-md-4 border-left border-dark">
+                                        <h3>Order</h3>
+                                        <hr />
                                         @if (Model.OrderFileStrings != null)
                                         {
-                                            foreach (var o in Model.OrderFileStrings)
+                                            foreach (var orderFileString in Model.OrderFileStrings)
                                             {
-                                                <button>Test</button>
-                                                <button class="btn btn-link" onclick="location.href='@Url.Action("DownloadPDF","Requests")'"></button>
+                                                <a href="@orderFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
                                             }
-                                            <button class="view-docs btn btn-block" onclick="ViewDocs(this.id)" value="Order">View Docs</button>
                                         }
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row invoices-view border rounded shadow text-center mb-5">
+                                    <div class="col-md-8 border-right border-dark">
+                                        Preview coming soon...
+                                    </div>
+                                    <div class="col-md-4 border-left border-dark">
+                                        <h3>Invoice</h3>
+                                        <hr />
+                                        @if (Model.InvoiceFileStrings != null)
+                                        {
+                                            foreach (var invoiceFileString in Model.InvoiceFileStrings)
+                                            {
+                                                <a href="@invoiceFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                            }
+                                        }
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row shipments-view border rounded shadow text-center mb-5">
+                                    <div class="col-md-8 border-right border-dark">
+                                        Preview coming soon...
+                                    </div>
+                                    <div class="col-md-4 border-left border-dark">
+                                        <h3>Shipment</h3>
+                                        <hr />
+                                        @if (Model.ShipmentFileStrings != null)
+                                        {
+                                            foreach (var shipmentFileString in Model.ShipmentFileStrings)
+                                            {
+                                                <a href="@shipmentFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                            }
+                                        }
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row quotes-view border rounded shadow text-center mb-5">
+                                    <div class="col-md-8 border-right border-dark">
+                                        Preview coming soon...
+                                    </div>
+                                    <div class="col-md-4 border-left border-dark">
+                                        <h3>Quote</h3>
+                                        <hr />
+                                        @if (Model.QuoteFileStrings != null)
+                                        {
+                                            foreach (var quoteFileString in Model.QuoteFileStrings)
+                                            {
+                                                <a href="@quoteFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                            }
+                                        }
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row info-view border rounded shadow text-center mb-5">
+                                    <div class="col-md-8 border-right border-dark">
+                                        Preview coming soon...
+                                    </div>
+                                    <div class="col-md-4 border-left border-dark">
+                                        <h3>Info</h3>
+                                        <hr />
+                                        @if (Model.InfoFileStrings != null)
+                                        {
+                                            foreach (var infoFileString in Model.InfoFileStrings)
+                                            {
+                                                <a href="@infoFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                            }
+                                        }
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row pictures-view border rounded shadow text-center mb-5">
+                                    <div class="col-md-8 border-right border-dark">
+                                        Preview coming soon...
+                                    </div>
+                                    <div class="col-md-4 border-left border-dark">
+                                        <h3>Picture</h3>
+                                        <hr />
+                                        @if (Model.PictureFileStrings != null)
+                                        {
+                                            foreach (var pictureFileString in Model.PictureFileStrings)
+                                            {
+                                                <a href="@pictureFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                            }
+                                        }
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row returns-view border rounded shadow text-center mb-5">
+                                    <div class="col-md-8 border-right border-dark">
+                                        Preview coming soon...
+                                    </div>
+                                    <div class="col-md-4 border-left border-dark">
+                                        <h3>Return</h3>
+                                        <hr />
+                                        @if (Model.ReturnFileStrings != null)
+                                        {
+                                            foreach (var returnFileString in Model.ReturnFileStrings)
+                                            {
+                                                <a href="@returnFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                            }
+                                        }
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row credits-view border rounded shadow text-center mb-5">
+                                    <div class="col-md-8 border-right border-dark">
+                                        Preview coming soon...
+                                    </div>
+                                    <div class="col-md-4 border-left border-dark">
+                                        <h3>Credit</h3>
+                                        <hr />
+                                        @if (Model.CreditFileStrings != null)
+                                        {
+                                            foreach (var creditFileString in Model.CreditFileStrings)
+                                            {
+                                                <a href="@creditFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                            }
+                                        }
+                                        <br />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        @{
+                                            var orderCardClass = "card";
+                                            var boolOrders = false;
+                                            if (Model.OrderFileStrings != null)
+                                            {
+                                                orderCardClass = "card document-border";
+                                                boolOrders = true;
+                                            }
+                                        }
+                                        <div class="@orderCardClass">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/order.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file text-center">
+                                                    <label for="OrderFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-1 mr-5" /></label>
+                                                    <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    @if (boolOrders)
+                                                    {
+                                                        <a class="show-orders-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label">Invoice Doc</label>
-                                        <input type="file" multiple name="invoice-docs" id="invoice-docs file" class="form-control-plaintext border-bottom-file" />
-                                        <span class="text-danger"></span>
+                                        @{
+                                            var invoiceCardClass = "card";
+                                            var boolInvoice = false;
+                                            if (Model.InvoiceFileStrings != null)
+                                            {
+                                                invoiceCardClass = "card document-border";
+                                                boolInvoice = true;
+                                            }
+                                        }
+                                        <div class="@invoiceCardClass">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/invoice.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file text-center">
+                                                    <label for="InvoiceFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-2 mr-5" /></label>
+                                                    <input type="file" asp-for="InvoiceFiles" class="file-select file-select-2" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    @if (boolInvoice)
+                                                    {
+                                                        <a class="show-invoices-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label">Shipment Doc</label>
-                                        <input type="file" multiple name="shipment-docs" id="shipment-docs file" class="form-control-plaintext border-bottom-file" />
-                                        <span class="text-danger"></span>
+                                        @{
+                                            var shipmentCardClass = "card";
+                                            var boolShipment = false;
+                                            if (Model.ShipmentFileStrings != null)
+                                            {
+                                                shipmentCardClass = "card document-border";
+                                                boolShipment = true;
+                                            }
+                                        }
+                                        <div class="@shipmentCardClass">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/shipment.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file text-center">
+                                                    <label for="ShipmentFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-3 mr-5" /></label>
+                                                    <input type="file" asp-for="ShipmentFiles" class="file-select file-select-3" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    @if (boolShipment)
+                                                    {
+                                                        <a class="show-shipments-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="control-label">Quote Doc</label>
-                                        <input type="file" multiple name="quote-docs" id="quote-docs file" class="form-control-plaintext border-bottom-file" />
-                                        <span class="text-danger"></span>
+                                        @{
+                                            var quoteCardClass = "card";
+                                            var boolQuote = false;
+                                            if (Model.QuoteFileStrings != null)
+                                            {
+                                                quoteCardClass = "card document-border";
+                                                boolQuote = true;
+                                            }
+                                        }
+                                        <div class="@quoteCardClass">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/quote.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file text-center">
+                                                    <label for="QuoteFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-4 mr-5" /></label>
+                                                    <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    @if (boolQuote)
+                                                    {
+                                                        <a class="show-quotes-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
                                     </div>
                                 </div>
                                 <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">Info Doc</label>
-                                    <input type="file" multiple name="info-docs" id="info-docs file" class="form-control-plaintext border-bottom-file" />
-                                    <span class="text-danger"></span>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Pictures Doc</label>
-                                    <input type="file" multiple name="pictures-docs" id="pictures-docs file" class="form-control-plaintext border-bottom-file" />
-                                    <span class="text-danger"></span>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Return Doc</label>
-                                    <input type="file" multiple name="return-docs" id="return-docs file" class="form-control-plaintext border-bottom-file" />
-                                    <span class="text-danger"></span>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Credit Doc</label>
-                                    <input type="file" multiple name="credit-docs" id="credit-docs file" class="form-control-plaintext border-bottom-file" />
-                                    <span class="text-danger"></span>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h3 class="images-header"></h3>
-                                    <hr />
-                                    @if (Model.OrderFileStrings != null)
-                                    {
-                                        <div class="fill-images-orders">
-                                            <a href="@Model.OrderFileStrings[0]" target="_blank">Click to open</a>
-                                            <embed src="@Model.OrderFileStrings[0]" type="application/pdg" />
-                                            <iframe src="@Model.OrderFileStrings[0]"></iframe>
+                                    <div class="col-md-3">
+                                        @{
+                                            var infoCardClass = "card";
+                                            var boolInfo = false;
+                                            if (Model.InfoFileStrings != null)
+                                            {
+                                                infoCardClass = "card document-border";
+                                                boolInfo = true;
+                                            }
+                                        }
+                                        <div class="@infoCardClass">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file text-center">
+                                                    <label for="InfoFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-5 mr-5" /></label>
+                                                    <input type="file" asp-for="InfoFiles" class="file-select file-select-5" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    @if (boolInfo)
+                                                    {
+                                                        <a class="show-info-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
+                                                    }
+                                                </div>
+                                            </div>
                                         </div>
-                                    }
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Info</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        @{
+                                            var pictureCardClass = "card";
+                                            var boolPicture = false;
+                                            if (Model.PictureFileStrings != null)
+                                            {
+                                                pictureCardClass = "card document-border";
+                                                boolPicture = true;
+                                            }
+                                        }
+                                        <div class="@pictureCardClass">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file text-center">
+                                                    <label for="PictureFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-6 mr-5" /></label>
+                                                    <input type="file" asp-for="PictureFiles" class="file-select file-select-6" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    @if (boolPicture)
+                                                    {
+                                                        <a class="show-pictures-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Picture</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        @{
+                                            var returnCardClass = "card";
+                                            var boolReturn = false;
+                                            if (Model.ReturnFileStrings != null)
+                                            {
+                                                returnCardClass = "card document-border";
+                                                boolReturn = true;
+                                            }
+                                        }
+                                        <div class="@returnCardClass">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file text-center">
+                                                    <label for="ReturnFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-7 mr-5" /></label>
+                                                    <input type="file" asp-for="ReturnFiles" class="file-select file-select-7" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    @if (boolReturn)
+                                                    {
+                                                        <a class="show-returns-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Return</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        @{
+                                            var creditCardClass = "card";
+                                            var boolCredit = false;
+                                            if (Model.CreditFileStrings != null)
+                                            {
+                                                creditCardClass = "card document-border";
+                                                boolCredit = true;
+                                            }
+                                        }
+                                        <div class="@creditCardClass">
+                                            <div class="card-body text-center" style="height:150px;">
+                                                <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="custom-file text-center">
+                                                    <label for="CreditFiles"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-8 mr-5" /></label>
+                                                    <input type="file" asp-for="CreditFiles" class="file-select file-select-8" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    @if (boolCredit)
+                                                    {
+                                                        <a class="show-credits-view"><label><img src="~/images/css/inventory/add-item/other icons/view.png" /></label></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label><img src="~/images/css/inventory/add-item/other icons/view_dis.png" /></label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Credit</label>
+                                    </div>
                                 </div>
-                            </div>*@
                             </div>
 
                             <div id="comments" class="tab-pane fade">
