@@ -7,7 +7,7 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 .document-border {
-    border: 2px solid rgba(0,0,0, .6);
+    border: 2px solid rgba(48, 188, 201, 0.60); /*Dani - edited color. 200622*/
 }
 
 .carousel.vertical .item {
