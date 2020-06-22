@@ -23,7 +23,15 @@
                 <input type="checkbox" class="custom-checkbox" asp-for="Ordered" />
                 <label asp-for="Ordered" class="inv-link-clr"> &ensp; Ordered</label><br />
                 <input type="checkbox" class="custom-checkbox" asp-for="ForApproval" />
-                <label asp-for="ForApproval" class="inv-link-clr"> &ensp; For Approval</label><br />
+                <label asp-for="ForApproval" class="inv-link-clr"> &ensp; For Approval</label>
+                <br />
+                <br />
+                <span class="text-muted">(another option)</span>
+                <select class="form-control-plaintext border-bottom">
+                    <option value="value">Inventory</option>
+                    <option value="value">Ordered</option>
+                    <option value="value">For Approval</option>
+                </select>
             </div>
 
             <div class="card col-6 offset-1" style="width:700px">
@@ -34,7 +42,7 @@
                         </div>
                         
                         <div class="col-md-3 text-center">
-                            <input type="submit" value="Search" class="inv-button" />
+                            <input type="submit" value="Search" class="inv-button" style="padding-right: 3.5rem;padding-left: 3.5rem;" />
                         </div>
                     </div>
                     <br />
@@ -170,9 +178,10 @@
                                 //adding the amount of months of the warranty to the invoice date
                                 var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                             }*@
-                            @*<input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext" disabled="disabled" />*@
+                            <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
                         </div>
                     </div>
+                    <br />
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -198,6 +207,7 @@
                             </div>
                         </div>
                     </div>
+                    <br />
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -224,7 +234,5 @@
             </div>
         </div>
     </div>
-    
-
 
 </form>
