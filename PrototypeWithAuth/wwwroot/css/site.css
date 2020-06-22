@@ -303,19 +303,23 @@ table.table td {
 }
 
 /*modal table color-profile change*/
-a.nav-link { color: inherit }
+a.nav-link 
+{ 
+    color: inherit 
+}
+
 .container-fluid ul li a.nav-link.active {
     background-color: transparent;
-    border-width:0;
-    filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
+    border-width: 0px;
+    border-bottom: 4px solid #30BCC9;
+    color: #30BCC9;
+    /*filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%); dont need filter since using icons*/
 }
 
 /*<<<< Modal Side Slide >>>>*/
-
 .modal.right .modal-dialog {
     position: fixed;
     margin: auto;
-    /*width: 1200em;*/
     height: 100%;
     -webkit-transform: translate3d(0%, 0, 0);
     -ms-transform: translate3d(0%, 0, 0);

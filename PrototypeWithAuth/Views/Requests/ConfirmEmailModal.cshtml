@@ -152,7 +152,7 @@
                         <div class="col-md-12">
                             <div class="payment-terms">
                                 <span style="font-weight:700; font-size:1.5rem;">Payment Terms</span><br>
-                                <span class="payment-terms">@Model.Request.Terms</span>
+                                <span class="payment-terms">@Model.Request.Terms</span> @*is this returning a '-1' if there 'payment terms' has no value? maybe there should be an if/else validation...*@
                             </div>
                         </div>
                     </div>
