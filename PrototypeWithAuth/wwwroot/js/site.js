@@ -37,8 +37,9 @@ $("#Project").change(function () {
 		var item = "<option value=''>Select Subcategory</option>";
 		$("#SubProject").empty();
 		$.each(data, function (i, subproject) {
-			item += '<option value="' + subproject.subProjectId + '">' + subproject.subProjectDescription + '</option>'
+			item += '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
 		});
+		console.log(item);
 		$("#SubProject").html(item);
 	});
 });

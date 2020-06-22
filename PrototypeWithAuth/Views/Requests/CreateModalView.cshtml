@@ -96,15 +96,15 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Project:</label>
-                                            @Html.DropDownList(
-                                                "Project",
+                                            @Html.DropDownListFor(
+                                                m => m.Request.Product.SubProject.ProjectID,
                                                 new SelectList(
                                                     Model.Projects,
                                                     "ProjectID",
                                                     "ProjectDescription"
                                                     ),
                                                 "Select Project",
-                                                new { @class = "form-control-plaintext border-bottom" }
+                                                new { @class = "form-control-plaintext border-bottom", id="Project" }
                                             )
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
@@ -115,17 +115,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            <select id="SubProject" class="form-control-plaintext border-bottom"></select>
-                                            @*@Html.DropDownList(
-                                                "Sub Project",
-                                                new SelectList(
-                                                    Model.SubProjects,
-                                                    "SubProjectID",
-                                                    "SubProjectDescription"
-                                                    ),
-                                                "Select Sub Project",
-                                                new { @class = "form-control-plaintext border-bottom" }
-                                            )*@
+                                            <select asp-for="Request.Product.SubProjectID" id="SubProject" class="form-control-plaintext border-bottom"></select>
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>

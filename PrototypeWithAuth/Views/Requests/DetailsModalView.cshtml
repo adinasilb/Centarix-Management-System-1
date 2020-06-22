@@ -122,16 +122,17 @@
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label class="control-label">Project:</label>
-                                            @Html.DropDownList(
-                                                "Project",
+                                            @Html.DropDownListFor(
+                                                vm => vm.Request.Product.SubProject.ProjectID,
                                                 new SelectList(
                                                     Model.Projects,
                                                     "ProjectID",
                                                     "ProjectDescription"
                                                     ),
                                                 "Select Project",
-                                                new { @class = "form-control-plaintext border-bottom" }
+                                                new { @class = "form-control-plaintext border-bottom", @disabled="disabled" }
                                             )
+                                            @Html.HiddenFor(m => m.Request.Product.SubProject.ProjectID)
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
@@ -141,7 +142,17 @@
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            <select id="SubProject" class="form-control-plaintext border-bottom"></select>
+                                            @Html.DropDownListFor(
+                                                vm => vm.Request.Product.SubProjectID,
+                                                new SelectList(
+                                                    Model.SubProjects,
+                                                    "SubProjectID",
+                                                    "SubProjectDescription"
+                                                    ),
+                                                "Select Sub Project",
+                                                new { @class = "form-control-plaintext border-bottom", @disabled="disabled" }
+                                            )
+                                            @Html.HiddenFor(m => m.Request.Product.SubProjectID)
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>

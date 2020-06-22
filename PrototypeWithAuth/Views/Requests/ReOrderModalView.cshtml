@@ -92,7 +92,7 @@
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
     "Select Category", new { @class = "form-control-plaintext border-bottom ", @id = "parentlist", @disabled = "disabled" })
-                                            @Html.HiddenFor(m => m.Request.Product.ProductSubcategory.ParentCategoryID)
+                                            @*do not need a hiddenfor here b/c it's built into the subcategory*@
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -109,16 +109,17 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Project:</label>
-                                            @Html.DropDownList(
-                                                "Project",
+                                            @Html.DropDownListFor(
+                                                vm => vm.Request.Product.SubProject.ProjectID,
                                                 new SelectList(
                                                     Model.Projects,
                                                     "ProjectID",
                                                     "ProjectDescription"
                                                     ),
                                                 "Select Project",
-                                                new { @class = "form-control-plaintext border-bottom" }
+                                                new { @class = "form-control-plaintext border-bottom", @id="Project", @disabled="disabled" }
                                             )
+                                            @*do not need a hiddenfor here b/c it's built into the subproject*@
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
@@ -128,7 +129,17 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            <select id="SubProject" class="form-control-plaintext border-bottom"></select>
+                                            @Html.DropDownListFor(
+                                                vm => vm.Request.Product.SubProjectID,
+                                                new SelectList(
+                                                    Model.SubProjects,
+                                                    "SubProjectID",
+                                                    "SubProjectDescription"
+                                                    ),
+                                                "Select Sub Project",
+                                                new { @class = "form-control-plaintext border-bottom", @id = "SubProject", @disabled = "disabled" }
+                                            )
+                                            @Html.HiddenFor(vm => vm.Request.Product.SubProjectID)
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
