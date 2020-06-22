@@ -92,18 +92,22 @@
                                     </select>
                                     <span asp-validation-for="Request.ApplicationUserReceiverID" class="text-danger"></span>
                                 </div>
-                                <div class="col-1 text-center">
-                                    <input type="checkbox" asp-for="Arrival" class="custom-radio" />
+                                @*<div class="col-1 text-center">
+                                    <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
                                     <label asp-for="Arrival">Arrival</label>
-                                </div>
-                                <div class="col-1 text-center">
-                                    <input type="checkbox" asp-for="Clarify" class="custom-radio" />
+                                </div>*@
+                                <div class="col-2 text-center">
+                                    <input type="checkbox" asp-for="Clarify" class="new-chckbx" />
                                     <label asp-for="Clarify">Clarify</label>
                                 </div>
-                                <div class="col-1 text-center">
-                                    <input type="checkbox" asp-for="PartialDelivery" class="custom-radio" />
+                                <div class="col-2 text-center">
+                                    <input type="checkbox" asp-for="PartialDelivery" class="new-chckbx" />
                                     <label asp-for="PartialDelivery">Partial Delivery</label>
                                 </div>
+                                @*<div class="col-1 text-center">
+                                    <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                                    <label for="test-chkbx">Trial</label>
+                                </div>*@
                             </div>
                             <br />
                             <div class="row">
