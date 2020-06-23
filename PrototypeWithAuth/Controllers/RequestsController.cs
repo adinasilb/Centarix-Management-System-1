@@ -2170,7 +2170,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
+        public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             bool hasLocationInstances = false;
 
@@ -2219,23 +2219,36 @@ namespace PrototypeWithAuth.Controllers
                     _context.SaveChanges();
                 }
             }
-            if (hasLocationInstances && receivedLocationViewModel.Arrival)
+            if (hasLocationInstances)
             {
-                receivedLocationViewModel.Request.RequestStatusID = 3;
-            }
-            else if (receivedLocationViewModel.Clarify)
-            {
-                receivedLocationViewModel.Request.RequestStatusID = 5;
-            }
-            else if (receivedLocationViewModel.PartialDelivery)
-            {
-                receivedLocationViewModel.Request.RequestStatusID = 4;
+                if (receivedLocationViewModel.Clarify)
+                {
+                    receivedLocationViewModel.Request.RequestStatusID = 5;
+                }
+                else if (receivedLocationViewModel.PartialDelivery)
+                {
+                    receivedLocationViewModel.Request.RequestStatusID = 4;
+                }
+                else
+                {
+                    receivedLocationViewModel.Request.RequestStatusID = 3;
+                }
             }
 
             try
             {
+                receivedLocationViewModel.Request.Product = _context.Products.Where(p => p.ProductID == receivedLocationViewModel.Request.ProductID).FirstOrDefault();
+                receivedLocationViewModel.Request.ParentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == receivedLocationViewModel.Request.ParentRequestID).FirstOrDefault();
+                receivedLocationViewModel.Request.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
+                receivedLocationViewModel.Request.RequestStatus = _context.RequestStatuses.Where(rs => rs.RequestStatusID == receivedLocationViewModel.Request.RequestStatusID).FirstOrDefault();
+                receivedLocationViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == receivedLocationViewModel.Request.SubProjectID).FirstOrDefault();
+
                 _context.Update(receivedLocationViewModel.Request);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                //do something here
             }
             catch (Exception e)
             {

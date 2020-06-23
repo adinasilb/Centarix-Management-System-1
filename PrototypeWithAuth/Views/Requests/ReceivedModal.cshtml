@@ -41,6 +41,8 @@
                 @Html.HiddenFor(vm => vm.Request.ExchangeRate)
                 @Html.HiddenFor(vm => vm.Request.Terms)
                 @Html.HiddenFor(vm => vm.Request.ExpectedSupplyDays)
+                @Html.HiddenFor(vm => vm.Request.SubProjectID)
+                @Html.HiddenFor(vm => vm.Request.SubProject.ProjectID)
                 @Html.HiddenFor(vm => vm.Request.RequestComment) @*???????? THis should be taken out of the model....*@
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
@@ -72,7 +74,7 @@
                                     <img src="~/images/css/inventory/Type/bottle.png" width="100" alt="Item Image" />
                                 </div>
                                 <div class="col-10">
-                                    <h3>Item Name - should be able to be pulled from modal...</h3>
+                                    <h3>@Html.DisplayFor(vm => vm.Request.Product.ProductName)</h3>
                                 </div>
                             </div>
                             <br />

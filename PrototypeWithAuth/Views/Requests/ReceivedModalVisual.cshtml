@@ -28,7 +28,7 @@
                     {
                         <td class="@backgroundClass" style="padding:0px;">
                             @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = "css-checkbox" })
-                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, (z+1) + " ", htmlAttributes: new { @class = "css-label" })
+                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
                         </td>
                     }
 
