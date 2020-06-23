@@ -405,6 +405,9 @@ $.fn.CalculateSubSubUnitAmounts = function () {
 	$.fn.ShowResults($iptBox, $subSubUnitSumShekel);
 	var $exchangeRate = $("#Request_ExchangeRate").val();
 	$subSubUnitSumDollars = $subSubUnitSumShekel / $exchangeRate;
+	console.log("$subSubUnitSumShekel: " + $subSubUnitSumShekel);
+	console.log("$exchangeRate: " + $exchangeRate);
+	console.log("$subSubUnitSumDollars: " + $subSubUnitSumDollars);
 	$iptBox = $("input[name='subsubunit-price-dollars']");
 	$.fn.ShowResults($iptBox, $subSubUnitSumDollars);
 };

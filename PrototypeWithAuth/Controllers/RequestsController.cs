@@ -833,8 +833,16 @@ namespace PrototypeWithAuth.Controllers
             //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
             //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
             //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
-
-            return PartialView(requestItemViewModel);
+            if (AppUtility.IsAjaxRequest(this.Request))
+            {
+                TempData["IsFull"] = false;
+                return PartialView(requestItemViewModel);
+            }
+            else
+            {
+                TempData["IsFull"] = true;
+                return View(requestItemViewModel);
+            }
 
         }
 
@@ -1509,10 +1517,10 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> ReOrderModalView(int? id, bool NewRequestFromProduct = false)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
 
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
@@ -1544,20 +1552,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequest = new ParentRequest();
             requestItemViewModel.Request.SubProject = new SubProject();
 
-            //loading up a previous subproject from a request in case they want to use that one
-            var oldRequestWithProduct = _context.Requests
-                .Where(r => r.ProductID == id)
-                .Include(r => r.SubProject)
-                .ThenInclude(sp => sp.Project)
-                .FirstOrDefault();
-            if (oldRequestWithProduct != null)
-            {
-                requestItemViewModel.Request.SubProjectID = oldRequestWithProduct.SubProjectID;
-                requestItemViewModel.Request.SubProject = oldRequestWithProduct.SubProject;
-
-                //then get the correct list of subprojects
-                requestItemViewModel.SubProjects = _context.SubProjects.Where(sp => sp.ProjectID == oldRequestWithProduct.SubProject.ProjectID);
-            }
+            
 
             //requestItemViewModel.Request.RequestStatus = new RequestStatus();
             requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
@@ -1573,7 +1568,20 @@ namespace PrototypeWithAuth.Controllers
             //you need the following line b/c there is nowhere underneath there that 
             requestItemViewModel.Request.Product = request.Product;
 
+            //loading up a previous subproject from a request in case they want to use that one
+            var oldRequestWithProduct = _context.Requests
+                .Where(r => r.ProductID == requestItemViewModel.Request.ProductID)
+                .Include(r => r.SubProject)
+                .ThenInclude(sp => sp.Project)
+                .FirstOrDefault();
+            if (oldRequestWithProduct != null)
+            {
+                requestItemViewModel.Request.SubProjectID = oldRequestWithProduct.SubProjectID;
+                requestItemViewModel.Request.SubProject = oldRequestWithProduct.SubProject;
 
+                //then get the correct list of subprojects
+                requestItemViewModel.SubProjects = _context.SubProjects.Where(sp => sp.ProjectID == oldRequestWithProduct.SubProject.ProjectID);
+            }
 
             //if you are creating a new one set the dates to today to prevent problems in the front end
             //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
