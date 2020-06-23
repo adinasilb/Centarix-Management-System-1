@@ -216,8 +216,8 @@
                                         <div class="form-group">
                                             <label for="currency" class="control-label">Currency</label>
                                             <select id="currency" class="form-control-plaintext border-bottom ">
-                                                <option value="dollar">&#36; USD</option>
-                                                <option value="shekel">&#x20aa; NIS</option>
+                                                <option value="dollar">&dollar; USD</option>
+                                                <option value="shekel">&#8362; NIS</option>
                                             </select>
                                         </div>
                                     </div>
@@ -318,7 +318,7 @@
                                                     <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
-                                                    <label asp-for="Request.SubSubUnitType" class="control-label"></label>
+                                                    <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
                                                     @Html.DropDownListFor(
                                                     vm => vm.Request.SubSubUnitTypeID,
                                                     Model.UnitTypeList,
@@ -504,7 +504,8 @@
 
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
-                                <br /><br />
+                                <br />
+                                <br />
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="card">
@@ -625,7 +626,8 @@
 
                             <div id="comments" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Comments</span>
-                                <br /><br />
+                                <br />
+                                <br />
 
                                 @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
                                 <div class="card rounded">
@@ -667,12 +669,9 @@
                                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
-
 
                 <!-- Modal footer -->
                 <!--<div class="modal-footer">
@@ -688,8 +687,6 @@
                 @*Hidden Input for Product Subcategory*@
                 @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
             </form>
-
-
         </div>
     </div>
 
