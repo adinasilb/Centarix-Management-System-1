@@ -15,5 +15,6 @@ namespace PrototypeWithAuth.Models
         public string SubProjectDescription { get; set; }
         public int ProjectID { get; set; }
         public Project Project { get; set; }
+        public IEnumerable<Request> Requests { get; set; }
     }
 }

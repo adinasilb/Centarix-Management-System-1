@@ -89,6 +89,11 @@ namespace PrototypeWithAuth.Data
             .WithMany(pc => pc.ProductSubcategories)
             .HasForeignKey(ps => ps.ParentCategoryID);
 
+            modelBuilder.Entity<SubProject>()
+            .HasOne<Project>(sp => sp.Project)
+            .WithMany(p => p.SubProjects)
+            .HasForeignKey(sp => sp.ProjectID);
+
             modelBuilder.Entity<UnitType>()
            .HasOne<UnitParentType>(ut => ut.UnitParentType)
            .WithMany(upt => upt.UnitTypes)

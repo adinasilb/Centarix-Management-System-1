@@ -96,16 +96,16 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Project:</label>
-                                            @Html.DropDownListFor(
-                                                m => m.Request.Product.SubProject.ProjectID,
+                                            @*@Html.DropDownList(
+                                                m => m.Request.SubProject.ProjectID,
                                                 new SelectList(
                                                     Model.Projects,
                                                     "ProjectID",
                                                     "ProjectDescription"
                                                     ),
                                                 "Select Project",
-                                                new { @class = "form-control-plaintext border-bottom", id="Project" }
-                                            )
+                                                new { @class = "form-control-plaintext border-bottom Project" }
+                                            )*@
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
@@ -115,7 +115,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            <select asp-for="Request.Product.SubProjectID" id="SubProject" class="form-control-plaintext border-bottom"></select>
+                                            @*<select asp-for="Request.SubProjectID" class="form-control-plaintext border-bottom SubProject"></select>*@
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>

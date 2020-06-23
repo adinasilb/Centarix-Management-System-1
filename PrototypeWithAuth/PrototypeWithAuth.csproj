@@ -51,6 +51,8 @@
     <Compile Remove="Data\Migrations\20200513080421_termsInRequestAndPayNowStat.Designer.cs" />
     <Compile Remove="Data\Migrations\20200513080950_productSubTestBlah.cs" />
     <Compile Remove="Data\Migrations\20200513080950_productSubTestBlah.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200623060307_addIenumerableProductsToSubProject.cs" />
+    <Compile Remove="Data\Migrations\20200623060307_addIenumerableProductsToSubProject.Designer.cs" />
   </ItemGroup>
 
 

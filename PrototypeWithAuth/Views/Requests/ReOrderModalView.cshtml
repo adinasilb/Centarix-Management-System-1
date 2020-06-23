@@ -109,7 +109,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Project:</label>
-                                            @Html.DropDownListFor(
+                                            @*@Html.DropDownListFor(
                                                 vm => vm.Request.Product.SubProject.ProjectID,
                                                 new SelectList(
                                                     Model.Projects,
@@ -118,7 +118,7 @@
                                                     ),
                                                 "Select Project",
                                                 new { @class = "form-control-plaintext border-bottom", @id="Project", @disabled="disabled" }
-                                            )
+                                            )*@
                                             @*do not need a hiddenfor here b/c it's built into the subproject*@
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
@@ -129,7 +129,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            @Html.DropDownListFor(
+                                            @*@Html.DropDownListFor(
                                                 vm => vm.Request.Product.SubProjectID,
                                                 new SelectList(
                                                     Model.SubProjects,
@@ -138,8 +138,8 @@
                                                     ),
                                                 "Select Sub Project",
                                                 new { @class = "form-control-plaintext border-bottom", @id = "SubProject", @disabled = "disabled" }
-                                            )
-                                            @Html.HiddenFor(vm => vm.Request.Product.SubProjectID)
+                                            )*@
+                                            @*@Html.HiddenFor(vm => vm.Request.Product.SubProjectID)*@
                                             <span @*asp-validation-for=""*@ class="text-danger"></span>
                                         </div>
                                     </div>
