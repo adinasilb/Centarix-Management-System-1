@@ -52,13 +52,13 @@
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center">
                                 <ul id="modal-tabs" class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
-                                    <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2.5rem;"></i><br />Item</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2.5rem;"></i><br />Price</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><i class="icon-attach_file-24px" style="font-size: 2.5rem;"></i><br />Documents</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><i class="icon-comment-24px" style="font-size: 2.5rem;"></i><br />Comments</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><i class="icon-archive-24px" style="font-size: 2.5rem;"></i><br />Archive</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2.5rem;"></i><br />History</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"> <i class="icon-shopping_cart-24px" style="font-size: 2.5rem;"></i> <br />Order</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><i class="icon-comment-24px" style="font-size: 2rem;"></i><br />Comments</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><i class="icon-archive-24px" style="font-size: 2rem;"></i><br />Archive</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"> <i class="icon-shopping_cart-24px" style="font-size: 2rem;"></i> <br />Order</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
 
                 <!-- Modal body -->
                 <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
-                    <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 3em 4em; border: 2px solid #EAEAEB;">
+                    <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
 
                         <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
@@ -309,7 +309,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 pl-0 RequestSubsubunitCard pl-0">
+                                    <div class="col-md-4 RequestSubsubunitCard pl-0">
                                         <div class="border rounded p-3">
                                             <div class="row">
                                                 <div class="col-md-6 form-group">
@@ -513,8 +513,8 @@
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label class="btn btn-block"><img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-1" /></label>
-                                                    <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                    <label for="OrderFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-1" style="cursor:pointer;" /></label>
+                                                    <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
                                         </div>
@@ -526,8 +526,8 @@
                                                 <img src="~/images/css/inventory/add-item/other icons/invoice.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             <div class="card-footer">
-                                                <div class="custom-file">
-                                                    <label for="InvoiceFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-2" /></label>
+                                                <div class="custom-file text-center">
+                                                    <label for="InvoiceFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-2" style="cursor:pointer;" /></label>
                                                     <input type="file" asp-for="InvoiceFiles" class="file-select file-select-2" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
@@ -541,7 +541,7 @@
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label for="ShipmentFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-3" /></label>
+                                                    <label for="ShipmentFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-3" style="cursor:pointer;" /></label>
                                                     <input type="file" asp-for="ShipmentFiles" class="file-select file-select-3" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
@@ -555,7 +555,7 @@
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label for="QuoteFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-4" /></label>
+                                                    <label for="QuoteFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-4" style="cursor:pointer;" /></label>
                                                     <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
@@ -571,7 +571,7 @@
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label for="InfoFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-5" /></label>
+                                                    <label for="InfoFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-5" style="cursor:pointer;" /></label>
                                                     <input type="file" asp-for="InfoFiles" class="file-select file-select-5" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
@@ -585,7 +585,7 @@
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label for="PictureFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-6" /></label>
+                                                    <label for="PictureFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-6" style="cursor:pointer;" /></label>
                                                     <input type="file" asp-for="PictureFiles" class="file-select file-select-6" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
@@ -599,7 +599,7 @@
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label for="ReturnFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-7" /></label>
+                                                    <label for="ReturnFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-7" style="cursor:pointer;" /></label>
                                                     <input type="file" asp-for="ReturnFiles" class="file-select file-select-7" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
@@ -613,7 +613,7 @@
                                             </div>
                                             <div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label for="CreditFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-8" /></label>
+                                                    <label for="CreditFiles"><img src="~/images/css/inventory/add-item/other icons/upload.png" class="upload-file-8" style="cursor:pointer;" /></label>
                                                     <input type="file" asp-for="CreditFiles" class="file-select file-select-8" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                 </div>
                                             </div>
