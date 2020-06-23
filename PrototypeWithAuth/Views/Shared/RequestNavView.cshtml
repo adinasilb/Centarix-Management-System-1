@@ -159,6 +159,7 @@
             $("#tdconfirmemail").hide();
             var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&IsBeingApproved=true";
             console.log("itemurl: " + $itemurl);
+            $("#loading").show();
             $.fn.CallPage($itemurl, "confirmemail");
         }
 
@@ -172,6 +173,7 @@
             console.log("send email is true");
             var tab = "";
             var $itemUrl = "Requests/ConfirmEmailModal/?id=" + sendEmail;
+            $("#loading").show();
             $.fn.CallPage(tab, $itemUrl, true);
         }*@
 
@@ -194,6 +196,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
+        $("#loading").show();
         $.fn.CallPage($itemurl, "details");
         return false;
     });
@@ -205,6 +208,7 @@
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
         console.log("itemurl: " + $itemurl);
+        $("#loading").show();
         $.fn.CallPage($itemurl, "edit");
         return false;
     });
@@ -215,6 +219,7 @@
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/CreateModalView";
         //var $itemurl = "Requests/DetailsModalView/?id=62";
+        $("#loading").show();
         $.fn.CallPage($itemurl, "create");
         return false;
     });
@@ -224,6 +229,7 @@
         e.preventDefault();
         e.stopPropagation();
         var $itemurl = "Requests/DeleteModal/?id=" + $(this).val();
+        $("#loading").show();
         $.fn.CallPage($itemurl, "delete");
         return false;
     });
@@ -235,6 +241,7 @@
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
         $.fn.CallPage($itemurl, "reorder");
+        $("#loading").show();
         return false;
     });
 
@@ -243,6 +250,7 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/ReceivedModal?RequestID=" + $(this).val();
+        $("#loading").show();
         $.fn.CallPage($itemurl, "received");
         return false;
     });
@@ -252,6 +260,7 @@
         e.preventDefault();
         e.stopPropagation();
         var $itemurl = "Requests/ConfirmEmailModal";
+        $("#loading").show();
         $.fn.CallPage($itemurl, "email");
         return false;
     });
