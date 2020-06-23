@@ -260,6 +260,7 @@
         e.preventDefault();
         e.stopPropagation();
         var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
+        $("#loading").show();
         $.fn.CallPage($itemurl, "confirmemail");
         return false;
     });
@@ -289,6 +290,7 @@
             type: 'GET',
             cache: false,
             success: function (data) {
+                $("#loading").hide();
                 console.log("success!");
                 var modal = $(data);
                 $('body').append(modal);

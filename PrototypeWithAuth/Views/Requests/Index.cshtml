@@ -167,7 +167,8 @@
         </div>
     </div>
 }
-<br /><br />
+<br />
+<br />
 <div class="mx-5">
     <table class="table table-headerspaced table-noheaderlines table-hover">
         <thead>
@@ -268,17 +269,17 @@
 
                             }
                         }
-                        else if (item.RequestStatusID == 2) 
+                        else if (item.RequestStatusID == 2)
                         {
                             <button class="btn load-receive-and-location" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
                         }
                         else
                         {
                             @*work on getting the correct syntax to create a new product with*@
-                            <button class="btn load-order-details" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button> // order
+                            <button class="btn load-order-details" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
                         }
-                    @*</td>
-                    <td>*@ 
+                        @*</td>
+                            <td>*@
                         @*did this to move the icons closer together, but for some reason it removes the tr border (?!)*@
                         <button class="btn load-confirm-delete" data-title="delete" value="@item.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button> @*delete*@
 
