@@ -415,7 +415,7 @@
                                                     <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
-                                                    <label asp-for="Request.SubSubUnitType" class="control-label"></label>
+                                                    <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
                                                     @Html.DropDownListFor(
                                                         vm => vm.Request.SubSubUnitTypeID,
                                                         Model.UnitTypeList,
@@ -431,7 +431,7 @@
                                                     <div class="col-md-6">
                                                         <div class="input-group">
                                                             <span class="input-group-text">&#36;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
+                                                            <input class="form-control-plaintext border-bottom" name="" id="subsubunit-price-dollars" disabled />
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -663,8 +663,10 @@
                                                         <div class="card-body">
                                                             <div class="row">
                                                                 <div class="col-md-2">
-                                                                    Insert Pic
+                                                                    <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
+                                                                    @*Insert Pic
                                                                     <img src="" />
+                                                                    changing this to the user's profile picture*@
                                                                 </div>
                                                                 <div class="col-md-10">
                                                                     <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
