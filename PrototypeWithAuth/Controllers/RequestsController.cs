@@ -330,7 +330,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request = new Request();
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentRequest = new ParentRequest();
-            //requestItemViewModel.Request.Product.SubProject = new SubProject();
+            requestItemViewModel.Request.SubProject = new SubProject();
             //DO WE NEED THIS LINE OR IS IT GIVING AN ERROR SOMETIMES
             int lastParentRequestOrderNum = 0;
             requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
@@ -429,7 +429,7 @@ namespace PrototypeWithAuth.Controllers
                     //requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
                     //var subprojectid = requestItemViewModel.Request.Product.SubProjectID;
                     //var subproject = requestItemViewModel.Request.Product.SubProject;
-                    //requestItemViewModel.Request.Product.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.Product.SubProjectID).FirstOrDefault();
+                    requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
 
@@ -638,6 +638,8 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestStatus)
                     .Include(r => r.ParentRequest.ApplicationUser)
                     .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                    .Include(r => r.SubProject)
+                    .ThenInclude(sp => sp.Project)
                     .SingleOrDefault(x => x.RequestID == id);
 
                 //check if this works once there are commments
@@ -836,6 +838,8 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+
+        //CAN TAKE OUT THIS ENTIRE HTTPPOST FOR THE DETAILS MODAL VIEW B/C ITS NEVER USED
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DetailsModalView(RequestItemViewModel requestItemViewModel, string OrderType)
@@ -848,7 +852,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
-
+            
             //in case we need to return to the modal view
             requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
@@ -1022,15 +1026,15 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.RequestStatus)
                 .Include(r => r.ParentRequest.ApplicationUser)
                 .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
-                //.Include(r => r.Product.SubProject)
-                //.Include(r => r.Product.SubProject.Project)
+                .Include(r => r.SubProject)
+                .Include(r => r.SubProject.Project)
                 .SingleOrDefault(x => x.RequestID == id);
 
             //load the correct list of subprojects
-            //var subprojects = await _context.SubProjects
-            //    .Where(sp => sp.ProjectID == requestItemViewModel.Request.Product.SubProject.ProjectID)
-            //    .ToListAsync();
-            //requestItemViewModel.SubProjects = subprojects;
+            var subprojects = await _context.SubProjects
+                .Where(sp => sp.ProjectID == requestItemViewModel.Request.SubProject.ProjectID)
+                .ToListAsync();
+            requestItemViewModel.SubProjects = subprojects;
 
             var comments = Enumerable.Empty<Comment>();
             comments = _context.Comments
@@ -1304,7 +1308,7 @@ namespace PrototypeWithAuth.Controllers
                  * only need this if using an existing product
                  */
                 requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
-                //requestItemViewModel.Request.Product.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.Product.SubProjectID).FirstOrDefault();
+                requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
                 try
                 {
                     //_context.Update(requestItemViewModel.Request.Product.SubProject);
@@ -1538,6 +1542,23 @@ namespace PrototypeWithAuth.Controllers
             //initiating the  following models so that we can use them in an asp-for in the view
             requestItemViewModel.Request = new Request();
             requestItemViewModel.Request.ParentRequest = new ParentRequest();
+            requestItemViewModel.Request.SubProject = new SubProject();
+
+            //loading up a previous subproject from a request in case they want to use that one
+            var oldRequestWithProduct = _context.Requests
+                .Where(r => r.ProductID == id)
+                .Include(r => r.SubProject)
+                .ThenInclude(sp => sp.Project)
+                .FirstOrDefault();
+            if (oldRequestWithProduct != null)
+            {
+                requestItemViewModel.Request.SubProjectID = oldRequestWithProduct.SubProjectID;
+                requestItemViewModel.Request.SubProject = oldRequestWithProduct.SubProject;
+
+                //then get the correct list of subprojects
+                requestItemViewModel.SubProjects = _context.SubProjects.Where(sp => sp.ProjectID == oldRequestWithProduct.SubProject.ProjectID);
+            }
+
             //requestItemViewModel.Request.RequestStatus = new RequestStatus();
             requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
 
@@ -1633,6 +1654,8 @@ namespace PrototypeWithAuth.Controllers
                  * only need this if using an existing product
                  */
                 requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
+                requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
+                
                 try
                 {
                     _context.Update(requestItemViewModel.Request);

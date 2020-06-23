@@ -96,7 +96,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Project:</label>
-                                            @*@Html.DropDownList(
+                                            @Html.DropDownListFor(
                                                 m => m.Request.SubProject.ProjectID,
                                                 new SelectList(
                                                     Model.Projects,
@@ -105,8 +105,8 @@
                                                     ),
                                                 "Select Project",
                                                 new { @class = "form-control-plaintext border-bottom Project" }
-                                            )*@
-                                            <span @*asp-validation-for=""*@ class="text-danger"></span>
+                                            )
+                                            <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -115,8 +115,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            @*<select asp-for="Request.SubProjectID" class="form-control-plaintext border-bottom SubProject"></select>*@
-                                            <span @*asp-validation-for=""*@ class="text-danger"></span>
+                                            <select asp-for="Request.SubProjectID" class="form-control-plaintext border-bottom SubProject"></select>
+                                            <span asp-validation-for="Request.SubProjectID" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4 px-4">
