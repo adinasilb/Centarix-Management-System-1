@@ -7,7 +7,7 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 .document-border {
-    border: 2px solid rgba(0,0,0, .6);
+    border: 2px solid rgba(48, 188, 201, 0.60); /*Dani - edited color. 200622*/
 }
 
 .center {
@@ -314,11 +314,15 @@ table.table td {
 }
 
 /*modal table color-profile change*/
-a.nav-link { color: inherit }
+a.nav-link { 
+    color: inherit 
+}
+
 .container-fluid ul li a.nav-link.active {
     background-color: transparent;
-    border-width:0;
-    filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
+    border-width: 0px;
+    border-bottom: 4px solid #30BCC9;
+    color: #30BCC9;
 }
 
 /*<<<< Modal Side Slide >>>>*/
@@ -381,7 +385,7 @@ a.nav-link { color: inherit }
     color: #30BCC9;
     font-weight:500;
     border-bottom: 4px solid #30BCC9;
-} /*going to have to add filter in order to change color on the intended images, unless chaya can come thru converting the pngs to icons!*/
+} 
 
 .zoom-in-btn {
     color: black;

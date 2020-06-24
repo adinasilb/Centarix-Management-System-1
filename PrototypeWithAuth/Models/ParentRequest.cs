@@ -20,13 +20,16 @@ namespace PrototypeWithAuth.Models
         public ApplicationUser ApplicationUser { get; set; }
 
         [DataType(DataType.Date)]
+        [Display(Name = "Order Date")]
         public DateTime OrderDate { get; set; }
         
-        [Display(Name = "No")]
+        [Display(Name = "Order Number")]
         public int? OrderNumber { get; set; }
+        [Display(Name = "Invoice Number")]
         public string InvoiceNumber { get; set; }
 
         [DataType(DataType.Date)]
+        [Display(Name = "Invoice Date")]
         public DateTime InvoiceDate { get; set; }
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
         public bool WithOrder { get; set; } //do we need this here?

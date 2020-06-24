@@ -13,7 +13,7 @@
 
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:60rem; overflow-y:auto;">
 
-        <div class="modal-content d-inline-block" style="width:60rem;">
+        <div class="modal-content d-inline-block" style="width:58.96rem;">
 
             <div class="modal-header pb-0 border-bottom-0">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -118,26 +118,22 @@
                                     <td>@Model.Request.Cost</td>
                                 </tr>
                                 <tr>
-                                    
                                     <td>Discount @*@Html.DisplayFor(modelItem => Model.Request.)*@</td>
                                     @*@{double discount = Model.Request.Cost * Model.Request.Discount; }*@
                                     <td>@*discount*@</td>
 
                                 </tr>
                                 <tr>
-                                    
                                     <td>Total Price</td>
                                     @*@{ double totalWithDis = Model.Request.Cost - discount}*@
                                     <td>@*@totalWithDis*@</td>
                                 </tr>
                                 <tr>
-                                    
                                     <td>VAT [17%]</td>
                                     @* @{ double vat = totalWithDis * Model.Request.VAT }*@
                                     <td>@*@vat*@</td>
                                 </tr>
                                 <tr>
-                                    
                                     <td style="font-weight: bold;">Total To Pay</td>
                                     <td style="font-weight: bold;">@*@vat+totalWithDis*@</td>
                                 </tr>

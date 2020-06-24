@@ -36,17 +36,22 @@ namespace PrototypeWithAuth.Models
 
         public int? UnitTypeID { get; set; }
         [ForeignKey("UnitTypeID")]
+        [Display(Name = "Unit Type")]
         public UnitType UnitType { get; set; }
-       // public int[] UnitTypes { get; set; }
+        // public int[] UnitTypes { get; set; }
+        [Display(Name = "Subunit")]
         public uint? SubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subunit
         public int? SubUnitTypeID { get; set; }
         [ForeignKey("SubUnitTypeID")]
+        [Display(Name = "Subunit Type")]
         public UnitType SubUnitType { get; set; }
+        [Display(Name = "Sub Subunit")]
         public uint? SubSubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subsubunit
 
         public int? SubSubUnitTypeID { get; set; }
 
         [ForeignKey("SubSubUnitTypeID")]
+        [Display(Name = "Sub Subunit Type")]
         public UnitType SubSubUnitType { get; set; }
         public uint UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
         public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
@@ -58,20 +63,26 @@ namespace PrototypeWithAuth.Models
         public string Currency { get; set; }
 
         [Required]
+        [Display(Name = "Catalog Number")]
         public string CatalogNumber { get; set; }
+        [Display(Name = "Serial Number")]
         public string SerialNumber { get; set; }
+        [Display(Name = "Website")]
         public string URL { get; set; }
         //public string ExpenseDescription { get; set; } - this is really the product name - so when view products, only return those with a specific subcategoryID,
 
         public byte Warranty { get; set; } // this is the amount of months of the warranty. the datetime when it ends will be calculated on the frontend (now it's from the date ordered, but should it be from the date received instead?)
 
         public double VAT = 0.17; // should this be coded into the model or should we set it elsewhere?
+        [Display(Name = "Exchange Rate")]
         public double ExchangeRate { get; set; } // holding the rate of exchange for this specic request
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
+        [Display(Name = "Expected Supply Days")]
         public byte ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
         public string RequestComment { get; set; } //can take this out - Adina
 
         [DataType(DataType.Date)]
+        [Display(Name = "Arrival Date")]
         public DateTime ArrivalDate { get; set; }
         
 

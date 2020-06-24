@@ -47,29 +47,26 @@
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col-md-2"><img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /></div>
+                        <div class="col-md-2">
+                            <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
+                        </div>
                         <div class="col-md-8 offset-1">
                             <!--<h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>-->
                             <!-- <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>  -->
                             <h3>@Model.Request.Product.ProductName</h3>
                             <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
                         </div>
-                        @*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                            {
-                                <div class="col-2">
-                                    <button class="btn inv-link-clr load-product-edit" value="@Model.Request.RequestID" data-target="item" href="item" style="font-size:1.5rem;">Edit <i style="font-size:1.2rem;" class="icon-create-24px"></i></button>
-                                </div>
-                            }*@
+                        
                     </div>
                     <br />
                     <div class="row">
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center">
-                                <ul class="nav nav-tabs container-fluid pr-0" style="display:inline-flex; justify-content:space-between;">
-                                    <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 1.8rem;"></i><br />Item</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 1.8rem;"></i><br />Location</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#price" id="price-tab" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 1.8rem;"></i><br />Price</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 1.8rem;"></i><br />Documents</a></li>
+                                <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between;">
+                                    <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#price" id="price-tab" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
                                     @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li>
                                         Commented out below - because this is the DETAILS modal, so cant order from here.*@
@@ -311,8 +308,8 @@
                                         <div class="form-group">
                                             <label for="currency" class="control-label">Currency</label>
                                             <select id="currency" asp-for="Request.Currency" class="form-control-plaintext border-bottom" disabled>
-                                                <option value="dollar">&#127482; USD</option>
-                                                <option value="shekel">&#127470; NIS</option>
+                                                <option value="dollar">&dollar; USD</option>
+                                                <option value="shekel">&#8362; NIS</option>
                                             </select>
                                         </div>
                                     </div>
@@ -413,7 +410,7 @@
                                                     <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
-                                                    <label asp-for="Request.SubSubUnitType" class="control-label"></label>
+                                                    <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
                                                     @Html.DropDownListFor(
          vm => vm.Request.SubSubUnitTypeID,
          Model.UnitTypeList,
@@ -977,8 +974,10 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                         <div class="card-body">
                                                             <div class="row">
                                                                 <div class="col-md-2">
-                                                                    Insert Pic
+                                                                    <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
+                                                                    @*Insert Pic
                                                                     <img src="" />
+                                                                    changing this to the user's profile picture*@
                                                                 </div>
                                                                 <div class="col-md-10">
                                                                     <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
