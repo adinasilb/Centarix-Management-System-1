@@ -364,7 +364,7 @@ a.nav-link {
 }
 
 /*Right*/
-.modal.right.faid .modal-dialog {
+.modal.right.fader .modal-dialog {
     right: 0;
     -webkit-transition: opacity 0.5s linear, right 0.5s ease-out;
     -moz-transition: opacity 0.5s linear, right 0.5s ease-out;
@@ -372,8 +372,8 @@ a.nav-link {
     transition: opacity 0.5s linear, right 0.5s ease-out;
 }
 
-.modal.right.faid.in .modal-dialog {
-    right:50px;
+.modal.right.fader.in .modal-dialog {
+    right: 50px;
 }
 
 .modal-content {

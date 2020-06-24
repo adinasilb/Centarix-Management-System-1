@@ -3,7 +3,7 @@
     ViewData["Title"] = "Search";
     Layout = "~/Views/Shared/View.cshtml";
 }
-@*<div class="modal modal-view  right faid " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">*@
+@*<div class="modal modal-view  right fader " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">*@
 
 <form action="" method="post" enctype="multipart/form-data" id="search-form">
     <div style="display:flex;">
@@ -40,9 +40,9 @@
                         <div class="col-md-9">
                             <span style="font-size:1.8rem;"> <i class="icon-zoom_in-24px-01"></i> Search</span>
                         </div>
-                        
+
                         <div class="col-md-3 text-center">
-                            <input type="submit" value="Search" class="inv-button" style="padding-right: 3.5rem;padding-left: 3.5rem;"/>
+                            <input type="submit" value="Search" class="inv-button" style="padding-right: 3.5rem;padding-left: 3.5rem;" />
                         </div>
                     </div>
                     <br />
@@ -174,10 +174,10 @@
                         <div class="col-md-3">
                             <label class="control-label">End Date</label>
                             @*@{
-                                //get this just to return the date (not the time)
-                                //adding the amount of months of the warranty to the invoice date
-                                var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                            }*@
+                                    //get this just to return the date (not the time)
+                                    //adding the amount of months of the warranty to the invoice date
+                                    var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                                }*@
                             <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
                         </div>
                     </div>
@@ -234,7 +234,7 @@
             </div>
         </div>
     </div>
-    
+
 
 
 </form>
