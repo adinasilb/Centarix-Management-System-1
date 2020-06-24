@@ -199,6 +199,16 @@ body {
     text-decoration: none;
 }
 
+.acc-link-clr {
+    color:black;
+}
+
+.acc-link-clr:hover {
+    font-weight: bold;
+    color: #A26FF0;
+    text-decoration: none;
+}
+
 .hover-bold:hover {
     font-weight:600;
 }
@@ -257,6 +267,7 @@ ul li button.bold-hover-effects:hover {
 
 ul li.acc-sidebar.active {
     filter: invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);
+
 }
 
 /*table CSS*/
