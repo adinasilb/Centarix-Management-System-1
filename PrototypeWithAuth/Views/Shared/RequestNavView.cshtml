@@ -240,8 +240,8 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
-        $.fn.CallPage($itemurl, "reorder");
         $("#loading").show();
+        $.fn.CallPage($itemurl, "reorder");
         return false;
     });
 

@@ -40,7 +40,7 @@
 
                                             @*@Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })*@
 
-                                            <a href="@Url.ActionLink("DetailsModalView", "Requests", new { @id = requestID })" class="btn btn-block text-light pb-5">@innerHtml</a>
+                                            <a href="@Url.ActionLink("DetailsView", "Requests", new { @id = requestID })" class="btn btn-block text-light pb-5">@innerHtml</a>
 
                                             <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
                                         </td>

@@ -1,0 +1,15 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+@using PrototypeWithAuth.AppData
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject SignInManager<ApplicationUser> SignInManager
+<script src="~/js/site.js" asp-append-version="true"></script>
+@{
+    ViewData["Title"] = "DetailsView";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+
+<h1>DetailsView</h1>
+<hr />
+
+@Html.DisplayFor(vm => vm.Request.Product.ProductName);
