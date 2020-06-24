@@ -5,25 +5,25 @@
     Layout = "~/Views/Shared/PaymentView.cshtml";
 }
 
-<div class="row">
-    <div style="font-size:small; width:120px; height:900px;" class="p-2 border-right box-shadow text-center">
+<div style="display:flex;">
+    <div style="width:100px; min-height:60rem;" class="sidebar-shadow text-center">
         @*<nav class="navbar flex-grow-1">*@
         <ul class="nav flex-column nav-pills nav-stacked" style="">
-            <li class="nav-item my-md-4 acc-sidebar">
+            <li class="nav-item my-md-4 acc-sidebar opac87">
                 <a class="btn btn-link text-dark" href="@Url.ActionLink("IndexForPayment", "Vendors")"> <img src="~/images/css/accounting/icons/all.png" alt="All" /> <br /> All</a>
                 @*@Html.ActionLink("All", "IndexForPayment", "Vendors", new { }, new { @class = "btn btn-link text-dark" })*@
             </li>
-            <li class="nav-item my-md-4 acc-sidebar">
+            <li class="nav-item my-md-4 acc-sidebar opac87">
                 <a class="btn btn-link text-dark" href="@Url.ActionLink("Create", "Vendors")"> <img src="~/images/css/accounting/icons/new_supplier.png" alt="New Supplier" /> <br /> New Supplier</a>
                 @*@Html.ActionLink("New Supplier", "Create", "Vendors", new { }, new { @class = "btn btn-link text-dark" })*@
             </li>
-            <li class="nav-item my-md-4 acc-sidebar">
+            <li class="nav-item my-md-4 acc-sidebar opac87">
                 <a class="btn btn-link text-dark" href="@Url.ActionLink("Search", "Vendors")">  <img src="~/images/css/accounting/icons/search.png" alt="Search" /> <br /> Search</a>
 </li>
         </ul>
         @*</nav>*@
     </div>
-    <div class="col-md-10 border-left">
+    <div style="flex-grow:1;">
         @RenderBody()
     </div>
 </div>

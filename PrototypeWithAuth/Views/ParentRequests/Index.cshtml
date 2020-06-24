@@ -12,7 +12,7 @@
 @*<<<<< Accounting Sidebar >>>>>*@
 <div style="display: flex">
 
-    <div style="width: 110px; font-size:small;" class="p-2 border-right box-shadow text-center ourNavBar">
+    <div style="width: 110px; min-height:60rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
         <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3">
             <li class="nav-item mb-4 mt-3 acc-sidebar active">
                 <a href="#@Model.TitleList.ElementAt(0).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/to_pay.png" alt="To Pay" /> <br /> @Model.TitleList.ElementAt(0).Key <br />[@Model.TitleList.ElementAt(0).Value] </a>
