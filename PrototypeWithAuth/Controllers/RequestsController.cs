@@ -784,7 +784,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    requestItemViewModel.Debt = 0;
+                    requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
                 }
 
 

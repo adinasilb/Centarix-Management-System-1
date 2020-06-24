@@ -204,7 +204,7 @@
         return false;
     });
 
-    $(".load-product-edit").on("click", function (e) {
+    $("body").on("click", ".load-product-edit", function (e) {
         console.log("inside of load product edit")
         e.preventDefault();
         e.stopPropagation();
@@ -216,7 +216,7 @@
         return false;
     });
 
-    $(".create-product-details").on("click", function (e) {
+    $("body").on("click",".create-product-details", function (e) {
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
@@ -227,7 +227,7 @@
         return false;
     });
 
-    $(".load-confirm-delete").on("click", function (e) {
+    $("body").on("click", ".load-confirm-delete", function (e) {
         console.log("in confirm delete");
         e.preventDefault();
         e.stopPropagation();
@@ -237,7 +237,7 @@
         return false;
     });
 
-    $(".load-order-details").on("click", function (e) {
+    $("body").on("click", ".load-order-details", function (e) {
         console.log("in order details");
         e.preventDefault();
         e.stopPropagation();
@@ -293,75 +293,80 @@
 
     $.fn.CallPage = function ($itemurl, $type) {
         console.log("in call page function");
+        $("#loading").hide();
         //delete existing modals
         $('.modal').replaceWith('');
         $(".modal-backdrop").remove();
-        $.ajax({
-            async: true,
-            url: $itemurl,
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                $("#loading").hide();
-                console.log("success!");
-                var modal = $(data);
-                $('body').append(modal);
-                //replaces the modal-view class with the ModalView view
-                //$(".modal-view").html(data);
-                //turn off data dismiss by clicking out of the box and by pressing esc
-                $(".modal-view").modal({
-                    backdrop: true,
-                    keyboard: false,
-                });
-                //shows the modal
-                $(".modal").modal('show');
-                //$(".modal").on('show.bs.modal', function (e) {
-                //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
-                //})
-                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                //$(".modal-backdrop").remove();
-                //$('.modal').find('input').first().focus();
-                //$(".modal").popover('hide')
-                switch ($type) {
-                    case "details":
-                        console.log('case "details":');
-                        $.fn.OnOpenModalView();
-                        AddTempDataMemory();
-                        break;
-                    case "edit":
-                        console.log('case "edit":');
-                        $.fn.OnOpenModalView();
-                        AddTempDataMemory();
-                        break;
-                    case "reorder":
-                        console.log('case "reorder":');
-                        $.fn.OnOpenModalView();
-                        AddTempDataMemory();
-                        break;
-                    case "create":
-                        console.log('case "create":');
-                        $.fn.OnOpenModalView();
-                        AddTempDataMemory();
-                        break;
-                    case "received":
-                        console.log('case "received":');
-                        AddTempDataMemory();
-                        break;
-                    case "confirmemail":
-                        console.log('case "confirmemail":');
-                        AddTempDataMemory();
-                        break;
-                    case "delete":
-                        console.log('case "delete":');
-                        AddTempDataMemory();
-                        break;
-                }
+        //$.ajax({
+        //    async: true,
+        //    url: $itemurl,
+        //    type: 'GET',
+        //    cache: false,
+        //    success: function (data) {
+        //        $("#loading").hide();
+        //        console.log("success!");
+        //        var modal = $(data);
+        //        $('body').append(modal);
+        //        //replaces the modal-view class with the ModalView view
+        //        //$(".modal-view").html(data);
+        //        //turn off data dismiss by clicking out of the box and by pressing esc
+        //        $(".modal-view").modal({
+        //            backdrop: true,
+        //            keyboard: false,
+        //        });
+        //        //shows the modal
+        //        $(".modal").modal('show');
+        //        //$(".modal").on('show.bs.modal', function (e) {
+        //        //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
+        //        //})
+        //        //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+        //        //$(".modal-backdrop").remove();
+        //        //$('.modal').find('input').first().focus();
+        //        //$(".modal").popover('hide')
+        //        switch ($type) {
+        //            case "details":
+        //                console.log('case "details":');
+        //                $.fn.OnOpenModalView();
+        //                AddTempDataMemory();
+        //                break;
+        //            case "edit":
+        //                console.log('case "edit":');
+        //                $.fn.OnOpenModalView();
+        //                AddTempDataMemory();
+        //                break;
+        //            case "reorder":
+        //                console.log('case "reorder":');
+        //                $.fn.OnOpenModalView();
+        //                AddTempDataMemory();
+        //                break;
+        //            case "create":
+        //                console.log('case "create":');
+        //                $.fn.OnOpenModalView();
+        //                AddTempDataMemory();
+        //                break;
+        //            case "received":
+        //                console.log('case "received":');
+        //                AddTempDataMemory();
+        //                break;
+        //            case "confirmemail":
+        //                console.log('case "confirmemail":');
+        //                AddTempDataMemory();
+        //                break;
+        //            case "delete":
+        //                console.log('case "delete":');
+        //                AddTempDataMemory();
+        //                break;
+        //        }
 
-            }
-            //error: function (/*request, status, error*/) {
-            //    console.log("ajax call went wrong:" /*+ request.responseText*/);
-            //}
-        });
+        //    },
+        //    error: function () {
+        //        $("#loading").hide();
+        //        alert("Error loading " + $type + " modal");
+        //    }
+        //    //error: function (/*request, status, error*/) {
+        //    //    console.log("ajax call went wrong:" /*+ request.responseText*/);
+        //    //}
+        //});
     }
 
     $.fn.OnOpenModalView = function () {
