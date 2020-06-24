@@ -836,12 +836,12 @@ namespace PrototypeWithAuth.Controllers
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 TempData["IsFull"] = false;
-                return PartialView(requestItemViewModel);
+                return View(requestItemViewModel);
             }
             else
             {
                 TempData["IsFull"] = true;
-                return View(requestItemViewModel);
+                return View("DetailsView", requestItemViewModel);
             }
 
         }

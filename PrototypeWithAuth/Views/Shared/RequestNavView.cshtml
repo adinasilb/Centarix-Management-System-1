@@ -154,6 +154,9 @@
 
 
     $(document).ready(function () {
+
+        $(".modal-content a:first").tab('show');
+
         if ($("#tdconfirmemail").val()) {
             console.log("tdconfirm email .val() = 'true'");
             $("#tdconfirmemail").hide();
@@ -362,6 +365,7 @@
     }
 
     $.fn.OnOpenModalView = function () {
+        console.log("in on open modal view");
         $('.modal-content a:first').tab('show');
         var parentCategoryId = $("#parentlist").val();
         var subcategoryId1 = $("#sublist").val();
