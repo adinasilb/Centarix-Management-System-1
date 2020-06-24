@@ -259,6 +259,11 @@ ul li button.bold-hover-effects:hover {
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
 }
 
+.ourNavBar li button.add-item-btn.active {
+    opacity: 1;
+    color: #30BCC9;
+}
+
 .ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
     
     filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
