@@ -217,7 +217,9 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                //do something here 
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
             }
 
             return View(onePageOfProducts);
@@ -446,7 +448,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception ex)
                         {
-                            //Tell the user that the comment didn't save here
+                            //do something here. comment didn't save
                         }
                     }
 
@@ -564,20 +566,23 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
-                    TempData["ErrorMessage"] = ex.InnerException.ToString();
-                    return View(requestItemViewModel);
+                    TempData["ErrorMessage"] = ex.Message.ToString();
+                    TempData["InnerMessage"] = ex.InnerException.ToString();
+                    return View("~/Views/Shared/RequestError.cshtml");
                 }
                 catch (Exception ex)
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
-                    TempData["ErrorMessage"] = ex.InnerException.ToString();
-                    return View(requestItemViewModel);
+                    TempData["ErrorMessage"] = ex.Message.ToString();
+                    TempData["InnerMessage"] = ex.InnerException.ToString();
+                    return View("~/Views/Shared/RequestError.cshtml");
                 }
             }
             else
             {
-                return View(requestItemViewModel);
+                TempData["InnerMessage"] = "The request model failed to validate. Please ensure that all fields were filled in correctly";
+                return View("~/Views/Shared/RequestError.cshtml");
             }
 
             //insert code here
@@ -1043,7 +1048,7 @@ namespace PrototypeWithAuth.Controllers
 
                 if (requestItemViewModel.Request == null)
                 {
-                    return NotFound();
+                    TempData["InnerMessage"] = "The request sent in was null";
                 }
             }
 
@@ -1077,7 +1082,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
-            
+
             //in case we need to return to the modal view
             requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
@@ -1458,7 +1463,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (requestItemViewModel.Request == null)
             {
-                return NotFound();
+                TempData["InnerMessage"] = "The request sent in was null";
             }
 
             ViewData["ModalViewType"] = ModalViewType;
@@ -1704,20 +1709,22 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                 }
+                catch (DbUpdateException ex)
+                {
+                    TempData["ErrorMessage"] = ex.Message.ToString();
+                    TempData["InnerMessage"] = ex.InnerException.ToString();
+                    return View("~/Views/Shared/RequestError.cshtml");
+                }
                 catch (Exception ex)
                 {
-                    //ModelState.AddModelError();
-                    ViewData["ModalViewType"] = "Create";
-                    if (ex.InnerException != null)
-                    {
-                        TempData["ErrorMessage"] = ex.InnerException.ToString();
-                    }
-                    return View(requestItemViewModel);
+                    TempData["ErrorMessage"] = ex.Message.ToString();
+                    TempData["InnerMessage"] = ex.InnerException.ToString();
+                    return View("~/Views/Shared/RequestError.cshtml");
                 }
             }
             else
             {
-                return View(requestItemViewModel);
+                return View("~/Views/Shared/RequestError.cshtml");
             }
             //return RedirectToAction("Index");
             AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
@@ -1769,7 +1776,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequest = new ParentRequest();
             requestItemViewModel.Request.SubProject = new SubProject();
 
-            
+
 
             //requestItemViewModel.Request.RequestStatus = new RequestStatus();
             requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
@@ -1880,7 +1887,7 @@ namespace PrototypeWithAuth.Controllers
                  */
                 requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
-                
+
                 try
                 {
                     _context.Update(requestItemViewModel.Request);
@@ -2284,7 +2291,9 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                //do something here 
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
             }
 
             TempData["Search"] = "True";
@@ -2473,11 +2482,15 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (DbUpdateException ex)
             {
-                //do something here
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //do something here if it can't be saved
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
             }
 
             AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)receivedLocationViewModel.PageType;
@@ -2498,6 +2511,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
 
+        
         [HttpGet]
         public ActionResult DocumentView(List<String> FileNames)
         {

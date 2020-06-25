@@ -211,7 +211,7 @@
                                             var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
                                         }
                                         <label class="control-label">Expected supply date</label>
-                                        <input value="@endSupplyDate" class="form-control-plaintext border-bottom " disabled="disabled" />
+                                        <input value="@endSupplyDate" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="Request.URL" class="control-label"></label>

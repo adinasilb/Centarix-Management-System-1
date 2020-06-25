@@ -255,10 +255,84 @@ $(".view-docs").click(function (clickEvent) {
 
 
 
+$("#Request_Warranty").change(function () {
+	var date = $("#Request_ParentRequest_InvoiceDate").val().split("-");
+	console.log("Date: " + date);
+	var dd = date[2];
+	var mm = parseInt(date[1]); //January is 0! ?? do we still need th get month???
+	var yyyy = date[0];
+	var newmm = parseInt(mm) + parseInt($(this).val());
+	mm = newmm;
+
+	if (dd < 10) { dd = '0' + dd }
+
+	var flag = true;
+	while (flag) {
+		if (mm > 12) {
+			mm = parseInt(mm) - 12;
+			yyyy = parseInt(yyyy) + 1;
+		}
+		else {
+			flag = false;
+		}
+	}
+	if (mm < 10) { mm = '0' + mm}
+
+	var warrantyDate = yyyy + '-' + mm + '-' + dd;
+
+	$("input[name='WarrantyDate']").val(warrantyDate);
+});
+
+
+$("#Request_ExpectedSupplyDays").change(function () {
+	var date = $("#Request_ParentRequest_OrderDate").val().split("-");
 
 
 
 
+
+	var esd = date.getDate() + $(this).val();
+
+
+
+
+
+
+
+	console.log("Date: " + date);
+	var dd = date[2];
+	console.log("dd " + dd);
+	var mm = parseInt(date[1]); //January is 0! ?? do we still need th get month???
+	console.log("mm " + mm);
+	var yyyy = date[0];
+	var newmm = parseInt(mm) + parseInt($(this).val());
+	console.log("new mm" + newmm);
+	mm = newmm;
+	console.log("yyyy " + yyyy);
+
+	if (dd < 10) { dd = '0' + dd }
+
+	var flag = true;
+
+
+
+	while (flag) {
+		if (mm > 12) {
+			mm = parseInt(mm) - 12;
+			yyyy = parseInt(yyyy) + 1;
+		}
+		else {
+			flag = false;
+		}
+	}
+	if (mm < 10) { mm = '0' + mm }
+
+	var warrantyDate = yyyy + '-' + mm + '-' + dd;
+
+	console.log("Invoice Date: " + date);
+	console.log("esd: " + esd);
+	$("input[name='expected-supply-days']").val(esd);
+});
 
 
 //PRICE PAGE ON MODAL VIEW//
@@ -487,34 +561,6 @@ $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that t
 	theResult = isFinite(theResult) && theResult || "";
 	$inputBox.val(theResult);
 }
-
-
-////change expected supply days automatically
-//$("#Request_ExpectedSupplyDays").change(function () {
-//    console.log("Request_expectedsupplydays changed!")
-//    var invoiceDate = $("#Request_ParentRequest_InvoiceDate").val();
-//    console.log("Invoice Date: " + invoiceDate);
-//    var invoiceDateinDateFormat = new Date(invoiceDate);
-//    console.log("Invoice Date in Date Format: " + invoiceDateinDateFormat);
-//    var expectedSupplyDays = $(this).val();
-//    console.log("Expected Supply Days: " + expectedSupplyDays);
-//    var expectedSupplyDate = invoiceDateinDateFormat.setMonth(3);
-//    console.log("Expected Supply Date: " + expectedSupplyDate);
-//});
-////change warranty month automatically
-//$("#Request_Warranty").change(function () {
-//    console.log("Request_Warranty changed!")
-//});
-
-//function addMonths(date, months) {
-//    var d = date.getDate();
-//    date.setMonth(date.getMonth() + +months);
-//    if (date.getDate() != d) {
-//        date.setDate(0);
-//    }
-//};
-
-
 
 
 //LOCATIONS:
