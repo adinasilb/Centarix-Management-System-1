@@ -12,31 +12,31 @@
 @*<<<<< Accounting Sidebar >>>>>*@
 <div style="display: flex">
 
-    <div style="width: 110px; font-size:small;" class="p-2 border-right box-shadow text-center ourNavBar">
+    <div style="width: 110px; min-height:60rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
         <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3">
             <li class="nav-item mb-4 mt-3 acc-sidebar active">
-                <a href="#@Model.TitleList.ElementAt(0).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/to_pay.png" alt="To Pay" /> <br /> @Model.TitleList.ElementAt(0).Key <br />[@Model.TitleList.ElementAt(0).Value] </a>
+                <a href="#@Model.TitleList.ElementAt(0).Key" class="bold-hover-effects"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i> <br /> @Model.TitleList.ElementAt(0).Key <br />[@Model.TitleList.ElementAt(0).Value] </a>
             </li>
             <li class="nav-item my-4 acc-sidebar">
-                <a href="#@Model.TitleList.ElementAt(1).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/no_invoice.png" alt="No Invoice" /> <br /> @Model.TitleList.ElementAt(1).Key <br />[@Model.TitleList.ElementAt(1).Value] </a>
+                <a href="#@Model.TitleList.ElementAt(1).Key" class="bold-hover-effects"> <i class="icon-cancel_presentation-24px" style="font-size:1.6rem;"></i> <br /> @Model.TitleList.ElementAt(1).Key <br />[@Model.TitleList.ElementAt(1).Value] </a>
             </li>
             <li class="nav-item my-4 acc-sidebar">
-                <a href="#@Model.TitleList.ElementAt(2).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/didnt_arrive.png" alt="Didnt Arrive" /> <br /> @Model.TitleList.ElementAt(2).Key <br />[@Model.TitleList.ElementAt(2).Value] </a>
+                <a href="#@Model.TitleList.ElementAt(2).Key" class="bold-hover-effects"> <i class="icon-local_shipping-24px" style="font-size:1.6rem;"></i> <br /> @Model.TitleList.ElementAt(2).Key <br />[@Model.TitleList.ElementAt(2).Value] </a>
             </li>
             <li class="nav-item my-4 acc-sidebar">
-                <a href="#@Model.TitleList.ElementAt(3).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/pay_now.png" alt="Pay Now" /> <br /> @Model.TitleList.ElementAt(3).Key <br />[@Model.TitleList.ElementAt(3).Value] </a>
+                <a href="#@Model.TitleList.ElementAt(3).Key" class="bold-hover-effects"> <i class="icon-payment-24px" style="font-size:1.6rem;"></i> <br /> @Model.TitleList.ElementAt(3).Key <br />[@Model.TitleList.ElementAt(3).Value] </a>
             </li>
             <li class="nav-item my-4 acc-sidebar">
-                <a href="#@Model.TitleList.ElementAt(4).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/partial_delivery.png" alt="Partial Delivery" /> <br /> @Model.TitleList.ElementAt(4).Key <br />[@Model.TitleList.ElementAt(4).Value] </a>
+                <a href="#@Model.TitleList.ElementAt(4).Key" class="bold-hover-effects"> <i class="icon-remove_shopping_cart-24px" style="font-size:1.6rem;"></i> <br /> @Model.TitleList.ElementAt(4).Key <br />[@Model.TitleList.ElementAt(4).Value] </a>
             </li>
             <li class="nav-item my-4 acc-sidebar">
-                <a href="#@Model.TitleList.ElementAt(5).Key" class="bold-hover-effects"> <img src="~/images/css/accounting/icons/for_clarification.png" alt="To Pay" /> <br /> @Model.TitleList.ElementAt(5).Key <br />[@Model.TitleList.ElementAt(5).Value] </a>
+                <a href="#@Model.TitleList.ElementAt(5).Key" class="bold-hover-effects"> <i class="icon-report_problem-24px" style="font-size:1.6rem;"></i> <br /> @Model.TitleList.ElementAt(5).Key <br />[@Model.TitleList.ElementAt(5).Value] </a>
             </li>
 
         </ul>
     </div>
     @*<<<< Content >>>>>*@
-    <div style="flex-grow: 1; position:relative;" class="m-4">
+    <div style="flex-grow: 1; position:relative; padding: 2rem;">
     
         <table class="table table-noheaderlines table-headerspaced" >
 

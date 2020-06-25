@@ -199,6 +199,16 @@ body {
     text-decoration: none;
 }
 
+.acc-link-clr {
+    color:black;
+}
+
+.acc-link-clr:hover {
+    font-weight: bold;
+    color: #A26FF0;
+    text-decoration: none;
+}
+
 .hover-bold:hover {
     font-weight:600;
 }
@@ -249,6 +259,11 @@ ul li button.bold-hover-effects:hover {
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
 }
 
+.ourNavBar li button.add-item-btn.active {
+    opacity: 1;
+    color: #30BCC9;
+}
+
 .ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
     
     filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
@@ -257,6 +272,7 @@ ul li button.bold-hover-effects:hover {
 
 ul li.acc-sidebar.active {
     filter: invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);
+
 }
 
 /*table CSS*/
@@ -348,7 +364,7 @@ a.nav-link {
 }
 
 /*Right*/
-.modal.right.faid .modal-dialog {
+.modal.right.fader .modal-dialog {
     right: 0;
     -webkit-transition: opacity 0.5s linear, right 0.5s ease-out;
     -moz-transition: opacity 0.5s linear, right 0.5s ease-out;
@@ -356,8 +372,8 @@ a.nav-link {
     transition: opacity 0.5s linear, right 0.5s ease-out;
 }
 
-.modal.right.faid.in .modal-dialog {
-    right:50px;
+.modal.right.fader.in .modal-dialog {
+    right: 50px;
 }
 
 .modal-content {
