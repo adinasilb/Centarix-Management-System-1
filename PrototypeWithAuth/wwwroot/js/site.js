@@ -337,6 +337,7 @@ $.fn.CheckUnitsFilled = function () {
 	console.log("in check units function");
 	if ($("#edit #Request_Unit").val() > 0 && $("#edit #Request_UnitTypeID").val()) {
 		$.fn.EnableSubUnits();
+		$.fn.ChangeSubUnitDropdown();
 	}
 	else {
 		$.fn.DisableSubUnits();
@@ -351,6 +352,7 @@ $.fn.CheckSubUnitsFilled = function () {
 	console.log("in check sub units function");
 	if ($("#edit #Request_SubUnit").val() > 0 && $("#edit #Request_SubUnitTypeID").val()) {
 		$.fn.EnableSubSubUnits();
+		$.fn.ChangeSubSubUnitDropdown();
 	}
 	else {
 		$.fn.DisableSubSubUnits();
@@ -434,6 +436,41 @@ $.fn.CalculateSumPlusVat = function () {
 	$sumTotalVatDollars = $sumTotalVatShekel / $exchangeRate;
 	$iptBox = $("input[name='sumPlusVat-Dollar']");
 	$.fn.ShowResults($iptBox, $sumTotalVatDollars);
+};
+
+$.fn.ChangeSubUnitDropdown = function (optgroup) {
+	//the following is based on the fact that the unit types and parents are seeded with primary key values
+	switch (optgroup) {
+		case "Units":
+			$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Weight/Volume":
+			$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Test":
+			$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+			break;
+	}
+};
+//change sub sub unit dropdown
+$.fn.ChangeSubSubUnitDropdown = function (optgroup) {
+	switch (optgroup) {
+		case "Units":
+			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+			$("#sRequest_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Weight/Volume":
+			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Test":
+			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+			break;
+	}
 };
 
 $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
