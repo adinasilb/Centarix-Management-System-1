@@ -438,7 +438,11 @@ $.fn.CalculateSumPlusVat = function () {
 	$.fn.ShowResults($iptBox, $sumTotalVatDollars);
 };
 
-$.fn.ChangeSubUnitDropdown = function (optgroup) {
+$.fn.ChangeSubUnitDropdown = function () {
+	var selected = $(':selected', $("#Request_UnitTypeID"));
+	console.log("u selected: " + selected);
+	var optgroup = selected.closest('optgroup').attr('label');
+	console.log("u optgroup: " + optgroup);
 	//the following is based on the fact that the unit types and parents are seeded with primary key values
 	switch (optgroup) {
 		case "Units":
@@ -456,7 +460,11 @@ $.fn.ChangeSubUnitDropdown = function (optgroup) {
 	}
 };
 //change sub sub unit dropdown
-$.fn.ChangeSubSubUnitDropdown = function (optgroup) {
+$.fn.ChangeSubSubUnitDropdown = function () {
+	var selected = $(':selected', $("#Request_SubUnitTypeID"));
+	console.log("su selected: " + selected);
+	var optgroup = selected.closest('optgroup').attr('label');
+	console.log("su optgroup: " + optgroup);
 	switch (optgroup) {
 		case "Units":
 			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
