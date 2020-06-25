@@ -52,6 +52,23 @@ $("#search-form #Project").change(function () {
 
 $("#search-form #SubProject").change(function () {
 	console.log("changed subproject");
+	console.log("val: " + $(this).val());
+	if ($(this).val() != 'Select a sub project') {
+		$("#search-form #Project").attr("disabled", true);
+	}
+	else {
+		$("#search-form #Project").attr("disabled", false);
+	}
+});
+
+$("#search-form #sublist").change(function () {
+	console.log("val: " + $(this).val());
+	if ($(this).val() != 'Please select a subcategory') {
+		$("#search-form #parentlist").attr("disabled", true);
+	}
+	else {
+		$("#search-form #parentlist").attr("disabled", false);
+	}
 });
 
 $("#search-form #vendorList").change(function () {
@@ -285,53 +302,12 @@ $("#Request_Warranty").change(function () {
 
 
 $("#Request_ExpectedSupplyDays").change(function () {
-	var date = $("#Request_ParentRequest_OrderDate").val().split("-");
-
-
-
-
-
-	var esd = date.getDate() + $(this).val();
-
-
-
-
-
-
-
-	console.log("Date: " + date);
-	var dd = date[2];
-	console.log("dd " + dd);
-	var mm = parseInt(date[1]); //January is 0! ?? do we still need th get month???
-	console.log("mm " + mm);
-	var yyyy = date[0];
-	var newmm = parseInt(mm) + parseInt($(this).val());
-	console.log("new mm" + newmm);
-	mm = newmm;
-	console.log("yyyy " + yyyy);
-
-	if (dd < 10) { dd = '0' + dd }
-
-	var flag = true;
-
-
-
-	while (flag) {
-		if (mm > 12) {
-			mm = parseInt(mm) - 12;
-			yyyy = parseInt(yyyy) + 1;
-		}
-		else {
-			flag = false;
-		}
-	}
-	if (mm < 10) { mm = '0' + mm }
-
-	var warrantyDate = yyyy + '-' + mm + '-' + dd;
-
-	console.log("Invoice Date: " + date);
-	console.log("esd: " + esd);
-	$("input[name='expected-supply-days']").val(esd);
+	//var orderdate = $("#Request_ParentRequest_OrderDate").val();
+	//console.log("Order date: " + orderdate);
+	//console.log("this.val: " + $(this).val());
+	//var esdate = (orderdate.getDate() + $(this).val());
+	//console.log("esdate: " + esdate);
+	//$("input[name='expected-supply-days']").val(esdate);
 });
 
 
