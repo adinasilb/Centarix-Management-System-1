@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using PrototypeWithAuth.Models;
+using System.Transactions;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -17,6 +18,8 @@ namespace PrototypeWithAuth.ViewModels
         public double ReagentsTotal { get; set; }
         public double ProprietyTotal { get; set; }
         public double ReusableTotal { get; set; }
+        public double EquipmentTotal { get; set; }
+        public double OperationsTotal { get; set; }
         //public List<Request> ExpensesByCatgeory { get; set; }
         // public ParentCategory ParentCategory { get; set; } //for expense view model
         // public double Total { get; set; }//for expense view model

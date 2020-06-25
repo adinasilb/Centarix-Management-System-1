@@ -57,6 +57,12 @@
                         Reusable
                     </th>
                     <th>
+                        Equipment
+                    </th>
+                    <th>
+                        Operation
+                    </th>
+                    <th>
                         Total
                     </th>
                 </tr>
@@ -81,6 +87,12 @@
                         </td>
                         <td>
                             @String.Format("{0:C}", Convert.ToInt32(item.ReusableTotal))
+                        </td>
+                        <td>
+                            @String.Format("{0:C}", Convert.ToInt32(item.EquipmentTotal))
+                        </td>
+                        <td>
+                            @String.Format("{0:C}", Convert.ToInt32(item.OperationsTotal))
                         </td>
                         <td style="font-weight:700" class="expenses-color">
                             @String.Format("{0:C}", Convert.ToInt32(item.GrandTotal))
