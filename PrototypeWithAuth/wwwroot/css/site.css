@@ -252,8 +252,10 @@ ul li button.bold-hover-effects:hover {
     font-weight: bold;
 }
 
+.hover-bold:hover {
+    font-weight: bold;
+}
 /*.ourNavBar li a { color: #333 }*/
-
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     opacity: 1;
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
