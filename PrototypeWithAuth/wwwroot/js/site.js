@@ -51,8 +51,6 @@ $("#search-form #Project").change(function () {
 });
 
 $("#search-form #SubProject").change(function () {
-	console.log("changed subproject");
-	console.log("val: " + $(this).val());
 	if ($(this).val() != 'Select a sub project') {
 		$("#search-form #Project").attr("disabled", true);
 	}
@@ -62,12 +60,14 @@ $("#search-form #SubProject").change(function () {
 });
 
 $("#search-form #sublist").change(function () {
-	console.log("val: " + $(this).val());
-	if ($(this).val() != 'Please select a subcategory') {
-		$("#search-form #parentlist").attr("disabled", true);
+	if ($(this).val() == 'Please select a subcategory') {
+		$("#search-form #parentlist").attr("disabled", false);
+	}
+	else if ($(this).val() == '') {
+		$("#search-form #parentlist").attr("disabled", false);
 	}
 	else {
-		$("#search-form #parentlist").attr("disabled", false);
+		$("#search-form #parentlist").attr("disabled", true);
 	}
 });
 
