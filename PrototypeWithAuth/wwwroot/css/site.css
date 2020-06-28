@@ -252,8 +252,10 @@ ul li button.bold-hover-effects:hover {
     font-weight: bold;
 }
 
+.hover-bold:hover {
+    font-weight: bold;
+}
 /*.ourNavBar li a { color: #333 }*/
-
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     opacity: 1;
     filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
@@ -584,23 +586,6 @@ table.table.visualzoom tr td a {
     transform: rotate(45deg);
 }
 
-/*input[type=checkbox] {
-    display: none;
-}
-
-.checkbox label:before {
-    border-radius: 3px;
-}
-
-input[type=checkbox]:checked {
-    background-color: #30BCC9;
-    color:white;
-    text-align: center;
-    font-size: 15px;
-    line-height: 15px;
-}
-*/
-
 input[type=checkbox].css-checkbox {
     display: none;
 }
@@ -680,4 +665,9 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
 [type="checkbox"].new-chckbx:checked + label:after {
     opacity: 1;
     transform: scale(1);
+}
+
+input.bigger-box {
+    width: 2rem;
+    height: 2rem;
 }
