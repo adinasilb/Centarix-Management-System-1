@@ -64,7 +64,7 @@
                 <div class="container-fluid">
                     <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500">
                         <li class="nav-item mx-4">
-                            @Html.ActionLink("Notifications", "Index", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = notificationsClass })
+                            @Html.ActionLink("Notifications", "ToPay", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = notificationsClass })
                         </li>
                         <li class="nav-item mx-5">
                             @Html.ActionLink("General", "GeneralPaymentList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = generalClass })

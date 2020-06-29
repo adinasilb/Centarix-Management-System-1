@@ -331,5 +331,46 @@ namespace PrototypeWithAuth.Controllers
         {
             return _context.ParentRequests.Any(e => e.ParentRequestID == id);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ToPay()
+        {
+            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
+            {
+                ParentRequests = await _context.ParentRequests.Where(pr => pr.Payed != true).ToListAsync()
+            };
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> NoInvoice()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DidntArrive()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PayNow()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PartialDelivery()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ForClarification()
+        {
+            return View();
+        }
     }
 }

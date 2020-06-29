@@ -1,0 +1,20 @@
+﻿@model PrototypeWithAuth.ViewModels.NotificationsListViewModel;
+
+@{
+    ViewData["Title"] = "ToPay";
+    Layout = "~/Views/Shared/NotificationsView.cshtml";
+}
+
+
+<table class="table table-noheaderlines table-headerspaced">
+    <tbody>
+        <tr style="border-color:transparent;">
+            <th colspan="8" style="border-color:transparent;">
+                <h5>
+                    <strong>To Pay</strong> [@Model.ParentRequests.Count()]
+                    <span>&emsp; Total: </span><span@*>@Model.ParentRequests.Sum(pr => pr.)*@</span>
+                </h5>
+            </th>
+        </tr>
+    </tbody>
+</table>
