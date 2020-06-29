@@ -60,6 +60,7 @@ namespace PrototypeWithAuth.Models
         ///[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
         [Display(Name = "Price")]
         public double Cost { get; set; } //this is always shekel no matter what currency is
+                                         //
         public string Currency { get; set; }
 
         [Required]
