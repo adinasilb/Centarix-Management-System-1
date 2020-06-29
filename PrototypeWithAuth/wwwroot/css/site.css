@@ -6,6 +6,18 @@ for details on configuring this project to bundle and minify static web assets. 
     height: 100%;
 }
 
+.btn{
+    box-shadow: none;
+}
+.btn:hover {
+    box-shadow: none;
+}
+
+table td {
+    /*IMPORTANT THIS IS OVERWRITING MDB-PRO.CSS*/
+    font-size: 1rem;
+}
+
 .document-border {
     border: 2px solid rgba(48, 188, 201, 0.60); /*Dani - edited color. 200622*/
 }
@@ -191,6 +203,7 @@ body {
 
 .inv-link-clr {
     color: black;
+    font-size: 1rem;
 }
 
 .inv-link-clr:hover {
@@ -254,6 +267,11 @@ ul li button.bold-hover-effects:hover {
 
 .hover-bold:hover {
     font-weight: bold;
+}
+
+
+.ourNavBar .btn-link{
+    padding: 0;
 }
 /*.ourNavBar li a { color: #333 }*/
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
