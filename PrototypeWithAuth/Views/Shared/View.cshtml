@@ -321,12 +321,17 @@
 
 <script>
     $(document).ready(function () {
+
         console.log("in the document ready");
         $('.mdb-select').materialSelect();
         $('#dtBasicExample').DataTable();
         $('.dataTables_length').addClass('bs-select');
         $('.datepicker').pickadate();
         $('#request-search a:first').tab('show'); @*I had to put this in here b/c otherwise it wasn't coming up on .search-link.click*@
+
+        
+
+
     });
     $(".search-link").on("click", function () {
         $('#request-search a:first').tab('show');
