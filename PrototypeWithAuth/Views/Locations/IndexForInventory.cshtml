@@ -1,0 +1,75 @@
+﻿@model IEnumerable<PrototypeWithAuth.Models.LocationInstance>
+@using PrototypeWithAuth.AppData; 
+
+@{
+    ViewData["Title"] = "IndexForInventory";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    var pagetype = TempData["PageType"];
+}
+
+
+<div class="ml-5">
+    <table class="table table-headerspaced table-noheaderlines text-center table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().CompanyLocationNo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().LocationInstanceName)
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().LocationType.LocationTypeName)
+
+                </th>
+                <th>
+                    Items
+                </th>
+
+                <th>
+                    Details
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr class="table">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyLocationNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LocationInstanceName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LocationType.LocationTypeName)
+                    </td>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.)
+                            display how many itmes are in that parent location*@
+                        @if (item.AllRequestLocationInstances != null && item.AllRequestLocationInstances.Any())
+                        {
+                            @item.AllRequestLocationInstances.Count();
+                        }
+                        else
+                        {
+                            <span>0</span>
+                        }
+                    </td>
+
+
+                    <td>
+                        @*<a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |*@
+                        <a href="@Url.Action("Index", "Requests", new { parentLocationInstanceID = item.LocationInstanceID,  PageType = AppUtility.RequestPageTypeEnum.Inventory })"> <img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /></a>
+                        @*<a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>*@
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>

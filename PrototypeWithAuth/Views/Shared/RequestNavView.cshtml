@@ -1,0 +1,413 @@
+﻿@using PrototypeWithAuth.AppData
+@{
+    ViewData["Title"] = "RequestNavView";
+    Layout = "~/Views/Shared/View.cshtml";
+
+    AppUtility.RequestPageTypeEnum pageType = AppUtility.RequestPageTypeEnum.None;
+    if (TempData["PageType"] != null)
+    {
+        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+    }
+
+    bool Cart = false;
+    bool Requests = false;
+    bool Inventory = false;
+    switch (pageType)
+    {
+        case AppUtility.RequestPageTypeEnum.Request:
+            Requests = true;
+            break;
+        case AppUtility.RequestPageTypeEnum.Inventory:
+            Inventory = true;
+            break;
+        case AppUtility.RequestPageTypeEnum.Cart:
+            Cart = true;
+            break;
+    }
+
+    string originalNavClasses = " ";
+    string activeClass = " font-weight-bold activeNavLink";
+
+    string type = originalNavClasses;
+    string vendor = originalNavClasses;
+    string owner = originalNavClasses;
+    string location = originalNavClasses;
+    string cart = originalNavClasses;
+
+    var SidebarType = TempData["SidebarTitle"];
+    switch (SidebarType)
+    {
+        case AppUtility.RequestSidebarEnum.Type:
+            type += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.Vendor:
+            vendor += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.Owner:
+            owner += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.Location:
+            location += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.Cart:
+            cart += activeClass;
+            break;
+    }
+
+    //not using this right now --> see with Faige if we should put it back in
+    var SendEmail = "0";
+    if (TempData["SendEmail"] != null)
+    {
+        SendEmail = TempData["SendEmail"].ToString();
+    }
+
+    //redo --> not used
+    var CancelledEmail = false;
+    if (TempData["CancelledEmail"] != null && TempData["CancelledEmail"].ToString().Equals("True"))
+    {
+        CancelledEmail = true;
+    }
+
+    if (TempData["RequestID"] == null)
+    {
+        TempData["RequestID"] = 0;
+    }
+
+}
+
+@{
+    if (TempData["SuccessMessage"] != null)
+    {
+        <div>@TempData["SuccessMessage"].ToString()</div>
+    }
+}
+
+
+<div style="display: flex">
+    <div style="width: 100px; min-height:60rem; padding: 5px;" class="navbar d-md-block sidebar-shadow navbar-light bg-white text-center ourNavBar ">
+        @*<nav class="navbar flex-grow-1">*@
+        <ul class="nav flex-column nav-pills nav-stacked mt-4" style="position:fixed;">
+
+            @if (Requests || Inventory)
+            {
+                <li class="nav-item my-3">
+
+                    <button class="btn btn-link opac87 create-product-details bold-hover-effects py-0 add-item-btn" id="sidebar-add-item" onclick="addActive(id)">
+                        <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
+                    </button>
+                </li>
+            }
+            @if (Requests || Inventory)
+            {
+                <li class="nav-item bold-hover-effects my-3 @type">
+                    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
+                </li>
+
+            }
+            @if (Requests || Inventory)
+            {
+
+                <li class="nav-item my-3 @vendor">
+                    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
+                </li>
+            }
+            @if (Requests || Inventory)
+            {
+                @*have to create contorller for application user?*@
+
+                <li class="nav-item my-3 @owner">
+                    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
+                </li>
+            }
+            @if (Inventory)
+            {
+
+                @*Redo the location class in the controller*@
+                <li class="nav-item my-3 @location">
+                    <a href="@Url.ActionLink("IndexForInventory", "Locations", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Location</a>
+                </li>
+            }
+            @if (Cart)
+            {
+                <li class="nav-item my-3">
+                    <i class="fas fa-shopping-cart"></i>
+                    <a class=@cart>Cart</a>
+                </li>
+            }
+
+        </ul>
+        @*</nav>*@
+    </div>
+    <div style="flex-grow: 1" class="border-left">
+        <!--class="col-md-10 border-left"-->
+        @RenderBody()
+    </div>
+</div>
+
+
+<!-- Confirm Email Modal -->
+<div class="modal confirm-email-modal" id="myModal">
+</div>
+
+@RenderSection("Scripts", required: false)
+<script>
+
+
+    $(document).ready(function () {
+        if ($("#tdconfirmemail").val()) {
+            console.log("tdconfirm email .val() = 'true'");
+            $("#tdconfirmemail").hide();
+            var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&IsBeingApproved=true";
+            console.log("itemurl: " + $itemurl);
+            $("#loading").show();
+            $.fn.CallPage($itemurl, "confirmemail");
+        }
+
+        //close ALL modals here just in case:
+
+
+        @*console.log("Requests nav view document is ready!");
+        var sendEmail = parseInt('@SendEmail'); //comes in as a string (even though originally an int and therefore must be converted.)
+        console.log("send email " + sendEmail);
+        if (sendEmail > 0) {
+            console.log("send email is true");
+            var tab = "";
+            var $itemUrl = "Requests/ConfirmEmailModal/?id=" + sendEmail;
+            $("#loading").show();
+            $.fn.CallPage(tab, $itemUrl, true);
+        }*@
+
+        //redo --> not used
+        var cancelledEmail = '@CancelledEmail';
+        if (cancelledEmail == "True") {
+            var $itemUrl = "Requests/DetailsModalView";
+        }
+
+
+        //close the modals on dismiss of them:
+
+
+    });
+
+    //Render a partial view inside of a modal
+    //To do later: add a loading gif div
+    $(".load-product-details").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "details");
+        return false;
+    });
+
+    $(".load-product-edit").on("click", function (e) {
+        console.log("inside of load product edit")
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+        console.log("itemurl: " + $itemurl);
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "edit");
+        return false;
+    });
+
+    $(".create-product-details").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/CreateModalView";
+        //var $itemurl = "Requests/DetailsModalView/?id=62";
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "create");
+        return false;
+    });
+
+    $(".load-confirm-delete").on("click", function (e) {
+        console.log("in confirm delete");
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/DeleteModal/?id=" + $(this).val();
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "delete");
+        return false;
+    });
+
+    $(".load-order-details").on("click", function (e) {
+        console.log("in order details");
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "reorder");
+        return false;
+    });
+
+    $(".load-receive-and-location").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        var $itemurl = "Requests/ReceivedModal?RequestID=" + $(this).val();
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "received");
+        return false;
+    });
+
+    $(".js-go-to-controller").on("click", function (e) {
+        console.log("inside of js-go-to-controller");
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/ConfirmEmailModal";
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "email");
+        return false;
+    });
+
+    $(".load-confirm-email").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "confirmemail");
+        return false;
+    });
+
+
+    function AddTempDataMemory() {
+        console.log("about to get set the hidden fors in the modal view to remember where the user was");
+
+        $("#Page").val(parseInt(@TempData["TempPage"]));
+        $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
+        $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
+        $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
+        $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
+        //console.log("PageType:" + @TempData["TempPageType"]);
+        $("#PageType").val(@TempData["TempPageType"]);
+    };
+
+
+    $.fn.CallPage = function ($itemurl, $type) {
+        console.log("in call page function");
+        //delete existing modals
+        $('.modal').replaceWith('');
+        $(".modal-backdrop").remove();
+        $.ajax({
+            async: true,
+            url: $itemurl,
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                $("#loading").hide();
+                console.log("success!");
+                var modal = $(data);
+                $('body').append(modal);
+                //replaces the modal-view class with the ModalView view
+                //$(".modal-view").html(data);
+                //turn off data dismiss by clicking out of the box and by pressing esc
+                $(".modal-view").modal({
+                    backdrop: true,
+                    keyboard: false,
+                });
+                //shows the modal
+                $(".modal").modal('show');
+                //$(".modal").on('show.bs.modal', function (e) {
+                //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
+                //})
+                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                //$(".modal-backdrop").remove();
+                //$('.modal').find('input').first().focus();
+                //$(".modal").popover('hide')
+                switch ($type) {
+                    case "details":
+                        console.log('case "details":');
+                        $.fn.OnOpenModalView();
+                        AddTempDataMemory();
+                        break;
+                    case "edit":
+                        console.log('case "edit":');
+                        $.fn.OnOpenModalView();
+                        AddTempDataMemory();
+                        break;
+                    case "reorder":
+                        console.log('case "reorder":');
+                        $.fn.OnOpenModalView();
+                        AddTempDataMemory();
+                        break;
+                    case "create":
+                        console.log('case "create":');
+                        $.fn.OnOpenModalView();
+                        AddTempDataMemory();
+                        break;
+                    case "received":
+                        console.log('case "received":');
+                        AddTempDataMemory();
+                        break;
+                    case "confirmemail":
+                        console.log('case "confirmemail":');
+                        AddTempDataMemory();
+                        break;
+                    case "delete":
+                        console.log('case "delete":');
+                        AddTempDataMemory();
+                        break;
+                }
+
+            }
+            //error: function (/*request, status, error*/) {
+            //    console.log("ajax call went wrong:" /*+ request.responseText*/);
+            //}
+        });
+    }
+
+    $.fn.OnOpenModalView = function () {
+        $('.modal-content a:first').tab('show');
+        var parentCategoryId = $("#parentlist").val();
+        var subcategoryId1 = $("#sublist").val();
+        var url = "/Requests/GetSubCategoryList";
+
+        $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+            var item = "";
+            $.each(data, function (i, subCategory) {
+                item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+            });
+            $("#sublist").html(item);
+            $("#sublist").val(subcategoryId1).change();
+        });
+
+        //For the order files
+
+        //goes into this function
+        $(".custom-file-input").on("change", function () {
+            var fileLabel = $(this).next(".custom-file-label");
+            var files = $(this)[0].files;
+            if (files.length > 1) {
+                fileLabel.html(files.length + ' files selected');
+            }
+            else {
+                fileLabel.html(files[0].name);
+            }
+        });
+
+        //get the current vendor id (if loading an already existing product)
+        var vendorid = $("#vendorList").val();
+        //call a function to lad the vendor business id from the vendor id
+        $.fn.ChangeVendorBusinessId(vendorid);
+
+    }
+
+
+
+    //$(".modal-view").on('show.bs.show.bs.modal', function (evt) {
+    //    var button = $(evt.relatedTarget);
+    //    var modal = $(this);
+    //    modal.find('[href="' + button.attr("href") + '"]').tab('show');
+    //});
+
+    function addActive(id) {
+        var item = document.getElementById(id);
+        item.classList.add("activeNavLink");
+    }
+
+</script>

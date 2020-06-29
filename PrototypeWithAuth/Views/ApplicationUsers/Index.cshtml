@@ -1,0 +1,31 @@
+﻿@model IEnumerable<PrototypeWithAuth.Data.ApplicationUser>
+@using PrototypeWithAuth.AppData
+@{
+    ViewData["Title"] = "Index";
+    var pagetype = TempData["PageType"];
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+
+@*<<<<<<<<<<<< This is the Owner page >>>>>>>>>>>>>>>*@
+
+<div class="m-4 text-center">
+    <div class="row">
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            if (i > 0 && i % 8 == 0)
+            {
+            @:</div><div class="row">
+            }
+            <div class="col-auto">
+                @*<fieldset class="border">*@
+                @*@Html.ActionLink(Model.ElementAt(i).FirstName + " " + Model.ElementAt(i).LastName, "Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)*@
+
+                <a href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)" class="owner-link bold-hover-effects"><img src="~/images/css/profile_circle_big.png" alt="defualt user circle" /> <br /> @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName</a>
+                @*</fieldset>*@
+            </div>
+        }
+    </div>
+</div>
+
+
+

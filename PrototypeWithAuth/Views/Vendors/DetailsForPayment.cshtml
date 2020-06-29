@@ -1,0 +1,169 @@
+﻿@model PrototypeWithAuth.ViewModels.VendorDetailsViewModel
+
+@{
+    ViewData["Title"] = "DetailsForPayment";
+    Layout = "~/Views/Shared/SuppliersNavView.cshtml";
+}
+
+
+<div class="modal-dialog modal-lg" role="document" style="max-height:100%; overflow-y:auto;">
+
+
+    <div class="modal-content d-inline-block">
+        <div class="modal-body">
+            <div class="container">
+                <div>
+                    <h4>Supplier Details</h4>
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="Vendor.VendorEnName" class="control-label"></label>
+                                <input asp-for="Vendor.VendorEnName" class="form-control-plaintext border-bottom" disabled/ />
+                                <span asp-validation-for="Vendor.VendorEnName" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Vendor.VendorHeName" class="control-label"></label>
+                                <input asp-for="Vendor.VendorHeName" class="form-control-plaintext border-bottom" disabled/ />
+                                <span asp-validation-for="Vendor.VendorHeName" class="text-danger"></span>
+                            </div>
+                            <div class=" row">
+                                <div class="form-group col-md-6">
+                                    <label asp-for="Products.FirstOrDefault().ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                                    @*@Html.DisplayNameFor(model => model.Products.FirstOrDefault().ProductSubcategory.ParentCategory.ParentCategoryDescription)*@
+                                <div class="form-control-plaintext border-bottom" disabled/>
+                                    @{ bool firstGroup = true;}
+                                    @foreach (var group in Model.Products.GroupBy(p => p.ProductSubcategory.ParentCategory.ParentCategoryDescription))
+                                    {
+                                        if (firstGroup)
+                                        {
+                                            @group.Key
+                                            firstGroup = false;
+                                        }
+                                        else
+                                        {
+                                            @:, @group.Key
+                                        }
+                                    }
+                                </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="Vendor.VendorBuisnessID" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorBuisnessID" class="form-control-plaintext border-bottom" disabled/>
+                                        <span asp-validation-for="Vendor.VendorBuisnessID" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class=" row">
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorCity" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorCity" class="form-control-plaintext border-bottom" disabled/ />
+                                        <span asp-validation-for="Vendor.VendorCity" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorStreet" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorStreet" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorStreet" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorZip" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorZip" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorZip" class="text-danger"></span>
+                                    </div>
+
+                                </div>
+                                <div class=" row">
+
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorContactPhone1" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorContactPhone1" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorContactPhone1" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorContactPhone2" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorContactPhone2" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorContactPhone2" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorFax" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorFax" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorFax" class="text-danger"></span>
+                                    </div>
+
+                                </div>
+
+                                <div class=" row">
+
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.OrderEmail" class="control-label"></label>
+                                        <input asp-for="Vendor.OrderEmail" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.OrderEmail" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.ContactEmail" class="control-label"></label>
+                                        <input asp-for="Vendor.ContactEmail" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.ContactEmail" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorWebsite" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorWebsite" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorWebsite" class="text-danger"></span>
+                                    </div>
+
+                                </div>
+                                <div class=" row">
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorBank" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorBank" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorBank" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorBankBranch" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorBankBranch" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorBankBranch" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorAccountNum" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorAccountNum" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorAccountNum" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4 ">
+                                        <label asp-for="Vendor.VendorSwift" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorSwift" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorSwift" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorBIC" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorBIC" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorBIC" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label asp-for="Vendor.VendorGoldAccount" class="control-label"></label>
+                                        <input asp-for="Vendor.VendorGoldAccount" class="form-control-plaintext border-bottom" disabled />
+                                        <span asp-validation-for="Vendor.VendorGoldAccount" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a asp-action="Edit" asp-route-id="@Model.Vendor.VendorID">Edit</a> |
+                                    <a asp-action="Delete" asp-route-id="@Model.Vendor.VendorID">Delete</a> |
+                                    <a asp-action="IndexForPayment">Back to List</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>

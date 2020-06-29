@@ -1,9 +1,53 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
     Layout = null;
+
+    /*
+     * Determine Active Nav Link START
+     * using the
+     */
+
+    //initializing pageType to None just in case none is passed in we don't want to disable any buttons unnecessarily (can take this out in the future if we are sure that we don't need it)
+    var pageType = AppUtility.RequestPageTypeEnum.None;
+
+    //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
+    if (TempData["PageType"] != null)
+    {
+        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+    }
+
+    //passing the
+    string initalClasses = "opac87";
+    string currentClasses = " activeNavLink";
+    string inventoryClass = initalClasses;
+    string requestClass = initalClasses;
+    string cartClass = initalClasses;
+    string searchClass = initalClasses;
+    string locationClass = initalClasses;
+    switch (pageType)
+    {
+        case AppUtility.RequestPageTypeEnum.Inventory:
+            inventoryClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Request:
+            requestClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Cart:
+            cartClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Search:
+            searchClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Location:
+            locationClass = initalClasses + currentClasses;
+            break;
+    }
+    /*Determine Active Nav Link END*/
+
 }
 
 <!DOCTYPE html>
@@ -13,46 +57,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Centarix Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
+    @*load the jquery ui stylesheet*@
+    <link rel="stylesheet" href="~/css/jquery-ui.min.css">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @*load jquery ui*@
+    @*<script src="~/lib/jquery/jquery-ui.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>*@
+
+    <script src="~/js/site.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/mvc/3.0/jquery.validate.unobtrusive.min.js"></script>
+
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <div class="container">
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                                    aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-
-
-                                <ul class="navbar-nav">
-                                    <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-
-                    }
-                    <!--this unordered list should also not be hard coded, this view should be inherited so whichever body is being rendered will disply an
-                        ul within this naigation bar-->
-                    <ul class="navbar-nav flex-grow-1">
+    @*<<<<< Inventory/Requests Header >>>>>*@
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar">
+            <div class="container-fluid justify-content-start float-left d-inline-block pl-0" style="width:auto">
+                <a style="padding-left:0.85rem;" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
+            </div>
+            <div class="container-fluid">
+                <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500">
+                    <li class="nav-item mx-4">
+                        @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @role = "button", @id = "inventory-link" })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @*Redo the location class in the controller*@
+                        @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = locationClass, @role = "button", @id = "request-link" })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
+                    </li>
+                </ul>
+            </div>
+            <div class="container-fluid justify-content-end">
+                <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Centarix</a>
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; <img src="~/images/css/profile_circle_big.png" height="30px" alt="User image" /></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Inventory</a>
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -60,44 +122,24 @@
         </nav>
     </header>
     <!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
-  <!--for now i am using an aside just to help me viuslly see thing on the side-->
-        <aside style="margin-left: 2.5em">
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Create">Add Item</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Vendors" asp-action="Index">Vendors</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="ProductSubcategories" asp-action="Index">Types</a>
-                </li>
+    <!--for now i am using an aside just to help me viuslly see thing on the side-->
 
-            </ul>
-
-        </aside>
-   
-        <div class="container">
-            <div class="sidebar">
-
-                <ul>
-                    <!--this is where we should have a sceleton for a side menu-->
-                </ul>
+    <div class="container-fluid pl-0">
+        <main role="main">
+            <div class="spinner-border center" role="status" id="loading" style="display:none;">
+                <span class="sr-only">Loading...</span>
             </div>
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
+            @RenderBody()
+        </main>
 
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container text-center">
+            &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-
-        <footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </footer>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        @RenderSection("Scripts", required: false)
+    </footer>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

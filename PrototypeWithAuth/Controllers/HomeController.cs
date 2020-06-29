@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.Controllers
@@ -19,6 +21,17 @@ namespace PrototypeWithAuth.Controllers
         }
 
         public IActionResult Index()
+        {
+            //Adina added in 3 lines
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("IndexAdmin");
+            }
+            return View();
+        }
+
+        //Adina added in
+        public IActionResult IndexAdmin()
         {
             return View();
         }

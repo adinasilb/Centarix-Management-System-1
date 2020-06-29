@@ -1,5 +1,12 @@
-﻿@{
-    Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+﻿@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+
+@{
+    Layout = "~/Views/Shared/_GeneralView.cshtml";
+    //Layout = "/Areas/Identity/Pages/_Layout.cshtml";
 }
 
 <h1>Manage your account</h1>
@@ -20,3 +27,4 @@
 @section Scripts {
     @RenderSection("Scripts", required: false)
 }
+

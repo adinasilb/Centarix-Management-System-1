@@ -6,20 +6,91 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\LocationModels\**" />
+    <Compile Remove="wwwroot\files\65\**" />
+    <Compile Remove="wwwroot\files\66\**" />
+    <Compile Remove="wwwroot\files\68\**" />
+    <Compile Remove="wwwroot\images\NewFolder\**" />
+    <Content Remove="Models\LocationModels\**" />
+    <Content Remove="wwwroot\files\65\**" />
+    <Content Remove="wwwroot\files\66\**" />
+    <Content Remove="wwwroot\files\68\**" />
+    <Content Remove="wwwroot\images\NewFolder\**" />
+    <EmbeddedResource Remove="Models\LocationModels\**" />
+    <EmbeddedResource Remove="wwwroot\files\65\**" />
+    <EmbeddedResource Remove="wwwroot\files\66\**" />
+    <EmbeddedResource Remove="wwwroot\files\68\**" />
+    <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
+    <None Remove="Models\LocationModels\**" />
+    <None Remove="wwwroot\files\65\**" />
+    <None Remove="wwwroot\files\66\**" />
+    <None Remove="wwwroot\files\68\**" />
+    <None Remove="wwwroot\images\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Data\Migrations\20200130075438_PopulateParentCategory.cs" />
     <Compile Remove="Data\Migrations\20200130075438_PopulateParentCategory.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200221071910_addTablesRequestAndRequestStat.cs" />
+    <Compile Remove="Data\Migrations\20200221071910_addTablesRequestAndRequestStat.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200224131546_databaseIncludeRequestStatID.cs" />
+    <Compile Remove="Data\Migrations\20200224131546_databaseIncludeRequestStatID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200224131855_RequestStatInRequests.cs" />
+    <Compile Remove="Data\Migrations\20200224131855_RequestStatInRequests.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200304105050_RequestRequestStatFK.cs" />
+    <Compile Remove="Data\Migrations\20200304105050_RequestRequestStatFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200309085533_seedUnitTables.cs" />
+    <Compile Remove="Data\Migrations\20200309085533_seedUnitTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200312131759_allowForUnitSubUnitSSUnitIDs.cs" />
+    <Compile Remove="Data\Migrations\20200312131759_allowForUnitSubUnitSSUnitIDs.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200312132053_allowForUnitSubUnitSSUnitIDs.cs" />
+    <Compile Remove="Data\Migrations\20200312132053_allowForUnitSubUnitSSUnitIDs.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200504122637_LocationRequestIDAndPlace.cs" />
+    <Compile Remove="Data\Migrations\20200504122637_LocationRequestIDAndPlace.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200513080421_termsInRequestAndPayNowStat.cs" />
+    <Compile Remove="Data\Migrations\20200513080421_termsInRequestAndPayNowStat.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200513080950_productSubTestBlah.cs" />
+    <Compile Remove="Data\Migrations\20200513080950_productSubTestBlah.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200623060307_addIenumerableProductsToSubProject.cs" />
+    <Compile Remove="Data\Migrations\20200623060307_addIenumerableProductsToSubProject.Designer.cs" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <PackageReference Include="Datejs" Version="1.0.0" />
+    <PackageReference Include="MailKit" Version="2.6.0" />
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
+    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="20.1.0" />
+    <PackageReference Include="System.CodeDom" Version="4.7.0" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />
+
+	<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.0" Condition="'$(Configuration)' == 'Debug'" />
+
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="wwwroot\files\" />
+    <Folder Include="wwwroot\images\NewFolder1\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="wwwroot\favicon_io\site.webmanifest" />
   </ItemGroup>
 
 </Project>

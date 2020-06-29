@@ -1,0 +1,79 @@
+﻿@using PrototypeWithAuth.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_LoginView.cshtml";
+
+
+}
+@*Need to add security here*@
+
+    <div class="text-center">
+        <h2>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h2>
+        <br />
+        <br />
+        <div class="container col-md-10" style="min-width:560px">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6 mb-4">
+                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("Index", "Requests", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/inventory.png" alt="Inventory" /><br /><span>Orders & Inventory</span></a>
+                        </div>
+                        <div class="col-6 mb-4">
+                            <a class="module-button bold-hover-effects" href="#"><img class="main-btn-img" src="~/images/css/main_menu_icons/protocols.png" alt="Protocols" /><br /><span>Protocols</span></a>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6 mb-4">
+                            <a class="module-button bold-hover-effects" href="#"><img class="main-btn-img" src="~/images/css/main_menu_icons/operation.png" alt="Operations" /><br /><span>Operations</span></a>
+                        </div>
+                        <div class="col-6 mb-4">
+                            <a class="module-button bold-hover-effects" href="#"><img class="main-btn-img" src="~/images/css/main_menu_icons/biomarkers.png" alt="Biomarkers" /><br /><span>Biomarkers</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6 mb-4">
+                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("IndexForLabManage", "Vendors", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/lab.png" alt="Lab" /><br /><span>Lab Management</span></a>
+                        </div>
+                       
+                        <div class="col-6 mb-4">
+                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("Index", "ParentRequests", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/accounting.png" alt="Accounting" /><br /><span>Accounting</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6 mb-4">
+                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("ExpensesList", "ParentRequests", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/expenses.png" alt="Expenses" /><br /><span>Expenses</span></a>
+                        </div>
+                        <div class="col-6 mb-4">
+                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("RegisterUser", "Admin", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/users.png" alt="Users" /><br /><span>Users</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*<div class="mt-5">
+            <button type="submit" class="btn btn-success module-buttons">Protocols</button>
+            &nbsp;
+            @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-info module-buttons" })
+            &nbsp;
+            @Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn btn-primary module-buttons" })
+            &nbsp;
+            <button type="submit" class="btn btn-danger module-buttons">Biomarkers</button>
+            &nbsp;
+            @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-secondary module-buttons" })
+        </div>*@
+
+    </div>

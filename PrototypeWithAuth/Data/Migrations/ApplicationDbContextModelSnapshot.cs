@@ -202,6 +202,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("SecureAppPass")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -223,6 +226,130 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
+                {
+                    b.Property<int>("CommentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CommentText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CommentTimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("RequestID");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.CompanyAccount", b =>
+                {
+                    b.Property<int>("CompanyAccountID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CompanyAccountNum")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(5)")
+                        .HasMaxLength(5);
+
+                    b.Property<string>("CompanyBankNum")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyBranchNum")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PaymentTypeID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CompanyAccountID");
+
+                    b.HasIndex("PaymentTypeID");
+
+                    b.ToTable("CompanyAccounts");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
+                {
+                    b.Property<int>("LocationInstanceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CompanyLocationNo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsFull")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LocationInstanceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LocationInstanceParentID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LocationTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Place")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.HasKey("LocationInstanceID");
+
+                    b.HasIndex("LocationInstanceParentID");
+
+                    b.HasIndex("LocationTypeID");
+
+                    b.ToTable("LocationInstances");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationType", b =>
+                {
+                    b.Property<int>("LocationTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Depth")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LocationTypeChildID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LocationTypeName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LocationTypeParentID")
+                        .HasColumnType("int");
+
+                    b.HasKey("LocationTypeID");
+
+                    b.HasIndex("LocationTypeChildID");
+
+                    b.HasIndex("LocationTypeParentID");
+
+                    b.ToTable("LocationTypes");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -260,7 +387,104 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ParentCategoryID = 4,
                             ParentCategoryDescription = "Reusable"
+                        },
+                        new
+                        {
+                            ParentCategoryID = 5,
+                            ParentCategoryDescription = "Equipment"
+                        },
+                        new
+                        {
+                            ParentCategoryID = 6,
+                            ParentCategoryDescription = "Operation"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
+                {
+                    b.Property<int>("ParentRequestID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
+
+                    b.Property<long>("Installments")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvoiceNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderNumber")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Payed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("WithOrder")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ParentRequestID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.ToTable("ParentRequests");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>
+                {
+                    b.Property<int>("PaymentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CompanyAccountID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParentRequestID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaymentID");
+
+                    b.HasIndex("CompanyAccountID");
+
+                    b.HasIndex("ParentRequestID");
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.PaymentType", b =>
+                {
+                    b.Property<int>("PaymentTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("PaymentTypeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaymentTypeID");
+
+                    b.ToTable("PaymentTypes");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
@@ -269,6 +493,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Handeling")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
@@ -281,6 +508,18 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductSubcategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("QuantityPerUnit")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReorderLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UnitsInOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UnitsInStock")
                         .HasColumnType("int");
 
                     b.Property<int>("VendorID")
@@ -318,93 +557,459 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ProductSubcategoryID = 11,
+                            ProductSubcategoryID = 101,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tubes"
+                            ProductSubcategoryDescription = "3D Cells Grow"
                         },
                         new
                         {
-                            ProductSubcategoryID = 12,
+                            ProductSubcategoryID = 102,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Pipets"
+                            ProductSubcategoryDescription = "PCR Plates"
                         },
                         new
                         {
-                            ProductSubcategoryID = 13,
+                            ProductSubcategoryID = 103,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Tips"
+                            ProductSubcategoryDescription = "Blood"
                         },
                         new
                         {
-                            ProductSubcategoryID = 14,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Dishes"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 15,
+                            ProductSubcategoryID = 104,
                             ParentCategoryID = 1,
                             ProductSubcategoryDescription = "Cell Culture Plates"
                         },
                         new
                         {
-                            ProductSubcategoryID = 21,
+                            ProductSubcategoryID = 105,
+                            ParentCategoryID = 1,
+                            ProductSubcategoryDescription = "Dishes"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 106,
+                            ParentCategoryID = 1,
+                            ProductSubcategoryDescription = "Tips"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 107,
+                            ParentCategoryID = 1,
+                            ProductSubcategoryDescription = "Pipets"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 108,
+                            ParentCategoryID = 1,
+                            ProductSubcategoryDescription = "Tubes"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 201,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Chemical Powder"
                         },
                         new
                         {
-                            ProductSubcategoryID = 22,
+                            ProductSubcategoryID = 202,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "DNA Enzyme"
                         },
                         new
                         {
-                            ProductSubcategoryID = 23,
+                            ProductSubcategoryID = 203,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Antibodies"
                         },
                         new
                         {
-                            ProductSubcategoryID = 24,
+                            ProductSubcategoryID = 204,
                             ParentCategoryID = 2,
                             ProductSubcategoryDescription = "Cell Media"
                         },
                         new
                         {
-                            ProductSubcategoryID = 31,
+                            ProductSubcategoryID = 205,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "Chemicals Solution"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 206,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "Kit"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 207,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "PCR"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 208,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "ddPCR"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 209,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "RT-PCR"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 210,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "Probes"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 211,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "Oligo"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 212,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "Media Supplement"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 213,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "Plasmid Purification"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 301,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Virus"
                         },
                         new
                         {
-                            ProductSubcategoryID = 32,
+                            ProductSubcategoryID = 302,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Plasmid"
                         },
                         new
                         {
-                            ProductSubcategoryID = 33,
+                            ProductSubcategoryID = 303,
                             ParentCategoryID = 3,
                             ProductSubcategoryDescription = "Primers"
                         },
                         new
                         {
-                            ProductSubcategoryID = 41,
+                            ProductSubcategoryID = 304,
+                            ParentCategoryID = 3,
+                            ProductSubcategoryDescription = "Probes"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 401,
                             ParentCategoryID = 4,
                             ProductSubcategoryDescription = "Beaker"
                         },
                         new
                         {
-                            ProductSubcategoryID = 42,
+                            ProductSubcategoryID = 402,
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "Measuring"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 403,
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "Tube Holders"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 404,
                             ParentCategoryID = 4,
                             ProductSubcategoryDescription = "Buckets"
                         },
                         new
                         {
-                            ProductSubcategoryID = 43,
+                            ProductSubcategoryID = 405,
                             ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Measuring Instruments"
+                            ProductSubcategoryDescription = "Cooling Racks"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 406,
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "-196 Box"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 407,
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "-80 Box"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 501,
+                            ParentCategoryID = 5,
+                            ProductSubcategoryDescription = "Instrument"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 502,
+                            ParentCategoryID = 5,
+                            ProductSubcategoryDescription = "Instrument Parts"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 503,
+                            ParentCategoryID = 5,
+                            ProductSubcategoryDescription = "Instrument Check"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 504,
+                            ParentCategoryID = 5,
+                            ProductSubcategoryDescription = "Instrument Fixing"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 505,
+                            ParentCategoryID = 5,
+                            ProductSubcategoryDescription = "Instrument Calibration"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 506,
+                            ParentCategoryID = 5,
+                            ProductSubcategoryDescription = "Instrument Warranty"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 507,
+                            ParentCategoryID = 5,
+                            ProductSubcategoryDescription = "Lab Software"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 508,
+                            ParentCategoryID = 5,
+                            ProductSubcategoryDescription = "Lab Furniture"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 601,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Computer"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 602,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Rent"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 603,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Communication"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 604,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Branding"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 605,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Travel"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 606,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Shipment"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 607,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Transportation"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 608,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Rennovation"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 609,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Bookkeeping"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 610,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Law Advisement"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 611,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Tax"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 612,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Books And Journal"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 613,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Regulations"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 614,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Clinical Regulation"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 615,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Conference"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 616,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Company Events"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 617,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Insurance"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 618,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "General"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 619,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Software"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 620,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Hotels"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 621,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Flight Tickets"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 622,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Scientific Advice"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 623,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Brokerage"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 624,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Business Advice"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 625,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Electric Appliances"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 626,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Safety"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 627,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Food"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 628,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Stationary"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 629,
+                            ParentCategoryID = 6,
+                            ProductSubcategoryDescription = "Furniture"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Project", b =>
+                {
+                    b.Property<int>("ProjectID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ProjectDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProjectID");
+
+                    b.ToTable("Projects");
+
+                    b.HasData(
+                        new
+                        {
+                            ProjectID = 1,
+                            ProjectDescription = "Rejuvenation"
+                        },
+                        new
+                        {
+                            ProjectID = 2,
+                            ProjectDescription = "Delivery Systems"
+                        },
+                        new
+                        {
+                            ProjectID = 3,
+                            ProjectDescription = "Biomarkers"
+                        },
+                        new
+                        {
+                            ProjectID = 4,
+                            ProjectDescription = "Clinical Trials"
+                        },
+                        new
+                        {
+                            ProjectID = 5,
+                            ProjectDescription = "General"
                         });
                 });
 
@@ -415,52 +1020,136 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserID")
+                    b.Property<long?>("AmountWithInLocation")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("AmountWithOutLocation")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ApplicationUserReceiverID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("ArrivalDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CatalogNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
-                    b.Property<string>("InvoiceNumber")
+                    b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LocationID")
-                        .HasColumnType("int");
+                    b.Property<double>("ExchangeRate")
+                        .HasColumnType("float");
 
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
+                    b.Property<byte>("ExpectedSupplyDays")
+                        .HasColumnType("tinyint");
 
-                    b.Property<int>("OrderNumber")
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ParentRequestID")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                    b.Property<long>("Quantity")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("RequestStatusID")
+                    b.Property<string>("RequestComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RequestStatusID")
                         .HasColumnType("int");
 
                     b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SubProjectID")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("SubSubUnit")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("SubSubUnitTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("SubUnit")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("SubUnitTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Terms")
+                        .HasColumnType("int");
+
                     b.Property<string>("URL")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("WithOrder")
-                        .HasColumnType("bit");
+                    b.Property<long>("Unit")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("UnitTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<long>("UnitsInStock")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UnitsOrdered")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte>("Warranty")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("RequestID");
 
-                    b.HasIndex("ApplicationUserID");
+                    b.HasIndex("ApplicationUserReceiverID");
+
+                    b.HasIndex("ParentRequestID");
+
+                    b.HasIndex("ProductID");
 
                     b.HasIndex("RequestStatusID");
 
+                    b.HasIndex("SubProjectID");
+
+                    b.HasIndex("SubSubUnitTypeID");
+
+                    b.HasIndex("SubUnitTypeID");
+
+                    b.HasIndex("UnitTypeID");
+
                     b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
+                {
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LocationInstanceID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ParentLocationInstanceID")
+                        .HasColumnType("int");
+
+                    b.HasKey("RequestID", "LocationInstanceID");
+
+                    b.HasIndex("LocationInstanceID");
+
+                    b.HasIndex("ParentLocationInstanceID");
+
+                    b.ToTable("RequestLocationInstance");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestStatus", b =>
@@ -476,6 +1165,264 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("RequestStatusID");
 
                     b.ToTable("RequestStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            RequestStatusID = 1,
+                            RequestStatusDescription = "New"
+                        },
+                        new
+                        {
+                            RequestStatusID = 2,
+                            RequestStatusDescription = "Ordered"
+                        },
+                        new
+                        {
+                            RequestStatusID = 3,
+                            RequestStatusDescription = "RecievedAndIsInventory"
+                        },
+                        new
+                        {
+                            RequestStatusID = 4,
+                            RequestStatusDescription = "Partial"
+                        },
+                        new
+                        {
+                            RequestStatusID = 5,
+                            RequestStatusDescription = "Clarify"
+                        },
+                        new
+                        {
+                            RequestStatusID = 6,
+                            RequestStatusDescription = "PayNow"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
+                {
+                    b.Property<int>("SubProjectID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProjectID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubProjectDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SubProjectID");
+
+                    b.HasIndex("ProjectID");
+
+                    b.ToTable("SubProjects");
+
+                    b.HasData(
+                        new
+                        {
+                            SubProjectID = 101,
+                            ProjectID = 1,
+                            SubProjectDescription = "Epigenetic Rejuvenation"
+                        },
+                        new
+                        {
+                            SubProjectID = 102,
+                            ProjectID = 1,
+                            SubProjectDescription = "Plasma Rejuvenation"
+                        },
+                        new
+                        {
+                            SubProjectID = 201,
+                            ProjectID = 2,
+                            SubProjectDescription = "AAV"
+                        },
+                        new
+                        {
+                            SubProjectID = 301,
+                            ProjectID = 3,
+                            SubProjectDescription = "Epigenetic Clock"
+                        },
+                        new
+                        {
+                            SubProjectID = 302,
+                            ProjectID = 3,
+                            SubProjectDescription = "Telomere Measurement"
+                        },
+                        new
+                        {
+                            SubProjectID = 401,
+                            ProjectID = 4,
+                            SubProjectDescription = "Biomarker Trial"
+                        },
+                        new
+                        {
+                            SubProjectID = 501,
+                            ProjectID = 5,
+                            SubProjectDescription = "General"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.UnitParentType", b =>
+                {
+                    b.Property<int>("UnitParentTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("UnitParentTypeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UnitParentTypeID");
+
+                    b.ToTable("UnitParentTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            UnitParentTypeID = 1,
+                            UnitParentTypeDescription = "Units"
+                        },
+                        new
+                        {
+                            UnitParentTypeID = 2,
+                            UnitParentTypeDescription = "Weight/Volume"
+                        },
+                        new
+                        {
+                            UnitParentTypeID = 3,
+                            UnitParentTypeDescription = "Test"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.UnitType", b =>
+                {
+                    b.Property<int>("UnitTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("UnitParentTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UnitTypeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UnitTypeID");
+
+                    b.HasIndex("UnitParentTypeID");
+
+                    b.ToTable("UnitTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            UnitTypeID = 1,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Bottle"
+                        },
+                        new
+                        {
+                            UnitTypeID = 2,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Box"
+                        },
+                        new
+                        {
+                            UnitTypeID = 3,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Pack"
+                        },
+                        new
+                        {
+                            UnitTypeID = 4,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Bag"
+                        },
+                        new
+                        {
+                            UnitTypeID = 5,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Unit"
+                        },
+                        new
+                        {
+                            UnitTypeID = 6,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Vial"
+                        },
+                        new
+                        {
+                            UnitTypeID = 7,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "Kg"
+                        },
+                        new
+                        {
+                            UnitTypeID = 8,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "gr"
+                        },
+                        new
+                        {
+                            UnitTypeID = 9,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "mg"
+                        },
+                        new
+                        {
+                            UnitTypeID = 10,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "ug"
+                        },
+                        new
+                        {
+                            UnitTypeID = 11,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "Liter"
+                        },
+                        new
+                        {
+                            UnitTypeID = 12,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "ml"
+                        },
+                        new
+                        {
+                            UnitTypeID = 13,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "ul"
+                        },
+                        new
+                        {
+                            UnitTypeID = 14,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "gal"
+                        },
+                        new
+                        {
+                            UnitTypeID = 15,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "rxhs"
+                        },
+                        new
+                        {
+                            UnitTypeID = 16,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "test"
+                        },
+                        new
+                        {
+                            UnitTypeID = 17,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "preps"
+                        },
+                        new
+                        {
+                            UnitTypeID = 18,
+                            UnitParentTypeID = 3,
+                            UnitTypeDescription = "assays"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>
@@ -496,9 +1443,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("OrderEmail")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
-
-                    b.Property<int>("ParentCategoryID")
-                        .HasColumnType("int");
 
                     b.Property<string>("VendorAccountNum")
                         .IsRequired()
@@ -562,8 +1506,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("VendorID");
 
-                    b.HasIndex("ParentCategoryID");
-
                     b.ToTable("Vendors");
                 });
 
@@ -572,7 +1514,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -581,7 +1523,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -590,7 +1532,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -599,13 +1541,13 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -614,7 +1556,80 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.CompanyAccount", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.PaymentType", "PaymentType")
+                        .WithMany()
+                        .HasForeignKey("PaymentTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.LocationInstance", "LocationInstanceParent")
+                        .WithMany()
+                        .HasForeignKey("LocationInstanceParentID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.LocationType", "LocationType")
+                        .WithMany()
+                        .HasForeignKey("LocationTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.LocationType", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.LocationType", "LocationTypeChild")
+                        .WithMany()
+                        .HasForeignKey("LocationTypeChildID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.LocationType", "LocationTypeParent")
+                        .WithMany()
+                        .HasForeignKey("LocationTypeParentID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("ParentRequests")
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
+                        .WithMany()
+                        .HasForeignKey("CompanyAccountID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
+                        .WithMany("Payments")
+                        .HasForeignKey("ParentRequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -623,13 +1638,13 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ProductSubcategory", "ProductSubcategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductSubcategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("VendorID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -638,28 +1653,91 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ParentCategory", "ParentCategory")
                         .WithMany("ProductSubcategories")
                         .HasForeignKey("ParentCategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserReceiver")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserReceiverID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
                         .WithMany("Requests")
-                        .HasForeignKey("ApplicationUserID");
+                        .HasForeignKey("ParentRequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
+                        .WithMany("Requests")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.RequestStatus", "RequestStatus")
                         .WithMany("Requests")
                         .HasForeignKey("RequestStatusID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.SubProject", "SubProject")
+                        .WithMany("Requests")
+                        .HasForeignKey("SubProjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.UnitType", "SubSubUnitType")
+                        .WithMany()
+                        .HasForeignKey("SubSubUnitTypeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.UnitType", "SubUnitType")
+                        .WithMany()
+                        .HasForeignKey("SubUnitTypeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.UnitType", "UnitType")
+                        .WithMany()
+                        .HasForeignKey("UnitTypeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.LocationInstance", "LocationInstance")
+                        .WithMany("RequestLocationInstances")
+                        .HasForeignKey("LocationInstanceID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.LocationInstance", "ParentLocationInstance")
+                        .WithMany("AllRequestLocationInstances")
+                        .HasForeignKey("ParentLocationInstanceID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany("RequestLocationInstances")
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.ParentCategory", "ParentCategory")
-                        .WithMany("Vendors")
-                        .HasForeignKey("ParentCategoryID")
+                    b.HasOne("PrototypeWithAuth.Models.Project", "Project")
+                        .WithMany("SubProjects")
+                        .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.UnitType", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.UnitParentType", "UnitParentType")
+                        .WithMany("UnitTypes")
+                        .HasForeignKey("UnitParentTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

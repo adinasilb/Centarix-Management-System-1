@@ -1,0 +1,67 @@
+﻿@model PrototypeWithAuth.ViewModels.VisualLocationsViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@*Name:
+    @Model.LocationInstanceName
+
+    Columns:
+    @Model.Height
+
+    Rows:
+    @Model.Width*@
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn visual-locations-zoom inv-link-clr float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ParentLocationInstance.LocationInstanceID"> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="container text-center" >
+            <table class="table table-sm border" style=" margin:auto;">
+                @{
+                    int z = -1;
+                }
+                @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+                {
+                    <tr>
+                        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                        {
+                            z++;
+                            var backgroundClass = "";
+                            var innerHtml = Model.ParentLocationInstance.Place;
+                            @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                            {
+                                if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                                {
+                                    backgroundClass += " bg-info text-light";
+
+                                    innerHtml = Model.ChildrenLocationInstances[z].Place;
+                                }
+                                else
+                                {
+                                    backgroundClass = "";
+                                    innerHtml = Model.ChildrenLocationInstances[z].Place;
+                                }
+                            }
+                            <td class="@backgroundClass" style="">@innerHtml</td>
+                            @*<td class="border">
+                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
+                        {
+                            <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
+                            z++;
+                        }
+                    </td>*@
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+        
+    </div>
+</div>

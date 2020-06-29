@@ -17,7 +17,8 @@ using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "Admin")]
+   // [AllowAnonymous]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -85,6 +86,10 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            if(!ModelState.IsValid)
+            {
+                return Page();
+            }
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser 
