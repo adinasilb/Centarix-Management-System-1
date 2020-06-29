@@ -209,7 +209,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .ToPagedListAsync(pageNumber, 3);
+                    .ToPagedListAsync(pageNumber, 25);
 
                 onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
 
@@ -401,13 +401,16 @@ namespace PrototypeWithAuth.Controllers
                 //all new ones will be "new" until actually ordered after the confirm email
                 requestItemViewModel.Request.RequestStatusID = 1;
                 //if it's less than 5500 shekel OR the user is an admin it will be ordered
-                if ((requestItemViewModel.Request.Cost < 5500 || User.IsInRole("Admin")) && OrderType.Equals("Order"))
-                {
-                    if (OrderType.Equals("Order"))
-                    {
-                        WithOrder = true;
-                    }
-                }
+
+                //now the ordering will be done later
+
+                //if ((requestItemViewModel.Request.Cost < 5500 || User.IsInRole("Admin")) && OrderType.Equals("Order"))
+                //{
+                //    if (OrderType.Equals("Order"))
+                //    {
+                //        WithOrder = true;
+                //    }
+                //}
             }
             //in case we need to redirect to action
             //TempData["ModalView"] = true;
@@ -2511,7 +2514,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
 
-        
+
         [HttpGet]
         public ActionResult DocumentView(List<String> FileNames)
         {

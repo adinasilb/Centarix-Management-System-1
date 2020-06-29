@@ -244,7 +244,6 @@
                     @*Later on should have a better location...*@
                     @if (Inventory)
                     {
-
                         <td>
                             @if (item.RequestLocationInstances != null)
                             {
@@ -264,8 +263,14 @@
                             if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
                             {
                                 @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
-
-                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" data-title="approve" class="btn load-confirm-email"><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i> </button> //approve
+                                if (item.Cost > 0)
+                                {
+                                    <button asp-action="ConfirmeEmailModal" value="@item.RequestID" data-title="approve" class="btn load-confirm-email"><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i> </button> //approve
+                                }
+                                else
+                                {
+                                    <button value="@item.RequestID" data-title="approve" class="btn load-add-cost">Add Cost</button>
+                                }
 
                             }
                         }
@@ -306,5 +311,5 @@
 
 <!-- output a paging control that lets the user navigation to the previous page, next page, etc
 page-->
-    <!-- commented out for now, until can be CSSed back into place how shimon wants it
+<!-- commented out for now, until can be CSSed back into place how shimon wants it
 -->
