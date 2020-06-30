@@ -121,8 +121,9 @@ html {
 }
 
 body {
-    /* Margin bottom by footer height */
-    margin-bottom: 60px;
+    /* Margin bottom by footer height - ADINA took it out b/c there is no footer
+    */
+    /*margin-bottom: 60px;*/
     font-family: 'Roboto', sans-serif;
     /*color: rgba(0,0,0,.87), !important;*/
 }

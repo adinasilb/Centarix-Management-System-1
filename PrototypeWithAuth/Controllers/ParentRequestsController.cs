@@ -335,13 +335,14 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<IActionResult> ToPay()
         {
+            TempData["Action"] = "ToPay";
             //var test = new DateTime(2014, 3, 15, 5, 4, 9) - DateTime.Today;
             var begDT = new DateTime();
             var requests = _context.Requests; //to instantiate the computed column????????
             //NEEDS TO BE FIXED!!!!!!!!!!!!!!!!!
             var parentRequests = await _context.ParentRequests
                 .Include(pr => pr.Requests)
-                //.Where(pr => pr.Requests.FirstOrDefault().DateToBePaid > begDT /*&& pr.Requests.FirstOrDefault().DateToBePaid <= DateTime.Today*/)
+                .Where(pr => /*pr.Requests.FirstOrDefault().Terms != -1 ||*/ pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms) <= DateTime.Today)
                 .Select(pr => new ParentRequestListViewModel
                 {
                     ParentRequest = pr,
@@ -373,6 +374,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<IActionResult> NoInvoice()
         {
+            TempData["Action"] = "NoInvoice";
             var parentRequests = await _context.ParentRequests
                 .Where(pr => pr.InvoiceNumber == null)
                 .Select(pr => new ParentRequestListViewModel
@@ -396,25 +398,36 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<IActionResult> DidntArrive()
         {
+            TempData["Action"] = "DidntArrive";
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> PayNow()
         {
+            TempData["Action"] = "PayNow";
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> PartialDelivery()
         {
+            TempData["Action"] = "PartialDelivery";
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> ForClarification()
         {
+            TempData["Action"] = "ForClarification";
             return View();
+        }
+
+        //this is here b/c the ajax call on the payment view is not working and I didn't have time to debug it
+        [HttpGet]
+        public IActionResult DetailsModalView(int id)
+        {
+            return RedirectToAction("DetailsModalView", "Requests", new { id = id });
         }
     }
 }

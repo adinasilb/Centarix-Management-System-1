@@ -2,27 +2,63 @@
 @{
     ViewData["Title"] = "NotificationsView";
     Layout = "~/Views/Shared/PaymentView.cshtml";
+
+    var allClasses = "nav-item my-4 acc-sidebar";
+    var activeClass = " active";
+    var toPayClass = allClasses;
+    var noInvoiceClass = allClasses;
+    var didntArriveClass = allClasses;
+    var payNowClass = allClasses;
+    var partialDeliveryClass = allClasses;
+    var forClarificationClass = allClasses;
+
+    if (TempData["Action"] != null)
+    {
+        var PageType = TempData["Action"].ToString();
+        switch (PageType)
+        {
+            case "ToPay":
+                toPayClass += activeClass;
+                break;
+            case "NoInvoice":
+                noInvoiceClass += activeClass;
+                break;
+            case "DidntArrive":
+                didntArriveClass += activeClass;
+                break;
+            case "PayNow":
+                payNowClass += activeClass;
+                break;
+            case "PartialDelivery":
+                partialDeliveryClass += activeClass;
+                break;
+            case "ForClarification":
+                forClarificationClass += activeClass;
+                break;
+        }
+    }
+
 }
-<div style="display: flex">
+<div style="display: flex;">
 
     <div style="width: 110px; min-height:60rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
         <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3">
-            <li class="nav-item mb-4 mt-3 acc-sidebar active">
+            <li class="@toPayClass">
                 <a href="@Url.Action("ToPay", "ParentRequests")" class="bold-hover-effects"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br /> To Pay <br /></a>
             </li>
-            <li class="nav-item my-4 acc-sidebar">
+            <li class="@noInvoiceClass">
                 <a href="@Url.Action("NoInvoice", "ParentRequests")" class="bold-hover-effects"> <i class="icon-cancel_presentation-24px" style="font-size:1.6rem;"></i><br /> No Invoice <br /></a>
             </li>
-            <li class="nav-item my-4 acc-sidebar">
+            <li class="@didntArriveClass">
                 <a href="@Url.Action("DidntArrive", "ParentRequests")" class="bold-hover-effects"> <i class="icon-local_shipping-24px" style="font-size:1.6rem;"></i><br /> Didn't Arrive <br /></a>
             </li>
-            <li class="nav-item my-4 acc-sidebar">
+            <li class="@payNowClass">
                 <a href="@Url.Action("PayNow", "ParentRequests")" class="bold-hover-effects"> <i class="icon-payment-24px" style="font-size:1.6rem;"></i><br /> Pay Now <br /></a>
             </li>
-            <li class="nav-item my-4 acc-sidebar">
+            <li class="@partialDeliveryClass">
                 <a href="@Url.Action("PartialDelivery", "ParentRequests")" class="bold-hover-effects"> <i class="icon-remove_shopping_cart-24px" style="font-size:1.6rem;"></i><br /> Partial Delivery <br /> </a>
             </li>
-            <li class="nav-item my-4 acc-sidebar">
+            <li class="@forClarificationClass">
                 <a href="@Url.Action("ForClarification", "ParentRequests")" class="bold-hover-effects"> <i class="icon-report_problem-24px" style="font-size:1.6rem;"></i><br /> For Clarification <br /> </a>
             </li>
 
@@ -32,3 +68,82 @@
         @RenderBody()
     </div>
 </div>
+
+@*<script>
+    $(".load-vendor-search").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Search";
+        $.fn.CallPage($itemurl);
+        return false;
+    });
+
+
+    $(".load-request-details").on("click", function (e) {
+        console.log("load-request-details: " + $(this).val())
+        e.preventDefault();
+        e.stopPropagation();
+        //var $itemurl = '@Url.Action("DetailsModalView", "Requests");
+        var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val() + "";
+        var $data = $(this).val();
+        $.fn.CallPage($itemurl, "details");
+        return false;
+    });
+
+    $.fn.CallPageData = function ($itemurl, $Type = "", $data = "") {
+        console.log("in function data");
+        $.ajax({
+            async: true,
+            url: $itemurl,
+            data: { Id: $data },
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                console.log("success!");
+                //replaces the modal-view class with the ModalView view
+                $(".modal-view").html(data);
+                //turn off data dismiss by clicking out of the box and by pressing esc
+                $(".modal-view").modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                //shows the modal
+                $(".modal").modal('show');
+                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                $(".modal-backdrop").remove();
+                if ($Type == "details") {
+                    $('.modal-content a:first').tab('show');
+                }
+            }
+        });
+    }
+    $.fn.CallPage = function ($itemurl, $Type = "") {
+        console.log("in function");
+        console.log("url: " + $itemurl);
+        var correctUrl = $itemurl.substring($itemurl.indexOf('/'), $itemurl.length);
+        console.log("correct url: " + correctUrl);
+        $.ajax({
+            async: true,
+            url: $itemurl,
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                console.log("success!");
+                //replaces the modal-view class with the ModalView view
+                $(".modal-view").html(data);
+                //turn off data dismiss by clicking out of the box and by pressing esc
+                $(".modal-view").modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                //shows the modal
+                $(".modal").modal('show');
+                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                $(".modal-backdrop").remove();
+                if ($Type == "details") {
+                    $('.modal-content a:first').tab('show');
+                }
+            }
+        });
+    }
+</script>*@
