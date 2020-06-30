@@ -53,6 +53,10 @@
     <Compile Remove="Data\Migrations\20200513080950_productSubTestBlah.Designer.cs" />
     <Compile Remove="Data\Migrations\20200623060307_addIenumerableProductsToSubProject.cs" />
     <Compile Remove="Data\Migrations\20200623060307_addIenumerableProductsToSubProject.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200630083030_addDateToBePaidToRequests.cs" />
+    <Compile Remove="Data\Migrations\20200630083030_addDateToBePaidToRequests.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200630085022_updatedDateToBePaidOnRequestsToNotThrowException.cs" />
+    <Compile Remove="Data\Migrations\20200630085022_updatedDateToBePaidOnRequestsToNotThrowException.Designer.cs" />
   </ItemGroup>
 
 

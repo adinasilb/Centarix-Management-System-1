@@ -332,15 +332,31 @@ namespace PrototypeWithAuth.Controllers
             return _context.ParentRequests.Any(e => e.ParentRequestID == id);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> ToPay()
         {
+            //var test = new DateTime(2014, 3, 15, 5, 4, 9) - DateTime.Today;
+            var begDT = new DateTime();
+            var allParentRequests = _context.ParentRequests.Include(pr => pr.Requests).ToList();
+            var parentRequests = await _context.ParentRequests
+                .Where(pr => pr.Requests.FirstOrDefault().DateToBePaid > begDT && pr.Requests.FirstOrDefault().DateToBePaid <= DateTime.Today)
+                .Select(pr => new ParentRequestListViewModel
+                {
+                    ParentRequest = pr,
+                    ProductName = pr.Requests.FirstOrDefault().Product.ProductName,
+                    ParentCategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
+                    ProductSubcategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription,
+                    VendorEnName = pr.Requests.FirstOrDefault().Product.Vendor.VendorEnName,
+                    Cost = pr.Requests.FirstOrDefault().Cost,
+                    SumRequestCost = pr.Requests.Sum(r => r.Cost)
+                })
+                .ToListAsync();
+
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
             {
-                ParentRequests = await _context.ParentRequests.Where(pr => pr.Payed != true).ToListAsync()
+                ParentRequestList = parentRequests
             };
-            return View();
+            return View(notificationsListViewModel);
         }
 
         [HttpGet]

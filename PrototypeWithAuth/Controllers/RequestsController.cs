@@ -413,6 +413,13 @@ namespace PrototypeWithAuth.Controllers
             //TempData["ModalView"] = true;
             //why is this here?
 
+
+            //PAYED NEEDS TO BE DONE DIFFERENTLY IN THE FUTURE:
+            if (requestItemViewModel.Request.Terms == -1)
+            {
+                requestItemViewModel.Request.ParentRequest.Payed = true;
+            }
+
             var context = new ValidationContext(requestItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
             if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
@@ -1526,6 +1533,12 @@ namespace PrototypeWithAuth.Controllers
             //in case we need to redirect to action
             //TempData["ModalView"] = true;
             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+
+            if (requestItemViewModel.Request.Terms == -1)
+            {
+                requestItemViewModel.Request.ParentRequest.Payed = true;
+            }
+
 
             var context = new ValidationContext(requestItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();

@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Request
+    public class Request //WHEN YOU RETURN REQUEST MAY WANT TO DO A SELECT SO IT DOESN"T ALWAYS NEED TO CALCULATE THE DATE PAID
     {
         //IMPT: When adding in data validation make sure that you turn data-val off in the search
         [Key]
@@ -75,7 +75,7 @@ namespace PrototypeWithAuth.Models
 
         public double VAT = 0.17; // should this be coded into the model or should we set it elsewhere?
         [Display(Name = "Exchange Rate")]
-        public double ExchangeRate { get; set; } // holding the rate of exchange for this specic request
+        public double ExchangeRate { get; set; } // holding the rate of exchange for this specific request
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
         [Display(Name = "Expected Supply Days")]
         public byte ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
@@ -84,7 +84,25 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         [Display(Name = "Arrival Date")]
         public DateTime ArrivalDate { get; set; }
-        
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime DateToBePaid //note until this is changed from negative one 
+        {
+            get
+            {
+                DateTime dt = new DateTime();
+                if (this.Terms == -1 && ParentRequest != null)
+                {
+                    dt = this.ParentRequest.OrderDate;
+                }
+                else if (ParentRequest != null)
+                {
+                    dt = this.ParentRequest.OrderDate.AddDays((double)this.Terms);
+                }
+                return dt;
+            }
+            private set { }
+        }
 
 
     }
