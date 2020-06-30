@@ -95,7 +95,7 @@ namespace PrototypeWithAuth.Models
                 {
                     dt = this.ParentRequest.OrderDate;
                 }
-                else if (ParentRequest != null)
+                else if (this.ParentRequest != null && this.ParentRequest.OrderDate != null && this.Terms != null)
                 {
                     dt = this.ParentRequest.OrderDate.AddDays((double)this.Terms);
                 }

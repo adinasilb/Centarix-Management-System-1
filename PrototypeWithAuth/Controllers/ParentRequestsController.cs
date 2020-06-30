@@ -337,9 +337,11 @@ namespace PrototypeWithAuth.Controllers
         {
             //var test = new DateTime(2014, 3, 15, 5, 4, 9) - DateTime.Today;
             var begDT = new DateTime();
-            var allParentRequests = _context.ParentRequests.Include(pr => pr.Requests).ToList();
+            var requests = _context.Requests; //to instantiate the computed column????????
+            //NEEDS TO BE FIXED!!!!!!!!!!!!!!!!!
             var parentRequests = await _context.ParentRequests
-                .Where(pr => pr.Requests.FirstOrDefault().DateToBePaid > begDT && pr.Requests.FirstOrDefault().DateToBePaid <= DateTime.Today)
+                .Include(pr => pr.Requests)
+                //.Where(pr => pr.Requests.FirstOrDefault().DateToBePaid > begDT /*&& pr.Requests.FirstOrDefault().DateToBePaid <= DateTime.Today*/)
                 .Select(pr => new ParentRequestListViewModel
                 {
                     ParentRequest = pr,
@@ -348,9 +350,18 @@ namespace PrototypeWithAuth.Controllers
                     ProductSubcategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription,
                     VendorEnName = pr.Requests.FirstOrDefault().Product.Vendor.VendorEnName,
                     Cost = pr.Requests.FirstOrDefault().Cost,
-                    SumRequestCost = pr.Requests.Sum(r => r.Cost)
+                    SumRequestCost = pr.Requests.Sum(r => r.Cost),
+                    DateToBePaid = pr.Requests.FirstOrDefault().DateToBePaid
                 })
                 .ToListAsync();
+
+            foreach (var pr in parentRequests)
+            {
+                if (pr.DateToBePaid > begDT)
+                {
+                    var t = true;
+                }
+            }
 
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
             {
@@ -362,7 +373,24 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<IActionResult> NoInvoice()
         {
-            return View();
+            var parentRequests = await _context.ParentRequests
+                .Where(pr => pr.InvoiceNumber == null)
+                .Select(pr => new ParentRequestListViewModel
+                {
+                    ParentRequest = pr,
+                    ProductName = pr.Requests.FirstOrDefault().Product.ProductName,
+                    ParentCategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
+                    ProductSubcategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription,
+                    VendorEnName = pr.Requests.FirstOrDefault().Product.Vendor.VendorEnName,
+                    Cost = pr.Requests.FirstOrDefault().Cost,
+                    Request = pr.Requests.FirstOrDefault()
+                })
+                .ToListAsync();
+            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
+            {
+                ParentRequestList = parentRequests
+            };
+            return View(notificationsListViewModel);
         }
 
         [HttpGet]
