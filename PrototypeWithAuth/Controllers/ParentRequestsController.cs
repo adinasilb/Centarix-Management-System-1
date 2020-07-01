@@ -431,23 +431,38 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> PayNow()
         {
             TempData["Action"] = "PayNow";
-            var parentRequests = await _context.ParentRequests
-               .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 6)
-               .Select(pr => new ParentRequestListViewModel
+            var fullListOfParentRequests = await _context.ParentRequests
+               //.Where(pr => pr.OrderDate!= null && pr.Requests.FirstOrDefault().Terms != null)
+               .Select(pr => new ParentRequestWithPayByDateViewModel
                {
                    ParentRequest = pr,
-                   Request = pr.Requests.FirstOrDefault(),
-                   Product = pr.Requests.FirstOrDefault().Product,
-                   Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                   ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                   UnitType = pr.Requests.FirstOrDefault().UnitType,
-                   SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                   SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+                    //Terms = pr.Requests.FirstOrDefault().Terms,
+                    PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
                })
                .ToListAsync();
+            var parentRequestIds = fullListOfParentRequests
+                .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate == DateTime.Today )
+                /*
+                 * Right now PAY NOW is taking all requests that are due today. Should it be tomorrow also or sometime this week?
+                 */
+                .Select(pr => pr.ParentRequest.ParentRequestID).ToList();
+            var ParentRequestsFiltered = _context.ParentRequests
+                .Where(pr => parentRequestIds.Contains(pr.ParentRequestID))
+                .Select(pr => new ParentRequestListViewModel
+                {
+                    ParentRequest = pr,
+                    Request = pr.Requests.FirstOrDefault(),
+                    Product = pr.Requests.FirstOrDefault().Product,
+                    Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                    ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                    UnitType = pr.Requests.FirstOrDefault().UnitType,
+                    SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                    SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+                })
+                .ToList();
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
             {
-                ParentRequestList = parentRequests
+                ParentRequestList = ParentRequestsFiltered
             };
             return View(notificationsListViewModel);
         }
