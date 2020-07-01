@@ -158,4 +158,13 @@
             }
         });
     }
+
+    $("table tr .form-check-input").click(function () {
+        if ($(this).is(':checked')) {
+            $(this).closest("tr").addClass("clicked-border");
+        }
+        else {
+            $(this).closest("tr").removeClass("clicked-border");
+        }
+    });
 </script>

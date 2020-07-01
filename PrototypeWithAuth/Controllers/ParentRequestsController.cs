@@ -84,7 +84,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 foreach (var request in parentRequest.Requests)
                 {
-                    if (request.RequestStatusID == 6) //Request Stat ID of 6 equals Clarify
+                    if (request.RequestStatusID == 6) //Request Stat ID of 6 equals Pay Now
                     {
                         PayNow.Add(request.ParentRequest);
                         break;
@@ -337,36 +337,42 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["Action"] = "ToPay";
             //var test = new DateTime(2014, 3, 15, 5, 4, 9) - DateTime.Today;
-            var begDT = new DateTime();
-            var requests = _context.Requests; //to instantiate the computed column????????
-            //NEEDS TO BE FIXED!!!!!!!!!!!!!!!!!
-            var parentRequests = await _context.ParentRequests
-                .Include(pr => pr.Requests)
-                .Where(pr => /*pr.Requests.FirstOrDefault().Terms != -1 ||*/ pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms) <= DateTime.Today)
+            //var begDT = new DateTime();
+            var fullListOfParentRequests = await _context.ParentRequests
+                //.Where(pr => pr.OrderDate!= null && pr.Requests.FirstOrDefault().Terms != null)
+                .Select(pr => new ParentRequestWithPayByDateViewModel
+                {
+                    ParentRequest = pr,
+                    //Terms = pr.Requests.FirstOrDefault().Terms,
+                    PayByDate = (DateTime?) pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
+                })
+                .ToListAsync();
+            var parentRequestIds = fullListOfParentRequests
+                .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate > DateTime.Today || pr.PayByDate == null)
+                /*
+                 * Right now To Pay is all requests with a NULL PayByDate or where the PayByDate is in the future
+                 * 1. should we take out the nulls?
+                 * 2. should we put in if the PayByDate is today?
+                 */
+                .Select(pr => pr.ParentRequest.ParentRequestID ).ToList();
+            var ParentRequestsFiltered = _context.ParentRequests
+                .Where(pr => parentRequestIds.Contains(pr.ParentRequestID))
                 .Select(pr => new ParentRequestListViewModel
                 {
                     ParentRequest = pr,
-                    ProductName = pr.Requests.FirstOrDefault().Product.ProductName,
-                    ParentCategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
-                    ProductSubcategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription,
-                    VendorEnName = pr.Requests.FirstOrDefault().Product.Vendor.VendorEnName,
-                    Cost = pr.Requests.FirstOrDefault().Cost,
-                    SumRequestCost = pr.Requests.Sum(r => r.Cost),
-                    DateToBePaid = pr.Requests.FirstOrDefault().DateToBePaid
+                    Request = pr.Requests.FirstOrDefault(),
+                    Product = pr.Requests.FirstOrDefault().Product,
+                    Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                    ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                    UnitType = pr.Requests.FirstOrDefault().UnitType,
+                    SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                    SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
                 })
-                .ToListAsync();
-
-            foreach (var pr in parentRequests)
-            {
-                if (pr.DateToBePaid > begDT)
-                {
-                    var t = true;
-                }
-            }
+                .ToList();
 
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
             {
-                ParentRequestList = parentRequests
+                ParentRequestList = ParentRequestsFiltered
             };
             return View(notificationsListViewModel);
         }
@@ -380,12 +386,13 @@ namespace PrototypeWithAuth.Controllers
                 .Select(pr => new ParentRequestListViewModel
                 {
                     ParentRequest = pr,
-                    ProductName = pr.Requests.FirstOrDefault().Product.ProductName,
-                    ParentCategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
-                    ProductSubcategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription,
-                    VendorEnName = pr.Requests.FirstOrDefault().Product.Vendor.VendorEnName,
-                    Cost = pr.Requests.FirstOrDefault().Cost,
-                    Request = pr.Requests.FirstOrDefault()
+                    Request = pr.Requests.FirstOrDefault(),
+                    Product = pr.Requests.FirstOrDefault().Product,
+                    Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                    ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                    UnitType = pr.Requests.FirstOrDefault().UnitType,
+                    SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                    SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
                 })
                 .ToListAsync();
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
@@ -404,12 +411,13 @@ namespace PrototypeWithAuth.Controllers
                .Select(pr => new ParentRequestListViewModel
                {
                    ParentRequest = pr,
-                   ProductName = pr.Requests.FirstOrDefault().Product.ProductName,
-                   ParentCategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
-                   ProductSubcategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription,
-                   VendorEnName = pr.Requests.FirstOrDefault().Product.Vendor.VendorEnName,
-                   Cost = pr.Requests.FirstOrDefault().Cost,
-                   Request = pr.Requests.FirstOrDefault()
+                   Request = pr.Requests.FirstOrDefault(),
+                   Product = pr.Requests.FirstOrDefault().Product,
+                   Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                   ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                   UnitType = pr.Requests.FirstOrDefault().UnitType,
+                   SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                   SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
                })
                .ToListAsync();
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
@@ -428,12 +436,13 @@ namespace PrototypeWithAuth.Controllers
                .Select(pr => new ParentRequestListViewModel
                {
                    ParentRequest = pr,
-                   ProductName = pr.Requests.FirstOrDefault().Product.ProductName,
-                   ParentCategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
-                   ProductSubcategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription,
-                   VendorEnName = pr.Requests.FirstOrDefault().Product.Vendor.VendorEnName,
-                   Cost = pr.Requests.FirstOrDefault().Cost,
-                   Request = pr.Requests.FirstOrDefault()
+                   Request = pr.Requests.FirstOrDefault(),
+                   Product = pr.Requests.FirstOrDefault().Product,
+                   Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                   ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                   UnitType = pr.Requests.FirstOrDefault().UnitType,
+                   SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                   SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
                })
                .ToListAsync();
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
@@ -447,14 +456,50 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> PartialDelivery()
         {
             TempData["Action"] = "PartialDelivery";
-            return View();
+            var parentRequests = await _context.ParentRequests
+               .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 4)
+               .Select(pr => new ParentRequestListViewModel
+               {
+                   ParentRequest = pr,
+                   Request = pr.Requests.FirstOrDefault(),
+                   Product = pr.Requests.FirstOrDefault().Product,
+                   Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                   ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                   UnitType = pr.Requests.FirstOrDefault().UnitType,
+                   SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                   SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+               })
+               .ToListAsync();
+            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
+            {
+                ParentRequestList = parentRequests
+            };
+            return View(notificationsListViewModel);
         }
 
         [HttpGet]
         public async Task<IActionResult> ForClarification()
         {
             TempData["Action"] = "ForClarification";
-            return View();
+            var parentRequests = await _context.ParentRequests
+               .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 5)
+               .Select(pr => new ParentRequestListViewModel
+               {
+                   ParentRequest = pr,
+                   Request = pr.Requests.FirstOrDefault(),
+                   Product = pr.Requests.FirstOrDefault().Product,
+                   Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                   ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                   UnitType = pr.Requests.FirstOrDefault().UnitType,
+                   SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                   SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+               })
+               .ToListAsync();
+            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
+            {
+                ParentRequestList = parentRequests
+            };
+            return View(notificationsListViewModel);
         }
 
         //this is here b/c the ajax call on the payment view is not working and I didn't have time to debug it

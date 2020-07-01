@@ -1,84 +1,98 @@
 ﻿@model PrototypeWithAuth.ViewModels.NotificationsListViewModel
 
 @{
-    ViewData["Title"] = "NoInvoice";
+    ViewData["Title"] = "No Invoice - Notifications";
     Layout = "~/Views/Shared/NotificationsView.cshtml";
 }
 
 
-<table class="table table-headerspaced">
-    <thead>
-        <tr style="border-color:transparent;">
-            <th colspan="8" style="border-color:transparent;">
-                <h5>
-                    <strong>No Invoice</strong> [@Model.ParentRequestList.Count]
-                    @{
-                        var TotalCost = Model.ParentRequestList.Sum(pr => pr.SumRequestCost);
-                        var decCost = (decimal)TotalCost;
-                        var formattedCostTotal = decCost.ToString("C02");
-                    }
-                    <span>&emsp; Total: </span><span>@formattedCostTotal</span>
-                </h5>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr style="border-color:transparent;">
-            <th style="width:8%;">
-                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ParentRequest.OrderNumber)
-            </th>
-            <th style="width:25%;">
-                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ProductName)
-            </th>
-            <th style="width:10%">
-                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ParentRequest.OrderDate)
-            </th>
-            <th style="width:10%">
-                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ParentCategoryDescription)
-            </th>
-            <th style="width:10%">
-                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ProductSubcategoryDescription)
-            </th>
-            <th style="width:15%">
-                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().VendorEnName)
-            </th>
-            <th style="width:15%">
-                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().Cost)
-            </th>
-        </tr>
-        @foreach (var parentRequestListViewModel in Model.ParentRequestList)
-        {
-            <tr class="border border-dark">
-                <td>
-                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ParentRequest.OrderNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ParentRequest.OrderDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ParentCategoryDescription)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ProductSubcategoryDescription)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => parentRequestListViewModel.VendorEnName)
-                </td>
-                <td>
-                    @{
-                        var ItemCost = parentRequestListViewModel.Cost;
-                        var decItemCost = (decimal)ItemCost;
-                        var stringItemCost = decItemCost.ToString("C02");
-                    }
-                    @stringItemCost
-                </td>
-                <td>
-                    <button class="load-request-details btn btn-link" value="@parentRequestListViewModel.Request.RequestID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /> </button>
-                </td>
+    <table class="table table-headerspaced">
+        <thead>
+            <tr style="border-color:transparent;">
+                <th colspan="8" style="border-color:transparent;">
+                    <h5>
+                        <strong>No Invoice</strong> [@Model.ParentRequestList.Count]
+                        @{
+                            var TotalCost = Model.ParentRequestList.Sum(pr => pr.Request.Cost);
+                            var decCost = (decimal)TotalCost;
+                            var formattedCostTotal = decCost.ToString("C02");
+                        }
+                        <span>&emsp; Total: </span><span>@formattedCostTotal</span>
+                    </h5>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <tr class="text-center" style="border-color:transparent; border-bottom: 2px solid lightgrey;">
+                <th style="width:8%;">
+                    No
+                </th>
+                <th style="width:10%;"></th>
+                <th style="width:20%;">
+                    Name
+                </th>
+                <th style="width:10%">
+                    Units
+                </th>
+                <th style="width:10%">
+                    Price
+                </th>
+                <th style="width:10%">
+                    Vendor
+                </th>
+                <th style="width:10%">
+                    Category
+                </th>
+                <th style="width:10%">
+                    Date
+                </th>
+                <th style="width:12%">
+
+                </th>
+            </tr>
+            @foreach (var parentRequestListViewModel in Model.ParentRequestList)
+            {
+                <tr class="text-center">
+                    <td class="text-center">
+                        <div class="form-check text-center">
+                            <input type="checkbox" class="form-check-input" id="@parentRequestListViewModel.ParentRequest.ParentRequestID" /><br />
+                            <label for="@parentRequestListViewModel.ParentRequest.ParentRequestID" class="form-check-label pl-0" style="margin-left: -1.7rem">
+                                @Html.DisplayFor(modelItem => parentRequestListViewModel.ParentRequest.OrderNumber)
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="~/images/css/inventory/Type/bottle.png" alt="Image" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => parentRequestListViewModel.Product.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => parentRequestListViewModel.Request.Unit) @Html.DisplayFor(modelItem => parentRequestListViewModel.UnitType.UnitTypeDescription)<br />
+                        @Html.DisplayFor(modelItem => parentRequestListViewModel.Request.SubUnit) @Html.DisplayFor(modelItem => parentRequestListViewModel.SubUnitType.UnitTypeDescription)<br />
+                        @Html.DisplayFor(modelItem => parentRequestListViewModel.Request.SubSubUnit) @Html.DisplayFor(modelItem => parentRequestListViewModel.SubSubUnitType.UnitTypeDescription)
+                    </td>
+                    <td>
+                        @{
+                            var ItemCost = parentRequestListViewModel.Request.Cost;
+                            var decItemCost = (decimal)ItemCost;
+                            var stringItemCost = decItemCost.ToString("C02");
+                        }
+                        @stringItemCost
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => parentRequestListViewModel.Vendor.VendorEnName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => parentRequestListViewModel.ParentCategory.ParentCategoryDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => parentRequestListViewModel.ParentRequest.OrderDate)
+                    </td>
+                    <td class="text-right">
+                        <button class="load-request-details btn btn-link" value="@parentRequestListViewModel.Request.RequestID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /> </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

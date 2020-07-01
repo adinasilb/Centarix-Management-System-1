@@ -8,14 +8,14 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class ParentRequestListViewModel
     {
-        public double SumRequestCost { get; set; }
-        public ParentRequest ParentRequest { get; set; }
+        //public double SumRequestCost { get; set; }
+        public ParentRequest ParentRequest { get; set; } //because this is set in the controller as a .select list then the normally included models need to be put in here
         public Request Request { get; set; }
-        public string ProductName { get; set; }
-        public string ParentCategoryDescription { get; set; }
-        public string ProductSubcategoryDescription { get; set; }
-        public string VendorEnName { get; set; }
-        public double Cost { get; set; }
-        public DateTime DateToBePaid { get; set; }
+        public Product Product { get; set; }
+        public Vendor Vendor { get; set; }
+        public ParentCategory ParentCategory { get; set; }
+        public UnitType UnitType { get; set; }
+        public UnitType SubUnitType { get; set; }
+        public UnitType SubSubUnitType { get; set; }
     }
 }

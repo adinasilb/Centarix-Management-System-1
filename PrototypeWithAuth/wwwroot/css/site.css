@@ -21,6 +21,11 @@ for details on configuring this project to bundle and minify static web assets. 
     background: #fff;
 }
 
+.clicked-border {
+    /*border-color: #A56FF1 !important;*/ /*invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);*/
+    border: 2px double #A56FF1 !important;
+}
+
 .carousel.vertical .item {
     -webkit-transition: 0.6s ease-in-out top;
     -moz-transition: 0.6s ease-in-out top;
