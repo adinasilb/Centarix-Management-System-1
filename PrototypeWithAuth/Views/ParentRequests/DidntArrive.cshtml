@@ -1,9 +1,84 @@
-﻿@model PrototypeWithAuth.ViewModels.NotificationsListViewModel;
+﻿@model PrototypeWithAuth.ViewModels.NotificationsListViewModel
 
 @{
     ViewData["Title"] = "DidntArrive";
     Layout = "~/Views/Shared/NotificationsView.cshtml";
 }
 
-<h1>DidntArrive</h1>
 
+<table class="table table-headerspaced">
+    <thead>
+        <tr style="border-color:transparent;">
+            <th colspan="8" style="border-color:transparent;">
+                <h5>
+                    <strong>Didn't Arrive</strong> [@Model.ParentRequestList.Count]
+                    @{
+                        var TotalCost = Model.ParentRequestList.Sum(pr => pr.SumRequestCost);
+                        var decCost = (decimal)TotalCost;
+                        var formattedCostTotal = decCost.ToString("C02");
+                    }
+                    <span>&emsp; Total: </span><span>@formattedCostTotal</span>
+                </h5>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="border-color:transparent;">
+            <th style="width:8%;">
+                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ParentRequest.OrderNumber)
+            </th>
+            <th style="width:25%;">
+                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ProductName)
+            </th>
+            <th style="width:10%">
+                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ParentRequest.OrderDate)
+            </th>
+            <th style="width:10%">
+                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ParentCategoryDescription)
+            </th>
+            <th style="width:10%">
+                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().ProductSubcategoryDescription)
+            </th>
+            <th style="width:15%">
+                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().VendorEnName)
+            </th>
+            <th style="width:15%">
+                @Html.DisplayNameFor(model => model.ParentRequestList.FirstOrDefault().Cost)
+            </th>
+        </tr>
+        @foreach (var parentRequestListViewModel in Model.ParentRequestList)
+        {
+            <tr class="border border-dark">
+                <td>
+                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ParentRequest.OrderNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ParentRequest.OrderDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ParentCategoryDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => parentRequestListViewModel.ProductSubcategoryDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => parentRequestListViewModel.VendorEnName)
+                </td>
+                <td>
+                    @{
+                        var ItemCost = parentRequestListViewModel.Cost;
+                        var decItemCost = (decimal)ItemCost;
+                        var stringItemCost = decItemCost.ToString("C02");
+                    }
+                    @stringItemCost
+                </td>
+                <td>
+                    <button class="load-request-details btn btn-link" value="@parentRequestListViewModel.Request.RequestID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /> </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

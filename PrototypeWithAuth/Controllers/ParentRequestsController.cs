@@ -399,14 +399,48 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DidntArrive()
         {
             TempData["Action"] = "DidntArrive";
-            return View();
+            var parentRequests = await _context.ParentRequests
+               .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 2)
+               .Select(pr => new ParentRequestListViewModel
+               {
+                   ParentRequest = pr,
+                   ProductName = pr.Requests.FirstOrDefault().Product.ProductName,
+                   ParentCategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
+                   ProductSubcategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription,
+                   VendorEnName = pr.Requests.FirstOrDefault().Product.Vendor.VendorEnName,
+                   Cost = pr.Requests.FirstOrDefault().Cost,
+                   Request = pr.Requests.FirstOrDefault()
+               })
+               .ToListAsync();
+            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
+            {
+                ParentRequestList = parentRequests
+            };
+            return View(notificationsListViewModel);
         }
 
         [HttpGet]
         public async Task<IActionResult> PayNow()
         {
             TempData["Action"] = "PayNow";
-            return View();
+            var parentRequests = await _context.ParentRequests
+               .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 6)
+               .Select(pr => new ParentRequestListViewModel
+               {
+                   ParentRequest = pr,
+                   ProductName = pr.Requests.FirstOrDefault().Product.ProductName,
+                   ParentCategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription,
+                   ProductSubcategoryDescription = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription,
+                   VendorEnName = pr.Requests.FirstOrDefault().Product.Vendor.VendorEnName,
+                   Cost = pr.Requests.FirstOrDefault().Cost,
+                   Request = pr.Requests.FirstOrDefault()
+               })
+               .ToListAsync();
+            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
+            {
+                ParentRequestList = parentRequests
+            };
+            return View(notificationsListViewModel);
         }
 
         [HttpGet]
