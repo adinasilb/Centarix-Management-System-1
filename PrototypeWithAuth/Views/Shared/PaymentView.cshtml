@@ -133,14 +133,12 @@
     });
 
     $.fn.CallPage = function ( $itemurl, $Type = "") {
-        console.log("in function");
         $.ajax({
             async: true,
             url: $itemurl,
             type: 'GET',
             cache: false,
             success: function (data) {
-                console.log("success!");
                 //replaces the modal-view class with the ModalView view
                 $(".modal-view").html(data);
                 //turn off data dismiss by clicking out of the box and by pressing esc

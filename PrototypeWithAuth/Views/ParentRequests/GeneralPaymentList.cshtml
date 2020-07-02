@@ -6,15 +6,15 @@
 }
 <div style="display:flex">
 
-    <div style="width: 100px; min-height:60rem;" class="p-2 border-right sidebar-shadow text-center">  
+    <div style="width: 100px; min-height:60rem;" class="p-2 border-right sidebar-shadow text-center">
         @*<<<<< side navbar >>>>>*@
         <ul class="nav flex-column nav-pills nav-stacked mt-4">
             @{int yearCount = 0;}
             @foreach (var group in Model.GroupBy(m => m.OrderDate.Year))
             {
                 <li class="nav-item m-3">
-                    <a href="#@group.Key"> 
-                        <strong style="color:#A26FF0;"> @group.Key </strong>  
+                    <a href="#@group.Key">
+                        <strong style="color:#A26FF0;"> @group.Key </strong>
                     </a>
                 </li>
                 yearCount++;
@@ -30,25 +30,32 @@
             <table class="table table-noheaderlines table-headerspaced table-hover" style="table-layout:fixed;">
                 <thead>
                     <tr>
-                        <th style="width:8%;"> @*No*@
+                        <th style="width:8%;">
+                            @*No*@
                             @Html.DisplayNameFor(model => model.OrderNumber)
                         </th>
-                        <th style="width:25%;"> @*Item*@
+                        <th style="width:25%;">
+                            @*Item*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductName)
                         </th>
-                        <th style="width:10%;"> @*OrderDate*@
+                        <th style="width:10%;">
+                            @*OrderDate*@
                             @Html.DisplayNameFor(model => model.OrderDate)
                         </th>
-                        <th style="width:10%;"> @*Category*@
+                        <th style="width:10%;">
+                            @*Category*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
                         </th>
-                        <th style="width:10%;"> @*Type*@
+                        <th style="width:10%;">
+                            @*Type*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
                         </th>
-                        <th style="width:15%;"> @*Supplier*@
+                        <th style="width:15%;">
+                            @*Supplier*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Product.Vendor.VendorEnName)
                         </th>
-                        <th style="width:15%;"> @*Price*@
+                        <th style="width:15%;">
+                            @*Price*@
                             @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Cost)
                         </th>
                     </tr>
@@ -101,8 +108,8 @@
                                 @formattedCost
                             </td>
 
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.ParentRequestID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /> </a>
+                            <td class="text-right">
+                                <button class="load-request-details btn btn-link" value="@item.Requests.FirstOrDefault().RequestID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /> </button>
                             </td>
                         </tr>
 
@@ -113,7 +120,7 @@
             </table>
             <br />
         }
-            
+
     </div>
 </div>
 
@@ -141,5 +148,5 @@
         hide = false;
     });
 </script>
-   
+
 

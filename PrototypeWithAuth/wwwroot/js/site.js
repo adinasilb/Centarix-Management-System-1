@@ -29,7 +29,8 @@ $("#parentlist").change(function () {
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $(".Project").change(function () {
-	console.log("in project change");
+
+	("in project change");
 	var projectId = $(this).val();
 	var url = "/Requests/GetSubProjectList";
 
@@ -39,7 +40,6 @@ $(".Project").change(function () {
 		$.each(data, function (i, subproject) {
 			item += '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
 		});
-		console.log(item);
 		$(".SubProject").html(item);
 	});
 });
@@ -47,7 +47,6 @@ $(".Project").change(function () {
 
 //search forms- Redo js in newer versions
 $("#search-form #Project").change(function () {
-	console.log("changed project");
 });
 
 $("#search-form #SubProject").change(function () {
@@ -92,18 +91,11 @@ var prevyyyy = yyyy;
 //insert the payment lines
 $("#Request_ParentRequest_Installments").change(function () {
 	var installments = $(this).val();
-	console.log("installments " + installments);
 	var countPrevInstallments = $(".payment-line").length;
-	console.log("countPrevInstallments " + countPrevInstallments);
 	var difference = installments - countPrevInstallments;
-	console.log("difference " + difference);
-
-
-	console.log("dd: " + dd);
 
 
 	if (difference > 0) { 
-		console.log("installments increased");
 		var newIncrementNumber = countPrevInstallments;
 		for (x = difference; x > 0; x--) {
 
@@ -125,7 +117,6 @@ $("#Request_ParentRequest_Installments").change(function () {
 
 			prevyyyy = newyyyy;
 			prevmm = newmm;
-			console.log("payment date: " + paymentDate);
 			$.fn.AddNewPaymentLine(newIncrementNumber, paymentDate);
 			newIncrementNumber++;
 		};
@@ -133,7 +124,6 @@ $("#Request_ParentRequest_Installments").change(function () {
 		$.fn.AdjustPaymentDates();
 	}
 	else if (difference < 0) { //installments were removed
-		console.log("installments decreased");
 		for (x = difference; x < 0; x++) {
 			$(".payments-table tr:last").remove();
 		}
@@ -213,7 +203,6 @@ $(".paymentType").change(function () {
 	var paymentTypeId = $(this).val();
 	var url = "/Requests/GetCompanyAccountList";
 	var paymentTypeId = $(this).attr("id");
-	console.log("payment type id: " + paymentTypeId);
 	var firstNum = paymentTypeId.charAt(12);
 	var secondNum = paymentTypeId.charAt(13);
 	var numId = firstNum;
@@ -223,13 +212,10 @@ $(".paymentType").change(function () {
 	var companyAccountId = "NewPayments_" + numId + "__CompanyAccount";
 
 	$.getJSON(url, { paymentTypeId: paymentTypeId }, function (data) {
-		console.log("in json");
 		var item = "";
 		$("#" + companyAccountId).empty();
 		$.each(data, function (i, companyAccount) {
-			console.log(companyAccount.companyAccountId)
 			item += '<option value="' + companyAccount.companyAccountId + '">' + companyAccount.companyAccountNum + ' - hello</option>'
-			console.log(item);
 		});
 		$("#" + companyAccountId).html(item);
 	});
