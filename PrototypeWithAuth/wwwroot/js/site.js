@@ -82,7 +82,7 @@ $("#search-form #vendorBusinessIDList").change(function () {
 
 var today = new Date();
 var dd = today.getDate();
-var mm = today.getMonth() + 1; //January is 0!
+var mm = today.getMonth(); //January is 0 but do not add because everytime you create a new line it adds 1
 var yyyy = today.getFullYear();
 
 if (dd < 10) { dd = '0' + dd }
@@ -97,8 +97,6 @@ $("#Request_ParentRequest_Installments").change(function () {
 	console.log("countPrevInstallments " + countPrevInstallments);
 	var difference = installments - countPrevInstallments;
 	console.log("difference " + difference);
-
-
 	console.log("dd: " + dd);
 
 
@@ -140,11 +138,12 @@ $("#Request_ParentRequest_Installments").change(function () {
 	}
 });
 
+
 $.fn.AddNewPaymentLine = function (increment, date) {
 	var htmlTR = "";
 	htmlTR += "<tr class='payment-line'>";
 	htmlTR += "<td>";
-	htmlTR += '<input class="form-control-plaintext border-bottom" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
+	htmlTR += '<input class="form-control-plaintext border-bottom payment-date" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
 	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '<td>';
@@ -235,6 +234,7 @@ $(".paymentType").change(function () {
 	});
 });
 
+
 $("#vendorList").change(function () {
 	//get the new vendor id selected
 	var vendorid = $("#vendorList").val();
@@ -259,7 +259,6 @@ $.fn.ChangeVendorBusinessId = function (vendorid) {
 	$(".vendorBusinessId").html(newBusinessID);
 	//put the business id into the form
 }
-
 
 //view documents on modal view
 $(".view-docs").click(function (clickEvent) {
@@ -336,6 +335,7 @@ $("#Request_Cost").change(function (e) {
 	$.fn.CalculateUnitAmounts();
 	$.fn.CalculateSubUnitAmounts();
 	$.fn.CalculateSubSubUnitAmounts();
+
 });
 
 $("#sum-dollars").change(function (e) {
@@ -343,6 +343,7 @@ $("#sum-dollars").change(function (e) {
 	$.fn.CalculateUnitAmounts();
 	$.fn.CalculateSubUnitAmounts();
 	$.fn.CalculateSubSubUnitAmounts();
+	$.fn.updateDebt();
 });
 
 $("#Request_Unit").change(function () {
@@ -410,6 +411,7 @@ $.fn.CheckSubUnitsFilled = function () {
 	$.fn.CalculateSubUnitAmounts();
 	$.fn.CalculateSubSubUnitAmounts();
 }
+
 
 $.fn.EnableSubUnits = function () {
 	$("#Request_SubUnit").prop("disabled", false);
@@ -981,4 +983,63 @@ $(".load-product-edit").on("click", function (e) {
 	console.log("itemurl: " + $itemurl);
 	$.fn.CallPage($itemurl, "edit");
 	return false;
+});
+
+
+$.fn.updateDebt = function () {
+	console.log("in update debt");
+	var sum = $("#Request_Cost").val();
+	var installments = $("#Request_ParentRequest_Installments").val();
+	var tdate = new Date();
+	var dd = tdate.getDate(); //yields day
+	var MM = tdate.getMonth(); //yields month
+	var yyyy = tdate.getFullYear(); //yields year
+	var today = yyyy + "-0" + (MM + 1) + "-0" + dd;
+	console.log("today:"+ today);
+	//count how many installment dates already passed
+	var count = 0;
+	if (installments != 0) {
+		$(".payments-table .payment-date").each(function (index) {
+			var date = $(this).val();
+			console.log("date: "+date);
+			if (today >= date) {
+				console.log("today > date");
+				//date passed
+				count=count + 1
+			}
+		});
+	}
+	if (count != 0) {
+		var paymentPerMonth = sum / installments;
+		console.log(" paymentPerMonth: " + paymentPerMonth);
+		var amountToSubstractFromDebt = paymentPerMonth * count;
+		console.log(" amountToSubstractFromDebt: " + amountToSubstractFromDebt);
+		var debt = sum - amountToSubstractFromDebt
+		console.log(" sum: " + sum);
+		console.log(" debt: " + debt);
+		$("#debt").val(debt);
+	} else {
+		$("#debt").val(sum);
+	}
+};
+
+$(".payments-table").on("change", ".payment-date", function (e) {
+	console.log("in change .payments-table ");
+	$.fn.updateDebt();
+});
+
+$("#Request_ExchangeRate").change(function (e) {
+	console.log("in change #Request_ExchangeRate ");
+	$.fn.updateDebt();
+});
+
+
+$("#sum-dollars").change(function (e) {
+	console.log("in change #sum-dollars ");
+	$.fn.updateDebt();
+});
+
+$("#Request_ParentRequest_Installments").change(function () {
+	console.log("in change Request_ParentRequest_Installments ");
+	$.fn.updateDebt();
 });
