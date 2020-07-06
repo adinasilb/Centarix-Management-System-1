@@ -523,5 +523,6 @@ namespace PrototypeWithAuth.Controllers
         {
             return RedirectToAction("DetailsModalView", "Requests", new { id = id });
         }
+
     }
 }

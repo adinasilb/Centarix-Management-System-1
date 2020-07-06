@@ -206,7 +206,7 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+        var $itemurl = "Requests/EditModalView?id=" + $(this).val();
         console.log("itemurl: " + $itemurl);
         $("#loading").show();
         $.fn.CallPage($itemurl, "edit");
@@ -239,7 +239,7 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
+        var $itemurl = "Requests/ReOrderModalView?id=" + $(this).val() + "&NewRequestFromProduct=true";
         $("#loading").show();
         $.fn.CallPage($itemurl, "reorder");
         return false;
@@ -297,7 +297,7 @@
             async: true,
             url: $itemurl,
             type: 'GET',
-            cache: false,
+            cache: true,
             success: function (data) {
                 $("#loading").hide();
                 console.log("success!");

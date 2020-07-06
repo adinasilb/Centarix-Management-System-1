@@ -56,7 +56,7 @@
                             <h3>@Model.Request.Product.ProductName</h3>
                             <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
                         </div>
-                        
+
                     </div>
                     <br />
                     <div class="row">
@@ -725,7 +725,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                     <label for="OrderFiles">
                                                         <i class="icon-centarix-icons-07 upload-file-1 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>
                                                         @*<img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-1 mr-5" />*@
-                                                    </label> 
+                                                    </label>
                                                     <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                     @if (boolOrders)
                                                     {
@@ -997,8 +997,8 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                                 <div class="col-md-2">
                                                                     <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
                                                                     @*Insert Pic
-                                                                    <img src="" />
-                                                                    changing this to the user's profile picture*@
+                                                                        <img src="" />
+                                                                        changing this to the user's profile picture*@
                                                                 </div>
                                                                 <div class="col-md-10">
                                                                     <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>

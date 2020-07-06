@@ -127,14 +127,16 @@
     $(".load-request-details").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        var $itemurl = "DetailsModalView/?id=" + $(this).val();
+        var $itemurl = "DetailsModalView?id=" + $(this).val();
         $.fn.CallPage($itemurl, "details");
         return false;
     });
 
-    $.fn.CallPage = function ( $itemurl, $Type = "") {
+
+    $.fn.CallPage = function ($itemurl, $Type = "") {
+        console.log("item url: " + $itemurl);
         $.ajax({
-            async: true,
+            //async: true,
             url: $itemurl,
             type: 'GET',
             cache: false,
