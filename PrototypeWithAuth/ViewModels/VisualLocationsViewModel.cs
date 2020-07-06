@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public LocationInstance ParentLocationInstance { get; set; }
         public List<LocationInstance> ChildrenLocationInstances { get; set; }
+        public bool IsSmallestChild { get; set; }
     }
 }

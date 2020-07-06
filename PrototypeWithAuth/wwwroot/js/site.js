@@ -767,29 +767,22 @@ $(".clicked-button").click(function () {
 	$(this).parent().addClass("td-selected");
 })
 
-$(".load-sublocation-view").click(function () {
+$(".load-sublocation-view").click(function (e) {
 	//add or remove the background class in col 1
 	//$(".load-sublocation-view").parent().removeClass("td-selected");
 	//$(this).parent().addClass("td-selected");
 
-	//fill up col 2 with the next one
-	var myDiv = $(".colTwoSublocations");
-	var parentId = $(this).val();
-	//console.log("about to call ajax with a parentid of: " + parentId);
-	$.ajax({
-		//IMPORTANT: ADD IN THE ID
-		url: "/Locations/SublocationIndex/?parentId=" + parentId,
-		type: 'GET',
-		cache: false,
-		context: myDiv,
-		success: function (result) {
-			this.html(result);
-		}
-	});
+	$.fn.setUpsubLocationList($(this).val())
 
+	$.fn.setUpVisual($(this).val());
+
+	
+});
+
+$.fn.setUpVisual = function (val) {
 	//fill up col three with the visual
 	var visualDiv = $(".VisualBoxColumn");
-	var visualContainerId = $(this).val();
+	var visualContainerId = val;
 	//console.log("about to call ajax with a visual container id of: " + visualContainerId);
 	$.ajax({
 		url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
@@ -800,10 +793,27 @@ $(".load-sublocation-view").click(function () {
 			this.html(result);
 		}
 	});
-});
+};
 
 
+$.fn.setUpsubLocationList = function (val) {
+	//fill up col 2 with the next one
+	var myDiv = $(".colTwoSublocations");
+	var parentId = val;
+	//console.log("about to call ajax with a parentid of: " + parentId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/SublocationIndex/?parentId=" + parentId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {	
+			myDiv.show();
+			this.html(result);					
+		}
+	});
 
+};
 
 
 function changeTerms(checkbox) {
