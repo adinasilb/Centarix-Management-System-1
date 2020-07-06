@@ -1017,9 +1017,9 @@ $.fn.updateDebt = function () {
 		var debt = sum - amountToSubstractFromDebt
 		console.log(" sum: " + sum);
 		console.log(" debt: " + debt);
-		$("#debt").val(debt);
+		$("#Debt").val(debt);
 	} else {
-		$("#debt").val(sum);
+		$("#Debt").val(sum);
 	}
 };
 

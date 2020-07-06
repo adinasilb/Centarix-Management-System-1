@@ -495,7 +495,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
-                                            <input asp-for="Request.ParentRequest.Installments" class="form-control-plaintext border-bottom" />
+                                            <input asp-for="Request.ParentRequest.Installments"  min="0" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
                                         </div>
                                         @if (Model.NewPayments != null && Model.NewPayments.Any())
@@ -558,7 +558,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label class="control-label">Debt</label>
-                                            <input class="form-control-plaintext border-bottom" id="debt" asp-for="Debt" disabled />
+                                            <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
                                         </div>
                                     </div>
                                 </div>
