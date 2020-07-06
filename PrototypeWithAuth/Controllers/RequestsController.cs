@@ -2103,8 +2103,8 @@ namespace PrototypeWithAuth.Controllers
 
 
                 var request = _context.Requests.Where(r => r.RequestID == confirmEmail.Request.RequestID).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).FirstOrDefault();
-                string ownerEmail = "adinasilberberg@gmail.com";// request.ParentRequest.ApplicationUser.Email;
-                string ownerUsername = "Adina Gayer";//request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
+                string ownerEmail = request.ParentRequest.ApplicationUser.Email;
+                string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
                 string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
                 string vendorEmail = request.Product.Vendor.OrderEmail;
                 string vendorName = request.Product.Vendor.VendorEnName;
