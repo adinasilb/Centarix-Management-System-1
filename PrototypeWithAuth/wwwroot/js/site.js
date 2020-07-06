@@ -5,6 +5,9 @@
 
 //global Exchange Rate variable (usd --> nis)
 
+	
+
+
 function showmodal() {
 	$("#modal").modal('show');
 };
@@ -780,6 +783,7 @@ $(".load-sublocation-view").click(function (e) {
 });
 
 $.fn.setUpVisual = function (val) {
+	$("#loading2").show();
 	//fill up col three with the visual
 	var visualDiv = $(".VisualBoxColumn");
 	var visualContainerId = val;
@@ -797,6 +801,7 @@ $.fn.setUpVisual = function (val) {
 
 
 $.fn.setUpsubLocationList = function (val) {
+	$("#loading1").show();
 	//fill up col 2 with the next one
 	var myDiv = $(".colTwoSublocations");
 	var parentId = val;
@@ -807,9 +812,10 @@ $.fn.setUpsubLocationList = function (val) {
 		type: 'GET',
 		cache: false,
 		context: myDiv,
-		success: function (result) {	
+		success: function (result) {
 			myDiv.show();
-			this.html(result);					
+			this.html(result);		
+			
 		}
 	});
 
@@ -1053,3 +1059,31 @@ $("#Request_ParentRequest_Installments").change(function () {
 	console.log("in change Request_ParentRequest_Installments ");
 	$.fn.updateDebt();
 });
+
+$('#myModal').change(
+	function () {
+		$.validator.unobtrusive.parse("#createModalForm");
+});
+
+$('#myModal').change(
+	function () {
+		$.validator.unobtrusive.parse("#editModalForm");
+	});
+
+
+
+//$('#createModalForm').submit(
+//	function () {
+//		if ($("#createModalForm").valid()) {
+//			return true;
+//		}
+//		return false;
+//	});
+
+//$('#editModalForm').submit(
+//	function () {
+//		if ($("#editModalForm").valid()) {
+//			return true;
+//		}
+//		return false
+//	});
