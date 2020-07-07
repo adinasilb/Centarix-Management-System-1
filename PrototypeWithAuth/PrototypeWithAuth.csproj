@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
-    <AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
     <UserSecretsId>aspnet-PrototypeWithAuth-FF43606E-A387-46F0-A35D-9ED6980E4BEE</UserSecretsId>
   </PropertyGroup>
 
@@ -81,9 +80,10 @@
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="20.1.0" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
-    <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />
 
 	<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.0" Condition="'$(Configuration)' == 'Debug'" />
+
+	<PackageReference Include="X.PagedList.Mvc.Core" Version="8.0.7" />
 
   </ItemGroup>
 
