@@ -46,7 +46,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            
+
             // Added by Dani because to make CSS work better
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
 
@@ -70,11 +70,13 @@ namespace PrototypeWithAuth.Controllers
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
             LocationInstance parentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentId).FirstOrDefault();
             int depth = _context.LocationTypes.Where(x => x.LocationTypeID == parentLocationInstance.LocationTypeID).FirstOrDefault().Depth;
-         
+            sublocationIndexViewModel.Depth = depth;
+
+            parentLocationInstance.LocationInstanceParent = _context.LocationInstances.Where(x => x.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
             /*
              * Right now in the js validation it should not allow anything to be 0 x 0; therefore, we can test by depth and not by a has children method
              */
-            if (depth > 0)
+            if (depth > 1)
             {
                 sublocationIndexViewModel.PrevLocationInstance = parentLocationInstance;
                 sublocationIndexViewModel.IsSmallestChild = false;
