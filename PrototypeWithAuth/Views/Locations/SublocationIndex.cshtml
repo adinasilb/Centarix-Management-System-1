@@ -10,7 +10,7 @@
 <div class="row" style="height:4.55rem">
     @*in order to align colOne and colTwo*@
     <div class="col-md-12">
-        @if (Model.PrevLocationInstance != null)
+        @if (Model.PrevLocationInstance != null && Model.SublocationInstances.FirstOrDefault().LocationType.Depth > 1)
         {
             //replaced 'btn btn-outline-secondary' with 'inv-button'
             <button class="inv-button load-sublocation-view" value="@Model.PrevLocationInstance.LocationInstanceParentID"><i class="fas fa-undo-alt"></i> &nbsp; @Model.PrevLocationInstance.LocationInstanceName</button>
@@ -29,7 +29,7 @@
                     <td class="">
                         @if (Model.IsSmallestChild)
                         {
-                            //in the futur this button should point to the location to see or insert a request
+                            //in the future this button should point to the location to see or insert a request
                             @*shouldn't this be - " if {this is the SmallestChild} - then it SHOULDNT be a button...?
                                 <label value="@locationInstance.LocationInstanceID" style="vertical-align:middle;">@locationInstance.LocationInstanceName</label>*@
                             <button class="btn btn-block" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
