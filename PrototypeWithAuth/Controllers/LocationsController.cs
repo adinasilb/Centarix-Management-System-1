@@ -68,8 +68,10 @@ namespace PrototypeWithAuth.Controllers
                 SublocationInstances = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentId)
             };
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
-            LocationInstance parentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentId).FirstOrDefault();
-            int depth = _context.LocationTypes.Where(x => x.LocationTypeID == parentLocationInstance.LocationTypeID).FirstOrDefault().Depth;
+            LocationInstance parentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentId)
+                .Include(pli => pli.LocationInstanceParent).FirstOrDefault();
+            int depth = _context.LocationTypes.Where(x => x.LocationTypeID == parentLocationInstance.LocationTypeID)
+                .FirstOrDefault().Depth;
          
             /*
              * Right now in the js validation it should not allow anything to be 0 x 0; therefore, we can test by depth and not by a has children method
