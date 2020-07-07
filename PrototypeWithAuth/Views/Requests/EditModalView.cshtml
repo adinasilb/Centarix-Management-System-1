@@ -160,7 +160,7 @@
                                 <div class="row">
                                     <div class="col-6 pr-4">
                                         <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom " readonly />
+                                        <input asp-for="Request.ParentRequest.OrderNumber" min="0" class="form-control-plaintext border-bottom " readonly />
                                         <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-6">
@@ -173,7 +173,7 @@
                                 <div class="row">
                                     <div class="col-6 pr-4">
                                         <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.ParentRequest.InvoiceNumber" min="0" asp-format="" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
                                     </div>
                                     <div class="col-6">
@@ -186,12 +186,12 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                                        <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-3">
                                         <label asp-for="Request.Warranty" class="control-label"></label>
-                                        <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.Warranty" class="text-danger"></span>
                                     </div>
                                     <div class="col-3">
@@ -208,7 +208,7 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                     </div>
                                     <div class="col-4">
@@ -301,7 +301,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.ExchangeRate" class="control-label"></label>
-                                            <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom" />
+                                            <input asp-for="Request.ExchangeRate" min="0" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -417,7 +417,7 @@
                                                     <div class="col-md-6">
                                                         <div class="input-group">
                                                             <span class="input-group-text">&#x20aa;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
+                                                            <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -432,7 +432,7 @@
                                             <label class="control-label">Sum:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled />
+                                                <input class="form-control-plaintext border-bottom" name="sum-dollars" min="0" id="sum-dollars" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -441,7 +441,7 @@
                                             <label asp-for="Request.Cost" class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" />
+                                                <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom" />
                                                 <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
