@@ -2,8 +2,11 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; overflow-y:auto; max-width: 33rem;">
-
-    <div class="modal-content d-inline-block" style="width:32rem;"> <!--HERE!-->
+    <div class="spinner-border center" role="status" id="loading" style="display:none;">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="modal-content d-inline-block" style="width:32rem;">
+        <!--HERE!-->
 
         <form id="AddLocationForm" action="" method="post" enctype="multipart/form-data" style="        height: 100%;
         overflow: auto;">
@@ -37,7 +40,7 @@
 
             <div class="modal-footer-no">
 
-                <input type="submit" value="SAVE" asp-action="AddLocation" class="inv-button mx-3" />@*style="margin-right:11rem;"*@
+                <input id="submitAddLocation" type="submit" value="SAVE" asp-action="AddLocation" class="inv-button mx-3" />@*style="margin-right:11rem;"*@
                 @if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
                 {
                     <button class="btn btn-link load-add-location-type float-none" style="color:#30BCC9;">[Add Location Type]</button>

@@ -1056,5 +1056,7 @@ $('#myModal').change(
 	function () {
 		$.validator.unobtrusive.parse("#editModalForm");
 	});
-
+$('#submitAddLocation').click(function () {
+	$('#loading').show();
+})
 
