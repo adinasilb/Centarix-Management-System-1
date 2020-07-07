@@ -5,8 +5,6 @@
 
 //global Exchange Rate variable (usd --> nis)
 
-	
-
 
 function showmodal() {
 	$("#modal").modal('show');
@@ -1048,6 +1046,7 @@ $("#Request_ParentRequest_Installments").change(function () {
 	$.fn.updateDebt();
 });
 
+
 $('#myModal').change(
 	function () {
 		$.validator.unobtrusive.parse("#createModalForm");
@@ -1059,19 +1058,3 @@ $('#myModal').change(
 	});
 
 
-
-//$('#createModalForm').submit(
-//	function () {
-//		if ($("#createModalForm").valid()) {
-//			return true;
-//		}
-//		return false;
-//	});
-
-//$('#editModalForm').submit(
-//	function () {
-//		if ($("#editModalForm").valid()) {
-//			return true;
-//		}
-//		return false
-//	});

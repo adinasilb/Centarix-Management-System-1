@@ -3,8 +3,6 @@
 @{
 
 }
-
-<script src="~/js/site.js" asp-append-version="true"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")"
         type="text/javascript">
 </script>
@@ -13,6 +11,8 @@
         type="text/javascript">
 </script>
 
+<script src="~/js/site.js" asp-append-version="true"></script>
+
 <div class="modal modal-view right fader " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg border-left box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
@@ -20,7 +20,7 @@
 
         <div class="modal-content d-inline-block">
 
-            <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" >
+            <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
