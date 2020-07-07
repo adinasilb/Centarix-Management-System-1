@@ -532,7 +532,7 @@
                                                         {
                                                             <tr class="payment-line">
                                                                 <td>
-                                                                    <input asp-for="@payment.PaymentDate" class="form-control-plaintext border-bottom datepicker" />
+                                                                    <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
                                                                 </td>
                                                                 <td>
                                                                     @Html.DropDownListFor(
@@ -547,13 +547,12 @@
                                                                    new SelectList(
                                                                        Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
                                                                    "CompanyAccountID", "CompanyAccountNum"),
-                                                                   new { @class = "form-control-plaintext border-bottom" })
+                                                                   new { @class = "form-control-plaintext border-bottom paymentType" })
                                                                 <td>
-                                                                    <input asp-for="@payment.Reference" class="form-control-plaintext border-bottom" />
+                                                                    <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
                                                                 </td>
                                                                 @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
                                                                 @Html.HiddenFor(m => m.NewPayments[counter].ParentRequestID)
-                                                                @Html.HiddenFor(m => m.NewPayments[counter].Reference)
                                                             </tr>
                                                             counter++;
                                                         }

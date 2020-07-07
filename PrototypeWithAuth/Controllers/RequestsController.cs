@@ -32,7 +32,7 @@ namespace PrototypeWithAuth.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         //take this out?
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         //private readonly IHttpContextAccessor _Context;
 
@@ -47,7 +47,7 @@ namespace PrototypeWithAuth.Controllers
         //    _viewEngine = viewEngine;
         //}
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/)
+            IWebHostEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/)
         {
             //_Context = Context;
             _context = context;
