@@ -70,7 +70,7 @@ namespace PrototypeWithAuth.Controllers
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
             LocationInstance parentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentId).FirstOrDefault();
             int depth = _context.LocationTypes.Where(x => x.LocationTypeID == parentLocationInstance.LocationTypeID).FirstOrDefault().Depth;
-
+         
             /*
              * Right now in the js validation it should not allow anything to be 0 x 0; therefore, we can test by depth and not by a has children method
              */
@@ -79,6 +79,7 @@ namespace PrototypeWithAuth.Controllers
                 sublocationIndexViewModel.PrevLocationInstance = parentLocationInstance;
                 sublocationIndexViewModel.IsSmallestChild = false;
             }
+
             var locationType = _context.LocationTypes.Where(x => x.LocationTypeID == sublocationIndexViewModel.SublocationInstances.FirstOrDefault().LocationTypeID).FirstOrDefault();
             if (locationType.LocationTypeChildID != null)
             {
@@ -88,6 +89,13 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 sublocationIndexViewModel.IsSmallestChild = true;
+
+                //display parent and parent sibling because for the children it is displaying the grid
+                IEnumerable<LocationInstance> siblingsOfParent = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentLocationInstance.LocationInstanceParentID);
+                sublocationIndexViewModel.SublocationInstances = siblingsOfParent;
+
+                LocationInstance parentOfParentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+                sublocationIndexViewModel.PrevLocationInstance = parentOfParentLocationInstance;
             }
             return PartialView(sublocationIndexViewModel);
         }
@@ -102,6 +110,18 @@ namespace PrototypeWithAuth.Controllers
             visualLocationsViewModel.ChildrenLocationInstances =
                 _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
                 .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+
+            var locationType = _context.LocationTypes.Where(x => x.LocationTypeID == visualLocationsViewModel.ChildrenLocationInstances.FirstOrDefault().LocationTypeID).FirstOrDefault();
+            if (locationType.LocationTypeChildID != null)
+            {
+                //is this enough or should we actually check for children
+                visualLocationsViewModel.IsSmallestChild = false;
+            }
+            else
+            {
+                visualLocationsViewModel.IsSmallestChild = true;
+ 
+            }
 
             return PartialView(visualLocationsViewModel);
         }
@@ -443,6 +463,6 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index");
         }
 
-
     }
+
 }

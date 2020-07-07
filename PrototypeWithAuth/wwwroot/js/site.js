@@ -5,6 +5,9 @@
 
 //global Exchange Rate variable (usd --> nis)
 
+	
+
+
 function showmodal() {
 	$("#modal").modal('show');
 };
@@ -81,7 +84,7 @@ $("#search-form #vendorBusinessIDList").change(function () {
 
 var today = new Date();
 var dd = today.getDate();
-var mm = today.getMonth() + 1; //January is 0!
+var mm = today.getMonth(); //January is 0 but do not add because everytime you create a new line it adds 1
 var yyyy = today.getFullYear();
 
 if (dd < 10) { dd = '0' + dd }
@@ -130,11 +133,12 @@ $("#Request_ParentRequest_Installments").change(function () {
 	}
 });
 
+
 $.fn.AddNewPaymentLine = function (increment, date) {
 	var htmlTR = "";
 	htmlTR += "<tr class='payment-line'>";
 	htmlTR += "<td>";
-	htmlTR += '<input class="form-control-plaintext border-bottom" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
+	htmlTR += '<input class="form-control-plaintext border-bottom payment-date" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
 	htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
 	htmlTR += '</td>';
 	htmlTR += '<td>';
@@ -221,6 +225,7 @@ $(".paymentType").change(function () {
 	});
 });
 
+
 $("#vendorList").change(function () {
 	//get the new vendor id selected
 	var vendorid = $("#vendorList").val();
@@ -245,7 +250,6 @@ $.fn.ChangeVendorBusinessId = function (vendorid) {
 	$(".vendorBusinessId").html(newBusinessID);
 	//put the business id into the form
 }
-
 
 //view documents on modal view
 $(".view-docs").click(function (clickEvent) {
@@ -322,6 +326,7 @@ $("#Request_Cost").change(function (e) {
 	$.fn.CalculateUnitAmounts();
 	$.fn.CalculateSubUnitAmounts();
 	$.fn.CalculateSubSubUnitAmounts();
+
 });
 
 $("#sum-dollars").change(function (e) {
@@ -329,6 +334,7 @@ $("#sum-dollars").change(function (e) {
 	$.fn.CalculateUnitAmounts();
 	$.fn.CalculateSubUnitAmounts();
 	$.fn.CalculateSubSubUnitAmounts();
+	$.fn.updateDebt();
 });
 
 $("#Request_Unit").change(function () {
@@ -396,6 +402,7 @@ $.fn.CheckSubUnitsFilled = function () {
 	$.fn.CalculateSubUnitAmounts();
 	$.fn.CalculateSubSubUnitAmounts();
 }
+
 
 $.fn.EnableSubUnits = function () {
 	$("#Request_SubUnit").prop("disabled", false);
@@ -751,29 +758,23 @@ $(".clicked-button").click(function () {
 	$(this).parent().addClass("td-selected");
 })
 
-$(".load-sublocation-view").click(function () {
+$(".load-sublocation-view").click(function (e) {
 	//add or remove the background class in col 1
 	//$(".load-sublocation-view").parent().removeClass("td-selected");
 	//$(this).parent().addClass("td-selected");
 
-	//fill up col 2 with the next one
-	var myDiv = $(".colTwoSublocations");
-	var parentId = $(this).val();
-	//console.log("about to call ajax with a parentid of: " + parentId);
-	$.ajax({
-		//IMPORTANT: ADD IN THE ID
-		url: "/Locations/SublocationIndex/?parentId=" + parentId,
-		type: 'GET',
-		cache: false,
-		context: myDiv,
-		success: function (result) {
-			this.html(result);
-		}
-	});
+	$.fn.setUpsubLocationList($(this).val())
 
+	$.fn.setUpVisual($(this).val());
+
+	
+});
+
+$.fn.setUpVisual = function (val) {
+	$("#loading2").show();
 	//fill up col three with the visual
 	var visualDiv = $(".VisualBoxColumn");
-	var visualContainerId = $(this).val();
+	var visualContainerId = val;
 	//console.log("about to call ajax with a visual container id of: " + visualContainerId);
 	$.ajax({
 		url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
@@ -784,10 +785,29 @@ $(".load-sublocation-view").click(function () {
 			this.html(result);
 		}
 	});
-});
+};
 
 
+$.fn.setUpsubLocationList = function (val) {
+	$("#loading1").show();
+	//fill up col 2 with the next one
+	var myDiv = $(".colTwoSublocations");
+	var parentId = val;
+	//console.log("about to call ajax with a parentid of: " + parentId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/SublocationIndex/?parentId=" + parentId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {
+			myDiv.show();
+			this.html(result);		
+			
+		}
+	});
 
+};
 
 
 function changeTerms(checkbox) {
@@ -968,3 +988,90 @@ $(".load-product-edit").on("click", function (e) {
 	$.fn.CallPage($itemurl, "edit");
 	return false;
 });
+
+
+$.fn.updateDebt = function () {
+	console.log("in update debt");
+	var sum = $("#Request_Cost").val();
+	var installments = $("#Request_ParentRequest_Installments").val();
+	var tdate = new Date();
+	var dd = tdate.getDate(); //yields day
+	var MM = tdate.getMonth(); //yields month
+	var yyyy = tdate.getFullYear(); //yields year
+	var today = yyyy + "-0" + (MM + 1) + "-0" + dd;
+	console.log("today:"+ today);
+	//count how many installment dates already passed
+	var count = 0;
+	if (installments != 0) {
+		$(".payments-table .payment-date").each(function (index) {
+			var date = $(this).val();
+			console.log("date: "+date);
+			if (today >= date) {
+				console.log("today > date");
+				//date passed
+				count=count + 1
+			}
+		});
+	}
+	if (count != 0) {
+		var paymentPerMonth = sum / installments;
+		console.log(" paymentPerMonth: " + paymentPerMonth);
+		var amountToSubstractFromDebt = paymentPerMonth * count;
+		console.log(" amountToSubstractFromDebt: " + amountToSubstractFromDebt);
+		var debt = sum - amountToSubstractFromDebt
+		console.log(" sum: " + sum);
+		console.log(" debt: " + debt);
+		$("#Debt").val(debt);
+	} else {
+		$("#Debt").val(sum);
+	}
+};
+
+$(".payments-table").on("change", ".payment-date", function (e) {
+	console.log("in change .payments-table ");
+	$.fn.updateDebt();
+});
+
+$("#Request_ExchangeRate").change(function (e) {
+	console.log("in change #Request_ExchangeRate ");
+	$.fn.updateDebt();
+});
+
+
+$("#sum-dollars").change(function (e) {
+	console.log("in change #sum-dollars ");
+	$.fn.updateDebt();
+});
+
+$("#Request_ParentRequest_Installments").change(function () {
+	console.log("in change Request_ParentRequest_Installments ");
+	$.fn.updateDebt();
+});
+
+$('#myModal').change(
+	function () {
+		$.validator.unobtrusive.parse("#createModalForm");
+});
+
+$('#myModal').change(
+	function () {
+		$.validator.unobtrusive.parse("#editModalForm");
+	});
+
+
+
+//$('#createModalForm').submit(
+//	function () {
+//		if ($("#createModalForm").valid()) {
+//			return true;
+//		}
+//		return false;
+//	});
+
+//$('#editModalForm').submit(
+//	function () {
+//		if ($("#editModalForm").valid()) {
+//			return true;
+//		}
+//		return false
+//	});
