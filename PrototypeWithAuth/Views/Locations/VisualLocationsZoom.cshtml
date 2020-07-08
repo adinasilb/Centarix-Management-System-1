@@ -40,7 +40,8 @@
 
                                             @*@Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })*@
 
-                                            <a href="@Url.ActionLink("DetailsView", "Requests", new { @id = requestID })" class="btn btn-block text-light pb-5">@innerHtml</a>
+                                            @*<a href="@Url.ActionLink("DetailsView", "Requests", new { @id = requestID })" class="btn btn-block text-light pb-5">@innerHtml</a>*@
+                                            <button class="btn btn-block text-light pb-5 load-order-details" value="@requestID">@innerHtml</button>
 
                                             <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
                                         </td>
@@ -61,3 +62,100 @@
     </div>
 
 </div>
+
+<script>
+    $(".load-order-details").on("click", function (e) {
+        console.log("in order details");
+        e.preventDefault();
+        e.stopPropagation();
+        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+        console.log("val: " + $(this).val());
+        var $itemurl = "Requests/DetailsModalView?id=" + $(this).val();
+        console.log("itemurl: " + $itemurl);
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "details");
+        return false;
+    });
+
+    $.fn.CallPage = function ($itemurl, $type) {
+        console.log("in call page function");
+        //delete existing modals
+        $('.modal').replaceWith('');
+        $(".modal-backdrop").remove();
+        $.ajax({
+            async: true,
+            url: $itemurl,
+            type: 'GET',
+            cache: true,
+            success: function (data) {
+                $("#loading").hide();
+                console.log("success!");
+                var modal = $(data);
+                $('body').append(modal);
+                //replaces the modal-view class with the ModalView view
+                //$(".modal-view").html(data);
+                //turn off data dismiss by clicking out of the box and by pressing esc
+                $(".modal-view").modal({
+                    backdrop: true,
+                    keyboard: false,
+                });
+                //shows the modal
+                $(".modal").modal('show');
+                //$(".modal").on('show.bs.modal', function (e) {
+                //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
+                //})
+                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                //$(".modal-backdrop").remove();
+                //$('.modal').find('input').first().focus();
+                //$(".modal").popover('hide')
+                switch ($type) {
+                    case "details":
+                        console.log('case "details":');
+                        $.fn.OnOpenModalView();
+                        break;
+                }
+
+            }
+            //error: function (/*request, status, error*/) {
+            //    console.log("ajax call went wrong:" /*+ request.responseText*/);
+            //}
+        });
+    }
+
+    $.fn.OnOpenModalView = function () {
+        $('.modal-content a:first').tab('show');
+        var parentCategoryId = $("#parentlist").val();
+        var subcategoryId1 = $("#sublist").val();
+        var url = "/Requests/GetSubCategoryList";
+
+        $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+            var item = "";
+            $.each(data, function (i, subCategory) {
+                item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+            });
+            $("#sublist").html(item);
+            $("#sublist").val(subcategoryId1).change();
+        });
+
+        //For the order files
+
+        //goes into this function
+        $(".custom-file-input").on("change", function () {
+            var fileLabel = $(this).next(".custom-file-label");
+            var files = $(this)[0].files;
+            if (files.length > 1) {
+                fileLabel.html(files.length + ' files selected');
+            }
+            else {
+                fileLabel.html(files[0].name);
+            }
+        });
+
+        //get the current vendor id (if loading an already existing product)
+        var vendorid = $("#vendorList").val();
+        //call a function to lad the vendor business id from the vendor id
+        $.fn.ChangeVendorBusinessId(vendorid);
+
+    }
+
+</script>
