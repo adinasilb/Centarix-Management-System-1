@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.Controllers
         {
             _context = context;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> IndexForInventory()
         {
@@ -39,14 +39,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 LocationsDepthOfZero = locations
             };
-            return View(locations); 
+            return View(locations);
         }
 
 
         [HttpGet]
         public IActionResult Index()
         {
-            
+
             // Added by Dani because to make CSS work better
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
 
@@ -69,10 +69,10 @@ namespace PrototypeWithAuth.Controllers
             };
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
             LocationInstance parentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentId)
-                .Include(pli => pli.LocationInstanceParent).FirstOrDefault();
+                .Include(pli => pli.LocationInstanceParent).Include(lip => lip.LocationType).FirstOrDefault();
             int depth = _context.LocationTypes.Where(x => x.LocationTypeID == parentLocationInstance.LocationTypeID)
                 .FirstOrDefault().Depth;
-         
+
             /*
              * Right now in the js validation it should not allow anything to be 0 x 0; therefore, we can test by depth and not by a has children method
              */
@@ -94,13 +94,19 @@ namespace PrototypeWithAuth.Controllers
 
                 //display parent and parent sibling because for the children it is displaying the grid
 
-                //there must have been a reason why this was originally here --> not sure now why
+                if (sublocationIndexViewModel.SublocationInstances.FirstOrDefault().LocationType.Depth > 1)
+                {
+                    IEnumerable<LocationInstance> siblingsOfParent = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentLocationInstance.LocationInstanceParentID);
+                    sublocationIndexViewModel.SublocationInstances = siblingsOfParent;
 
-                //IEnumerable<LocationInstance> siblingsOfParent = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentLocationInstance.LocationInstanceParentID);
-                //sublocationIndexViewModel.SublocationInstances = siblingsOfParent;
+                    LocationInstance parentOfParentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    sublocationIndexViewModel.PrevLocationInstance = parentOfParentLocationInstance;
 
-                //LocationInstance parentOfParentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
-                //sublocationIndexViewModel.PrevLocationInstance = parentOfParentLocationInstance;
+                }
+                else
+                {
+                    sublocationIndexViewModel.SublocationInstances = Enumerable.Empty<LocationInstance>();
+                }
             }
             return PartialView(sublocationIndexViewModel);
         }
@@ -125,7 +131,7 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 visualLocationsViewModel.IsSmallestChild = true;
- 
+
             }
 
             return PartialView(visualLocationsViewModel);
@@ -219,7 +225,7 @@ namespace PrototypeWithAuth.Controllers
                 List<List<string>> namesPlaceholder = new List<List<string>>();
                 List<List<int>> placeholderInstanceIds = new List<List<int>>(); //may need to be a list of lists
                 bool first = true;
-        
+
                 int prevHeight = addLocationViewModel.LocationInstance.Height;
                 int prevWidth = addLocationViewModel.LocationInstance.Width;
                 for (int z = 0; z < subLocationViewModel.LocationInstances.Count; z++)/*var locationInstance in subLocationViewModel.LocationInstances*/ //for each level in the sublevels
@@ -239,7 +245,7 @@ namespace PrototypeWithAuth.Controllers
                     int width = 0;
                     if (z < subLocationViewModel.LocationInstances.Count - 1)
                     {
-                        
+
                         height = subLocationViewModel.LocationInstances[z + 1].Height;
                         width = subLocationViewModel.LocationInstances[z + 1].Width;
                     }

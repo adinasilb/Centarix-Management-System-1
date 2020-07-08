@@ -55,14 +55,14 @@ namespace PrototypeWithAuth.Controllers
                     NoInvoiceList.Add(parentRequest);
                 }
                 //need to test and have code review, is this the best way to do it?? have O^2 run time
-                foreach (var request in parentRequest.Requests) 
-                { 
-                    if(request.RequestStatusID == 2) //Request Stat ID of 2 equals Ordered
+                foreach (var request in parentRequest.Requests)
+                {
+                    if (request.RequestStatusID == 2) //Request Stat ID of 2 equals Ordered
                     {
                         DidntArriveList.Add(request.ParentRequest);
                         break; //make sure break doesnt leave the outer-foreach
                     }
-                    
+
                 }
                 foreach (var request in parentRequest.Requests)
                 {
@@ -71,7 +71,7 @@ namespace PrototypeWithAuth.Controllers
                         PartialDeliveryList.Add(request.ParentRequest);
                         break;
                     }
-                    
+
                 }
                 foreach (var request in parentRequest.Requests)
                 {
@@ -80,7 +80,7 @@ namespace PrototypeWithAuth.Controllers
                         ForClarification.Add(request.ParentRequest);
                         break;
                     }
-                    
+
                 }
                 foreach (var request in parentRequest.Requests)
                 {
@@ -106,7 +106,7 @@ namespace PrototypeWithAuth.Controllers
                 { "Pay Now", PayNow.Count },
                 { "Partial Delivery", PartialDeliveryList.Count },
                 { "For Clarification", ForClarification.Count }
-                
+
             };
 
             ReturnParentRequestList.Add(NotPayedList);
@@ -132,7 +132,13 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> GeneralPaymentList()
         {
 
-            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.Vendor);
+            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests
+                .Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.ProductSubcategory)
+                .ThenInclude(ps => ps.ParentCategory).Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(pr => pr.Vendor)
+                .Include(pr => pr.Requests).ThenInclude( r=> r.UnitType)
+                .Include(pr => pr.Requests).ThenInclude(r => r.SubUnitType)
+                .Include(pr => pr.Requests).ThenInclude(r => r.SubSubUnitType)
+                ;
 
             var fullParentRequestsListByDate = fullParentRequestsList
                         .OrderByDescending(f => f.OrderDate.Date)
@@ -160,7 +166,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 year = requestsByMonthAndYear.FirstOrDefault().Year;
             }
- 
+
             foreach (var req in requestsByMonthAndYear)
             {
                 var requestsinMonthAndYear = _context.Requests.Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(p => p.ParentCategory).Where(r => r.ParentRequest.OrderDate.Year == req.Year).Where(r => r.ParentRequest.OrderDate.Month == req.Month).ToList();
@@ -234,7 +240,7 @@ namespace PrototypeWithAuth.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", parentRequest.ApplicationUserID);
-            
+
             return View(parentRequest);
         }
 
@@ -344,7 +350,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     ParentRequest = pr,
                     //Terms = pr.Requests.FirstOrDefault().Terms,
-                    PayByDate = (DateTime?) pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
+                    PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
                 })
                 .ToListAsync();
             var parentRequestIds = fullListOfParentRequests
@@ -354,7 +360,7 @@ namespace PrototypeWithAuth.Controllers
                  * 1. should we take out the nulls?
                  * 2. should we put in if the PayByDate is today?
                  */
-                .Select(pr => pr.ParentRequest.ParentRequestID ).ToList();
+                .Select(pr => pr.ParentRequest.ParentRequestID).ToList();
             var ParentRequestsFiltered = _context.ParentRequests
                 .Where(pr => parentRequestIds.Contains(pr.ParentRequestID))
                 .Select(pr => new ParentRequestListViewModel
@@ -436,12 +442,12 @@ namespace PrototypeWithAuth.Controllers
                .Select(pr => new ParentRequestWithPayByDateViewModel
                {
                    ParentRequest = pr,
-                    //Terms = pr.Requests.FirstOrDefault().Terms,
-                    PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
+                   //Terms = pr.Requests.FirstOrDefault().Terms,
+                   PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
                })
                .ToListAsync();
             var parentRequestIds = fullListOfParentRequests
-                .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate == DateTime.Today )
+                .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate == DateTime.Today)
                 /*
                  * Right now PAY NOW is taking all requests that are due today. Should it be tomorrow also or sometime this week?
                  */
