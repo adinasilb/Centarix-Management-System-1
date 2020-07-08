@@ -496,7 +496,7 @@ namespace PrototypeWithAuth.Data
                 new RequestStatus
                 {
                     RequestStatusID = 6,
-                    RequestStatusDescription = "PayNow" // request page, under order
+                    RequestStatusDescription = "AwaitingOrder" // request page, under order
                 }
              );
             modelBuilder.Entity<UnitParentType>().HasData
