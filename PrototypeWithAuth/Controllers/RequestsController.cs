@@ -63,7 +63,7 @@ namespace PrototypeWithAuth.Controllers
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
-            
+
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).OrderBy(r => r.ParentRequest.OrderDate);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
@@ -76,6 +76,7 @@ namespace PrototypeWithAuth.Controllers
             int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, vendorID, subcategoryID, applicationUserID);
             newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, vendorID, subcategoryID, applicationUserID);
             newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, vendorID, subcategoryID, applicationUserID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, vendorID, subcategoryID, applicationUserID);
 
             //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
@@ -125,7 +126,11 @@ namespace PrototypeWithAuth.Controllers
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                 }
-
+                if (RequestStatusID == 0 || RequestStatusID == 6 || RequestStatusID == 1)
+                {
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 6);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                }
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
             else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
@@ -1207,6 +1212,136 @@ namespace PrototypeWithAuth.Controllers
             });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> PriceModalView(int id)
+        {
+            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
+            {
+                Request = await _context.Requests.Where(r => r.RequestID == id)
+                    .Include(r => r.Product).Include(r => r.ParentRequest)
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                    .FirstOrDefaultAsync(),
+                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
+                PaymentTypes = await _context.PaymentTypes.ToListAsync()
+            };
+            requestItemViewModel.NewPayments = await _context.Payments
+                .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+                .Where(p => p.ParentRequestID == requestItemViewModel.Request.ParentRequestID).ToListAsync();
+            if (requestItemViewModel.NewPayments.Count > 0)
+            {
+                var amountPerPayment = requestItemViewModel.Request.Cost / requestItemViewModel.NewPayments.Count; //shekel
+                var totalPaymentsToDate = 0;
+                foreach (var payment in requestItemViewModel.NewPayments)
+                {
+                    if (payment.PaymentDate <= DateTime.Now)
+                    {
+                        totalPaymentsToDate++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+            }
+            else
+            {
+                requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
+            }
+
+            //setting the lists of companyaccounts by payment type id (so easy filtering on the frontend)
+
+            //first get the list of payment types there are
+            var paymentTypeIds = _context.CompanyAccounts.Select(ca => ca.PaymentTypeID).Distinct().ToList();
+            //initialize the dictionary
+            requestItemViewModel.CompanyAccountListsByPaymentTypeID = new Dictionary<int, IEnumerable<CompanyAccount>>();
+            //foreach paymenttype
+            foreach (var paymentTypeID in paymentTypeIds)
+            {
+                var caList = _context.CompanyAccounts.Where(ca => ca.PaymentTypeID == paymentTypeID);
+                requestItemViewModel.CompanyAccountListsByPaymentTypeID.Add(paymentTypeID, caList);
+            }
+            if (AppUtility.IsAjaxRequest(this.Request))
+            {
+                TempData["IsFull"] = false;
+                return PartialView(requestItemViewModel);
+            }
+            else
+            {
+                TempData["IsFull"] = true;
+                return View(requestItemViewModel);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PriceModalView(RequestItemViewModel requestItemViewModel)
+        {
+            //doing it this way instead of a million hidden fors (just for mvp - will decide the best way later)
+            var request = _context.Requests.Where(r => r.RequestID == requestItemViewModel.Request.RequestID).Include(r => r.ParentRequest).FirstOrDefault();
+            request.Currency = requestItemViewModel.Request.Currency;
+            request.ExchangeRate = requestItemViewModel.Request.ExchangeRate;
+            request.Unit = requestItemViewModel.Request.Unit;
+            request.UnitTypeID = requestItemViewModel.Request.UnitTypeID;
+            request.SubUnit = requestItemViewModel.Request.SubUnit;
+            request.SubUnitTypeID = requestItemViewModel.Request.SubUnitTypeID;
+            request.SubSubUnit = requestItemViewModel.Request.SubSubUnit;
+            request.SubSubUnitTypeID = requestItemViewModel.Request.SubSubUnitTypeID;
+            request.Cost = requestItemViewModel.Request.Cost;
+            request.VAT = requestItemViewModel.Request.VAT;
+            request.Terms = requestItemViewModel.Request.Terms;
+            request.ParentRequest.Installments = requestItemViewModel.Request.ParentRequest.Installments;
+            request.RequestStatusID = 6;
+
+            //var context = new ValidationContext(requestItemViewModel.Request, null, null);
+            //var results = new List<ValidationResult>();
+            //if (Validator.TryValidateObject(request, context, results, true))
+            //{
+            try
+            {
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            if (requestItemViewModel.NewPayments != null)
+            {
+                foreach (Payment payment in requestItemViewModel.NewPayments)
+                {
+                    payment.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+                    payment.CompanyAccount = null;
+                    //payment.Reference = "TEST";
+                    try
+                    {
+                        _context.Payments.Update(payment);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+            //}
+
+            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+            return RedirectToAction("Index", new
+            {
+                page = requestItemViewModel.Page,
+                requestStatusID = requestItemViewModel.RequestStatusID,
+                subcategoryID = requestItemViewModel.SubCategoryID,
+                vendorID = requestItemViewModel.VendorID,
+                applicationUserID = requestItemViewModel.ApplicationUserID,
+                PageType = requestPageTypeEnum
+            });
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -2523,7 +2658,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
 
-        
+
         [HttpGet]
         public ActionResult DocumentView(List<String> FileNames)
         {

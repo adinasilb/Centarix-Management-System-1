@@ -274,6 +274,15 @@
         return false;
     });
 
+    $(".add-prices").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $itemurl = "Requests/PriceModalView?id=" + $(this).val();
+        $("#loading").show();
+        $.fn.CallPage($itemurl, "addprices");
+        return false;
+    });
+
 
     function AddTempDataMemory() {
         console.log("about to get set the hidden fors in the modal view to remember where the user was");
@@ -350,6 +359,10 @@
                         break;
                     case "delete":
                         console.log('case "delete":');
+                        AddTempDataMemory();
+                        break;
+                    case "addprices":
+                        $.fn.OnOpenModalView();
                         AddTempDataMemory();
                         break;
                 }
