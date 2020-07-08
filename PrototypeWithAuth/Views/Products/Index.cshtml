@@ -1,0 +1,93 @@
+﻿@model IEnumerable<PrototypeWithAuth.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/ProductsNavView.cshtml";
+}
+<br />
+<br />
+<div class="mx-5">
+    <table class="table table-headerspaced table-noheaderlines table-hover">
+        <thead class="text-center">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.VendorID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductSubcategoryID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Handeling)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.QuantityPerUnit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UnitsInStock)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UnitsInOrder)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ReorderLevel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductComment)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductMedia)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="text-center inv-list-item">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductSubcategoryID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Handeling)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.QuantityPerUnit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitsInStock)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitsInOrder)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReorderLevel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductComment)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductMedia)
+                    </td>
+                    <td>
+                        <button>View Requests</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewData["Title"] = "ProductsNavView";
+    Layout = "~/Views/Shared/View.cshtml";
+}
+
+<div style="display: flex">
+    <div style="width: 100px; min-height:100rem; padding: 5px;" class="navbar d-md-block sidebar-shadow navbar-light bg-white text-center ourNavBar ">
+        @*<nav class="navbar flex-grow-1">*@
+        <ul class="nav flex-column nav-pills nav-stacked mt-4" style="position:fixed;">
+            <li>*</li>
+        </ul>
+    </div>
+    <div style="flex-grow: 1" class="border-left">
+        <!--class="col-md-10 border-left"-->
+        @RenderBody()
+    </div>
+</div>
+@RenderSection("Scripts", required: false)

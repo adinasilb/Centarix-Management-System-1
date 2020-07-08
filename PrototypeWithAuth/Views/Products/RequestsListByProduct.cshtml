@@ -1,0 +1,28 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestListByProductViewModel
+
+<div class="modal modal-view right fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+    <div class="modal-dialog modal-lg border-left box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
+        @*style needed here to override bootstraps modal width limitations*@
+        <div class="modal-content d-inline-block">
+            <div class="modal-header">
+                @Html.DisplayNameFor(vm => vm.Product.ProductName)
+                @Html.DisplayFor(vm => vm.Product.ProductName)
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm">
+                    @foreach(var request in Model.Requests)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => request.RequestID)
+                            </td>
+                            <td>
+                                View
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

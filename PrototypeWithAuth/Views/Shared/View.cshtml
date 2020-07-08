@@ -28,6 +28,7 @@
     string cartClass = initalClasses;
     string searchClass = initalClasses;
     string locationClass = initalClasses;
+    string productClass = initalClasses;
     switch (pageType)
     {
         case AppUtility.RequestPageTypeEnum.Inventory:
@@ -44,6 +45,9 @@
             break;
         case AppUtility.RequestPageTypeEnum.Location:
             locationClass = initalClasses + currentClasses;
+            break;
+        case AppUtility.RequestPageTypeEnum.Product:
+            productClass = initalClasses + currentClasses;
             break;
     }
     /*Determine Active Nav Link END*/
@@ -94,6 +98,9 @@
                         @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
                     </li>
                     <li class="nav-item mx-5">
+                        @Html.ActionLink("Products", "Index", "Products", new { }, new { @class = productClass, @role = "button", @id = "request-link" })
+                    </li>
+                    <li class="nav-item mx-5">
                         @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
                     </li>
                     <li class="nav-item mx-5">
@@ -135,10 +142,10 @@
     </div>
 
     @*<footer class="border-top footer text-muted">
-        <div class="container text-center">
-            &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>*@
+            <div class="container text-center">
+                &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
