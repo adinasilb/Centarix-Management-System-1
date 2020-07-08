@@ -4,9 +4,11 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
@@ -49,15 +51,12 @@ namespace PrototypeWithAuth.Controllers
 
             // Added by Dani because to make CSS work better
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
-
-            LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
+            LocationTypeViewModel locationTypeViewModel = new LocationTypeViewModel()
             {
-                //exclude the box and cell from locationsDepthOfZero
-                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0),
-                SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0)
+                LocationTypes = _context.LocationTypes.Where(lt => lt.Depth == 0)
             };
-
-            return View(locationIndexViewModel);
+            
+            return View(locationTypeViewModel);
         }
 
         [HttpGet]
@@ -65,14 +64,13 @@ namespace PrototypeWithAuth.Controllers
         {
             SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
             {
-                SublocationInstances = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentId)
+                SublocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentId).Include(li => li.LocationInstanceParent)
             };
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
-            LocationInstance parentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentId).FirstOrDefault();
-            int depth = _context.LocationTypes.Where(x => x.LocationTypeID == parentLocationInstance.LocationTypeID).FirstOrDefault().Depth;
+            LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentId).Include(li => li.LocationInstanceParent).FirstOrDefault();
+            int depth = _context.LocationTypes.Where(li => li.LocationTypeID == parentLocationInstance.LocationTypeID).FirstOrDefault().Depth;
             sublocationIndexViewModel.Depth = depth;
 
-            parentLocationInstance.LocationInstanceParent = _context.LocationInstances.Where(x => x.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
             /*
              * Right now in the js validation it should not allow anything to be 0 x 0; therefore, we can test by depth and not by a has children method
              */
@@ -81,8 +79,9 @@ namespace PrototypeWithAuth.Controllers
                 sublocationIndexViewModel.PrevLocationInstance = parentLocationInstance;
                 sublocationIndexViewModel.IsSmallestChild = false;
             }
-
-            var locationType = _context.LocationTypes.Where(x => x.LocationTypeID == sublocationIndexViewModel.SublocationInstances.FirstOrDefault().LocationTypeID).FirstOrDefault();
+         
+            //get the max depth this location instance can go
+            var locationType = _context.LocationTypes.Where(lt => lt.LocationTypeID == sublocationIndexViewModel.SublocationInstances.FirstOrDefault().LocationTypeID).FirstOrDefault();
             if (locationType.LocationTypeChildID != null)
             {
                 //is this enough or should we actually check for children
@@ -91,13 +90,6 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 sublocationIndexViewModel.IsSmallestChild = true;
-
-                //display parent and parent sibling because for the children it is displaying the grid
-                IEnumerable<LocationInstance> siblingsOfParent = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentLocationInstance.LocationInstanceParentID);
-                sublocationIndexViewModel.SublocationInstances = siblingsOfParent;
-
-                LocationInstance parentOfParentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
-                sublocationIndexViewModel.PrevLocationInstance = parentOfParentLocationInstance;
             }
             return PartialView(sublocationIndexViewModel);
         }
@@ -126,6 +118,17 @@ namespace PrototypeWithAuth.Controllers
             }
 
             return PartialView(visualLocationsViewModel);
+        }
+        [HttpGet]
+        public IActionResult LocationIndex (int typeID )
+        {
+            LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
+            {
+                //exclude the box and cell from locationsDepthOfZero
+                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0 && li.LocationTypeID==typeID),
+                SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0 && li.LocationTypeID == typeID)
+            };
+            return PartialView(locationIndexViewModel);
         }
 
         [HttpGet]

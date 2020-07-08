@@ -758,57 +758,6 @@ $(".clicked-button").click(function () {
 	$(this).parent().addClass("td-selected");
 })
 
-$(".load-sublocation-view").click(function (e) {
-	//add or remove the background class in col 1
-	//$(".load-sublocation-view").parent().removeClass("td-selected");
-	//$(this).parent().addClass("td-selected");
-
-	$.fn.setUpsubLocationList($(this).val())
-
-	$.fn.setUpVisual($(this).val());
-
-	
-});
-
-$.fn.setUpVisual = function (val) {
-	$("#loading2").show();
-	//fill up col three with the visual
-	var visualDiv = $(".VisualBoxColumn");
-	var visualContainerId = val;
-	//console.log("about to call ajax with a visual container id of: " + visualContainerId);
-	$.ajax({
-		url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
-		type: 'GET',
-		cache: false,
-		context: visualDiv,
-		success: function (result) {
-			this.html(result);
-		}
-	});
-};
-
-
-$.fn.setUpsubLocationList = function (val) {
-	$("#loading1").show();
-	//fill up col 2 with the next one
-	var myDiv = $(".colTwoSublocations");
-	var parentId = val;
-	//console.log("about to call ajax with a parentid of: " + parentId);
-	$.ajax({
-		//IMPORTANT: ADD IN THE ID
-		url: "/Locations/SublocationIndex/?parentId=" + parentId,
-		type: 'GET',
-		cache: false,
-		context: myDiv,
-		success: function (result) {
-			myDiv.show();
-			this.html(result);		
-			
-		}
-	});
-
-};
-
 
 function changeTerms(checkbox) {
 	if (checkbox.checked) {
@@ -1075,3 +1024,95 @@ $('#myModal').change(
 //		}
 //		return false
 //	});
+
+$(".load-location-index-view").click(function (e) {
+	//clear the div to restart filling with new children
+	$.fn.setUpLocationIndexList($(this).val())
+});
+
+$.fn.setUpLocationIndexList = function (val) {
+	$("#loading3").show();
+	//fill up col 2 with the next one
+	var myDiv = $(".colOne");
+	var typeId = val;
+	//console.log("about to call ajax with a parentid of: " + parentId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/LocationIndex/?typeId=" + typeId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {
+			$(".VisualBoxColumn").hide();
+			$(".colTwoSublocations").hide();
+			myDiv.show();
+			this.html(result);
+
+		}
+	});
+
+};
+
+$(".load-sublocation-view.parent-location").click(function (e) {
+	console.log(".load-sublocation-view.parent-location");
+	$(".colTwoSublocationsChildren").remove();
+
+});
+
+$(".load-sublocation-view").click(function (e) {
+	//add or remove the background class in col 1
+	//$(".load-sublocation-view").parent().removeClass("td-selected");
+	//$(this).parent().addClass("td-selected");
+	$("#loading1").show();
+	//fill up col 2 with the next one
+	var myDiv = $(".colTwoSublocations");
+	var parentId = $(this).val();
+
+	var parentsParentId = $(this).closest('tr').attr('name');;
+
+	if ($("#colTwoSublocations" + parentsParentId).length == 0) {
+		$('.colTwoSublocations').append('<div class="colTwoSublocationsChildren" id="colTwoSublocations' + parentsParentId + '"></div>');
+	}
+	//console.log("about to call ajax with a parentid of: " + parentId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/SublocationIndex/?parentId=" + parentId,
+		type: 'GET',
+		cache: false,
+		context: $("#colTwoSublocations" + parentsParentId),
+		success: function (result) {
+			myDiv.show();
+			$("#loading1").hide();
+			this.html(result);
+
+		}
+	});
+
+	$.fn.setUpVisual($(this).val());
+
+
+});
+
+$.fn.setUpVisual = function (val) {
+	$("#loading2").show();
+	//fill up col three with the visual
+	var visualDiv = $(".VisualBoxColumn");
+	var visualContainerId = val;
+	//console.log("about to call ajax with a visual container id of: " + visualContainerId);
+	$.ajax({
+		url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
+		type: 'GET',
+		cache: false,
+		context: visualDiv,
+		success: function (result) {
+			visualDiv.show();
+			this.html(result);
+		}
+	});
+};
+
+
+$.fn.setUpsubLocationList = function (val) {
+	
+
+};

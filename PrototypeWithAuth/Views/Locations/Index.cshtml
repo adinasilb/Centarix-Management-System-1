@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.LocationIndexViewModel
+﻿@model PrototypeWithAuth.ViewModels.LocationTypeViewModel;
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/ManageLocationView.cshtml";
@@ -9,48 +9,35 @@
 {
     <div class="row mt-4">
         <div class="col-2 offset-1">
-            <button class="inv-button load-add-location"  data-target="item" data-backdrop="static" data-keyboard="false" href="item">
+            <button class="inv-button load-add-location" data-target="item" data-backdrop="static" data-keyboard="false" href="item">
                 ADD LOCATION
             </button>
         </div>
-        
+
     </div>
 }
 <br />
-<div class="row">
-    <div class="col-md-3 colOne pr-0 pl-5">
-        <br />
-        <table class="table table-sm table-noheaderlines table-headerspaced table-hover border">
-            <thead>
-                <tr>
-
-                    <th class="text-center font-weight-bold">
-                        Location Name
-                        @*@Html.DisplayNameFor(item => item.LocationsDepthOfZero.FirstOrDefault().LocationInstanceName)*@
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-
-                @foreach (var item in Model.LocationsDepthOfZero)
-                {
-
-                    <tr class="border-0">
-                        <td class="">
-                            <button class="btn btn-block load-sublocation-view clicked-button" value="@item.LocationInstanceID">@item.LocationInstanceName</button>
-                        </td> @*Freezer names*@
-                    </tr>
-                }
-            </tbody>
-
-        </table>
-
+    <div class="row ml-5">
+        
+        @foreach (var type in Model.LocationTypes)
+        {
+            <ul class="list-inline ">
+                <li class="list-inline-item mr-3" ><button class="opac87 btn load-location-index-view clicked-button " value=@type.LocationTypeID>@type.LocationTypeName</button></li>
+            </ul>
+        }
+           
     </div>
-    <div class="col-md-3 colTwoSublocations text-center pl-0">
 
-    </div>
-    <div class="col-md-6 VisualBoxColumn">
 
+    <div class="row">
+        <div class="col-md-3 colOne pr-0 pl-5">
+
+        </div>
+        <div class="row col-md-3 colTwoSublocations text-center pl-0">
+
+        </div>
+        <div class="col-md-6 VisualBoxColumn">
+
+        </div>
     </div>
-</div>
 

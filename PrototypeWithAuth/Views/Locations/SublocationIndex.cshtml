@@ -4,44 +4,28 @@
 *@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-<div class="spinner-border center" role="status" id="loading1" style="display:none;">
+@if (!Model.IsSmallestChild)
+{
+    <div class="spinner-border center" role="status" id="loading1" style="display:none;">
     <span class="sr-only">Loading...</span>
 </div>
-<div class="row" style="height:4.55rem">
-    @*in order to align colOne and colTwo*@
-    <div class="col-md-12">
-        @if (Model.PrevLocationInstance != null && Model.PrevLocationInstance.LocationInstanceParent != null)
+
+<div class="col-md-12 ">
+    <table class="table table-borderless">
+        @foreach (var locationInstance in Model.SublocationInstances)
         {
-            //replaced 'btn btn-outline-secondary' with 'inv-button'
-            <button class="inv-button load-sublocation-view" value="@Model.PrevLocationInstance.LocationInstanceParent.LocationInstanceParentID"><i class="fas fa-undo-alt"></i> &nbsp; @Model.PrevLocationInstance.LocationInstanceParent.LocationInstanceName</button>
-
-            <br />
+            <tr class="border-0" name="@locationInstance.LocationInstanceParentID">
+                <td class="">
+                    <button class="btn btn-block load-sublocation-view" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
+                </td>
+            </tr>
+            @*l.LocationInstanceName.ToString();*@
         }
-    </div>
+    </table>
 </div>
 
-<div class="row">
-    <div class="col-md-12 ">
-        <table class="table table-sm table-hover " style="background-color:rgba(0, 0, 0, 0.03);">
-            @foreach (var locationInstance in Model.SublocationInstances)
-            {
-                <tr class="border-0">
-                    @if (Model.Depth != 0)
-                    {
-                        <td class="">
-                            <button class="btn btn-block load-sublocation-view" value="@locationInstance.LocationInstanceParentID">@locationInstance.LocationInstanceParent.LocationInstanceName</button>
-                        </td>
-                    }
+}
 
-                    <td class="">
-                        <button class="btn btn-block load-sublocation-view" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
-                    </td>
-                </tr>
-                @*l.LocationInstanceName.ToString();*@
-            }
-        </table>
-    </div>
-</div>
 
 
 

@@ -433,11 +433,18 @@ a.nav-link {
 
 /*<<<< Location selected coloring >>>>*/
 .td-selected {
-    z-index: 1;
-    width: 400px;
-    /*background-color: rgba(48, 188, 201, 0.18);*/
-    background-color: rgba(0, 0, 0, 0.03);
-    border-left: 5px solid #30BCC9;
+    opacity: 1;
+    filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
+
+}
+
+.clicked-button:focus {
+    box-shadow: none !important;
+}
+.clicked-button {
+    outline: none !important;
+    font-size: 1.2rem;
+    font-weight: 500
 }
 
 table.table tr td button:focus { /*in order to remove button outine on focus. but may affect accessability, so consider returning*/
