@@ -54,7 +54,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 //exclude the box and cell from locationsDepthOfZero
                 LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0),
-                SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0)
+                //SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0) --> seems like we're passing in a ton of info for nothing
             };
 
             return View(locationIndexViewModel);
@@ -93,11 +93,14 @@ namespace PrototypeWithAuth.Controllers
                 sublocationIndexViewModel.IsSmallestChild = true;
 
                 //display parent and parent sibling because for the children it is displaying the grid
-                IEnumerable<LocationInstance> siblingsOfParent = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentLocationInstance.LocationInstanceParentID);
-                sublocationIndexViewModel.SublocationInstances = siblingsOfParent;
 
-                LocationInstance parentOfParentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
-                sublocationIndexViewModel.PrevLocationInstance = parentOfParentLocationInstance;
+                //there must have been a reason why this was originally here --> not sure now why
+
+                //IEnumerable<LocationInstance> siblingsOfParent = _context.LocationInstances.Where(x => x.LocationInstanceParentID == parentLocationInstance.LocationInstanceParentID);
+                //sublocationIndexViewModel.SublocationInstances = siblingsOfParent;
+
+                //LocationInstance parentOfParentLocationInstance = _context.LocationInstances.Where(x => x.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+                //sublocationIndexViewModel.PrevLocationInstance = parentOfParentLocationInstance;
             }
             return PartialView(sublocationIndexViewModel);
         }

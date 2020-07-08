@@ -760,7 +760,7 @@ $(".load-sublocation-view").click(function (e) {
 	//add or remove the background class in col 1
 	//$(".load-sublocation-view").parent().removeClass("td-selected");
 	//$(this).parent().addClass("td-selected");
-
+	console.log("in sublocation view");
 	$.fn.setUpsubLocationList($(this).val())
 
 	$.fn.setUpVisual($(this).val());
@@ -768,7 +768,30 @@ $(".load-sublocation-view").click(function (e) {
 	
 });
 
+
+$.fn.setUpsubLocationList = function (val) {
+	console.log("in set up sublocation list");
+	$("#loading1").show();
+	//fill up col 2 with the next one
+	var myDiv = $(".colTwoSublocations");
+	var parentId = val;
+	$.ajax({
+		url: "/Locations/SublocationIndex/?parentId=" + parentId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {
+			myDiv.show();
+			this.html(result);
+
+		}
+	});
+
+};
+
+
 $.fn.setUpVisual = function (val) {
+	console.log("in set up visual");
 	$("#loading2").show();
 	//fill up col three with the visual
 	var visualDiv = $(".VisualBoxColumn");
@@ -783,28 +806,6 @@ $.fn.setUpVisual = function (val) {
 			this.html(result);
 		}
 	});
-};
-
-
-$.fn.setUpsubLocationList = function (val) {
-	$("#loading1").show();
-	//fill up col 2 with the next one
-	var myDiv = $(".colTwoSublocations");
-	var parentId = val;
-	//console.log("about to call ajax with a parentid of: " + parentId);
-	$.ajax({
-		//IMPORTANT: ADD IN THE ID
-		url: "/Locations/SublocationIndex/?parentId=" + parentId,
-		type: 'GET',
-		cache: false,
-		context: myDiv,
-		success: function (result) {
-			myDiv.show();
-			this.html(result);		
-			
-		}
-	});
-
 };
 
 
