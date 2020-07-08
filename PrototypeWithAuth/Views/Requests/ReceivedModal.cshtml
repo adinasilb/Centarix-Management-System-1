@@ -73,7 +73,7 @@
                                     <img src="~/images/css/inventory/Type/bottle.png" width="100" alt="Item Image" />
                                 </div>
                                 <div class="col-10">
-                                    <h3>@Html.DisplayFor(vm => vm.Request.Product.ProductName)</h3>
+                                    <h3><input asp-for="Request.Product.ProductName" class="form-control-plaintext mt-2 center-horizontally my-auto" readonly />
                                 </div>
                             </div>
                             <br />
