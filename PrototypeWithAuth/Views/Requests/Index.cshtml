@@ -1,14 +1,309 @@
-﻿@*@model IPagedList<PrototypeWithAuth.Models.Request>*@
+﻿@model IPagedList<PrototypeWithAuth.Models.Request>
 @using PrototypeWithAuth.AppData;
 
 @using PrototypeWithAuth.Data;
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 
-@*@using X.PagedList.Mvc.Core;*@ @* import this so we get our HTML Helper *@
-@*@using X.PagedList;*@ @* import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)*@
+@using X.PagedList.Mvc.Core; @* import this so we get our HTML Helper *@
+@using X.PagedList; @* import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)*@
 
 <!-- import the included stylesheet for some (very basic) default styling -->
 @*<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
 
 
+@{
+    ViewData["Title"] = "Index";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    /*
+     * BEGIN REMEMBERING DATA
+     */
+    if (TempData["TempPage"] != null)
+    {
+        TempData["TempPage"] = TempData["TempPage"];
+    }
+    if (TempData["TempRequestStatusID"] != null)
+    {
+        TempData["TempRequestStatusID"] = TempData["TempRequestStatusID"];
+    }
+    if (TempData["TempSubcategoryID"] != null)
+    {
+        TempData["TempSubcategoryID"] = TempData["TempSubcategoryID"];
+    }
+    if (TempData["TempVendorID"] != null)
+    {
+        TempData["TempVendorID"] = TempData["TempVendorID"];
+    }
+    if (TempData["TempApplicationUserID"] != null)
+    {
+        TempData["TempApplicationUserID"] = TempData["TempApplicationUserID"];
+    }
+    if (TempData["TempPageType"] != null)
+    {
+        TempData["TempPageType"] = TempData["TempPageType"];
+    }
+    /*RequestsSearchViewModel?
+    TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;*/
+    /*
+     * BEGIN REMEMBERING DATA
+     * follow through on the modals these will be remembered on top
+     */
+
+    bool search = false;
+    if (TempData["Search"] != null)
+    {
+        if (TempData["Search"].ToString() == "True")
+        {
+            search = true;
+        }
+    }
+
+    int vendorID = 0; int subcategoryID = 0; string applicationUserID = null;
+    if (TempData["VendorID"] != null)
+    {
+        vendorID = (int)TempData["VendorID"];
+    }
+    else if (TempData["SubcategoryID"] != null)
+    {
+        subcategoryID = (int)TempData["SubcategoryID"];
+    }
+    else if (TempData["ApplicationUserID"] != null)
+    {
+        applicationUserID = TempData["ApplicationUserID"].ToString();
+    }
+
+    var PageType = TempData["PageType"];
+
+    //saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
+    bool Request = false;
+    bool Inventory = false;
+    if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
+    {
+        Request = true;
+    }
+    else if (PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    {
+        Inventory = true;
+    }
+
+    string newButtonText = "";
+    string orderedButtonText = "";
+    string receivedButtonText = "";
+
+    string newActiveClass = "";
+    string orderedActiveClass = "";
+    string receivedActiveClass = "";
+
+    if (!search)
+    {
+        newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
+        orderedButtonText = "Ordered [" + TempData["AmountOrdered"].ToString() + "]";
+        receivedButtonText = "Received [" + TempData["AmountReceived"].ToString() + "]";
+
+        //newActiveClass = "btn btn-outline-secondary text-dark new-button"; //used to be this...
+        newActiveClass = "new-button";
+        orderedActiveClass = "new-button";
+        receivedActiveClass = "new-button";
+
+        //changing the classes for the action links based on the tempdata of request status
+        int requestStatusID = 0;
+        int.TryParse(TempData["RequestStatusID"].ToString(), out requestStatusID);
+        switch (requestStatusID)
+        {
+            case 1:
+            case 4:
+            case 5:
+                //newActiveClass = "btn btn-secondary text-dark new-button"; //used to be this...
+                newActiveClass = "new-button active";
+                break;
+            case 2:
+                orderedActiveClass = "new-button active";
+                break;
+            case 3:
+                receivedActiveClass = "new-button active";
+                break;
+        }
+    }
+
+
+}
+
+@*<h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>*@
+@if (TempData["OpenConfirmEmailModal"] != null)
+{
+    <input type="text" id="tdconfirmemail" class="hidden" value="@TempData["RequestID"]" />
+}
+<br />
+<br />
+@if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
+{
+    <div class="row ml-5">
+        <div class="">
+            <ul class="list-inline">
+                <li class="list-inline-item active mr-3">
+                    <a class="@newActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i style="font-size:1.4rem;" class="icon-centarix-icons-04"></i> &nbsp;&nbsp;  @newButtonText </a>
+                    @*<img src="~/images/css/inventory/icons/new_tab.png" alt="New" />*@
+
+                    @*@Html.ActionLink(newButtonText, "Index", "Requests", new {@applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request}, new {@class = newActiveClass})*@
+                </li>
+
+                <li class="list-inline-item mr-3">
+                    <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-centarix-icons-03"></i>  &nbsp;&nbsp; @orderedButtonText</a>
+
+                    @*@Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })*@
+                </li>
+
+                <li class="list-inline-item ">
+                    <a class="@receivedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-done-24px"></i> &nbsp;&nbsp;  @receivedButtonText</a>
+
+                    @*@Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })*@
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+<br />
+<br />
+<div class="mx-5">
+    <table class="table table-headerspaced table-noheaderlines table-hover">
+        <thead>
+            <tr class="text-center">
+                @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>*@
+                <th>Item Image</th>
+                @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductName)</th>*@
+                <th>Item Name</th>
+                @*<th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>*@
+                <th>Vendor</th>
+                <th>Amount</th> @*Placeholder until we insert total*@
+                <th>@Html.DisplayNameFor(m => m[0].Cost)</th>
+                @*Later on should have a better location...*@
+                @if (Inventory)
+                {
+                    <th> Location </th>
+                }
+                <th>@Html.DisplayNameFor(m => m[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
+                @*<th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>*@
+                <th>Owner</th>
+                <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="text-center inv-list-item">
+                    <td>
+                        @if (item.Product.ProductSubcategory.ImageURL != null)
+                        {
+                            var imageurl = item.Product.ProductSubcategory.ImageURL;
+                            <img src="@imageurl" alt="Image" width="100" class="category-image" />
+                        }
+                        else
+                        {
+                            <img src="~/images/css/accounting/sample_image.png" alt="Image" width="100" class="category-image" />
+                        }
+                    </td>
+
+                    <td> <button class="btn inv-link-clr load-product-details" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
+
+                    <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
+
+                    <td>
+                        <ul style="list-style: none;">
+
+                            @if (item.Unit != null)
+                            {
+                                <li>
+                                    @Html.DisplayFor(modelItem => item.Unit)
+                                    @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                                </li>
+                                @if (item.SubUnit != null)
+                                {
+                                    <li>
+                                        @Html.DisplayFor(modelItem => item.SubUnit)
+                                        @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
+                                    </li>
+                                    @if (item.SubSubUnit != null)
+                                    {
+                                        <li>
+                                            @Html.DisplayFor(modelItem => item.SubSubUnit)
+                                            @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
+                                        </li>
+                                    }
+                                }
+
+                            }
+
+
+                        </ul>
+                    </td> @*Computed column?*@
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.Cost)*@
+                        @{
+                            decimal cost = (decimal)item.Cost;
+                            string formattedCost = cost.ToString("C02");
+                        }
+                        @formattedCost
+                    </td>
+                    @*Later on should have a better location...*@
+                    @if (Inventory)
+                    {
+
+                        <td>
+                            @if (item.RequestLocationInstances != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName)
+                            }
+                        </td>
+                    }
+                    <td> @Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription) </td>
+                    <td> @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName) </td>
+
+                    <td> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
+
+                    <td style="width:3rem;">
+                        @if (item.RequestStatusID == 1)
+                        {
+                            //this is a nested if b/c if user can't approve then i still don't want it to go the the else
+                            if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
+                            {
+                                @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
+
+                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" data-title="approve" class="btn load-confirm-email"><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i> </button> //approve
+
+                            }
+                        }
+                        else if (item.RequestStatusID == 2)
+                        {
+                            <button class="btn load-receive-and-location" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
+                        }
+                        else
+                        {
+                            @*work on getting the correct syntax to create a new product with*@
+                            <button class="btn load-order-details" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
+                        }
+                    </td>
+                    @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
+                    <td style="width:3rem;">
+                        <button class="btn load-confirm-delete" data-title="delete" value="@item.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button> @*delete*@
+
+                        @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
+                        @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-6 offset-6 text-center">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    </div>
+</div>

@@ -14,7 +14,7 @@ using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
-//using X.PagedList;
+using X.PagedList;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -119,7 +119,7 @@ namespace PrototypeWithAuth.Controllers
             PaymentNotificationsViewModel paymentNotificationsViewModel = new PaymentNotificationsViewModel
             {
                 TitleList = titleList,
-                ParentRequests =  ReturnParentRequestList
+                ParentRequests = await ReturnParentRequestList.ToListAsync()
             };
 
             //tempdata page type for active tab link
@@ -148,7 +148,7 @@ namespace PrototypeWithAuth.Controllers
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.General;
 
-            return View(fullParentRequestsListByDate);
+            return View(await fullParentRequestsListByDate.ToListAsync());
         }
 
 

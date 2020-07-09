@@ -13,7 +13,7 @@ using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
-//using X.PagedList;
+using X.PagedList;
 using Microsoft.AspNetCore.Hosting;
 using MailKit.Net.Smtp;
 using MimeKit;
@@ -63,165 +63,165 @@ namespace PrototypeWithAuth.Controllers
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
+            
+            //instantiate your list of requests to pass into the index
+            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).OrderBy(r => r.ParentRequest.OrderDate);
+            //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
-            ////instantiate your list of requests to pass into the index
-            //IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).OrderBy(r => r.ParentRequest.OrderDate);
-            ////.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
+            TempData["RequestStatusID"] = RequestStatusID;
+            var SidebarTitle = AppUtility.RequestSidebarEnum.None;
 
-            //TempData["RequestStatusID"] = RequestStatusID;
-            //var SidebarTitle = AppUtility.RequestSidebarEnum.None;
+            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
+            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
+            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, vendorID, subcategoryID, applicationUserID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, vendorID, subcategoryID, applicationUserID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, vendorID, subcategoryID, applicationUserID);
 
-            //int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
-            //int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
-            //int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, vendorID, subcategoryID, applicationUserID);
-            //newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, vendorID, subcategoryID, applicationUserID);
-            //newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, vendorID, subcategoryID, applicationUserID);
+            //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
+            IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
+            //use an enum to determine which page type you are using and fill the data accordingly, 
+            //also pass the data through tempdata to the page so you can 
+            TempData["PageType"] = PageType;
+            //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
+            //if it is a request page --> get all the requests with a new or ordered request status
+            if (ViewData["ReturnRequests"] != null)
+            {
+                RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
+            }
+            else if (PageType == AppUtility.RequestPageTypeEnum.Request)
+            {
+                /*
+                 * In order to combine all the requests each one needs to be in a separate list
+                 * Then you need to union them one at a time into separate variables
+                 * you only need the separate union variable in order for the union to work
+                 * and the original queries are on separate lists because each is querying the full database with a separate where
+                 */
+                IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
+                if (RequestStatusID == 0 || RequestStatusID == 1)
+                {
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
+                    RequestsPassedIn = TempRequestList;
+                }
+                if (RequestStatusID == 0 || RequestStatusID == 2)
+                {
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                }
+                if (RequestStatusID == 0 || RequestStatusID == 3)
+                {
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                    RequestsPassedIn = RequestsPassedIn.OrderBy(rpi => rpi.ArrivalDate);
+                }
+                //if the user chooses a new status they want to see this too
+                if (RequestStatusID == 0 || RequestStatusID == 4 || RequestStatusID == 1)
+                {
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                }
+                //if the user chooses a new status they want to see this too
+                if (RequestStatusID == 0 || RequestStatusID == 5 || RequestStatusID == 1)
+                {
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                }
 
-            ////use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
-            //IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-            ////use an enum to determine which page type you are using and fill the data accordingly, 
-            ////also pass the data through tempdata to the page so you can 
-            //TempData["PageType"] = PageType;
-            ////instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
-            ////if it is a request page --> get all the requests with a new or ordered request status
-            //if (ViewData["ReturnRequests"] != null)
-            //{
-            //    RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
-            //}
-            //else if (PageType == AppUtility.RequestPageTypeEnum.Request)
-            //{
-            //    /*
-            //     * In order to combine all the requests each one needs to be in a separate list
-            //     * Then you need to union them one at a time into separate variables
-            //     * you only need the separate union variable in order for the union to work
-            //     * and the original queries are on separate lists because each is querying the full database with a separate where
-            //     */
-            //    IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
-            //    if (RequestStatusID == 0 || RequestStatusID == 1)
-            //    {
-            //        TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
-            //        RequestsPassedIn = TempRequestList;
-            //    }
-            //    if (RequestStatusID == 0 || RequestStatusID == 2)
-            //    {
-            //        TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
-            //        RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-            //    }
-            //    if (RequestStatusID == 0 || RequestStatusID == 3)
-            //    {
-            //        TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
-            //        RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-            //        RequestsPassedIn = RequestsPassedIn.OrderBy(rpi => rpi.ArrivalDate);
-            //    }
-            //    //if the user chooses a new status they want to see this too
-            //    if (RequestStatusID == 0 || RequestStatusID == 4 || RequestStatusID == 1)
-            //    {
-            //        TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
-            //        RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-            //    }
-            //    //if the user chooses a new status they want to see this too
-            //    if (RequestStatusID == 0 || RequestStatusID == 5 || RequestStatusID == 1)
-            //    {
-            //        TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
-            //        RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-            //    }
+            }
+            //if it is an inventory page --> get all the requests with received and is inventory request status
+            else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
+            {
+                //partial and clarify?
+                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3);
+            }
+            else
+            {
+                RequestsPassedIn = fullRequestsList;
+            }
 
-            //}
-            ////if it is an inventory page --> get all the requests with received and is inventory request status
-            //else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
-            //{
-            //    //partial and clarify?
-            //    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3);
-            //}
-            //else
-            //{
-            //    RequestsPassedIn = fullRequestsList;
-            //}
-
-            ////now that the lists are created sort by vendor or subcategory
-            //if (vendorID > 0 && requestsSearchViewModel != null)
-            //{
-            //    RequestsPassedIn = RequestsPassedIn
-            //        .OrderByDescending(r => r.ProductID)
-            //        .Where(r => r.Product.VendorID == vendorID);
-            //    //pass the vendorID into the temp data to use if you'd like to sort from there
-            //    SidebarTitle = AppUtility.RequestSidebarEnum.Vendor;
-            //    TempData["VendorID"] = vendorID;
-            //}
-            //else if (subcategoryID > 0 && requestsSearchViewModel != null)
-            //{
-            //    RequestsPassedIn = RequestsPassedIn
-            //        .OrderByDescending(r => r.ProductID)
-            //        .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
-            //    //pass the subcategoryID into the temp data to use if you'd like to sort from there
-            //    SidebarTitle = AppUtility.RequestSidebarEnum.Type;
-            //    TempData["SubcategoryID"] = subcategoryID;
-            //}
-            //else if (applicationUserID != null && requestsSearchViewModel != null)
-            //{
-            //    RequestsPassedIn = RequestsPassedIn
-            //        .OrderByDescending(r => r.ProductID)
-            //        .Where(r => r.ParentRequest.ApplicationUserID == applicationUserID);
-            //    //pass the subcategoryID into the temp data to use if you'd like to sort from there
-            //    SidebarTitle = AppUtility.RequestSidebarEnum.Owner;
-            //    TempData["ApplicationUserID"] = applicationUserID;
-            //}
-            //else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
-            //{
-            //    LocationInstance rliList = _context.LocationInstances
-            //        .Include(li => li.AllRequestLocationInstances)
-            //        .Where(li => li.LocationInstanceID == parentLocationInstanceID).FirstOrDefault();
-            //    RequestsPassedIn = RequestsPassedIn.Where(r => rliList.AllRequestLocationInstances.Select(rli => rli.RequestID).ToList().Contains(r.RequestID));
-            //    //RequestsPassedIn = RequestsPassedIn.Except(RequestsPassedIn.Where(r => rliList.RequestLocationInstances.se))
-            //}
-
-
-            ////passing in the amounts to display in the top buttons
-            //TempData["AmountNew"] = newCount;
-            //TempData["AmountOrdered"] = orderedCount;
-            //TempData["AmountReceived"] = receivedCount;
-
-            //TempData["SidebarTitle"] = SidebarTitle;
+            //now that the lists are created sort by vendor or subcategory
+            if (vendorID > 0 && requestsSearchViewModel != null)
+            {
+                RequestsPassedIn = RequestsPassedIn
+                    .OrderByDescending(r => r.ProductID)
+                    .Where(r => r.Product.VendorID == vendorID);
+                //pass the vendorID into the temp data to use if you'd like to sort from there
+                SidebarTitle = AppUtility.RequestSidebarEnum.Vendor;
+                TempData["VendorID"] = vendorID;
+            }
+            else if (subcategoryID > 0 && requestsSearchViewModel != null)
+            {
+                RequestsPassedIn = RequestsPassedIn
+                    .OrderByDescending(r => r.ProductID)
+                    .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
+                //pass the subcategoryID into the temp data to use if you'd like to sort from there
+                SidebarTitle = AppUtility.RequestSidebarEnum.Type;
+                TempData["SubcategoryID"] = subcategoryID;
+            }
+            else if (applicationUserID != null && requestsSearchViewModel != null)
+            {
+                RequestsPassedIn = RequestsPassedIn
+                    .OrderByDescending(r => r.ProductID)
+                    .Where(r => r.ParentRequest.ApplicationUserID == applicationUserID);
+                //pass the subcategoryID into the temp data to use if you'd like to sort from there
+                SidebarTitle = AppUtility.RequestSidebarEnum.Owner;
+                TempData["ApplicationUserID"] = applicationUserID;
+            }
+            else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
+            {
+                LocationInstance rliList = _context.LocationInstances
+                    .Include(li => li.AllRequestLocationInstances)
+                    .Where(li => li.LocationInstanceID == parentLocationInstanceID).FirstOrDefault();
+                RequestsPassedIn = RequestsPassedIn.Where(r => rliList.AllRequestLocationInstances.Select(rli => rli.RequestID).ToList().Contains(r.RequestID));
+                //RequestsPassedIn = RequestsPassedIn.Except(RequestsPassedIn.Where(r => rliList.RequestLocationInstances.se))
+            }
 
 
-            ////TRY USING TEMP DATA TO REMEMBER WHERE THE PAGE IS
+            //passing in the amounts to display in the top buttons
+            TempData["AmountNew"] = newCount;
+            TempData["AmountOrdered"] = orderedCount;
+            TempData["AmountReceived"] = receivedCount;
 
-            ///*int?*/
-            //TempData["TempPage"] = page;
-            ///*int*/
-            //TempData["TempRequestStatusID"] = RequestStatusID;
-            ///*int*/
-            //TempData["TempSubcategoryID"] = subcategoryID;
-            ///*int*/
-            //TempData["TempVendorID"] = vendorID;
-            ///*string*/
-            //TempData["TempApplicationUserID"] = applicationUserID;
-            ///*AppUtility.RequestPageTypeEnum*/
-            //TempData["TempPageType"] = (int)PageType;
-            ///*RequestsSearchViewModel?*/
-            ////TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
-
-            ////Getting the page that is going to be seen (if no page was specified it will be one)
-            //var pageNumber = page ?? 1;
-            //var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
-            //try
-            //{
-            //    onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
-            //        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-            //        .ToPagedListAsync(pageNumber, 25);
-
-            //    onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
+            TempData["SidebarTitle"] = SidebarTitle;
 
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    TempData["ErrorMessage"] = ex.Message;
-            //    TempData["InnerMessage"] = ex.InnerException;
-            //    return View("~/Views/Shared/RequestError.cshtml");
-            //}
+            //TRY USING TEMP DATA TO REMEMBER WHERE THE PAGE IS
 
-            return View();
+            /*int?*/
+            TempData["TempPage"] = page;
+            /*int*/
+            TempData["TempRequestStatusID"] = RequestStatusID;
+            /*int*/
+            TempData["TempSubcategoryID"] = subcategoryID;
+            /*int*/
+            TempData["TempVendorID"] = vendorID;
+            /*string*/
+            TempData["TempApplicationUserID"] = applicationUserID;
+            /*AppUtility.RequestPageTypeEnum*/
+            TempData["TempPageType"] = (int)PageType;
+            /*RequestsSearchViewModel?*/
+            //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
+
+            //Getting the page that is going to be seen (if no page was specified it will be one)
+            var pageNumber = page ?? 1;
+            var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
+            try
+            {
+                onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                    .ToPagedListAsync(pageNumber, 25);
+
+                onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
+
+
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
+            }
+
+            return View(onePageOfProducts);
         }
         [HttpGet]
         public async Task<IActionResult> DeleteModal(int? id)
@@ -2295,22 +2295,22 @@ namespace PrototypeWithAuth.Controllers
 
 
             //Getting the page that is going to be seen (if no page was specified it will be one)
-            //var pageNumber = page ?? 1;
-            //var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
-            //try
-            //{
-            //    onePageOfProducts = await requestsSearched.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
-            //}
-            //catch (Exception ex)
-            //{
-            //    TempData["ErrorMessage"] = ex.Message;
-            //    TempData["InnerMessage"] = ex.InnerException;
-            //    return View("~/Views/Shared/RequestError.cshtml");
-            //}
+            var pageNumber = page ?? 1;
+            var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
+            try
+            {
+                onePageOfProducts = await requestsSearched.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory).Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
+            }
 
-            //TempData["Search"] = "True";
+            TempData["Search"] = "True";
 
-            return View("Index"/*, onePageOfProducts*/);
+            return View("Index", onePageOfProducts);
         }
 
 
