@@ -758,6 +758,7 @@ $(".clicked-inside-button").click(function () {
 
 $(".clicked-outer-button").click(function () {
 	$(".clicked-outer-button").parent().removeClass("td-selected-outer");
+	$(".clicked-outer-button").parent().parent().removeClass("td-selected-outer");
 	$(this).parent().addClass("td-selected-outer");
 	$(this).parent().parent().addClass("td-selected-outer");
 });
