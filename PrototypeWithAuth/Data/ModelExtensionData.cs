@@ -758,6 +758,72 @@ namespace PrototypeWithAuth.Data
                 }
             );
 
+            modelBuilder.Entity<Menu>().HasData(
+                new Menu
+                {
+                    menuID = 1,
+                    MenuDescription = "Orders & Inventory",
+                    ControllerName = "Requests",
+                    ActionName = "Index",
+                    MenuImageURL = "/images/css/main_menu_icons/inventory.png"
+                },
+                new Menu
+                {
+                    menuID = 2,
+                    MenuDescription = "Protocols",
+                    ControllerName = "",
+                    ActionName = "",
+                    MenuImageURL = "/images/css/main_menu_icons/protocols.png"
+                }, 
+                new Menu
+                {
+                    menuID = 3,
+                    MenuDescription = "Operations",
+                    ControllerName = "",
+                    ActionName = "",
+                    MenuImageURL = "/images/css/main_menu_icons/operation.png"
+                },
+                new Menu
+                {
+                    menuID = 4,
+                    MenuDescription = "Biomarkers",
+                    ControllerName = "",
+                    ActionName = "",
+                    MenuImageURL = "/images/css/main_menu_icons/biomarkers.png"
+                },
+                new Menu
+                {
+                    menuID = 5,
+                    MenuDescription = "Lab Management",
+                    ControllerName = "Vendors",
+                    ActionName = "IndexForLabManage",
+                    MenuImageURL = "/images/css/main_menu_icons/lab.png"
+                },
+                new Menu
+                {
+                    menuID = 6,
+                    MenuDescription = "Accounting",
+                    ControllerName = "ParentRequests",
+                    ActionName = "ToPay",
+                    MenuImageURL = "/images/css/main_menu_icons/accounting.png"
+                },
+                new Menu
+                {
+                    menuID = 7,
+                    MenuDescription = "Expenses",
+                    ControllerName = "ParentRequests",
+                    ActionName = "ExpensesList",
+                    MenuImageURL = "/images/css/main_menu_icons/expenses.png"
+                },
+                new Menu
+                {
+                    menuID = 8,
+                    MenuDescription = "Users",
+                    ControllerName = "Admin",
+                    ActionName = "RegisterUser",
+                    MenuImageURL = "/images/css/main_menu_icons/users.png"
+                }
+            );
 
         }
     }

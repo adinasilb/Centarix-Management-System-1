@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200709095619_createMenuTable")]
+    partial class createMenuTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,72 +376,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("menuID");
 
                     b.ToTable("Menus");
-
-                    b.HasData(
-                        new
-                        {
-                            menuID = 1,
-                            ActionName = "Index",
-                            ControllerName = "Requests",
-                            MenuDescription = "Orders & Inventory",
-                            MenuImageURL = "/images/css/main_menu_icons/inventory.png"
-                        },
-                        new
-                        {
-                            menuID = 2,
-                            ActionName = "",
-                            ControllerName = "",
-                            MenuDescription = "Protocols",
-                            MenuImageURL = "/images/css/main_menu_icons/protocols.png"
-                        },
-                        new
-                        {
-                            menuID = 3,
-                            ActionName = "",
-                            ControllerName = "",
-                            MenuDescription = "Operations",
-                            MenuImageURL = "/images/css/main_menu_icons/operation.png"
-                        },
-                        new
-                        {
-                            menuID = 4,
-                            ActionName = "",
-                            ControllerName = "",
-                            MenuDescription = "Biomarkers",
-                            MenuImageURL = "/images/css/main_menu_icons/biomarkers.png"
-                        },
-                        new
-                        {
-                            menuID = 5,
-                            ActionName = "IndexForLabManage",
-                            ControllerName = "Vendors",
-                            MenuDescription = "Lab Management",
-                            MenuImageURL = "/images/css/main_menu_icons/lab.png"
-                        },
-                        new
-                        {
-                            menuID = 6,
-                            ActionName = "ToPay",
-                            ControllerName = "ParentRequests",
-                            MenuDescription = "Accounting",
-                            MenuImageURL = "/images/css/main_menu_icons/accounting.png"
-                        },
-                        new
-                        {
-                            menuID = 7,
-                            ActionName = "ExpensesList",
-                            ControllerName = "ParentRequests",
-                            MenuDescription = "Expenses",
-                            MenuImageURL = "/images/css/main_menu_icons/expenses.png"
-                        },
-                        new
-                        {
-                            menuID = 8,
-                            ActionName = "RegisterUser",
-                            ControllerName = "Admin",
-                            MenuDescription = "Users",
-                            MenuImageURL = "/images/css/main_menu_icons/users.png"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>

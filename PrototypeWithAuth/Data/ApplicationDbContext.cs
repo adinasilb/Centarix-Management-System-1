@@ -22,6 +22,7 @@ namespace PrototypeWithAuth.Data
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
         
+        public DbSet<Menu> Menus { get; set; }
         public DbSet<SubProject> SubProjects { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<LocationInstance> LocationInstances { get; set; }
