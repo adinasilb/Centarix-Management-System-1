@@ -8,15 +8,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+using SQLitePCL;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
@@ -33,7 +36,8 @@ namespace PrototypeWithAuth.Controllers
         //Adina added in
         public IActionResult IndexAdmin()
         {
-            return View();
+            IEnumerable<Menu> menu = _context.Menus.Select(x => x);
+            return View(menu);
         }
 
         public IActionResult Privacy()

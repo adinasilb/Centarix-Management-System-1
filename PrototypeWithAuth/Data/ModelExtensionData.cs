@@ -794,6 +794,14 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 5,
+                    MenuDescription = "TimeKeeper",
+                    ControllerName = "",
+                    ActionName = "",
+                    MenuImageURL = "/images/css/main_menu_icons/timekeeper.png"
+                },
+                new Menu
+                {
+                    menuID = 6,
                     MenuDescription = "Lab Management",
                     ControllerName = "Vendors",
                     ActionName = "IndexForLabManage",
@@ -801,7 +809,7 @@ namespace PrototypeWithAuth.Data
                 },
                 new Menu
                 {
-                    menuID = 6,
+                    menuID = 7,
                     MenuDescription = "Accounting",
                     ControllerName = "ParentRequests",
                     ActionName = "ToPay",
@@ -809,7 +817,7 @@ namespace PrototypeWithAuth.Data
                 },
                 new Menu
                 {
-                    menuID = 7,
+                    menuID = 8,
                     MenuDescription = "Expenses",
                     ControllerName = "ParentRequests",
                     ActionName = "ExpensesList",
@@ -817,12 +825,22 @@ namespace PrototypeWithAuth.Data
                 },
                 new Menu
                 {
-                    menuID = 8,
+                    menuID = 9,
+                    MenuDescription = "Income",
+                    ControllerName = "",
+                    ActionName = "",
+                    MenuImageURL = "/images/css/main_menu_icons/Income.png"
+                },
+                new Menu
+                {
+                    menuID = 10,
                     MenuDescription = "Users",
                     ControllerName = "Admin",
                     ActionName = "RegisterUser",
                     MenuImageURL = "/images/css/main_menu_icons/users.png"
                 }
+                 
+                
             );
 
         }

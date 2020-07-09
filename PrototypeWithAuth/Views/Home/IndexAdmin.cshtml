@@ -1,4 +1,5 @@
-﻿@using PrototypeWithAuth.Data
+﻿@model IEnumerable<PrototypeWithAuth.Models.Menu>
+@using PrototypeWithAuth.Data
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -11,60 +12,41 @@
 }
 @*Need to add security here*@
 
-    <div class="text-center center-horizontally">
-        <h2>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h2>
-        <br />
-        <br />
-        <div class="container col-md-10" style="min-width:560px">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-6 mb-4">
-                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("Index", "Requests", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/inventory.png" alt="Inventory" /><br /><span>Orders & Inventory</span></a>
-                        </div>
-                        <div class="col-6 mb-4">
-                            <a class="module-button bold-hover-effects" href="#"><img class="main-btn-img" src="~/images/css/main_menu_icons/protocols.png" alt="Protocols" /><br /><span>Protocols</span></a>
-                        </div>
-                    </div> 
+<div class="text-center center-horizontally mt-3">
+    <h2>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h2>
+    <div class="container col-md-10" style="min-width:560px">
+        <div class="row mt-5">
+
+            @for (int i = 0; i < Model.Count() / 2; i++)
+            {
+                if (i > 0 && i % 8 == 0)
+                {
+                @:</div><div class="d-flex mt-5">
+                }
+                <div class="px-3">
+                    <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuDescription</span></a>
                 </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-6 mb-4">
-                            <a class="module-button bold-hover-effects" href="#"><img class="main-btn-img" src="~/images/css/main_menu_icons/operation.png" alt="Operations" /><br /><span>Operations</span></a>
-                        </div>
-                        <div class="col-6 mb-4">
-                            <a class="module-button bold-hover-effects" href="#"><img class="main-btn-img" src="~/images/css/main_menu_icons/biomarkers.png" alt="Biomarkers" /><br /><span>Biomarkers</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-6 mb-4">
-                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("IndexForLabManage", "Vendors", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/lab.png" alt="Lab" /><br /><span>Lab Management</span></a>
-                        </div>
-                       
-                        <div class="col-6 mb-4">
-                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("ToPay", "ParentRequests", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/accounting.png" alt="Accounting" /><br /><span>Accounting</span></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-6 mb-4">
-                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("ExpensesList", "ParentRequests", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/expenses.png" alt="Expenses" /><br /><span>Expenses</span></a>
-                        </div>
-                        <div class="col-6 mb-4">
-                            <a class="module-button bold-hover-effects" href="@Url.ActionLink("RegisterUser", "Admin", new {})"><img class="main-btn-img" src="~/images/css/main_menu_icons/users.png" alt="Users" /><br /><span>Users</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+            }
         </div>
+        <div class="row mt-5">
+
+            @for (int i = Model.Count() / 2; i < Model.Count(); i++)
+            {
+                if (i > 0 && i+1 % 8 == 0)
+                {
+                @:</div><div class="d-flex mt-5">
+                }
+                <div class="px-3 ">
+                    <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuDescription</span></a>
+                </div>
+
+            }
+        </div>
+    </div>
 
 
-        @*<div class="mt-5">
+    @*<div class="mt-5">
             <button type="submit" class="btn btn-success module-buttons">Protocols</button>
             &nbsp;
             @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-info module-buttons" })
@@ -76,4 +58,4 @@
             @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-secondary module-buttons" })
         </div>*@
 
-    </div>
+</div>
