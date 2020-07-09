@@ -10,13 +10,13 @@
     <span class="sr-only">Loading...</span>
 </div>
 
-<div class="col-md-12 ">
+<div class="col ">
     <table class="table table-borderless">
         @foreach (var locationInstance in Model.SublocationInstances)
         {
-            <tr class="border-0" name="@locationInstance.LocationInstanceParentID">
+            <tr class="border-bottom border-left-0 border-right-0 border-top-0 border-dark"  name="@locationInstance.LocationInstanceParentID">
                 <td class="">
-                    <button class="btn btn-block load-sublocation-view" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
+                    <button class="btn btn-block load-sublocation-view clicked-inside-button clicked-button" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
                 </td>
             </tr>
             @*l.LocationInstanceName.ToString();*@

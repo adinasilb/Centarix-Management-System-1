@@ -753,11 +753,15 @@ $(".visual-locations-zoom").on("click", function (e) {
 	}); 
 });
 
-$(".clicked-button").click(function () {
-	$(".clicked-button").parent().removeClass("td-selected");
-	$(this).parent().addClass("td-selected");
-})
+$(".clicked-inside-button").click(function () {
+	$(this).parent().closest('td-selected-inside').removeClass("td-selected-inside");
+	$(this).parent().addClass("td-selected-inside");
+});
 
+$(".clicked-outer-button").click(function () {
+	$(this).parent().closest('td-selected-outer').removeClass("td-selected-outer");
+	$(this).parent().addClass("td-selected-outer");
+});
 
 function changeTerms(checkbox) {
 	if (checkbox.checked) {
