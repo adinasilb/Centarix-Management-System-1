@@ -754,13 +754,14 @@ $(".visual-locations-zoom").on("click", function (e) {
 });
 
 $(".clicked-inside-button").click(function () {
-	$(this).parent().closest('td-selected-inside').removeClass("td-selected-inside");
+	$(".clicked-inside-button").parent().removeClass("td-selected-inside");
 	$(this).parent().addClass("td-selected-inside");
 });
 
 $(".clicked-outer-button").click(function () {
-	$(this).parent().closest('td-selected-outer').removeClass("td-selected-outer");
+	$(".clicked-outer-button").parent().removeClass("td-selected-outer");
 	$(this).parent().addClass("td-selected-outer");
+	$(this).parent().parent().addClass("td-selected-outer");
 });
 
 function changeTerms(checkbox) {

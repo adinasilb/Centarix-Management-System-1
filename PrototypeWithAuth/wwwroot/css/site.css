@@ -464,6 +464,7 @@ a.nav-link {
 .td-selected-outer {
     border-left: .3rem solid #30BCC9 !important;
     border-right: 0 !important;
+    background: #F4F7F9 0% 0% no-repeat padding-box;
 }
 
 table.table tr td button:focus { /*in order to remove button outine on focus. but may affect accessability, so consider returning*/
@@ -471,15 +472,12 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
 }
 
 .location-index-border {
-    border: .063rem solid rgba(0,0,0,.38) !important;
+    border: .063rem solid rgba(0,0,0,.38);
 }
 .location-index-border td {
-    border-top: .063rem solid rgba(0,0,0,.38) !important;
+    border-top: .063rem solid rgba(0,0,0,.38) ;
 }
 
-tr! > .td-selected-outer {
-    border-right: 0 !important;
-}
 
 /*removed , .VisualBoxColumn table.table tr*/
 .VisualBoxColumn table.table, .VisualBoxColumn table.table tr {
