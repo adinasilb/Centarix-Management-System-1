@@ -1,20 +1,12 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestsSearchViewModel
 @{
     ViewData["Title"] = "Search";
-    Layout = "~/Views/Shared/View.cshtml";
+    Layout = "~/Views/Shared/ManageSharedView.cshtml";
 }
 @*<div class="modal modal-view  right fader " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">*@
 
 <form action="" method="post" enctype="multipart/form-data" id="search-form">
-    <div style="display:flex;">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div style="width: 110px; min-height: 100rem;" class="p-2 sidebar-shadow text-center p-3">
-            <ul class="nav flex-column nav-pills nav-stacked mt-3 ">
-                <li class="nav-item">
-                    <a href="#" class="inv-link-clr" style="color:#30BCC9;"> <i class="icon-zoom_in-24px-01" style="font-size: 2rem;"></i> <br /> Search </a>
-                </li>
-            </ul>
-        </div>
+ 
 
         <div class="row mt-5" style="flex-grow: 1;">
             <div class="col-1 offset-1 mt-3">

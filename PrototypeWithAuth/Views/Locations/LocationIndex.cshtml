@@ -1,0 +1,24 @@
+﻿@model PrototypeWithAuth.ViewModels.LocationIndexViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+<div class="spinner-border center" role="status" id="loading3" style="display:none;">
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="row">
+    <div class="col location-index-container">
+        <table class="table table-sm table-hover " >
+            @foreach (var item in Model.LocationsDepthOfZero)
+            {
+
+                <tr class="location-index-border">
+                    <td class="">
+                        <button class="btn btn-block load-sublocation-view parent-location clicked-outer-button clicked-button" value="@item.LocationInstanceID">@item.LocationInstanceName</button>
+                    </td> @*Freezer names*@
+                </tr>
+            }
+        </table>
+    </div>
+</div>
