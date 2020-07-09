@@ -754,21 +754,6 @@ $(".visual-locations-zoom").on("click", function (e) {
 $(".clicked-inside-button").click(function () {
 	$(".clicked-inside-button").parent().removeClass("td-selected-inside");
 	$(this).parent().addClass("td-selected-inside");
-$(".clicked-button").click(function () {
-	$(".clicked-button").parent().removeClass("td-selected");
-	$(this).parent().addClass("td-selected");
-})
-
-$(".load-sublocation-view").click(function (e) {
-	//add or remove the background class in col 1
-	//$(".load-sublocation-view").parent().removeClass("td-selected");
-	//$(this).parent().addClass("td-selected");
-	console.log("in sublocation view");
-	$.fn.setUpsubLocationList($(this).val())
-
-	$.fn.setUpVisual($(this).val());
-
-	
 });
 
 $(".clicked-outer-button").click(function () {
@@ -777,45 +762,6 @@ $(".clicked-outer-button").click(function () {
 	$(this).parent().parent().addClass("td-selected-outer");
 });
 
-
-$.fn.setUpsubLocationList = function (val) {
-	console.log("in set up sublocation list");
-	$("#loading1").show();
-	//fill up col 2 with the next one
-	var myDiv = $(".colTwoSublocations");
-	var parentId = val;
-	$.ajax({
-		url: "/Locations/SublocationIndex/?parentId=" + parentId,
-		type: 'GET',
-		cache: false,
-		context: myDiv,
-		success: function (result) {
-			myDiv.show();
-			this.html(result);
-
-		}
-	});
-
-};
-
-
-$.fn.setUpVisual = function (val) {
-	console.log("in set up visual");
-	$("#loading2").show();
-	//fill up col three with the visual
-	var visualDiv = $(".VisualBoxColumn");
-	var visualContainerId = val;
-	//console.log("about to call ajax with a visual container id of: " + visualContainerId);
-	$.ajax({
-		url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
-		type: 'GET',
-		cache: false,
-		context: visualDiv,
-		success: function (result) {
-			this.html(result);
-		}
-	});
-};
 
 
 function changeTerms(checkbox) {
@@ -838,343 +784,332 @@ $(".documents-tab").click(function () {
 	$.fn.CheckIfFileSelectsAreFull();
 });
 
-//$(".upload-file-1").click(function () {
-//	console.log("file select clicked 1");
-//	$(".file-select-1").click();
-//});
-//$(".upload-file-2").click(function () {
-//	console.log("file select clicked 2");
-//	$(".file-select-2").click();
-//});
-//$(".upload-file-3").click(function () {
-//	console.log("file select clicked 3 ");
-//	$(".file-select-3").click();
-//});
-//$(".upload-file-4").click(function () {
-//	console.log("file select clicked");
-//	$(".file-select-4").click();
-//});
-//$(".upload-file-5").click(function () {
-//	console.log("file select clicked");
-//	$(".file-select-5").click();
-//});
-//$(".upload-file-6").click(function () {
-//	console.log("file select clicked");
-//	$(".file-select-6").click();
-//});
-//$(".upload-file-7").click(function () {
-//	console.log("file select clicked");
-//	$(".file-select-7").click();
-//});
-//$(".upload-file-8").click(function () {
-//	console.log("file select clicked");
-//	$(".file-select-8").click();
-//});
+	//$(".upload-file-1").click(function () {
+	//	console.log("file select clicked 1");
+	//	$(".file-select-1").click();
+	//});
+	//$(".upload-file-2").click(function () {
+	//	console.log("file select clicked 2");
+	//	$(".file-select-2").click();
+	//});
+	//$(".upload-file-3").click(function () {
+	//	console.log("file select clicked 3 ");
+	//	$(".file-select-3").click();
+	//});
+	//$(".upload-file-4").click(function () {
+	//	console.log("file select clicked");
+	//	$(".file-select-4").click();
+	//});
+	//$(".upload-file-5").click(function () {
+	//	console.log("file select clicked");
+	//	$(".file-select-5").click();
+	//});
+	//$(".upload-file-6").click(function () {
+	//	console.log("file select clicked");
+	//	$(".file-select-6").click();
+	//});
+	//$(".upload-file-7").click(function () {
+	//	console.log("file select clicked");
+	//	$(".file-select-7").click();
+	//});
+	//$(".upload-file-8").click(function () {
+	//	console.log("file select clicked");
+	//	$(".file-select-8").click();
+	//});
 
-$(".file-select").on("change", function (e) {
-	console.log("file was changed");
-	$cardDiv = $(this).closest("div.card");
-	console.log("cardDiv: " + JSON.stringify($cardDiv));
-	$cardDiv.addClass("document-border");
-});
+	$(".file-select").on("change", function (e) {
+		console.log("file was changed");
+		$cardDiv = $(this).closest("div.card");
+		console.log("cardDiv: " + JSON.stringify($cardDiv));
+		$cardDiv.addClass("document-border");
+	});
 
-$.fn.HideAllDocs = function () {
-	console.log("hide all docs");
-	$(".orders-view").hide();
-	$(".invoices-view").hide();
-	$(".shipments-view").hide();
-	$(".quotes-view").hide();
-	$(".info-view").hide();
-	$(".pictures-view").hide();
-	$(".returns-view").hide();
-	$(".credits-view").hide();
-};
+	$.fn.HideAllDocs = function () {
+		console.log("hide all docs");
+		$(".orders-view").hide();
+		$(".invoices-view").hide();
+		$(".shipments-view").hide();
+		$(".quotes-view").hide();
+		$(".info-view").hide();
+		$(".pictures-view").hide();
+		$(".returns-view").hide();
+		$(".credits-view").hide();
+	};
 
-$(".show-orders-view").click(function () {
-	$(".invoices-view").hide();
-	$(".shipments-view").hide();
-	$(".quotes-view").hide();
-	$(".info-view").hide();
-	$(".pictures-view").hide();
-	$(".returns-view").hide();
-	$(".credits-view").hide();
-	$(".orders-view").toggle();
-});
-$(".show-invoices-view").click(function () {
-	$(".orders-view").hide();
-	$(".shipments-view").hide();
-	$(".quotes-view").hide();
-	$(".info-view").hide();
-	$(".pictures-view").hide();
-	$(".returns-view").hide();
-	$(".credits-view").hide();
-	$(".invoices-view").toggle();
-});
-$(".show-shipments-view").click(function () {
-	$(".orders-view").hide();
-	$(".invoices-view").hide();
-	$(".quotes-view").hide();
-	$(".info-view").hide();
-	$(".pictures-view").hide();
-	$(".returns-view").hide();
-	$(".credits-view").hide();
-	$(".shipments-view").toggle();
-});
-$(".show-quotes-view").click(function () {
-	$(".orders-view").hide();
-	$(".invoices-view").hide();
-	$(".shipments-view").hide();
-	$(".info-view").hide();
-	$(".pictures-view").hide();
-	$(".returns-view").hide();
-	$(".credits-view").hide();
-	$(".quotes-view").toggle();
-});
-$(".show-info-view").click(function () {
-	$(".orders-view").hide();
-	$(".invoices-view").hide();
-	$(".shipments-view").hide();
-	$(".quotes-view").hide();
-	$(".pictures-view").hide();
-	$(".returns-view").hide();
-	$(".credits-view").hide();
-	$(".info-view").toggle();
-});
-$(".show-pictures-view").click(function () {
-	$(".orders-view").hide();
-	$(".invoices-view").hide();
-	$(".shipments-view").hide();
-	$(".quotes-view").hide();
-	$(".info-view").hide();
-	$(".returns-view").hide();
-	$(".credits-view").hide();
-	$(".pictures-view").toggle();
-});
-$(".show-returns-view").click(function () {
-	$(".orders-view").hide();
-	$(".invoices-view").hide();
-	$(".shipments-view").hide();
-	$(".quotes-view").hide();
-	$(".info-view").hide();
-	$(".pictures-view").hide();
-	$(".credits-view").hide();
-	$(".returns-view").toggle();
-});
-$(".show-credits-view").click(function () {
-	$(".orders-view").hide();
-	$(".invoices-view").hide();
-	$(".shipments-view").hide();
-	$(".quotes-view").hide();
-	$(".info-view").hide();
-	$(".pictures-view").hide();
-	$(".returns-view").hide();
-	$(".credits-view").toggle();
-});
-
-
-//$(".close").click(function () {
-//	console.log("close");
-//	$(".modal").hide();
-//	$(".modal").modal('hide');
-//	$('.modal').replaceWith('');
-//	//$.ajax({
-//	//	async: true,
-//	//	url: "Locations/Index",
-//	//	type: 'GET',
-//	//	cache: false,
-//	//});
-//});
+	$(".show-orders-view").click(function () {
+		$(".invoices-view").hide();
+		$(".shipments-view").hide();
+		$(".quotes-view").hide();
+		$(".info-view").hide();
+		$(".pictures-view").hide();
+		$(".returns-view").hide();
+		$(".credits-view").hide();
+		$(".orders-view").toggle();
+	});
+	$(".show-invoices-view").click(function () {
+		$(".orders-view").hide();
+		$(".shipments-view").hide();
+		$(".quotes-view").hide();
+		$(".info-view").hide();
+		$(".pictures-view").hide();
+		$(".returns-view").hide();
+		$(".credits-view").hide();
+		$(".invoices-view").toggle();
+	});
+	$(".show-shipments-view").click(function () {
+		$(".orders-view").hide();
+		$(".invoices-view").hide();
+		$(".quotes-view").hide();
+		$(".info-view").hide();
+		$(".pictures-view").hide();
+		$(".returns-view").hide();
+		$(".credits-view").hide();
+		$(".shipments-view").toggle();
+	});
+	$(".show-quotes-view").click(function () {
+		$(".orders-view").hide();
+		$(".invoices-view").hide();
+		$(".shipments-view").hide();
+		$(".info-view").hide();
+		$(".pictures-view").hide();
+		$(".returns-view").hide();
+		$(".credits-view").hide();
+		$(".quotes-view").toggle();
+	});
+	$(".show-info-view").click(function () {
+		$(".orders-view").hide();
+		$(".invoices-view").hide();
+		$(".shipments-view").hide();
+		$(".quotes-view").hide();
+		$(".pictures-view").hide();
+		$(".returns-view").hide();
+		$(".credits-view").hide();
+		$(".info-view").toggle();
+	});
+	$(".show-pictures-view").click(function () {
+		$(".orders-view").hide();
+		$(".invoices-view").hide();
+		$(".shipments-view").hide();
+		$(".quotes-view").hide();
+		$(".info-view").hide();
+		$(".returns-view").hide();
+		$(".credits-view").hide();
+		$(".pictures-view").toggle();
+	});
+	$(".show-returns-view").click(function () {
+		$(".orders-view").hide();
+		$(".invoices-view").hide();
+		$(".shipments-view").hide();
+		$(".quotes-view").hide();
+		$(".info-view").hide();
+		$(".pictures-view").hide();
+		$(".credits-view").hide();
+		$(".returns-view").toggle();
+	});
+	$(".show-credits-view").click(function () {
+		$(".orders-view").hide();
+		$(".invoices-view").hide();
+		$(".shipments-view").hide();
+		$(".quotes-view").hide();
+		$(".info-view").hide();
+		$(".pictures-view").hide();
+		$(".returns-view").hide();
+		$(".credits-view").toggle();
+	});
 
 
-$(".load-product-edit").on("click", function (e) {
-	console.log("inside of load product edit")
-	e.preventDefault();
-	e.stopPropagation();
-	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
-	var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
-	console.log("itemurl: " + $itemurl);
-	$.fn.CallPage($itemurl, "edit");
-	return false;
-});
+	//$(".close").click(function () {
+	//	console.log("close");
+	//	$(".modal").hide();
+	//	$(".modal").modal('hide');
+	//	$('.modal').replaceWith('');
+	//	//$.ajax({
+	//	//	async: true,
+	//	//	url: "Locations/Index",
+	//	//	type: 'GET',
+	//	//	cache: false,
+	//	//});
+	//});
 
 
-$.fn.updateDebt = function () {
-	console.log("in update debt");
-	var sum = $("#Request_Cost").val();
-	var installments = $("#Request_ParentRequest_Installments").val();
-	var tdate = new Date();
-	var dd = tdate.getDate(); //yields day
-	var MM = tdate.getMonth(); //yields month
-	var yyyy = tdate.getFullYear(); //yields year
-	var today = yyyy + "-0" + (MM + 1) + "-0" + dd;
-	console.log("today:"+ today);
-	//count how many installment dates already passed
-	var count = 0;
-	if (installments != 0) {
-		$(".payments-table .payment-date").each(function (index) {
-			var date = $(this).val();
-			console.log("date: "+date);
-			if (today >= date) {
-				console.log("today > date");
-				//date passed
-				count=count + 1
+	$(".load-product-edit").on("click", function (e) {
+		console.log("inside of load product edit")
+		e.preventDefault();
+		e.stopPropagation();
+		//takes the item value and calls the Products controller with the ModalView view to render the modal inside
+		var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+		console.log("itemurl: " + $itemurl);
+		$.fn.CallPage($itemurl, "edit");
+		return false;
+	});
+
+
+	$.fn.updateDebt = function () {
+		console.log("in update debt");
+		var sum = $("#Request_Cost").val();
+		var installments = $("#Request_ParentRequest_Installments").val();
+		var tdate = new Date();
+		var dd = tdate.getDate(); //yields day
+		var MM = tdate.getMonth(); //yields month
+		var yyyy = tdate.getFullYear(); //yields year
+		var today = yyyy + "-0" + (MM + 1) + "-0" + dd;
+		console.log("today:" + today);
+		//count how many installment dates already passed
+		var count = 0;
+		if (installments != 0) {
+			$(".payments-table .payment-date").each(function (index) {
+				var date = $(this).val();
+				console.log("date: " + date);
+				if (today >= date) {
+					console.log("today > date");
+					//date passed
+					count = count + 1
+				}
+			});
+		}
+		if (count != 0) {
+			var paymentPerMonth = sum / installments;
+			console.log(" paymentPerMonth: " + paymentPerMonth);
+			var amountToSubstractFromDebt = paymentPerMonth * count;
+			console.log(" amountToSubstractFromDebt: " + amountToSubstractFromDebt);
+			var debt = sum - amountToSubstractFromDebt
+			console.log(" sum: " + sum);
+			console.log(" debt: " + debt);
+			$("#Debt").val(debt);
+		} else {
+			$("#Debt").val(sum);
+		}
+	};
+
+	$(".payments-table").on("change", ".payment-date", function (e) {
+		console.log("in change .payments-table ");
+		$.fn.updateDebt();
+	});
+
+	$("#Request_ExchangeRate").change(function (e) {
+		console.log("in change #Request_ExchangeRate ");
+		$.fn.updateDebt();
+	});
+
+
+	$("#sum-dollars").change(function (e) {
+		console.log("in change #sum-dollars ");
+		$.fn.updateDebt();
+	});
+
+	$("#Request_ParentRequest_Installments").change(function () {
+		console.log("in change Request_ParentRequest_Installments ");
+		$.fn.updateDebt();
+	});
+
+
+	$('#myModal').change(
+		function () {
+			$.validator.unobtrusive.parse("#createModalForm");
+		});
+
+	$('#myModal').change(
+		function () {
+			$.validator.unobtrusive.parse("#editModalForm");
+		});
+	$('#submitAddLocation').click(function () {
+		$('#loading').show();
+	});
+
+
+	//$('#createModalForm').submit(
+	//	function () {
+	//		if ($("#createModalForm").valid()) {
+	//			return true;
+	//		}
+	//		return false;
+	//	});
+
+	//$('#editModalForm').submit(
+	//	function () {
+	//		if ($("#editModalForm").valid()) {
+	//			return true;
+	//		}
+	//		return false
+	//	});
+
+	$(".load-location-index-view").click(function (e) {
+		//clear the div to restart filling with new children
+		$.fn.setUpLocationIndexList($(this).val())
+	});
+
+	$.fn.setUpLocationIndexList = function (val) {
+		$("#loading3").show();
+		//fill up col 2 with the next one
+		var myDiv = $(".colOne");
+		var typeId = val;
+		//console.log("about to call ajax with a parentid of: " + parentId);
+		$.ajax({
+			//IMPORTANT: ADD IN THE ID
+			url: "/Locations/LocationIndex/?typeId=" + typeId,
+			type: 'GET',
+			cache: false,
+			context: myDiv,
+			success: function (result) {
+				$(".VisualBoxColumn").hide();
+				$(".colTwoSublocations").hide();
+				myDiv.show();
+				this.html(result);
+
 			}
 		});
-	}
-	if (count != 0) {
-		var paymentPerMonth = sum / installments;
-		console.log(" paymentPerMonth: " + paymentPerMonth);
-		var amountToSubstractFromDebt = paymentPerMonth * count;
-		console.log(" amountToSubstractFromDebt: " + amountToSubstractFromDebt);
-		var debt = sum - amountToSubstractFromDebt
-		console.log(" sum: " + sum);
-		console.log(" debt: " + debt);
-		$("#Debt").val(debt);
-	} else {
-		$("#Debt").val(sum);
-	}
-};
 
-$(".payments-table").on("change", ".payment-date", function (e) {
-	console.log("in change .payments-table ");
-	$.fn.updateDebt();
-});
-
-$("#Request_ExchangeRate").change(function (e) {
-	console.log("in change #Request_ExchangeRate ");
-	$.fn.updateDebt();
-});
+	};
 
 
-$("#sum-dollars").change(function (e) {
-	console.log("in change #sum-dollars ");
-	$.fn.updateDebt();
-});
+	$(".load-sublocation-view").click(function (e) {
+		//add or remove the background class in col 1
+		//$(".load-sublocation-view").parent().removeClass("td-selected");
+		//$(this).parent().addClass("td-selected");
+		$("#loading1").show();
+		//fill up col 2 with the next one
+		var myDiv = $(".colTwoSublocations");
+		var parentId = $(this).val();
 
-$("#Request_ParentRequest_Installments").change(function () {
-	console.log("in change Request_ParentRequest_Installments ");
-	$.fn.updateDebt();
-});
+		var parentsParentId = $(this).closest('tr').attr('name');
 
-
-$('#myModal').change(
-	function () {
-		$.validator.unobtrusive.parse("#createModalForm");
-});
-
-$('#myModal').change(
-	function () {
-		$.validator.unobtrusive.parse("#editModalForm");
-	});
-$('#submitAddLocation').click(function () {
-	$('#loading').show();
-})
-
-
-//$('#createModalForm').submit(
-//	function () {
-//		if ($("#createModalForm").valid()) {
-//			return true;
-//		}
-//		return false;
-//	});
-
-//$('#editModalForm').submit(
-//	function () {
-//		if ($("#editModalForm").valid()) {
-//			return true;
-//		}
-//		return false
-//	});
-
-$(".load-location-index-view").click(function (e) {
-	//clear the div to restart filling with new children
-	$.fn.setUpLocationIndexList($(this).val())
-});
-
-$.fn.setUpLocationIndexList = function (val) {
-	$("#loading3").show();
-	//fill up col 2 with the next one
-	var myDiv = $(".colOne");
-	var typeId = val;
-	//console.log("about to call ajax with a parentid of: " + parentId);
-	$.ajax({
-		//IMPORTANT: ADD IN THE ID
-		url: "/Locations/LocationIndex/?typeId=" + typeId,
-		type: 'GET',
-		cache: false,
-		context: myDiv,
-		success: function (result) {
-			$(".VisualBoxColumn").hide();
-			$(".colTwoSublocations").hide();
-			myDiv.show();
-			this.html(result);
-
+		if ($("#colTwoSublocations" + parentsParentId).length == 0) {
+			$('.colTwoSublocations').append('<div class="colTwoSublocationsChildren" id="colTwoSublocations' + parentsParentId + '"></div>');
 		}
+		//console.log("about to call ajax with a parentid of: " + parentId);
+		$.ajax({
+			//IMPORTANT: ADD IN THE ID
+			url: "/Locations/SublocationIndex/?parentId=" + parentId,
+			type: 'GET',
+			cache: false,
+			context: $("#colTwoSublocations" + parentsParentId),
+			success: function (result) {
+				myDiv.show();
+				$("#loading1").hide();
+				this.html(result);
+
+			}
+		});
+
+		$.fn.setUpVisual($(this).val());
+
+
 	});
 
-};
-
-$(".load-sublocation-view.parent-location").click(function (e) {
-	console.log(".load-sublocation-view.parent-location");
-	$(".colTwoSublocationsChildren").remove();
-
-});
-
-$(".load-sublocation-view").click(function (e) {
-	//add or remove the background class in col 1
-	//$(".load-sublocation-view").parent().removeClass("td-selected");
-	//$(this).parent().addClass("td-selected");
-	$("#loading1").show();
-	//fill up col 2 with the next one
-	var myDiv = $(".colTwoSublocations");
-	var parentId = $(this).val();
-
-	var parentsParentId = $(this).closest('tr').attr('name');;
-
-	if ($("#colTwoSublocations" + parentsParentId).length == 0) {
-		$('.colTwoSublocations').append('<div class="colTwoSublocationsChildren" id="colTwoSublocations' + parentsParentId + '"></div>');
-	}
-	//console.log("about to call ajax with a parentid of: " + parentId);
-	$.ajax({
-		//IMPORTANT: ADD IN THE ID
-		url: "/Locations/SublocationIndex/?parentId=" + parentId,
-		type: 'GET',
-		cache: false,
-		context: $("#colTwoSublocations" + parentsParentId),
-		success: function (result) {
-			myDiv.show();
-			$("#loading1").hide();
-			this.html(result);
-
-		}
-	});
-
-	$.fn.setUpVisual($(this).val());
-
-
-});
-
-$.fn.setUpVisual = function (val) {
-	$("#loading2").show();
-	//fill up col three with the visual
-	var visualDiv = $(".VisualBoxColumn");
-	var visualContainerId = val;
-	//console.log("about to call ajax with a visual container id of: " + visualContainerId);
-	$.ajax({
-		url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
-		type: 'GET',
-		cache: false,
-		context: visualDiv,
-		success: function (result) {
-			visualDiv.show();
-			this.html(result);
-		}
-	});
-};
-
-
-$.fn.setUpsubLocationList = function (val) {
-	
-
-};
+	$.fn.setUpVisual = function (val) {
+		$("#loading2").show();
+		//fill up col three with the visual
+		var visualDiv = $(".VisualBoxColumn");
+		var visualContainerId = val;
+		//console.log("about to call ajax with a visual container id of: " + visualContainerId);
+		$.ajax({
+			url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
+			type: 'GET',
+			cache: false,
+			context: visualDiv,
+			success: function (result) {
+				visualDiv.show();
+				this.html(result);
+			}
+		});
+	};
