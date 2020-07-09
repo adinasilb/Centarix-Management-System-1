@@ -126,8 +126,11 @@
 
     <div class="container-fluid pl-0">
         <main role="main">
-            <div class="spinner-border center" role="status" id="loading" style="display:none;">
-                <span class="sr-only">Loading...</span>
+            @*<div class="spinner-border center" role="status" id="loading" style="display:none;">
+            <span class="sr-only">Loading...</span>
+        </div>*@
+            <div class="center" role="status" id="loading" style="display:none;">
+                <img src="~/images/css/Loading/centarix_loading3.gif" />
             </div>
             @RenderBody()
         </main>
