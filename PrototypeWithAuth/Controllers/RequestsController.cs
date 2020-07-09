@@ -2347,7 +2347,8 @@ namespace PrototypeWithAuth.Controllers
 
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
             {
-                Request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).FirstOrDefault(),
+                Request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
+                    .FirstOrDefault(),
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
                 ApplicationUsers = await _context.Users.ToListAsync()

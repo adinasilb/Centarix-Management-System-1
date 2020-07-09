@@ -62,7 +62,15 @@
                     </div>
                 </td>
                 <td>
-                    <img src="~/images/css/inventory/Type/bottle.png" alt="Image" />
+                    @if (parentRequestListViewModel.ProductSubcategory.ImageURL != null)
+                    {
+                        var imageurl = parentRequestListViewModel.Product.ProductSubcategory.ImageURL;
+                        <img src="@imageurl" alt="Image" width="100" class="category-image" />
+                    }
+                    else
+                    {
+                        <img src="~/images/css/accounting/sample_image.png" alt="Image" width="100" class="category-image" />
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => parentRequestListViewModel.Product.ProductName)

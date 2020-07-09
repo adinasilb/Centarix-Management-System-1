@@ -10,6 +10,11 @@ for details on configuring this project to bundle and minify static web assets. 
     border: 2px solid rgba(48, 188, 201, 0.60); /*Dani - edited color. 200622*/
 }
 
+.category-image {
+    border: .5px solid rgba(0, 0, 0, .6);
+    border-radius: 8px;
+}
+
 .center {
     position: fixed; /* change this to fixed */
     top: 50%;
@@ -264,9 +269,21 @@ a.bold-hover-effects {
 
     a.bold-hover-effects:hover,
     ul li button.bold-hover-effects:hover {
-        color: black !important;
+        /*color: black !important;*/
         text-decoration: none;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: black;
+        /*font-weight: bold;*/
+    }
+
+    a.bold-hover-effects::before,
+    ul li button.bold-hover-effects::before {
+        display: block;
+        content: attr(title);
         font-weight: bold;
+        height: 0;
+        overflow: hidden;
+        visibility: hidden;
     }
 
 .hover-bold:hover {
@@ -328,7 +345,7 @@ table.table.table-headerspaced tbody:before {
 }
 
 table.table tbody tr {
-    border: 2px solid lightgrey;
+    border: 2px solid #ebebeb;
 }
 
 table.table td {

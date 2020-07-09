@@ -12,6 +12,7 @@ namespace PrototypeWithAuth.ViewModels
         public ParentRequest ParentRequest { get; set; } //because this is set in the controller as a .select list then the normally included models need to be put in here
         public Request Request { get; set; }
         public Product Product { get; set; }
+        public ProductSubcategory ProductSubcategory { get; set; }
         public Vendor Vendor { get; set; }
         public ParentCategory ParentCategory { get; set; }
         public UnitType UnitType { get; set; }

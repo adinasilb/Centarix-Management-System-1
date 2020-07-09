@@ -70,7 +70,15 @@
                         <div class="col-8">
                             <div class="row">
                                 <div class="col-2">
-                                    <img src="~/images/css/inventory/Type/bottle.png" width="100" alt="Item Image" />
+                                    @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
+                                    {
+                                        var imageurl = Model.Request.Product.ProductSubcategory.ImageURL;
+                                        <img src="@imageurl" alt="Image" width="100" class="category-image" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/css/accounting/sample_image.png" alt="Image" width="100" class="category-image" />
+                                    }
                                 </div>
                                 <div class="col-10">
                                     <h3><input asp-for="Request.Product.ProductName" class="form-control-plaintext mt-2 center-horizontally my-auto" readonly />

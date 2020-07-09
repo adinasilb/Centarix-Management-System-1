@@ -20,5 +20,6 @@ namespace PrototypeWithAuth.Models
         public string ProductSubcategoryDescription { get; set; }
 
         public IEnumerable<Product> Products { get; set; }
+        public string ImageURL { get; set; }
     }
 }
