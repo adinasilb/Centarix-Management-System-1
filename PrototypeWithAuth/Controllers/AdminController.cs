@@ -44,7 +44,7 @@ namespace PrototypeWithAuth.Controllers
             var roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
             {
-                Roles = roles
+                //Roles = roles
 
             };
             return View(registerUserViewModel);
@@ -66,8 +66,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     UserName = registerUserViewModel.Email,
                     Email = registerUserViewModel.Email,
-                    FirstName = registerUserViewModel.FirstName,
-                    LastName = registerUserViewModel.LastName,
+                    //FirstName = registerUserViewModel.FirstName,
+                    //LastName = registerUserViewModel.LastName,
                     SecureAppPass = registerUserViewModel.SecureAppPass,
                     UserNum = usernum
                 };
@@ -75,7 +75,7 @@ namespace PrototypeWithAuth.Controllers
                 var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, registerUserViewModel.Role);
+                    //await _userManager.AddToRoleAsync(user, registerUserViewModel.Role);
                     await _signManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "ApplicationUsers");
                 }
@@ -93,7 +93,47 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult CreateUserModal()
         {
-            return PartialView();
+            RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
+            return PartialView(registerUserViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUserModal(RegisterUserViewModel registerUserViewModel)
+        {
+            var usernum = 1;
+            if (_context.Users.Any())
+            {
+                usernum = _context.Users.OrderByDescending(u => u.UserNum).FirstOrDefault().UserNum + 1;
+            }
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = registerUserViewModel.UserName,
+                    Email = registerUserViewModel.Email,
+                    //FirstName = registerUserViewModel.FirstName,
+                    //LastName = registerUserViewModel.LastName,
+                    SecureAppPass = registerUserViewModel.SecureAppPass,
+                    UserNum = usernum
+                };
+
+                var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
+                //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                    await _signManager.SignInAsync(user, false);
+                    return RedirectToAction("Index", "ApplicationUsers");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

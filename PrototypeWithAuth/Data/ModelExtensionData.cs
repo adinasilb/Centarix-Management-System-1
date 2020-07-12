@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.Data
@@ -762,7 +763,8 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 1,
-                    MenuDescription = "Orders & Inventory",
+                    MenuDescription = AppUtility.MenuItems.OrdersAndInventory.ToString(),
+                    MenuViewName = "Orders & Inventory",
                     ControllerName = "Requests",
                     ActionName = "Index",
                     MenuImageURL = "/images/css/main_menu_icons/inventory.png"
@@ -770,7 +772,8 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 2,
-                    MenuDescription = "Protocols",
+                    MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
+                    MenuViewName = "Protocols",
                     ControllerName = "",
                     ActionName = "",
                     MenuImageURL = "/images/css/main_menu_icons/protocols.png"
@@ -778,7 +781,8 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 3,
-                    MenuDescription = "Operations",
+                    MenuDescription = AppUtility.MenuItems.Operation.ToString(),
+                    MenuViewName = "Operation",
                     ControllerName = "",
                     ActionName = "",
                     MenuImageURL = "/images/css/main_menu_icons/operation.png"
@@ -786,7 +790,8 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 4,
-                    MenuDescription = "Biomarkers",
+                    MenuDescription = AppUtility.MenuItems.Biomarkers.ToString(),
+                    MenuViewName = "Biomarkers",
                     ControllerName = "",
                     ActionName = "",
                     MenuImageURL = "/images/css/main_menu_icons/biomarkers.png"
@@ -794,7 +799,8 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 5,
-                    MenuDescription = "Lab Management",
+                    MenuDescription = AppUtility.MenuItems.LabManagement.ToString(),
+                    MenuViewName = "Lab Management",
                     ControllerName = "Vendors",
                     ActionName = "IndexForLabManage",
                     MenuImageURL = "/images/css/main_menu_icons/lab.png"
@@ -802,7 +808,8 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 6,
-                    MenuDescription = "Accounting",
+                    MenuDescription = AppUtility.MenuItems.Accounting.ToString(),
+                    MenuViewName = "Accounting",
                     ControllerName = "ParentRequests",
                     ActionName = "ToPay",
                     MenuImageURL = "/images/css/main_menu_icons/accounting.png"
@@ -810,7 +817,8 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 7,
-                    MenuDescription = "Expenses",
+                    MenuDescription = AppUtility.MenuItems.Expenses.ToString(),
+                    MenuViewName = "Expenses",
                     ControllerName = "ParentRequests",
                     ActionName = "ExpensesList",
                     MenuImageURL = "/images/css/main_menu_icons/expenses.png"
@@ -818,7 +826,8 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 8,
-                    MenuDescription = "Users",
+                    MenuDescription = AppUtility.MenuItems.Users.ToString(),
+                    MenuViewName = "Users",
                     ControllerName = "Admin",
                     ActionName = "RegisterUser",
                     MenuImageURL = "/images/css/main_menu_icons/users.png"

@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int menuID { get; set; }
         public string MenuDescription { get; set; }
+        public string MenuViewName { get; set; }
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
         public string MenuImageURL { get; set; }

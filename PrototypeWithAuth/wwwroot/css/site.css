@@ -217,8 +217,31 @@ body {
     text-transform: uppercase;
 }
 
-    .inv-button:hover {
+    .inv-button:hover, inv-user-button:hover {
         opacity: 0.67;
+    }
+
+.inv-user-button {
+    background-color: #DB669D;
+    border: 1px solid #DB669D;
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.56rem 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.edit-user-modal /*the a that opens it*/ {
+    color: #000;
+    text-decoration: none;
+}
+
+    .edit-user-modal:hover /*the a that opens it*/ {
+        color: #000;
+        text-decoration: none;
+        font-weight: bold;
     }
 
 .inv-link-clr {
@@ -403,6 +426,13 @@ a.nav-link {
     color: #30BCC9;
 }
 
+.container-fluid ul li a.user-nav-link.active {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid #DB669D;
+    color: #DB669D;
+}
+
 /*<<<< Modal Side Slide >>>>*/
 
 .modal.right .modal-dialog {
@@ -524,9 +554,10 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
 .location-index-border {
     border: .063rem solid rgba(0,0,0,.38);
 }
-.location-index-border td {
-    border-top: .063rem solid rgba(0,0,0,.38) ;
-}
+
+    .location-index-border td {
+        border-top: .063rem solid rgba(0,0,0,.38);
+    }
 
 
 /*removed , .VisualBoxColumn table.table tr*/
@@ -544,18 +575,20 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
         border: 0.125rem solid black;
     }
 
-    .VisualBoxColumn {
-        max-width: 44%;
-        margin-right: 3%;
-    }
+.VisualBoxColumn {
+    max-width: 44%;
+    margin-right: 3%;
+}
 
 .sublocation-background {
     background: #F4F7F9 0% 0% no-repeat padding-box;
 }
-    table.table.visualzoom {
-        width: auto;
-        height: auto;
-    }
+
+table.table.visualzoom {
+    width: auto;
+    height: auto;
+}
+
 table.table.visualzoom {
     width: auto;
     height: auto;
@@ -775,6 +808,6 @@ input.bigger-box {
     height: 2rem;
 }
 
-.location-index-container{
+.location-index-container {
     margin-right: 14.1px;
 }

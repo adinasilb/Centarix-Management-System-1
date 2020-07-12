@@ -18,6 +18,7 @@ namespace PrototypeWithAuth.AppData
         public enum RequestSidebarEnum { None, Type, Vendor, Owner, Location, Cart }
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits}
         public enum UserPageTypeEnum { None, Index, Add }
+        public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, LabManagement, Accounting, Expenses, Users }
 
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
         {

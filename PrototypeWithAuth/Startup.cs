@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization; //in order to allow for authirization policy builder
 using Microsoft.AspNetCore.Mvc.Authorization; // in order to allow for authorize filter
 using Microsoft.AspNetCore.Diagnostics;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth
 {
@@ -130,8 +131,9 @@ namespace PrototypeWithAuth
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            string[] roleNames = { "Admin", "Manager", "Member" };
-
+            string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
+            var newRoleNum = roleNames.Count();
+            
             IdentityResult roleResult;
             foreach (var roleName in roleNames)
             {

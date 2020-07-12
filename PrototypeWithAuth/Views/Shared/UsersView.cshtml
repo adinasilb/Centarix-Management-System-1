@@ -10,7 +10,7 @@
     var navClass = "bold-hover-effects";
     var activeNavClass = " active";
     var ListClasses = navClass;
-    var AddClasses = navClass;
+    var AddClasses = navClass + " create-user-modal";
     if (TempData["PageType"] != null)
     {
         switch (TempData["PageType"])
@@ -90,7 +90,7 @@
                             <a href="@Url.Action("Index", "Admin")" class="@ListClasses"> <i class="icon-cancel_presentation-24px" style="font-size:1.6rem;"></i><br /> List <br /></a>
                         </li>
                         <li class="nav-item my-4 acc-sidebar">
-                            <a href="@Url.Action("RegisterUser", "Admin")" class="@AddClasses"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br /> Add <br /></a>
+                            <a href="" class="@AddClasses"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br /> Add <br /></a>
                         </li>
                     </ul>
                 </div>
@@ -108,6 +108,17 @@
 </html>
 
 <script>
+    $(".create-user-modal").on("click", function (e) {
+        $("li a").removeClass("active");
+        $(".create-user-modal").addClass("active");
+
+        console.log("create user modal clicked");
+        var $itemurl = "Admin/CreateUserModal/";
+        console.log("itemurl: " + $itemurl);
+        //$("#loading").show();
+        $.fn.CallPage($itemurl);
+        return false;
+    });
     $(".edit-user-modal").on("click", function (e) {
         console.log("edit user modal clicked");
         console.log("val: " + $(this).data('string'));
@@ -138,7 +149,12 @@
                 });
                 //shows the modal
                 $(".modal").modal('show');
+                $.fn.OnOpenModal();
             }
         });
+    };
+
+    $.fn.OnOpenModal = function () {
+        $('.modal-content a:first').tab('show');
     };
 </script>
