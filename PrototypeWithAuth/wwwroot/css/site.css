@@ -1,6 +1,12 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+/*
+    Good resource to create filter:
+    https://codepen.io/sosuke/pen/Pjoqqp
+*/
+
+
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 body {
     min-height: 100% !important;
@@ -35,7 +41,7 @@ center-horizontally {
 }
 
 .module-button:hover > img {
-    box-shadow: 0 .25rem .5rem rgba(0, 0, 0, 0.3);
+    filter: drop-shadow(5px 5px 5px #222222);
 }
 
 .clicked-border {
@@ -308,9 +314,30 @@ a.bold-hover-effects {
     filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
 }
 
+.ourNavBar .activeUserClass {
+    opacity: 1;
+    filter: brightness(0) saturate(100%) invert(67%) sepia(32%) saturate(3488%) hue-rotate(294deg) brightness(89%) contrast(91%);
+    text-decoration: none;
+    -webkit-text-stroke-width: 0px;
+    -webkit-text-stroke-color: black;
+}
+
 ul li.acc-sidebar.active {
     filter: invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);
 }
+
+.usersview .ourNavBar li.nav-item a.active {
+    opacity: 1;
+    filter: invert(67%) sepia(32%) saturate(3488%) hue-rotate(294deg) brightness(89%) contrast(91%);
+    text-decoration: none;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+}
+
+.users-tr:hover {
+    border: 2px double #DB669D !important;
+}
+
 
 /*table CSS*/
 /*table tr td button.btn-link {
@@ -321,7 +348,6 @@ table tr td button.btn-link:hover {
     color:black;
     font-weight:bold;
 }*/
-
 /*<<<< main menu images css >>>>*/
 .main-btn-img {
     width: 9em;

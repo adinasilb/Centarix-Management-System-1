@@ -6,6 +6,23 @@
 @{
     ViewData["Title"] = "UsersView";
     Layout = null;
+
+    var navClass = "bold-hover-effects";
+    var activeNavClass = " active";
+    var ListClasses = navClass;
+    var AddClasses = navClass;
+    if (TempData["PageType"] != null)
+    {
+        switch (TempData["PageType"])
+        {
+            case AppUtility.UserPageTypeEnum.Index:
+                ListClasses += activeNavClass;
+                break;
+            case AppUtility.UserPageTypeEnum.Add:
+                AddClasses += activeNavClass;
+                break;
+        }
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -41,6 +58,13 @@
             <div class="container-fluid justify-content-start float-left d-inline-block pl-0" style="width:auto">
                 <a style="padding-left:0.85rem;" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
             </div>
+            <div class="container-fluid">
+                <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500">
+                    <li class="nav-item mx-4">
+                        @Html.ActionLink("Users", "Index", "Admin", new { }, new { @class = "activeUserClass", @role = "button", @id = "inventory-link" })
+                    </li>
+                </ul>
+            </div>
             <div class="container-fluid justify-content-end">
                 <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
                     <ul class="navbar-nav">
@@ -57,20 +81,24 @@
             </div>
         </nav>
     </header>
-    <div style="display: flex;">
-        <div style="min-width: 110px; min-height:100rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
-            <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3">
-                <li class="nav-item my-4 acc-sidebar">
-                    <a href="@Url.Action("Index", "Admin")" class="bold-hover-effects"> <i class="icon-cancel_presentation-24px" style="font-size:1.6rem;"></i><br /> List <br /></a>
-                </li>
-                <li class="nav-item my-4 acc-sidebar">
-                    <a href="@Url.Action("RegisterUser", "Admin")" class="bold-hover-effects"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br /> Add <br /></a>
-                </li>
-            </ul>
-        </div>
-        <div style="flex-grow: 1; position:relative; padding: 2rem;">
-            @RenderBody()
-        </div>
+    <div class="container-fluid pl-0">
+        <main role="main">
+            <div style="display: flex;" class="usersview">
+                <div style="min-width: 110px; min-height:100rem; padding:5px; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
+                    <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3 pl-lg-4 pl-md-3 pl-sm-2">
+                        <li class="nav-item my-4 acc-sidebar">
+                            <a href="@Url.Action("Index", "Admin")" class="@ListClasses"> <i class="icon-cancel_presentation-24px" style="font-size:1.6rem;"></i><br /> List <br /></a>
+                        </li>
+                        <li class="nav-item my-4 acc-sidebar">
+                            <a href="@Url.Action("RegisterUser", "Admin")" class="@AddClasses"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br /> Add <br /></a>
+                        </li>
+                    </ul>
+                </div>
+                <div style="flex-grow: 1; position:relative; padding: 2rem;">
+                    @RenderBody()
+                </div>
+            </div>
+        </main>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -78,3 +106,39 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    $(".edit-user-modal").on("click", function (e) {
+        console.log("edit user modal clicked");
+        console.log("val: " + $(this).data('string'));
+        var $itemurl = "Admin/EditUserModal/?id=" + $(this).data('string');
+        console.log("itemurl: " + $itemurl);
+        //$("#loading").show();
+        $.fn.CallPage($itemurl);
+        return false;
+    });
+    $.fn.CallPage = function ($itemurl) {
+        console.log("in call page function");
+        //delete existing modals
+        $('.modal').replaceWith('');
+        $(".modal-backdrop").remove();
+        $.ajax({
+            async: true,
+            url: $itemurl,
+            type: 'GET',
+            cache: true,
+            success: function (data) {
+                //$("#loading").hide();
+                console.log("success!");
+                var modal = $(data);
+                $('body').append(modal);
+                $(".modal-view").modal({
+                    backdrop: true,
+                    keyboard: false,
+                });
+                //shows the modal
+                $(".modal").modal('show');
+            }
+        });
+    };
+</script>

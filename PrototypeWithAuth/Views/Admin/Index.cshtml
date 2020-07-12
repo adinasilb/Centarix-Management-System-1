@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PrototypeWithAuth.ViewModels.UserViewModel>
+﻿@model IEnumerable<PrototypeWithAuth.Data.ApplicationUser>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/UsersView.cshtml";
@@ -22,25 +22,27 @@
             </td>
             <td></td>
         </tr>
-        @foreach(var user in Model)
+        @foreach (var user in Model)
         {
-        <tr class="text-center">
-            <td>
-                @Html.DisplayFor(modelItem => user.UserNum)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => user.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => user.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => user.DateCreated)
-            </td>
-            <td>
-                <button class="btn btn-link">View</button>
-            </td>
-        </tr>
+                <tr class="text-center users-tr">
+                    <td>
+                        @Html.DisplayFor(modelItem => user.UserNum)
+                    </td>
+                    <td>
+                        <a href="" class="edit-user-modal" data-string="@user.Id">
+                            @Html.DisplayFor(modelItem => user.UserName)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => user.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => user.DateCreated)
+                    </td>
+                    <td>
+                        <img src="~/images/css/inventory/add-item/other icons/delete_dis.png" />
+                    </td>
+                </tr>
         }
     </tbody>
 </table>

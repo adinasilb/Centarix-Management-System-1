@@ -30,22 +30,17 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            TempData["PageType"] = AppUtility.UserPageTypeEnum.Index;
             var users = _context.Users
-                .Select(u => new UserViewModel
-                {
-                    UserNum = u.UserNum,
-                    UserName = u.UserName,
-                    Email = u.Email,
-                    DateCreated = u.DateCreated
-                })
                 .ToList();
             return View(users);
         }
       
         [HttpGet]
         public IActionResult RegisterUser()
-            
+
         {
+            TempData["PageType"] = AppUtility.UserPageTypeEnum.Add;
             var roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
             {
@@ -94,6 +89,21 @@ namespace PrototypeWithAuth.Controllers
             }
             return View(registerUserViewModel);
         }
+
+        [HttpGet]
+        public IActionResult CreateUserModal()
+        {
+            return PartialView();
+        }
+
+        [HttpGet]
+        public IActionResult EditUserModal(string id)
+        {
+            UserItemViewModel userItemViewModel = new UserItemViewModel();
+            userItemViewModel.ApplicationUser = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            return PartialView(userItemViewModel);
+        }
+
         [Authorize(Roles = "Admin")]
         public IActionResult GetHomeView()
         {
