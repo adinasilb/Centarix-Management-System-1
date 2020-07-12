@@ -108,7 +108,10 @@
 
         //changing the classes for the action links based on the tempdata of request status
         int requestStatusID = 0;
-        int.TryParse(TempData["RequestStatusID"].ToString(), out requestStatusID);
+        if (TempData["RequestStatusID"] != null)
+        {
+            int.TryParse(TempData["RequestStatusID"].ToString(), out requestStatusID);
+        }
         switch (requestStatusID)
         {
             case 1:

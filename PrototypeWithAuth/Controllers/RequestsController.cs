@@ -63,6 +63,35 @@ namespace PrototypeWithAuth.Controllers
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
+            //use an enum to determine which page type you are using and fill the data accordingly, 
+            //also pass the data through tempdata to the page so you can 
+            TempData["PageType"] = PageType;
+            int newCount = 0;
+            int orderedCount = 0;
+            int receivedCount = 0;
+            //passing in the amounts to display in the top buttons
+            TempData["AmountNew"] = newCount;
+            TempData["AmountOrdered"] = orderedCount;
+            TempData["AmountReceived"] = receivedCount;
+            //TRY USING TEMP DATA TO REMEMBER WHERE THE PAGE IS
+
+            /*int?*/
+            TempData["TempPage"] = page;
+            /*int*/
+            TempData["TempRequestStatusID"] = RequestStatusID;
+            /*int*/
+            TempData["TempSubcategoryID"] = subcategoryID;
+            /*int*/
+            TempData["TempVendorID"] = vendorID;
+            /*string*/
+            TempData["TempApplicationUserID"] = applicationUserID;
+            /*AppUtility.RequestPageTypeEnum*/
+            TempData["TempPageType"] = (int)PageType;
+            if (!_context.Requests.ToList().Any())
+            {
+                var onePageOfProducts1 = Enumerable.Empty<Request>().ToPagedList();
+                return View(onePageOfProducts1);
+            }
             
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).OrderBy(r => r.ParentRequest.OrderDate);
@@ -71,17 +100,14 @@ namespace PrototypeWithAuth.Controllers
             TempData["RequestStatusID"] = RequestStatusID;
             var SidebarTitle = AppUtility.RequestSidebarEnum.None;
 
-            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
-            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
-            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, vendorID, subcategoryID, applicationUserID);
+            newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
+            orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
+            receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, vendorID, subcategoryID, applicationUserID);
             newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, vendorID, subcategoryID, applicationUserID);
             newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, vendorID, subcategoryID, applicationUserID);
 
             //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-            //use an enum to determine which page type you are using and fill the data accordingly, 
-            //also pass the data through tempdata to the page so you can 
-            TempData["PageType"] = PageType;
             //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
             if (ViewData["ReturnRequests"] != null)
@@ -184,20 +210,6 @@ namespace PrototypeWithAuth.Controllers
             TempData["SidebarTitle"] = SidebarTitle;
 
 
-            //TRY USING TEMP DATA TO REMEMBER WHERE THE PAGE IS
-
-            /*int?*/
-            TempData["TempPage"] = page;
-            /*int*/
-            TempData["TempRequestStatusID"] = RequestStatusID;
-            /*int*/
-            TempData["TempSubcategoryID"] = subcategoryID;
-            /*int*/
-            TempData["TempVendorID"] = vendorID;
-            /*string*/
-            TempData["TempApplicationUserID"] = applicationUserID;
-            /*AppUtility.RequestPageTypeEnum*/
-            TempData["TempPageType"] = (int)PageType;
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
 
