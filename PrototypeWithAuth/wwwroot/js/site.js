@@ -1254,6 +1254,44 @@ $("#order-tab").click(function () {
 	$.fn.validatePriceTab();
 });
 
+$("#comments-tab").click(function () {
+	console.log("in onclick comments-tab");
+	$("#createModalForm").valid();
+	$.fn.validatePriceTab();
+});
+
+
 $.fn.validatePriceTab = function () {
-	
+	$("#documents-tab").prop("disabled", true);
+	$("#comments-tab").prop("disabled", true);
+	$("#archive-tab").prop("disabled", true);
+	$("#history-tab").prop("disabled", true);
+	$("#order-tab").prop("disabled", true);
+	valid = $("#Request_Unit").attr('aria-invalid');
+	console.log("valid: " + valid);
+	if (valid == "true" || valid == undefined) {
+		console.log("valid: " + valid);
+		return;
+	}
+	console.log("valid1: " + valid);
+	valid = $("#Request_UnitType").attr('aria-invalid');
+	$("#sublist").valid();
+	if (valid == "true" || valid == undefined) {
+		return;
+	}
+	console.log("valid2: " + valid);
+	valid = $("#Request_ExchangeRate").attr('aria-invalid');
+	if (valid == "true" || valid == undefined) {
+		return;
+	}
+	console.log("valid3: " + valid);
+	valid = $("#Request_Cost").attr('aria-invalid');
+	if (valid === "false") {
+		$("#documents-tab").prop("disabled", false);
+		$("#comments-tab").prop("disabled", false);
+		$("#archive-tab").prop("disabled", false);
+		$("#history-tab").prop("disabled", false);
+		$("#order-tab").prop("disabled", false);
+	}
+
 }
