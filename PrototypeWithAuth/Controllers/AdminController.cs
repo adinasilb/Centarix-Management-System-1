@@ -15,16 +15,23 @@ namespace PrototypeWithAuth.Controllers
 {
     public class AdminController : Controller
     {
-        //private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private SignInManager<ApplicationUser> _signManager;
         private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
-        public AdminController(/*ApplicationDbContext context,*/ UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager,RoleManager<IdentityRole> roleManager)
+        public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager,RoleManager<IdentityRole> roleManager)
         {
-           // _context = context;
+            _context = context;
             _userManager = userManager;
             _signManager = signManager;
             _roleManager = roleManager;
+        }
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var users = _context.Users.ToList();
+            return View(users);
         }
       
         [HttpGet]
@@ -45,6 +52,11 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> RegisterUser(RegisterUserViewModel registerUserViewModel)
         {
 
+            var usernum = 1;
+            if (_context.Users.Any())
+            {
+                usernum = _context.Users.LastOrDefault().UserNum + 1;
+            }
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
@@ -53,7 +65,8 @@ namespace PrototypeWithAuth.Controllers
                     Email = registerUserViewModel.Email,
                     FirstName = registerUserViewModel.FirstName,
                     LastName = registerUserViewModel.LastName,
-                    SecureAppPass = registerUserViewModel.SecureAppPass
+                    SecureAppPass = registerUserViewModel.SecureAppPass,
+                    UserNum = usernum
                 };
             
                 var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);

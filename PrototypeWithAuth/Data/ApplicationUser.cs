@@ -20,7 +20,7 @@ namespace PrototypeWithAuth.Data
         [Display(Name = "Google Secure App Password")]
         public string SecureAppPass { get; set; }
         public IEnumerable<ParentRequest> ParentRequests { get; set;}
-
+        public int UserNum { get; set; }
 
 
         // public string URLPic { get; set; }
