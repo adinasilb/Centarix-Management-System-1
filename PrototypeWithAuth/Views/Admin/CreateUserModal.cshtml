@@ -1,4 +1,5 @@
-﻿@model PrototypeWithAuth.ViewModels.RegisterUserViewModel
+﻿@model PrototypeWithAuth.ViewModels.RegisterUserViewModel;
+@using PrototypeWithAuth.AppData;
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")"
         type="text/javascript">
@@ -73,7 +74,23 @@
                                 </div>
                             </div>
                             <div id="permissions" class="tab-pane fade">
-                                Permissions
+                                <div class="row mt-5">
+                                    @{
+                                        string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>
+                                        ().Select(x => x.ToString()).ToArray();
+                                    }
+                                    @foreach (var menuItem in roleNames)
+                                    {
+                                        if (menuItem != "Admin")
+                                        {
+                                            <div class="col-6">
+                                                <select class="form-control my-3 inv-permissions-button">
+                                                    <option value="@menuItem">@menuItem</option>
+                                                </select>
+                                            </div>
+                                        }
+                                    }
+                                </div>
                             </div>
                             <div id="budget" class="tab-pane fade">
                                 Budget

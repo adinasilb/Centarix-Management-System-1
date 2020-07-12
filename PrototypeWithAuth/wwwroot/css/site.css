@@ -233,6 +233,59 @@ body {
     text-transform: uppercase;
 }
 
+.inv-permissions-button-orders {
+    background-color: #fff;
+    /*border: 1px solid #DB669D;*/
+    border-radius: 3rem;
+    /*color: #DB669D;*/
+    font-weight: 500;
+    padding: 0.56rem 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.orders-color {
+    color: #30BCC9;
+    border: 1px solid #30BCC9;
+}
+
+.protocols-color {
+    color: #00CA72;
+    border: 1px solid #30BCC9;
+}
+
+.operation-color {
+    color: #5F79E2;
+    border: 1px solid #30BCC9;
+}
+
+.biomarkers-color {
+    color: #E95252;
+    border: 1px solid #30BCC9;
+}
+
+.labmanagement-color {
+    color: #D5A522;
+    border: 1px solid #30BCC9;
+}
+
+.accounting-color {
+    color: #A26FF0;
+    border: 1px solid #30BCC9;
+}
+
+.expenses-color {
+    color: #E27933;
+    border: 1px solid #30BCC9;
+}
+
+.users-color {
+    color: #DB669D;
+    border: 1px solid #30BCC9;
+}
+
+
 .edit-user-modal /*the a that opens it*/ {
     color: #000;
     text-decoration: none;
