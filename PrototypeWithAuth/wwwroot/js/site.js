@@ -290,14 +290,18 @@ $("#Request_Warranty").change(function () {
 
 
 $("#Request_ExpectedSupplyDays").change(function () {
-	//var orderdate = $("#Request_ParentRequest_OrderDate").val();
-	//console.log("Order date: " + orderdate);
+	//var date = $("#Request_ParentRequest_InvoiceDate").val();
+	//console.log("Order date: " + date);
 	//console.log("this.val: " + $(this).val());
-	//var esdate = (orderdate.getDate() + $(this).val());
-	//console.log("esdate: " + esdate);
-	//$("input[name='expected-supply-days']").val(esdate);
+	//var supplyDate = Date.addDays($("#Request_ExpectedSupplyDays").val())
+	//console.log("supplyDate: " + supplyDate);
+	//$("input[name='expected-supply-days']").val(supplyDate);
+	
 });
 
+$.fn.leapYear = function(year) {
+	return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+}
 
 //PRICE PAGE ON MODAL VIEW//
 $("#price-tab").click(function () {
@@ -953,7 +957,15 @@ $(".documents-tab").click(function () {
 		var dd = tdate.getDate(); //yields day
 		var MM = tdate.getMonth(); //yields month
 		var yyyy = tdate.getFullYear(); //yields year
-		var today = yyyy + "-0" + (MM + 1) + "-0" + dd;
+		if (dd < 10) {
+			dd = "0" + dd
+		}
+		if (MM < 10) {
+			MM = "0" + (MM + 1)
+		} else {
+			MM = MM + 1;
+		}
+		var today = yyyy + "-" + (MM) + "-" + dd;
 		console.log("today:" + today);
 		//count how many installment dates already passed
 		var count = 0;
@@ -1003,16 +1015,6 @@ $(".documents-tab").click(function () {
 		$.fn.updateDebt();
 	});
 
-
-	$('#myModal').change(
-		function () {
-			$.validator.unobtrusive.parse("#createModalForm");
-		});
-
-	$('#myModal').change(
-		function () {
-			$.validator.unobtrusive.parse("#editModalForm");
-		});
 	$('#submitAddLocation').click(function () {
 		$('#loading').show();
 	});
@@ -1113,4 +1115,145 @@ $(".documents-tab").click(function () {
 				this.html(result);
 			}
 		});
-	};
+};
+
+$.fn.validateItemTab = function () {
+
+	$("#price-tab").prop("disabled", true);
+
+	console.log("in $.fn.validateItemTab");
+	valid = $("#parentlist").attr('aria-invalid');
+	console.log("valid: " + valid);
+	if (valid == "true" || valid == undefined) {
+		console.log("valid: "+valid);
+		return;
+	}
+	console.log("valid1: " + valid);
+	valid = $("#sublist").attr('aria-invalid');
+    $("#sublist").valid();
+	if (valid == "true" || valid == undefined) {
+		return;
+	}
+	console.log("valid2: " + valid);
+	valid = $("#Request_SubProjectID").attr('aria-invalid');
+	if (valid == "true" || valid == undefined) {
+		return;
+	}
+	console.log("valid3: " + valid);
+	valid = $("#Request_SubProject_ProjectID").attr('aria-invalid');
+	if (valid == "true" || valid == undefined) {
+		return;
+	}
+	console.log("valid4: " + valid);
+	valid = $("#vendorList").attr('aria-invalid');
+	if (valid == "true" || valid == undefined) {
+		return;
+	}
+	console.log("valid5: " + valid);
+	valid = $("#Request_ParentRequest_InvoiceNumber").attr('aria-invalid');
+	if (valid === "true" || valid == undefined) {
+		return;
+	}
+	console.log("valid5: " + valid);
+	valid = $("#Request_Warranty").attr('aria-invalid');
+	if (valid === "true") {
+		return;
+	}
+	console.log("valid6: " + valid);
+	valid = $("#Request_ParentRequest_InvoiceDate").attr('aria-invalid');
+	var validDate = $.fn.validateDateisGreaterThanOrEqualToToday($("#Request_ParentRequest_InvoiceDate").val())
+	//if (!validDate) {
+	//	$('.invoice-date').removeClass("field-validation-valid");
+	//	$('.invoice-date').addClass("field-validation-error");
+	//	$("#Request_ParentRequest_InvoiceDate").attr('data-val-range', "Date must be greater than or equal to today")
+	//}
+	valid = "" + !validDate;
+	if (valid === "true" ) {
+		return;
+	}
+	console.log("valid7: " + valid);
+	valid = $("#Request_ExpectedSupplyDays").attr('aria-invalid');
+	if (valid === "true") {
+		return;
+	}
+	valid = $("#Request_CatalogNumber").attr('aria-invalid');
+	console.log("valid8: " + valid);
+	if (valid==="false") {
+		$("#price-tab").prop("disabled", false);
+	}
+}
+
+$("#Request_ParentRequest_InvoiceDate").change(function () {
+	
+});
+$('#myModal').change(
+	function () {
+		$.validator.unobtrusive.parse("#createModalForm");
+	});
+
+$('#myModal').change(
+	function () {
+		$.validator.unobtrusive.parse("#editModalForm");
+	});
+
+$("#price-tab").click(function () {
+	console.log("in onclick price tab");
+	$("#createModalForm").valid();
+	$.fn.validateItemTab();
+});
+
+$.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
+	var tdate = new Date();
+	var dd = tdate.getDate(); //yields day
+	var MM = tdate.getMonth(); //yields month
+	var yyyy = tdate.getFullYear(); //yields year
+	if (dd < 10) {
+		dd="0"+dd
+	}
+	if (MM < 10) {
+		MM = "0" + (MM + 1);
+	} else {
+		MM = MM + 1;
+	}
+	var today = yyyy + "-" + (MM) + "-" + dd;
+	console.log("today:" + today);
+		//count how many installment dates already passed
+	if (date < today) {
+		return false;
+	}
+	return true;
+};
+
+$("#price-tab").click(function () {
+	console.log("in onclick price tab");
+	$("#createModalForm").valid();
+	$.fn.validatePriceTab();
+});
+
+$("#documents-tab").click(function () {
+	console.log("in onclick documents-tab");
+	$("#createModalForm").valid();
+	$.fn.validatePriceTab();
+});
+
+$("#archive-tab").click(function () {
+	console.log("in onclick archive-tab");
+	$("#createModalForm").valid();
+	$.fn.validatePriceTab();
+});
+
+$("#history-tab").click(function () {
+	console.log("in onclick history-tab");
+	$("#createModalForm").valid();
+	$.fn.validatePriceTab();
+});
+
+$("#order-tab").click(function () {
+	console.log("in onclick order-tab");
+	$("#createModalForm").valid();
+	$.fn.validatePriceTab();
+});
+
+$.fn.validatePriceTab = function () {
+	
+}

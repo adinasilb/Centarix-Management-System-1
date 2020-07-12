@@ -3,6 +3,7 @@
 @{
 
 }
+<script type="text/javascript" src="date.js"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")"
         type="text/javascript">
 </script>
@@ -174,7 +175,7 @@
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
                                         <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
+                                        <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger invoice-date" />
                                     </div>
                                 </div>
                                 <br />
@@ -243,18 +244,19 @@
                                             <div class="row">
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.Unit" class="control-label"></label>
-                                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="0" />
+                                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="1" />
                                                     <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label asp-for="Request.UnitType" class="control-label"></label>
                                                         @Html.DropDownListFor(
-                                                            vm => vm.Request.UnitTypeID,
+                                                            vm => vm.Request.UnitType,
                                                             Model.UnitTypeList,
                                                             "",
-                                                            htmlAttributes: new { @class = "form-control-plaintext border-bottom " }
+                                                            htmlAttributes: new { @class = "form-control-plaintext border-bottom " }                                     
                                                             )
+                                                        
                                                         <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                                     </div>
                                                 </div>
@@ -371,7 +373,7 @@
                                             <label asp-for="Request.Cost" class="control-label">Sum:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" readonly />
+                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1" readonly />
                                                 <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
