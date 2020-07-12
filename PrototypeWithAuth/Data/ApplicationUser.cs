@@ -21,7 +21,7 @@ namespace PrototypeWithAuth.Data
         public string SecureAppPass { get; set; }
         public IEnumerable<ParentRequest> ParentRequests { get; set;}
         public int UserNum { get; set; }
-
+        public DateTime DateCreated { get; set; }
 
         // public string URLPic { get; set; }
 

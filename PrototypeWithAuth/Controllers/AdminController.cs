@@ -30,7 +30,15 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var users = _context.Users.ToList();
+            var users = _context.Users
+                .Select(u => new UserViewModel
+                {
+                    UserNum = u.UserNum,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    DateCreated = u.DateCreated
+                })
+                .ToList();
             return View(users);
         }
       
