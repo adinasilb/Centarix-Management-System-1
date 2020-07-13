@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200709115434_SeededMenuWithNewImages")]
+    partial class SeededMenuWithNewImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,9 +168,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -217,9 +216,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
-
-                    b.Property<int>("UserNum")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -377,9 +373,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("MenuImageURL")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MenuViewName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("menuID");
 
                     b.ToTable("Menus");
@@ -390,9 +383,8 @@ namespace PrototypeWithAuth.Data.Migrations
                             menuID = 1,
                             ActionName = "Index",
                             ControllerName = "Requests",
-                            MenuDescription = "OrdersAndInventory",
-                            MenuImageURL = "/images/css/main_menu_icons/inventory.png",
-                            MenuViewName = "Orders & Inventory"
+                            MenuDescription = "Orders & Inventory",
+                            MenuImageURL = "/images/css/main_menu_icons/inventory.png"
                         },
                         new
                         {
@@ -400,17 +392,15 @@ namespace PrototypeWithAuth.Data.Migrations
                             ActionName = "",
                             ControllerName = "",
                             MenuDescription = "Protocols",
-                            MenuImageURL = "/images/css/main_menu_icons/protocols.png",
-                            MenuViewName = "Protocols"
+                            MenuImageURL = "/images/css/main_menu_icons/protocols.png"
                         },
                         new
                         {
                             menuID = 3,
                             ActionName = "",
                             ControllerName = "",
-                            MenuDescription = "Operation",
-                            MenuImageURL = "/images/css/main_menu_icons/operation.png",
-                            MenuViewName = "Operation"
+                            MenuDescription = "Operations",
+                            MenuImageURL = "/images/css/main_menu_icons/operation.png"
                         },
                         new
                         {
@@ -418,8 +408,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ActionName = "",
                             ControllerName = "",
                             MenuDescription = "Biomarkers",
-                            MenuImageURL = "/images/css/main_menu_icons/biomarkers.png",
-                            MenuViewName = "Biomarkers"
+                            MenuImageURL = "/images/css/main_menu_icons/biomarkers.png"
                         },
                         new
                         {
@@ -434,9 +423,8 @@ namespace PrototypeWithAuth.Data.Migrations
                             menuID = 6,
                             ActionName = "IndexForLabManage",
                             ControllerName = "Vendors",
-                            MenuDescription = "LabManagement",
-                            MenuImageURL = "/images/css/main_menu_icons/lab.png",
-                            MenuViewName = "Lab Management"
+                            MenuDescription = "Lab Management",
+                            MenuImageURL = "/images/css/main_menu_icons/lab.png"
                         },
                         new
                         {
@@ -444,8 +432,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ActionName = "ToPay",
                             ControllerName = "ParentRequests",
                             MenuDescription = "Accounting",
-                            MenuImageURL = "/images/css/main_menu_icons/accounting.png",
-                            MenuViewName = "Accounting"
+                            MenuImageURL = "/images/css/main_menu_icons/accounting.png"
                         },
                         new
                         {
@@ -453,8 +440,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ActionName = "ExpensesList",
                             ControllerName = "ParentRequests",
                             MenuDescription = "Expenses",
-                            MenuImageURL = "/images/css/main_menu_icons/expenses.png",
-                            MenuViewName = "Expenses"
+                            MenuImageURL = "/images/css/main_menu_icons/expenses.png"
                         },
                         new
                         {
@@ -470,8 +456,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ActionName = "RegisterUser",
                             ControllerName = "Admin",
                             MenuDescription = "Users",
-                            MenuImageURL = "/images/css/main_menu_icons/users.png",
-                            MenuViewName = "Users"
+                            MenuImageURL = "/images/css/main_menu_icons/users.png"
                         });
                 });
 

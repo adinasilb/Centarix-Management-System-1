@@ -25,6 +25,9 @@ namespace PrototypeWithAuth.Models
         
         [Display(Name = "Order Number")]
         public int? OrderNumber { get; set; }
+
+        [Range(1, 2147483647, ErrorMessage = "Field must be a number")]
+        [Required]
         [Display(Name = "Invoice Number")]
         public string InvoiceNumber { get; set; }
 

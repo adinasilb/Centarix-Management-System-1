@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.Models
         public string CompanyBankNum { get; set; }
         public string CompanyBranchNum { get; set; }
         public int PaymentTypeID { get; set; }
+
         public PaymentType PaymentType { get; set; }
     }
 }

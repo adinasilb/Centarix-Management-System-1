@@ -63,6 +63,7 @@
 
 
   <ItemGroup>
+    <PackageReference Include="date.js" Version="1.0.1" />
     <PackageReference Include="Datejs" Version="1.0.0" />
     <PackageReference Include="MailKit" Version="2.6.0" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
