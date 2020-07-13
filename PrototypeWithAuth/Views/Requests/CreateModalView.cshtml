@@ -60,13 +60,13 @@
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center">
                                 <ul id="modal-tabs" class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
-                                    <li class="nav-item"><a data-toggle="tab" id="item-tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="price-tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="documents-tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="comments-tab" href="#comments" class="nav-link"><i class="icon-comment-24px" style="font-size: 2rem;"></i><br />Comments</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="archive-tab" href="#archive" class="nav-link"><i class="icon-archive-24px" style="font-size: 2rem;"></i><br />Archive</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="history-tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="order-tab" href="#order" class="nav-link"> <i class="icon-shopping_cart-24px" style="font-size: 2rem;"></i> <br />Order</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                    <li class="nav-item" id="price-tab"><a data-toggle="tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"><i class="icon-comment-24px" style="font-size: 2rem;"></i><br />Comments</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#archive" class="nav-link"><i class="icon-archive-24px" style="font-size: 2rem;"></i><br />Archive</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link"> <i class="icon-shopping_cart-24px" style="font-size: 2rem;"></i> <br />Order</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -85,11 +85,11 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
                                             new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-                                            "Select Category", new { @class = "form-control-plaintext border-bottom ", @id = "parentlist" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+                                            "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "parentlist" })
+                                            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="mdb-main-label text-black-50 mb-2" style="font-size: 1.25em;"></label>
+<span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4 px-4">
@@ -251,7 +251,7 @@
                                                     <div class="form-group">
                                                         <label asp-for="Request.UnitType" class="control-label"></label>
                                                         @Html.DropDownListFor(
-                                                            vm => vm.Request.UnitType,
+                                                            vm => vm.Request.UnitTypeID,
                                                             Model.UnitTypeList,
                                                             "",
                                                             htmlAttributes: new { @class = "form-control-plaintext border-bottom " }                                     

@@ -30,27 +30,56 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Centarix Management System</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
+
+
+    @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
+    <!-- Bootstrap core CSS -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-reboot.css" rel="stylesheet" />
+    <!-- Material Design Bootstrap -->
+    <link href="~/lib/bootstrap/dist/css/mdb.min.css" rel="stylesheet">
+
+    <link href="~/lib/bootstrap/dist/css/addons/datatables-select.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons/datatables-select2.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons/datatables.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons/datatables2.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons/directives.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons/flag.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons/jquery.zmd.hierarchical-display.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons/rating.min.css" rel="stylesheet" />
+
+    <link href="~/lib/bootstrap/dist/css/addons-pro/cards-extended.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons-pro/chat.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons-pro/multi-range.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons-pro/simple-charts.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons-pro/steppers.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/addons-pro/timeline.min.css" rel="stylesheet" />
+
+    <link href="~/lib/bootstrap/dist/css/modules/accordion-extended.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/modules/animations-extended.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/modules/lightbox.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/modules/megamenu.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/modules/parallax.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+                <link rel="stylesheet" href="~/lib/bootstrap/dist/css/style.css">
+        <link href="~/lib/bootstrap/dist/css/modules/parallax.min.css" rel="stylesheet" />
+                <link rel="stylesheet" href="~/lib/bootstrap/dist/css/addons/datatables.min.css" />*@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @*load jquery ui*@
-    @*<script src="~/lib/jquery/jquery-ui.min.js"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>*@
 
-    @*<script src="~/js/site.js"></script>*@
-    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/mvc/3.0/jquery.validate.unobtrusive.min.js"></script>
-
-
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/jquery/dist/popper.min.js"></script>
+        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
+        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 </head>
 <body>
     <header class="sticky-top">
@@ -100,10 +129,156 @@
             </div>
         </main>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+
+
+    <!--  SCRIPTS  -->
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="~/js/popper.min.js"></script>
+    <!-- JQuery -->
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
+
+
+    @*<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
+        <script type="text/javascript" src="~/js/popper.min.js"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/popper.min.js"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>*@
+
+
+    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script> @*getting an error without type=module*@
+    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script> @*getting an error without type=module*@
+    <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons/datatables2.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons/directives.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons/flag.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons/imagesloaded.pkgd.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons/jquery.zmd.hierarchical-display.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons/masonry.pkgd.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons/rating.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/addons-pro/cards-extended.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons-pro/chat.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons-pro/multi-range.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons-pro/simple-charts.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons-pro/steppers.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/addons-pro/timeline.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown-searchable.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"></script>
+    <script type="module" src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
+    <script type="module" src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/modules/accordion-extended.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/animations-extended.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/buttons.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/cards.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/character-counter.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/chips.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/collapsible.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/file-input.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/forms-free.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/lightbox.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/mdb-autocomplete.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/megamenu.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/parallax.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/preloading.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/range-input.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/scrolling-navbar.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/sidenav.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/smooth-scroll.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/sticky.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/treeview.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/wow.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/src/js/free/forms-free.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/free/scrolling-navbar.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/free/treeview.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/free/wow.js"></script>
+
+    <script src="~/lib/bootstrap/dist/src/js/pro/dropdown/dropdown-searchable.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/dropdown/dropdown.js"></script>
+
+    <script src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
+
+    <script src="~/lib/bootstrap/dist/src/js/pro/buttons.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/cards.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/character-counter.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/chips.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/collapsible.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/file-input.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/mdb-autocomplete.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/picker-date.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/picker-time.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/preloading.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/range-input.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/sidenav.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/sidenav2.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/smooth-scroll.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/sticky.js"></script>
+
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/datatables-select.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/datatables-select2.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/datatables.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/datatables2.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/imagesloaded.pkgd.min.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/jquery.zmd.hierarchical-display.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/masonry.pkgd.min.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/rating.js"></script>
+
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/chat.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/multi-range.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/simple-charts.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/steppers.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/timeline.js"></script>
+
+    <script src="~/lib/bootstrap/dist/src/js/vendor/free/bs-custom-file-input.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/free/chart.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/free/chartjs-datalabels.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/free/enhanced-modals.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/free/jquery.easing.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/free/velocity.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/free/waves.js"></script>
+
+    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/jarallax-video.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/jarallax.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/jquery.sticky.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/lightbox.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/ofi.js"></script>
+    @*<script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-date-time.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-date.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-time.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker.js"></script>*@
+    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/scrollbar.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/toastr.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map-world-mill.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map.js"></script>
+
+
+
+
+
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @*load jquery ui*@
+    <script src="~/lib/jquery/jquery-ui.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+
+    <script type="text/javascript" src="~/js/site.js" asp-append-version="true"></script>
+    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 </body>
 </html>
 
@@ -156,5 +331,6 @@
 
     $.fn.OnOpenModal = function () {
         $('.modal-content a:first').tab('show');
+        $('.mdb-select').materialSelect();
     };
 </script>

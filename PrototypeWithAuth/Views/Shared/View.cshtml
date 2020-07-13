@@ -327,7 +327,9 @@
     $(document).ready(function () {
         $('#dtBasicExample').DataTable();
         $('.dataTables_length').addClass('bs-select');
+        console.log("before mdb select 1");
         $('.mdb-select').materialSelect();
+        console.log("after mdb select 1");
         $('.datepicker').pickadate();
         $('#request-search a:first').tab('show'); @*I had to put this in here b/c otherwise it wasn't coming up on .search-link.click*@
     });
@@ -498,6 +500,9 @@
     }
 
     $.fn.OnOpenModalView = function () {
+        console.log("before mdb select 2");
+        $('.mdb-select').materialSelect();
+        console.log("after mdb select 2");
         $('.modal-content a:first').tab('show');
         var parentCategoryId = $("#parentlist").val();
         var subcategoryId1 = $("#sublist").val();

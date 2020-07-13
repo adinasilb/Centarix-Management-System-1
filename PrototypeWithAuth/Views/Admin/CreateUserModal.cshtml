@@ -74,23 +74,63 @@
                                 </div>
                             </div>
                             <div id="permissions" class="tab-pane fade">
-                                <div class="row mt-5">
-                                    @{
-                                        string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>
-                                        ().Select(x => x.ToString()).ToArray();
-                                    }
-                                    @foreach (var menuItem in roleNames)
-                                    {
-                                        if (menuItem != "Admin")
-                                        {
-                                            <div class="col-6">
-                                                <select class="form-control my-3 inv-permissions-button">
-                                                    <option value="@menuItem">@menuItem</option>
-                                                </select>
-                                            </div>
-                                        }
-                                    }
+                                <div class="row">
+                                    <div class="col-5 offset-1">
+                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm orders-color pb-5 text-black-50" multiple>
+                                            <option value="" disabled selected>Orders &amp; Inventory</option>
+                                            <option value="@AppUtility.MenuItems.OrdersAndInventory">Orders &amp; Inventory</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-5">
+                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm protocols-color pb-5 text-black-50" multiple>
+                                            <option value="" disabled selected>Protocols</option>
+                                            <option value="@AppUtility.MenuItems.Protocols">Protocols</option>
+                                        </select>
+                                    </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-5 offset-1">
+                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm labmanagement-color pb-5 text-black-50" multiple>
+                                            <option value="" disabled selected>Lab Management</option>
+                                            <option value="@AppUtility.MenuItems.LabManagement">Lab Management</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-5">
+                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm accounting-color pb-5 text-black-50" multiple>
+                                            <option value="" disabled selected>Accounting</option>
+                                            <option value="@AppUtility.MenuItems.Accounting">Accounting</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-5 offset-1">
+                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm labmanagement-color pb-5 text-black-50" multiple>
+                                            <option value="" disabled selected>Lab Management</option>
+                                            <option value="@AppUtility.MenuItems.LabManagement">Lab Management</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-5">
+                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm accounting-color pb-5 text-black-50" multiple>
+                                            <option value="" disabled selected>Accounting</option>
+                                            <option value="@AppUtility.MenuItems.Accounting">Accounting</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @*@{
+            string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>
+            ().Select(x => x.ToString()).ToArray();
+        }
+        @foreach (var menuItem in roleNames)
+        {
+            if (menuItem != "Admin")
+            {
+                <div class="col-6">
+                    <select class="form-control my-3 inv-permissions-button">
+                        <option value="@menuItem">@menuItem</option>
+                    </select>
+                </div>
+            }
+        }*@
                             </div>
                             <div id="budget" class="tab-pane fade">
                                 Budget

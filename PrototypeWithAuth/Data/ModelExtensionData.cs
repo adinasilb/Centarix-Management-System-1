@@ -777,7 +777,7 @@ namespace PrototypeWithAuth.Data
                     ControllerName = "",
                     ActionName = "",
                     MenuImageURL = "/images/css/main_menu_icons/protocols.png"
-                }, 
+                },
                 new Menu
                 {
                     menuID = 3,
@@ -851,6 +851,8 @@ namespace PrototypeWithAuth.Data
                     MenuImageURL = "/images/css/main_menu_icons/users.png"
                 }
             );
+
+
 
         }
     }

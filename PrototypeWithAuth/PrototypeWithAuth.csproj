@@ -59,6 +59,8 @@
     <Compile Remove="Data\Migrations\20200630085022_updatedDateToBePaidOnRequestsToNotThrowException.Designer.cs" />
     <Compile Remove="Data\Migrations\20200709095514_createMenuTable.cs" />
     <Compile Remove="Data\Migrations\20200709095514_createMenuTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200713064039_seededMenuNames.cs" />
+    <Compile Remove="Data\Migrations\20200713064039_seededMenuNames.Designer.cs" />
   </ItemGroup>
 
 

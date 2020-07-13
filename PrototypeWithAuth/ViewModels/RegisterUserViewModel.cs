@@ -55,5 +55,9 @@ namespace PrototypeWithAuth.ViewModels
         [Required]
         [Display(Name = "Google Secure App Password")]
         public string SecureAppPass { get; set; }
+
+
+        //Permissions
+        public string[] selectedOrders { get; set; }
     }
 }

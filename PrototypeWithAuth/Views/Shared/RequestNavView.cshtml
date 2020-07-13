@@ -90,46 +90,46 @@
 
             @if (Requests || Inventory)
             {
-                <li class="nav-item my-3">
+                <li class="nav-item my-1 p-0">
 
-                    <button class="btn btn-link opac87 create-product-details bold-hover-effects py-0 add-item-btn" id="sidebar-add-item" onclick="addActive(id)">
+                    <button class="btn btn-link opac87 create-product-details bold-hover-effects p-1 add-item-btn" id="sidebar-add-item" onclick="addActive(id)">
                         <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
                     </button>
                 </li>
             }
             @if (Requests || Inventory)
             {
-                <li class="nav-item bold-hover-effects my-3 @type">
-                    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
+                <li class="nav-item bold-hover-effects my-1 @type">
+                    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
                 </li>
 
             }
             @if (Requests || Inventory)
             {
 
-                <li class="nav-item my-3 @vendor">
-                    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
+                <li class="nav-item my-1 @vendor">
+                    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
                 </li>
             }
             @if (Requests || Inventory)
             {
                 @*have to create contorller for application user?*@
 
-                <li class="nav-item my-3 @owner">
-                    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
+                <li class="nav-item my-1 @owner">
+                    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
                 </li>
             }
             @if (Inventory)
             {
 
                 @*Redo the location class in the controller*@
-                <li class="nav-item my-3 @location">
-                    <a href="@Url.ActionLink("IndexForInventory", "Locations", new { @PageType = pageType })" class="bold-hover-effects opac87"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Location</a>
+                <li class="nav-item my-1 @location">
+                    <a href="@Url.ActionLink("IndexForInventory", "Locations", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Location</a>
                 </li>
             }
             @if (Cart)
             {
-                <li class="nav-item my-3">
+                <li class="nav-item my-1">
                     <i class="fas fa-shopping-cart"></i>
                     <a class=@cart>Cart</a>
                 </li>
@@ -362,6 +362,9 @@
     }
 
     $.fn.OnOpenModalView = function () {
+        console.log("before mdb select 3");
+        $('.mdb-select').materialSelect();
+        console.log("after mdb select 3");
         $('.modal-content a:first').tab('show');
         var parentCategoryId = $("#parentlist").val();
         var subcategoryId1 = $("#sublist").val();

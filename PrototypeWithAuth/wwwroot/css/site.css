@@ -12,6 +12,10 @@ body {
     min-height: 100% !important;
 }
 
+.no-box-shadow {
+    box-shadow: none !important;
+}
+
 .vertical .carousel-inner {
     height: 100%;
 }
@@ -233,56 +237,115 @@ body {
     text-transform: uppercase;
 }
 
-.inv-permissions-button-orders {
-    background-color: #fff;
+.inv-permissions-button {
+    /*background-color: #fff;*/
     /*border: 1px solid #DB669D;*/
-    border-radius: 3rem;
     /*color: #DB669D;*/
-    font-weight: 500;
-    padding: 0.56rem 1.5rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
+    font-weight: 300;
+    /*padding: 0.56rem 1.5rem;*/
+    /*font-size: 1.125rem;*/
+    /*line-height: 1.5;*/
     text-transform: uppercase;
 }
+    .inv-permissions-button input{
+    }
+
+    .inv-permissions-button ul.dropdown-content {
+        margin-top: 2rem;
+        width: 50%;
+    }
+
+        .inv-permissions-button ul.dropdown-content li > span,
+        .inv-permissions-button ul.dropdown-content li > a {
+            color: black;
+        }
 
 .orders-color {
     color: #30BCC9;
     border: 1px solid #30BCC9;
+    border-radius: 3rem;
 }
+
+    .orders-color:hover {
+        color: #fff;
+        background-color: #30BCC9;
+    }
 
 .protocols-color {
     color: #00CA72;
-    border: 1px solid #30BCC9;
+    border: 1px solid #00CA72;
+    border-radius: 3rem;
 }
+
+    .protocols-color:hover {
+        color: #fff;
+        background-color: #00CA72;
+    }
 
 .operation-color {
     color: #5F79E2;
-    border: 1px solid #30BCC9;
+    border: 1px solid #5F79E2;
+    border-radius: 3rem;
 }
+    .operation-color:hover {
+        color: #fff;
+        background-color: #5F79E2;
+    }
 
 .biomarkers-color {
     color: #E95252;
-    border: 1px solid #30BCC9;
+    border: 1px solid #E95252;
+    border-radius: 3rem;
 }
+
+    .biomarkers-color:hover {
+        color: #fff;
+        background-color: #E95252;
+    }
+
 
 .labmanagement-color {
     color: #D5A522;
-    border: 1px solid #30BCC9;
+    border: 1px solid #D5A522;
+    border-radius: 3rem;
 }
+
+    .labmanagement-color:hover {
+        color: #fff;
+        background-color: #D5A522;
+    }
 
 .accounting-color {
     color: #A26FF0;
-    border: 1px solid #30BCC9;
+    border: 1px solid #A26FF0;
+    border-radius: 3rem;
 }
+
+    .accounting-color:hover {
+        color: #fff;
+        background-color: #A26FF0;
+    }
 
 .expenses-color {
     color: #E27933;
-    border: 1px solid #30BCC9;
+    border: 1px solid #E27933;
+    border-radius: 3rem;
 }
+
+    .expenses-color:hover {
+        color: #fff;
+        background-color: #E27933;
+    }
 
 .users-color {
     color: #DB669D;
-    border: 1px solid #30BCC9;
+    border: 1px solid #DB669D;
+    border-radius: 3rem;
+}
+
+.expenses-color:hover {
+    color: #fff;
+    background-color: #DB669D;
 }
 
 
@@ -299,6 +362,7 @@ body {
 
 .inv-link-clr {
     color: black;
+    box-shadow: none;
 }
 
     .inv-link-clr:hover {
