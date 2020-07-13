@@ -15,7 +15,7 @@
         <div class="modal-content d-inline-block">
 
 
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
 
@@ -513,7 +513,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                     </div>
                                 </div>
                                 <br />
-                                <div class="row">
+                                <div class="row installments">
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>

@@ -33,12 +33,11 @@ namespace PrototypeWithAuth.Models
         public bool IsApproved { get; set; } 
         public uint Unit { get; set; } //largest unit the request comes in - amount of unit
         //public int Unit { get; set; }
-        [Required]
+        [Required (ErrorMessage = "The UnitType field is required.")]
         public int? UnitTypeID { get; set; }
         [ForeignKey("UnitTypeID")]
         [Display(Name = "Unit Type")]
 
-        [Required]
         public UnitType UnitType { get; set; }
         // public int[] UnitTypes { get; set; }
         [Display(Name = "Subunit")]

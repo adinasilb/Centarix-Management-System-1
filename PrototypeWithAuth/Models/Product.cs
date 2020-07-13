@@ -17,7 +17,7 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Item")]
         public string ProductName { get; set; }
 
-        [Required] //vendor, or vendor id?
+        [Required (ErrorMessage = "The Vendor field is required.")] //vendor, or vendor id?
         public int VendorID { get; set; }
     
         public Vendor Vendor { get; set; }
