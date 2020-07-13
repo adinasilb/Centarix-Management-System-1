@@ -10,7 +10,7 @@
     var navClass = "bold-hover-effects";
     var activeNavClass = " active";
     var ListClasses = navClass;
-    var AddClasses = navClass + " create-user-modal";
+    var AddClasses = navClass; // + " create-user-modal";
     if (TempData["PageType"] != null)
     {
         switch (TempData["PageType"])
@@ -119,7 +119,7 @@
                             <a href="@Url.Action("Index", "Admin")" class="@ListClasses"> <i class="icon-cancel_presentation-24px" style="font-size:1.6rem;"></i><br /> List <br /></a>
                         </li>
                         <li class="nav-item my-4 acc-sidebar">
-                            <a href="" class="@AddClasses"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br /> Add <br /></a>
+                            <a href="@Url.Action("CreateUser","Admin")" class="@AddClasses"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br /> Add <br /></a>
                         </li>
                     </ul>
                 </div>
@@ -283,6 +283,13 @@
 </html>
 
 <script>
+    $(document).ready(function () {
+        console.log("in doc ready");
+        $('#createModalForm a:first').tab('show');
+        $('.mdb-select').materialSelect();
+        $('.mdb-select li:first-child').hide();
+        $('.mdb-select li:nth-child(2)').hide();
+    });
     $(".create-user-modal").on("click", function (e) {
         $("li a").removeClass("active");
         $(".create-user-modal").addClass("active");
@@ -332,5 +339,7 @@
     $.fn.OnOpenModal = function () {
         $('.modal-content a:first').tab('show');
         $('.mdb-select').materialSelect();
+        $('.mdb-select li:first-child').hide();
+        $('.mdb-select li:nth-child(2)').hide();
     };
 </script>
