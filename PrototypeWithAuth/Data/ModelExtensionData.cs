@@ -799,8 +799,15 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 5,
-                    MenuDescription = AppUtility.MenuItems.LabManagement.ToString(),
-                    MenuViewName = "Lab Management",
+                    MenuDescription = "TimeKeeper",
+                    ControllerName = "",
+                    ActionName = "",
+                    MenuImageURL = "/images/css/main_menu_icons/timekeeper.png"
+                },
+                new Menu
+                {
+                    menuID = 6,
+                    MenuDescription = "Lab Management",
                     ControllerName = "Vendors",
                     ActionName = "IndexForLabManage",
                     MenuImageURL = "/images/css/main_menu_icons/lab.png"
