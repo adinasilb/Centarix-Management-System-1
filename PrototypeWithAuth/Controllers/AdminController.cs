@@ -209,6 +209,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public IActionResult CreateUser()
         {
+            TempData["PageType"] = AppUtility.UserPageTypeEnum.Add;
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
             return View(registerUserViewModel);
         }

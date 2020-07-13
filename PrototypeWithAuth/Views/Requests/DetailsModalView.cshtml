@@ -48,7 +48,14 @@
                     <br />
                     <div class="row">
                         <div class="col-md-2">
-                            <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
+                            @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
+                            {
+                                <img src="@Model.Request.Product.ProductSubcategory.ImageURL" alt="Alternate Text" />
+                            }
+                            else
+                            {
+                                <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
+                            }
                         </div>
                         <div class="col-md-8 offset-1">
                             <!--<h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>-->

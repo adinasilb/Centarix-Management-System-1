@@ -374,11 +374,6 @@ body {
     text-decoration: none;
 }
 
-    .edit-user-modal:hover /*the a that opens it*/ {
-        color: #000;
-        text-decoration: none;
-        font-weight: bold;
-    }
 
 .inv-link-clr {
     color: black;
