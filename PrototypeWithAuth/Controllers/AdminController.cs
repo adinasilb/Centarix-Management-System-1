@@ -121,9 +121,79 @@ namespace PrototypeWithAuth.Controllers
                 //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, "Admin");
-                    await _signManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "ApplicationUsers");
+                    //await _userManager.AddToRoleAsync(user, "Admin");
+                    if (registerUserViewModel.SelectedOrders != null)
+                    {
+                        if (registerUserViewModel.SelectedOrders[0] == AppUtility.MenuItems.OrdersAndInventory.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.OrdersAndInventory.ToString());
+                        }
+                    }
+                    if (registerUserViewModel.SelectedProtocols != null)
+                    {
+                        if (registerUserViewModel.SelectedProtocols[0] == AppUtility.MenuItems.Protocols.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Protocols.ToString());
+                        }
+                    }
+                    if (registerUserViewModel.SelectedLabManagement != null)
+                    {
+                        if (registerUserViewModel.SelectedLabManagement[0] == AppUtility.MenuItems.LabManagement.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.LabManagement.ToString());
+                        }
+                    }
+                    if (registerUserViewModel.SelectedAccounting != null)
+                    {
+                        if (registerUserViewModel.SelectedAccounting[0] == AppUtility.MenuItems.Accounting.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Accounting.ToString());
+                        }
+                    }
+                    if (registerUserViewModel.SelectedOperations != null)
+                    {
+                        if (registerUserViewModel.SelectedOperations[0] == AppUtility.MenuItems.Operation.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Operation.ToString());
+                        }
+                    }
+                    if (registerUserViewModel.SelectedExpenses != null)
+                    {
+                        if (registerUserViewModel.SelectedExpenses[0] == AppUtility.MenuItems.Expenses.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Expenses.ToString());
+                        }
+                    }
+                    if (registerUserViewModel.SelectedBiomarkers != null)
+                    {
+                        if (registerUserViewModel.SelectedBiomarkers[0] == AppUtility.MenuItems.Biomarkers.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Biomarkers.ToString());
+                        }
+                    }
+                    if (registerUserViewModel.SelectedIncome != null)
+                    {
+                        if (registerUserViewModel.SelectedIncome[0] == AppUtility.MenuItems.Income.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Income.ToString());
+                        }
+                    }
+                    if (registerUserViewModel.SelectedTimekeeper != null)
+                    {
+                        if (registerUserViewModel.SelectedTimekeeper[0] == AppUtility.MenuItems.TimeKeeper.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.TimeKeeper.ToString());
+                        }
+                    }
+                    if (registerUserViewModel.SelectedUsers != null)
+                    {
+                        if (registerUserViewModel.SelectedUsers[0] == AppUtility.MenuItems.Users.ToString())
+                        {
+                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Users.ToString());
+                        }
+                    }
+                    //await _signManager.SignInAsync(user, false);  --> this would sign in the user automatically. we don't want that.
+                    //return RedirectToAction("Index", "ApplicationUsers");
                 }
                 else
                 {
@@ -132,6 +202,7 @@ namespace PrototypeWithAuth.Controllers
                         ModelState.AddModelError("", error.Description);
                     }
                 }
+
             }
             return RedirectToAction("Index");
         }

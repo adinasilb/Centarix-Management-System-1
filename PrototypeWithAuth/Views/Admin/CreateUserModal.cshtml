@@ -37,7 +37,7 @@
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                     <li class="nav-item"><a data-toggle="tab" href="#details" class="nav-link user-nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Details</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#permissions" class="nav-link user-nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Permissions</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#budget" id="price-tab" class="nav-link user-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#budget" class="nav-link user-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#more" class="nav-link documents-tab user-nav-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />More</a></li>
                                 </ul>
                             </div>
@@ -74,45 +74,73 @@
                                 </div>
                             </div>
                             <div id="permissions" class="tab-pane fade">
-                                <div class="row">
-                                    <div class="col-5 offset-1">
-                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm orders-color pb-5 text-black-50" multiple>
+                                <div class="row text-center">
+                                    <div class="col-4 offset-2 text-center">
+                                        <select asp-for="SelectedOrders" class="mdb-select md-form inv-permissions-button custom-select-sm orders-color pt-0 pb-4 text-black-50 text-center" multiple>
                                             <option value="" disabled selected>Orders &amp; Inventory</option>
                                             <option value="@AppUtility.MenuItems.OrdersAndInventory">Orders &amp; Inventory</option>
                                         </select>
                                     </div>
-                                    <div class="col-5">
-                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm protocols-color pb-5 text-black-50" multiple>
+                                    <div class="col-4">
+                                        <select asp-for="SelectedProtocols" class="mdb-select md-form inv-permissions-button custom-select-sm protocols-color pt-0 pb-4 text-black-50" multiple>
                                             <option value="" disabled selected>Protocols</option>
                                             <option value="@AppUtility.MenuItems.Protocols">Protocols</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-5 offset-1">
-                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm labmanagement-color pb-5 text-black-50" multiple>
+                                    <div class="col-4 offset-2">
+                                        <select asp-for="SelectedLabManagement" class="mdb-select md-form inv-permissions-button custom-select-sm labmanagement-color pt-0 pb-4 text-black-50" multiple>
                                             <option value="" disabled selected>Lab Management</option>
                                             <option value="@AppUtility.MenuItems.LabManagement">Lab Management</option>
                                         </select>
                                     </div>
-                                    <div class="col-5">
-                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm accounting-color pb-5 text-black-50" multiple>
+                                    <div class="col-4">
+                                        <select asp-for="SelectedAccounting" class="mdb-select md-form inv-permissions-button custom-select-sm accounting-color pt-0 pb-4 text-black-50" multiple>
                                             <option value="" disabled selected>Accounting</option>
                                             <option value="@AppUtility.MenuItems.Accounting">Accounting</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-5 offset-1">
-                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm labmanagement-color pb-5 text-black-50" multiple>
-                                            <option value="" disabled selected>Lab Management</option>
-                                            <option value="@AppUtility.MenuItems.LabManagement">Lab Management</option>
+                                    <div class="col-4 offset-2">
+                                        <select asp-for="SelectedOperations" class="mdb-select md-form inv-permissions-button custom-select-sm operation-color pt-0 pb-4 text-black-50" multiple>
+                                            <option value="" disabled selected>Operation</option>
+                                            <option value="@AppUtility.MenuItems.Operation">Operation</option>
                                         </select>
                                     </div>
-                                    <div class="col-5">
-                                        <select class="mdb-select md-form inv-permissions-button custom-select-sm accounting-color pb-5 text-black-50" multiple>
-                                            <option value="" disabled selected>Accounting</option>
-                                            <option value="@AppUtility.MenuItems.Accounting">Accounting</option>
+                                    <div class="col-4">
+                                        <select asp-for="SelectedExpenses" class="mdb-select md-form inv-permissions-button custom-select-sm expenses-color pt-0 pb-4 text-black-50" multiple>
+                                            <option value="" disabled selected>Expenses</option>
+                                            <option value="@AppUtility.MenuItems.Expenses">Expenses</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 offset-2">
+                                        <select asp-for="SelectedBiomarkers" class="mdb-select md-form inv-permissions-button custom-select-sm biomarkers-color pt-0 pb-4 text-black-50" multiple>
+                                            <option value="" disabled selected>Biomarkers</option>
+                                            <option value="@AppUtility.MenuItems.Biomarkers">Biomarkers</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <select asp-for="SelectedIncome" class="mdb-select md-form inv-permissions-button custom-select-sm income-color pt-0 pb-4 text-black-50" multiple>
+                                            <option value="" disabled selected>Income</option>
+                                            <option value="@AppUtility.MenuItems.Income">Income</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 offset-2">
+                                        <select asp-for="SelectedTimekeeper" class="mdb-select md-form inv-permissions-button custom-select-sm labmanagement-color pt-0 pb-4 text-black-50" multiple>
+                                            <option value="" disabled selected>Timekeeper</option>
+                                            <option value="@AppUtility.MenuItems.TimeKeeper">Timekeeper</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <select asp-for="SelectedUsers" class="mdb-select md-form inv-permissions-button custom-select-sm users-color pt-0 pb-4 text-black-50" multiple>
+                                            <option value="" disabled selected>Users</option>
+                                            <option value="@AppUtility.MenuItems.Users">Users</option>
                                         </select>
                                     </div>
                                 </div>

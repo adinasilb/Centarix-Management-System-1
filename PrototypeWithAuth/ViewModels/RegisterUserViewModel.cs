@@ -58,6 +58,15 @@ namespace PrototypeWithAuth.ViewModels
 
 
         //Permissions
-        public string[] selectedOrders { get; set; }
+        public string[] SelectedOrders { get; set; }
+        public string[] SelectedProtocols { get; set; }
+        public string[] SelectedLabManagement { get; set; }
+        public string[] SelectedAccounting { get; set; }
+        public string[] SelectedOperations { get; set; }
+        public string[] SelectedExpenses { get; set; }
+        public string[] SelectedBiomarkers { get; set; }
+        public string[] SelectedIncome { get; set; }
+        public string[] SelectedTimekeeper { get; set; }
+        public string[] SelectedUsers { get; set; }
     }
 }

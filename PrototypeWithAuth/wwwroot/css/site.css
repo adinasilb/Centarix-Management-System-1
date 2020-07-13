@@ -246,8 +246,11 @@ body {
     /*font-size: 1.125rem;*/
     /*line-height: 1.5;*/
     text-transform: uppercase;
+    margin: .75em 0;
+    /*padding: 0;*/
 }
-    .inv-permissions-button input{
+    .inv-permissions-button input {
+        border-bottom: none !important;
     }
 
     .inv-permissions-button ul.dropdown-content {
@@ -337,13 +340,26 @@ body {
         background-color: #E27933;
     }
 
+.income-color {
+    color: #90C939;
+    border: 1px solid #90C939;
+    border-radius: 3rem;
+}
+
+    .income-color:hover {
+        color: #fff;
+        background-color: #90C939;
+    }
+
+
+
 .users-color {
     color: #DB669D;
     border: 1px solid #DB669D;
     border-radius: 3rem;
 }
 
-.expenses-color:hover {
+.users-color:hover {
     color: #fff;
     background-color: #DB669D;
 }
