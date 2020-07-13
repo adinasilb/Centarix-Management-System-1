@@ -30,9 +30,13 @@ namespace PrototypeWithAuth.Controllers
         }
         
         [HttpGet] //send a json to that the subcategory list is filered
-        public JsonResult GetSubCategoryList(int ParentCategoryId)
+        public JsonResult GetSubCategoryList(int? ParentCategoryId)
         {
-            var subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
+            var subCategoryList = _context.ProductSubcategories.ToList();
+            if (ParentCategoryId != null)
+            {
+                subCategoryList = _context.ProductSubcategories.Where(c => c.ParentCategoryID == ParentCategoryId).ToList();
+            }
             return Json(subCategoryList);
         }
 
