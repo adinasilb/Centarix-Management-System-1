@@ -18,7 +18,7 @@
 
         <div class="modal-content d-inline-block">
 
-            <form action="" id="editModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
 
@@ -59,10 +59,10 @@
                             <div class="container-fluid div-tabs text-center">
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                     <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#location"  id="location-tab" class="nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#price" id="price-tab" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#documents" id="documents-tab" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#comments" id="comments-tab"  class="nav-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -178,7 +178,7 @@
                                     </div>
                                     <div class="col-6">
                                         <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom  " />
                                         <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
                                     </div>
                                 </div>
@@ -301,7 +301,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.ExchangeRate" class="control-label"></label>
-                                            <input asp-for="Request.ExchangeRate" min="0" class="form-control-plaintext border-bottom" />
+                                            <input asp-for="Request.ExchangeRate" min="1" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -313,7 +313,7 @@
                                             <div class="row">
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.Unit" class="control-label"></label>
-                                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" min="0" />
+                                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" min="1" />
                                                     <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-md-6">
@@ -498,11 +498,11 @@
                                     </div>
                                 </div>
                                 <br />
-                                <div class="row">
+                                <div class="row installments">
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
-                                            <input asp-for="Request.ParentRequest.Installments" min="0" class="form-control-plaintext border-bottom" />
+                                            <input asp-for="Request.ParentRequest.Installments" min="1" class="form-control-plaintext border-bottom" />
                                             <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
                                         </div>
                                         @if (Model.NewPayments != null && Model.NewPayments.Any())
@@ -538,7 +538,7 @@
                                                                     @Html.DropDownListFor(
                                                                    m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
                                                                    new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
-                                                                   , new { @class = "form-control-plaintext border-bottom" }
+                                                                   , new { @class = "form-control-plaintext border-bottom paymentType" }
                                                                    )
                                                                 </td>
                                                                 <td>
@@ -1036,7 +1036,7 @@
                 </div>
                 <div class="modal-footer">
                     @*you can only add to cart if you are creating a new one*@
-                    <input type="submit" name="OrderType" value="Save" asp-action="EditModalView" class="inv-button mr-4" />
+                    <input type="submit" id="saveEditModal" name="OrderType" value="Save" asp-action="EditModalView" class="inv-button mr-4" />
 
                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                     <button type="button" class="cancel-button" data-dismiss="modal">Close</button>

@@ -21,7 +21,7 @@
 
         <div class="modal-content d-inline-block">
 
-            <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -139,7 +139,7 @@
                                                 optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
                                                 htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList" }
                                                 )
-                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.VendorID" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -174,7 +174,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom create-modal-invoice-date" />
                                         <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger invoice-date" />
                                     </div>
                                 </div>
@@ -232,7 +232,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.ExchangeRate" class="control-label"></label>
-                                            <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " />
+                                            <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " min="1"/>
                                             <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -251,13 +251,13 @@
                                                     <div class="form-group">
                                                         <label asp-for="Request.UnitType" class="control-label"></label>
                                                         @Html.DropDownListFor(
-                                                            vm => vm.Request.UnitType,
+                                                            vm => vm.Request.UnitTypeID,
                                                             Model.UnitTypeList,
                                                             "",
                                                             htmlAttributes: new { @class = "form-control-plaintext border-bottom " }                                     
                                                             )
                                                         
-                                                        <span asp-validation-for="Request.UnitType" class="text-danger"></span>
+                                                        <span asp-validation-for="Request.UnitTypeID" class="text-danger"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -431,11 +431,11 @@
                                     </div>
                                 </div>
                                 <br />
-                                <div class="row">
+                                <div class="row installments">
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
-                                            <input asp-for="Request.ParentRequest.Installments" min="0" class="form-control-plaintext border-bottom " />
+                                            <input asp-for="Request.ParentRequest.Installments" min="1" class="form-control-plaintext border-bottom " />
                                             <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
                                         </div>
                                     </div>

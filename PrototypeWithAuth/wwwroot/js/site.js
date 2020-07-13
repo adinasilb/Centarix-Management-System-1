@@ -771,6 +771,7 @@ $(".clicked-outer-button").click(function () {
 
 function changeTerms(checkbox) {
 	if (checkbox.checked) {
+		$(".installments").hide();
 		console.log("checked");
 		$("#Request_Terms").append(`<option value="${"0"}">${"Pay Now"}</option>`);;
 		$("#Request_Terms").val("0");
@@ -784,9 +785,17 @@ function changeTerms(checkbox) {
 }
 
 $(".documents-tab").click(function () {
+	//this is for validation
+	$("#myForm").valid();
+	$.fn.validatePriceTab();
+
+
+
 	console.log("documents tab clicked");
 	$.fn.HideAllDocs();
 	$.fn.CheckIfFileSelectsAreFull();
+
+	
 });
 
 	//$(".upload-file-1").click(function () {
@@ -1020,21 +1029,7 @@ $(".documents-tab").click(function () {
 	});
 
 
-	//$('#createModalForm').submit(
-	//	function () {
-	//		if ($("#createModalForm").valid()) {
-	//			return true;
-	//		}
-	//		return false;
-	//	});
 
-	//$('#editModalForm').submit(
-	//	function () {
-	//		if ($("#editModalForm").valid()) {
-	//			return true;
-	//		}
-	//		return false
-	//	});
 
 	$(".load-location-index-view").click(function (e) {
 		//clear the div to restart filling with new children
@@ -1118,69 +1113,87 @@ $(".documents-tab").click(function () {
 };
 
 $.fn.validateItemTab = function () {
-
 	$("#price-tab").prop("disabled", true);
+	$("#location-tab").prop("disabled", true);
+	$("#order-tab").prop("disabled", true);
 
 	console.log("in $.fn.validateItemTab");
 	valid = $("#parentlist").attr('aria-invalid');
+	if (valid == "true" || $("#parentlist").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
+	valid = $("#Request_Product_ProductName").attr('aria-invalid');
 	console.log("valid: " + valid);
-	if (valid == "true" || valid == undefined) {
+	if (valid == "true" || $("#Request_Product_ProductName").val() == "") {
 		console.log("valid: "+valid);
 		return;
 	}
 	console.log("valid1: " + valid);
 	valid = $("#sublist").attr('aria-invalid');
-    $("#sublist").valid();
-	if (valid == "true" || valid == undefined) {
+	if (valid == "true" || $("#sublist").val()=="") {
 		return;
 	}
 	console.log("valid2: " + valid);
 	valid = $("#Request_SubProjectID").attr('aria-invalid');
-	if (valid == "true" || valid == undefined) {
+	if (valid == "true" || $("#Request_SubProjectID").val() == "") {
 		return;
 	}
 	console.log("valid3: " + valid);
 	valid = $("#Request_SubProject_ProjectID").attr('aria-invalid');
-	if (valid == "true" || valid == undefined) {
+	if (valid == "true" || $("#Request_SubProject_ProjectID").val() == "") {
 		return;
 	}
 	console.log("valid4: " + valid);
 	valid = $("#vendorList").attr('aria-invalid');
-	if (valid == "true" || valid == undefined) {
+	if (valid == "true" || $("#vendorList").val()=="") {
 		return;
 	}
 	console.log("valid5: " + valid);
 	valid = $("#Request_ParentRequest_InvoiceNumber").attr('aria-invalid');
-	if (valid === "true" || valid == undefined) {
+	if (valid == "true" || $("#Request_ParentRequest_InvoiceNumber").val() == "") {
 		return;
 	}
 	console.log("valid5: " + valid);
 	valid = $("#Request_Warranty").attr('aria-invalid');
-	if (valid === "true") {
+	if (valid == "true") {
 		return;
 	}
 	console.log("valid6: " + valid);
 	valid = $("#Request_ParentRequest_InvoiceDate").attr('aria-invalid');
-	var validDate = $.fn.validateDateisGreaterThanOrEqualToToday($("#Request_ParentRequest_InvoiceDate").val())
-	//if (!validDate) {
-	//	$('.invoice-date').removeClass("field-validation-valid");
-	//	$('.invoice-date').addClass("field-validation-error");
-	//	$("#Request_ParentRequest_InvoiceDate").attr('data-val-range', "Date must be greater than or equal to today")
-	//}
+	if (valid == "true" || $("#Request_ParentRequest_InvoiceDate").val() == "") {
+		return;
+	}
+	var validDate = true;
+	var dateVal = $(".create-modal-invoice-date").val();
+	console.log("date val: "+dateVal)
+	if (dateVal!= undefined) {
+
+		validDate = $.fn.validateDateisGreaterThanOrEqualToToday(dateVal)
+	}
 	valid = "" + !validDate;
-	if (valid === "true" ) {
+	console.log("valid date: " + valid);
+	if (valid == "true" || $("#Request_ParentRequest_InvoiceDate").val() =="") {
 		return;
 	}
 	console.log("valid7: " + valid);
 	valid = $("#Request_ExpectedSupplyDays").attr('aria-invalid');
-	if (valid === "true") {
+	if (valid == "true" || $("#Request_ExpectedSupplyDays").val()=="") {
 		return;
 	}
 	valid = $("#Request_CatalogNumber").attr('aria-invalid');
-	console.log("valid8: " + valid);
-	if (valid==="false") {
-		$("#price-tab").prop("disabled", false);
+	if (valid == "true" || $("#Request_CatalogNumber").val() == "") {
+		return;
 	}
+	console.log("valid8: " + valid);
+	if (valid == "false" || valid == undefined) {
+		$("#price-tab").prop("disabled", false);
+		$("#location-tab").prop("disabled", false);
+		$("#saveEditModal").removeClass("disabled");
+		$("#saveEditModal").prop("disabled", false);
+		$("#order-tab").prop("disabled", false);
+	}
+	return valid;
 }
 
 $("#Request_ParentRequest_InvoiceDate").change(function () {
@@ -1188,18 +1201,34 @@ $("#Request_ParentRequest_InvoiceDate").change(function () {
 });
 $('#myModal').change(
 	function () {
-		$.validator.unobtrusive.parse("#createModalForm");
+		$.validator.unobtrusive.parse("#myForm");
 	});
 
-$('#myModal').change(
-	function () {
-		$.validator.unobtrusive.parse("#editModalForm");
-	});
 
 $("#price-tab").click(function () {
 	console.log("in onclick price tab");
-	$("#createModalForm").valid();
+	$("#myForm").valid();
 	$.fn.validateItemTab();
+});
+
+$("#saveEditModal").click(function () {
+	console.log("in onclick save modal");
+	$("#saveEditModal").addClass("disabled");
+	$("#saveEditModal").prop("disabled", true);
+	$("#myForm").valid();
+	var valid = $.fn.validateItemTab();
+	if (valid == "false" || valid == undefined) {
+		valid = $.fn.validatePriceTab();
+		if (valid == "false" || valid == undefined) {
+			$("#saveEditModal").removeClass("disabled");
+			$("#saveEditModal").prop("disabled", false);
+			return true;
+		}
+	};
+	$("#saveEditModal").removeClass("disabled");
+	$("#saveEditModal").prop("disabled", false);
+	return false;
+
 });
 
 $.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
@@ -1226,72 +1255,111 @@ $.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
 
 $("#price-tab").click(function () {
 	console.log("in onclick price tab");
-	$("#createModalForm").valid();
-	$.fn.validatePriceTab();
-});
+	$("#myForm").valid();
+	$.fn.validateItemTab();
 
-$("#documents-tab").click(function () {
-	console.log("in onclick documents-tab");
-	$("#createModalForm").valid();
-	$.fn.validatePriceTab();
 });
 
 $("#archive-tab").click(function () {
 	console.log("in onclick archive-tab");
-	$("#createModalForm").valid();
+	$("#myForm").valid();
 	$.fn.validatePriceTab();
+
 });
 
 $("#history-tab").click(function () {
 	console.log("in onclick history-tab");
-	$("#createModalForm").valid();
+	$("#myForm").valid();
+	$.fn.validateItemTab();
 	$.fn.validatePriceTab();
+
 });
 
 $("#order-tab").click(function () {
 	console.log("in onclick order-tab");
-	$("#createModalForm").valid();
-	$.fn.validatePriceTab();
+	$("#myForm").valid();
+	var valid = $.fn.validateItemTab();
+	if (valid == "false" || valid == undefined) {
+		$.fn.validatePriceTab();
+	};
+
 });
 
 $("#comments-tab").click(function () {
 	console.log("in onclick comments-tab");
-	$("#createModalForm").valid();
+	$("#myForm").valid();
 	$.fn.validatePriceTab();
 });
 
+$("#location-tab").click(function () {
+	console.log("in onclick location-tab");
+	$("#myForm").valid();
+	$.fn.validateItemTab();
+});
+
+
+$("#Request_Terms").change( function () {
+	console.log("in change Request_Terms");
+	if ($(this).val() == -1) {
+		$(".installments").hide();
+	} else {
+		$(".installments").show();
+	}
+
+});
 
 $.fn.validatePriceTab = function () {
+	//all the true and falses are opposite because fo the ariainvalid is true if invalid
+	$("#item-tab").prop("disabled", true);
 	$("#documents-tab").prop("disabled", true);
 	$("#comments-tab").prop("disabled", true);
 	$("#archive-tab").prop("disabled", true);
 	$("#history-tab").prop("disabled", true);
 	$("#order-tab").prop("disabled", true);
+	valid = $("#Request_Product_ProductName").attr('aria-invalid');
+	console.log("valid: " + valid);
+	if (valid == "true" || $("#Request_Product_ProductName").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
 	valid = $("#Request_Unit").attr('aria-invalid');
 	console.log("valid: " + valid);
-	if (valid == "true" || valid == undefined) {
+	if (valid == "true" || $("#Request_Unit").val() == "") {
 		console.log("valid: " + valid);
 		return;
 	}
 	console.log("valid1: " + valid);
-	valid = $("#Request_UnitType").attr('aria-invalid');
-	$("#sublist").valid();
-	if (valid == "true" || valid == undefined) {
+	valid = $("#Request_UnitTypeID").attr('aria-invalid');
+	if (valid == "true" || $("#Request_UnitTypeID").val() == "") {
 		return;
 	}
 	console.log("valid2: " + valid);
 	valid = $("#Request_ExchangeRate").attr('aria-invalid');
-	if (valid == "true" || valid == undefined) {
+	if (valid == "true" || $("#Request_ExchangeRate").val() == "") {
 		return;
 	}
 	console.log("valid3: " + valid);
 	valid = $("#Request_Cost").attr('aria-invalid');
-	if (valid === "false") {
+	if (valid == "true" || $("#Request_Cost").val() == "") {
+		return;
+	}
+	console.log("final valid: " + valid);
+	if ($("#Request_Terms").val() != -1) {
+		console.log(".paymentType: " + $(".paymentType").val());
+		if ($(".paymentType").val() != "") {
+			valid = "false";
+		} else {
+			valid = "true";
+		}
+	} 
+
+	if (valid == "false" || valid==undefined) {
+		$("#item-tab").prop("disabled", false);
 		$("#documents-tab").prop("disabled", false);
 		$("#comments-tab").prop("disabled", false);
 		$("#archive-tab").prop("disabled", false);
 		$("#history-tab").prop("disabled", false);
 		$("#order-tab").prop("disabled", false);
 	}
-
+	return valid;
 }

@@ -401,7 +401,11 @@
         $("#archive-tab").prop("disabled", true);
         $("#history-tab").prop("disabled", true);
         $("#order-tab").prop("disabled", true);
-
+        $("#location-tab").prop("disabled", true);
+        if ($("#Request_Terms").val() == -1) {
+            $(".installments").hide();
+        }
+   
     }
 
 
@@ -416,5 +420,6 @@
         var item = document.getElementById(id);
         item.classList.add("activeNavLink");
     }
+
 
 </script>
