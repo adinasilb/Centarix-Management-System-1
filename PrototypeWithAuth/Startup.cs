@@ -132,7 +132,6 @@ namespace PrototypeWithAuth
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
-            var newRoleNum = roleNames.Count();
             
             IdentityResult roleResult;
             foreach (var roleName in roleNames)

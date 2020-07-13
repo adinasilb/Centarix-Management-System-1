@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200713044404_seededMenuItemsWithExtra2")]
+    partial class seededMenuItemsWithExtra2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -463,7 +465,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ActionName = "",
                             ControllerName = "",
                             MenuDescription = "Income",
-                            MenuImageURL = "/images/css/main_menu_icons/income.png",
+                            MenuImageURL = "/images/css/main_menu_icons/expenses.png",
                             MenuViewName = "Income"
                         },
                         new

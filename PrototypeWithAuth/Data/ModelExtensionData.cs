@@ -799,7 +799,8 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 5,
-                    MenuDescription = "TimeKeeper",
+                    MenuDescription = AppUtility.MenuItems.TimeKeeper.ToString(),
+                    MenuViewName = "TimeKeeper",
                     ControllerName = "",
                     ActionName = "",
                     MenuImageURL = "/images/css/main_menu_icons/timekeeper.png"
@@ -807,14 +808,15 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 6,
-                    MenuDescription = "Lab Management",
+                    MenuDescription = AppUtility.MenuItems.LabManagement.ToString(),
+                    MenuViewName = "Lab Management",
                     ControllerName = "Vendors",
                     ActionName = "IndexForLabManage",
                     MenuImageURL = "/images/css/main_menu_icons/lab.png"
                 },
                 new Menu
                 {
-                    menuID = 6,
+                    menuID = 7,
                     MenuDescription = AppUtility.MenuItems.Accounting.ToString(),
                     MenuViewName = "Accounting",
                     ControllerName = "ParentRequests",
@@ -823,7 +825,7 @@ namespace PrototypeWithAuth.Data
                 },
                 new Menu
                 {
-                    menuID = 7,
+                    menuID = 8,
                     MenuDescription = AppUtility.MenuItems.Expenses.ToString(),
                     MenuViewName = "Expenses",
                     ControllerName = "ParentRequests",
@@ -832,11 +834,20 @@ namespace PrototypeWithAuth.Data
                 },
                 new Menu
                 {
-                    menuID = 8,
+                    menuID = 9,
+                    MenuDescription = AppUtility.MenuItems.Income.ToString(),
+                    MenuViewName = "Income",
+                    ControllerName = "",
+                    ActionName = "",
+                    MenuImageURL = "/images/css/main_menu_icons/income.png"
+                },
+                new Menu
+                {
+                    menuID = 10,
                     MenuDescription = AppUtility.MenuItems.Users.ToString(),
                     MenuViewName = "Users",
                     ControllerName = "Admin",
-                    ActionName = "RegisterUser",
+                    ActionName = "Index",
                     MenuImageURL = "/images/css/main_menu_icons/users.png"
                 }
             );
