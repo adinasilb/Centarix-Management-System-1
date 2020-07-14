@@ -238,7 +238,13 @@ namespace PrototypeWithAuth.Controllers
                     //FirstName = registerUserViewModel.FirstName,
                     //LastName = registerUserViewModel.LastName,
                     SecureAppPass = registerUserViewModel.SecureAppPass,
-                    UserNum = usernum
+                    UserNum = usernum,
+                    LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
+                    LabUnitLimit = registerUserViewModel.LabUnitLimit,
+                    LabOrderLimit = registerUserViewModel.LabOrderLimit,
+                    OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
+                    OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
+                    OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit
                 };
 
                 var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);

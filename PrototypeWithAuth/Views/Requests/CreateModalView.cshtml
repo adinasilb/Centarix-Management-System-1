@@ -14,7 +14,7 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-<div class="modal modal-view right fader " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view right fader orders-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
@@ -85,11 +85,11 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
+                                            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
                                             new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
                                             "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "parentlist" })
-                                            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="mdb-main-label text-black-50 mb-2" style="font-size: 1.25em;"></label>
-<span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4 px-4">
@@ -97,7 +97,7 @@
                                             <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
                                             new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-                                            "Select Subcategory", new { @class = "form-control-plaintext border-bottom ", @id = "sublist" })
+                                            "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist" })
                                             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -112,7 +112,7 @@
                                                     "ProjectDescription"
                                                     ),
                                                 "Select Project",
-                                                new { @class = "form-control-plaintext border-bottom Project" }
+                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary Project" }
                                             )
                                             <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger"></span>
                                         </div>
@@ -123,7 +123,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            <select asp-for="Request.SubProjectID" class="form-control-plaintext border-bottom SubProject"></select>
+                                            <select asp-for="Request.SubProjectID" class="mdb-select md-form  colorful-select dropdown-primary SubProject"></select>
                                             <span asp-validation-for="Request.SubProjectID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -137,7 +137,7 @@
                                                 dataValueField: "VendorID",
                                                 dataTextField: "VendorEnName"),
                                                 optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                                                htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList" }
+                                                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "vendorList" }
                                                 )
                                             <span asp-validation-for="Request.Product.VendorID" class="text-danger"></span>
                                         </div>
@@ -223,7 +223,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="currency" class="control-label">Currency</label>
-                                            <select id="currency" class="form-control-plaintext border-bottom ">
+                                            <select id="currency" class="mdb-select md-form  colorful-select dropdown-primary">
                                                 <option value="dollar">&dollar; USD</option>
                                                 <option value="shekel">&#8362; NIS</option>
                                             </select>
@@ -232,7 +232,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.ExchangeRate" class="control-label"></label>
-                                            <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " min="1"/>
+                                            <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " min="1" />
                                             <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -254,9 +254,9 @@
                                                             vm => vm.Request.UnitTypeID,
                                                             Model.UnitTypeList,
                                                             "",
-                                                            htmlAttributes: new { @class = "form-control-plaintext border-bottom " }                                     
+                                                            htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
                                                             )
-                                                        
+
                                                         <span asp-validation-for="Request.UnitTypeID" class="text-danger"></span>
                                                     </div>
                                                 </div>
@@ -294,7 +294,7 @@
                                                         vm => vm.Request.SubUnitTypeID,
                                                         Model.UnitTypeList,
                                                         "",
-                                                        htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
+                                                        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
                                                     )
                                                     <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                                 </div>
@@ -332,7 +332,7 @@
                                                     vm => vm.Request.SubSubUnitTypeID,
                                                     Model.UnitTypeList,
                                                     "",
-                                                    htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @disabled = "disabled" }
+                                                    htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
                                                     )
                                                     <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                                 </div>
@@ -420,7 +420,7 @@
                                             @Html.DropDownListFor(
                                                                     model => model.Request.Terms,
                                                                     new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-                                                                    htmlAttributes: new { @class = "form-control-plaintext border-bottom" }
+                                                                    htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
                                                                 )
                                         </div>
                                     </div>
@@ -466,7 +466,7 @@
                                                     dataValueField: "PaymentTypeID",
                                                     dataTextField: "PaymentTypeDescription"),
                                                     optionLabel: "Select A Payment Type ",
-                                                    htmlAttributes: new { @class = "form-control-plaintext border-bottom  paymentType" }
+                                                    htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
                                                             )
                                                             <span asp-validation-for="NewPayments[x].CompanyAccount.PaymentType" class="text-danger"></span>
                                                         </td>

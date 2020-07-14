@@ -68,5 +68,15 @@ namespace PrototypeWithAuth.ViewModels
         public string[] SelectedIncome { get; set; }
         public string[] SelectedTimekeeper { get; set; }
         public string[] SelectedUsers { get; set; }
+
+
+        //Budget
+
+        public double LabMonthlyLimit { get; set; }
+        public double LabUnitLimit { get; set; }
+        public double LabOrderLimit { get; set; }
+        public double OperationMonthlyLimit { get; set; }
+        public double OperationUnitLimit { get; set; }
+        public double OperaitonOrderLimit { get; set; }
     }
 }

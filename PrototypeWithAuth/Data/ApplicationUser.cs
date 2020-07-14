@@ -22,6 +22,12 @@ namespace PrototypeWithAuth.Data
         public IEnumerable<ParentRequest> ParentRequests { get; set;}
         public int UserNum { get; set; }
         public DateTime DateCreated { get; set; }
+        public double LabMonthlyLimit { get; set; }
+        public double LabUnitLimit { get; set; }
+        public double LabOrderLimit { get; set; }
+        public double OperationMonthlyLimit { get; set; }
+        public double OperationUnitLimit { get; set; }
+        public double OperaitonOrderLimit { get; set; }
 
         // public string URLPic { get; set; }
 

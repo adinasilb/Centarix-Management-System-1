@@ -89,8 +89,15 @@ center-horizontally {
 .carousel.vertical .item {
     left: 0;
 }
-/*END ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 
+
+.orders-view .dropdown-content li>a, .dropdown-content li>span {
+    color: #000 !important;
+}
+.orders-view .dropdown-primary .dropdown-content li.active, .dropdown-primary .dropdown-content li a, .dropdown-primary .dropdown-content li span:hover {
+    background-color: rgba(48,188,201, .5) !important;
+}
+/*END ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 a.navbar-brand {
     white-space: normal;
     text-align: center;
@@ -172,6 +179,25 @@ body {
 
 /* <<<<<Dani's added CSS below>>>>> */
 
+.control-label {
+    font-size: 15px;
+    color: #212020;
+    font-weight: normal;
+    margin-bottom: 0px;
+    line-height: 90%;
+}
+
+.form-control-plaintext, .mdb-select {
+    margin-top: 0px;
+    padding-top: 0px;
+    line-height: 90%;
+}
+
+    .form-control-plaintext:focus {
+        outline-width: 0;
+        box-shadow: 0 1px 0 0 black;
+    }
+
 /*Login page buttons*/
 .login-field {
     border: 1.5px solid black;
@@ -248,10 +274,10 @@ body {
     font-weight: 300;
     /*padding: 0.56rem 1.5rem;*/
     /*font-size: 1.125rem;*/
-    /*line-height: 1.5;*/
+    line-height: 1.5;
     text-transform: uppercase;
-    margin: .75em 0;
-    /*padding: 0;*/
+    margin: 1em 0;
+    height: 2.5em;
 }
     .inv-permissions-button input {
         border-bottom: none !important;
@@ -259,7 +285,6 @@ body {
 
     .inv-permissions-button ul.dropdown-content {
         margin-top: 2rem;
-        width: 50%;
     }
 
         .inv-permissions-button ul.dropdown-content li > span,

@@ -159,7 +159,42 @@
                             }*@
                         </div>
                         <div id="budget" class="tab-pane fade">
-                            Budget
+                            <div class="row pb-3"><strong>Lab</strong></div>
+                            <div class="row pb-5">
+                                <div class="col-4">
+                                    <label asp-for="LabMonthlyLimit" class="control-label"></label>
+                                    <input asp-for="LabMonthlyLimit" class="form-control-plaintext border-bottom" />
+                                    <span asp-validation-for="LabMonthlyLimit" class="text-danger"></span>
+                                </div>
+                                <div class="col-4">
+                                    <label asp-for="LabUnitLimit" class="control-label"></label>
+                                    <input asp-for="LabUnitLimit" class="form-control-plaintext border-bottom" />
+                                    <span asp-validation-for="LabUnitLimit" class="text-danger"></span>
+                                </div>
+                                <div class="col-4">
+                                    <label asp-for="LabOrderLimit" class="control-label"></label>
+                                    <input asp-for="LabOrderLimit" class="form-control-plaintext border-bottom" />
+                                    <span asp-validation-for="LabOrderLimit" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row pb-3"><strong>Operation</strong></div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <label asp-for="OperationMonthlyLimit" class="control-label"></label>
+                                    <input asp-for="OperationMonthlyLimit" class="form-control-plaintext border-bottom" />
+                                    <span asp-validation-for="OperationMonthlyLimit" class="text-danger"></span>
+                                </div>
+                                <div class="col-4">
+                                    <label asp-for="OperationUnitLimit" class="control-label"></label>
+                                    <input asp-for="OperationUnitLimit" class="form-control-plaintext border-bottom" />
+                                    <span asp-validation-for="OperationUnitLimit" class="text-danger"></span>
+                                </div>
+                                <div class="col-4">
+                                    <label asp-for="OperaitonOrderLimit" class="control-label"></label>
+                                    <input asp-for="OperaitonOrderLimit" class="form-control-plaintext border-bottom" />
+                                    <span asp-validation-for="OperaitonOrderLimit" class="text-danger"></span>
+                                </div>
+                            </div>
                         </div>
                         <div id="more" class="tab-pane fade">
                             More
