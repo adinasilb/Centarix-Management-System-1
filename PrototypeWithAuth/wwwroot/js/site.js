@@ -1363,3 +1363,6 @@ $.fn.validatePriceTab = function () {
 	}
 	return valid;
 }
+$("#profile-img").click(function () {
+		$("#logout-form").toggle();
+});

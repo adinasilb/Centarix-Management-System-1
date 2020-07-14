@@ -174,21 +174,25 @@ body {
 
 /*Login page buttons*/
 .login-field {
-    border: 1.5px solid black;
     border-radius: 5px;
-    font-size: 1.2em;
+    font-size: 1.5em;
     padding: 1.2em 1em;
+    width: 80%;
+    margin: auto;
 }
 
 .login-button {
     padding: 5px 30px;
-    line-height: 120%;
-    font-size: 90%;
+    line-height: 160%;
+    font-size: 150%;
     text-transform: uppercase;
-    border-radius: 3px;
+    border-radius: 25px;
     font-weight: 600;
     background-color: #db2127;
     color: white;
+    text-transform: capitalize;
+    width: 30%;
+}
 }
 
 /*general buttons*/
@@ -979,4 +983,15 @@ input.bigger-box {
 
 .table-hover > tbody > tr.no-hover:hover {
     background-color: #ffffff;
+}
+
+.logout-div {
+    margin-top: -.55%;
+    position: absolute;
+    right: .05%;
+}
+.logout-button {
+    display: none;
+    background: white;
+    z-index: 500
 }
