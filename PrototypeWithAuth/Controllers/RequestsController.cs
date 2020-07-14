@@ -20,6 +20,7 @@ using MimeKit;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SelectPdf;
+using Microsoft.AspNetCore.Authorization;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
@@ -59,6 +60,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         // GET: Requests
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
@@ -224,6 +226,7 @@ namespace PrototypeWithAuth.Controllers
             return View(onePageOfProducts);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> DeleteModal(int? id)
         {
             if (id == null)
@@ -249,6 +252,7 @@ namespace PrototypeWithAuth.Controllers
         // POST: Vendors/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel)
         {
             var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID)
@@ -280,6 +284,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Requests/Details/5
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -304,6 +309,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * START MODAL VIEW COPY
          */
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> CreateModalView()
         {
             var parentcategories = await _context.ParentCategories.ToListAsync();
@@ -359,6 +365,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> CreateModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //initializing the boolean here
@@ -604,6 +611,7 @@ namespace PrototypeWithAuth.Controllers
             });
         }
 
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> DetailsView(int? id)
         {
             var parentcategories = await _context.ParentCategories.ToListAsync();
@@ -821,6 +829,7 @@ namespace PrototypeWithAuth.Controllers
             return View(requestItemViewModel);
         }
 
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> DetailsModalView(int? id, bool NewRequestFromProduct = false)
         {
             //string ModalViewType = "";
@@ -1078,6 +1087,7 @@ namespace PrototypeWithAuth.Controllers
         //CAN TAKE OUT THIS ENTIRE HTTPPOST FOR THE DETAILS MODAL VIEW B/C ITS NEVER USED
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> DetailsModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //initializing the boolean here
@@ -1210,11 +1220,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> AddToCart(RequestItemViewModel requestItemViewModel)
         {
             return RedirectToAction("Cart");
         }
 
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public ActionResult DownloadPDF(string filename)
         {
             //string filename = orderFileInfo.FullName.ToString();
@@ -1225,6 +1237,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false)
         {
             string ModalViewType = "";
@@ -1488,6 +1501,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //initializing the boolean here
@@ -1751,6 +1765,7 @@ namespace PrototypeWithAuth.Controllers
             });
         }
 
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ReOrderModalView(int? id, bool NewRequestFromProduct = false)
         {
             //if (id == null)
@@ -1841,6 +1856,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ReOrderModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //initializing the boolean here
@@ -1998,6 +2014,7 @@ namespace PrototypeWithAuth.Controllers
          * BEGIN SEND EMAIL
          */
         //this could be used as a static function - for now we only need to convert the purchase order html into a pdf so it is located locally
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         private async Task<string> RenderPartialViewToString(string viewName, object model)
         {
             if (string.IsNullOrEmpty(viewName))
@@ -2027,6 +2044,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
         {
             Request request1 = await _context.Requests.Where(r => r.RequestID == id)
@@ -2083,6 +2101,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)
         {
             string uploadFolder1 = Path.Combine("~", "files");
@@ -2179,6 +2198,7 @@ namespace PrototypeWithAuth.Controllers
          * BEGIN SEARCH
          */
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Search()
         {
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Search;
@@ -2203,6 +2223,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
         {
             int RSRecieved = 0;
@@ -2321,6 +2342,7 @@ namespace PrototypeWithAuth.Controllers
         /*
          * BEGIN CART
          */
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Cart()
         {
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
@@ -2336,6 +2358,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ReceivedModal(int RequestID)
         {
             //foreach(var li in _context.LocationInstances)
@@ -2362,6 +2385,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult ReceivedModalSublocations(int LocationTypeID)
         {
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
@@ -2398,6 +2422,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult ReceivedModalVisual(int LocationInstanceID)
         {
             ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
@@ -2417,6 +2442,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             bool hasLocationInstances = false;
@@ -2526,6 +2552,7 @@ namespace PrototypeWithAuth.Controllers
 
         
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public ActionResult DocumentView(List<String> FileNames)
         {
             return View();

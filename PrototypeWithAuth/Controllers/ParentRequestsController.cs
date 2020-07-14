@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,6 +29,8 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ParentRequests
+        [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, int? page, AppUtility.PaymentPageTypeEnum PageType = AppUtility.PaymentPageTypeEnum.Notifications)
         {
             IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.Vendor);
@@ -129,6 +132,7 @@ namespace PrototypeWithAuth.Controllers
             return View(paymentNotificationsViewModel);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> GeneralPaymentList()
         {
 
@@ -152,6 +156,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> ExpensesList()
         {
             List<MonthlyTotalsViewModel> monthlyTotals = new List<MonthlyTotalsViewModel>();
@@ -196,6 +201,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         // GET: ParentRequests/Details/5
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -217,6 +223,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ParentRequests/Create
+        [Authorize(Roles = "Admin, Accounting")]
         public IActionResult Create()
         {
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
@@ -231,6 +238,7 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Create([Bind("ParentRequestID,ApplicationUserID,OrderDate,OrderNumber,InvoiceNumber,InvoiceDate")] ParentRequest parentRequest)
         {
             if (ModelState.IsValid)
@@ -245,6 +253,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ParentRequests/Edit/5
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -272,6 +281,7 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Edit(int id, [Bind("ParentRequestID,ApplicationUserID,OrderDate,OrderNumber,InvoiceNumber,InvoiceDate")] ParentRequest parentRequest)
         {
             if (id != parentRequest.ParentRequestID)
@@ -304,6 +314,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ParentRequests/Delete/5
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -325,6 +336,7 @@ namespace PrototypeWithAuth.Controllers
         // POST: ParentRequests/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parentRequest = await _context.ParentRequests.FindAsync(id);
@@ -339,6 +351,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Notifications(AppUtility.NotificationsEnum id)
         {
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel();
@@ -509,6 +522,7 @@ namespace PrototypeWithAuth.Controllers
   
         //this is here b/c the ajax call on the payment view is not working and I didn't have time to debug it
         [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
         public IActionResult DetailsModalView(int id)
         {
             return RedirectToAction("DetailsModalView", "Requests", new { id = id });

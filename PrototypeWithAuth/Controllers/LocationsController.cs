@@ -62,6 +62,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult SublocationIndex(int parentId)
         {
             SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
@@ -97,6 +98,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult VisualLocations(int VisualContainerId)
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
@@ -135,6 +137,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult VisualLocationsZoom(int VisualContainerId)
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
@@ -149,7 +152,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, manager")]
+        [Authorize(Roles = "Admin, manager, OrdersAndInventory")]
         public IActionResult AddLocation()
         {
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel
@@ -162,6 +165,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult SubLocation(int ParentLocationTypeID)
         {
             SubLocationViewModel subLocationViewModel = new SubLocationViewModel(); bool go = true;
@@ -197,7 +201,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, manager")]
+        [Authorize(Roles = "Admin, manager, OrdersAndInventory")]
         public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel, SubLocationViewModel subLocationViewModel)
         {
             if (ModelState.IsValid) //make sure this allows for sublocations to be binded
@@ -416,6 +420,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult AddLocationType()
         {
             AddLocationTypeViewModel addLocationTypeViewModel = new AddLocationTypeViewModel
@@ -427,6 +432,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult AddLocationType(AddLocationTypeViewModel addLocationTypeViewModel)
         {
             int foriegnKeyParent = 0; //retain primary key to be a foriegn key for next model

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -19,7 +21,7 @@ namespace PrototypeWithAuth.Controllers
         private SignInManager<ApplicationUser> _signManager;
         private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
-        public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager,RoleManager<IdentityRole> roleManager)
+        public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
@@ -36,7 +38,7 @@ namespace PrototypeWithAuth.Controllers
                 .ToList();
             return View(users);
         }
-      
+
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
         public IActionResult RegisterUser()
@@ -74,7 +76,7 @@ namespace PrototypeWithAuth.Controllers
                     SecureAppPass = registerUserViewModel.SecureAppPass,
                     UserNum = usernum
                 };
-            
+
                 var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
                 if (result.Succeeded)
                 {
@@ -335,6 +337,74 @@ namespace PrototypeWithAuth.Controllers
 
             }
             return RedirectToAction("Index");
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> EditUser(string id)
+        {
+            var registerUserViewModel = _context.Users.Where(u => u.Id == id)
+                .Select(u => new RegisterUserViewModel
+                {
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    //do we want to show the secure app pass??
+                    LabMonthlyLimit = u.LabMonthlyLimit,
+                    LabUnitLimit = u.LabUnitLimit,
+                    LabOrderLimit = u.LabOrderLimit,
+                    OperationMonthlyLimit = u.OperationMonthlyLimit,
+                    OperationUnitLimit = u.OperationUnitLimit,
+                    OperaitonOrderLimit = u.OperaitonOrderLimit
+                }).FirstOrDefault();
+
+            var userToShow = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            var rolesList = await _userManager.GetRolesAsync(userToShow).ConfigureAwait(false);
+            foreach (var role in rolesList)
+            {
+                if (role == AppUtility.MenuItems.OrdersAndInventory.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedOrders[0] = AppUtility.MenuItems.OrdersAndInventory.ToString();
+                }
+                else if (role == AppUtility.MenuItems.Protocols.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedProtocols[0] = AppUtility.MenuItems.Protocols.ToString();
+                }
+                else if (role == AppUtility.MenuItems.LabManagement.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedLabManagement[0] = AppUtility.MenuItems.LabManagement.ToString();
+                }
+                else if (role == AppUtility.MenuItems.Accounting.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedAccounting[0] = AppUtility.MenuItems.Accounting.ToString();
+                }
+                else if (role == AppUtility.MenuItems.Operation.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedOperations[0] = AppUtility.MenuItems.Operation.ToString();
+                }
+                else if (role == AppUtility.MenuItems.Expenses.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedExpenses[0] = AppUtility.MenuItems.Expenses.ToString();
+                }
+                else if (role == AppUtility.MenuItems.Biomarkers.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedBiomarkers[0] = AppUtility.MenuItems.Biomarkers.ToString();
+                }
+                else if (role == AppUtility.MenuItems.Income.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedIncome[0] = AppUtility.MenuItems.Income.ToString();
+                }
+                else if (role == AppUtility.MenuItems.TimeKeeper.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedTimekeeper[0] = AppUtility.MenuItems.TimeKeeper.ToString();
+                }
+                else if (role == AppUtility.MenuItems.Users.ToString()) //this was giving me an error in a switch case
+                {
+                    registerUserViewModel.SelectedUsers[0] = AppUtility.MenuItems.Users.ToString();
+                }
+            }
+
+            return View(registerUserViewModel);
         }
 
         [HttpGet]

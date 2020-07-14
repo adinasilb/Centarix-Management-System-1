@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.AppData;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -21,6 +22,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             TempData["PageType"] = PageType;

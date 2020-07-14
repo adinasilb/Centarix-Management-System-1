@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         // GET: Vendors
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             TempData["PageType"] = PageType;
@@ -33,13 +35,15 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Vendors
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> IndexForPayment()
         {
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
 
             return View(await _context.Vendors.ToListAsync());
-            
+
         }
+        [Authorize(Roles = "Admin, LabManagement")]
         public async Task<IActionResult> IndexForLabManage()
         {
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
@@ -49,6 +53,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Vendors/Details/5
+        [Authorize(Roles = "Admin")] //don't know where this goes to so can't have a role
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -74,6 +79,7 @@ namespace PrototypeWithAuth.Controllers
             return View(vendorDetailsViewModel);
         }
         // GET: Vendors/Details/5
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> DetailsForPayment(int? id) // should not have to repeat this code - but for now just doing things quick
         {
             if (id == null)
@@ -106,6 +112,7 @@ namespace PrototypeWithAuth.Controllers
      
         // GET: Vendors/Search
         [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
         public IActionResult Search()
         {
             VendorSearchViewModel vendorSearchViewModel = new VendorSearchViewModel
@@ -129,6 +136,7 @@ namespace PrototypeWithAuth.Controllers
         // Post: Vendors/Search
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Search(VendorSearchViewModel vendorSearchViewModel)
 
         {
@@ -210,6 +218,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         // GET: Vendors/Create
+        [Authorize(Roles = "Admin, Accounting")]
         public IActionResult Create()
         {
             //tempdata page type for active tab link
@@ -223,6 +232,7 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Create([Bind("VendorID,VendorEnName,VendorHeName,VendorBuisnessID,ContactPerson,ContactEmail,OrderEmail,VendorContactPhone1,VendorContactPhone2,VendorFax,VendorCity,VendorStreet,VendorZip,VendorWebsite,VendorBank,VendorBankBranch,VendorAccountNum,VendorSwift,VendorBIC,VendorGoldAccount")] Vendor vendor)
         {
             if (ModelState.IsValid)
@@ -237,6 +247,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Vendors/Edit/5
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -262,6 +273,7 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Edit(int id, [Bind("VendorID,VendorEnName,VendorHeName,VendorBuisnessID,ContactPerson,ContactEmail,OrderEmail,VendorContactPhone1,VendorContactPhone2,VendorFax,VendorCity,VendorStreet,VendorZip,VendorWebsite,VendorBank,VendorBankBranch,VendorAccountNum,VendorSwift,VendorBIC,VendorGoldAccount")] Vendor vendor)
         {
             if (id != vendor.VendorID)
@@ -293,6 +305,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Vendors/Delete/5
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -313,6 +326,7 @@ namespace PrototypeWithAuth.Controllers
         // POST: Vendors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var vendor = await _context.Vendors.FindAsync(id);
@@ -321,6 +335,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction(nameof(IndexForPayment));
         }
 
+        [Authorize(Roles = "Admin, Accounting")]
         private bool VendorExists(int id)
         {
             return _context.Vendors.Any(e => e.VendorID == id);

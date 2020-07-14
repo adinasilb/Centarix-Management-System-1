@@ -26,29 +26,27 @@
         {
             <tr class="text-center users-tr">
                 <td>
-                    <a href="" class="edit-user-modal" data-string="@user.Id" style="display:block;">
+                    <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
                         @Html.DisplayFor(modelItem => user.UserNum)
                     </a>
                 </td>
                 <td>
-                    <a href="" class="edit-user-modal" data-string="@user.Id" style="display:block;">
+                    <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
                         @Html.DisplayFor(modelItem => user.UserName)
                     </a>
                 </td>
                 <td>
-                    <a href="" class="edit-user-modal" data-string="@user.Id" style="display:block;">
+                    <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
                         @Html.DisplayFor(modelItem => user.Email)
                     </a>
                 </td>
                 <td>
-                    <a href="" class="edit-user-modal" data-string="@user.Id" style="display:block;">
+                    <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
                         @Html.DisplayFor(modelItem => user.DateCreated)
                     </a>
                 </td>
                 <td>
-                    <a href="" class="edit-user-modal" data-string="@user.Id" style="display:block;">
                         <img src="~/images/css/inventory/add-item/other icons/delete_dis.png" />
-                    </a>
                 </td>
             </tr>
         }
