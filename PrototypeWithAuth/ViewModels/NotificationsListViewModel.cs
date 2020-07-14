@@ -10,6 +10,6 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class NotificationsListViewModel
     {
-        public List<ParentRequestListViewModel> ParentRequestList { get; set; }
+        public Dictionary<Vendor, List<ParentRequestListViewModel>> ParentRequestList { get; set; }
     }
 }

@@ -339,196 +339,174 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ToPay()
+        public async Task<IActionResult> Notifications(AppUtility.NotificationsEnum id)
         {
-            TempData["Action"] = "ToPay";
-            //var test = new DateTime(2014, 3, 15, 5, 4, 9) - DateTime.Today;
-            //var begDT = new DateTime();
-            var fullListOfParentRequests = await _context.ParentRequests
-                //.Where(pr => pr.OrderDate!= null && pr.Requests.FirstOrDefault().Terms != null)
-                .Select(pr => new ParentRequestWithPayByDateViewModel
-                {
-                    ParentRequest = pr,
+            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel();
+            Dictionary<Vendor, List<ParentRequestListViewModel>> ParentRequestsFiltered;
+            switch (id)
+            {
+                case AppUtility.NotificationsEnum.ToPay:
+                    TempData["Action"] = "ToPay";
+                    //var test = new DateTime(2014, 3, 15, 5, 4, 9) - DateTime.Today;
+                    //var begDT = new DateTime();
+                    var fullListOfParentRequests = await _context.ParentRequests
+                        //.Where(pr => pr.OrderDate!= null && pr.Requests.FirstOrDefault().Terms != null)
+                        .Select(pr => new ParentRequestWithPayByDateViewModel
+                        {
+                            ParentRequest = pr,
                     //Terms = pr.Requests.FirstOrDefault().Terms,
                     PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
-                })
-                .ToListAsync();
-            var parentRequestIds = fullListOfParentRequests
-                .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate > DateTime.Today || pr.PayByDate == null)
-                /*
-                 * Right now To Pay is all requests with a NULL PayByDate or where the PayByDate is in the future
-                 * 1. should we take out the nulls?
-                 * 2. should we put in if the PayByDate is today?
-                 */
-                .Select(pr => pr.ParentRequest.ParentRequestID).ToList();
-            var ParentRequestsFiltered = _context.ParentRequests
-                .Where(pr => parentRequestIds.Contains(pr.ParentRequestID))
-                .Select(pr => new ParentRequestListViewModel
-                {
-                    ParentRequest = pr,
-                    Request = pr.Requests.FirstOrDefault(),
-                    Product = pr.Requests.FirstOrDefault().Product,
-                    ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                    Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                    ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                    UnitType = pr.Requests.FirstOrDefault().UnitType,
-                    SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                    SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-                })
-                .ToList();
+                        })
+                        .ToListAsync();
+                    var parentRequestIds = fullListOfParentRequests
+                        .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate > DateTime.Today || pr.PayByDate == null)
+                        /*
+                         * Right now To Pay is all requests with a NULL PayByDate or where the PayByDate is in the future
+                         * 1. should we take out the nulls?
+                         * 2. should we put in if the PayByDate is today?
+                         */
+                        .Select(pr => pr.ParentRequest.ParentRequestID).ToList();
+                    ParentRequestsFiltered = _context.ParentRequests
+                        .Where(pr => parentRequestIds.Contains(pr.ParentRequestID))
+                        .Select(pr => new ParentRequestListViewModel
+                        {
+                            ParentRequest = pr,
+                            Request = pr.Requests.FirstOrDefault(),
+                            Product = pr.Requests.FirstOrDefault().Product,
+                            ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+                            Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                            ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                            UnitType = pr.Requests.FirstOrDefault().UnitType,
+                            SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                            SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+                        }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+                               pr => pr.ToList()
+                            );
+                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+                    break;
+                    
+                case AppUtility.NotificationsEnum.NoInvoice:
+                    TempData["Action"] = "NoInvoice";
+                    ParentRequestsFiltered =  _context.ParentRequests
+                        .Where(pr => pr.InvoiceNumber == null)
+                        .Select(pr => new ParentRequestListViewModel
+                        {
+                            ParentRequest = pr,
+                            Request = pr.Requests.FirstOrDefault(),
+                            Product = pr.Requests.FirstOrDefault().Product,
+                            ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+                            Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                            ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                            UnitType = pr.Requests.FirstOrDefault().UnitType,
+                            SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                            SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+                        }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+                               pr => pr.Select(r => r).ToList()
+                            );
+                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+                    break;
 
-            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
-            {
-                ParentRequestList = ParentRequestsFiltered
-            };
-            return View(notificationsListViewModel);
-        }
+                case AppUtility.NotificationsEnum.DidntArrive:
+                    TempData["Action"] = "DidntArrive";
+                    ParentRequestsFiltered = _context.ParentRequests
+                       .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 2)
+                       .Select(pr => new ParentRequestListViewModel
+                       {
+                           ParentRequest = pr,
+                           Request = pr.Requests.FirstOrDefault(),
+                           Product = pr.Requests.FirstOrDefault().Product,
+                           ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+                           Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                           ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                           UnitType = pr.Requests.FirstOrDefault().UnitType,
+                           SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                           SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+                       }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+                               pr => pr.Select(r => r).ToList()
+                            );
+                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+                    break;
 
-        [HttpGet]
-        public async Task<IActionResult> NoInvoice()
-        {
-            TempData["Action"] = "NoInvoice";
-            var parentRequests = await _context.ParentRequests
-                .Where(pr => pr.InvoiceNumber == null)
-                .Select(pr => new ParentRequestListViewModel
-                {
-                    ParentRequest = pr,
-                    Request = pr.Requests.FirstOrDefault(),
-                    Product = pr.Requests.FirstOrDefault().Product,
-                    ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                    Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                    ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                    UnitType = pr.Requests.FirstOrDefault().UnitType,
-                    SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                    SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-                })
-                .ToListAsync();
-            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
-            {
-                ParentRequestList = parentRequests
-            };
-            return View(notificationsListViewModel);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> DidntArrive()
-        {
-            TempData["Action"] = "DidntArrive";
-            var parentRequests = await _context.ParentRequests
-               .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 2)
-               .Select(pr => new ParentRequestListViewModel
-               {
-                   ParentRequest = pr,
-                   Request = pr.Requests.FirstOrDefault(),
-                   Product = pr.Requests.FirstOrDefault().Product,
-                   ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                   Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                   ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                   UnitType = pr.Requests.FirstOrDefault().UnitType,
-                   SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                   SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-               })
-               .ToListAsync();
-            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
-            {
-                ParentRequestList = parentRequests
-            };
-            return View(notificationsListViewModel);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> PayNow()
-        {
-            TempData["Action"] = "PayNow";
-            var fullListOfParentRequests = await _context.ParentRequests
-               //.Where(pr => pr.OrderDate!= null && pr.Requests.FirstOrDefault().Terms != null)
-               .Select(pr => new ParentRequestWithPayByDateViewModel
-               {
-                   ParentRequest = pr,
+                case AppUtility.NotificationsEnum.PayNow:
+                    TempData["Action"] = "PayNow";
+                    var fullListOfParentRequestsDidNotArrive =  await _context.ParentRequests
+                       //.Where(pr => pr.OrderDate!= null && pr.Requests.FirstOrDefault().Terms != null)
+                       .Select(pr => new ParentRequestWithPayByDateViewModel
+                       {
+                           ParentRequest = pr,
                    //Terms = pr.Requests.FirstOrDefault().Terms,
                    PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
-               })
-               .ToListAsync();
-            var parentRequestIds = fullListOfParentRequests
-                .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate == DateTime.Today)
-                /*
-                 * Right now PAY NOW is taking all requests that are due today. Should it be tomorrow also or sometime this week?
-                 */
-                .Select(pr => pr.ParentRequest.ParentRequestID).ToList();
-            var ParentRequestsFiltered = _context.ParentRequests
-                .Where(pr => parentRequestIds.Contains(pr.ParentRequestID))
-                .Select(pr => new ParentRequestListViewModel
-                {
-                    ParentRequest = pr,
-                    Request = pr.Requests.FirstOrDefault(),
-                    Product = pr.Requests.FirstOrDefault().Product,
-                    ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                    Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                    ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                    UnitType = pr.Requests.FirstOrDefault().UnitType,
-                    SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                    SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-                })
-                .ToList();
-            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
-            {
-                ParentRequestList = ParentRequestsFiltered
-            };
+                       })
+                       .ToListAsync();
+                    var parentRequestIdsDidNotArrive = fullListOfParentRequestsDidNotArrive
+                        .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate == DateTime.Today)
+                        /*
+                         * Right now PAY NOW is taking all requests that are due today. Should it be tomorrow also or sometime this week?
+                         */
+                        .Select(pr => pr.ParentRequest.ParentRequestID).ToList();
+                    ParentRequestsFiltered = _context.ParentRequests
+                        .Where(pr => parentRequestIdsDidNotArrive.Contains(pr.ParentRequestID))
+                        .Select(pr => new ParentRequestListViewModel
+                        {
+                            ParentRequest = pr,
+                            Request = pr.Requests.FirstOrDefault(),
+                            Product = pr.Requests.FirstOrDefault().Product,
+                            ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+                            Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                            ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                            UnitType = pr.Requests.FirstOrDefault().UnitType,
+                            SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                            SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+                        }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+                               pr => pr.Select(r => r).ToList()
+                            );
+                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+                    break;
+                case AppUtility.NotificationsEnum.PartialDelivery:
+                    TempData["Action"] = "PartialDelivery";
+                    ParentRequestsFiltered = _context.ParentRequests
+                       .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 4)
+                       .Select(pr => new ParentRequestListViewModel
+                       {
+                           ParentRequest = pr,
+                           Request = pr.Requests.FirstOrDefault(),
+                           Product = pr.Requests.FirstOrDefault().Product,
+                           ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+                           Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                           ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                           UnitType = pr.Requests.FirstOrDefault().UnitType,
+                           SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                           SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+                       }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+                               pr => pr.Select(r => r).ToList()
+                            );
+                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+                    break;
+                case AppUtility.NotificationsEnum.ForClarification:
+                    TempData["Action"] = "ForClarification";
+                    ParentRequestsFiltered = _context.ParentRequests
+                       .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 5)
+                       .Select(pr => new ParentRequestListViewModel
+                       {
+                           ParentRequest = pr,
+                           Request = pr.Requests.FirstOrDefault(),
+                           Product = pr.Requests.FirstOrDefault().Product,
+                           ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+                           Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                           ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                           UnitType = pr.Requests.FirstOrDefault().UnitType,
+                           SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                           SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+                       }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+                               pr => pr.Select(r => r).ToList()
+                            );
+                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+                    break;
+            }
             return View(notificationsListViewModel);
-        }
 
-        [HttpGet]
-        public async Task<IActionResult> PartialDelivery()
-        {
-            TempData["Action"] = "PartialDelivery";
-            var parentRequests = await _context.ParentRequests
-               .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 4)
-               .Select(pr => new ParentRequestListViewModel
-               {
-                   ParentRequest = pr,
-                   Request = pr.Requests.FirstOrDefault(),
-                   Product = pr.Requests.FirstOrDefault().Product,
-                   ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                   Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                   ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                   UnitType = pr.Requests.FirstOrDefault().UnitType,
-                   SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                   SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-               })
-               .ToListAsync();
-            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
-            {
-                ParentRequestList = parentRequests
-            };
-            return View(notificationsListViewModel);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> ForClarification()
-        {
-            TempData["Action"] = "ForClarification";
-            var parentRequests = await _context.ParentRequests
-               .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 5)
-               .Select(pr => new ParentRequestListViewModel
-               {
-                   ParentRequest = pr,
-                   Request = pr.Requests.FirstOrDefault(),
-                   Product = pr.Requests.FirstOrDefault().Product,
-                   ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                   Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                   ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                   UnitType = pr.Requests.FirstOrDefault().UnitType,
-                   SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                   SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-               })
-               .ToListAsync();
-            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel()
-            {
-                ParentRequestList = parentRequests
-            };
-            return View(notificationsListViewModel);
-        }
-
+  
         //this is here b/c the ajax call on the payment view is not working and I didn't have time to debug it
         [HttpGet]
         public IActionResult DetailsModalView(int id)

@@ -25,7 +25,7 @@ body {
 }
 
 .category-image {
-    border: .5px solid rgba(0, 0, 0, .6);
+    border: .5px solid rgba(0, 0, 0, .54);
     border-radius: 8px;
 }
 
@@ -379,15 +379,28 @@ body {
 .inv-link-clr {
     color: black;
     box-shadow: none;
+    font-size: 1rem;
+    font-weight:300;
 }
 
     .inv-link-clr:hover {
         font-weight: bold;
         color: #30BCC9;
         text-decoration: none;
+   
     }
 
-.acc-link-clr {
+table td {
+    font-size: 1rem;
+ 
+}
+
+table th {
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+    .acc-link-clr {
     color: black;
 }
 
@@ -482,6 +495,13 @@ ul li.acc-sidebar.active {
     filter: invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);
 }
 
+.acc-sidebar a{
+    font-size: 1rem;
+}
+.acc-sidebar {
+    max-width: 80%;
+}
+
 .usersview .ourNavBar li.nav-item a.active {
     opacity: 1;
     filter: invert(67%) sepia(32%) saturate(3488%) hue-rotate(294deg) brightness(89%) contrast(91%);
@@ -520,7 +540,7 @@ a.owner-link {
 /*<<<<< table body css >>>>>*/
 table.table.table-noheaderlines th {
     border-width: 0;
-    font-weight: normal;
+ 
 }
 
 table.table.table-headerspaced tbody:before {

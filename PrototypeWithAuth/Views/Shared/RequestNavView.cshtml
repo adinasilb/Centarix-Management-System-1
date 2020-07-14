@@ -84,8 +84,8 @@
 
 
 <div style="display: flex">
-    <div style="min-width: 100px; min-height:100rem; padding: 5px;" class="navbar d-md-block sidebar-shadow navbar-light bg-white text-center ourNavBar ">
-        @*<nav class="navbar flex-grow-1">*@
+    <div style="min-width: 100px; min-height:100rem; padding: 5px;" class="navbar d-md-block sidebar-shadow   navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
+        @*<nav class="navbar navbar-expand-lg">*@
         <ul class="nav flex-column nav-pills nav-stacked mt-4" style="position:fixed;">
 
             @if (Requests || Inventory)
@@ -408,7 +408,7 @@
         if ($("#Request_Terms").val() == -1) {
             $(".installments").hide();
         }
-   
+
     }
 
 
