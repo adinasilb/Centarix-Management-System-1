@@ -30,6 +30,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize (Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> IndexForInventory()
         {
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Inventory;
@@ -46,6 +47,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult Index()
         {
 
@@ -120,6 +122,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(visualLocationsViewModel);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult LocationIndex (int typeID )
         {
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()

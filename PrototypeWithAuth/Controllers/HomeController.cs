@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -34,6 +35,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         //Adina added in
+        [Authorize (Roles ="Admin")]
         public IActionResult IndexAdmin()
         {
             IEnumerable<Menu> menu = _context.Menus.Select(x => x);

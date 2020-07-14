@@ -28,6 +28,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
         public IActionResult Index()
         {
             TempData["PageType"] = AppUtility.UserPageTypeEnum.Index;
@@ -37,6 +38,7 @@ namespace PrototypeWithAuth.Controllers
         }
       
         [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
         public IActionResult RegisterUser()
 
         {
@@ -52,6 +54,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> RegisterUser(RegisterUserViewModel registerUserViewModel)
         {
 
@@ -91,6 +94,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
         public IActionResult CreateUserModal()
         {
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
@@ -98,6 +102,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> CreateUserModal(RegisterUserViewModel registerUserViewModel)
         {
             var usernum = 1;
@@ -207,6 +212,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
         public IActionResult CreateUser()
         {
             TempData["PageType"] = AppUtility.UserPageTypeEnum.Add;
@@ -215,6 +221,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> CreateUser(RegisterUserViewModel registerUserViewModel)
         {
             var usernum = 1;
@@ -325,6 +332,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
         public IActionResult EditUserModal(string id)
         {
             UserItemViewModel userItemViewModel = new UserItemViewModel();
@@ -332,7 +340,8 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(userItemViewModel);
         }
 
-        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
         public IActionResult GetHomeView()
         {
             //Adina's code: should not go to IndexAdmin otherwise if not Admin will say denied Index will take them to IndexAdmin if they're an admin

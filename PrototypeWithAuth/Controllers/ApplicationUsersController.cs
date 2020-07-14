@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
+using Microsoft.AspNetCore.Authorization;
 using PrototypeWithAuth.Models;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,6 +22,9 @@ namespace PrototypeWithAuth.Controllers
             _context = context;
         }
         // GET: /<controller>/
+        [HttpGet]
+
+        [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             TempData["PageType"] = PageType;
