@@ -179,18 +179,35 @@ body {
 
 /* <<<<<Dani's added CSS below>>>>> */
 
+.btn.load-order-details {
+    box-shadow: none !important;
+}
+
+.locations-page .btn {
+    box-shadow: none !important;
+    padding: .2em .6em;
+}
+    .locations-page .btn.load-location-index-view:hover,
+    .locations-page .btn.load-location-index-view:focus,
+    .locations-page .btn.load-location-index-view:active {
+        box-shadow: none !important;
+        border-bottom: 2px solid rgba(0, 0, 0, .54);
+    }
+
+
 .control-label {
     font-size: 15px;
     color: #212020;
     font-weight: normal;
-    margin-bottom: 0px;
-    line-height: 90%;
+    /*margin-bottom: 0px;*/
+    line-height: 100%;
 }
 
 .form-control-plaintext, .mdb-select {
     margin-top: 0px;
     padding-top: 0px;
-    line-height: 90%;
+    line-height: 100%;
+    margin-bottom: 1rem;
 }
 
     .form-control-plaintext:focus {

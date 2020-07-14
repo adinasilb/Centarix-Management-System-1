@@ -14,7 +14,7 @@
     ViewData["Title"] = "CreateUser";
     Layout = "~/Views/Shared/UsersView.cshtml";
 }
-<div class="card col-6 offset-3" style="width:850px;">
+<div class="card col-8 offset-2" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
     <div class="card-body">
         <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
@@ -26,7 +26,7 @@
                         <h2 class="mt-1">New User</h2>
                     </div>
                     <div class="col-4">
-                        <input type="submit" asp-action="CreateUserModal" class="inv-user-button mt-1" style="float: right;" />
+                        <input type="submit" value="ADD USER" asp-action="CreateUserModal" class="inv-user-button mt-1" style="float: right;" />
                     </div>
                 </div>
                 <div class="row">

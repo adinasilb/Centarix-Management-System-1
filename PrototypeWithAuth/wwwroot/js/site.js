@@ -1051,6 +1051,7 @@ $(".documents-tab").click(function () {
 			success: function (result) {
 				$(".VisualBoxColumn").hide();
 				$(".colTwoSublocations").hide();
+				$("#loading3").hide();
 				myDiv.show();
 				this.html(result);
 
@@ -1108,6 +1109,7 @@ $(".documents-tab").click(function () {
 			success: function (result) {
 				visualDiv.show();
 				this.html(result);
+				$("#loading2").hide();
 			}
 		});
 };

@@ -3,29 +3,29 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/ManageLocationView.cshtml";
 }
+<div class="locations-page">
+    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
+    @if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
+    {
+        <div class="row mt-4">
+            <div class="col-2 offset-1">
+                <button class="inv-button load-add-location" data-target="item" data-backdrop="static" data-keyboard="false" href="item">
+                    ADD LOCATION
+                </button>
+            </div>
 
-@*<script src="~/js/site.js" asp-append-version="true"></script>*@
-@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
-{
-    <div class="row mt-4">
-        <div class="col-2 offset-1">
-            <button class="inv-button load-add-location" data-target="item" data-backdrop="static" data-keyboard="false" href="item">
-                ADD LOCATION
-            </button>
         </div>
-
-    </div>
-}
-<br />
+    }
+    <br />
     <div class="row ml-5">
-        
+
         @foreach (var type in Model.LocationTypes)
         {
             <ul class="list-inline ">
-                <li class="list-inline-item mr-3" ><button class="opac87 btn load-location-index-view clicked-button " value=@type.LocationTypeID>@type.LocationTypeName</button></li>
+                <li class="list-inline-item mr-3"><button class="opac87 btn load-location-index-view clicked-button " value=@type.LocationTypeID>@type.LocationTypeName</button></li>
             </ul>
         }
-           
+
     </div>
 
 
@@ -34,11 +34,12 @@
 
         </div>
         <div class="row  sublocation-background  colTwoSublocations text-center pl-0">
-          
+
         </div>
-        
+
         <div class="col-md-6 VisualBoxColumn">
 
         </div>
     </div>
 
+</div>

@@ -6,8 +6,12 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 @if (!Model.IsSmallestChild)
 {
-    <div class="spinner-border center" role="status" id="loading1" style="display:none;">
-        <span class="sr-only">Loading...</span>
+    @*<div class="spinner-border center" role="status" id="loading1" style="display:none;">
+            <span class="sr-only">Loading...</span>
+        </div>*@
+
+    <div class="center" role="status" id="loading2" style="display:none;">
+        <img src="~/images/css/Loading/centarix_loading3.gif" />
     </div>
 
     <div class="col ">
