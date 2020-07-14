@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "To Pay - Notifications";
-    Layout = "~/Views/Shared/NotificationsView.cshtml";
+    Layout = "~/Views/Shared/PaymentsView.cshtml";
 }
 
 
@@ -11,7 +11,7 @@
         <tr style="border-color:transparent;">
             <th colspan="8" style="border-color:transparent;">
                 <h5>
-                    <strong>To Pay</strong> [@Model.ParentRequestList.Values.SelectMany(pr => pr).ToList().Count]
+                    <strong>Monthly Payment</strong>[@Model.ParentRequestList.Values.SelectMany(pr => pr).ToList().Count]
                     @{
                         var TotalCost = Model.ParentRequestList.Values.SelectMany(pr => pr).Sum(pr => pr.Request.Cost);
                         var decCost = (decimal)TotalCost;
@@ -53,7 +53,7 @@
 @foreach (var item in Model.ParentRequestList)
 {
 
-    <div class=" row text-dark pt-5" >
+    <div class=" row text-dark pt-5">
         <div class="col-2"><h5>@item.Key.VendorEnName</h5></div>
         <div class="col-10"><hr /></div>
     </div>

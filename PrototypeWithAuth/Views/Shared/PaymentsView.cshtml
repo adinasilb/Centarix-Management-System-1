@@ -1,0 +1,41 @@
+﻿@{
+    Layout = "~/Views/Shared/PaymentView.cshtml";
+
+    var allClasses = "nav-item my-4 acc-sidebar";
+    var activeClass = " active";
+    var toPayClass = allClasses;
+    var payNowClass = allClasses;
+
+    if (TempData["Action"] != null)
+    {
+        var PageType = TempData["Action"].ToString();
+        switch (PageType)
+        {
+            case "ToPay":
+                toPayClass += activeClass;
+                break;
+            case "PayNow":
+                payNowClass += activeClass;
+                break;
+
+        }
+    }
+
+}
+<div style="display: flex;">
+
+    <div style="min-width: 110px; min-height:100rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
+        <ul style="position:fixed;" class="nav flex-column nav-pills nav-stacked mb-lg-3">
+            <li class="@toPayClass">
+                <a href="@Url.Action("Payments", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.PaymentsEnum.ToPay })" class="bold-hover-effects"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br />Monthly Payment</a>
+            </li>
+
+            <li class="@payNowClass">
+                <a href="@Url.Action("Payments", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.PaymentsEnum.PayNow })" class="bold-hover-effects"> <i class="icon-payment-24px" style="font-size:1.6rem;"></i><br /> Pay Now <br /></a>
+            </li>
+        </ul>
+    </div>
+    <div style="flex-grow: 1; position:relative; padding: 2rem;">
+        @RenderBody()
+    </div>
+</div>

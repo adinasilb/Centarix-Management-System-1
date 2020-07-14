@@ -396,7 +396,6 @@ table td {
 
 table th {
     font-size: 1rem;
-    font-weight: 300;
 }
 
     .acc-link-clr {
@@ -967,4 +966,17 @@ input.bigger-box {
 
 .location-index-container {
     margin-right: 14.1px;
+}
+
+.notification-line {
+    MAX-WIDTH: 99%;
+    */ display: inline-block;
+    float: left;
+    width: 9%;
+    MARGIN-LEFT: 1.4%;
+    WIDTH: 96%;
+}
+
+.table-hover > tbody > tr.no-hover:hover {
+    background-color: #ffffff;
 }
