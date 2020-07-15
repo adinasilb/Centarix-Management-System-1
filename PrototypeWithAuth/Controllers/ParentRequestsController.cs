@@ -350,6 +350,7 @@ namespace PrototypeWithAuth.Controllers
             return _context.ParentRequests.Any(e => e.ParentRequestID == id);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Payments(AppUtility.PaymentsEnum id)
         {
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Payments;
@@ -437,6 +438,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Notifications(AppUtility.NotificationsEnum id)
         {
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
