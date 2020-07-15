@@ -820,7 +820,7 @@ namespace PrototypeWithAuth.Data
                     MenuDescription = AppUtility.MenuItems.Accounting.ToString(),
                     MenuViewName = "Accounting",
                     ControllerName = "ParentRequests",
-                    ActionName = "Notifications",
+                    ActionName = "Payments",
                     MenuImageURL = "/images/css/main_menu_icons/accounting.png"
                 },
                 new Menu

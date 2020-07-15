@@ -349,16 +349,15 @@ namespace PrototypeWithAuth.Controllers
         {
             return _context.ParentRequests.Any(e => e.ParentRequestID == id);
         }
-
         [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> Notifications(AppUtility.NotificationsEnum id)
+        public async Task<IActionResult> Payments(AppUtility.PaymentsEnum id)
         {
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Payments;
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel();
             Dictionary<Vendor, List<ParentRequestListViewModel>> ParentRequestsFiltered;
             switch (id)
             {
-                case AppUtility.NotificationsEnum.ToPay:
+                case AppUtility.PaymentsEnum.ToPay:
                     TempData["Action"] = "ToPay";
                     //var test = new DateTime(2014, 3, 15, 5, 4, 9) - DateTime.Today;
                     //var begDT = new DateTime();
@@ -367,8 +366,8 @@ namespace PrototypeWithAuth.Controllers
                         .Select(pr => new ParentRequestWithPayByDateViewModel
                         {
                             ParentRequest = pr,
-                    //Terms = pr.Requests.FirstOrDefault().Terms,
-                    PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
+                            //Terms = pr.Requests.FirstOrDefault().Terms,
+                            PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
                         })
                         .ToListAsync();
                     var parentRequestIds = fullListOfParentRequests
@@ -397,7 +396,54 @@ namespace PrototypeWithAuth.Controllers
                             );
                     notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
                     break;
-                    
+
+                case AppUtility.PaymentsEnum.PayNow:
+                    TempData["Action"] = "PayNow";
+                    var fullListOfParentRequestsDidNotArrive = await _context.ParentRequests
+                       //.Where(pr => pr.OrderDate!= null && pr.Requests.FirstOrDefault().Terms != null)
+                       .Select(pr => new ParentRequestWithPayByDateViewModel
+                       {
+                           ParentRequest = pr,
+                           //Terms = pr.Requests.FirstOrDefault().Terms,
+                           PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
+                       })
+                       .ToListAsync();
+                    var parentRequestIdsDidNotArrive = fullListOfParentRequestsDidNotArrive
+                        .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate == DateTime.Today)
+                        /*
+                         * Right now PAY NOW is taking all requests that are due today. Should it be tomorrow also or sometime this week?
+                         */
+                        .Select(pr => pr.ParentRequest.ParentRequestID).ToList();
+                    ParentRequestsFiltered = _context.ParentRequests
+                        .Where(pr => parentRequestIdsDidNotArrive.Contains(pr.ParentRequestID))
+                        .Select(pr => new ParentRequestListViewModel
+                        {
+                            ParentRequest = pr,
+                            Request = pr.Requests.FirstOrDefault(),
+                            Product = pr.Requests.FirstOrDefault().Product,
+                            ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+                            Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+                            ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+                            UnitType = pr.Requests.FirstOrDefault().UnitType,
+                            SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+                            SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+                        }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+                               pr => pr.Select(r => r).ToList()
+                            );
+                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+                    break;
+            }
+            return View(notificationsListViewModel);
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> Notifications(AppUtility.NotificationsEnum id)
+        {
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
+            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel();
+            Dictionary<Vendor, List<ParentRequestListViewModel>> ParentRequestsFiltered;
+            switch (id)
+            {            
                 case AppUtility.NotificationsEnum.NoInvoice:
                     TempData["Action"] = "NoInvoice";
                     ParentRequestsFiltered =  _context.ParentRequests
@@ -439,42 +485,7 @@ namespace PrototypeWithAuth.Controllers
                             );
                     notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
                     break;
-
-                case AppUtility.NotificationsEnum.PayNow:
-                    TempData["Action"] = "PayNow";
-                    var fullListOfParentRequestsDidNotArrive =  await _context.ParentRequests
-                       //.Where(pr => pr.OrderDate!= null && pr.Requests.FirstOrDefault().Terms != null)
-                       .Select(pr => new ParentRequestWithPayByDateViewModel
-                       {
-                           ParentRequest = pr,
-                   //Terms = pr.Requests.FirstOrDefault().Terms,
-                   PayByDate = (DateTime?)pr.OrderDate.AddDays((double)pr.Requests.FirstOrDefault().Terms)
-                       })
-                       .ToListAsync();
-                    var parentRequestIdsDidNotArrive = fullListOfParentRequestsDidNotArrive
-                        .Where(pr => /*pr.DateToBePaid != null &&*/ pr.PayByDate == DateTime.Today)
-                        /*
-                         * Right now PAY NOW is taking all requests that are due today. Should it be tomorrow also or sometime this week?
-                         */
-                        .Select(pr => pr.ParentRequest.ParentRequestID).ToList();
-                    ParentRequestsFiltered = _context.ParentRequests
-                        .Where(pr => parentRequestIdsDidNotArrive.Contains(pr.ParentRequestID))
-                        .Select(pr => new ParentRequestListViewModel
-                        {
-                            ParentRequest = pr,
-                            Request = pr.Requests.FirstOrDefault(),
-                            Product = pr.Requests.FirstOrDefault().Product,
-                            ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                            Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                            ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                            UnitType = pr.Requests.FirstOrDefault().UnitType,
-                            SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                            SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-                        }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
-                               pr => pr.Select(r => r).ToList()
-                            );
-                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
-                    break;
+               
                 case AppUtility.NotificationsEnum.PartialDelivery:
                     TempData["Action"] = "PartialDelivery";
                     ParentRequestsFiltered = _context.ParentRequests
@@ -519,6 +530,8 @@ namespace PrototypeWithAuth.Controllers
             return View(notificationsListViewModel);
 
         }
+
+
   
         //this is here b/c the ajax call on the payment view is not working and I didn't have time to debug it
         [HttpGet]

@@ -42,17 +42,12 @@
 
     <div style="min-width: 110px; min-height:100rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
         <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3">
-            <li class="@toPayClass">
-                <a href="@Url.Action("Notifications", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.NotificationsEnum.ToPay })" class="bold-hover-effects"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br /> To Pay <br /></a>
-            </li>
+          
             <li class="@noInvoiceClass">
                 <a href="@Url.Action("Notifications", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.NotificationsEnum.NoInvoice })" class="bold-hover-effects"> <i class="icon-cancel_presentation-24px" style="font-size:1.6rem;"></i><br /> No Invoice <br /></a>
             </li>
             <li class="@didntArriveClass">
                 <a href="@Url.Action("Notifications", "ParentRequests", new { id = PrototypeWithAuth.AppData.AppUtility.NotificationsEnum.DidntArrive })" class="bold-hover-effects"> <i class="icon-local_shipping-24px" style="font-size:1.6rem;"></i><br /> Didn't Arrive <br /></a>
-            </li>
-            <li class="@payNowClass">
-                <a href="@Url.Action("Notifications", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.NotificationsEnum.PayNow })" class="bold-hover-effects"> <i class="icon-payment-24px" style="font-size:1.6rem;"></i><br /> Pay Now <br /></a>
             </li>
             <li class="@partialDeliveryClass">
                 <a href="@Url.Action("Notifications", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.NotificationsEnum.PartialDelivery })" class="bold-hover-effects"> <i class="icon-remove_shopping_cart-24px" style="font-size:1.6rem;"></i><br /> Partial Delivery <br /> </a>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200714085050_AccountingActionNamePayments")]
+    partial class AccountingActionNamePayments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,15 +181,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("LabMonthlyLimit")
-                        .HasColumnType("float");
-
-                    b.Property<double>("LabOrderLimit")
-                        .HasColumnType("float");
-
-                    b.Property<double>("LabUnitLimit")
-                        .HasColumnType("float");
-
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -204,15 +197,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
-
-                    b.Property<double>("OperaitonOrderLimit")
-                        .HasColumnType("float");
-
-                    b.Property<double>("OperationMonthlyLimit")
-                        .HasColumnType("float");
-
-                    b.Property<double>("OperationUnitLimit")
-                        .HasColumnType("float");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
