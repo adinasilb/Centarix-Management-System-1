@@ -21,8 +21,8 @@
     }
 
     //passing the
-    string initalClasses = "opac87";
-    string currentClasses = " activeNavLink";
+    string initalClasses = "opac87 align-text-bottom";
+    string currentClasses = " activeNavLink  ";
     string inventoryClass = initalClasses;
     string requestClass = initalClasses;
     string cartClass = initalClasses;
@@ -107,45 +107,38 @@
         <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
         <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 </head>
-<body>
+<body style="display:none">
     @*<<<<< Inventory/Requests Header >>>>>*@
     <header class="sticky-top">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar">
-            <div class="container-fluid justify-content-start float-left d-inline-block pl-0" style="width:auto">
-                <a style="padding-left:0.85rem;" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
-            </div>
-            <div class="container-fluid">
-                <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500">
-                    <li class="nav-item mx-4">
-                        @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @role = "button", @id = "inventory-link" })
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
+
+            <a class="navbar-brand" style="padding-left:0.85rem;" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
+
+            <div class="collapse navbar-collapse" >
+                <ul class="navbar-nav dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; " >
+                    <li class="nav-item mx-4 d-table ">
+                        @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass,  @id = "inventory-link" })
                     </li>
                     <li class="nav-item mx-5">
-                        @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @role = "button", @id = "request-link" })
+                        @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass,   @id = "request-link"})
                     </li>
                     <li class="nav-item mx-5">
-                        @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
+                        @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass,  @id = "request-link" /*why is the role and id here?*/ })
                     </li>
                     <li class="nav-item mx-5">
                         @*Redo the location class in the controller*@
-                        @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = locationClass, @role = "button", @id = "request-link" })
+                        @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = locationClass,  @id = "request-link" })
                     </li>
                     <li class="nav-item mx-5">
-                        @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @role = "button", @id = "request-link" /*why is the role and id here?*/ })
+                        @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "request-link" /*why is the role and id here?*/ })
                     </li>
                 </ul>
             </div>
-            <div class="container-fluid justify-content-end">
-                <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
-                    <ul class="nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
-                        </li>
-                        <li class="nav-item">
-                            <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
-                        </li>
-
-                    </ul>
-
+            <div class="form-inline">
+                <div class="md-form my-0">
+                    <a href="#" class="text-dark" > @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
+                   
+                   <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
                 </div>
             </div>
 
@@ -331,6 +324,10 @@
 
 <script>
     $(document).ready(function () {
+        $('body').hide();
+        $(window).on('load', function () {
+            $('body').show();
+        });
         $('#dtBasicExample').DataTable();
         $('.dataTables_length').addClass('bs-select');
         console.log("before mdb select 1");

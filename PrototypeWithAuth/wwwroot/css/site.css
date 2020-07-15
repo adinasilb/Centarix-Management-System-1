@@ -8,6 +8,7 @@ for details on configuring this project to bundle and minify static web assets. 
 
 
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
+
 body {
     min-height: 100% !important;
 }
@@ -1036,4 +1037,8 @@ input.bigger-box {
     display: none;
     background: white;
     z-index: 500
+}
+
+body {
+    display: block !important
 }
