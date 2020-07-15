@@ -289,7 +289,26 @@
         $('.mdb-select').materialSelect();
         $('.mdb-select li:first-child').hide();
         $('.mdb-select li:nth-child(2)').hide();
+
+
+
+
+        //console.log("in create user doc ready");
+        //$(".orders-real").hide();
+
     });
+
+    //$(".orders-div input").on("click", function (e) {
+    //    console.log("orders div was clicked");
+    //    var event;
+    //    event = document.createEvent('MouseEvents');
+    //    event.initMouseEvent('mousedown', true, true, window);
+    //    $(".orders-real").dispatchEvent(event);
+    //});
+
+
+
+
     $(".create-user-modal").on("click", function (e) {
         $("li a").removeClass("active");
         $(".create-user-modal").addClass("active");

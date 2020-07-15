@@ -9,7 +9,7 @@
     <div style="width: 110px; min-height:100rem" class="sidebar-shadow text-center p-3">
         <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3">
             <li class="nav-item my-4">
-                <a href="#" class="expenses-color">
+                <a href="#" class="expenses-color-module">
                     <i class="icon-monetization_on-24px" style="font-size:2rem;"></i><br />
                     Summary
                 </a>
@@ -21,7 +21,7 @@
                 </a>
             </li>
             <li class="nav-item my-4 ">
-                <a href="#" class="font-weight-bold expenses-color">
+                <a href="#" class="font-weight-bold expenses-color-module">
                     <i class="icon-table_chart-24px-1" style="font-size:1.5rem;"></i><br />
                     Tables
                 </a>
@@ -94,7 +94,7 @@
                         <td>
                             @String.Format("{0:C}", Convert.ToInt32(item.OperationsTotal))
                         </td>
-                        <td style="font-weight:700" class="expenses-color">
+                        <td style="font-weight:700" class="expenses-color-module">
                             @String.Format("{0:C}", Convert.ToInt32(item.GrandTotal))
                         </td>
 

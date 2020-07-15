@@ -464,6 +464,10 @@ table th {
     opacity: 0.54;
 }
 
+.navbar .user-nav-linkl li {
+    pointer-events: none !important;
+}
+
 .opac87 {
     color: black;
     opacity: 0.87;
@@ -475,12 +479,12 @@ table th {
         text-decoration: none;
     }
 
-.expenses-color {
+.expenses-color-module {
     color: #E27933;
     opacity: 0.87;
 }
 
-    .expenses-color:hover {
+    .expenses-color-module:hover {
         color: #E27933;
         opacity: 1;
         text-decoration: none;

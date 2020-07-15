@@ -7,8 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -58,15 +57,25 @@ namespace PrototypeWithAuth.ViewModels
 
 
         //Permissions
+        public SelectList OrdersList { get; set; }
         public string[] SelectedOrders { get; set; }
+        public SelectList ProtocolsList { get; set; }
         public string[] SelectedProtocols { get; set; }
+        public SelectList LabManagementList { get; set; }
         public string[] SelectedLabManagement { get; set; }
+        public SelectList AccountingList { get; set; }
         public string[] SelectedAccounting { get; set; }
+        public SelectList OperationsList { get; set; }
         public string[] SelectedOperations { get; set; }
+        public SelectList ExpensesList { get; set; }
         public string[] SelectedExpenses { get; set; }
+        public SelectList BiomarkersList { get; set; }
         public string[] SelectedBiomarkers { get; set; }
+        public SelectList IncomeList { get; set; }
         public string[] SelectedIncome { get; set; }
+        public SelectList TimekeeperList { get; set; }
         public string[] SelectedTimekeeper { get; set; }
+        public SelectList UsersList { get; set; }
         public string[] SelectedUsers { get; set; }
 
 

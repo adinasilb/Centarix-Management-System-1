@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
@@ -219,6 +220,77 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["PageType"] = AppUtility.UserPageTypeEnum.Add;
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
+            registerUserViewModel.OrdersList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="Orders & Inventory", Value=null },
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.OrdersAndInventory.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.OrdersList.FirstOrDefault().Selected = true;
+            registerUserViewModel.OrdersList.FirstOrDefault().Disabled = true;
+            registerUserViewModel.ProtocolsList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="Protocols", Value=null},
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Protocols.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.ProtocolsList.FirstOrDefault().Selected = true;
+            registerUserViewModel.ProtocolsList.FirstOrDefault().Disabled = true;
+            registerUserViewModel.LabManagementList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="Lab Management", Value=null},
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.LabManagement.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.LabManagementList.FirstOrDefault().Selected = true;
+            registerUserViewModel.LabManagementList.FirstOrDefault().Disabled = true;
+            registerUserViewModel.AccountingList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="Accounting", Value=null},
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Accounting.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.AccountingList.FirstOrDefault().Selected = true;
+            registerUserViewModel.AccountingList.FirstOrDefault().Disabled = true;
+            registerUserViewModel.OperationsList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="Operations", Value=null},
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Operation.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.OperationsList.FirstOrDefault().Selected = true;
+            registerUserViewModel.OperationsList.FirstOrDefault().Disabled = true;
+            registerUserViewModel.ExpensesList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="Expenses", Value=null},
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Expenses.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.ExpensesList.FirstOrDefault().Selected = true;
+            registerUserViewModel.ExpensesList.FirstOrDefault().Disabled = true;
+            registerUserViewModel.BiomarkersList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="Biomarkers", Value=null},
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Biomarkers.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.BiomarkersList.FirstOrDefault().Selected = true;
+            registerUserViewModel.BiomarkersList.FirstOrDefault().Disabled = true;
+
+            registerUserViewModel.IncomeList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="Income", Value=null},
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Income.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.IncomeList.FirstOrDefault().Selected = true;
+            registerUserViewModel.IncomeList.FirstOrDefault().Disabled = true;
+            registerUserViewModel.TimekeeperList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="TimeKeeper", Value=null},
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.TimeKeeper.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.TimekeeperList.FirstOrDefault().Selected = true;
+            registerUserViewModel.TimekeeperList.FirstOrDefault().Disabled = true;
+            registerUserViewModel.UsersList = new SelectList(
+            new List<SelectListItem>{
+                new SelectListItem() {Text="Users", Value=null},
+                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Users.ToString()}
+            }, "Value", "Text");
+            registerUserViewModel.UsersList.FirstOrDefault().Selected = true;
+            registerUserViewModel.UsersList.FirstOrDefault().Disabled = true;
             return View(registerUserViewModel);
         }
 
