@@ -40,9 +40,10 @@
 }
 <div style="display: flex;">
 
-    <div style="min-width: 110px; min-height:100rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
-        <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3">
-          
+    <div style="min-width: 100px; min-height:100rem; padding: 5px;" class=" d-md-block sidebar-shadow  navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
+ 
+        <ul class="nav flex-column nav-pills nav-stacked mt-4">
+
             <li class="@noInvoiceClass">
                 <a href="@Url.Action("Notifications", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.NotificationsEnum.NoInvoice })" class="bold-hover-effects"> <i class="icon-cancel_presentation-24px" style="font-size:1.6rem;"></i><br /> No Invoice <br /></a>
             </li>

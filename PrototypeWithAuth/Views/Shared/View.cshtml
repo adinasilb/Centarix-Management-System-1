@@ -4,7 +4,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/Master.cshtml";
 
     /*
      * Determine Active Nav Link START
@@ -50,509 +50,68 @@
 
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Centarix Management System</title>
-    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
-    @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
 
+@*<<<<< Inventory/Requests Header >>>>>*@
+<header class="sticky-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
 
-    @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
-    <!-- Bootstrap core CSS -->
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/bootstrap-reboot.css" rel="stylesheet" />
-    <!-- Material Design Bootstrap -->
-    <link href="~/lib/bootstrap/dist/css/mdb.min.css" rel="stylesheet">
+        <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
 
-    <link href="~/lib/bootstrap/dist/css/addons/datatables-select.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons/datatables-select2.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons/datatables.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons/datatables2.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons/directives.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons/flag.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons/jquery.zmd.hierarchical-display.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons/rating.min.css" rel="stylesheet" />
-
-    <link href="~/lib/bootstrap/dist/css/addons-pro/cards-extended.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons-pro/chat.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons-pro/multi-range.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons-pro/simple-charts.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons-pro/steppers.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/addons-pro/timeline.min.css" rel="stylesheet" />
-
-    <link href="~/lib/bootstrap/dist/css/modules/accordion-extended.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/modules/animations-extended.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/modules/lightbox.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/modules/megamenu.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/modules/parallax.min.css" rel="stylesheet" />
-
-    <!-- Font Awesome -->
-    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-                <link rel="stylesheet" href="~/lib/bootstrap/dist/css/style.css">
-        <link href="~/lib/bootstrap/dist/css/modules/parallax.min.css" rel="stylesheet" />
-                <link rel="stylesheet" href="~/lib/bootstrap/dist/css/addons/datatables.min.css" />*@
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
-    @*load the jquery ui stylesheet*@
-    <link rel="stylesheet" href="~/css/jquery-ui.min.css">
-
-    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/jquery/dist/popper.min.js"></script>
-        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
-        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
-</head>
-<body style="display:none">
-    @*<<<<< Inventory/Requests Header >>>>>*@
-    <header class="sticky-top">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
-
-            <a class="navbar-brand" style="padding-left:0.85rem;" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
-
-            <div class="collapse navbar-collapse" >
-                <ul class="navbar-nav dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; " >
-                    <li class="nav-item mx-4 d-table ">
-                        @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass,  @id = "inventory-link" })
-                    </li>
-                    <li class="nav-item mx-5">
-                        @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass,   @id = "request-link"})
-                    </li>
-                    <li class="nav-item mx-5">
-                        @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass,  @id = "request-link" /*why is the role and id here?*/ })
-                    </li>
-                    <li class="nav-item mx-5">
-                        @*Redo the location class in the controller*@
-                        @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = locationClass,  @id = "request-link" })
-                    </li>
-                    <li class="nav-item mx-5">
-                        @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "request-link" /*why is the role and id here?*/ })
-                    </li>
-                </ul>
-            </div>
-            <div class="form-inline">
-                <div class="md-form my-0">
-                    <a href="#" class="text-dark" > @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
-                   
-                   <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
-                </div>
-            </div>
-
-        </nav>
-        <div class=" logout-div">
-            <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
-            </form>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
+                <li class="nav-item mx-4 d-table ">
+                    @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
+                </li>
+                <li class="nav-item mx-5">
+                    @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link" })
+                </li>
+                <li class="nav-item mx-5">
+                    @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @id = "request-link" /*why is the role and id here?*/ })
+                </li>
+                <li class="nav-item mx-5">
+                    @*Redo the location class in the controller*@
+                    @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = locationClass, @id = "request-link" })
+                </li>
+                <li class="nav-item mx-5">
+                    @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "request-link" /*why is the role and id here?*/ })
+                </li>
+            </ul>
         </div>
-    </header>
-    <!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
-    <!--for now i am using an aside just to help me viuslly see thing on the side-->
+        <div class="form-inline">
+            <div class="md-form my-0">
+                <a href="#" class="text-dark"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
 
-    <div class="container-fluid pl-0">
-        <main role="main">
-            @*<div class="spinner-border center" role="status" id="loading" style="display:none;">
-            <span class="sr-only">Loading...</span>
-        </div>*@
-            <div class="center" role="status" id="loading" style="display:none;">
-                <img src="~/images/css/Loading/centarix_loading3.gif" />
+                <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
             </div>
-            @RenderBody()
-        </main>
+        </div>
 
+    </nav>
+    <div class=" logout-div">
+        <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
+        </form>
     </div>
+</header>
+<!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
+<!--for now i am using an aside just to help me viuslly see thing on the side-->
 
-    @*<footer class="border-top footer text-muted">
+<div class="container-fluid pl-0">
+    <main role="main">
+        @*<div class="spinner-border center" role="status" id="loading" style="display:none;">
+                <span class="sr-only">Loading...</span>
+            </div>*@
+        <div class="center" role="status" id="loading" style="display:none;">
+            <img src="~/images/css/Loading/centarix_loading3.gif" />
+        </div>
+        @RenderBody()
+    </main>
+
+</div>
+
+@*<footer class="border-top footer text-muted">
         <div class="container text-center">
             &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>*@
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
 
 
-    <!--  SCRIPTS  -->
-    <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="~/js/popper.min.js"></script>
-    <!-- JQuery -->
-    <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
-    <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
-
-
-    @*<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
-        <script type="text/javascript" src="~/js/popper.min.js"></script>
-        <script type="text/javascript" src="~/lib/bootstrap/dist/js/popper.min.js"></script>
-        <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>*@
-
-
-    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script> @*getting an error without type=module*@
-    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script> @*getting an error without type=module*@
-    <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons/datatables2.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons/directives.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons/flag.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons/imagesloaded.pkgd.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons/jquery.zmd.hierarchical-display.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons/masonry.pkgd.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons/rating.min.js"></script>
-
-    <script src="~/lib/bootstrap/dist/js/addons-pro/cards-extended.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons-pro/chat.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons-pro/multi-range.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons-pro/simple-charts.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons-pro/steppers.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/addons-pro/timeline.min.js"></script>
-
-    <script src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown-searchable.min.js"></script>
-
-    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"></script>
-    <script type="module" src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
-    <script type="module" src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
-
-    <script src="~/lib/bootstrap/dist/js/modules/accordion-extended.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/animations-extended.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/buttons.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/cards.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/character-counter.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/chips.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/collapsible.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/file-input.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/forms-free.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/lightbox.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/mdb-autocomplete.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/megamenu.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/parallax.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/preloading.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/range-input.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/scrolling-navbar.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/sidenav.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/smooth-scroll.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/sticky.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/treeview.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/wow.min.js"></script>
-
-    <script src="~/lib/bootstrap/dist/src/js/free/forms-free.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/free/scrolling-navbar.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/free/treeview.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/free/wow.js"></script>
-
-    <script src="~/lib/bootstrap/dist/src/js/pro/dropdown/dropdown-searchable.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/dropdown/dropdown.js"></script>
-
-    <script src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
-
-    <script src="~/lib/bootstrap/dist/src/js/pro/buttons.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/cards.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/character-counter.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/chips.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/collapsible.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/file-input.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/mdb-autocomplete.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker-date.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker-time.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/preloading.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/range-input.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/sidenav.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/sidenav2.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/smooth-scroll.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/sticky.js"></script>
-
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/datatables-select.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/datatables-select2.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/datatables.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/datatables2.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/imagesloaded.pkgd.min.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/jquery.zmd.hierarchical-display.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/masonry.pkgd.min.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons/rating.js"></script>
-
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/chat.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/multi-range.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/simple-charts.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/steppers.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/addons-pro/timeline.js"></script>
-
-    <script src="~/lib/bootstrap/dist/src/js/vendor/free/bs-custom-file-input.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/free/chart.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/free/chartjs-datalabels.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/free/enhanced-modals.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/free/jquery.easing.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/free/velocity.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/free/waves.js"></script>
-
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/jarallax-video.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/jarallax.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/jquery.sticky.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/lightbox.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/ofi.js"></script>
-    @*<script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-date-time.js"></script>
-        <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-date.js"></script>
-        <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker-time.js"></script>
-        <script src="~/lib/bootstrap/dist/src/js/vendor/pro/picker.js"></script>*@
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/scrollbar.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/toastr.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map-world-mill.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map.js"></script>
-
-
-
-
-
-
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @*load jquery ui*@
-    <script src="~/lib/jquery/jquery-ui.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-
-    <script type="text/javascript" src="~/js/site.js" asp-append-version="true"></script>
-    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
-</body>
-</html>
-
-<script>
-    $(document).ready(function () {
-        $('body').hide();
-        $(window).on('load', function () {
-            $('body').show();
-        });
-        $('#dtBasicExample').DataTable();
-        $('.dataTables_length').addClass('bs-select');
-        console.log("before mdb select 1");
-        $('.mdb-select').materialSelect();
-        console.log("after mdb select 1");
-        $('.datepicker').pickadate();
-        $('#request-search a:first').tab('show'); @*I had to put this in here b/c otherwise it wasn't coming up on .search-link.click*@
-    });
-
-    $(".search-link").on("click", function () {
-        $('#request-search a:first').tab('show');
-    });
-
-     $(".load-product-details").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
-        $.fn.CallPage($itemurl, "details");
-        return false;
-    });
-
-    $(".load-product-edit").on("click", function (e) {
-        console.log("inside of load product edit")
-        e.preventDefault();
-        e.stopPropagation();
-        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
-        console.log("itemurl: " + $itemurl);
-        $.fn.CallPage($itemurl, "edit");
-        return false;
-    });
-
-    $(".create-product-details").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/CreateModalView";
-        //var $itemurl = "Requests/DetailsModalView/?id=62";
-        $.fn.CallPage($itemurl, "create");
-        return false;
-    });
-
-    $(".load-confirm-delete").on("click", function (e) {
-        console.log("in confirm delete");
-        e.preventDefault();
-        e.stopPropagation();
-        var $itemurl = "Requests/DeleteModal/?id=" + $(this).val();
-        $.fn.CallPage($itemurl, "delete");
-        return false;
-    });
-
-    $(".load-order-details").on("click", function (e) {
-        console.log("in order details");
-        e.preventDefault();
-        e.stopPropagation();
-        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
-        $.fn.CallPage($itemurl, "reorder");
-        return false;
-    });
-
-    $(".load-receive-and-location").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/ReceivedModal?RequestID=" + $(this).val();
-        $.fn.CallPage($itemurl, "received");
-        return false;
-    });
-
-    $(".js-go-to-controller").on("click", function (e) {
-        console.log("inside of js-go-to-controller");
-        e.preventDefault();
-        e.stopPropagation();
-        var $itemurl = "Requests/ConfirmEmailModal";
-        $.fn.CallPage($itemurl, "email");
-        return false;
-    });
-
-    $(".load-confirm-email").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
-        $.fn.CallPage($itemurl, "confirmemail");
-        return false;
-    });
-
-
-    function AddTempDataMemory() {
-        console.log("about to get set the hidden fors in the modal view to remember where the user was");
-
-        $("#Page").val(parseInt(@TempData["TempPage"]));
-        $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
-        $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
-        $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
-        $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
-        //console.log("PageType:" + @TempData["TempPageType"]);
-        $("#PageType").val(@TempData["TempPageType"]);
-    };
-
-
-    $.fn.CallPage = function ($itemurl, $type) {
-        console.log("in call page function");
-        //delete existing modals
-        $('.modal').replaceWith('');
-        $(".modal-backdrop").remove();
-        $.ajax({
-            async: true,
-            url: $itemurl,
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                console.log("success!");
-                var modal = $(data);
-                $('body').append(modal);
-                //replaces the modal-view class with the ModalView view
-                //$(".modal-view").html(data);
-                //turn off data dismiss by clicking out of the box and by pressing esc
-                $(".modal-view").modal({
-                    backdrop: true,
-                    keyboard: false,
-                });
-                //shows the modal
-                $(".modal").modal('show');
-                //$(".modal").on('show.bs.modal', function (e) {
-                //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
-                //})
-                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                //$(".modal-backdrop").remove();
-                //$('.modal').find('input').first().focus();
-                //$(".modal").popover('hide')
-                switch ($type) {
-                    case "details":
-                        console.log('case "details":');
-                        $.fn.OnOpenModalView();
-                        AddTempDataMemory();
-                        break;
-                    case "edit":
-                        console.log('case "edit":');
-                        $.fn.OnOpenModalView();
-                        AddTempDataMemory();
-                        break;
-                    case "reorder":
-                        console.log('case "reorder":');
-                        $.fn.OnOpenModalView();
-                        AddTempDataMemory();
-                        break;
-                    case "create":
-                        console.log('case "create":');
-                        $.fn.OnOpenModalView();
-                        AddTempDataMemory();
-                        break;
-                    case "received":
-                        console.log('case "received":');
-                        AddTempDataMemory();
-                        break;
-                    case "confirmemail":
-                        console.log('case "confirmemail":');
-                        AddTempDataMemory();
-                        break;
-                    case "delete":
-                        console.log('case "delete":');
-                        AddTempDataMemory();
-                        break;
-                }
-
-            }
-            //error: function (/*request, status, error*/) {
-            //    console.log("ajax call went wrong:" /*+ request.responseText*/);
-            //}
-        });
-    }
-
-    $.fn.OnOpenModalView = function () {
-        console.log("before mdb select 2");
-        $('.mdb-select').materialSelect();
-        console.log("after mdb select 2");
-        $('.modal-content a:first').tab('show');
-        var parentCategoryId = $("#parentlist").val();
-        var subcategoryId1 = $("#sublist").val();
-        var url = "/Requests/GetSubCategoryList";
-
-        $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-            var item = "";
-            $.each(data, function (i, subCategory) {
-                item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-            });
-            $("#sublist").html(item);
-            $("#sublist").val(subcategoryId1).change();
-        });
-
-        //For the order files
-
-        //goes into this function
-        $(".custom-file-input").on("change", function () {
-            var fileLabel = $(this).next(".custom-file-label");
-            var files = $(this)[0].files;
-            if (files.length > 1) {
-                fileLabel.html(files.length + ' files selected');
-            }
-            else {
-                fileLabel.html(files[0].name);
-            }
-        });
-
-        //get the current vendor id (if loading an already existing product)
-        var vendorid = $("#vendorList").val();
-        //call a function to lad the vendor business id from the vendor id
-        $.fn.ChangeVendorBusinessId(vendorid);
-
-    }
-
-    $(".search-link").on("click", function () {
-    });
-
-
-    //$(".modal-view").on('show.bs.show.bs.modal', function (evt) {
-    //    var button = $(evt.relatedTarget);
-    //    var modal = $(this);
-    //    modal.find('[href="' + button.attr("href") + '"]').tab('show');
-    //});
-
-    function addActive(id) {
-        var item = document.getElementById(id);
-        item.classList.add("activeNavLink");
-    }
-</script>

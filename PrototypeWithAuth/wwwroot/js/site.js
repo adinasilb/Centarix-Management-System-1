@@ -31,18 +31,18 @@ $("#parentlist").change(function () {
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $(".Project").change(function () {
 
-	("in project change");
 	var projectId = $(this).val();
 	var url = "/Requests/GetSubProjectList";
 
 	$.getJSON(url, { ProjectID: projectId }, function (data) {
 		var item = "<option value=''>Select Subcategory</option>";
-		$(".SubProject").empty();
+		$("#SubProject").empty();
 		$.each(data, function (i, subproject) {
 			item += '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
 		});
-		$(".SubProject").html(item);
+		$("#SubProject").html(item);
 	});
+
 });
 
 

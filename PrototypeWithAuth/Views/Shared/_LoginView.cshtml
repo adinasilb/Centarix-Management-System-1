@@ -32,94 +32,91 @@
     @if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
     {
         @*<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })"> </form>*@
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container mr-0">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+        <header class="sticky-top">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
 
-                    @*Need to add user profile picture from the DB. *@
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
-                        </li>
-                        <li class="nav-item">
-                            <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
-                        </li>
 
+
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
+                        <li class="nav-item mx-4 d-table ">
+
+                        </li>
                     </ul>
-
                 </div>
-            </div>
+                <div class="form-inline">
+                    <div class="md-form my-0">
+                        <a href="#" class="text-dark"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
 
-        </nav>
-        <div class=" logout-div">
-            <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
-            </form>
-        </div>
-
-
-    }
-    else if (SignInManager.IsSignedIn(User))
-    {
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-
-
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName </a>
-                        </li>
-                        <li class="nav-item">
-                            <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
-                        </li>
-
-                    </ul>
-
+                        <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
+                    </div>
                 </div>
-            </div>
 
-        </nav>
-        <div class=" logout-div">
-            <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
-            </form>
+            </nav>
+            <div class=" logout-div">
+                <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
+                </form>
+            </div>
+            </header>
+
+
+            }
+            else if (SignInManager.IsSignedIn(User))
+            {
+<header class="sticky-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
+
+
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
+                <li class="nav-item mx-4 d-table ">
+
+                </li>
+            </ul>
+        </div>
+        <div class="form-inline">
+            <div class="md-form my-0">
+                <a href="#" class="text-dark"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
+
+                <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
+            </div>
         </div>
 
-    }
-
-    <div class="text-center container col-md-7 center-horizontally" style="min-width:560px">
-        <div class="row h-100">
-            <div class="col-12 my-auto">
-                <br /><br /><br /><br /><br /><br />
-                <img style="width:30em; max-width: 100%; min-width:500px" class="mb-3" src="~/images/css/Centarix_Logo.png" alt="Centarix Logo" />
-                <br /><br />
-                <h2 style="color:#DB2127; font-weight:600" class="mb-5">Maximizing Health</h2>
-
-
-                <main role="main" class="pb-3">
-                    @RenderBody()
-                </main>
-            </div>
-        </div>
+    </nav>
+    <div class=" logout-div">
+        <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
+        </form>
     </div>
+</header>
+            }
 
-    @*<footer class="border-top footer text-muted text-center">
-            <div class="container">
-                &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="text-center container col-md-7 center-horizontally" style="min-width:560px">
+                <div class="row h-100">
+                    <div class="col-12 my-auto">
+                        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                        <img style="width:30em; max-width: 100%; min-width:500px" class="mb-3" src="~/images/css/Centarix_Logo.png" alt="Centarix Logo" />
+                        <br /><br />
+                        <h2 style="color:#DB2127; font-weight:600" class="mb-5">Maximizing Health</h2>
+
+
+                        <main role="main" class="pb-3">
+                            @RenderBody()
+                        </main>
+                    </div>
+                </div>
             </div>
-        </footer>*@
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
-</body>
+
+            @*<footer class="border-top footer text-muted text-center">
+                    <div class="container">
+                        &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </footer>*@
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>
+            @RenderSection("Scripts", required: false)
+    </body>
 </html>

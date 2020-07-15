@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/PaymentView.cshtml";
 
-    var allClasses = "nav-item my-4 acc-sidebar";
+    var allClasses = "nav-item my-4 sidebar-customization acc-sidebar";
     var activeClass = " active";
     var toPayClass = allClasses;
     var payNowClass = allClasses;
@@ -24,7 +24,7 @@
 }
 <div style="display: flex;">
 
-    <div style="min-width: 110px; min-height:100rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
+    <div style="min-width: 110px; min-height:100rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar ">
         <ul style="position:fixed;" class="nav flex-column nav-pills nav-stacked mb-lg-3">
             <li class="@toPayClass">
                 <a href="@Url.Action("Payments", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.PaymentsEnum.ToPay })" class="bold-hover-effects"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br />Monthly Payment</a>

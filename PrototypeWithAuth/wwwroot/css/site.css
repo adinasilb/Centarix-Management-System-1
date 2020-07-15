@@ -26,8 +26,8 @@ body {
 }
 
 .category-image {
-    border: .5px solid rgba(0, 0, 0, .54);
     border-radius: 8px;
+    border: .5px solid #ebebeb;
 }
 
 .center {
@@ -237,6 +237,11 @@ body {
     text-transform: capitalize;
     width: 30%;
 }
+
+    .login-button:hover {
+        color: white !important;
+    }
+    
 }
 
 /*general buttons*/
@@ -540,10 +545,16 @@ ul li.acc-sidebar.active {
     filter: invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);
 }
 
-.acc-sidebar a{
+.sidebar-customization a {
     font-size: 1rem;
+    text-transform: capitalize
 }
-.acc-sidebar {
+
+.sidebar-customization button{
+    font-size: 1rem;
+    text-transform: capitalize
+}
+.sidebar-customization {
     max-width: 80%;
 }
 
@@ -1041,4 +1052,8 @@ input.bigger-box {
 
 body {
     display: block !important
+}
+
+.home-nav-item{
+    padding-left:1.6rem;
 }
