@@ -29,12 +29,12 @@
         {
             <table class="table table-noheaderlines table-headerspaced table-hover" style="table-layout:fixed;">
                 <thead>
-                    <tr>
-                        <th style="width:8%;">
+                    <tr class="text-center">
+                        <th style="width:12%;">
                             @*No*@
                             @Html.DisplayNameFor(model => model.OrderNumber)
                         </th>
-                        <th widht="12%">
+                        <th widht="8%">
 
                         </th>
                         <th style="width:13%;">
@@ -95,7 +95,8 @@
                                 <img src="~/images/css/inventory/Type/bottle.png" alt="Image" width="75" />
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName)
+                                <button class="load-request-details btn btn-link acc-link-clr" value="@item.Requests.FirstOrDefault().RequestID">  @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName)</button>
+                               
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Unit) @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().UnitType.UnitTypeDescription)<br />
@@ -119,10 +120,6 @@
 
                             <td>
                                 @Html.DisplayFor(modeltem => item.OrderDate)
-                            </td>
-
-                            <td class="text-right">
-                                <button class="load-request-details btn btn-link" value="@item.Requests.FirstOrDefault().RequestID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /> </button>
                             </td>
                         </tr>
 

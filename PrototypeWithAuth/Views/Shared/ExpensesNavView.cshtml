@@ -4,53 +4,38 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/Master.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Centarix Management System</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-<body>
+
     @*<<<<<< Expenses Top Navbar >>>>>>*@
     <header class="sticky-top">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-            <div class="container-fluid">
-                <div class="container-fluid justify-content-start float-left d-inline-block pl-0" style="width:auto"> 
-                    <a asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
-                </div>
-                <div class="container-fluid">
-                    <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; color:#E27933;">
-                        <li class="nav-item nav-fill mx-4">
-                                @Html.ActionLink("Expenses", "ExpensesList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = " expenses-color-module" })
-                            </li>
-                       
-                    </ul>
-                </div>
-                <div class="container-fluid justify-content-end">
-                    <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; <img src="~/images/css/profile_circle_big.png" height="30" alt="User image" /> </a>
-                            </li>
-                            <li class="nav-item">
-                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
+
+            <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
+                    <li class="nav-item mx-4 d-table ">
+                        @Html.ActionLink("Expenses", "ExpensesList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = " expenses-color align-text-bottom" })
+                    </li>
+
+                </ul>
+            </div>
+            <div class="form-inline">
+                <div class="md-form my-0">
+                    <a href="#" class="text-dark"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
+
+                    <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
                 </div>
             </div>
+
         </nav>
+        <div class=" logout-div">
+            <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
+            </form>
+        </div>
     </header>
     <div class="container-fluid pl-0">
         <main role="main" class="">
@@ -68,10 +53,4 @@
             &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>*@
-    <script src="~/js/site.js" asp-append-version="true">
 
-
-    </script>
-    @RenderSection("Scripts", required: false)
-</body>
-</html>

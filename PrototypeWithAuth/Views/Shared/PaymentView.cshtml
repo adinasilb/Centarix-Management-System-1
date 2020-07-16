@@ -4,7 +4,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/Master.cshtml";
 
     /*
      * Determine Active Nav Link START
@@ -21,7 +21,7 @@
     }
 
     //passing the
-    string initalClasses = "opac87";
+    string initalClasses = "opac87 align-text-bottom";
     string currentClasses = " text-dark activeNavLinkAcc";
     string notificationsClass = initalClasses;
     string generalClass = initalClasses;
@@ -46,28 +46,15 @@
 
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Centarix Management System</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-<body>
     @*<<<<<< Accounting Header >>>>>*@
     <header class="sticky-top">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar">
-            <div class="container-fluid justify-content-start float-left d-inline-block pl-1" style="width:auto">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"> <img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
-            </div>
-            <div class="container-fluid">
-                <ul class="navbar-nav flex-grow-1 dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500">
-                    <li class="nav-item mx-4">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
+
+            <a class="navbar-brand" style="padding-left:2rem;" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
+                    <li class="nav-item mx-4 d-table">
                         @Html.ActionLink("Payments", "Payments", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Payments }, new { @class = paymentClass })
                     </li>
                     <li class="nav-item mx-5">
@@ -81,24 +68,16 @@
                     </li>
                 </ul>
             </div>
-            <div class="container-fluid justify-content-end">
-                <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;</a>
-                        </li>
-                        <li class="nav-item">
-                            <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
+            <div class="form-inline">
+                <div class="md-form my-0">
+                    <a href="#" class="text-dark"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
 
-                        </li>
-
-                    </ul>
-
+                    <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
                 </div>
             </div>
 
         </nav>
-        <div class=" logout-div" >
+        <div class=" logout-div">
             <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
             </form>
@@ -128,14 +107,13 @@
 
     </script>
     @RenderSection("Scripts", required: false)
-</body>
-</html>
+
 <script>
     $(".load-vendor-search").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
         var $itemurl = "Search";
-        $.fn.CallPage($itemurl);
+        $.fn.CallPagePayment($itemurl);
         return false;
     });
 
@@ -144,12 +122,12 @@
         e.preventDefault();
         e.stopPropagation();
         var $itemurl = "DetailsModalView?id=" + $(this).val();
-        $.fn.CallPage($itemurl, "details");
+        $.fn.CallPagePayment($itemurl, "details");
         return false;
     });
 
 
-    $.fn.CallPage = function ($itemurl, $Type = "") {
+    $.fn.CallPagePayment = function ($itemurl, $Type = "") {
         console.log("item url: " + $itemurl);
         $.ajax({
             //async: true,
