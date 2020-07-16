@@ -44,7 +44,7 @@ center-horizontally {
     margin: auto;
 }
 
-.module-button:hover > img {
+.module-button:hover > img, .main-permissions div:hover > img {
     filter: drop-shadow(5px 5px 5px #a7a7a7);
 }
 
@@ -324,6 +324,11 @@ body {
         background-color: #30BCC9;
     }
 
+
+    select option[value="US"] {
+        background-image: url(flags/usa.png);
+    }
+
 .protocols-color {
     color: #00CA72;
     border: 1px solid #00CA72;
@@ -414,7 +419,43 @@ body {
     background-color: #DB669D;
 }
 
+.main-permissions span {
+    font-size:.85em;
+}
 
+.disabled-permissions{
+    filter: grayscale(100%);
+}
+
+
+/*.orders-color input.select-dropdown.form-control {
+    padding-bottom: .3em !important;
+    padding-left: 2.2em !important;
+    background-image: url(../images/css/usericons/inventory_dropdown.png);
+    background-repeat: no-repeat;
+}
+
+.protocols-color input.select-dropdown.form-control {
+    padding-bottom: .3em !important;
+    padding-left: 2.2em !important;
+    background-image: url(../images/css/usericons/protocols_dropdown.png);
+    background-repeat: no-repeat;
+}
+
+.labmanagement-color input.select-dropdown.form-control {
+    padding-bottom: .3em !important;
+    padding-left: 2.2em !important;
+    background-image: url(../images/css/usericons/labmanagments_dropdown.png);
+    background-repeat: no-repeat;
+}
+
+.accounting-color input.select-dropdown.form-control {
+    padding-bottom: .3em !important;
+    padding-left: 2.2em !important;
+    background-image: url(../images/css/usericons/accounting_dropdown@2x.png);
+    background-size: 1em;
+    background-repeat: no-repeat;
+}*/
 .edit-user-modal /*the a that opens it*/ {
     color: #000;
     text-decoration: none;
