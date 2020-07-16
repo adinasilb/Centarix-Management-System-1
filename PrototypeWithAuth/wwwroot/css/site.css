@@ -291,8 +291,8 @@ body {
 }
 
 .inv-supplier-button {
-    background-color: #7D9BAA;
-    border: 1px solid #7D9BAA;
+    background-color: #A26FF0;
+    border: 1px solid #A26FF0;
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -701,8 +701,8 @@ a.nav-link {
 .container-fluid ul li a.supplier-nav-link.active {
     background-color: transparent;
     border-width: 0px;
-    border-bottom: 4px solid #7D9BAA;
-    color: #7D9BAA;
+    border-bottom: 4px solid #A26FF0;
+    color: #A26FF0;
 }
 
 /*<<<< Modal Side Slide >>>>*/

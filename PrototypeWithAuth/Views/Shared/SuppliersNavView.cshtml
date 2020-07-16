@@ -28,28 +28,3 @@
     </div>
 </div>
 
-<script>
-
-    hide = true;
-    $('body').on("click", function () {
-        if (hide) $('.acc-sidebar').removeClass('active');
-        hide = true;
-    });
-
-    // add and remove .active
-    $('body').on('click', '.acc-sidebar', function () {
-
-        var self = $(this);
-
-        //if (self.hasClass('active')) {
-        //    $('.acc-sidebar').removeClass('active');
-        //    return false;
-        //}
-
-        $('.acc-sidebar').removeClass('active');
-
-        self.toggleClass('active');
-        hide = false;
-    });
-
-</script>

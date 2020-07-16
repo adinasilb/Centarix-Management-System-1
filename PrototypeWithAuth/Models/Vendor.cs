@@ -15,11 +15,11 @@ namespace PrototypeWithAuth.Models
         public int VendorID { get; set; } 
         
         [Required, MaxLength(50)]
-        [Display(Name ="Supplier")]
+        [Display(Name = "Supplier name [EN]")]
         public string VendorEnName { get; set; }
         
         [MaxLength (50)]
-        [Display(Name = "Name He")]
+        [Display(Name = "Supplier name [He]")]
         public string VendorHeName { get; set; }
        
         [Required, MinLength (9), MaxLength(9)]
