@@ -98,199 +98,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
-        public IActionResult CreateUserModal()
-        {
-            RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
-            return PartialView(registerUserViewModel);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin, Users")]
-        public async Task<IActionResult> CreateUserModal(RegisterUserViewModel registerUserViewModel)
-        {
-            var usernum = 1;
-            if (_context.Users.Any())
-            {
-                usernum = _context.Users.OrderByDescending(u => u.UserNum).FirstOrDefault().UserNum + 1;
-            }
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser
-                {
-                    UserName = registerUserViewModel.UserName,
-                    Email = registerUserViewModel.Email,
-                    //FirstName = registerUserViewModel.FirstName,
-                    //LastName = registerUserViewModel.LastName,
-                    SecureAppPass = registerUserViewModel.SecureAppPass,
-                    UserNum = usernum
-                };
-
-                var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
-                //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
-                if (result.Succeeded)
-                {
-                    //await _userManager.AddToRoleAsync(user, "Admin");
-                    if (registerUserViewModel.SelectedOrders != null)
-                    {
-                        if (registerUserViewModel.SelectedOrders[0] == AppUtility.MenuItems.OrdersAndInventory.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.OrdersAndInventory.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedProtocols != null)
-                    {
-                        if (registerUserViewModel.SelectedProtocols[0] == AppUtility.MenuItems.Protocols.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Protocols.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedLabManagement != null)
-                    {
-                        if (registerUserViewModel.SelectedLabManagement[0] == AppUtility.MenuItems.LabManagement.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.LabManagement.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedAccounting != null)
-                    {
-                        if (registerUserViewModel.SelectedAccounting[0] == AppUtility.MenuItems.Accounting.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Accounting.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedOperations != null)
-                    {
-                        if (registerUserViewModel.SelectedOperations[0] == AppUtility.MenuItems.Operation.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Operation.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedExpenses != null)
-                    {
-                        if (registerUserViewModel.SelectedExpenses[0] == AppUtility.MenuItems.Expenses.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Expenses.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedBiomarkers != null)
-                    {
-                        if (registerUserViewModel.SelectedBiomarkers[0] == AppUtility.MenuItems.Biomarkers.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Biomarkers.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedIncome != null)
-                    {
-                        if (registerUserViewModel.SelectedIncome[0] == AppUtility.MenuItems.Income.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Income.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedTimekeeper != null)
-                    {
-                        if (registerUserViewModel.SelectedTimekeeper[0] == AppUtility.MenuItems.TimeKeeper.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.TimeKeeper.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedUsers != null)
-                    {
-                        if (registerUserViewModel.SelectedUsers[0] == AppUtility.MenuItems.Users.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Users.ToString());
-                        }
-                    }
-                    //await _signManager.SignInAsync(user, false);  --> this would sign in the user automatically. we don't want that.
-                    //return RedirectToAction("Index", "ApplicationUsers");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-
-            }
-            return RedirectToAction("Index");
-        }
-        [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
         public IActionResult CreateUser()
         {
             TempData["PageType"] = AppUtility.UserPageTypeEnum.Add;
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
-            registerUserViewModel.OrdersList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="Orders & Inventory", Value=null },
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.OrdersAndInventory.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.OrdersList.FirstOrDefault().Selected = true;
-            registerUserViewModel.OrdersList.FirstOrDefault().Disabled = true;
-            registerUserViewModel.ProtocolsList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="Protocols", Value=null},
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Protocols.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.ProtocolsList.FirstOrDefault().Selected = true;
-            registerUserViewModel.ProtocolsList.FirstOrDefault().Disabled = true;
-            registerUserViewModel.LabManagementList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="Lab Management", Value=null},
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.LabManagement.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.LabManagementList.FirstOrDefault().Selected = true;
-            registerUserViewModel.LabManagementList.FirstOrDefault().Disabled = true;
-            registerUserViewModel.AccountingList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="Accounting", Value=null},
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Accounting.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.AccountingList.FirstOrDefault().Selected = true;
-            registerUserViewModel.AccountingList.FirstOrDefault().Disabled = true;
-            registerUserViewModel.OperationsList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="Operations", Value=null},
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Operation.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.OperationsList.FirstOrDefault().Selected = true;
-            registerUserViewModel.OperationsList.FirstOrDefault().Disabled = true;
-            registerUserViewModel.ExpensesList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="Expenses", Value=null},
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Expenses.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.ExpensesList.FirstOrDefault().Selected = true;
-            registerUserViewModel.ExpensesList.FirstOrDefault().Disabled = true;
-            registerUserViewModel.BiomarkersList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="Biomarkers", Value=null},
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Biomarkers.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.BiomarkersList.FirstOrDefault().Selected = true;
-            registerUserViewModel.BiomarkersList.FirstOrDefault().Disabled = true;
-
-            registerUserViewModel.IncomeList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="Income", Value=null},
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Income.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.IncomeList.FirstOrDefault().Selected = true;
-            registerUserViewModel.IncomeList.FirstOrDefault().Disabled = true;
-            registerUserViewModel.TimekeeperList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="TimeKeeper", Value=null},
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.TimeKeeper.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.TimekeeperList.FirstOrDefault().Selected = true;
-            registerUserViewModel.TimekeeperList.FirstOrDefault().Disabled = true;
-            registerUserViewModel.UsersList = new SelectList(
-            new List<SelectListItem>{
-                new SelectListItem() {Text="Users", Value=null},
-                new SelectListItem() {Text="General", Value=AppUtility.MenuItems.Users.ToString()}
-            }, "Value", "Text");
-            registerUserViewModel.UsersList.FirstOrDefault().Selected = true;
-            registerUserViewModel.UsersList.FirstOrDefault().Disabled = true;
+            registerUserViewModel.OrderList = new Dictionary<string, bool>(); ;
+            registerUserViewModel.OrderList.Add("General", false);
             return View(registerUserViewModel);
         }
 
@@ -325,79 +138,7 @@ namespace PrototypeWithAuth.Controllers
                 //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
                 if (result.Succeeded)
                 {
-                    //await _userManager.AddToRoleAsync(user, "Admin");
-                    if (registerUserViewModel.SelectedOrders != null)
-                    {
-                        if (registerUserViewModel.SelectedOrders[0] == AppUtility.MenuItems.OrdersAndInventory.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.OrdersAndInventory.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedProtocols != null)
-                    {
-                        if (registerUserViewModel.SelectedProtocols[0] == AppUtility.MenuItems.Protocols.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Protocols.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedLabManagement != null)
-                    {
-                        if (registerUserViewModel.SelectedLabManagement[0] == AppUtility.MenuItems.LabManagement.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.LabManagement.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedAccounting != null)
-                    {
-                        if (registerUserViewModel.SelectedAccounting[0] == AppUtility.MenuItems.Accounting.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Accounting.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedOperations != null)
-                    {
-                        if (registerUserViewModel.SelectedOperations[0] == AppUtility.MenuItems.Operation.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Operation.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedExpenses != null)
-                    {
-                        if (registerUserViewModel.SelectedExpenses[0] == AppUtility.MenuItems.Expenses.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Expenses.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedBiomarkers != null)
-                    {
-                        if (registerUserViewModel.SelectedBiomarkers[0] == AppUtility.MenuItems.Biomarkers.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Biomarkers.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedIncome != null)
-                    {
-                        if (registerUserViewModel.SelectedIncome[0] == AppUtility.MenuItems.Income.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Income.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedTimekeeper != null)
-                    {
-                        if (registerUserViewModel.SelectedTimekeeper[0] == AppUtility.MenuItems.TimeKeeper.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.TimeKeeper.ToString());
-                        }
-                    }
-                    if (registerUserViewModel.SelectedUsers != null)
-                    {
-                        if (registerUserViewModel.SelectedUsers[0] == AppUtility.MenuItems.Users.ToString())
-                        {
-                            await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Users.ToString());
-                        }
-                    }
-                    //await _signManager.SignInAsync(user, false);  --> this would sign in the user automatically. we don't want that.
-                    //return RedirectToAction("Index", "ApplicationUsers");
+                    //add user roles
                 }
                 else
                 {
@@ -436,56 +177,47 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (role == AppUtility.MenuItems.OrdersAndInventory.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedOrders[0] = AppUtility.MenuItems.OrdersAndInventory.ToString();
+
                 }
                 else if (role == AppUtility.MenuItems.Protocols.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedProtocols[0] = AppUtility.MenuItems.Protocols.ToString();
+
                 }
                 else if (role == AppUtility.MenuItems.LabManagement.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedLabManagement[0] = AppUtility.MenuItems.LabManagement.ToString();
+
                 }
                 else if (role == AppUtility.MenuItems.Accounting.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedAccounting[0] = AppUtility.MenuItems.Accounting.ToString();
+
                 }
                 else if (role == AppUtility.MenuItems.Operation.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedOperations[0] = AppUtility.MenuItems.Operation.ToString();
+
                 }
                 else if (role == AppUtility.MenuItems.Expenses.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedExpenses[0] = AppUtility.MenuItems.Expenses.ToString();
+
                 }
                 else if (role == AppUtility.MenuItems.Biomarkers.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedBiomarkers[0] = AppUtility.MenuItems.Biomarkers.ToString();
+
                 }
                 else if (role == AppUtility.MenuItems.Income.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedIncome[0] = AppUtility.MenuItems.Income.ToString();
+
                 }
                 else if (role == AppUtility.MenuItems.TimeKeeper.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedTimekeeper[0] = AppUtility.MenuItems.TimeKeeper.ToString();
+
                 }
                 else if (role == AppUtility.MenuItems.Users.ToString()) //this was giving me an error in a switch case
                 {
-                    registerUserViewModel.SelectedUsers[0] = AppUtility.MenuItems.Users.ToString();
+
                 }
             }
 
             return View(registerUserViewModel);
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
-        public IActionResult EditUserModal(string id)
-        {
-            UserItemViewModel userItemViewModel = new UserItemViewModel();
-            userItemViewModel.ApplicationUser = _context.Users.Where(u => u.Id == id).FirstOrDefault();
-            return PartialView(userItemViewModel);
         }
 
         [HttpGet]

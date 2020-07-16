@@ -96,7 +96,7 @@ $("#Request_ParentRequest_Installments").change(function () {
 	var difference = installments - countPrevInstallments;
 
 
-	if (difference > 0) { 
+	if (difference > 0) {
 		var newIncrementNumber = countPrevInstallments;
 		for (x = difference; x > 0; x--) {
 
@@ -281,7 +281,7 @@ $("#Request_Warranty").change(function () {
 			flag = false;
 		}
 	}
-	if (mm < 10) { mm = '0' + mm}
+	if (mm < 10) { mm = '0' + mm }
 
 	var warrantyDate = yyyy + '-' + mm + '-' + dd;
 
@@ -296,10 +296,10 @@ $("#Request_ExpectedSupplyDays").change(function () {
 	//var supplyDate = Date.addDays($("#Request_ExpectedSupplyDays").val())
 	//console.log("supplyDate: " + supplyDate);
 	//$("input[name='expected-supply-days']").val(supplyDate);
-	
+
 });
 
-$.fn.leapYear = function(year) {
+$.fn.leapYear = function (year) {
 	return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
 }
 
@@ -752,7 +752,7 @@ $(".visual-locations-zoom").on("click", function (e) {
 			$(".modal-backdrop").remove();
 
 		}
-	}); 
+	});
 });
 
 $(".clicked-inside-button").click(function () {
@@ -795,323 +795,323 @@ $(".documents-tab").click(function () {
 	$.fn.HideAllDocs();
 	$.fn.CheckIfFileSelectsAreFull();
 
-	
+
 });
 
-	//$(".upload-file-1").click(function () {
-	//	console.log("file select clicked 1");
-	//	$(".file-select-1").click();
-	//});
-	//$(".upload-file-2").click(function () {
-	//	console.log("file select clicked 2");
-	//	$(".file-select-2").click();
-	//});
-	//$(".upload-file-3").click(function () {
-	//	console.log("file select clicked 3 ");
-	//	$(".file-select-3").click();
-	//});
-	//$(".upload-file-4").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-4").click();
-	//});
-	//$(".upload-file-5").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-5").click();
-	//});
-	//$(".upload-file-6").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-6").click();
-	//});
-	//$(".upload-file-7").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-7").click();
-	//});
-	//$(".upload-file-8").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-8").click();
-	//});
+//$(".upload-file-1").click(function () {
+//	console.log("file select clicked 1");
+//	$(".file-select-1").click();
+//});
+//$(".upload-file-2").click(function () {
+//	console.log("file select clicked 2");
+//	$(".file-select-2").click();
+//});
+//$(".upload-file-3").click(function () {
+//	console.log("file select clicked 3 ");
+//	$(".file-select-3").click();
+//});
+//$(".upload-file-4").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-4").click();
+//});
+//$(".upload-file-5").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-5").click();
+//});
+//$(".upload-file-6").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-6").click();
+//});
+//$(".upload-file-7").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-7").click();
+//});
+//$(".upload-file-8").click(function () {
+//	console.log("file select clicked");
+//	$(".file-select-8").click();
+//});
 
-	$(".file-select").on("change", function (e) {
-		console.log("file was changed");
-		$cardDiv = $(this).closest("div.card");
-		console.log("cardDiv: " + JSON.stringify($cardDiv));
-		$cardDiv.addClass("document-border");
-	});
+$(".file-select").on("change", function (e) {
+	console.log("file was changed");
+	$cardDiv = $(this).closest("div.card");
+	console.log("cardDiv: " + JSON.stringify($cardDiv));
+	$cardDiv.addClass("document-border");
+});
 
-	$.fn.HideAllDocs = function () {
-		console.log("hide all docs");
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-	};
+$.fn.HideAllDocs = function () {
+	console.log("hide all docs");
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
+};
 
-	$(".show-orders-view").click(function () {
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".orders-view").toggle();
-	});
-	$(".show-invoices-view").click(function () {
-		$(".orders-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".invoices-view").toggle();
-	});
-	$(".show-shipments-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".shipments-view").toggle();
-	});
-	$(".show-quotes-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".quotes-view").toggle();
-	});
-	$(".show-info-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".info-view").toggle();
-	});
-	$(".show-pictures-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".pictures-view").toggle();
-	});
-	$(".show-returns-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".credits-view").hide();
-		$(".returns-view").toggle();
-	});
-	$(".show-credits-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").toggle();
-	});
-
-
-	//$(".close").click(function () {
-	//	console.log("close");
-	//	$(".modal").hide();
-	//	$(".modal").modal('hide');
-	//	$('.modal').replaceWith('');
-	//	//$.ajax({
-	//	//	async: true,
-	//	//	url: "Locations/Index",
-	//	//	type: 'GET',
-	//	//	cache: false,
-	//	//});
-	//});
+$(".show-orders-view").click(function () {
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
+	$(".orders-view").toggle();
+});
+$(".show-invoices-view").click(function () {
+	$(".orders-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
+	$(".invoices-view").toggle();
+});
+$(".show-shipments-view").click(function () {
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
+	$(".shipments-view").toggle();
+});
+$(".show-quotes-view").click(function () {
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
+	$(".quotes-view").toggle();
+});
+$(".show-info-view").click(function () {
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
+	$(".info-view").toggle();
+});
+$(".show-pictures-view").click(function () {
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").hide();
+	$(".pictures-view").toggle();
+});
+$(".show-returns-view").click(function () {
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".credits-view").hide();
+	$(".returns-view").toggle();
+});
+$(".show-credits-view").click(function () {
+	$(".orders-view").hide();
+	$(".invoices-view").hide();
+	$(".shipments-view").hide();
+	$(".quotes-view").hide();
+	$(".info-view").hide();
+	$(".pictures-view").hide();
+	$(".returns-view").hide();
+	$(".credits-view").toggle();
+});
 
 
-	$(".load-product-edit").on("click", function (e) {
-		console.log("inside of load product edit")
-		e.preventDefault();
-		e.stopPropagation();
-		//takes the item value and calls the Products controller with the ModalView view to render the modal inside
-		var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
-		console.log("itemurl: " + $itemurl);
-		$.fn.CallPage($itemurl, "edit");
-		return false;
-	});
+//$(".close").click(function () {
+//	console.log("close");
+//	$(".modal").hide();
+//	$(".modal").modal('hide');
+//	$('.modal').replaceWith('');
+//	//$.ajax({
+//	//	async: true,
+//	//	url: "Locations/Index",
+//	//	type: 'GET',
+//	//	cache: false,
+//	//});
+//});
 
 
-	$.fn.updateDebt = function () {
-		console.log("in update debt");
-		var sum = $("#Request_Cost").val();
-		var installments = $("#Request_ParentRequest_Installments").val();
-		var tdate = new Date();
-		var dd = tdate.getDate(); //yields day
-		var MM = tdate.getMonth(); //yields month
-		var yyyy = tdate.getFullYear(); //yields year
-		if (dd < 10) {
-			dd = "0" + dd
-		}
-		if (MM < 10) {
-			MM = "0" + (MM + 1)
-		} else {
-			MM = MM + 1;
-		}
-		var today = yyyy + "-" + (MM) + "-" + dd;
-		console.log("today:" + today);
-		//count how many installment dates already passed
-		var count = 0;
-		if (installments != 0) {
-			$(".payments-table .payment-date").each(function (index) {
-				var date = $(this).val();
-				console.log("date: " + date);
-				if (today >= date) {
-					console.log("today > date");
-					//date passed
-					count = count + 1
-				}
-			});
-		}
-		if (count != 0) {
-			var paymentPerMonth = sum / installments;
-			console.log(" paymentPerMonth: " + paymentPerMonth);
-			var amountToSubstractFromDebt = paymentPerMonth * count;
-			console.log(" amountToSubstractFromDebt: " + amountToSubstractFromDebt);
-			var debt = sum - amountToSubstractFromDebt
-			console.log(" sum: " + sum);
-			console.log(" debt: " + debt);
-			$("#Debt").val(debt);
-		} else {
-			$("#Debt").val(sum);
-		}
-	};
-
-	$(".payments-table").on("change", ".payment-date", function (e) {
-		console.log("in change .payments-table ");
-		$.fn.updateDebt();
-	});
-
-	$("#Request_ExchangeRate").change(function (e) {
-		console.log("in change #Request_ExchangeRate ");
-		$.fn.updateDebt();
-	});
+$(".load-product-edit").on("click", function (e) {
+	console.log("inside of load product edit")
+	e.preventDefault();
+	e.stopPropagation();
+	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
+	var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+	console.log("itemurl: " + $itemurl);
+	$.fn.CallPage($itemurl, "edit");
+	return false;
+});
 
 
-	$("#sum-dollars").change(function (e) {
-		console.log("in change #sum-dollars ");
-		$.fn.updateDebt();
-	});
-
-	$("#Request_ParentRequest_Installments").change(function () {
-		console.log("in change Request_ParentRequest_Installments ");
-		$.fn.updateDebt();
-	});
-
-	$('#submitAddLocation').click(function () {
-		$('#loading').show();
-	});
-
-
-
-
-	$(".load-location-index-view").click(function (e) {
-		//clear the div to restart filling with new children
-		$.fn.setUpLocationIndexList($(this).val())
-	});
-
-	$.fn.setUpLocationIndexList = function (val) {
-		$("#loading3").show();
-		//fill up col 2 with the next one
-		var myDiv = $(".colOne");
-		var typeId = val;
-		//console.log("about to call ajax with a parentid of: " + parentId);
-		$.ajax({
-			//IMPORTANT: ADD IN THE ID
-			url: "/Locations/LocationIndex/?typeId=" + typeId,
-			type: 'GET',
-			cache: false,
-			context: myDiv,
-			success: function (result) {
-				$(".VisualBoxColumn").hide();
-				$(".colTwoSublocations").hide();
-				$("#loading3").hide();
-				myDiv.show();
-				this.html(result);
-
+$.fn.updateDebt = function () {
+	console.log("in update debt");
+	var sum = $("#Request_Cost").val();
+	var installments = $("#Request_ParentRequest_Installments").val();
+	var tdate = new Date();
+	var dd = tdate.getDate(); //yields day
+	var MM = tdate.getMonth(); //yields month
+	var yyyy = tdate.getFullYear(); //yields year
+	if (dd < 10) {
+		dd = "0" + dd
+	}
+	if (MM < 10) {
+		MM = "0" + (MM + 1)
+	} else {
+		MM = MM + 1;
+	}
+	var today = yyyy + "-" + (MM) + "-" + dd;
+	console.log("today:" + today);
+	//count how many installment dates already passed
+	var count = 0;
+	if (installments != 0) {
+		$(".payments-table .payment-date").each(function (index) {
+			var date = $(this).val();
+			console.log("date: " + date);
+			if (today >= date) {
+				console.log("today > date");
+				//date passed
+				count = count + 1
 			}
 		});
+	}
+	if (count != 0) {
+		var paymentPerMonth = sum / installments;
+		console.log(" paymentPerMonth: " + paymentPerMonth);
+		var amountToSubstractFromDebt = paymentPerMonth * count;
+		console.log(" amountToSubstractFromDebt: " + amountToSubstractFromDebt);
+		var debt = sum - amountToSubstractFromDebt
+		console.log(" sum: " + sum);
+		console.log(" debt: " + debt);
+		$("#Debt").val(debt);
+	} else {
+		$("#Debt").val(sum);
+	}
+};
 
-	};
+$(".payments-table").on("change", ".payment-date", function (e) {
+	console.log("in change .payments-table ");
+	$.fn.updateDebt();
+});
+
+$("#Request_ExchangeRate").change(function (e) {
+	console.log("in change #Request_ExchangeRate ");
+	$.fn.updateDebt();
+});
 
 
-	$(".load-sublocation-view").click(function (e) {
-		//add or remove the background class in col 1
-		//$(".load-sublocation-view").parent().removeClass("td-selected");
-		//$(this).parent().addClass("td-selected");
-		$("#loading1").show();
-		//fill up col 2 with the next one
-		var myDiv = $(".colTwoSublocations");
-		var parentId = $(this).val();
+$("#sum-dollars").change(function (e) {
+	console.log("in change #sum-dollars ");
+	$.fn.updateDebt();
+});
 
-		var parentsParentId = $(this).closest('tr').attr('name');
+$("#Request_ParentRequest_Installments").change(function () {
+	console.log("in change Request_ParentRequest_Installments ");
+	$.fn.updateDebt();
+});
 
-		if ($("#colTwoSublocations" + parentsParentId).length == 0) {
-			$('.colTwoSublocations').append('<div class="colTwoSublocationsChildren" id="colTwoSublocations' + parentsParentId + '"></div>');
+$('#submitAddLocation').click(function () {
+	$('#loading').show();
+});
+
+
+
+
+$(".load-location-index-view").click(function (e) {
+	//clear the div to restart filling with new children
+	$.fn.setUpLocationIndexList($(this).val())
+});
+
+$.fn.setUpLocationIndexList = function (val) {
+	$("#loading3").show();
+	//fill up col 2 with the next one
+	var myDiv = $(".colOne");
+	var typeId = val;
+	//console.log("about to call ajax with a parentid of: " + parentId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/LocationIndex/?typeId=" + typeId,
+		type: 'GET',
+		cache: false,
+		context: myDiv,
+		success: function (result) {
+			$(".VisualBoxColumn").hide();
+			$(".colTwoSublocations").hide();
+			$("#loading3").hide();
+			myDiv.show();
+			this.html(result);
+
 		}
-		//console.log("about to call ajax with a parentid of: " + parentId);
-		$.ajax({
-			//IMPORTANT: ADD IN THE ID
-			url: "/Locations/SublocationIndex/?parentId=" + parentId,
-			type: 'GET',
-			cache: false,
-			context: $("#colTwoSublocations" + parentsParentId),
-			success: function (result) {
-				myDiv.show();
-				$("#loading1").hide();
-				this.html(result);
-
-			}
-		});
-
-		$.fn.setUpVisual($(this).val());
-
-
 	});
 
-	$.fn.setUpVisual = function (val) {
-		$("#loading2").show();
-		//fill up col three with the visual
-		var visualDiv = $(".VisualBoxColumn");
-		var visualContainerId = val;
-		//console.log("about to call ajax with a visual container id of: " + visualContainerId);
-		$.ajax({
-			url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
-			type: 'GET',
-			cache: false,
-			context: visualDiv,
-			success: function (result) {
-				visualDiv.show();
-				this.html(result);
-				$("#loading2").hide();
-			}
-		});
+};
+
+
+$(".load-sublocation-view").click(function (e) {
+	//add or remove the background class in col 1
+	//$(".load-sublocation-view").parent().removeClass("td-selected");
+	//$(this).parent().addClass("td-selected");
+	$("#loading1").show();
+	//fill up col 2 with the next one
+	var myDiv = $(".colTwoSublocations");
+	var parentId = $(this).val();
+
+	var parentsParentId = $(this).closest('tr').attr('name');
+
+	if ($("#colTwoSublocations" + parentsParentId).length == 0) {
+		$('.colTwoSublocations').append('<div class="colTwoSublocationsChildren" id="colTwoSublocations' + parentsParentId + '"></div>');
+	}
+	//console.log("about to call ajax with a parentid of: " + parentId);
+	$.ajax({
+		//IMPORTANT: ADD IN THE ID
+		url: "/Locations/SublocationIndex/?parentId=" + parentId,
+		type: 'GET',
+		cache: false,
+		context: $("#colTwoSublocations" + parentsParentId),
+		success: function (result) {
+			myDiv.show();
+			$("#loading1").hide();
+			this.html(result);
+
+		}
+	});
+
+	$.fn.setUpVisual($(this).val());
+
+
+});
+
+$.fn.setUpVisual = function (val) {
+	$("#loading2").show();
+	//fill up col three with the visual
+	var visualDiv = $(".VisualBoxColumn");
+	var visualContainerId = val;
+	//console.log("about to call ajax with a visual container id of: " + visualContainerId);
+	$.ajax({
+		url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
+		type: 'GET',
+		cache: false,
+		context: visualDiv,
+		success: function (result) {
+			visualDiv.show();
+			this.html(result);
+			$("#loading2").hide();
+		}
+	});
 };
 
 $.fn.validateItemTab = function () {
@@ -1128,12 +1128,12 @@ $.fn.validateItemTab = function () {
 	valid = $("#Request_Product_ProductName").attr('aria-invalid');
 	console.log("valid: " + valid);
 	if (valid == "true" || $("#Request_Product_ProductName").val() == "") {
-		console.log("valid: "+valid);
+		console.log("valid: " + valid);
 		return;
 	}
 	console.log("valid1: " + valid);
 	valid = $("#sublist").attr('aria-invalid');
-	if (valid == "true" || $("#sublist").val()=="") {
+	if (valid == "true" || $("#sublist").val() == "") {
 		return;
 	}
 	console.log("valid2: " + valid);
@@ -1148,7 +1148,7 @@ $.fn.validateItemTab = function () {
 	}
 	console.log("valid4: " + valid);
 	valid = $("#vendorList").attr('aria-invalid');
-	if (valid == "true" || $("#vendorList").val()=="") {
+	if (valid == "true" || $("#vendorList").val() == "") {
 		return;
 	}
 	console.log("valid5: " + valid);
@@ -1168,19 +1168,19 @@ $.fn.validateItemTab = function () {
 	}
 	var validDate = true;
 	var dateVal = $(".create-modal-invoice-date").val();
-	console.log("date val: "+dateVal)
-	if (dateVal!= undefined) {
+	console.log("date val: " + dateVal)
+	if (dateVal != undefined) {
 
 		validDate = $.fn.validateDateisGreaterThanOrEqualToToday(dateVal)
 	}
 	valid = "" + !validDate;
 	console.log("valid date: " + valid);
-	if (valid == "true" || $("#Request_ParentRequest_InvoiceDate").val() =="") {
+	if (valid == "true" || $("#Request_ParentRequest_InvoiceDate").val() == "") {
 		return;
 	}
 	console.log("valid7: " + valid);
 	valid = $("#Request_ExpectedSupplyDays").attr('aria-invalid');
-	if (valid == "true" || $("#Request_ExpectedSupplyDays").val()=="") {
+	if (valid == "true" || $("#Request_ExpectedSupplyDays").val() == "") {
 		return;
 	}
 	valid = $("#Request_CatalogNumber").attr('aria-invalid');
@@ -1199,7 +1199,7 @@ $.fn.validateItemTab = function () {
 }
 
 $("#Request_ParentRequest_InvoiceDate").change(function () {
-	
+
 });
 $('#myModal').change(
 	function () {
@@ -1239,7 +1239,7 @@ $.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
 	var MM = tdate.getMonth(); //yields month
 	var yyyy = tdate.getFullYear(); //yields year
 	if (dd < 10) {
-		dd="0"+dd
+		dd = "0" + dd
 	}
 	if (MM < 10) {
 		MM = "0" + (MM + 1);
@@ -1248,7 +1248,7 @@ $.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
 	}
 	var today = yyyy + "-" + (MM) + "-" + dd;
 	console.log("today:" + today);
-		//count how many installment dates already passed
+	//count how many installment dates already passed
 	if (date < today) {
 		return false;
 	}
@@ -1300,7 +1300,7 @@ $("#location-tab").click(function () {
 });
 
 
-$("#Request_Terms").change( function () {
+$("#Request_Terms").change(function () {
 	console.log("in change Request_Terms");
 	if ($(this).val() == -1) {
 		$(".installments").hide();
@@ -1353,9 +1353,9 @@ $.fn.validatePriceTab = function () {
 		} else {
 			valid = "true";
 		}
-	} 
+	}
 
-	if (valid == "false" || valid==undefined) {
+	if (valid == "false" || valid == undefined) {
 		$("#item-tab").prop("disabled", false);
 		$("#documents-tab").prop("disabled", false);
 		$("#comments-tab").prop("disabled", false);
@@ -1366,5 +1366,113 @@ $.fn.validatePriceTab = function () {
 	return valid;
 }
 $("#profile-img").click(function () {
-		$("#logout-form").toggle();
+	$("#logout-form").toggle();
+});
+
+
+$(".create-user .permissions-tab").on("click", function () {
+	console.log("permissions tab opened");
+	$.fn.HideAllPermissionsDivs();
+});
+
+$.fn.HideAllPermissionsDivs = function () {
+	console.log("hide all permissions function entered");
+	$(".orders-list").hide();
+	$(".protocols-list").hide();
+	$(".operations-list").hide();
+	$(".biomarkers-list").hide();
+	$(".timekeeper-list").hide();
+	$(".lab-list").hide();
+	$(".accounting-list").hide();
+	$(".expenses-list").hide();
+	$(".income-list").hide();
+	$(".users-list").hide();
+};
+
+$(".back-to-main-permissions").on("click", function (e) {
+	console.log("back to main permissions clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$.fn.HideAllPermissionsDivs();
+	$(".main-permissions").show();
+});
+
+$(".open-orders-list").on("click", function (e) {
+	console.log("open orders lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".orders-list").show();
+});
+
+$(".open-protocols-list").on("click", function (e) {
+	console.log("open protocols lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".protocols-list").show();
+});
+
+$(".open-operations-list").on("click", function (e) {
+	console.log("open operations lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".operations-list").show();
+});
+
+$(".open-biomarkers-list").on("click", function (e) {
+	console.log("open biomarkers lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".biomarkers-list").show();
+});
+
+$(".open-timekeepers-list").on("click", function (e) {
+	console.log("open timekeeper lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".timekeeper-list").show();
+});
+
+$(".open-lab-list").on("click", function (e) {
+	console.log("open lab lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".lab-list").show();
+});
+
+$(".open-accounting-list").on("click", function (e) {
+	console.log("open accounting lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".accounting-list").show();
+});
+
+$(".open-expenses-list").on("click", function (e) {
+	console.log("open expenses lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".expenses-list").show();
+});
+
+$(".open-income-list").on("click", function (e) {
+	console.log("open income lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".income-list").show();
+});
+
+$(".open-users-list").on("click", function (e) {
+	console.log("open users lsit clicked");
+	e.preventDefault();
+	e.stopPropagation();
+	$(".main-permissions").hide();
+	$(".users-list").show();
 });

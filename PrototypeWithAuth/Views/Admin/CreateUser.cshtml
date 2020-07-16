@@ -15,7 +15,7 @@
     ViewData["Title"] = "CreateUser";
     Layout = "~/Views/Shared/UsersView.cshtml";
 }
-<div class="card col-8 offset-2" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
+<div class="card col-8 offset-2 create-user" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
     <div class="card-body">
         <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
@@ -35,7 +35,7 @@
                         <div class="container-fluid div-tabs text-center">
                             <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                 <li class="nav-item"><a data-toggle="tab" href="#details" class="nav-link user-nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Details</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#permissions" class="nav-link user-nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Permissions</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#permissions" class="nav-link user-nav-link permissions-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Permissions</a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#budget" class="nav-link user-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget</a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#more" class="nav-link documents-tab user-nav-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />More</a></li>
                             </ul>
@@ -150,6 +150,103 @@
                                                 <span>Users</span>
                                             </a>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="orders-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/inventory_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size: 1.2em;"> Orders &amp; Inventory</span>
+                                    </div>
+                                    <div class="col-3 offset-2 mt-3">
+                                        @foreach(var orderPermission in Model.OrderList)
+                                        {
+                                            @Html.CheckBoxFor(m => m.OrderList[orderPermission.Key])
+                                            @Html.LabelFor(m => m.OrderList[orderPermission.Key])
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="protocols-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/protocols_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size: 1.2em;">Protocols</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="operations-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/operation_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size:1.2em;">Operations</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="biomarkers-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/biomarkers_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size:1.2em;">Biomarkers</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timekeeper-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/timekeeper_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size:1.2em;">Timekeeper</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lab-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/labmanagments_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size:1.2em;">Lab Management</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accounting-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/accounting_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size:1.2em;">Accounting</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="expenses-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/expenses_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size: 1.2em;">Expenses</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="income-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/income_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size: 1.2em;">Income</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="users-list">
+                                <div class="row h-100">
+                                    <div class="col-12 my-auto">
+                                        <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                        <img src="~/images/css/usericons/users_dropdown@2x.png" class="my-auto" width="40" />
+                                        <span class="my-auto" style="font-size: 1.2em;">Users</span>
                                     </div>
                                 </div>
                             </div>
