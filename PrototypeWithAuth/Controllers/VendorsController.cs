@@ -220,8 +220,19 @@ namespace PrototypeWithAuth.Controllers
         {
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
+            List<VendorContact> vendorContacts = new List<VendorContact>();
+            createSupplierViewModel.VendorContacts = vendorContacts;
+            return View(createSupplierViewModel);
+        }
 
-            return View();
+        [HttpGet]
+        public IActionResult AddContact()
+        {
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+            VendorContact vendorContact = new VendorContact();
+            return PartialView(vendorContact);
         }
 
         // POST: Vendors/Create
@@ -229,18 +240,24 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> CreateSupplier([Bind("VendorID,VendorEnName,VendorHeName,VendorBuisnessID,ContactPerson,ContactEmail,OrderEmail,VendorContactPhone1,VendorContactPhone2,VendorFax,VendorCity,VendorStreet,VendorZip,VendorWebsite,VendorBank,VendorBankBranch,VendorAccountNum,VendorSwift,VendorBIC,VendorGoldAccount")] Vendor vendor)
+        [Authorize(Roles = "Admin, Accounting")] 
+        public IActionResult Create(CreateSupplierViewModel createSupplierViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vendor);
-                await _context.SaveChangesAsync();
+                _context.Add(createSupplierViewModel.Vendor);
+                _context.SaveChanges();
+                foreach (var vendorContact in createSupplierViewModel.VendorContacts)
+                {
+                    vendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                    _context.Add(vendorContact);
+                }
+                _context.SaveChanges();
                 return RedirectToAction(nameof(IndexForPayment));
             }
 
 
-            return View(vendor);
+            return View(createSupplierViewModel);
         }
 
         // GET: Vendors/Edit/5

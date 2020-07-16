@@ -18,7 +18,7 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Supplier name [EN]")]
         public string VendorEnName { get; set; }
         
-        [MaxLength (50)]
+        [Required, MaxLength (50)]
         [Display(Name = "Supplier name [He]")]
         public string VendorHeName { get; set; }
        
@@ -27,15 +27,15 @@ namespace PrototypeWithAuth.Models
         public string VendorBuisnessID { get; set; }
         
         [MaxLength (50)]
+        [EmailAddress]
         public string InfoEmail { get; set; }
-        
+        [Required]
         [MaxLength (50)]
         public string OrdersEmail { get; set; }
-        
+        [Required]
         [MinLength(9)]
         [Display(Name = "Telephone")]
         public string VendorTelephone { get; set; }
-        
         [MinLength(9)]
         [Display(Name = "Cell")]
         public string VendorCellPhone { get; set; }
@@ -43,15 +43,15 @@ namespace PrototypeWithAuth.Models
         [MinLength(9)]
         [Display(Name = "Fax")]
         public string VendorFax { get; set; }
-        
+        [Required]
         [MaxLength(50)]
         [Display(Name = "City")]
         public string VendorCity { get; set; }
-
+        [Required]
         [MaxLength(50)]
         [Display(Name = "Country")]
         public string VendorCountry { get; set; }
-
+        [Required]
         [MaxLength(50)]
         [Display(Name = "Street")]
         public string VendorStreet { get; set; }

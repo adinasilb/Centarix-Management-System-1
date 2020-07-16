@@ -1368,3 +1368,4 @@ $.fn.validatePriceTab = function () {
 $("#profile-img").click(function () {
 		$("#logout-form").toggle();
 });
+

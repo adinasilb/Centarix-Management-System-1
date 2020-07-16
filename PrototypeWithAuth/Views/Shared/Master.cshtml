@@ -586,7 +586,30 @@
             self.toggleClass('active');
             hide = false;
         });
+    </script>
+    <script>
+        $("#contact-tab").click(function () {
+            console.log("in onclickcontact");
+            $.fn.addContactBlock();
+        });
 
+        $.fn.addContactBlock = function () {
+            var contactDiv = $("#contact-info");
+            //console.log("about to call ajax with a visual container id of: " + visualContainerId);
+            $.ajax({
+                url: "/Vendors/AddContact/",
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    contactDiv.append(result);
+                }
+            });
+        };
+
+        $("#addSuplierContact").click(function () {
+            console.log("in onclick addSuplierContact");
+            $.fn.addContactBlock();
+        });
     </script>
 
 </body>

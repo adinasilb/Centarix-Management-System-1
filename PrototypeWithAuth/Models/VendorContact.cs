@@ -11,8 +11,16 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int VendorContactID { get; set; }
+        [Required]
+        [Display(Name = "Contact Name")]
         public string VendorContactName { get; set; }
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Contact Email")]
         public string VendorContactEmail { get; set; }
+        [Required]
+        [Phone]
+        [Display(Name = "Contact Phone")]
         public string VendorContactPhone { get; set; }
         public int VendorID { get; set; }
         public Vendor Vendor { get; set; }
