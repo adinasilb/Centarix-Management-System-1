@@ -148,16 +148,13 @@ namespace PrototypeWithAuth.Controllers
              &&
              (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBuisnessID) || fv.VendorBuisnessID.Contains(vendorSearchViewModel.Vendor.VendorBuisnessID))
              &&
-
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.ContactPerson) || fv.ContactPerson.Contains(vendorSearchViewModel.Vendor.ContactPerson))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.ContactEmail) || fv.ContactEmail.Contains(vendorSearchViewModel.Vendor.ContactEmail))
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.InfoEmail) || fv.InfoEmail.Contains(vendorSearchViewModel.Vendor.InfoEmail))
             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.OrderEmail) || fv.OrderEmail.Contains(vendorSearchViewModel.Vendor.OrderEmail))
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.OrdersEmail) || fv.OrdersEmail.Contains(vendorSearchViewModel.Vendor.OrdersEmail))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorContactPhone1) || fv.VendorContactPhone1.Contains(vendorSearchViewModel.Vendor.VendorContactPhone1))
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorTelephone) || fv.VendorTelephone.Contains(vendorSearchViewModel.Vendor.VendorTelephone))
               &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorContactPhone2) || fv.VendorContactPhone2.Contains(vendorSearchViewModel.Vendor.VendorContactPhone2))
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorCellPhone) || fv.VendorCellPhone.Contains(vendorSearchViewModel.Vendor.VendorCellPhone))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.Vendor.VendorFax))
              &&
@@ -233,7 +230,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> Create([Bind("VendorID,VendorEnName,VendorHeName,VendorBuisnessID,ContactPerson,ContactEmail,OrderEmail,VendorContactPhone1,VendorContactPhone2,VendorFax,VendorCity,VendorStreet,VendorZip,VendorWebsite,VendorBank,VendorBankBranch,VendorAccountNum,VendorSwift,VendorBIC,VendorGoldAccount")] Vendor vendor)
+        public async Task<IActionResult> CreateSupplier([Bind("VendorID,VendorEnName,VendorHeName,VendorBuisnessID,ContactPerson,ContactEmail,OrderEmail,VendorContactPhone1,VendorContactPhone2,VendorFax,VendorCity,VendorStreet,VendorZip,VendorWebsite,VendorBank,VendorBankBranch,VendorAccountNum,VendorSwift,VendorBIC,VendorGoldAccount")] Vendor vendor)
         {
             if (ModelState.IsValid)
             {

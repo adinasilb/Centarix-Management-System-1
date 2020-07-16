@@ -2124,7 +2124,7 @@ namespace PrototypeWithAuth.Controllers
                 string ownerEmail = request.ParentRequest.ApplicationUser.Email;
                 string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
                 string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
-                string vendorEmail = request.Product.Vendor.OrderEmail;
+                string vendorEmail = request.Product.Vendor.OrdersEmail;
                 string vendorName = request.Product.Vendor.VendorEnName;
 
                 //add a "From" Email

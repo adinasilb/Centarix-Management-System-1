@@ -93,6 +93,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\files\" />
+    <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
   </ItemGroup>
 
