@@ -20,7 +20,9 @@ namespace PrototypeWithAuth.Models
 
         [ForeignKey("ApplicationUserID")]
         public ApplicationUser ApplicationUser { get; set; }
+        [Required]
         public string CommentText { get; set; }
+        public string CommentType { get; set; }
 
         [DataType(DataType.Date)]
         private DateTime commentTimeStamp = DateTime.Now; //should this be readonly -ADINA
