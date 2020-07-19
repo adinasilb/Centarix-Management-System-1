@@ -9,6 +9,21 @@ for details on configuring this project to bundle and minify static web assets. 
 
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 
+
+/*MDBootstrap material select*/
+[type=checkbox]:checked + label:before {
+    border-right: 2px solid white !important;
+    border-bottom: 2px solid white !important;
+}
+/*
+[type=checkbox]:checked{
+    color: black;
+}*/
+.form-check [type="checkbox"][class*='filled-in']:checked + label:after {
+    border-color: black;
+    background-color: black;
+}
+
 body {
     min-height: 100% !important;
 }
@@ -211,10 +226,14 @@ body {
     margin-bottom: 1rem;
 }
 
-    .form-control-plaintext:focus {
-        outline-width: 0;
-        box-shadow: 0 1px 0 0 black;
-    }
+.form-control-plaintext:focus {
+    outline-width: 0;
+    box-shadow: 0 1px 0 0 black;
+}
+
+.form-control-plaintext:read-only {
+    background-color: #F9F9F9 !important;
+}
 
 /*Login page buttons*/
 .login-field {

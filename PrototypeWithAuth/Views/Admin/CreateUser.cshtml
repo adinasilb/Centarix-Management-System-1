@@ -27,7 +27,7 @@
                         <h2 class="mt-1">New User</h2>
                     </div>
                     <div class="col-4">
-                        <input type="submit" value="ADD USER" asp-action="CreateUserModal" class="inv-user-button mt-1 btn-block py-2" style="float: right;" />
+                        <input type="submit" value="ADD USER" asp-action="CreateUser" class="inv-user-button mt-1 btn-block py-2" style="float: right;" />
                     </div>
                 </div>
                 <div class="row">
@@ -160,11 +160,15 @@
                                         <img src="~/images/css/usericons/inventory_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size: 1.2em;"> Orders &amp; Inventory</span>
                                     </div>
-                                    <div class="col-3 offset-2 mt-3">
-                                        @foreach(var orderPermission in Model.OrderList)
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.OrderRoles.Count(); i++)
                                         {
-                                            @Html.CheckBoxFor(m => m.OrderList[orderPermission.Key])
-                                            @Html.LabelFor(m => m.OrderList[orderPermission.Key])
+                                            @Html.HiddenFor(model => model.OrderRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.OrderRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="OrderRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
+                                            </div>
                                         }
                                     </div>
                                 </div>
@@ -176,6 +180,17 @@
                                         <img src="~/images/css/usericons/protocols_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size: 1.2em;">Protocols</span>
                                     </div>
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.ProtocolRoles.Count(); i++)
+                                        {
+                                            @Html.HiddenFor(model => model.ProtocolRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.ProtocolRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="ProtocolRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="ProtocolRoles[i].Selected">@Model.ProtocolRoles[i].Name</label>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                             <div class="operations-list">
@@ -184,6 +199,17 @@
                                         <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
                                         <img src="~/images/css/usericons/operation_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size:1.2em;">Operations</span>
+                                    </div>
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.OperationRoles.Count(); i++)
+                                        {
+                                            @Html.HiddenFor(model => model.OperationRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.OperationRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="OperationRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="OperationRoles[i].Selected">@Model.OperationRoles[i].Name</label>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -194,6 +220,17 @@
                                         <img src="~/images/css/usericons/biomarkers_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size:1.2em;">Biomarkers</span>
                                     </div>
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.BiomarkerRoles.Count(); i++)
+                                        {
+                                            @Html.HiddenFor(model => model.BiomarkerRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.BiomarkerRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="BiomarkerRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="BiomarkerRoles[i].Selected">@Model.BiomarkerRoles[i].Name</label>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                             <div class="timekeeper-list">
@@ -202,6 +239,17 @@
                                         <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
                                         <img src="~/images/css/usericons/timekeeper_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size:1.2em;">Timekeeper</span>
+                                    </div>
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.TimekeeperRoles.Count(); i++)
+                                        {
+                                            @Html.HiddenFor(model => model.TimekeeperRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.TimekeeperRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="TimekeeperRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="TimekeeperRoles[i].Selected">@Model.TimekeeperRoles[i].Name</label>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -212,6 +260,17 @@
                                         <img src="~/images/css/usericons/labmanagments_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size:1.2em;">Lab Management</span>
                                     </div>
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.LabManagementRoles.Count(); i++)
+                                        {
+                                            @Html.HiddenFor(model => model.LabManagementRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.LabManagementRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="LabManagementRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="LabManagementRoles[i].Selected">@Model.LabManagementRoles[i].Name</label>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                             <div class="accounting-list">
@@ -220,6 +279,17 @@
                                         <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
                                         <img src="~/images/css/usericons/accounting_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size:1.2em;">Accounting</span>
+                                    </div>
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.AccountingRoles.Count(); i++)
+                                        {
+                                            @Html.HiddenFor(model => model.AccountingRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.AccountingRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="AccountingRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="AccountingRoles[i].Selected">@Model.AccountingRoles[i].Name</label>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -230,6 +300,17 @@
                                         <img src="~/images/css/usericons/expenses_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size: 1.2em;">Expenses</span>
                                     </div>
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.ExpenseesRoles.Count(); i++)
+                                        {
+                                            @Html.HiddenFor(model => model.ExpenseesRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.ExpenseesRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="ExpenseesRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="ExpenseesRoles[i].Selected">@Model.ExpenseesRoles[i].Name</label>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                             <div class="income-list">
@@ -238,6 +319,17 @@
                                         <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
                                         <img src="~/images/css/usericons/income_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size: 1.2em;">Income</span>
+                                    </div>
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.IncomeRoles.Count(); i++)
+                                        {
+                                            @Html.HiddenFor(model => model.ExpenseesRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.ExpenseesRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="ExpenseesRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="ExpenseesRoles[i].Selected">@Model.ExpenseesRoles[i].Name</label>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -248,23 +340,34 @@
                                         <img src="~/images/css/usericons/users_dropdown@2x.png" class="my-auto" width="40" />
                                         <span class="my-auto" style="font-size: 1.2em;">Users</span>
                                     </div>
+                                    <div class="col-3 offset-1 mt-4">
+                                        @for (var i = 0; i < Model.UserRoles.Count(); i++)
+                                        {
+                                            @Html.HiddenFor(model => model.UserRoles[i].MenuItemsID)
+                                            @Html.HiddenFor(model => model.UserRoles[i].Name)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input filled-in" asp-for="UserRoles[i].Selected" />
+                                                <label class="form-check-label" asp-for="UserRoles[i].Selected">@Model.UserRoles[i].Name</label>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div id="budget" class="tab-pane fade">
                             <div class="row pb-3"><strong>Lab</strong></div>
                             <div class="row pb-5">
-                                <div class="col-4">
+                                <div class="col-4 pl-0 pr-5">
                                     <label asp-for="LabMonthlyLimit" class="control-label"></label>
                                     <input asp-for="LabMonthlyLimit" class="form-control-plaintext border-bottom" />
                                     <span asp-validation-for="LabMonthlyLimit" class="text-danger"></span>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-4 pl-0 pr-5">
                                     <label asp-for="LabUnitLimit" class="control-label"></label>
                                     <input asp-for="LabUnitLimit" class="form-control-plaintext border-bottom" />
                                     <span asp-validation-for="LabUnitLimit" class="text-danger"></span>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-4 pl-0 pr-5">
                                     <label asp-for="LabOrderLimit" class="control-label"></label>
                                     <input asp-for="LabOrderLimit" class="form-control-plaintext border-bottom" />
                                     <span asp-validation-for="LabOrderLimit" class="text-danger"></span>
@@ -272,17 +375,17 @@
                             </div>
                             <div class="row pb-3"><strong>Operation</strong></div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-4 pl-0 pr-5">
                                     <label asp-for="OperationMonthlyLimit" class="control-label"></label>
                                     <input asp-for="OperationMonthlyLimit" class="form-control-plaintext border-bottom" />
                                     <span asp-validation-for="OperationMonthlyLimit" class="text-danger"></span>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-4 pl-0 pr-5">
                                     <label asp-for="OperationUnitLimit" class="control-label"></label>
                                     <input asp-for="OperationUnitLimit" class="form-control-plaintext border-bottom" />
                                     <span asp-validation-for="OperationUnitLimit" class="text-danger"></span>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-4 pl-0 pr-5">
                                     <label asp-for="OperaitonOrderLimit" class="control-label"></label>
                                     <input asp-for="OperaitonOrderLimit" class="form-control-plaintext border-bottom" />
                                     <span asp-validation-for="OperaitonOrderLimit" class="text-danger"></span>

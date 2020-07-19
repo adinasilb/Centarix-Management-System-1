@@ -1375,6 +1375,11 @@ $(".create-user .permissions-tab").on("click", function () {
 	$.fn.HideAllPermissionsDivs();
 });
 
+$(".edit-user .permissions-tab").on("click", function () {
+	console.log("permissions tab opened");
+	$.fn.HideAllPermissionsDivs();
+});
+
 $.fn.HideAllPermissionsDivs = function () {
 	console.log("hide all permissions function entered");
 	$(".orders-list").hide();

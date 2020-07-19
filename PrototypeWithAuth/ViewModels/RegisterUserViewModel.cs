@@ -13,6 +13,8 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class RegisterUserViewModel
     {
+        public string ApplicationUserID { get; set; } //this is used for the Edit form
+
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.Text)]
@@ -57,7 +59,16 @@ namespace PrototypeWithAuth.ViewModels
 
 
         //Permissions
-        public Dictionary<string, bool> OrderList { get; set; }
+        public List<UserRoleViewModel> OrderRoles { get; set; }
+        public List<UserRoleViewModel> ProtocolRoles { get; set; }
+        public List<UserRoleViewModel> OperationRoles { get; set; }
+        public List<UserRoleViewModel> BiomarkerRoles { get; set; }
+        public List<UserRoleViewModel> TimekeeperRoles { get; set; }
+        public List<UserRoleViewModel> LabManagementRoles { get; set; }
+        public List<UserRoleViewModel> AccountingRoles { get; set; }
+        public List<UserRoleViewModel> ExpenseesRoles { get; set; }
+        public List<UserRoleViewModel> IncomeRoles { get; set; }
+        public List<UserRoleViewModel> UserRoles { get; set; }
 
         //Budget
 

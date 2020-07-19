@@ -225,6 +225,7 @@
         console.log("after mdb select 1");
         $('.datepicker').pickadate();
         $('#request-search a:first').tab('show'); @*I had to put this in here b/c otherwise it wasn't coming up on .search-link.click*@
+        $('#edit-user a:first').tab('show');
     });
 
     $(".search-link").on("click", function () {
@@ -452,8 +453,7 @@
             console.log("in doc ready");
             $('#createModalForm a:first').tab('show');
             // $('.mdb-select').materialSelect();
-            $('.mdb-select li:first-child').hide();
-            $('.mdb-select li:nth-child(2)').hide();
+            $('.edit-user a:first').tab('show');
         });
         $(".create-user-modal").on("click", function (e) {
             $("li a").removeClass("active");
