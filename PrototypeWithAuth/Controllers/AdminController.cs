@@ -484,6 +484,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles ="Admin, Users")]
+        public IActionResult DeleteUserModal(string Id)
+        {
+            var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
+            return PartialView(user);
+        }
+
+        [HttpGet]
         [Authorize(Roles = "Admin, Users")]
         public IActionResult GetHomeView()
         {

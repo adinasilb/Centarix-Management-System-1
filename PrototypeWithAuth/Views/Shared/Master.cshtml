@@ -527,6 +527,20 @@
             return false;
         });
 
+        //$(".delete-user-modal").on("click", function (e) {
+        //    e.preventDefault();
+        //    e.stopPropagation();
+        //    var $itemurl = "DeleteUserModal?id=" + $(this).val();
+        //    $.fn.CallPagePayment($itemurl, "");
+        //    return false;
+        //});
+
+        $.fn.DeleteUserModal = function ($itemurl) {
+            e.preventDefault();
+            e.stopPropagation();
+            $.fn.CallPagePayment($itemurl, '');
+            return false;
+        }
 
         $.fn.CallPagePayment = function ($itemurl, $Type = "") {
             console.log("item url: " + $itemurl);

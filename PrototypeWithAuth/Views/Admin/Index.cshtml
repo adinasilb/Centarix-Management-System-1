@@ -46,7 +46,12 @@
                     </a>
                 </td>
                 <td>
+                    @{ 
+                        var itemurl = "DeleteUserModal?id=" + user.Id;
+                    }
+                    <a href="" onclick="$.fn.DeleteUserModal(@itemurl)">
                         <img src="~/images/css/inventory/add-item/other icons/delete_dis.png" />
+                    </a>
                 </td>
             </tr>
         }
