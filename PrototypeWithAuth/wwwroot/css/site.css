@@ -290,6 +290,17 @@ body {
     text-transform: uppercase;
 }
 
+.inv-supplier-button {
+    background-color: #A26FF0;
+    border: 1px solid #A26FF0;
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.56rem 1.5rem;
+    font-size: 1.5625rem;
+    line-height: 1.5;
+}
+
 #createModalForm .mdb-select li:nth-child(2) {
     z-index: 1;
 }
@@ -685,6 +696,13 @@ a.nav-link {
     border-width: 0px;
     border-bottom: 4px solid #DB669D;
     color: #DB669D;
+}
+
+.container-fluid ul li a.supplier-nav-link.active {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid #A26FF0;
+    color: #A26FF0;
 }
 
 /*<<<< Modal Side Slide >>>>*/

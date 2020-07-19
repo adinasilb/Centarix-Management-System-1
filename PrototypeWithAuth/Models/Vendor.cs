@@ -15,44 +15,43 @@ namespace PrototypeWithAuth.Models
         public int VendorID { get; set; } 
         
         [Required, MaxLength(50)]
-        [Display(Name ="Supplier")]
+        [Display(Name = "Supplier name [EN]")]
         public string VendorEnName { get; set; }
         
-        [MaxLength (50)]
-        [Display(Name = "Name He")]
+        [Required, MaxLength (50)]
+        [Display(Name = "Supplier name [He]")]
         public string VendorHeName { get; set; }
        
         [Required, MinLength (9), MaxLength(9)]
         [Display(Name = "Company ID")]
         public string VendorBuisnessID { get; set; }
-
-        [MaxLength(50)]
-        [Display(Name = "Contact Name")]
-        public string ContactPerson { get; set; }
         
         [MaxLength (50)]
-        [Display(Name = "Contact Mail")]
-        public string ContactEmail { get; set; }
-        
+        [EmailAddress]
+        public string InfoEmail { get; set; }
+        [Required]
         [MaxLength (50)]
-        [Display(Name = "Email Info")]
-        public string OrderEmail { get; set; }
-        
+        public string OrdersEmail { get; set; }
+        [Required]
         [MinLength(9)]
-        [Display(Name = "Tel")]
-        public string VendorContactPhone1 { get; set; }
-        
+        [Display(Name = "Telephone")]
+        public string VendorTelephone { get; set; }
         [MinLength(9)]
-        public string VendorContactPhone2 { get; set; }
+        [Display(Name = "Cell")]
+        public string VendorCellPhone { get; set; }
         
         [MinLength(9)]
         [Display(Name = "Fax")]
         public string VendorFax { get; set; }
-        
+        [Required]
         [MaxLength(50)]
         [Display(Name = "City")]
         public string VendorCity { get; set; }
-        
+        [Required]
+        [MaxLength(50)]
+        [Display(Name = "Country")]
+        public string VendorCountry { get; set; }
+        [Required]
         [MaxLength(50)]
         [Display(Name = "Street")]
         public string VendorStreet { get; set; }
@@ -64,7 +63,7 @@ namespace PrototypeWithAuth.Models
         public string VendorWebsite { get; set; }
         
         [Required, MaxLength (50)]
-        [Display(Name = "Bank")]
+        [Display(Name = "Bank Name")]
         public string VendorBank { get; set; }
         
         [Required, MaxLength(4)]
@@ -85,6 +84,7 @@ namespace PrototypeWithAuth.Models
         public string VendorGoldAccount { get; set; }
         public IEnumerable<Product> Products { get; set; }
 
+        public IEnumerable<VendorContact> VendorContacts { get; set; }
 
     }
 }

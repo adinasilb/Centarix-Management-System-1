@@ -148,16 +148,13 @@ namespace PrototypeWithAuth.Controllers
              &&
              (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBuisnessID) || fv.VendorBuisnessID.Contains(vendorSearchViewModel.Vendor.VendorBuisnessID))
              &&
-
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.ContactPerson) || fv.ContactPerson.Contains(vendorSearchViewModel.Vendor.ContactPerson))
-             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.ContactEmail) || fv.ContactEmail.Contains(vendorSearchViewModel.Vendor.ContactEmail))
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.InfoEmail) || fv.InfoEmail.Contains(vendorSearchViewModel.Vendor.InfoEmail))
             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.OrderEmail) || fv.OrderEmail.Contains(vendorSearchViewModel.Vendor.OrderEmail))
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.OrdersEmail) || fv.OrdersEmail.Contains(vendorSearchViewModel.Vendor.OrdersEmail))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorContactPhone1) || fv.VendorContactPhone1.Contains(vendorSearchViewModel.Vendor.VendorContactPhone1))
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorTelephone) || fv.VendorTelephone.Contains(vendorSearchViewModel.Vendor.VendorTelephone))
               &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorContactPhone2) || fv.VendorContactPhone2.Contains(vendorSearchViewModel.Vendor.VendorContactPhone2))
+            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorCellPhone) || fv.VendorCellPhone.Contains(vendorSearchViewModel.Vendor.VendorCellPhone))
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.Vendor.VendorFax))
              &&
@@ -223,8 +220,19 @@ namespace PrototypeWithAuth.Controllers
         {
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
+            List<VendorContact> vendorContacts = new List<VendorContact>();
+            createSupplierViewModel.VendorContacts = vendorContacts;
+            return View(createSupplierViewModel);
+        }
 
-            return View();
+        [HttpGet]
+        public IActionResult AddContact()
+        {
+            //tempdata page type for active tab link
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+            VendorContact vendorContact = new VendorContact();
+            return PartialView(vendorContact);
         }
 
         // POST: Vendors/Create
@@ -232,18 +240,24 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> Create([Bind("VendorID,VendorEnName,VendorHeName,VendorBuisnessID,ContactPerson,ContactEmail,OrderEmail,VendorContactPhone1,VendorContactPhone2,VendorFax,VendorCity,VendorStreet,VendorZip,VendorWebsite,VendorBank,VendorBankBranch,VendorAccountNum,VendorSwift,VendorBIC,VendorGoldAccount")] Vendor vendor)
+        [Authorize(Roles = "Admin, Accounting")] 
+        public IActionResult Create(CreateSupplierViewModel createSupplierViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vendor);
-                await _context.SaveChangesAsync();
+                _context.Add(createSupplierViewModel.Vendor);
+                _context.SaveChanges();
+                foreach (var vendorContact in createSupplierViewModel.VendorContacts)
+                {
+                    vendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                    _context.Add(vendorContact);
+                }
+                _context.SaveChanges();
                 return RedirectToAction(nameof(IndexForPayment));
             }
 
 
-            return View(vendor);
+            return View(createSupplierViewModel);
         }
 
         // GET: Vendors/Edit/5

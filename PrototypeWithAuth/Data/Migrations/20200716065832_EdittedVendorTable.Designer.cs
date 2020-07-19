@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200716065832_EdittedVendorTable")]
+    partial class EdittedVendorTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1635,7 +1637,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("OrdersEmail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -1665,12 +1666,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorCity")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("VendorCountry")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -1686,12 +1685,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorHeName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("VendorStreet")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -1699,7 +1696,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorTelephone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorWebsite")
@@ -1721,15 +1717,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("VendorContactEmail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorContactName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorContactPhone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("VendorID")

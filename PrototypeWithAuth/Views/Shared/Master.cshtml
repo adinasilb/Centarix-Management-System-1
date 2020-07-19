@@ -563,6 +563,54 @@
             }
         });
     </script>
+    <script>
+
+        hide = true;
+        $('body').on("click", function () {
+            if (hide) $('.acc-sidebar').removeClass('active');
+            hide = true;
+        });
+
+        // add and remove .active
+        $('body').on('click', '.acc-sidebar', function () {
+
+            var self = $(this);
+
+            //if (self.hasClass('active')) {
+            //    $('.acc-sidebar').removeClass('active');
+            //    return false;
+            //}
+
+            $('.acc-sidebar').removeClass('active');
+
+            self.toggleClass('active');
+            hide = false;
+        });
+    </script>
+    <script>
+        $("#contact-tab").click(function () {
+            console.log("in onclickcontact");
+            $.fn.addContactBlock();
+        });
+
+        $.fn.addContactBlock = function () {
+            var contactDiv = $("#contact-info");
+            //console.log("about to call ajax with a visual container id of: " + visualContainerId);
+            $.ajax({
+                url: "/Vendors/AddContact/",
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    contactDiv.append(result);
+                }
+            });
+        };
+
+        $("#addSuplierContact").click(function () {
+            console.log("in onclick addSuplierContact");
+            $.fn.addContactBlock();
+        });
+    </script>
 
 </body>
 </html>
