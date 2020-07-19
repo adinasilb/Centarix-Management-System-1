@@ -1476,3 +1476,4 @@ $(".open-users-list").on("click", function (e) {
 	$(".main-permissions").hide();
 	$(".users-list").show();
 });
+

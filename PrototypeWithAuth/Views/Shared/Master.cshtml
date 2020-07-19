@@ -588,7 +588,10 @@
         });
     </script>
     <script>
-        $("#contact-tab").click(function () {
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+        $("#vendor-contact-tab").click(function () {
             console.log("in onclickcontact");
             $(".contact-info:hidden:first").find(".contact-active").val(true);
                $(".contact-info:hidden:first").show();
@@ -599,6 +602,30 @@
             $(".contact-info:hidden:first").find(".contact-active").val(true);
             $(".contact-info:hidden:first").show();
         });
+
+        $("#addSupplierComment").click(function () {
+            console.log("in onclick addSuplierComment");
+            $(".comment-info:hidden:first").find(".comment-active").val(true);
+            $(".comment-info:hidden:first").show();
+        });
+
+        //$('#addSupplierComment').popover({
+        //    trigger: 'click',
+        //    html: true,
+        //    content: function () {
+ 
+        //        var content = ''
+
+        //        content = $('#comment-types').html()
+        //        $(this).attr('data-content', content);
+        //        return content; //$('.popover-body').preappend(content);
+        //    } 
+
+        //}).on('shown.bs.popover', function () {
+        //});
+        //$('.popover-dismiss').popover({
+        //    trigger: 'focus'
+        //})
     </script>
 
 </body>
