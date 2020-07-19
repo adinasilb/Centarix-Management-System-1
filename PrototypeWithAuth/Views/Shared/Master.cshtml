@@ -590,25 +590,14 @@
     <script>
         $("#contact-tab").click(function () {
             console.log("in onclickcontact");
-            $.fn.addContactBlock();
+            $(".contact-info:hidden:first").find(".contact-active").val(true);
+               $(".contact-info:hidden:first").show();
         });
-
-        $.fn.addContactBlock = function () {
-            var contactDiv = $("#contact-info");
-            //console.log("about to call ajax with a visual container id of: " + visualContainerId);
-            $.ajax({
-                url: "/Vendors/AddContact/",
-                type: 'GET',
-                cache: false,
-                success: function (result) {
-                    contactDiv.append(result);
-                }
-            });
-        };
 
         $("#addSuplierContact").click(function () {
             console.log("in onclick addSuplierContact");
-            $.fn.addContactBlock();
+            $(".contact-info:hidden:first").find(".contact-active").val(true);
+            $(".contact-info:hidden:first").show();
         });
     </script>
 

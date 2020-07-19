@@ -9,6 +9,6 @@ namespace PrototypeWithAuth.ViewModels
     public class CreateSupplierViewModel
     {
         public Vendor Vendor { get; set; }
-        public List<VendorContact> VendorContacts { get; set; }
+        public List< AddContactViewModel> VendorContacts { get; set; }
     }
 }

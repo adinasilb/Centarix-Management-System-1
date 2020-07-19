@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Host;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
+using PrototypeWithAuth.Data.Migrations;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 
@@ -221,19 +224,25 @@ namespace PrototypeWithAuth.Controllers
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
              CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
-            List<VendorContact> vendorContacts = new List<VendorContact>();
+            List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
+            //only allowed to have 10 contacts
+            //have to hard coded becasuse did not know how to render dynamic partial views
+            for (int i = 0; i < 10; i++)
+            {
+                vendorContacts.Add(new AddContactViewModel());
+            }
             createSupplierViewModel.VendorContacts = vendorContacts;
             return View(createSupplierViewModel);
         }
 
-        [HttpGet]
-        public IActionResult AddContact()
-        {
-            //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-            VendorContact vendorContact = new VendorContact();
-            return PartialView(vendorContact);
-        }
+        //[HttpGet]
+        //public IActionResult AddContact()
+        //{
+        //    //tempdata page type for active tab link
+        //    TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+        //    VendorContact vendorContact = new VendorContact();
+        //    return PartialView(vendorContact);
+        //}
 
         // POST: Vendors/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -243,16 +252,32 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")] 
         public IActionResult Create(CreateSupplierViewModel createSupplierViewModel)
         {
+            List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
+            //loop throught the bedor contact to see which contact are filled in
+            for (int i=0; i< createSupplierViewModel.VendorContacts.Count();i++)
+            {
+                if (!createSupplierViewModel.VendorContacts[i].IsActive)
+                {
+                    ModelState.Remove($"VendorContacts[{i}].VendorContact.VendorContactName");
+                    ModelState.Remove($"VendorContacts[{i}].VendorContact.VendorContactEmail");
+                    ModelState.Remove($"VendorContacts[{i}].VendorContact.VendorContactPhone");
+                }
+                else
+                {
+                    vendorContacts.Add(createSupplierViewModel.VendorContacts[i]);
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(createSupplierViewModel.Vendor);
                 _context.SaveChanges();
-                foreach (var vendorContact in createSupplierViewModel.VendorContacts)
+                foreach (var vendorContact in vendorContacts)
                 {
-                    vendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                    _context.Add(vendorContact);
+                    vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                    _context.Add(vendorContact.VendorContact);
+                    _context.SaveChanges();
                 }
-                _context.SaveChanges();
+                
                 return RedirectToAction(nameof(IndexForPayment));
             }
 
