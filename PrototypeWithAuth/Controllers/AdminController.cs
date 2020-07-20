@@ -161,7 +161,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    UserName = registerUserViewModel.UserName,
+                    UserName = registerUserViewModel.Email,
                     Email = registerUserViewModel.Email,
                     FirstName = registerUserViewModel.FirstName,
                     LastName = registerUserViewModel.LastName,
@@ -274,7 +274,6 @@ namespace PrototypeWithAuth.Controllers
                     ApplicationUserID = u.Id,
                     FirstName = u.FirstName,
                     LastName = u.LastName,
-                    UserName = u.UserName,
                     Email = u.Email,
                     //do we want to show the secure app pass??
                     LabMonthlyLimit = u.LabMonthlyLimit,
@@ -380,7 +379,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> EditUser(RegisterUserViewModel registerUserViewModel)
         {
             var userEditted = _context.Users.Where(u => u.Id == registerUserViewModel.ApplicationUserID).FirstOrDefault();
-            userEditted.UserName = registerUserViewModel.UserName;
+            userEditted.UserName = registerUserViewModel.Email;
             userEditted.FirstName = registerUserViewModel.FirstName;
             userEditted.LastName = registerUserViewModel.LastName;
             userEditted.Email = registerUserViewModel.Email;

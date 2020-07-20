@@ -15,11 +15,11 @@ namespace PrototypeWithAuth.ViewModels
     {
         public string ApplicationUserID { get; set; } //this is used for the Edit form
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.Text)]
-        [Display(Name = "User Name")]
-        public string UserName { get; set; }
+        //[Required]
+        //[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+        //[DataType(DataType.Text)]
+        //[Display(Name = "User Name")]
+        //public string UserName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
@@ -72,11 +72,23 @@ namespace PrototypeWithAuth.ViewModels
 
         //Budget
 
+        [Display(Name = "Monthly Limit")]
         public double LabMonthlyLimit { get; set; }
+
+        [Display(Name = "Unit Limit")]
         public double LabUnitLimit { get; set; }
+
+        [Display(Name = "Order Limit")]
+
         public double LabOrderLimit { get; set; }
+
+        [Display(Name = "Monthly Limit")]
         public double OperationMonthlyLimit { get; set; }
+
+        [Display(Name = "Unit Limit")]
         public double OperationUnitLimit { get; set; }
+
+        [Display(Name = "Order Limit")]
         public double OperaitonOrderLimit { get; set; }
     }
 }
