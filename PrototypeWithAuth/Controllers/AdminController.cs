@@ -503,7 +503,7 @@ namespace PrototypeWithAuth.Controllers
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
             applicationUser.IsDeleted = true;
             _context.Update(applicationUser);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
