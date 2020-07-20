@@ -172,7 +172,8 @@ namespace PrototypeWithAuth.Controllers
                     LabOrderLimit = registerUserViewModel.LabOrderLimit,
                     OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
                     OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
-                    OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit
+                    OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
+                    DateCreated = DateTime.Now
                 };
 
                 var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);

@@ -61,6 +61,8 @@
     <Compile Remove="Data\Migrations\20200709095514_createMenuTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200713064039_seededMenuNames.cs" />
     <Compile Remove="Data\Migrations\20200713064039_seededMenuNames.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200720103207_addedDisplayNamesToApplicationUser.cs" />
+    <Compile Remove="Data\Migrations\20200720103207_addedDisplayNamesToApplicationUser.Designer.cs" />
   </ItemGroup>
 
 

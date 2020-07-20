@@ -22,11 +22,23 @@ namespace PrototypeWithAuth.Data
         public IEnumerable<ParentRequest> ParentRequests { get; set;}
         public int UserNum { get; set; }
         public DateTime DateCreated { get; set; }
+
+        [Display(Name = "Monthly Limit")]
         public double LabMonthlyLimit { get; set; }
+
+        [Display(Name = "Unit Limit")]
         public double LabUnitLimit { get; set; }
+
+        [Display(Name = "Order Limit")]
         public double LabOrderLimit { get; set; }
+
+        [Display(Name = "Monthly Limit")]
         public double OperationMonthlyLimit { get; set; }
+
+        [Display(Name = "Unit Limit")]
         public double OperationUnitLimit { get; set; }
+
+        [Display(Name = "Order Limit")]
         public double OperaitonOrderLimit { get; set; }
         public bool IsDeleted { get; set; }
 
