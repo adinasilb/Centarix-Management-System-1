@@ -85,6 +85,7 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<Product> Products { get; set; }
 
         public IEnumerable<VendorContact> VendorContacts { get; set; }
+        public IEnumerable<VendorComment> VendorComments { get; set; }
 
     }
 }

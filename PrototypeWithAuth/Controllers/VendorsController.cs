@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Host;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
+using PrototypeWithAuth.Data.Migrations;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 
@@ -17,10 +22,12 @@ namespace PrototypeWithAuth.Controllers
     public class VendorsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
 
-        public VendorsController(ApplicationDbContext context)
+        public VendorsController(ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
 
@@ -220,20 +227,31 @@ namespace PrototypeWithAuth.Controllers
         {
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+            
              CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
-            List<VendorContact> vendorContacts = new List<VendorContact>();
+            createSupplierViewModel.CommentType = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+            List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
+            List<AddCommentViewModel> vendorComments = new List<AddCommentViewModel>();
+            //only allowed to have 10 contacts
+            //have to hard coded becasuse did not know how to render dynamic partial views
+            for (int i = 0; i < 10; i++)
+            {
+                vendorContacts.Add(new AddContactViewModel());
+                vendorComments.Add(new AddCommentViewModel());
+            }
             createSupplierViewModel.VendorContacts = vendorContacts;
+            createSupplierViewModel.VendorComments = vendorComments;
             return View(createSupplierViewModel);
         }
 
-        [HttpGet]
-        public IActionResult AddContact()
-        {
-            //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-            VendorContact vendorContact = new VendorContact();
-            return PartialView(vendorContact);
-        }
+        //[HttpGet]
+        //public IActionResult AddContact()
+        //{
+        //    //tempdata page type for active tab link
+        //    TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+        //    VendorContact vendorContact = new VendorContact();
+        //    return PartialView(vendorContact);
+        //}
 
         // POST: Vendors/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -243,16 +261,52 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")] 
         public IActionResult Create(CreateSupplierViewModel createSupplierViewModel)
         {
+            List<AddCommentViewModel> vendorComments = new List<AddCommentViewModel>();
+            List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
+            //loop throught the bedor contact to see which contact are filled in
+            for (int i=0; i< createSupplierViewModel.VendorContacts.Count();i++)
+            {
+                if (!createSupplierViewModel.VendorContacts[i].IsActive)
+                {
+                    ModelState.Remove($"VendorContacts[{i}].VendorContact.VendorContactName");
+                    ModelState.Remove($"VendorContacts[{i}].VendorContact.VendorContactEmail");
+                    ModelState.Remove($"VendorContacts[{i}].VendorContact.VendorContactPhone");
+                }
+                else
+                {
+                    vendorContacts.Add(createSupplierViewModel.VendorContacts[i]);
+                }
+            }
+            for (int i = 0; i < createSupplierViewModel.VendorComments.Count(); i++)
+            {
+                if (!createSupplierViewModel.VendorComments[i].IsActive)
+                {
+                    ModelState.Remove($"VendorComments[{i}].VendorComment.CommentText");           
+                }
+                else
+                {
+                    vendorComments.Add(createSupplierViewModel.VendorComments[i]);
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(createSupplierViewModel.Vendor);
                 _context.SaveChanges();
-                foreach (var vendorContact in createSupplierViewModel.VendorContacts)
+                foreach (var vendorContact in vendorContacts)
                 {
-                    vendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                    _context.Add(vendorContact);
+                    vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                    _context.Add(vendorContact.VendorContact);
+                    _context.SaveChanges();
                 }
-                _context.SaveChanges();
+                var userid = _userManager.GetUserAsync(User).Result.Id;
+                foreach (var vendorComment in vendorComments)
+                {
+                    vendorComment.VendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
+                    vendorComment.VendorComment.ApplicationUserID = userid;
+                    vendorComment.VendorComment.CommentTimeStamp = DateTime.Now;
+                    _context.Add(vendorComment.VendorComment);
+                    _context.SaveChanges();
+                }
                 return RedirectToAction(nameof(IndexForPayment));
             }
 
