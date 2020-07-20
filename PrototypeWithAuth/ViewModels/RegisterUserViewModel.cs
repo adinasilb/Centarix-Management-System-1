@@ -50,6 +50,8 @@ namespace PrototypeWithAuth.ViewModels
         public string ConfirmPassword { get; set; }
         public IEnumerable<IdentityRole> Roles { get; set; }
 
+        public string CentarixID { get; set; }
+
         //[Required]
         //public string Role { get; set; }
 

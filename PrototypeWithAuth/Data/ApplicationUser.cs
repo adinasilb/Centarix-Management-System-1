@@ -21,6 +21,9 @@ namespace PrototypeWithAuth.Data
         public string SecureAppPass { get; set; }
         public IEnumerable<ParentRequest> ParentRequests { get; set;}
         public int UserNum { get; set; }
+
+        [Display(Name = "ID")]
+        public string CentarixID { get; set; }
         public DateTime DateCreated { get; set; }
         public double LabMonthlyLimit { get; set; }
         public double LabUnitLimit { get; set; }

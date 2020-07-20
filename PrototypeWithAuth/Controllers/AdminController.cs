@@ -166,6 +166,7 @@ namespace PrototypeWithAuth.Controllers
                     FirstName = registerUserViewModel.FirstName,
                     LastName = registerUserViewModel.LastName,
                     SecureAppPass = registerUserViewModel.SecureAppPass,
+                    CentarixID = registerUserViewModel.CentarixID,
                     UserNum = usernum,
                     LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
                     LabUnitLimit = registerUserViewModel.LabUnitLimit,
@@ -275,6 +276,7 @@ namespace PrototypeWithAuth.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Email = u.Email,
+                    CentarixID = u.CentarixID,
                     //do we want to show the secure app pass??
                     LabMonthlyLimit = u.LabMonthlyLimit,
                     LabUnitLimit = u.LabUnitLimit,
@@ -380,6 +382,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var userEditted = _context.Users.Where(u => u.Id == registerUserViewModel.ApplicationUserID).FirstOrDefault();
             userEditted.UserName = registerUserViewModel.Email;
+            userEditted.CentarixID = registerUserViewModel.CentarixID;
             userEditted.FirstName = registerUserViewModel.FirstName;
             userEditted.LastName = registerUserViewModel.LastName;
             userEditted.Email = registerUserViewModel.Email;
