@@ -229,7 +229,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
             
              CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
-            createSupplierViewModel.CommentType = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+            createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
             List<AddCommentViewModel> vendorComments = new List<AddCommentViewModel>();
             //only allowed to have 10 contacts

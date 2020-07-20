@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.ViewModels
         public Vendor Vendor { get; set; }
         public List< AddContactViewModel> VendorContacts { get; set; }
         public List<AddCommentViewModel> VendorComments { get; set; }
-        public List<PrototypeWithAuth.AppData.AppUtility.CommentTypeEnum> CommentType { get; set; }
+        public List<PrototypeWithAuth.AppData.AppUtility.CommentTypeEnum> CommentTypes { get; set; }
 
     }
 }
