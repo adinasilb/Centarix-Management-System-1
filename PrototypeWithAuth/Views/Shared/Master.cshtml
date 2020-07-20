@@ -10,7 +10,10 @@
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
     @*<link rel="stylesheet" href="~/lib/bootstrap/originalDist/css/bootstrap.min.css" />*@
 
-
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/jquery/dist/popper.min.js"></script>
+        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
+        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
     @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
     <!-- Bootstrap core CSS -->
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -53,15 +56,14 @@
     @*load the jquery ui stylesheet*@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css">
     <link rel="icon" type="image/x-icon" href="~/favicon.ico">
-    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/jquery/dist/popper.min.js"></script>
-        <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
-        <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
+
+
 </head>
 
 <body style="display:none">
     @RenderBody()
     <script src="~/js/site.js" asp-append-version="true"></script>
+
 
     @RenderSection("Scripts", required: false)
 
@@ -75,7 +77,6 @@
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
-
 
     @*<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
@@ -200,15 +201,11 @@
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map.js"></script>
 
 
-
-
-
-
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @*load jquery ui*@
     <script src="~/lib/jquery/jquery-ui.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-
+        <script src="~/lib/jquery-validation/dist/jquery.validate.unobtrusive.min.js"></script>
     <script type="text/javascript" src="~/js/site.js" asp-append-version="true"></script>
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 
@@ -604,42 +601,12 @@
     <script>
         $(document).ready(function () {
             $('[data-toggle="popover"]').popover();
-        });
-        $("#vendor-contact-tab").click(function () {
-            console.log("in onclickcontact");
-            $(".contact-info:hidden:first").find(".contact-active").val(true);
-               $(".contact-info:hidden:first").show();
-        });
+            $("#vendor-payments-tab").prop("disabled", true);
+            $("#vendor-categories-tab").prop("disabled", true);
+            $("#vendor-comment-tab").prop("disabled", true);
+            $("#vendor-contact-tab").prop("disabled", true);
+        });   
 
-        $("#addSuplierContact").click(function () {
-            console.log("in onclick addSuplierContact");
-            $(".contact-info:hidden:first").find(".contact-active").val(true);
-            $(".contact-info:hidden:first").show();
-        });
-
-        $("#addSupplierComment").click(function () {
-            console.log("in onclick addSuplierComment");
-            $(".comment-info:hidden:first").find(".comment-active").val(true);
-            $(".comment-info:hidden:first").show();
-        });
-
-        //$('#addSupplierComment').popover({
-        //    trigger: 'click',
-        //    html: true,
-        //    content: function () {
- 
-        //        var content = ''
-
-        //        content = $('#comment-types').html()
-        //        $(this).attr('data-content', content);
-        //        return content; //$('.popover-body').preappend(content);
-        //    } 
-
-        //}).on('shown.bs.popover', function () {
-        //});
-        //$('.popover-dismiss').popover({
-        //    trigger: 'focus'
-        //})
     </script>
 
 </body>
