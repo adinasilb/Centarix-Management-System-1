@@ -28,6 +28,7 @@ namespace PrototypeWithAuth.Data
         public double OperationMonthlyLimit { get; set; }
         public double OperationUnitLimit { get; set; }
         public double OperaitonOrderLimit { get; set; }
+        public bool IsDeleted { get; set; }
 
         // public string URLPic { get; set; }
 

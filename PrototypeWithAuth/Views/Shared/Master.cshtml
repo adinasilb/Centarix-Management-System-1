@@ -228,6 +228,12 @@
         $('#edit-user a:first').tab('show');
     });
 
+    $(".prevent-js-reload").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    });
+
     $(".search-link").on("click", function () {
         $('#request-search a:first').tab('show');
     });
@@ -535,11 +541,36 @@
         //    return false;
         //});
 
-        $.fn.DeleteUserModal = function ($itemurl) {
-            e.preventDefault();
-            e.stopPropagation();
-            $.fn.CallPagePayment($itemurl, '');
+        $.fn.DeleteUserModal = function (userid) {
+            console.log("in delete user modal function");
+            $itemurl = 'Admin/DeleteUserModal?id=' + userid;
+            $.fn.CallPageUser($itemurl, '');
             return false;
+        }
+
+        $.fn.CallPageUser = function ($itemurl) {
+            console.log("item url: " + $itemurl);
+            $('.modal').replaceWith('');
+            $(".modal-backdrop").remove();
+            $.ajax({
+                //async: true,
+                url: $itemurl,
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    var modal = $(data);
+                    $('body').append(modal);
+                    //replaces the modal-view class with the ModalView view
+                    //$(".modal-view").html(data);
+                    //turn off data dismiss by clicking out of the box and by pressing esc
+                    $(".modal-view").modal({
+                        backdrop: true,
+                        keyboard: false,
+                    });
+                    //shows the modal
+                    $(".modal").modal('show');
+                }
+            });
         }
 
         $.fn.CallPagePayment = function ($itemurl, $Type = "") {
@@ -548,7 +579,7 @@
                 //async: true,
                 url: $itemurl,
                 type: 'GET',
-                cache: false,
+                cache: true,
                 success: function (data) {
                     //replaces the modal-view class with the ModalView view
                     $(".modal-view").html(data);
@@ -608,7 +639,7 @@
         $("#vendor-contact-tab").click(function () {
             console.log("in onclickcontact");
             $(".contact-info:hidden:first").find(".contact-active").val(true);
-               $(".contact-info:hidden:first").show();
+            $(".contact-info:hidden:first").show();
         });
 
         $("#addSuplierContact").click(function () {
@@ -623,23 +654,23 @@
             $(".comment-info:hidden:first").show();
         });
 
-        //$('#addSupplierComment').popover({
-        //    trigger: 'click',
-        //    html: true,
-        //    content: function () {
- 
-        //        var content = ''
+                    //$('#addSupplierComment').popover({
+                    //    trigger: 'click',
+                    //    html: true,
+                    //    content: function () {
 
-        //        content = $('#comment-types').html()
-        //        $(this).attr('data-content', content);
-        //        return content; //$('.popover-body').preappend(content);
-        //    } 
+                    //        var content = ''
 
-        //}).on('shown.bs.popover', function () {
-        //});
-        //$('.popover-dismiss').popover({
-        //    trigger: 'focus'
-        //})
+                    //        content = $('#comment-types').html()
+                    //        $(this).attr('data-content', content);
+                    //        return content; //$('.popover-body').preappend(content);
+                    //    }
+
+                    //}).on('shown.bs.popover', function () {
+                    //});
+                    //$('.popover-dismiss').popover({
+                    //    trigger: 'focus'
+                    //})
     </script>
 
 </body>

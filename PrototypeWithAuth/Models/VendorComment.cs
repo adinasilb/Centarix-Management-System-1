@@ -13,16 +13,19 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int VendorCommentID { get; set; }
-        public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
 
         public int VendorID { get; set; }
         public Vendor Vendor { get; set; }
 
+        public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
+
         [ForeignKey("ApplicationUserID")]
         public ApplicationUser ApplicationUser { get; set; }
+
         [Required]
         public string CommentText { get; set; }
         public string CommentType { get; set; }
+
 
         [DataType(DataType.Date)]
         private DateTime commentTimeStamp = DateTime.Now; //should this be readonly -ADINA

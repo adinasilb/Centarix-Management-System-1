@@ -47,9 +47,9 @@
                 </td>
                 <td>
                     @{ 
-                        var itemurl = "DeleteUserModal?id=" + user.Id;
+                        var userid = user.Id;
                     }
-                    <a href="" onclick="$.fn.DeleteUserModal(@itemurl)">
+                    <a href="" onclick="$.fn.DeleteUserModal('@userid')" class="prevent-js-reload">
                         <img src="~/images/css/inventory/add-item/other icons/delete_dis.png" />
                     </a>
                 </td>

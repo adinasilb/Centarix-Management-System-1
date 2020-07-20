@@ -36,6 +36,7 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["PageType"] = AppUtility.UserPageTypeEnum.Index;
             var users = _context.Users
+                .Where(u => u.IsDeleted == false)
                 .ToList();
             return View(users);
         }
@@ -162,8 +163,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     UserName = registerUserViewModel.UserName,
                     Email = registerUserViewModel.Email,
-                    //FirstName = registerUserViewModel.FirstName,
-                    //LastName = registerUserViewModel.LastName,
+                    FirstName = registerUserViewModel.FirstName,
+                    LastName = registerUserViewModel.LastName,
                     SecureAppPass = registerUserViewModel.SecureAppPass,
                     UserNum = usernum,
                     LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
@@ -266,10 +267,12 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> EditUser(string id)
         {
-            var registerUserViewModel = _context.Users.Where(u => u.Id == id)
+            var registerUserViewModel = _context.Users.Where(u => u.Id == id).Where(u => u.IsDeleted == false)
                 .Select(u => new RegisterUserViewModel
                 {
                     ApplicationUserID = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
                     UserName = u.UserName,
                     Email = u.Email,
                     //do we want to show the secure app pass??
@@ -377,6 +380,8 @@ namespace PrototypeWithAuth.Controllers
         {
             var userEditted = _context.Users.Where(u => u.Id == registerUserViewModel.ApplicationUserID).FirstOrDefault();
             userEditted.UserName = registerUserViewModel.UserName;
+            userEditted.FirstName = registerUserViewModel.FirstName;
+            userEditted.LastName = registerUserViewModel.LastName;
             userEditted.Email = registerUserViewModel.Email;
             userEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
             userEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
@@ -487,8 +492,19 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles ="Admin, Users")]
         public IActionResult DeleteUserModal(string Id)
         {
-            var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
+            var user = _context.Users.Where(u => u.Id == Id).Where(u => u.IsDeleted == false).FirstOrDefault();
             return PartialView(user);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> DeleteUserModal(ApplicationUser applicationUser)
+        {
+            applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
+            applicationUser.IsDeleted = true;
+            _context.Update(applicationUser);
+            _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
