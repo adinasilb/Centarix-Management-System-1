@@ -1159,3 +1159,6 @@ body {
     background-color: #A26FF0;
     color:white;
 }
+.disabled-submit{
+    background-color:grey;
+}

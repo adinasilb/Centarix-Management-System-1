@@ -1482,3 +1482,200 @@ $(".open-users-list").on("click", function (e) {
 	$(".users-list").show();
 });
 
+$('#addVendorModal').change(
+	function () {
+		$("#createModalForm").validate();   
+		$.validator.unobtrusive.parse("#createModalForm");
+});
+$("#vendor-payments-tab").click(function () {
+	console.log("$('#vendor - payments - tab')");
+	$("#createModalForm").validate();   
+	$("#createModalForm").valid();
+	$.fn.validateVendorDetailsTab();
+});
+$("#vendor-categories-tab").click(function () {
+	console.log("$('#vendor - payments - tab')");
+	$("#createModalForm").valid();
+	$.fn.validateVendorDetailsTab();
+});
+$("#vendor-comment-tab").click(function () {
+	$("#createModalForm").valid();
+	$.fn.validateVendorPayment();
+});
+$("#vendor-contact-tab").click(function () {
+	$("#createModalForm").valid();
+	$.fn.validateVendorPayment();
+});
+$("#addSupplier").click(function () {
+	$("#createModalForm").valid();
+	$.fn.validateVendorPayment();
+});
+
+$.fn.validateVendorDetailsTab = function () {
+	//all the true and falses are opposite because fo the ariainvalid is true if invalid
+	valid = $("#Vendor_VendorEnName").attr('aria-invalid');
+	console.log("valid: " + valid);
+	if (valid == "true" || $("#Vendor_VendorEnName").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
+	valid = $("#Vendor_VendorHeName").attr('aria-invalid');
+	console.log("valid: " + valid);
+	if (valid == "true" || $("#Vendor_VendorHeName").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
+	console.log("valid1: " + valid);
+	valid = $("#Vendor_VendorBuisnessID").attr('aria-invalid');
+	if (valid == "true" || $("#Vendor_VendorBuisnessID").val() == "") {
+		return;
+	}
+	console.log("valid2: " + valid);
+	valid = $("#Vendor_VendorCountry").attr('aria-invalid');
+	if (valid == "true" || $("#Vendor_VendorCountry").val() == "") {
+		return;
+	}
+	console.log("valid3: " + valid);
+	valid = $("#Vendor_VendorCity").attr('aria-invalid');
+	if (valid == "true" || $("#Vendor_VendorCity").val() == "") {
+		return;
+	}
+	console.log("valid1: " + valid);
+	valid = $("#Vendor_VendorStreet").attr('aria-invalid');
+	if (valid == "true" || $("#Vendor_VendorStreet").val() == "") {
+		return;
+	}
+	console.log("valid2: " + valid);
+	valid = $("#Vendor_VendorTelephone").attr('aria-invalid');
+	if (valid == "true" || $("#Vendor_VendorTelephone").val() == "") {
+		return;
+	}
+	console.log("valid3: " + valid);
+	valid = $("#Vendor_VendorFax").attr('aria-invalid');
+	if (valid == "true") {
+		return;
+	}
+	console.log("valid1: " + valid);
+	valid = $("#Vendor_OrdersEmail").attr('aria-invalid');
+	if (valid == "true" || $("#Vendor_OrdersEmail").val() == "") {
+		return;
+	}
+	console.log("valid2: " + valid);
+	valid = $("#Vendor_InfoEmail").attr('aria-invalid');
+	if (valid == "true") {
+		return;
+	}
+	console.log("valid3: " + valid);
+	valid = $("#Vendor_VendorCellPhone").attr('aria-invalid');
+	if (valid == "true") {
+		return;
+	}
+	if (valid == "false" || valid == undefined) {
+		$("#vendor-payments-tab").prop("disabled", false);
+		$("#vendor-categories-tab").prop("disabled", false);
+	}
+	return valid;
+}
+$.fn.validateVendorPayment = function () {
+	//all the true and falses are opposite because fo the ariainvalid is true if invalid
+	valid = $("#Vendor_VendorBank").attr('aria-invalid');
+	console.log("valid: " + valid);
+	if (valid == "true" || $("#Vendor_VendorBank").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
+	valid = $("#Vendor_VendorBankBranch").attr('aria-invalid');
+	console.log("valid: " + valid);
+	if (valid == "true" || $("#Vendor_VendorBankBranch").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
+	console.log("valid1: " + valid);
+	valid = $("#Vendor_VendorAccountNum").attr('aria-invalid');
+	if (valid == "true" || $("#Vendor_VendorAccountNum").val() == "") {
+		return;
+	}
+	
+	if (valid == "false" || valid == undefined) {
+		$("#vendor-comment-tab").prop("disabled", false);
+		$("#vendor-contact-tab").prop("disabled", false);
+	}
+	return valid;
+}
+
+$.fn.validateVendorContactTab = function () {
+	//all the true and falses are opposite because fo the ariainvalid is true if invalid
+	valid = $("#VendorContacts_0__VendorContact_VendorContactEmail").attr('aria-invalid');
+	console.log("valid: " + valid);
+	if (valid == "true" || $("#VendorContacts_0__VendorContact_VendorContactName").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
+	valid = $("#VendorContacts_0__VendorContact_VendorContactEmail").attr('aria-invalid');
+	console.log("valid: " + valid);
+	if (valid == "true" || $("#VendorContacts_0__VendorContact_VendorContactEmail").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
+	console.log("valid1: " + valid);
+	valid = $("#VendorContacts_0__VendorContact_VendorContactPhone").attr('aria-invalid');
+	if (valid == "true" || $("#VendorContacts_0__VendorContact_VendorContactPhone").val() == "") {
+		return;
+	}
+	if (valid == "false" || valid == undefined) {
+		$("#addSupplier").prop("disabled", false);
+		$("#addSupplier").removeClass("disabled-submit");
+		return "false"
+	}
+	return "true";
+}
+
+$("#VendorContacts_0__VendorContact_VendorContactPhone").change(function () {
+	var valid = $.fn.validateVendorContactTab();
+	if (valid == "false") {
+		$("#addSupplier").prop("disabled", false);
+		$("#addSupplier").removeClass("disabled-submit");
+	};
+});
+$("#VendorContacts_0__VendorContact_VendorContactEmail").change(function () {
+	var valid = $.fn.validateVendorContactTab();
+	if (valid == "false" ) {
+		$("#addSupplier").prop("disabled", false);
+		$("#addSupplier").removeClass("disabled-submit");
+	};
+});
+$("#VendorContacts_0__VendorContact_VendorContactName").change(function () {
+	var valid = $.fn.validateVendorContactTab();
+	if (valid == "false") {
+		$("#addSupplier").prop("disabled", false);
+		$("#addSupplier").removeClass("disabled-submit");
+	};
+});
+
+$("#vendor-contact-tab").click(function () {
+	console.log("in onclickcontact");
+	$(".contact-info:hidden:first").find(".contact-active").val(true);
+	$(".contact-info:hidden:first").show();
+});
+
+$("#addSuplierContact").click(function () {
+	console.log("in onclick addSuplierContact");
+	$(".contact-info:hidden:first").find(".contact-active").val(true);
+	$(".contact-info:hidden:first").show();
+});
+
+$("#addSupplierComment").click(function () {
+	console.log("in onclick addSuplierComment");
+	$(".comment-info:hidden:first").find(".comment-active").val(true);
+	$(".comment-info:hidden:first").show();
+	$('#addSupplierComment').popover({
+		trigger: 'manual',
+		placement: 'bottom',
+		html: true,
+		content: function () {
+			return $('#comment-types').html();
+		}
+	});
+	$('#addSupplierComment').popover('show');
+
+});
