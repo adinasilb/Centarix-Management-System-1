@@ -258,16 +258,17 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
 
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, "UserImages");
-                    Directory.CreateDirectory(requestFolder);
-                    if (registerUserViewModel.UserImage != null) //test for more than one???
-                    {
-                        //create file
-                        string uniqueFileName = user.UserNum.ToString() + ".png";
-                        string filePath = Path.Combine(requestFolder, uniqueFileName);
-                        registerUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
-                    }
+                    //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    //string requestFolder = Path.Combine(uploadFolder, "UserImages");
+                    //Directory.CreateDirectory(requestFolder);
+                    //if (registerUserViewModel.UserImage != null) //test for more than one???
+                    //{
+                    //    //create file
+                    //    var extension = registerUserViewModel.UserImage.FileName.Substring(registerUserViewModel.UserImage.FileName.IndexOf("."), registerUserViewModel.UserImage.FileName.Length);
+                    //    string uniqueFileName = user.UserNum.ToString() + ".png";
+                    //    string filePath = Path.Combine(requestFolder, uniqueFileName);
+                    //    registerUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
+                    //}
 
                 }
                 else
