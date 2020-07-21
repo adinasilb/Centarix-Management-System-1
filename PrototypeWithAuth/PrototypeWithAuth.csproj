@@ -63,6 +63,10 @@
     <Compile Remove="Data\Migrations\20200713064039_seededMenuNames.Designer.cs" />
     <Compile Remove="Data\Migrations\20200720103207_addedDisplayNamesToApplicationUser.cs" />
     <Compile Remove="Data\Migrations\20200720103207_addedDisplayNamesToApplicationUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200720113347_createdCategoryTypeAndCategoryTypeParentCategoryTables.cs" />
+    <Compile Remove="Data\Migrations\20200720113347_createdCategoryTypeAndCategoryTypeParentCategoryTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200720115846_changedCategoryTypeToOneToManyRelationship.cs" />
+    <Compile Remove="Data\Migrations\20200720115846_changedCategoryTypeToOneToManyRelationship.Designer.cs" />
   </ItemGroup>
 
 

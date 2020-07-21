@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200720114112_createdCategoryTypeAndCategoryTypeParentCategoryTables")]
+    partial class createdCategoryTypeAndCategoryTypeParentCategoryTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -271,18 +273,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("CategoryTypeID");
 
                     b.ToTable("CategoryTypes");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            CategoryTypeID = 1,
-                            CategoryTypeDescription = "Lab"
-                        },
-                        new
-                        {
-                            CategoryTypeID = 2,
-                            CategoryTypeDescription = "Operational"
-                        });
+            modelBuilder.Entity("PrototypeWithAuth.Models.CategoryTypeParentCategory", b =>
+                {
+                    b.Property<int>("CategoryTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParentCategoryID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoryTypeID", "ParentCategoryID");
+
+                    b.HasIndex("ParentCategoryID");
+
+                    b.ToTable("CategoryTypeParentCategory");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
@@ -535,16 +540,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CategoryTypeID")
-                        .HasColumnType("int");
-
                     b.Property<string>("ParentCategoryDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ParentCategoryID");
-
-                    b.HasIndex("CategoryTypeID");
 
                     b.ToTable("ParentCategories");
 
@@ -552,37 +552,31 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ParentCategoryID = 1,
-                            CategoryTypeID = 1,
                             ParentCategoryDescription = "Plastics"
                         },
                         new
                         {
                             ParentCategoryID = 2,
-                            CategoryTypeID = 1,
                             ParentCategoryDescription = "Reagents"
                         },
                         new
                         {
                             ParentCategoryID = 3,
-                            CategoryTypeID = 1,
                             ParentCategoryDescription = "Proprietry"
                         },
                         new
                         {
                             ParentCategoryID = 4,
-                            CategoryTypeID = 1,
                             ParentCategoryDescription = "Reusable"
                         },
                         new
                         {
                             ParentCategoryID = 5,
-                            CategoryTypeID = 1,
                             ParentCategoryDescription = "Equipment"
                         },
                         new
                         {
                             ParentCategoryID = 6,
-                            CategoryTypeID = 2,
                             ParentCategoryDescription = "Operation"
                         });
                 });
@@ -1869,6 +1863,21 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.CategoryTypeParentCategory", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.CategoryType", "CategoryType")
+                        .WithMany("CategoryTypeParentCategories")
+                        .HasForeignKey("CategoryTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.ParentCategory", "ParentCategory")
+                        .WithMany("CategoryTypeParentCategories")
+                        .HasForeignKey("ParentCategoryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
@@ -1917,15 +1926,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("LocationTypeParentID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.CategoryType", "CategoryType")
-                        .WithMany("ParentCategories")
-                        .HasForeignKey("CategoryTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>

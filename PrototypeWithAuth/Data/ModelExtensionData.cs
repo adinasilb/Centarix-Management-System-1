@@ -14,40 +14,60 @@ namespace PrototypeWithAuth.Data
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<CategoryType>().HasData(
+                new CategoryType
+                {
+                    CategoryTypeID = 1,
+                    CategoryTypeDescription = "Lab"
+                },
+                new CategoryType
+                {
+                    CategoryTypeID = 2,
+                    CategoryTypeDescription = "Operational"
+                }
+            );
             //if any data is changed in parent categories - must edit parentRequestController monthly view models - had to hard code categories so if add any more have to adjust
             modelBuilder.Entity<ParentCategory>().HasData
            (
                new ParentCategory
                {
                    ParentCategoryID = 1,
-                   ParentCategoryDescription = "Plastics"
+                   ParentCategoryDescription = "Plastics",
+                   CategoryTypeID = 1
                },
                new ParentCategory
                {
                    ParentCategoryID = 2,
-                   ParentCategoryDescription = "Reagents"
+                   ParentCategoryDescription = "Reagents",
+                   CategoryTypeID = 1
                },
                new ParentCategory
                {
                    ParentCategoryID = 3,
-                   ParentCategoryDescription = "Proprietry"
+                   ParentCategoryDescription = "Proprietry",
+                   CategoryTypeID = 1
                },
                 new ParentCategory
                 {
                     ParentCategoryID = 4,
-                    ParentCategoryDescription = "Reusable"
+                    ParentCategoryDescription = "Reusable",
+                    CategoryTypeID = 1
                 },
                 new ParentCategory
                 {
                     ParentCategoryID = 5,
-                    ParentCategoryDescription = "Equipment"
+                    ParentCategoryDescription = "Equipment",
+                    CategoryTypeID = 1
                 },
                 new ParentCategory
                 {
                     ParentCategoryID = 6,
-                    ParentCategoryDescription = "Operation"
+                    ParentCategoryDescription = "Operation",
+                    CategoryTypeID = 2
                 }
-              );
+            );
+
             modelBuilder.Entity<ProductSubcategory>().HasData
               (
 
@@ -851,7 +871,6 @@ namespace PrototypeWithAuth.Data
                     MenuImageURL = "/images/css/main_menu_icons/users.png"
                 }
             );
-
 
 
         }
