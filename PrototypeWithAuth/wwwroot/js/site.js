@@ -1603,53 +1603,12 @@ $.fn.validateVendorPayment = function () {
 	return valid;
 }
 
-$.fn.validateVendorContactTab = function () {
-	//all the true and falses are opposite because fo the ariainvalid is true if invalid
-	valid = $("#VendorContacts_0__VendorContact_VendorContactEmail").attr('aria-invalid');
-	console.log("valid: " + valid);
-	if (valid == "true" || $("#VendorContacts_0__VendorContact_VendorContactName").val() == "") {
-		console.log("valid: " + valid);
-		return;
-	}
-	valid = $("#VendorContacts_0__VendorContact_VendorContactEmail").attr('aria-invalid');
-	console.log("valid: " + valid);
-	if (valid == "true" || $("#VendorContacts_0__VendorContact_VendorContactEmail").val() == "") {
-		console.log("valid: " + valid);
-		return;
-	}
-	console.log("valid1: " + valid);
-	valid = $("#VendorContacts_0__VendorContact_VendorContactPhone").attr('aria-invalid');
-	if (valid == "true" || $("#VendorContacts_0__VendorContact_VendorContactPhone").val() == "") {
-		return;
-	}
-	if (valid == "false" || valid == undefined) {
-		$("#addSupplier").prop("disabled", false);
-		$("#addSupplier").removeClass("disabled-submit");
-		return "false"
-	}
-	return "true";
-}
 
-$("#VendorContacts_0__VendorContact_VendorContactPhone").change(function () {
-	var valid = $.fn.validateVendorContactTab();
-	if (valid == "false") {
+$(".vendor-contact").change(function () {
+	if ($("#createModalForm").valid()) {
 		$("#addSupplier").prop("disabled", false);
 		$("#addSupplier").removeClass("disabled-submit");
-	};
-});
-$("#VendorContacts_0__VendorContact_VendorContactEmail").change(function () {
-	var valid = $.fn.validateVendorContactTab();
-	if (valid == "false" ) {
-		$("#addSupplier").prop("disabled", false);
-		$("#addSupplier").removeClass("disabled-submit");
-	};
-});
-$("#VendorContacts_0__VendorContact_VendorContactName").change(function () {
-	var valid = $.fn.validateVendorContactTab();
-	if (valid == "false") {
-		$("#addSupplier").prop("disabled", false);
-		$("#addSupplier").removeClass("disabled-submit");
-	};
+	}
 });
 
 $("#vendor-contact-tab").click(function () {
@@ -1664,18 +1623,33 @@ $("#addSuplierContact").click(function () {
 	$(".contact-info:hidden:first").show();
 });
 
+
 $("#addSupplierComment").click(function () {
-	console.log("in onclick addSuplierComment");
-	$(".comment-info:hidden:first").find(".comment-active").val(true);
-	$(".comment-info:hidden:first").show();
-	$('#addSupplierComment').popover({
-		trigger: 'manual',
+
+	$('[data-toggle="popover"]').popover({
+		sanitize: false,
 		placement: 'bottom',
 		html: true,
 		content: function () {
-			return $('#comment-types').html();
+			return $('#popover-content').html();
 		}
 	});
-	$('#addSupplierComment').popover('show');
+	$('[data-toggle="popover"]').popover('toggle');
 
 });
+
+$("#addSupplier").click(function () {
+	console.log($("#createModalForm").valid());
+	if (!$("#createModalForm").valid()) {
+		$("#addSupplier").prop("disabled", true);
+	}
+});
+
+
+
+$.fn.addComment = function (type) {
+	console.log("$('#Comment').click");
+	$(".comment-info:hidden:first").find(".comment-active").val(true);
+	$(".comment-info:hidden:first").find(".comment-type").val(type);
+	$(".comment-info:hidden:first").show();
+}

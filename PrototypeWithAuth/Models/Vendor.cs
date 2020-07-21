@@ -33,14 +33,14 @@ namespace PrototypeWithAuth.Models
         [MaxLength (50)]
         public string OrdersEmail { get; set; }
         [Required]
-        [MinLength(9)]
+        [Phone]
         [Display(Name = "Telephone")]
         public string VendorTelephone { get; set; }
-        [MinLength(9)]
+        [Phone]
         [Display(Name = "Cell")]
         public string VendorCellPhone { get; set; }
         
-        [MinLength(9)]
+        [Phone]
         [Display(Name = "Fax")]
         public string VendorFax { get; set; }
         [Required]
