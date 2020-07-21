@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -395,11 +396,31 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var vendor = await _context.Vendors.FindAsync(id);
+            var vendor = _context.Vendors.Find(id);
+            var contacts = _context.VendorContacts.Where(x => x.VendorID == id);
+            using (var transaction = new TransactionScope())
+            {
+                foreach (var contact in contacts)
+                {
+                    _context.Remove(contact);
+                    _context.SaveChanges();
+                }
+                transaction.Complete();
+            }
+            var comments = _context.VendorComments.Where(x => x.VendorID == id);
+            using (var transaction = new TransactionScope())
+            {
+                foreach (var comment in comments)
+                {
+                    _context.Remove(comment);
+                    _context.SaveChanges();
+                }
+                transaction.Complete();
+            }
             _context.Vendors.Remove(vendor);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return RedirectToAction(nameof(IndexForPayment));
         }
 

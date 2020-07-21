@@ -25,7 +25,7 @@
 <div style="display: flex;">
 
     <div style="min-width: 110px; min-height:100rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar ">
-        <ul style="position:fixed;" class="nav flex-column nav-pills nav-stacked mb-lg-3">
+        <ul style="position:fixed;" class="nav flex-column nav-pills nav-stacked mb-lg-3 mt-4">
             <li class="@toPayClass">
                 <a href="@Url.Action("Payments", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.PaymentsEnum.ToPay })" class="bold-hover-effects"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br />Monthly Payment</a>
             </li>
@@ -35,7 +35,7 @@
             </li>
         </ul>
     </div>
-    <div style="flex-grow: 1; position:relative; padding: 2rem;">
+    <div style="flex-grow: 1; position:relative; " class="px-5 mt-5">
         @RenderBody()
     </div>
 </div>

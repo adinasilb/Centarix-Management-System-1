@@ -1482,11 +1482,6 @@ $(".open-users-list").on("click", function (e) {
 	$(".users-list").show();
 });
 
-$('#addVendorModal').change(
-	function () {
-		$("#createModalForm").validate();   
-		$.validator.unobtrusive.parse("#createModalForm");
-});
 $("#vendor-payments-tab").click(function () {
 	console.log("$('#vendor - payments - tab')");
 	$("#createModalForm").validate();   
@@ -1508,7 +1503,6 @@ $("#vendor-contact-tab").click(function () {
 });
 $("#addSupplier").click(function () {
 	$("#createModalForm").valid();
-	$.fn.validateVendorPayment();
 });
 
 $.fn.validateVendorDetailsTab = function () {
@@ -1645,6 +1639,14 @@ $("#addSupplier").click(function () {
 	}
 });
 
+$("#addUser").click(function () {
+	console.log($("#createModalForm").valid());
+	if (!$("#createModalForm").valid()) {
+		$("#addUser").prop("disabled", true);
+	}
+});
+
+
 
 
 $.fn.addComment = function (type) {
@@ -1652,4 +1654,58 @@ $.fn.addComment = function (type) {
 	$(".comment-info:hidden:first").find(".comment-active").val(true);
 	$(".comment-info:hidden:first").find(".comment-type").val(type);
 	$(".comment-info:hidden:first").show();
+}
+
+$("#user-permissions-tab").click(function () {
+	$("#createModalForm").valid();
+	$.fn.validateUserDetailsTab();
+});
+$("#user-budget-tab").click(function () {
+	$("#createModalForm").valid();
+});
+$("#user-more-tab").click(function () {
+	console.log('"#user-more-tab").click');
+	$("#createModalForm").valid();
+	$("#addUser").prop("disabled", false);
+	$("#addUser").removeClass("disabled-submit");
+});
+
+$.fn.validateUserDetailsTab = function () {
+	//all the true and falses are opposite because fo the ariainvalid is true if invalid
+	valid = $("#FirstName").attr('aria-invalid');
+	if (valid == "true" || $("#FirstName").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
+	valid = $("#LastName").attr('aria-invalid');
+	if (valid == "true" || $("#LastName").val() == "") {
+		return;
+	}
+	valid = $("#Email").attr('aria-invalid');
+	if (valid == "true" || $("#Email").val() == "") {
+		console.log("valid: " + valid);
+		return;
+	}
+	valid = $("#SecureAppPass").attr('aria-invalid');
+	if (valid == "true" || $("#SecureAppPass").val() == "") {
+		return;
+	}
+	valid = $("#CentarixID").attr('aria-invalid');
+	if (valid == "true" || $("#CentarixID").val() == "") {
+		return;
+	}
+	valid = $("#Password").attr('aria-invalid');
+	if (valid == "true" || $("#Password").val() == "") {
+		return;
+	}
+	valid = $("#ConfirmPassword").attr('aria-invalid');
+	if (valid == "true" || $("#ConfirmPassword").val() == "") {
+		return;
+	}
+	if (valid == "false" || valid == undefined) {
+		$("#user-permissions-tab").prop("disabled", false);
+		$("#user-budget-tab").prop("disabled", false);
+		$("#user-more-tab").prop("disabled", false);
+	}
+	return valid;
 }

@@ -19,7 +19,7 @@
     <div class="card-body">
         <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="new-modal-header border-bottom box-shadow container-fluid" style="padding: 0.5em 6em">
                 <div class="row mt-3 mb-5">
@@ -27,17 +27,17 @@
                         <h2 class="mt-1">New User</h2>
                     </div>
                     <div class="col-4">
-                        <input type="submit" value="ADD USER" asp-action="CreateUser" class="inv-user-button mt-1 btn-block py-2" style="float: right;" />
+                        <input type="submit" id="addUser" value="ADD USER" asp-action="CreateUser" class="inv-user-button mt-1 btn-block py-2 disabled-submit" style="float: right;" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 px-0">
                         <div class="container-fluid div-tabs text-center">
                             <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
-                                <li class="nav-item"><a data-toggle="tab" href="#details" class="nav-link user-nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Details</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#permissions" class="nav-link user-nav-link permissions-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Permissions</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#budget" class="nav-link user-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#more" class="nav-link documents-tab user-nav-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />More</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Details</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#permissions" id="user-permissions-tab" class="nav-link user-nav-link permissions-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Permissions</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#budget" id="user-budget-tab" class="nav-link user-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#more" id="user-more-tab" class="nav-link user-nav-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />More</a></li>
                             </ul>
                         </div>
                     </div>

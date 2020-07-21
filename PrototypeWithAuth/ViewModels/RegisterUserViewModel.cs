@@ -50,13 +50,13 @@ namespace PrototypeWithAuth.ViewModels
         // [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
         public IEnumerable<IdentityRole> Roles { get; set; }
-
+        [Required]
         public string CentarixID { get; set; }
 
         //[Required]
         //public string Role { get; set; }
 
-        [Required]
+        [Required, DataType(DataType.Password)]
         [Display(Name = "Google Secure App Password")]
         public string SecureAppPass { get; set; }
 

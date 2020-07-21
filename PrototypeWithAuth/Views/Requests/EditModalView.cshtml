@@ -86,7 +86,7 @@
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
             new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-            "Select Category", new { @class = "form-control-plaintext border-bottom", @id = "parentlist" })
+            "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "parentlist" })
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -95,7 +95,7 @@
                                             <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
             new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-            "Select Subcategory", new { @class = "form-control-plaintext border-bottom ", @id = "sublist" })
+            "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist" })
                                             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -110,7 +110,7 @@
                                                     "ProjectDescription"
                                                     ),
                                                 "Select Project",
-                                                new { @class = "form-control-plaintext border-bottom Project" }
+                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary Project" }
                                             )
                                             <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger"></span>
                                         </div>
@@ -129,6 +129,7 @@
                                                     "SubProjectDescription"
                                                     ),
                                                 "Select Sub Project",
+                                                new { @class = "fmdb-select md-form  colorful-select dropdown-primary SubProject" }
                                                 new { @class = "form-control-plaintext border-bottom SubProject", @id="SubProject" }
                                             )
                                             <span asp-validation-for="Request.SubProjectID" class="text-danger"></span>
@@ -144,7 +145,7 @@
                                                     dataValueField: "VendorID",
                                                     dataTextField: "VendorEnName"),
                                                     optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                                                htmlAttributes: new { @class = "form-control-plaintext border-bottom ", @id = "vendorList" }
+                                                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "vendorList" }
                                             )
                                             <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                         </div>
@@ -325,7 +326,7 @@
         vm => vm.Request.UnitTypeID,
         Model.UnitTypeList,
         "",
-        htmlAttributes: new { @class = "form-control-plaintext border-bottom" }
+        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
         )
                                                         <span asp-validation-for="Request.UnitType" class="text-danger"></span>
                                                     </div>
@@ -364,7 +365,7 @@
                  vm => vm.Request.SubUnitTypeID,
                  Model.UnitTypeList,
                  "",
-                 htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
+                 htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
              )
                                                     <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                                 </div>
@@ -402,7 +403,7 @@
                                                         vm => vm.Request.SubSubUnitTypeID,
                                                         Model.UnitTypeList,
                                                         "",
-                                                        htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled = "disabled" }
+                                                        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
                                                         )
                                                     <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
                                                 </div>
@@ -489,7 +490,7 @@
                                             @Html.DropDownListFor(
                                                                     model => model.Request.Terms,
                                                                     new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-            htmlAttributes: new { @class = "form-control-plaintext border-bottom" }
+            htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
                                                                 )
                                         </div>
                                     </div>
@@ -540,7 +541,7 @@
                                                                     @Html.DropDownListFor(
                                                                    m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
                                                                    new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
-                                                                   , new { @class = "form-control-plaintext border-bottom paymentType" }
+                                                                   , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
                                                                    )
                                                                 </td>
                                                                 <td>
@@ -549,7 +550,7 @@
                                                                    new SelectList(
                                                                        Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
                                                                    "CompanyAccountID", "CompanyAccountNum"),
-                                                                   new { @class = "form-control-plaintext border-bottom" })
+                                                                   new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
                                                                 <td>
                                                                     <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
                                                                 </td>

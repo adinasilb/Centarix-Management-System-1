@@ -9,9 +9,9 @@
 <table class="table table-headerspaced table-borderless table-hover">
     <thead>
         <tr style="border-color:transparent;">
-            <th colspan="8" style="border-color:transparent;">
+            <th colspan="8" style="border-color:transparent;" class="pt-3">
                 <h5>
-                    <strong>Monthly Payment</strong>[@Model.ParentRequestList.Values.SelectMany(pr => pr).ToList().Count]
+                    <strong>Monthly Payment</strong>&nbsp;[@Model.ParentRequestList.Values.SelectMany(pr => pr).ToList().Count]
                     @{
                         var TotalCost = Model.ParentRequestList.Values.SelectMany(pr => pr).Sum(pr => pr.Request.Cost);
                         var decCost = (decimal)TotalCost;
