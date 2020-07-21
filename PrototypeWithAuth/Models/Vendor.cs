@@ -31,6 +31,7 @@ namespace PrototypeWithAuth.Models
         public string InfoEmail { get; set; }
         [Required]
         [MaxLength (50)]
+        [EmailAddress]
         public string OrdersEmail { get; set; }
         [Required]
         [Phone]
