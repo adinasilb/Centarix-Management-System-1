@@ -953,7 +953,7 @@ $(".load-product-edit").on("click", function (e) {
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
 	console.log("itemurl: " + $itemurl);
-	$.fn.CallPage($itemurl, "edit");
+	$.fn.CallPageRequest($itemurl, "edit");
 	return false;
 });
 
