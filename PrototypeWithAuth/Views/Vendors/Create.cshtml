@@ -173,7 +173,7 @@
                                         <li><button href="#" id="addSupplierComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" class="btn btn-circle btn-xl">   +</button></li>
                                        
                                         <div style="display:none;" id="popover-content">
-                                            @foreach (var item in Model.CommentType)
+                                            @foreach (var item in Model.CommentTypes)
                                             {
                                                 <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addComment('@item')">@item</button><hr class="m-0" />
                                             }
