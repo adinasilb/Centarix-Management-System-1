@@ -8,7 +8,9 @@ for details on configuring this project to bundle and minify static web assets. 
 
 
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
-
+html.wf-loading * {
+    opacity: 0;
+}
 
 /*MDBootstrap material select*/
 [type=checkbox]:checked + label:before {
@@ -247,7 +249,7 @@ body {
 .login-button {
     padding: 5px 30px;
     line-height: 160%;
-    font-size: 150%;
+    font-size: 150% !important;
     text-transform: uppercase;
     border-radius: 25px;
     font-weight: 600;
@@ -1161,4 +1163,8 @@ body {
 }
 .disabled-submit{
     background-color:grey;
+}
+
+td .btn{
+    font-size: 1rem;
 }
