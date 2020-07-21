@@ -8,6 +8,7 @@ using PrototypeWithAuth.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -92,5 +93,7 @@ namespace PrototypeWithAuth.ViewModels
 
         [Display(Name = "Order Limit")]
         public double OperaitonOrderLimit { get; set; }
+
+        public IFormFile UserImage { get; set; }
     }
 }

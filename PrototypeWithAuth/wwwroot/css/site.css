@@ -107,11 +107,26 @@ center-horizontally {
 }
 
 
-.orders-view .dropdown-content li>a, .dropdown-content li>span {
+.orders-view .dropdown-content li>a, .orders-view .dropdown-content li>span {
     color: #000 !important;
 }
-.orders-view .dropdown-primary .dropdown-content li.active, .dropdown-primary .dropdown-content li a, .dropdown-primary .dropdown-content li span:hover {
+.orders-view .dropdown-primary .dropdown-content li.active,{
+    background-color: inherit !important;
+    box-shadow: 0 0 0 0 !important;
+    color: black !important;
+    font-weight: bold !important;
+}
+
+.orders-view .dropdown-primary .dropdown-content li.active,{
+
+
+}
+
+.orders-view .dropdown-primary .dropdown-content li a,
+.orders-view .dropdown-primary .dropdown-content li span:hover {
     background-color: rgba(48,188,201, .5) !important;
+    -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.16), 0 1px 6px 0 rgba(0,0,0,0.12);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.16), 0 1px 6px 0 rgba(0,0,0,0.12);
 }
 /*END ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 a.navbar-brand {
@@ -231,10 +246,23 @@ body {
     box-shadow: 0 1px 0 0 black;
 }
 
-.form-control-plaintext:read-only {
-    background-color: #F9F9F9 !important;
+input.select-dropdown {
+    margin:0 !important;
 }
 
+.align-with-select {
+    margin-bottom: 0;
+    margin-top: 1rem;
+}
+
+.input-group-text {
+    background-color: white !important;
+    border-width: 0 0 1px 0 !important;
+    border-radius: 0;
+}
+/*.form-control-plaintext:read-only {
+    background-color: #F9F9F9 !important;
+}*/
 /*Login page buttons*/
 .login-field {
     border-radius: 5px;
@@ -294,6 +322,29 @@ body {
 
     .inv-button:hover, inv-user-button:hover {
         opacity: 0.67;
+    }
+
+.form-control-file::-webkit-file-upload-button {
+    background-color: #DB669D;
+    border: 1px solid #DB669D;
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.16rem 0.5rem;
+    font-size: 1rem;
+    line-height: 1;
+    /*text-transform: uppercase;*/
+}
+    .form-control-file::-webkit-file-upload-button:hover {
+        background-color: rgba(219, 102, 157, .5);
+        border: 1px solid #DB669D;
+        border-radius: 3rem;
+        color: white;
+        font-weight: 550;
+        padding: 0.16rem 0.5rem;
+        font-size: 1rem;
+        line-height: 1;
+        /*text-transform: uppercase;*/
     }
 
 .inv-user-button {

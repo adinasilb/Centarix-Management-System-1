@@ -30,7 +30,7 @@ $("#parentlist").change(function () {
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $(".Project").change(function () {
-
+	console.log("project was changed");
 	var projectId = $(this).val();
 	var url = "/Requests/GetSubProjectList";
 
@@ -408,22 +408,22 @@ $.fn.CheckSubUnitsFilled = function () {
 
 $.fn.EnableSubUnits = function () {
 	$("#Request_SubUnit").prop("disabled", false);
-	$("#Request_SubUnitTypeID").prop("disabled", false);
+	$("#select-options-Request_SubUnitTypeID").prop("disabled", false);
 };
 
 $.fn.EnableSubSubUnits = function () {
 	$("#Request_SubSubUnit").prop("disabled", false);
-	$("#Request_SubSubUnitTypeID").prop("disabled", false);
+	$("#select-options-Request_SubSubUnitTypeID").prop("disabled", false);
 };
 
 $.fn.DisableSubUnits = function () {
 	$("#Request_SubUnit").prop("disabled", true);
-	$("#Request_SubUnitTypeID").prop("disabled", true);
+	$("#select-options-Request_SubUnitTypeID").prop("disabled", true);
 };
 
 $.fn.DisableSubSubUnits = function () {
 	$("#Request_SubSubUnit").prop("disabled", true);
-	$("#Request_SubSubUnitTypeID").prop("disabled", true);
+	$("#select-options-Request_SubSubUnitTypeID").prop("disabled", true);
 };
 
 $.fn.CalculateUnitAmounts = function () {
@@ -793,7 +793,7 @@ $(".documents-tab").click(function () {
 
 	console.log("documents tab clicked");
 	$.fn.HideAllDocs();
-	$.fn.CheckIfFileSelectsAreFull();
+	//$.fn.CheckIfFileSelectsAreFull();
 
 
 });

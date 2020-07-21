@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,12 +25,15 @@ namespace PrototypeWithAuth.Controllers
         private SignInManager<ApplicationUser> _signManager;
         private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
-        public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _signManager = signManager;
             _roleManager = roleManager;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -251,6 +257,18 @@ namespace PrototypeWithAuth.Controllers
                             await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Users.ToString());
                         }
                     }
+
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    string requestFolder = Path.Combine(uploadFolder, "UserImages");
+                    Directory.CreateDirectory(requestFolder);
+                    if (registerUserViewModel.UserImage != null) //test for more than one???
+                    {
+                        //create file
+                        string uniqueFileName = user.UserNum.ToString() + ".png";
+                        string filePath = Path.Combine(requestFolder, uniqueFileName);
+                        registerUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
+                    }
+
                 }
                 else
                 {
@@ -396,7 +414,7 @@ namespace PrototypeWithAuth.Controllers
             _context.Update(userEditted);
             _context.SaveChanges();
 
-            var rolesList = await _userManager.GetRolesAsync(userEditted).ConfigureAwait(false); 
+            var rolesList = await _userManager.GetRolesAsync(userEditted).ConfigureAwait(false);
 
             if (rolesList.Contains(AppUtility.MenuItems.OrdersAndInventory.ToString()) && !registerUserViewModel.OrderRoles[0].Selected)
             {
@@ -492,7 +510,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles ="Admin, Users")]
+        [Authorize(Roles = "Admin, Users")]
         public IActionResult DeleteUserModal(string Id)
         {
             var user = _context.Users.Where(u => u.Id == Id).Where(u => u.IsDeleted == false).FirstOrDefault();

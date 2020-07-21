@@ -3,14 +3,14 @@
 @{
 
 }
-<script type="text/javascript" src="date.js"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"
+
+@*<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"
         type="text/javascript">
 </script>
 
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"
         type="text/javascript">
-</script>
+</script>*@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
@@ -119,11 +119,11 @@
                                     </div>
                                 </div>
                                 <br />
-                                <div class="row">
+                                <div class="row" style="height: 100px;">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Sub Project:</label>
-                                            <select asp-for="Request.SubProjectID" class="mdb-select md-form  colorful-select dropdown-primary SubProject"></select>
+                                            <select asp-for="Request.SubProjectID" id="SubProject" class="align-bottom mdb-select md-form  colorful-select dropdown-primary SubProject"></select>
                                             <span asp-validation-for="Request.SubProjectID" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -137,7 +137,7 @@
                                                 dataValueField: "VendorID",
                                                 dataTextField: "VendorEnName"),
                                                 optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                                                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "vendorList" }
+                                                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary align-bottom", @id = "vendorList", @size=1 }
                                                 )
                                             <span asp-validation-for="Request.Product.VendorID" class="text-danger"></span>
                                         </div>
@@ -146,7 +146,7 @@
                                         <div class="form-group">
                                             @* IN MIDDLE *@
                                             <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                                            <label class="vendorBusinessId form-control-plaintext border-bottom " />
+                                            <input class="vendorBusinessId form-control-plaintext border-bottom align-bottom h-100 align-with-select" />
                                             @*don't need a validation here because you it's not saving*@
                                         </div>
                                     </div>
@@ -220,20 +220,24 @@
                                     <div class="col-md-8">
                                         <span style="font-size: 1.7em;">Price</span>
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="currency" class="control-label">Currency</label>
-                                            <select id="currency" class="mdb-select md-form  colorful-select dropdown-primary">
-                                                <option value="dollar">&dollar; USD</option>
-                                                <option value="shekel">&#8362; NIS</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label asp-for="Request.ExchangeRate" class="control-label"></label>
-                                            <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " min="1" />
-                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Currency</label>
+                                                    <select id="currency" class="mdb-select md-form colorful-select dropdown-primary">
+                                                        <option value="dollar">&dollar; USD</option>
+                                                        <option value="shekel">&#8362; NIS</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label asp-for="Request.ExchangeRate" class="control-label"></label>
+                                                    <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom align-with-select" min="1" />
+                                                    <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -244,7 +248,7 @@
                                             <div class="row">
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.Unit" class="control-label"></label>
-                                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="1" />
+                                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom align-with-select" min="1" />
                                                     <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-md-6">
@@ -266,7 +270,7 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="input-group">
-                                                            <span class="input-group-text">&#36;</span>
+                                                            <span class="input-group-text border-bottom">&#36;</span>
                                                             <input class="form-control-plaintext border-bottom " name="unit-price-dollars" id="unit-price-dollars" disabled />
                                                         </div>
                                                     </div>
@@ -285,7 +289,7 @@
                                             <div class="row">
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubUnit" class="control-label"></label>
-                                                    <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom " min="0" disabled />
+                                                    <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom align-with-select" min="0" disabled />
                                                     <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
@@ -323,7 +327,7 @@
                                             <div class="row">
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                                    <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom " min="0" disabled />
+                                                    <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom align-with-select" min="0" disabled />
                                                     <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
