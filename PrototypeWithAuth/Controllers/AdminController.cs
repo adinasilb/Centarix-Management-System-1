@@ -258,17 +258,21 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
 
-                    //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    //string requestFolder = Path.Combine(uploadFolder, "UserImages");
-                    //Directory.CreateDirectory(requestFolder);
-                    //if (registerUserViewModel.UserImage != null) //test for more than one???
-                    //{
-                    //    //create file
-                    //    var extension = registerUserViewModel.UserImage.FileName.Substring(registerUserViewModel.UserImage.FileName.IndexOf("."), registerUserViewModel.UserImage.FileName.Length);
-                    //    string uniqueFileName = user.UserNum.ToString() + ".png";
-                    //    string filePath = Path.Combine(requestFolder, uniqueFileName);
-                    //    registerUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
-                    //}
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                    Directory.CreateDirectory(uploadFolder);
+                    if (registerUserViewModel.UserImage != null) //test for more than one???
+                    {
+                        //create file
+                        var indexOfDot = registerUserViewModel.UserImage.FileName.IndexOf(".");
+                        var extension = registerUserViewModel.UserImage.FileName.Substring(indexOfDot, registerUserViewModel.UserImage.FileName.Length - indexOfDot);
+                        string uniqueFileName = user.UserNum.ToString() + extension;
+                        string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                        registerUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                        user.UserImage = filePath;
+                        _context.Update(user);
+                        _context.SaveChanges();
+                    }
 
                 }
                 else
@@ -505,6 +509,24 @@ namespace PrototypeWithAuth.Controllers
             else if (!rolesList.Contains(AppUtility.MenuItems.Users.ToString()) && registerUserViewModel.UserRoles[0].Selected)
             {
                 await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Users.ToString());
+            }
+
+            var folderName = "UserImages";
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, folderName);
+            Directory.CreateDirectory(uploadFolder);
+            if (registerUserViewModel.UserImage != null) //test for more than one???
+            {
+                //create file
+                var indexOfDot = registerUserViewModel.UserImage.FileName.IndexOf(".");
+                var extension = registerUserViewModel.UserImage.FileName.Substring(indexOfDot, registerUserViewModel.UserImage.FileName.Length - indexOfDot);
+                string uniqueFileName = userEditted.UserNum.ToString() + extension;
+                string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                registerUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                var pathToSave = Path.Combine(folderName, uniqueFileName);
+                userEditted.UserImage = "/" + pathToSave;
+                _context.Update(userEditted);
+                _context.SaveChanges();
             }
 
             return RedirectToAction("Index");

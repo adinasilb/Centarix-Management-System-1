@@ -35,6 +35,7 @@
                         <div class="container-fluid div-tabs text-center">
                             <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                 <li class="nav-item"><a data-toggle="tab" href="#details" class="nav-link user-nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Details</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#images" id="user-images-tab" class="nav-link user-nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Images</a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#permissions" class="nav-link user-nav-link permissions-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Permissions</a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#budget" class="nav-link user-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget</a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#more" class="nav-link documents-tab user-nav-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />More</a></li>
@@ -88,6 +89,16 @@
                                     <label asp-for="ConfirmPassword" class="control-label"></label>
                                     <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" readonly />
                                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="images" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label asp-for="UserImage" class="control-label"></label>
+                                    <input type="file" asp-for="UserImage" class="form-control-file pt-1" accept=".png, .jpg, .jpeg, .pdf">
+                                    <span asp-validation-for="UserImage" class="text-danger"></span>
+                                    <img id="user-image" max-width="400" />
                                 </div>
                             </div>
                         </div>

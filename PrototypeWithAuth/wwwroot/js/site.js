@@ -1114,6 +1114,39 @@ $.fn.setUpVisual = function (val) {
 	});
 };
 
+$("#UserImage").on("change", function () {
+	var imgPath = $("#UserImage")[0].value;
+	console.log("imgPath: " + imgPath);
+	var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+	console.log("extn: " + extn);
+	var imageHolder = $("#user-image");
+	imageHolder.empty();
+
+	if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+		console.log("inside the if statement");
+		if (typeof (FileReader) != "undefined") {
+			console.log("file reader does not equal undefined");
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				console.log(e.target.result);
+				//$("<img />", {
+				//	"src": e.target.result,
+				//	"class": "thumb-image"
+				//}).appendTo(imageHolder);
+				$("#user-image").attr("src", e.target.result);
+			}
+			imageHolder.show();
+			reader.readAsDataURL($(this)[0].files[0]);
+		}
+	}
+	else {
+		alert("Please only select images");
+	}
+});
+
+
+
+
 $.fn.validateItemTab = function () {
 	$("#price-tab").prop("disabled", true);
 	$("#location-tab").prop("disabled", true);
@@ -1380,6 +1413,9 @@ $(".edit-user .permissions-tab").on("click", function () {
 	$.fn.HideAllPermissionsDivs();
 });
 
+
+
+
 $.fn.HideAllPermissionsDivs = function () {
 	console.log("hide all permissions function entered");
 	$(".orders-list").hide();
@@ -1398,6 +1434,93 @@ $(".back-to-main-permissions").on("click", function (e) {
 	console.log("back to main permissions clicked");
 	e.preventDefault();
 	e.stopPropagation();
+	//var classes = $(this).attr('class').split(' ');
+	//for (var i = 0; i < classes.length; i++) {
+	//	if (classes[i] == "orders") {
+	//		return false; //jquery break
+	//	}
+	//}
+	var checks = $("input[type='checkbox']:checked");
+	var checkTypes = [];
+	for (var x = 0; x < checks.length; x++) {
+		var name = $(checks[x]).attr("name");
+		var bracket = name.indexOf('[');
+		var type = name.substring(0, bracket);
+		checkTypes.push(type);
+		console.log("type: " + type);
+
+	}
+
+	console.log("OrderRoles: " + checkTypes.indexOf("OrderRoles"));
+	console.log(checkTypes.indexOf("false"));
+	if (!checkTypes.indexOf("OrderRoles")) {
+		console.log("Order roles exists");
+	}
+	console.log("ProtocolRoles: " + checkTypes.indexOf("ProtocolRoles"));
+	if (!checkTypes.indexOf("ProtocolRoles")) {
+		console.log("Protocol roles exists");
+	}
+	else {
+		console.log("else protocols");
+	}
+	console.log("OperationRoles: " + checkTypes.indexOf("OperationRoles"));
+	if (!checkTypes.indexOf("OperationRoles")) {
+		console.log("Operation roles exists");
+	}
+	else {
+		console.log("else Operation");
+	}
+	console.log("BiomarkerRoles: " + checkTypes.indexOf("BiomarkerRoles"));
+	if (!checkTypes.indexOf("BiomarkerRoles")) {
+		console.log("Biomarker roles exists");
+	}
+	else {
+		console.log("else Biomarker");
+	}
+	console.log("TimekeeperRoles: " + checkTypes.indexOf("TimekeeperRoles"));
+	if (!checkTypes.indexOf("TimekeeperRoles")) {
+		console.log("Timekeeper roles exists");
+	}
+	else {
+		console.log("else Timekeeper");
+	}
+	console.log("LabManagementRoles: " + checkTypes.indexOf("LabManagementRoles"));
+	if (!checkTypes.indexOf("LabManagementRoles")) {
+		console.log("LabManagement roles exists");
+	}
+	else {
+		console.log("else LabManagement");
+	}
+	console.log("AccountingRoles: " + checkTypes.indexOf("AccountingRoles"));
+	if (!checkTypes.indexOf("AccountingRoles")) {
+		console.log("Accounting roles exists");
+	}
+	else {
+		console.log("else Accounting");
+	}
+	console.log("ExpenseesRoles: " + checkTypes.indexOf("ExpenseesRoles"));
+	if (!checkTypes.indexOf("ExpenseesRoles")) {
+		console.log("Expenses roles exists");
+	}
+	else {
+		console.log("else Expenses");
+	}
+	console.log("IncomeRoles: " + checkTypes.indexOf("IncomeRoles"));
+	if (!checkTypes.indexOf("IncomeRoles")) {
+		console.log("Income roles exists");
+	}
+	else {
+		console.log("else Income");
+	}
+	console.log("UserRoles: " + checkTypes.indexOf("UserRoles"));
+	if (!checkTypes.indexOf("UserRoles")) {
+		console.log("User roles exists");
+	}
+	else {
+		console.log("else User");
+	}
+
+
 	$.fn.HideAllPermissionsDivs();
 	$(".main-permissions").show();
 });
@@ -1484,7 +1607,7 @@ $(".open-users-list").on("click", function (e) {
 
 $("#vendor-payments-tab").click(function () {
 	console.log("$('#vendor - payments - tab')");
-	$("#createModalForm").validate();   
+	$("#createModalForm").validate();
 	$("#createModalForm").valid();
 	$.fn.validateVendorDetailsTab();
 });
@@ -1589,7 +1712,7 @@ $.fn.validateVendorPayment = function () {
 	if (valid == "true" || $("#Vendor_VendorAccountNum").val() == "") {
 		return;
 	}
-	
+
 	if (valid == "false" || valid == undefined) {
 		$("#vendor-comment-tab").prop("disabled", false);
 		$("#vendor-contact-tab").prop("disabled", false);
