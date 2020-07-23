@@ -8,6 +8,6 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class LabManageQuotesViewModel
     {
-        public Dictionary<Vendor, List<Request>> RequestsByVendor { get; set; }
+        public ILookup<Vendor, Request> RequestsByVendor { get; set; }
     }
 }

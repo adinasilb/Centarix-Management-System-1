@@ -2204,8 +2204,10 @@ namespace PrototypeWithAuth.Controllers
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.RequestStatusID == 6)
-                .Include(r=> r.Product).ThenInclude(p => p.Vendor)
-                .ToList().GroupBy(r => r.Product.Vendor).ToDictionary(r => r.Key, r => r.ToList());
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.ParentRequest.ApplicationUser)
+                .ToLookup(r => r.Product.Vendor);
             return View(labManageQuotesViewModel);
         }
 
