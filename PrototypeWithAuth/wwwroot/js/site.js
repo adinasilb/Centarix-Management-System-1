@@ -1753,26 +1753,6 @@ $("#addSuplierContact").click(function () {
 });
 
 
-$("#addSupplierComment").click(function () {
-
-	$('[data-toggle="popover"]').popover({
-		sanitize: false,
-		placement: 'bottom',
-		html: true,
-		content: function () {
-			return $('#popover-content').html();
-		}
-	});
-	$('[data-toggle="popover"]').popover('toggle');
-
-});
-
-$("#addSupplier").click(function () {
-	console.log($("#createModalForm").valid());
-	if (!$("#createModalForm").valid()) {
-		$("#addSupplier").prop("disabled", true);
-	}
-});
 
 $("#addUser").click(function () {
 	console.log($("#createModalForm").valid());

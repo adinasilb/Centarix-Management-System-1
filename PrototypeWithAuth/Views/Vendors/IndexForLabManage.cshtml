@@ -44,7 +44,7 @@
                         @Html.DisplayFor(modelItem => item.VendorID)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.VendorEnName)
+                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="acc-link-clr">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorHeName)
@@ -65,7 +65,7 @@
                         </td>*@
                     <td>
                         @*<a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |*@
-                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /></a>
+
                         @*<a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>*@
                     </td>
                 </tr>
