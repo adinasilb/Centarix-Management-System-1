@@ -1406,11 +1406,13 @@ $("#profile-img").click(function () {
 $(".create-user .permissions-tab").on("click", function () {
 	console.log("permissions tab opened");
 	$.fn.HideAllPermissionsDivs();
+	$.fn.ChangeUserPermissionsButtons();
 });
 
 $(".edit-user .permissions-tab").on("click", function () {
 	console.log("permissions tab opened");
 	$.fn.HideAllPermissionsDivs();
+	$.fn.ChangeUserPermissionsButtons();
 });
 
 
@@ -1434,12 +1436,14 @@ $(".back-to-main-permissions").on("click", function (e) {
 	console.log("back to main permissions clicked");
 	e.preventDefault();
 	e.stopPropagation();
-	//var classes = $(this).attr('class').split(' ');
-	//for (var i = 0; i < classes.length; i++) {
-	//	if (classes[i] == "orders") {
-	//		return false; //jquery break
-	//	}
-	//}
+
+	$.fn.ChangeUserPermissionsButtons();
+
+	$.fn.HideAllPermissionsDivs();
+	$(".main-permissions").show();
+});
+
+$.fn.ChangeUserPermissionsButtons = function () {
 	var checks = $("input[type='checkbox']:checked");
 	var checkTypes = [];
 	for (var x = 0; x < checks.length; x++) {
@@ -1531,11 +1535,7 @@ $(".back-to-main-permissions").on("click", function (e) {
 		$(".users-main").hide();
 		$(".users-grey").show();
 	}
-
-
-	$.fn.HideAllPermissionsDivs();
-	$(".main-permissions").show();
-});
+};
 
 $(".open-orders-list").on("click", function (e) {
 	console.log("open orders lsit clicked");

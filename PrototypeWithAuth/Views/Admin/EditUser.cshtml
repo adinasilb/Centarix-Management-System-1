@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.RegisterUserViewModel;
+﻿@model PrototypeWithAuth.ViewModels.EditUserViewModel;
 @using PrototypeWithAuth.AppData;
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")"
@@ -120,35 +120,40 @@
                                     <div class="row">
                                         <div class="col-2 offset-1 text-center px-2">
                                             <a href="" class="bold-hover-effects open-orders-list text-center">
-                                                <img src="~/images/css/main_menu_icons/inventory.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/inventory.png" class="orders-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/inventory_grey.png" class="orders-grey" width="115" />
                                                 <br />
                                                 <span class="text-center">Orders &amp; Inventory</span>
                                             </a>
                                         </div>
                                         <div class="col-2 text-center px-2">
                                             <a href="" class="open-protocols-list bold-hover-effects">
-                                                <img src="~/images/css/main_menu_icons/protocols.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/protocols.png" class="protocols-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/protocols_grey.png" class="protocols-grey" width="115" />
                                                 <br />
                                                 <span>Protocols</span>
                                             </a>
                                         </div>
                                         <div class="col-2 text-center px-2">
                                             <a href="" class="open-operations-list bold-hover-effects">
-                                                <img src="~/images/css/main_menu_icons/operation.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/operation.png" class="operations-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/operation_grey.png" class="operations-grey" width="115" />
                                                 <br />
                                                 <span>Operations</span>
                                             </a>
                                         </div>
                                         <div class="col-2 text-center px-2">
                                             <a href="" class="open-biomarkers-list bold-hover-effects">
-                                                <img src="~/images/css/main_menu_icons/biomarkers.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/biomarkers.png" class="biomarkers-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/biomarkers_grey.png" class="biomarkers-grey" width="115" />
                                                 <br />
                                                 <span>Biomarkers</span>
                                             </a>
                                         </div>
                                         <div class="col-2 text-center px-2">
                                             <a href="" class="open-timekeepers-list bold-hover-effects">
-                                                <img src="~/images/css/main_menu_icons/timekeeper.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/timekeeper.png" class="timekeeper-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/timekeeper_grey.png" class="timekeeper-grey" width="115" />
                                                 <br />
                                                 <span>Timekeeper</span>
                                             </a>
@@ -159,35 +164,40 @@
                                     <div class="row">
                                         <div class="col-2 offset-1 text-center px-2">
                                             <a href="" class="bold-hover-effects open-lab-list text-center">
-                                                <img src="~/images/css/main_menu_icons/lab.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/lab.png" class="lab-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/lab_grey.png" class="lab-grey" width="115" />
                                                 <br />
                                                 <span class="text-center">Lab Management</span>
                                             </a>
                                         </div>
                                         <div class="col-2 text-center px-2">
                                             <a href="" class="open-accounting-list bold-hover-effects">
-                                                <img src="~/images/css/main_menu_icons/accounting.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/accounting.png" class="accounting-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/accounting_grey.png" class="accounting-grey" width="115" />
                                                 <br />
                                                 <span>Accounting</span>
                                             </a>
                                         </div>
                                         <div class="col-2 text-center px-2">
                                             <a href="" class="open-expenses-list bold-hover-effects">
-                                                <img src="~/images/css/main_menu_icons/expenses.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/expenses.png" class="expenses-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/expenses_grey.png" class="expenses-grey" width="115" />
                                                 <br />
                                                 <span>Expenses</span>
                                             </a>
                                         </div>
                                         <div class="col-2 text-center px-2">
                                             <a href="" class="open-income-list bold-hover-effects">
-                                                <img src="~/images/css/main_menu_icons/income.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/income.png" class="income-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/income_grey.png" class="income-grey" width="115" />
                                                 <br />
                                                 <span>Income</span>
                                             </a>
                                         </div>
                                         <div class="col-2 text-center px-2">
                                             <a href="" class="open-users-list bold-hover-effects">
-                                                <img src="~/images/css/main_menu_icons/users.png" width="115" class="disabled-permissions" />
+                                                <img src="~/images/css/main_menu_icons/users.png" class="users-main" width="115" style="display: none;" />
+                                                <img src="~/images/css/main_menu_icons/users_grey.png" class="users-grey" width="115" />
                                                 <br />
                                                 <span>Users</span>
                                             </a>
