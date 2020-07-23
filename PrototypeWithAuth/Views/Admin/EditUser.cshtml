@@ -95,10 +95,22 @@
                         <div id="images" class="tab-pane fade">
                             <div class="row">
                                 <div class="col-6">
-                                    <label asp-for="UserImage" class="control-label"></label>
-                                    <input type="file" asp-for="UserImage" class="form-control-file pt-1" accept=".png, .jpg, .jpeg, .pdf">
-                                    <span asp-validation-for="UserImage" class="text-danger"></span>
-                                    <img id="user-image" max-width="400" />
+                                    <div id="profile-img" class="btn no-box-shadow pl-0 pr-1 pt-1 pb-0">
+                                        @{
+                                            var src = "/UserImages/profile_circle_big.png";
+                                            if (Model.UserImageSaved != null)
+                                            {
+                                                src = Model.UserImageSaved;
+                                            }
+                                        }
+                                        <img src="@src" class="user-image ml-0" id="user-image" height="150" width="150" alt="Default User Image" />
+                                        <br />@*<br /><br />
+                                        <label asp-for="UserImage" class="control-label"></label>*@
+                                        <input type="file" asp-for="UserImage" class="form-control-file pt-1" accept=".png, .jpg, .jpeg, .pdf">
+                                        <span asp-validation-for="UserImage" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
                                 </div>
                             </div>
                         </div>

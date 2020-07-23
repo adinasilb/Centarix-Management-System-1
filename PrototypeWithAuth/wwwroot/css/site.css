@@ -17,12 +17,16 @@ html.wf-loading * {
     border: 1px solid rgba(0, 0, 0, .54);
 }
 
-
-/*MDBootstrap material select*/
-[type=checkbox]:checked + label:before {
-    border-right: 2px solid white !important;
-    border-bottom: 2px solid white !important;
+.user-image-bold {
+    border-radius: 50%;
+    border: 3px solid rgba(0, 0, 0, .54);
 }
+
+    /*MDBootstrap material select*/
+    [type=checkbox]:checked + label:before {
+        border-right: 2px solid white !important;
+        border-bottom: 2px solid white !important;
+    }
 /*
 [type=checkbox]:checked{
     color: black;

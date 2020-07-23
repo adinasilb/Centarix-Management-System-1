@@ -300,6 +300,7 @@ namespace PrototypeWithAuth.Controllers
                     LastName = u.LastName,
                     Email = u.Email,
                     CentarixID = u.CentarixID,
+                    UserImageSaved = u.UserImage,
                     //do we want to show the secure app pass??
                     LabMonthlyLimit = u.LabMonthlyLimit,
                     LabUnitLimit = u.LabUnitLimit,

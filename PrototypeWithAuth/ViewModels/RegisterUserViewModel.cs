@@ -95,5 +95,7 @@ namespace PrototypeWithAuth.ViewModels
         public double OperaitonOrderLimit { get; set; }
 
         public IFormFile UserImage { get; set; }
+
+        public string UserImageSaved { get; set; }
     }
 }
