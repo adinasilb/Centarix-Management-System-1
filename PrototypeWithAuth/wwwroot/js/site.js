@@ -1451,73 +1451,85 @@ $(".back-to-main-permissions").on("click", function (e) {
 
 	}
 
-	console.log("OrderRoles: " + checkTypes.indexOf("OrderRoles"));
-	console.log(checkTypes.indexOf("false"));
-	if (!checkTypes.indexOf("OrderRoles")) {
-		console.log("Order roles exists");
-	}
-	console.log("ProtocolRoles: " + checkTypes.indexOf("ProtocolRoles"));
-	if (!checkTypes.indexOf("ProtocolRoles")) {
-		console.log("Protocol roles exists");
+	if (checkTypes.indexOf("OrderRoles") > -1) {
+		$(".orders-main").show();
+		$(".orders-grey").hide();
 	}
 	else {
-		console.log("else protocols");
+		$(".orders-main").hide();
+		$(".orders-grey").show();
 	}
-	console.log("OperationRoles: " + checkTypes.indexOf("OperationRoles"));
-	if (!checkTypes.indexOf("OperationRoles")) {
-		console.log("Operation roles exists");
-	}
-	else {
-		console.log("else Operation");
-	}
-	console.log("BiomarkerRoles: " + checkTypes.indexOf("BiomarkerRoles"));
-	if (!checkTypes.indexOf("BiomarkerRoles")) {
-		console.log("Biomarker roles exists");
+	if (checkTypes.indexOf("ProtocolRoles") > -1) {
+		$(".protocols-main").show();
+		$(".protocols-grey").hide();
 	}
 	else {
-		console.log("else Biomarker");
+		$(".protocols-main").hide();
+		$(".protocols-grey").show();
 	}
-	console.log("TimekeeperRoles: " + checkTypes.indexOf("TimekeeperRoles"));
-	if (!checkTypes.indexOf("TimekeeperRoles")) {
-		console.log("Timekeeper roles exists");
-	}
-	else {
-		console.log("else Timekeeper");
-	}
-	console.log("LabManagementRoles: " + checkTypes.indexOf("LabManagementRoles"));
-	if (!checkTypes.indexOf("LabManagementRoles")) {
-		console.log("LabManagement roles exists");
+	if (checkTypes.indexOf("OperationRoles") > -1) {
+		$(".operations-main").show();
+		$(".operations-grey").hide();
 	}
 	else {
-		console.log("else LabManagement");
+		$(".operations-main").hide();
+		$(".operations-grey").show();
 	}
-	console.log("AccountingRoles: " + checkTypes.indexOf("AccountingRoles"));
-	if (!checkTypes.indexOf("AccountingRoles")) {
-		console.log("Accounting roles exists");
-	}
-	else {
-		console.log("else Accounting");
-	}
-	console.log("ExpenseesRoles: " + checkTypes.indexOf("ExpenseesRoles"));
-	if (!checkTypes.indexOf("ExpenseesRoles")) {
-		console.log("Expenses roles exists");
+	if (checkTypes.indexOf("BiomarkerRoles") > -1) {
+		$(".biomarkers-main").show();
+		$(".biomarkers-grey").hide();
 	}
 	else {
-		console.log("else Expenses");
+		$(".biomarkers-main").hide();
+		$(".biomarkers-grey").show();
 	}
-	console.log("IncomeRoles: " + checkTypes.indexOf("IncomeRoles"));
-	if (!checkTypes.indexOf("IncomeRoles")) {
-		console.log("Income roles exists");
-	}
-	else {
-		console.log("else Income");
-	}
-	console.log("UserRoles: " + checkTypes.indexOf("UserRoles"));
-	if (!checkTypes.indexOf("UserRoles")) {
-		console.log("User roles exists");
+	if (checkTypes.indexOf("TimekeeperRoles") > -1) {
+		$(".timekeeper-main").show();
+		$(".timekeeper-grey").hide();
 	}
 	else {
-		console.log("else User");
+		$(".timekeeper-main").hide();
+		$(".timekeeper-grey").show();
+	}
+	if (checkTypes.indexOf("LabManagementRoles") > -1) {
+		$(".lab-main").show();
+		$(".lab-grey").hide();
+	}
+	else {
+		$(".lab-main").hide();
+		$(".lab-grey").show();
+	}
+	if (checkTypes.indexOf("AccountingRoles") > -1) {
+		$(".accounting-main").show();
+		$(".accounting-grey").hide();
+	}
+	else {
+		$(".accounting-main").hide();
+		$(".accounting-grey").show();
+	}
+	if (checkTypes.indexOf("ExpenseesRoles") > -1) {
+		$(".expenses-main").show();
+		$(".expenses-grey").hide();
+	}
+	else {
+		$(".expenses-main").hide();
+		$(".expenses-grey").show();
+	}
+	if (checkTypes.indexOf("IncomeRoles") > -1) {
+		$(".income-main").show();
+		$(".income-grey").hide();
+	}
+	else {
+		$(".income-main").hide();
+		$(".income-grey").show();
+	}
+	if (checkTypes.indexOf("UserRoles") > -1) {
+		$(".users-main").show();
+		$(".users-grey").hide();
+	}
+	else {
+		$(".users-main").hide();
+		$(".users-grey").show();
 	}
 
 
