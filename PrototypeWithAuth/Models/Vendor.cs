@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.Models
         public string VendorHeName { get; set; }
        
         [Required, MinLength (9), MaxLength(9)]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         [Display(Name = "Company ID")]
         public string VendorBuisnessID { get; set; }
         
@@ -72,6 +73,7 @@ namespace PrototypeWithAuth.Models
         public string VendorBankBranch { get; set; }
         
         [Required]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         [Display(Name = "Account Number")]
         public string VendorAccountNum{ get; set; }
         

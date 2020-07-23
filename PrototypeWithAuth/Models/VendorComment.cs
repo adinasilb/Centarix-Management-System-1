@@ -22,7 +22,6 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("ApplicationUserID")]
         public ApplicationUser ApplicationUser { get; set; }
 
-        [Required]
         public string CommentText { get; set; }
         public string CommentType { get; set; }
 

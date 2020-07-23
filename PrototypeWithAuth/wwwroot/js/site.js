@@ -1498,11 +1498,19 @@ $("#vendor-comment-tab").click(function () {
 	$.fn.validateVendorPayment();
 });
 $("#vendor-contact-tab").click(function () {
+	$('[data-toggle="popover"]').popover('hide');
 	$("#createModalForm").valid();
 	$.fn.validateVendorPayment();
 });
 $("#addSupplier").click(function () {
-	$("#createModalForm").valid();
+	console.log('$("#createModalForm").valid()');
+	if ($("#createModalForm").valid()) {
+		return true;
+	} else {
+		$("#addSupplier").prop("disabled", true);
+		$("#addSupplier").addClass("disabled-submit");
+		return false;
+	}
 });
 
 $.fn.validateVendorDetailsTab = function () {

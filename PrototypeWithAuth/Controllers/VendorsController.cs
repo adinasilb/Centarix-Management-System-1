@@ -280,11 +280,7 @@ namespace PrototypeWithAuth.Controllers
             }
             for (int i = 0; i < createSupplierViewModel.VendorComments.Count(); i++)
             {
-                if (!createSupplierViewModel.VendorComments[i].IsActive)
-                {
-                    ModelState.Remove($"VendorComments[{i}].VendorComment.CommentText");           
-                }
-                else
+                if (createSupplierViewModel.VendorComments[i].IsActive)
                 {
                     vendorComments.Add(createSupplierViewModel.VendorComments[i]);
                 }
