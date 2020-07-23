@@ -316,7 +316,7 @@
             e.preventDefault();
             e.stopPropagation();
             //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-            var $itemurl = "Requests/ReOrderModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
+            var $itemurl = "Requests/ReOrderFloatModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
             $.fn.CallPageRequest($itemurl, "reorder");
             return false;
         });
@@ -657,7 +657,19 @@
             }
         });
 
+        $("#parentlist").change(function () {
+            var parentCategoryId = $("#parentlist").val();
+            var url = "/Requests/GetSubCategorsyList";
 
+            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+                var item = "<option value=''>Select a Subcategory</option>";
+                $("#sublist").empty();
+                $.each(data, function (i, subCategory) {
+                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+                });
+                $("#sublist").html(item);
+            });
+        });
 
     </script>
 

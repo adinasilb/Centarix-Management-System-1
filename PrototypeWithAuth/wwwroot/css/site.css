@@ -1219,3 +1219,7 @@ body {
 td .btn{
     font-size: 1rem;
 }
+
+.rounded-reorder{
+    border-radius: 1rem !important
+}

@@ -1766,7 +1766,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ReOrderModalView(int? id, bool NewRequestFromProduct = false)
+        public async Task<IActionResult> ReOrderFloatModalView(int? id, bool NewRequestFromProduct = false)
         {
             //if (id == null)
             //{
@@ -1857,7 +1857,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ReOrderModalView(RequestItemViewModel requestItemViewModel, string OrderType)
+        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //initializing the boolean here
             //b/c need to check if the requestID is 0 but then pass in the new request ID
