@@ -59,6 +59,10 @@
                             @*@Html.ActionLink("Notifications", "Index", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = notificationsClass })*@
                         </li>
                         <li class="nav-item ml-5">
+                            @Html.ActionLink("Quotes", "LabManageQuotes", "Requests", new { }, new { @class = "opac87 align-text-bottom" })
+                            @*<a href="" class = "opac87 align-text-bottom">Orders</a>*@
+                        </li>
+                        <li class="nav-item ml-5">
                             @Html.ActionLink("Search", "Search", "Requests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "opac87 align-text-bottom" })
                         </li>
                     </ul>

@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "LabManageOrders";
+    Layout = "~/Views/Shared/LabManageView.cshtml";
+}
+
+    <div style="display: flex;">
+
+        <div style="width: 110px; min-height: 100rem;" class="p-2 sidebar-shadow text-center p-3">
+            <ul class="nav flex-column nav-pills nav-stacked mt-3 ">
+                <li class="nav-item pb-4">
+                    <a href="@Url.Action("", "")" class="inv-link-clr" style="color:#a9a9a9;"> <i class="icon-zoom_in-24px-01" style="font-size: 2rem;"></i> <br /> Orders </a>
+                </li>
+                <li class="nav-item pb-4">
+                    <a href="@Url.Action("LabManageQuotes", "Requests")" class="inv-link-clr" style="color:#30BCC9;"> <i class="icon-zoom_in-24px-01" style="font-size: 2rem;"></i> <br /> Quotes </a>
+                </li>
+            </ul>
+        </div>
+        <div style="flex-grow: 1; position:relative; padding: 2rem;">
+            @RenderBody()
+        </div>
+    </div>
