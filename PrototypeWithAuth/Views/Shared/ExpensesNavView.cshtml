@@ -24,9 +24,20 @@
             </div>
             <div class="form-inline">
                 <div class="md-form my-0">
-                    <a href="#" class="text-dark"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp; </a>
+                    <a href="#" class="text-dark">
+                        @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
+                    </a>
 
-                    <button id="profile-img" class="btn no-box-shadow"><img src="~/images/css/profile_circle_big.png" height="30" alt="default User image" /></button>
+                    <button id="profile-img" class="btn no-box-shadow pl-0 pr-1 pt-1 pb-0">
+                        @{
+                           var src = "UserImages/profile_circle_big.png";
+                            if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                            {
+                                src = UserManager.GetUserAsync(User).Result.UserImage;
+                            }
+                        }
+                        <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
+                    </button>
                 </div>
             </div>
 

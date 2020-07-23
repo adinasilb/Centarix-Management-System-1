@@ -12,6 +12,12 @@ html.wf-loading * {
     opacity: 0;
 }
 
+.user-image {
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, .54);
+}
+
+
 /*MDBootstrap material select*/
 [type=checkbox]:checked + label:before {
     border-right: 2px solid white !important;
