@@ -65,7 +65,7 @@ namespace PrototypeWithAuth.Controllers
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
-            
+
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).OrderBy(r => r.ParentRequest.OrderDate);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
@@ -2194,6 +2194,24 @@ namespace PrototypeWithAuth.Controllers
          * END SEND EMAIL
          */
 
+
+
+
+        /*LABMANAGEMENT*/
+        [HttpGet]
+        [Authorize(Roles = "Admin, LabManagement")]
+        public async Task<IActionResult> LabManageQuotes()
+        {
+            LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.RequestStatusID == 6)
+                .Include(r=> r.Product).ThenInclude(p => p.Vendor)
+                .ToList().GroupBy(r => r.Product.Vendor).ToDictionary(r => r.Key, r => r.ToList());
+            return View(labManageQuotesViewModel);
+        }
+
+
+
+
         /*
          * BEGIN SEARCH
          */
@@ -2550,7 +2568,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
 
-        
+
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public ActionResult DocumentView(List<String> FileNames)

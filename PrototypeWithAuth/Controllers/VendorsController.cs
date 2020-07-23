@@ -33,6 +33,9 @@ namespace PrototypeWithAuth.Controllers
 
 
 
+
+
+
         // GET: Vendors
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)

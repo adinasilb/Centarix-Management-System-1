@@ -1114,6 +1114,39 @@ $.fn.setUpVisual = function (val) {
 	});
 };
 
+$("#UserImage").on("change", function () {
+	var imgPath = $("#UserImage")[0].value;
+	console.log("imgPath: " + imgPath);
+	var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+	console.log("extn: " + extn);
+	var imageHolder = $("#user-image");
+	imageHolder.empty();
+
+	if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+		console.log("inside the if statement");
+		if (typeof (FileReader) != "undefined") {
+			console.log("file reader does not equal undefined");
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				console.log(e.target.result);
+				//$("<img />", {
+				//	"src": e.target.result,
+				//	"class": "thumb-image"
+				//}).appendTo(imageHolder);
+				$("#user-image").attr("src", e.target.result);
+			}
+			imageHolder.show();
+			reader.readAsDataURL($(this)[0].files[0]);
+		}
+	}
+	else {
+		alert("Please only select images");
+	}
+});
+
+
+
+
 $.fn.validateItemTab = function () {
 	$("#price-tab").prop("disabled", true);
 	$("#location-tab").prop("disabled", true);
@@ -1373,12 +1406,17 @@ $("#profile-img").click(function () {
 $(".create-user .permissions-tab").on("click", function () {
 	console.log("permissions tab opened");
 	$.fn.HideAllPermissionsDivs();
+	$.fn.ChangeUserPermissionsButtons();
 });
 
 $(".edit-user .permissions-tab").on("click", function () {
 	console.log("permissions tab opened");
 	$.fn.HideAllPermissionsDivs();
+	$.fn.ChangeUserPermissionsButtons();
 });
+
+
+
 
 $.fn.HideAllPermissionsDivs = function () {
 	console.log("hide all permissions function entered");
@@ -1398,9 +1436,106 @@ $(".back-to-main-permissions").on("click", function (e) {
 	console.log("back to main permissions clicked");
 	e.preventDefault();
 	e.stopPropagation();
+
+	$.fn.ChangeUserPermissionsButtons();
+
 	$.fn.HideAllPermissionsDivs();
 	$(".main-permissions").show();
 });
+
+$.fn.ChangeUserPermissionsButtons = function () {
+	var checks = $("input[type='checkbox']:checked");
+	var checkTypes = [];
+	for (var x = 0; x < checks.length; x++) {
+		var name = $(checks[x]).attr("name");
+		var bracket = name.indexOf('[');
+		var type = name.substring(0, bracket);
+		checkTypes.push(type);
+		console.log("type: " + type);
+
+	}
+
+	if (checkTypes.indexOf("OrderRoles") > -1) {
+		$(".orders-main").show();
+		$(".orders-grey").hide();
+	}
+	else {
+		$(".orders-main").hide();
+		$(".orders-grey").show();
+	}
+	if (checkTypes.indexOf("ProtocolRoles") > -1) {
+		$(".protocols-main").show();
+		$(".protocols-grey").hide();
+	}
+	else {
+		$(".protocols-main").hide();
+		$(".protocols-grey").show();
+	}
+	if (checkTypes.indexOf("OperationRoles") > -1) {
+		$(".operations-main").show();
+		$(".operations-grey").hide();
+	}
+	else {
+		$(".operations-main").hide();
+		$(".operations-grey").show();
+	}
+	if (checkTypes.indexOf("BiomarkerRoles") > -1) {
+		$(".biomarkers-main").show();
+		$(".biomarkers-grey").hide();
+	}
+	else {
+		$(".biomarkers-main").hide();
+		$(".biomarkers-grey").show();
+	}
+	if (checkTypes.indexOf("TimekeeperRoles") > -1) {
+		$(".timekeeper-main").show();
+		$(".timekeeper-grey").hide();
+	}
+	else {
+		$(".timekeeper-main").hide();
+		$(".timekeeper-grey").show();
+	}
+	if (checkTypes.indexOf("LabManagementRoles") > -1) {
+		$(".lab-main").show();
+		$(".lab-grey").hide();
+	}
+	else {
+		$(".lab-main").hide();
+		$(".lab-grey").show();
+	}
+	if (checkTypes.indexOf("AccountingRoles") > -1) {
+		$(".accounting-main").show();
+		$(".accounting-grey").hide();
+	}
+	else {
+		$(".accounting-main").hide();
+		$(".accounting-grey").show();
+	}
+	if (checkTypes.indexOf("ExpenseesRoles") > -1) {
+		$(".expenses-main").show();
+		$(".expenses-grey").hide();
+	}
+	else {
+		$(".expenses-main").hide();
+		$(".expenses-grey").show();
+	}
+	if (checkTypes.indexOf("IncomeRoles") > -1) {
+		$(".income-main").show();
+		$(".income-grey").hide();
+	}
+	else {
+		$(".income-main").hide();
+		$(".income-grey").show();
+	}
+	if (checkTypes.indexOf("UserRoles") > -1) {
+		$(".users-main").show();
+		$(".users-grey").hide();
+	}
+	else {
+		$(".users-main").hide();
+		$(".users-grey").show();
+	}
+};
 
 $(".open-orders-list").on("click", function (e) {
 	console.log("open orders lsit clicked");
@@ -1484,7 +1619,7 @@ $(".open-users-list").on("click", function (e) {
 
 $("#vendor-payments-tab").click(function () {
 	console.log("$('#vendor - payments - tab')");
-	$("#createModalForm").validate();   
+	$("#createModalForm").validate();
 	$("#createModalForm").valid();
 	$.fn.validateVendorDetailsTab();
 });
@@ -1597,7 +1732,7 @@ $.fn.validateVendorPayment = function () {
 	if (valid == "true" || $("#Vendor_VendorAccountNum").val() == "") {
 		return;
 	}
-	
+
 	if (valid == "false" || valid == undefined) {
 		$("#vendor-comment-tab").prop("disabled", false);
 		$("#vendor-contact-tab").prop("disabled", false);

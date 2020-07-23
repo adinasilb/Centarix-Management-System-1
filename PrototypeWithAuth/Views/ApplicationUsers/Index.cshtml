@@ -20,7 +20,23 @@
                 @*<fieldset class="border">*@
                 @*@Html.ActionLink(Model.ElementAt(i).FirstName + " " + Model.ElementAt(i).LastName, "Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)*@
 
-                <a href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)" class="owner-link bold-hover-effects"><img src="~/images/css/profile_circle_big.png" alt="defualt user circle" /> <br /> @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName</a>
+                <a href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)"
+                   class="owner-link bold-hover-effects" id="profile-img">
+                    @{
+                        var src = "UserImages/profile_circle_big.png";
+                        if (Model.ElementAt(i).UserImage != null)
+                        {
+                            src = Model.ElementAt(i).UserImage;
+                        }
+                    }
+                    <img src="@src" class="user-image-bold ml-0" width="160" height="160" alt="default user circle" />
+                    <br />
+                    @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
+                </a>
+                @*<button id="profile-img" class="btn no-box-shadow ">
+                    
+                    <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
+                </button>*@
                 @*</fieldset>*@
             </div>
         }

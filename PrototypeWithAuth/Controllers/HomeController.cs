@@ -31,7 +31,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 return RedirectToAction("IndexAdmin");
             }
-            return View();
+            IEnumerable<Menu> menu = _context.Menus.Select(x => x);
+            return View(menu);
         }
 
         //Adina added in

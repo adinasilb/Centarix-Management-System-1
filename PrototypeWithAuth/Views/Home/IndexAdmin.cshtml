@@ -15,7 +15,7 @@
 <div class="text-center center-horizontally mt-3">
     <h2>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h2>
     <div class="container col-md-10" style="min-width:560px">
-        <div class="row mt-5">
+        <div class="row mt-5 mb-2">
 
             @for (int i = 0; i < Model.Count() / 2; i++)
             {
@@ -25,21 +25,21 @@
                 }
                 if (i == 0)
                 {
-                    <div class="px-3 offset-1 col-2">
-                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    <div class="px-2 offset-1 col-2">
+                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img pr-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
                     </div>
                 }
                 else
                 {
-                    <div class="px-3 col-2">
-                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    <div class="px-2 col-2">
+                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img pr-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
                     </div>
                 }
 
 
             }
         </div>
-        <div class="row mt-5">
+        <div class="row mt-4">
 
             @for (int i = Model.Count() / 2; i < Model.Count(); i++)
             {
@@ -49,14 +49,14 @@
                 }
                 if (i == 5)
                 {
-                    <div class="px-3 offset-1 col-2">
-                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    <div class="px-2 offset-1 col-2">
+                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img pr-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
                     </div>
                 }
                 else
                 {
-                    <div class="px-3 col-2">
-                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    <div class="px-2 col-2">
+                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img pr-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
                     </div>
                 }
 
