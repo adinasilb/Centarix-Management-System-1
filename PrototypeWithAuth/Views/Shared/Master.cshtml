@@ -317,7 +317,7 @@
             e.stopPropagation();
             //takes the item value and calls the Products controller with the ModalView view to render the modal inside
             var $itemurl = "Requests/ReOrderFloatModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
-            $.fn.CallPageRequest($itemurl, "reorder");
+            $.fn.CallPageRequest($itemurl, "reorder");           
             return false;
         });
 
@@ -404,6 +404,7 @@
                             console.log('case "reorder":');
                             $.fn.OnOpenModalView();
                             AddTempDataMemory();
+                            $("#Request_Cost").trigger('change');
                             break;
                         case "create":
                             console.log('case "create":');
@@ -658,6 +659,7 @@
         });
 
         $("#parentlist").change(function () {
+            console.log('  $("#parentlist").change(')
             var parentCategoryId = $("#parentlist").val();
             var url = "/Requests/GetSubCategorsyList";
 

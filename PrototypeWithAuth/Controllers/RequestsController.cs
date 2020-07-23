@@ -1785,7 +1785,13 @@ namespace PrototypeWithAuth.Controllers
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
-
+            Request request = _context.Requests
+                .Include(r => r.Product)
+                .Include(r => r.UnitType)
+                .Include(r => r.SubUnitType)
+                .Include(r => r.SubSubUnitType)
+                .SingleOrDefault(x => x.RequestID == id);
+            request.ParentRequest = new ParentRequest();
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
                 ParentCategories = parentcategories,
@@ -1795,63 +1801,23 @@ namespace PrototypeWithAuth.Controllers
                 SubProjects = subprojects,
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
-                CompanyAccounts = companyaccounts
+                CompanyAccounts = companyaccounts,
+                Request = request
             };
 
             //initiating the  following models so that we can use them in an asp-for in the view
-            requestItemViewModel.Request = new Request();
-            requestItemViewModel.Request.ParentRequest = new ParentRequest();
-            requestItemViewModel.Request.SubProject = new SubProject();
 
-
-
-            //requestItemViewModel.Request.RequestStatus = new RequestStatus();
+            requestItemViewModel.Request.RequestStatusID = 7;
             requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
 
             int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
             requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-
-            //getting the old request so we can load it with the correct product id
-            var request = _context.Requests
-                .Include(r => r.Product)
-                .SingleOrDefault(x => x.RequestID == id);
-            requestItemViewModel.Request.ProductID = request.ProductID;
-            //you need the following line b/c there is nowhere underneath there that 
-            requestItemViewModel.Request.Product = request.Product;
-
-            //loading up a previous subproject from a request in case they want to use that one
-            var oldRequestWithProduct = _context.Requests
-                .Where(r => r.ProductID == requestItemViewModel.Request.ProductID)
-                .Include(r => r.SubProject)
-                .ThenInclude(sp => sp.Project)
-                .FirstOrDefault();
-            if (oldRequestWithProduct != null)
-            {
-                requestItemViewModel.Request.SubProjectID = oldRequestWithProduct.SubProjectID;
-                requestItemViewModel.Request.SubProject = oldRequestWithProduct.SubProject;
-
-                //then get the correct list of subprojects
-                requestItemViewModel.SubProjects = _context.SubProjects.Where(sp => sp.ProjectID == oldRequestWithProduct.SubProject.ProjectID);
-            }
-
-            //if you are creating a new one set the dates to today to prevent problems in the front end
-            //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
-            //(already imported it)
             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
             requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
 
-
-            //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
-            //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
-            //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
-            if (AppUtility.IsAjaxRequest(this.Request))
-            {
-                return PartialView(requestItemViewModel);
-            }
-            else
-            {
-                return View(requestItemViewModel);
-            }
+       
+            return PartialView(requestItemViewModel);
+           
         }
 
         [HttpPost]
@@ -1859,9 +1825,6 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
-            //initializing the boolean here
-            //b/c need to check if the requestID is 0 but then pass in the new request ID
-            bool WithOrder = false;
 
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
             requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
@@ -1887,18 +1850,6 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
             }
 
-            //can we combine this with the one above?
-            //if it's a new request need to put in a request status
-            if (requestItemViewModel.Request.RequestStatusID == null)
-            {
-                //all new ones will be "new" until actually ordered after the confirm email
-                requestItemViewModel.Request.RequestStatusID = 1;
-                //if it's less than 5500 shekel OR the user is an admin it will be ordered
-                if ((requestItemViewModel.Request.Cost < 5500 || User.IsInRole("Admin")) && OrderType.Equals("Order"))
-                {
-                    WithOrder = true;
-                }
-            }
             //in case we need to redirect to action
             //TempData["ModalView"] = true;
             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
@@ -1957,22 +1908,7 @@ namespace PrototypeWithAuth.Controllers
                             x++;
                         }
                     }
-                    //test that this works
-                    if (WithOrder)
-                    {
-                        TempData["RequestID"] = requestItemViewModel.Request.RequestID;
-                        TempData["OpenConfirmEmailModal"] = true;
-                        AppUtility.RequestPageTypeEnum requestPageTypeEnum1 = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
-                        return RedirectToAction("Index", new
-                        {
-                            page = requestItemViewModel.Page,
-                            requestStatusID = requestItemViewModel.RequestStatusID,
-                            subcategoryID = requestItemViewModel.SubCategoryID,
-                            vendorID = requestItemViewModel.VendorID,
-                            applicationUserID = requestItemViewModel.ApplicationUserID,
-                            PageType = requestPageTypeEnum1
-                        });
-                    }
+
                 }
                 catch (DbUpdateException ex)
                 {

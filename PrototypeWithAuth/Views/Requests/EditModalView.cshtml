@@ -1061,31 +1061,5 @@
         </div>
     </div>
 </div>
-@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
-@*This will work for the EDIT (putting in the already loaded product subcategory)*@
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    <script type="text/javascript">
-
-        /*
-         * Including these js pieces from site.js b/c has issue always attaching
-         */
-
-        //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
-        $("#parentlist").change(function () {
-            var parentCategoryId = $("#parentlist").val();
-            var url = "/Requests/GetSubCategoryList";
-
-            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-                var item = "<option value=''>Select a Subcategory</option>";
-                $("#sublist").empty();
-                $.each(data, function (i, subCategory) {
-                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-                });
-                $("#sublist").html(item);
-            });
-        });
-
-    </script>
 }

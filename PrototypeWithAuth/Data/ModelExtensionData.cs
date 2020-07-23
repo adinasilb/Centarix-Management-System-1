@@ -565,13 +565,12 @@ namespace PrototypeWithAuth.Data
                 {
                     RequestStatusID = 5,
                     RequestStatusDescription = "Clarify" // request page, under order
-                }
-                ,
-                new RequestStatus
-                {
-                    RequestStatusID = 6,
-                    RequestStatusDescription = "PayNow" // request page, under order
-                }
+                },
+                 new RequestStatus
+                 {
+                     RequestStatusID = 6,
+                     RequestStatusDescription = "AwaitingQuote" // request page, under reorder
+                 }
              );
             modelBuilder.Entity<UnitParentType>().HasData
          (
