@@ -6,112 +6,119 @@
 @{
 
     Layout = "~/Views/Shared/Master.cshtml";
-    //Layout = null;
-
-    ///*
-    // * Determine Active Nav Link START
-    // * using the
-    // */
 
     //initializing pageType to None just in case none is passed in we don't want to disable any buttons unnecessarily (can take this out in the future if we are sure that we don't need it)
-    //var pageType = AppUtility.PaymentPageTypeEnum.None;
+    var pageType = AppUtility.LabManagementPageTypeEnum.None;
 
     //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
-    //if (TempData["PageType"] != null)
-    //{
-    //    pageType = (AppUtility.PaymentPageTypeEnum)Enum.Parse(typeof(AppUtility.PaymentPageTypeEnum), TempData["PageType"].ToString());
-    //}
-
-    //passing the
-    //string initalClasses = "nav-link";
-    //string currentClasses = " text-dark activeNavLinkAcc";
-    //string notificationsClass = initalClasses;
-    //string generalClass = initalClasses;
-    //string suppliersClass = initalClasses;
-    //switch (pageType)
-    //{
-    //    case AppUtility.PaymentPageTypeEnum.Notifications:
-    //        notificationsClass = initalClasses + currentClasses;
-    //        break;
-    //    case AppUtility.PaymentPageTypeEnum.General:
-    //        generalClass = initalClasses + currentClasses;
-    //        break;
-    //    case AppUtility.PaymentPageTypeEnum.Suppliers:
-    //        suppliersClass = initalClasses + currentClasses;
-    //        break;
+    if (TempData["PageType"] != null)
+    {
+        pageType = (AppUtility.LabManagementPageTypeEnum)Enum.Parse(typeof(AppUtility.LabManagementPageTypeEnum), TempData["PageType"].ToString());
     }
 
-        <header class="sticky-top">
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
+    //passing the
+    string initalClasses = "opac87 align-text-bottom";
+    string currentClasses = " text-dark activeNavLinkAcc";
+    string suppliersClass = initalClasses;
+    string locationsClass = initalClasses;
+    string equipmentClass = initalClasses;
+    string quotesClass = initalClasses;
+    string searchClass = initalClasses;
 
-                <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
 
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav mr-auto dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
-                        <li class="nav-item mx-4 d-table ">
-                            @Html.ActionLink("Suppliers", "IndexForLabManage", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = " opac87 align-text-bottom" })
-                        </li>
-                        <li class="nav-item ml-5 ">
-                            @Html.ActionLink("Locations", "Index", "Locations", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = "opac87 align-text-bottom" })
-                        </li>
-                        <li class="nav-item ml-5">
-                            Equipment
-                            @*@Html.ActionLink("Notifications", "Index", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = notificationsClass })*@
-                        </li>
-                        <li class="nav-item ml-5">
-                            @Html.ActionLink("Quotes", "LabManageQuotes", "Requests", new { }, new { @class = "opac87 align-text-bottom" })
-                            @*<a href="" class = "opac87 align-text-bottom">Orders</a>*@
-                        </li>
-                        <li class="nav-item ml-5">
-                            @Html.ActionLink("Search", "Search", "Requests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "opac87 align-text-bottom" })
-                        </li>
-                    </ul>
-                </div>
-                <div class="form-inline">
-                    <div class="md-form my-0">
-                        <a href="#" class="text-dark">
-                            @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
-                        </a>
 
-                        <button id="profile-img" class="btn no-box-shadow pl-0 pr-1 pt-1 pb-0">
-                            @{
-                               var src = "UserImages/profile_circle_big.png";
-                                if (UserManager.GetUserAsync(User).Result.UserImage != null)
-                                {
-                                    src = UserManager.GetUserAsync(User).Result.UserImage;
-                                }
-                            }
-                            <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
-                        </button>
-                    </div>
-                </div>
+    switch (pageType)
+    {
+        case AppUtility.LabManagementPageTypeEnum.Suppliers:
+            suppliersClass += currentClasses;
+            break;
+        case AppUtility.LabManagementPageTypeEnum.Locations:
+            locationsClass += currentClasses;
+            break;
+        case AppUtility.LabManagementPageTypeEnum.Equipment:
+            equipmentClass += currentClasses;
+            break;
+        case AppUtility.LabManagementPageTypeEnum.Quotes:
+            quotesClass += currentClasses;
+            break;
+        case AppUtility.LabManagementPageTypeEnum.Search:
+            searchClass += searchClass;
+            break;
+    }
 
-            </nav>
-            <div class=" logout-div">
-                <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
-                </form>
+
+}
+
+<header class="sticky-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
+
+        <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
+                <li class="nav-item ml-4 d-table ">
+                    @Html.ActionLink("Suppliers", "IndexForLabManage", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = " opac87 align-text-bottom" })
+                </li>
+                <li class="nav-item ml-5 ">
+                    @Html.ActionLink("Locations", "Index", "Locations", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = "opac87 align-text-bottom" })
+                </li>
+                <li class="nav-item ml-5">
+                    Equipment
+                    @*@Html.ActionLink("Notifications", "Index", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = notificationsClass })*@
+                </li>
+                <li class="nav-item ml-5">
+                    @Html.ActionLink("Quotes", "LabManageQuotes", "Requests", new { }, new { @class = "opac87 align-text-bottom" })
+                    @*<a href="" class = "opac87 align-text-bottom">Orders</a>*@
+                </li>
+                <li class="nav-item ml-5">
+                    @Html.ActionLink("Search", "Search", "Requests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "opac87 align-text-bottom" })
+                </li>
+            </ul>
+        </div>
+        <div class="form-inline">
+            <div class="md-form my-0">
+                <a href="#" class="text-dark">
+                    @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
+                </a>
+
+                <button id="profile-img" class="btn no-box-shadow pl-0 pr-1 pt-1 pb-0">
+                    @{
+                        var src = "UserImages/profile_circle_big.png";
+                        if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                        {
+                            src = UserManager.GetUserAsync(User).Result.UserImage;
+                        }
+                    }
+                    <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
+                </button>
             </div>
-        </header>
-    <div class="container-fluid">
-        <main role="main">
-            @RenderBody()
-        </main>
+        </div>
 
+    </nav>
+    <div class=" logout-div">
+        <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
+        </form>
     </div>
+</header>
+<div class="container-fluid">
+    <main role="main">
+        @RenderBody()
+    </main>
 
-    <!-- The Modal -->
-    <div class="modal modal-view" id="myModal">
-    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal modal-view" id="myModal">
+</div>
 
 
-    @*<footer class="border-top footer text-muted text-center">
+@*<footer class="border-top footer text-muted text-center">
         <div class="container">
             &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>*@
-    <script src="~/js/site.js" asp-append-version="true">
+<script src="~/js/site.js" asp-append-version="true">
 
 
-    </script>
-   
+</script>

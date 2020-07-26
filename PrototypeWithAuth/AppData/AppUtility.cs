@@ -14,7 +14,8 @@ namespace PrototypeWithAuth.AppData
     {
         public enum CommentTypeEnum { Warning, Comment}
         public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location }
-        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers, Payments} //these are all going to the ParentRequestIndex
+        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers, Payments } //these are all going to the ParentRequestIndex
+        public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, Search }
         public enum RequestSidebarEnum { None, Type, Vendor, Owner, Location, Cart }
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits}
         public enum UserPageTypeEnum { None, Index, Add }
