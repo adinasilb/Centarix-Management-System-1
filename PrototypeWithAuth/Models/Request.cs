@@ -76,7 +76,7 @@ namespace PrototypeWithAuth.Models
         [Range(0, 255, ErrorMessage = "Field must be positive")]
         public byte Warranty { get; set; } // this is the amount of months of the warranty. the datetime when it ends will be calculated on the frontend (now it's from the date ordered, but should it be from the date received instead?)
 
-        public double VAT = 0.17; // should this be coded into the model or should we set it elsewhere?
+        public double VAT { get; set; } // should this be coded into the model or should we set it elsewhere?
         [Display(Name = "Exchange Rate")]
         public double ExchangeRate { get; set; } // holding the rate of exchange for this specific request
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
