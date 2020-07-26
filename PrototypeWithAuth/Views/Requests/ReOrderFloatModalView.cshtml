@@ -6,57 +6,67 @@
 
 <div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog rounded-reorder modal-lg box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
+    <div class="modal-dialog reorder-modal  modal-lg " role="document" >
 
-        <div class="modal-content d-inline-block">
+        <div class="modal-content d-inline-block" style="border-radius:2rem;">
 
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" method="post" id="reorderForm" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+                <div class="text-right mr-5 mt-4">
+                    <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent; text-transform:lowercase">x</button>
+                </div>
 
                 @*
-                    NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
-                        they need the hiddenfors that are right underneath it
+        NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+            they need the hiddenfors that are right underneath it
                 *@
 
-                @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
-                @Html.HiddenFor(model => model.Request.ProductID)
-                @Html.HiddenFor(model => model.Request.Product.ProductSubcategory)
-
-                @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
-                @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
+                @Html.HiddenFor(model => model.Request.RequestID)
+                @Html.HiddenFor(model => model.Request.ExchangeRate)
                 @Html.HiddenFor(model => model.Page)
-                @Html.HiddenFor(model => model.RequestStatusID)
-                @Html.HiddenFor(model => model.SubCategoryID)
-                @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
-                @*Requests search view model*@
-
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
 
                 <!-- Modal Header -->
-                <div class="new-modal-header border-bottom box-shadow" style="padding: 0.5em 6em">
+                <div class="new-modal-header no-box-shadow" style="padding: 0.5em 6em">
                     @if (TempData["ErrorMessage"] != null)
                     {
                         <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
-                    <div class="text-right">
-                        <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent">x</button>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" readonly /></h4>
-                        <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
+
+                    <div class="form-group mb-3 ">
+                        <div class="row">
+                            <div class="col-1">
+                                @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
+                                {
+                                    var imageurl = Model.Request.Product.ProductSubcategory.ImageURL;<img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                                }
+                            </div>
+
+                            <div class="col-3">
+                                <h4 class="modal-title ml-4 pt-4"><label class="rounded form-control-plaintext border-0">@Model.Request.Product.ProductName</label> </h4>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <hr class="col-12" />
+                        </div>
+
                     </div>
 
                     <div class="row" id="edit">
-                        <div class="col-md-4 RequestUnitCard">
+                        <div class="col RequestUnitCard">
                             <div class="border rounded rounded-reorder p-3">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.Unit" class="control-label"></label>
-                                        <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="0" />
+                                        <input asp-for="Request.Unit" class="form-control-plaintext border-bottom align-with-select" min="1" />
                                         <span asp-validation-for="Request.Unit" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-6">
@@ -91,12 +101,12 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 RequestSubunitCard pl-0">
+                        <div class="col RequestSubunitCard pl-0">
                             <div class="border rounded rounded-reorder p-3">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubUnit" class="control-label"></label>
-                                        <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                        <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom align-with-select" min="0" disabled />
                                         <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-6 form-group">
@@ -129,12 +139,12 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 RequestSubsubunitCard pl-0">
+                        <div class="col-4 RequestSubsubunitCard pl-0">
                             <div class="border rounded rounded-reorder p-3">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                        <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                        <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom align-with-select" min="0" disabled />
                                         <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-6 form-group">
@@ -184,17 +194,17 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 <label asp-for="Request.Cost" class="control-label"></label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
-                                    <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" />
+                                    <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1"/>
                                     <span class="text-danger" asp-validation-for="Request.Cost"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label asp-for="Request.VAT" class="control-label"></label>
+                                <label  class="control-label">VAT</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#x20aa;</span>
-                                    <input asp-for="Request.VAT" class="form-control-plaintext border-bottom" disabled />
+                                    <span class="input-group-text">&#x20aa;</span>                                    
+                                    <input class="form-control-plaintext border-bottom vat" disabled />
                                 </div>
                             </div>
                         </div>
@@ -217,9 +227,13 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <input type="submit" name="OrderType" value="Request" asp-action="ReOrderModalView" class="inv-button mr-1" />
-                        <button type="button" class="cancel-button float-right" data-dismiss="modal">Cancel</button>
+                    <div class="row mt-3">
+                        <hr class="col-12" />
+                    </div>
+
+                    <div class="form-group text-center my-5">
+                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="inv-button mr-2" style="width:20%" />
+                        <button type="button" class="cancel-button " data-dismiss="modal" style="width:20%">Cancel</button>
                     </div>
                 </div>
             </form>

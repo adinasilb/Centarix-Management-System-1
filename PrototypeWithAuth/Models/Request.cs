@@ -30,7 +30,8 @@ namespace PrototypeWithAuth.Models
         public uint? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
 
         public bool IsDeleted { get; set; } // check if this request's parentrequests requests are deleted - if so give parent request true for is deleted
-        public bool IsApproved { get; set; } 
+        public bool IsApproved { get; set; }
+        [Range(1, uint.MaxValue, ErrorMessage = "Field must be more than 0")]
         public uint Unit { get; set; } //largest unit the request comes in - amount of unit
         //public int Unit { get; set; }
         [Required (ErrorMessage = "The UnitType field is required.")]
@@ -59,6 +60,7 @@ namespace PrototypeWithAuth.Models
         public uint Quantity { get; set; }
 
         ///[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
+        [Range(1, Double.MaxValue, ErrorMessage = "Field must be more than 0")]
         [Display(Name = "Price")]
         public double Cost { get; set; } //this is always shekel no matter what currency is
         public string Currency { get; set; }

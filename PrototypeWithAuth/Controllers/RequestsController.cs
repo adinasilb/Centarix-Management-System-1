@@ -1787,6 +1787,12 @@ namespace PrototypeWithAuth.Controllers
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
+            Request request = _context.Requests
+                .Include(r => r.Product)
+                .Include(r => r.UnitType)
+                .Include(r => r.SubUnitType)
+                .Include(r => r.SubSubUnitType)
+                .SingleOrDefault(x => x.RequestID == id);
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
@@ -1797,63 +1803,13 @@ namespace PrototypeWithAuth.Controllers
                 SubProjects = subprojects,
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
-                CompanyAccounts = companyaccounts
+                CompanyAccounts = companyaccounts,
+                Request = request
             };
 
-            //initiating the  following models so that we can use them in an asp-for in the view
-            requestItemViewModel.Request = new Request();
-            requestItemViewModel.Request.ParentRequest = new ParentRequest();
-            requestItemViewModel.Request.SubProject = new SubProject();
-
-
-
-            //requestItemViewModel.Request.RequestStatus = new RequestStatus();
-            requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
-
-            int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-            requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-
-            //getting the old request so we can load it with the correct product id
-            var request = _context.Requests
-                .Include(r => r.Product)
-                .SingleOrDefault(x => x.RequestID == id);
-            requestItemViewModel.Request.ProductID = request.ProductID;
-            //you need the following line b/c there is nowhere underneath there that 
-            requestItemViewModel.Request.Product = request.Product;
-
-            //loading up a previous subproject from a request in case they want to use that one
-            var oldRequestWithProduct = _context.Requests
-                .Where(r => r.ProductID == requestItemViewModel.Request.ProductID)
-                .Include(r => r.SubProject)
-                .ThenInclude(sp => sp.Project)
-                .FirstOrDefault();
-            if (oldRequestWithProduct != null)
-            {
-                requestItemViewModel.Request.SubProjectID = oldRequestWithProduct.SubProjectID;
-                requestItemViewModel.Request.SubProject = oldRequestWithProduct.SubProject;
-
-                //then get the correct list of subprojects
-                requestItemViewModel.SubProjects = _context.SubProjects.Where(sp => sp.ProjectID == oldRequestWithProduct.SubProject.ProjectID);
-            }
-
-            //if you are creating a new one set the dates to today to prevent problems in the front end
-            //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
-            //(already imported it)
-            requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
-            requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
-
-
-            //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
-            //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
-            //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
-            if (AppUtility.IsAjaxRequest(this.Request))
-            {
-                return PartialView(requestItemViewModel);
-            }
-            else
-            {
-                return View(requestItemViewModel);
-            }
+            //initiating the  following models so that we can use them in an asp-for in the view 
+            return PartialView(requestItemViewModel);
+           
         }
 
         [HttpPost]
@@ -1861,139 +1817,131 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
-            //initializing the boolean here
-            //b/c need to check if the requestID is 0 but then pass in the new request ID
-            bool WithOrder = false;
-
-            //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
-            requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
-            requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
-            requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
-
-            //in case we need to return to the modal view
-            requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
-            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
-            requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
-            requestItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
-            //redo the unit types when seeded
-            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
-
-            //declared outside the if b/c it's used farther down to (for parent request the new comment too)
+            //get the old request that we are reordering
+            var oldRequest = _context.Requests.Where(r => r.RequestID == requestItemViewModel.Request.RequestID)
+                .Include(r=>r.ParentRequest)
+                .Include(r=>r.Product)
+                .ThenInclude(p=>p.ProductSubcategory).FirstOrDefault();
+            
+            //get current user
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
-            //checks if it's a new request
-            if (requestItemViewModel.Request.ParentRequestID == 0)
-            {
-                //use application user of whoever signed in
-                requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
-            }
+            //populate parent request
+            ParentRequest parentRequest = new ParentRequest();
+            parentRequest.ApplicationUserID = currentUser.Id;
+            int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+            parentRequest.InvoiceNumber = ""; 
+            parentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+            parentRequest.OrderDate = DateTime.Now;
+            parentRequest.InvoiceDate = DateTime.Now;
+            //save parent request
+            _context.Add(parentRequest);
+            _context.SaveChanges();
 
-            //can we combine this with the one above?
-            //if it's a new request need to put in a request status
-            if (requestItemViewModel.Request.RequestStatusID == null)
-            {
-                //all new ones will be "new" until actually ordered after the confirm email
-                requestItemViewModel.Request.RequestStatusID = 1;
-                //if it's less than 5500 shekel OR the user is an admin it will be ordered
-                if ((requestItemViewModel.Request.Cost < 5500 || User.IsInRole("Admin")) && OrderType.Equals("Order"))
-                {
-                    WithOrder = true;
-                }
-            }
-            //in case we need to redirect to action
-            //TempData["ModalView"] = true;
-            TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+            //set the request to the feshly populated parent request id
+            requestItemViewModel.Request.ParentRequestID = parentRequest.ParentRequestID;
 
-            var context = new ValidationContext(requestItemViewModel.Request, null, null);
+            //copy over request to new request with new id
+            Request reorderRequest = new Request();
+            reorderRequest.ProductID = oldRequest.ProductID;
+            reorderRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+            reorderRequest.SubProjectID = oldRequest.SubProjectID;
+            reorderRequest.SerialNumber = oldRequest.SerialNumber;
+            reorderRequest.URL = oldRequest.URL;
+            reorderRequest.Warranty = oldRequest.Warranty;
+            reorderRequest.ExchangeRate = oldRequest.ExchangeRate;
+            reorderRequest.Terms = oldRequest.Terms;
+            reorderRequest.Cost = requestItemViewModel.Request.Cost;
+            reorderRequest.Currency = oldRequest.Currency;
+            reorderRequest.CatalogNumber = oldRequest.CatalogNumber;
+            reorderRequest.RequestStatusID = 6;
+            reorderRequest.UnitTypeID = requestItemViewModel.Request.UnitTypeID;
+            reorderRequest.Unit = requestItemViewModel.Request.Unit;
+            reorderRequest.SubSubUnit = requestItemViewModel.Request.SubSubUnit;
+            reorderRequest.SubUnit = requestItemViewModel.Request.SubUnit;
+            reorderRequest.SubUnitTypeID = requestItemViewModel.Request.SubUnitTypeID;
+            reorderRequest.SubSubUnitTypeID = requestItemViewModel.Request.SubSubUnitTypeID;
+            reorderRequest.UnitsOrdered = oldRequest.UnitsOrdered;
+            reorderRequest.UnitsInStock = oldRequest.UnitsInStock;
+            reorderRequest.Quantity = oldRequest.Quantity;
+            reorderRequest.VAT = requestItemViewModel.Request.VAT;
+
+            var context = new ValidationContext(reorderRequest, null, null);
             var results = new List<ValidationResult>();
-            if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
-            {
-                /*
-                 * the viewmodel loads the request.product with a primary key of 0
-                 * so if you don't insert the request.productid into the request.product.productid
-                 * it will create a new one instead of updating the existing one
-                 * only need this if using an existing product
-                 */
-                requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
-                requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
 
+            if (Validator.TryValidateObject(reorderRequest, context, results, true))
+            {
                 try
-                {
-                    _context.Update(requestItemViewModel.Request);
+                {               
+
+                    _context.Add(reorderRequest);
                     await _context.SaveChangesAsync();
 
-                    if (!String.IsNullOrEmpty(requestItemViewModel.NewComment.CommentText))
-                    {
-                        try
-                        {
-                            //save the new comment
-                            requestItemViewModel.NewComment.ApplicationUserID = currentUser.Id;
-                            requestItemViewModel.NewComment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
-                            requestItemViewModel.NewComment.RequestID = requestItemViewModel.Request.RequestID;
-                            _context.Add(requestItemViewModel.NewComment);
-                            await _context.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            //Tell the user that the comment didn't save here
-                        }
-                    }
+                    //if (!String.IsNullOrEmpty(requestItemViewModel.NewComment.CommentText))
+                    //{
+                    //    try
+                    //    {
+                    //        //save the new comment
+                    //        requestItemViewModel.NewComment.ApplicationUserID = currentUser.Id;
+                    //        requestItemViewModel.NewComment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                    //        requestItemViewModel.NewComment.RequestID = requestItemViewModel.Request.RequestID;
+                    //        _context.Add(requestItemViewModel.NewComment);
+                    //        await _context.SaveChangesAsync();
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        //Tell the user that the comment didn't save here
+                    //    }
+                    //}
 
                     //check if there are any files to upload first
                     //save the files
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
-                    Directory.CreateDirectory(requestFolder);
-                    if (requestItemViewModel.OrderFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + orderfile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    //test that this works
-                    if (WithOrder)
-                    {
-                        TempData["RequestID"] = requestItemViewModel.Request.RequestID;
-                        TempData["OpenConfirmEmailModal"] = true;
-                        AppUtility.RequestPageTypeEnum requestPageTypeEnum1 = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
-                        return RedirectToAction("Index", new
-                        {
-                            page = requestItemViewModel.Page,
-                            requestStatusID = requestItemViewModel.RequestStatusID,
-                            subcategoryID = requestItemViewModel.SubCategoryID,
-                            vendorID = requestItemViewModel.VendorID,
-                            applicationUserID = requestItemViewModel.ApplicationUserID,
-                            PageType = requestPageTypeEnum1
-                        });
-                    }
+                    //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    //string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
+                    //Directory.CreateDirectory(requestFolder);
+                    //if (requestItemViewModel.OrderFiles != null) //test for more than one???
+                    //{
+                    //    var x = 1;
+                    //    foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
+                    //    {
+                    //        //create file
+                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+                    //        Directory.CreateDirectory(folderPath);
+                    //        string uniqueFileName = x + orderfile.FileName;
+                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
+                    //        orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    //        x++;
+                    //    }
+                    //}
+
                 }
                 catch (DbUpdateException ex)
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
-                    return View(requestItemViewModel);
+                  
+                    await populateRequestItemViewModel(requestItemViewModel, oldRequest);
+                    return PartialView(requestItemViewModel);
                 }
                 catch (Exception ex)
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
-                    return View(requestItemViewModel);
+         
+                    await populateRequestItemViewModel(requestItemViewModel, oldRequest);
+                    return PartialView(requestItemViewModel);
                 }
             }
             else
-            {
-                return View(requestItemViewModel);
+            {              
+                //in case we need to redirect to action
+                //TempData["ModalView"] = true;
+                TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+
+                await populateRequestItemViewModel(requestItemViewModel, oldRequest);
+                return PartialView(requestItemViewModel);
             }
             //return RedirectToAction("Index");
             AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
@@ -2008,6 +1956,19 @@ namespace PrototypeWithAuth.Controllers
             });
         }
 
+        private async Task<bool> populateRequestItemViewModel(RequestItemViewModel requestItemViewModel, Request oldRequest )
+        {
+            //in case of error we need to populate these fields
+            requestItemViewModel.Request.Product = oldRequest.Product;
+            requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
+            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
+            requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+            requestItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
+            //redo the unit types when seeded
+            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
+            return true;
+        }
         /*
          * END MODAL VIEW COPY
          */
