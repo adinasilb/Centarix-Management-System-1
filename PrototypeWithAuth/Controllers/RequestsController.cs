@@ -2208,6 +2208,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ParentRequest.ApplicationUser)
                 .ToLookup(r => r.Product.Vendor);
+            TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
             return View(labManageQuotesViewModel);
         }
 

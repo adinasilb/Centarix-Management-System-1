@@ -57,21 +57,21 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
                 <li class="nav-item ml-4 d-table ">
-                    @Html.ActionLink("Suppliers", "IndexForLabManage", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = " opac87 align-text-bottom" })
+                    @Html.ActionLink("Suppliers", "IndexForLabManage", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = suppliersClass })
                 </li>
                 <li class="nav-item ml-5 ">
-                    @Html.ActionLink("Locations", "Index", "Locations", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = "opac87 align-text-bottom" })
+                    @Html.ActionLink("Locations", "Index", "Locations", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class =locationsClass })
                 </li>
                 <li class="nav-item ml-5">
-                    Equipment
+                    <a class="@equipmentClass">Equipment</a>
                     @*@Html.ActionLink("Notifications", "Index", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = notificationsClass })*@
                 </li>
                 <li class="nav-item ml-5">
-                    @Html.ActionLink("Quotes", "LabManageQuotes", "Requests", new { }, new { @class = "opac87 align-text-bottom" })
+                    @Html.ActionLink("Quotes", "LabManageQuotes", "Requests", new { }, new { @class = quotesClass })
                     @*<a href="" class = "opac87 align-text-bottom">Orders</a>*@
                 </li>
                 <li class="nav-item ml-5">
-                    @Html.ActionLink("Search", "Search", "Requests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = "opac87 align-text-bottom" })
+                    @Html.ActionLink("Search", "Search", "Requests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = searchClass })
                 </li>
             </ul>
         </div>
