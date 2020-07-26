@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PrototypeWithAuth.AppData;
 using System.IO;
+using System.Linq;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -20,6 +21,7 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
         public IEnumerable<SelectListItem> UnitTypeList { get; set; }
+        public ILookup<UnitParentType, UnitType> UnitTypes { get; set; }
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
         public List<string> OrderFileStrings { get; set; }

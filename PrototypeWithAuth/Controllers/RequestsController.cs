@@ -319,6 +319,7 @@ namespace PrototypeWithAuth.Controllers
             var subprojects = await _context.SubProjects.ToListAsync();
 
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            var unittypeslookup = _context.UnitTypes.Include(u => u.UnitParentType).ToLookup(u => u.UnitParentType);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
 
@@ -330,6 +331,7 @@ namespace PrototypeWithAuth.Controllers
                 Projects = projects,
                 SubProjects = subprojects,
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
+                UnitTypes = unittypeslookup,
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts
             };
