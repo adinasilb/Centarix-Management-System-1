@@ -1833,3 +1833,14 @@ $.fn.validateUserDetailsTab = function () {
 	}
 	return valid;
 }
+
+
+$("#reorderRequest").click(function () {
+	console.log($("#reorderForm").valid());
+	if (!$("#reorderForm").valid()) {
+		$("#reorderRequest").prop("disabled", true);
+	
+	}
+	$("#reorderRequest").prop("disabled", false);
+
+});
