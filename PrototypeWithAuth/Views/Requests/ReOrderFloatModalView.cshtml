@@ -22,16 +22,8 @@
 
                 @Html.HiddenFor(model => model.Request.RequestID)
                 @Html.HiddenFor(model => model.Request.ExchangeRate)
-
-                @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
-                @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
                 @Html.HiddenFor(model => model.Page)
-                @Html.HiddenFor(model => model.RequestStatusID)
-                @Html.HiddenFor(model => model.SubCategoryID)
-                @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
-                @*Requests search view model*@
-
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
@@ -209,10 +201,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label asp-for="Request.VAT" class="control-label"></label>
+                                <label  class="control-label">VAT</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#x20aa;</span>
-                                    <input asp-for="Request.VAT" class="form-control-plaintext border-bottom" disabled />
+                                    <span class="input-group-text">&#x20aa;</span>                                    
+                                    <input class="form-control-plaintext border-bottom vat" disabled />
                                 </div>
                             </div>
                         </div>
@@ -240,7 +232,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                     </div>
 
                     <div class="form-group text-center my-5">
-                        <input type="submit" name="OrderType" value="Request" asp-action="ReOrderModalView" class="inv-button mr-2" style="width:20%" />
+                        <input type="submit" name="OrderType" value="Request" asp-action="ReOrderFloatModalView" class="inv-button mr-2" style="width:20%" />
                         <button type="button" class="cancel-button " data-dismiss="modal" style="width:20%">Cancel</button>
                     </div>
                 </div>

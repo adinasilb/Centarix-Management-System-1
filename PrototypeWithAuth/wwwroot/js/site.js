@@ -475,6 +475,7 @@ $.fn.CalculateSumPlusVat = function () {
 	}
 	$sumShekel = parseFloat($("#Request_Cost").val());
 	$vatOnshekel = $sumShekel * parseFloat(vatInShekel);
+	$('.vat').val($vatOnshekel.toFixed(2));
 	$sumTotalVatShekel = $sumShekel + $vatOnshekel;
 	$iptBox = $("input[name='sumPlusVat-Shekel']");
 	$.fn.ShowResults($iptBox, $sumTotalVatShekel);
