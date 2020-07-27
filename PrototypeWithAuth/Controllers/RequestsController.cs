@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SelectPdf;
 using Microsoft.AspNetCore.Authorization;
+using Org.BouncyCastle.Ocsp;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
@@ -1849,7 +1850,10 @@ namespace PrototypeWithAuth.Controllers
             //save parent request
             _context.Add(parentRequest);
             _context.SaveChanges();
-
+            ParentQuote parentQuote = new ParentQuote();
+            //save parent quote
+            _context.Add(parentQuote);
+            _context.SaveChanges();
             //set the request to the feshly populated parent request id
             requestItemViewModel.Request.ParentRequestID = parentRequest.ParentRequestID;
 
@@ -1877,6 +1881,8 @@ namespace PrototypeWithAuth.Controllers
             reorderRequest.UnitsInStock = oldRequest.UnitsInStock;
             reorderRequest.Quantity = oldRequest.Quantity;
             reorderRequest.VAT = requestItemViewModel.Request.VAT;
+            reorderRequest.ParentQuoteID = parentQuote.ParentQuoteID;
+            reorderRequest.QuoteStatusID = -1;
 
             var context = new ValidationContext(reorderRequest, null, null);
             var results = new List<ValidationResult>();
@@ -2613,18 +2619,18 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public IActionResult ApproveReorder(RequestItemViewModel requestItemViewModel)
+        public IActionResult ApproveReorder(int id)
         {
-
+            var request = _context.Requests.OfType<Quote>().Where(r => r.RequestID == id).FirstOrDefault();
             try
-            {
-                var request = _context.Requests.OfType<Quote>().Where(r => r.RequestID == requestItemViewModel.Request.RequestID).FirstOrDefault();
+            {                
                 request.RequestStatusID = 6; //approved
                 request.QuoteStatusID = 1; //awaiting quote request
                 _context.Update(request);
+                _context.SaveChanges();
             }
             catch(Exception ex)
             {
@@ -2632,15 +2638,11 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
-            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+            AppUtility.RequestPageTypeEnum requestPageTypeEnum = AppUtility.RequestPageTypeEnum.Request;
 
             return RedirectToAction("Index", new
             {
-                page = requestItemViewModel.Page,
-                requestStatusID = requestItemViewModel.RequestStatusID,
-                subcategoryID = requestItemViewModel.SubCategoryID,
-                vendorID = requestItemViewModel.VendorID,
-                applicationUserID = requestItemViewModel.ApplicationUserID,
+                requestStatusID = 6,
                 PageType = requestPageTypeEnum
             });
         }

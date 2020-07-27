@@ -286,10 +286,10 @@
                             if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
                             {
                                 if (item is Quote)
-                                {
-                                    @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
-
-                                    <button asp-action="ApproveReorder" data-title="approve" class="btn  no-box-shadow"><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i> </button> //approve
+                                {                            
+                                    <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder", new { id = item.RequestID })">
+                                        <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
+                                    </a>
                                 }
                                 else
                                 {
