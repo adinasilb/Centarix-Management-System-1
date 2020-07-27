@@ -470,11 +470,11 @@ $.fn.leapYear = function (year) {
 
 //PRICE PAGE ON MODAL VIEW//
 $("#price-tab").click(function () {
-	//$.fn.CheckUnitsFilled();
-	//$.fn.CheckSubUnitsFilled();
-	////I don't think that we need $.fn.CheckSubSubUnitsFilled over here b/c we don't need to enable or disable anything and the CalculateSubSubUnits should already run
-	//$.fn.CalculateSumPlusVat();
-	//$.fn.CheckCurrency();
+	$.fn.CheckUnitsFilled();
+	$.fn.CheckSubUnitsFilled();
+	//I don't think that we need $.fn.CheckSubSubUnitsFilled over here b/c we don't need to enable or disable anything and the CalculateSubSubUnits should already run
+	$.fn.CalculateSumPlusVat();
+	$.fn.CheckCurrency();
 });
 
 $("#currency").change(function (e) {
@@ -1015,14 +1015,11 @@ function changeTerms(checkbox) {
 	}
 }
 
-$(".documents-tab").click(function () {
+$(".documents-tab").click(function (e) {
 	//this is for validation
 	$("#myForm").valid();
 	$.fn.validatePriceTab();
 
-
-
-	console.log("documents tab clicked");
 	$.fn.HideAllDocs();
 	//$.fn.CheckIfFileSelectsAreFull();
 
@@ -1070,8 +1067,7 @@ $(".file-select").on("change", function (e) {
 });
 
 $.fn.HideAllDocs = function () {
-	console.log("hide all docs");
-	$(".orders-view").hide();
+	//$(".orders-view").hide();
 	$(".invoices-view").hide();
 	$(".shipments-view").hide();
 	$(".quotes-view").hide();

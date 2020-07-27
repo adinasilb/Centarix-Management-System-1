@@ -14,7 +14,7 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-<div class="modal modal-view right fader orders-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view right fader order-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
@@ -255,7 +255,8 @@
                                                 </div>
                                                 <div class="col-md-8 form-group dropdown-select-div">
                                                     <label asp-for="Request.UnitType" class="control-label"></label>
-                                                    <select asp-for="Request.UnitTypeID" class="mdb-select md-form">
+                                                    <select asp-for="Request.UnitTypeID" class="mdb-select border-bottom">
+                                                        <option value=""></option>
                                                         @foreach (var unitparenttype in Model.UnitTypes)
                                                         {
                                                             //var unitparenttypedesc = unitparenttype.Key.un
@@ -311,11 +312,12 @@
                                                 </div>
                                                 <div class="col-md-8 form-group dropdown-select-div">
                                                     <label asp-for="Request.SubUnitType" class="control-label"></label>
-                                                    <select asp-for="Request.SubUnitTypeID" class="mdb-select md-form" disabled>
+                                                    <select asp-for="Request.SubUnitTypeID" class="mdb-select border-bottom">
+                                                        <option value=""></option>
                                                         @foreach (var unitparenttype in Model.UnitTypes)
                                                         {
                                                             //var unitparenttypedesc = unitparenttype.Key.un
-                                                            <optgroup label="@unitparenttype.Key.UnitParentTypeDescription">
+                                                            <optgroup label="@unitparenttype.Key.UnitParentTypeDescription" style="display:none;">
                                                                 @foreach (var unittype in unitparenttype)
                                                                 {
                                                                     <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
@@ -364,7 +366,7 @@
                                                 </div>
                                                 <div class="col-md-8 form-group dropdown-select-div">
                                                     <label asp-for="Request.SubSubUnitType" class="control-label"></label>
-                                                    <select asp-for="Request.SubSubUnitTypeID" class="mdb-select md-form" disabled>
+                                                    <select asp-for="Request.SubSubUnitTypeID" class="mdb-select border-bottom" disabled>
                                                         @foreach (var unitparenttype in Model.UnitTypes)
                                                         {
                                                             //var unitparenttypedesc = unitparenttype.Key.un
