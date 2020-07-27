@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200727052110_AddedQuoteStatusModel")]
+    partial class AddedQuoteStatusModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -588,29 +590,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             CategoryTypeID = 2,
                             ParentCategoryDescription = "Operation"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ParentQuote", b =>
-                {
-                    b.Property<int>("ParentQuoteID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("QuoteDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("QuoteNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("ParentQuoteID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.ToTable("ParentQuotes");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
@@ -1969,14 +1948,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("CategoryTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ParentQuote", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
