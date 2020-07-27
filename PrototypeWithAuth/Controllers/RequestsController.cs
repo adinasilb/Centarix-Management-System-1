@@ -1839,28 +1839,17 @@ namespace PrototypeWithAuth.Controllers
             //get current user
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
-            //populate parent request
-            ParentRequest parentRequest = new ParentRequest();
-            parentRequest.ApplicationUserID = currentUser.Id;
-            int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-            parentRequest.InvoiceNumber = "";
-            parentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-            parentRequest.OrderDate = DateTime.Now;
-            parentRequest.InvoiceDate = DateTime.Now;
-            //save parent request
-            _context.Add(parentRequest);
-            _context.SaveChanges();
-            ParentQuote parentQuote = new ParentQuote();
-            //save parent quote
-            _context.Add(parentQuote);
-            _context.SaveChanges();
-            //set the request to the feshly populated parent request id
-            requestItemViewModel.Request.ParentRequestID = parentRequest.ParentRequestID;
-
+             int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
             //copy over request to new request with new id
             Quote reorderRequest = new Quote();
             reorderRequest.ProductID = oldRequest.ProductID;
-            reorderRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+            reorderRequest.ParentRequest = new ParentRequest()
+            {
+                ApplicationUserID = currentUser.Id,
+                InvoiceNumber = "",
+                OrderNumber = lastParentRequestOrderNum + 1,
+                OrderDate = DateTime.Now
+            };
             reorderRequest.SubProjectID = oldRequest.SubProjectID;
             reorderRequest.SerialNumber = oldRequest.SerialNumber;
             reorderRequest.URL = oldRequest.URL;
@@ -1881,7 +1870,7 @@ namespace PrototypeWithAuth.Controllers
             reorderRequest.UnitsInStock = oldRequest.UnitsInStock;
             reorderRequest.Quantity = oldRequest.Quantity;
             reorderRequest.VAT = requestItemViewModel.Request.VAT;
-            reorderRequest.ParentQuoteID = parentQuote.ParentQuoteID;
+            reorderRequest.ParentQuote = new ParentQuote();
             reorderRequest.QuoteStatusID = -1;
 
             var context = new ValidationContext(reorderRequest, null, null);
@@ -2184,13 +2173,57 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> LabManageQuotes()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 2)
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 1 || r.QuoteStatusID==2)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ParentRequest.ApplicationUser)
                 .ToLookup(r => r.Product.Vendor);
             TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
-            return View(labManageQuotesViewModel);GenericUriParser quotes
+            return View(labManageQuotesViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, LabManagement")]
+        public  IActionResult LabManageQuotes(int id)
+        {
+            try
+            {
+                var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                List<Quote> quotes = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == id && r.QuoteStatusID == 1).Include(r=>r.ParentQuote).ToList();
+                foreach (var quote in quotes)
+                {
+                    quote.QuoteStatusID = 2;
+                    quote.ParentQuote.ApplicationUserID = currentUser.Id;
+                    //_context.Update(quote.ParentQuote);
+                    //_context.SaveChanges();
+                    _context.Update(quote);
+                     _context.SaveChanges();
+                }
+                LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
+                labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 1 || r.QuoteStatusID == 2)
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                    .Include(r => r.ParentRequest.ApplicationUser)
+                    .ToLookup(r => r.Product.Vendor);
+                TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
+                return View(labManageQuotesViewModel);
+            }
+            catch (DbUpdateException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
+            }
+
+
+
         }
 
 
@@ -2199,7 +2232,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> LabManageOrders()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 1)
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.RequestStatusID == 2)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ParentRequest.ApplicationUser)

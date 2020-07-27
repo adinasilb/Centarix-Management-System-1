@@ -392,6 +392,17 @@ input.select-dropdown {
     text-transform: uppercase;
 }
 
+.quote-lab-button {
+    background-color: #7D9BAA;
+    border: 1px solid #7D9BAA;
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.56rem 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
 .inv-user-button {
     background-color: #DB669D;
     border: 1px solid #DB669D;

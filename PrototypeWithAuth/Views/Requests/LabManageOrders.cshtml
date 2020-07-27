@@ -1,8 +1,12 @@
 ﻿@model PrototypeWithAuth.ViewModels.LabManageQuotesViewModel
 @{
-    ViewData["Title"] = "LabManageQuotes";
+    ViewData["Title"] = "LabManageOrders";
     Layout = "~/Views/Shared/LabManageOrdersSideBar.cshtml";
 
+    if (Model.RequestsByVendor.Count() == 0)
+    {
+        <div><h5>There are currently no orders</h5></div>
+    }
     foreach (var vendor in Model.RequestsByVendor)
     {
         <table class="table table-headerspaced table-borderless table-hover mb-5">
@@ -116,4 +120,3 @@
     }
 }
 
-}
