@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200727053243_AddedQuoteTable")]
+    partial class AddedQuoteTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1296,18 +1298,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("QuoteStatusID");
 
                     b.ToTable("QuoteStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            QuoteStatusID = 1,
-                            QuoteStatusDescription = "AwaitingRequestOfQuote"
-                        },
-                        new
-                        {
-                            QuoteStatusID = 2,
-                            QuoteStatusDescription = "AwaitingQuoteResponse"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
@@ -1499,7 +1489,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             RequestStatusID = 6,
-                            RequestStatusDescription = "Approved"
+                            RequestStatusDescription = "AwaitingQuote"
                         });
                 });
 
@@ -2173,13 +2163,13 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.Quote", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.ParentQuote", "ParentQuote")
-                        .WithMany("Quotes")
+                        .WithMany()
                         .HasForeignKey("ParentQuoteID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
-                        .WithMany("Quotes")
+                        .WithMany()
                         .HasForeignKey("QuoteStatusID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

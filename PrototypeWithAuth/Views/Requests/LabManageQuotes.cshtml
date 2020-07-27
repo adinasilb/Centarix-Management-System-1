@@ -37,10 +37,12 @@
             </tr>
             <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
             <tbody>
+
                 @foreach (var request in vendor)
                 {
                     <tr class="text-center">
                         <td class="text-center" width="15%">
+                            <input type="hidden" asp-for="@request.RequestID" />
                             @if (request.Product.ProductSubcategory.ImageURL != null)
                             {
                                 var imageurl = request.Product.ProductSubcategory.ImageURL;
@@ -88,30 +90,30 @@
                         </td>
                     </tr>
                 }
-            <tr class="border-0 mb-5 no-hover">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <h5><strong>Items: @vendor.Count()</strong></h5>
-                </td>
-                <td colspan="2">
-                    @{
-                        var totalCost = vendor.Sum(r => r.Cost);
-                        var decTotalCost = (decimal)totalCost;
-                        var stringTotalCost = decTotalCost.ToString("C02");
-                    }
-                    <h5><strong>Total: @stringTotalCost</strong></h5>
-                </td>
-                <td>
-                    <button class="inv-lab-button float-right">Order</button>
-                </td>
-            </tr>
+                <tr class="border-0 mb-5 no-hover">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <h5><strong>Items: @vendor.Count()</strong></h5>
+                    </td>
+                    <td colspan="2">
+                        @{
+                            var totalCost = vendor.Sum(r => r.Cost);
+                            var decTotalCost = (decimal)totalCost;
+                            var stringTotalCost = decTotalCost.ToString("C02");
+                        }
+                        <h5><strong>Total: @stringTotalCost</strong></h5>
+                    </td>
+                    <td>
+                        <button class="inv-lab-button float-right" type="submit" asp-action="LabManageQuotes" asp-route-id="@vendor.Key.VendorID">Order</button>
+                    </td>
+                </tr>
 
             </tbody>
         </table>
-                        }
+    }
 }
 
 }

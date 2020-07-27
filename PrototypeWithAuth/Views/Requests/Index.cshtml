@@ -90,21 +90,25 @@
     string newButtonText = "";
     string orderedButtonText = "";
     string receivedButtonText = "";
+    string approvedButtonText = "";
 
     string newActiveClass = "";
     string orderedActiveClass = "";
     string receivedActiveClass = "";
+    string approvedActiveClass = "";
 
     if (!search)
     {
         newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
         orderedButtonText = "Ordered [" + TempData["AmountOrdered"].ToString() + "]";
         receivedButtonText = "Received [" + TempData["AmountReceived"].ToString() + "]";
+        approvedButtonText = "Approved [" + TempData["AmountApproved"].ToString() + "]";
 
         //newActiveClass = "btn btn-outline-secondary text-dark new-button"; //used to be this...
         newActiveClass = "new-button";
         orderedActiveClass = "new-button";
         receivedActiveClass = "new-button";
+        approvedActiveClass = "new-button";
 
         //changing the classes for the action links based on the tempdata of request status
         int requestStatusID = 0;
@@ -123,6 +127,10 @@
             case 3:
                 receivedActiveClass = "new-button active";
                 break;
+            case 6:
+                approvedActiveClass = "new-button active";
+                break;
+
         }
     }
 
@@ -150,6 +158,10 @@
                     @*<img src="~/images/css/inventory/icons/new_tab.png" alt="New" />*@
 
                     @*@Html.ActionLink(newButtonText, "Index", "Requests", new {@applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request}, new {@class = newActiveClass})*@
+                </li>
+                <li class="list-inline-item mr-3">
+                    <a class="@approvedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-centarix-icons-03"></i>  &nbsp;&nbsp; @approvedButtonText</a>
+
                 </li>
 
                 <li class="list-inline-item mr-3">
@@ -273,9 +285,19 @@
                             //this is a nested if b/c if user can't approve then i still don't want it to go the the else
                             if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
                             {
-                                @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
+                                if (item is Quote)
+                                {
+                                    @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
 
-                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" data-title="approve" class="btn load-confirm-email no-box-shadow"><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i> </button> //approve
+                                    <button asp-action="ApproveReorder" data-title="approve" class="btn  no-box-shadow"><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i> </button> //approve
+                                }
+                                else
+                                {
+                                    @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
+
+                                    <button asp-action="ConfirmeEmailModal" value="@item.RequestID" data-title="approve" class="btn load-confirm-email no-box-shadow"><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i> </button> //approve
+                                }
+
 
                             }
                         }
