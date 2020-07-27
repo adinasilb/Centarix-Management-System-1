@@ -380,6 +380,21 @@ input.select-dropdown {
         /*text-transform: uppercase;*/
     }
 
+.form-control-file-lab::-webkit-file-upload-button:hover {
+    font-weight: 550;
+    /*text-transform: uppercase;*/
+}
+.form-control-file-lab::-webkit-file-upload-button {
+    background-color: #7D9BAA;
+    border: 1px solid #7D9BAA;
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.35rem 2rem;
+    font-size: 1.125rem;
+    line-height: 2;
+    /*text-transform: uppercase;*/
+}
 .inv-lab-button {
     background-color: #7D9BAA;
     border: 1px solid #7D9BAA;

@@ -2187,6 +2187,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, LabManagement")]
         public  IActionResult LabManageQuotes(int id)
         {
+            //todo : display pdf
             try
             {
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
@@ -2691,6 +2692,39 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestStatusID = 6,
                 PageType = requestPageTypeEnum
+            });
+        }
+
+        [Authorize(Roles = "Admin, LabManagement")]
+        public IActionResult EditQuoteDetails(int id, int requestID=0)
+        {
+            if (requestID !=0)
+            {
+                //user wants to edit only one quote
+                var requests = _context.Requests.OfType<Quote>().Where(r => r.RequestID ==requestID)
+               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
+               .Include(r => r.ParentQuote).Include(r => r.UnitType).Include(r => r.SubSubUnitType).Include(r => r.SubUnitType).ToList();
+
+                return PartialView(requests);
+            }
+            else
+            {
+                var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == id)
+              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
+              .Include(r => r.ParentQuote).Include(r => r.UnitType).Include(r => r.SubSubUnitType).Include(r => r.SubUnitType).ToList();
+
+                return PartialView(requests);
+            }
+        }
+        [HttpPost]
+        [Authorize(Roles = "Admin, LabManagement")]
+        public IActionResult EditQuoteDetails(Quote quote)
+        {
+            
+
+            return RedirectToAction("Index", new
+            {
+               
             });
         }
 

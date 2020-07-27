@@ -19,7 +19,9 @@ namespace PrototypeWithAuth.Models
         public ApplicationUser ApplicationUser { get; set; }
 
         [DataType(DataType.Date)]
+        [Display(Name = "Quote Date")]
         public DateTime QuoteDate { get; set; }
+        [Display(Name = "Quote Number")]
         public int? QuoteNumber { get; set; }
     }
 }

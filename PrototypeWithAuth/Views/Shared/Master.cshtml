@@ -326,6 +326,16 @@
             return false;
         });
 
+        $(".load-quote-details").on("click", function (e) {
+            console.log("in order details");
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "EditQuoteDetails/?id="+$("#Key").val() + "&requestID=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "quote");
+            return false;
+        });
+
         $(".load-receive-and-location").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -351,14 +361,6 @@
             $("#loading").show();
             var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
             $.fn.CallPageRequest($itemurl, "confirmemail");
-            return false;
-        });
-        $(".load-approval").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "Requests/ApproveOrder/?id=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "approveReOrder");
             return false;
         });
 
@@ -437,6 +439,10 @@
                             break;
                         case "delete":
                             console.log('case "delete":');
+                            AddTempDataMemory();
+                            break;
+                        case "quote":
+                            console.log('case "quote":');
                             AddTempDataMemory();
                             break;
                     }
