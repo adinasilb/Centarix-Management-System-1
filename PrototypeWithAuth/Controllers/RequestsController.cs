@@ -76,6 +76,7 @@ namespace PrototypeWithAuth.Controllers
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
             int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, vendorID, subcategoryID, applicationUserID);
+            int approvedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, vendorID, subcategoryID, applicationUserID);
             newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, vendorID, subcategoryID, applicationUserID);
             newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, vendorID, subcategoryID, applicationUserID);
 
@@ -104,6 +105,12 @@ namespace PrototypeWithAuth.Controllers
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
                     RequestsPassedIn = TempRequestList;
                 }
+
+                if (RequestStatusID == 0 || RequestStatusID == 6)
+                {
+                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 6);
+                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
+                }
                 if (RequestStatusID == 0 || RequestStatusID == 2)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
@@ -127,6 +134,7 @@ namespace PrototypeWithAuth.Controllers
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                 }
+
 
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
@@ -182,6 +190,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["AmountNew"] = newCount;
             TempData["AmountOrdered"] = orderedCount;
             TempData["AmountReceived"] = receivedCount;
+            TempData["AmountApproved"] = approvedCount;
 
             TempData["SidebarTitle"] = SidebarTitle;
 
@@ -1809,7 +1818,7 @@ namespace PrototypeWithAuth.Controllers
 
             //initiating the  following models so that we can use them in an asp-for in the view 
             return PartialView(requestItemViewModel);
-           
+
         }
 
         [HttpPost]
@@ -1819,10 +1828,10 @@ namespace PrototypeWithAuth.Controllers
         {
             //get the old request that we are reordering
             var oldRequest = _context.Requests.Where(r => r.RequestID == requestItemViewModel.Request.RequestID)
-                .Include(r=>r.ParentRequest)
-                .Include(r=>r.Product)
-                .ThenInclude(p=>p.ProductSubcategory).FirstOrDefault();
-            
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product)
+                .ThenInclude(p => p.ProductSubcategory).FirstOrDefault();
+
             //get current user
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
@@ -1830,7 +1839,7 @@ namespace PrototypeWithAuth.Controllers
             ParentRequest parentRequest = new ParentRequest();
             parentRequest.ApplicationUserID = currentUser.Id;
             int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-            parentRequest.InvoiceNumber = ""; 
+            parentRequest.InvoiceNumber = "";
             parentRequest.OrderNumber = lastParentRequestOrderNum + 1;
             parentRequest.OrderDate = DateTime.Now;
             parentRequest.InvoiceDate = DateTime.Now;
@@ -1842,7 +1851,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequestID = parentRequest.ParentRequestID;
 
             //copy over request to new request with new id
-            Request reorderRequest = new Request();
+            Quote reorderRequest = new Quote();
             reorderRequest.ProductID = oldRequest.ProductID;
             reorderRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
             reorderRequest.SubProjectID = oldRequest.SubProjectID;
@@ -1854,7 +1863,7 @@ namespace PrototypeWithAuth.Controllers
             reorderRequest.Cost = requestItemViewModel.Request.Cost;
             reorderRequest.Currency = oldRequest.Currency;
             reorderRequest.CatalogNumber = oldRequest.CatalogNumber;
-            reorderRequest.RequestStatusID = 6;
+            reorderRequest.RequestStatusID = 1; //waiting approval status of new
             reorderRequest.UnitTypeID = requestItemViewModel.Request.UnitTypeID;
             reorderRequest.Unit = requestItemViewModel.Request.Unit;
             reorderRequest.SubSubUnit = requestItemViewModel.Request.SubSubUnit;
@@ -1872,7 +1881,7 @@ namespace PrototypeWithAuth.Controllers
             if (Validator.TryValidateObject(reorderRequest, context, results, true))
             {
                 try
-                {               
+                {
 
                     _context.Add(reorderRequest);
                     await _context.SaveChangesAsync();
@@ -1920,7 +1929,7 @@ namespace PrototypeWithAuth.Controllers
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
-                  
+
                     await populateRequestItemViewModel(requestItemViewModel, oldRequest);
                     return PartialView(requestItemViewModel);
                 }
@@ -1929,13 +1938,13 @@ namespace PrototypeWithAuth.Controllers
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
-         
+
                     await populateRequestItemViewModel(requestItemViewModel, oldRequest);
                     return PartialView(requestItemViewModel);
                 }
             }
             else
-            {              
+            {
                 //in case we need to redirect to action
                 //TempData["ModalView"] = true;
                 TempData["RequestID"] = requestItemViewModel.Request.RequestID;
@@ -1956,7 +1965,7 @@ namespace PrototypeWithAuth.Controllers
             });
         }
 
-        private async Task<bool> populateRequestItemViewModel(RequestItemViewModel requestItemViewModel, Request oldRequest )
+        private async Task<bool> populateRequestItemViewModel(RequestItemViewModel requestItemViewModel, Request oldRequest)
         {
             //in case of error we need to populate these fields
             requestItemViewModel.Request.Product = oldRequest.Product;
@@ -2175,6 +2184,31 @@ namespace PrototypeWithAuth.Controllers
             return View(labManageQuotesViewModel);
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admin, OrdersAndInventory")]
+        //public IActionResult LabManageQuotes(int id)
+        //{
+        //    var requestsToAskQuote = _context.Requests.Where(r => r.Product.VendorID == id && r.RequestStatusID == 6).Include(r=>r.Product);
+        //    TempData["OpenConfirmQuoteEmailModal"] = true;
+        //    foreach (var request in requestsToAskQuote)
+        //    {
+        //        request.RequestStatusID = 7;
+        //        _context.Update(request);
+        //        _context.SaveChanges();
+        //    }
+        //    AppUtility.RequestPageTypeEnum requestPageTypeEnum1 = AppUtility.RequestPageTypeEnum.Quote;
+        //    var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+        //    return RedirectToAction("Index", new
+        //    {
+        //        page = ,
+        //        requestStatusID = 7,
+        //        subcategoryID = requestsToAskQuote.FirstOrDefault().Product.ProductSubcategoryID,
+        //        vendorID = id,
+        //        applicationUserID = currentUser.Id,
+        //        PageType = requestPageTypeEnum1
+        //    });
+        //}
 
 
 
@@ -2575,6 +2609,38 @@ namespace PrototypeWithAuth.Controllers
             return Json(locationInstanceList);
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public IActionResult ApproveReorder(RequestItemViewModel requestItemViewModel)
+        {
+
+            try
+            {
+                var request = _context.Requests.OfType<Quote>().Where(r => r.RequestID == requestItemViewModel.Request.RequestID).FirstOrDefault();
+                request.RequestStatusID = 6; //approved
+                request.QuoteStatusID = 1; //awaiting quote request
+                _context.Update(request);
+            }
+            catch(Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
+            }
+            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+
+            return RedirectToAction("Index", new
+            {
+                page = requestItemViewModel.Page,
+                requestStatusID = requestItemViewModel.RequestStatusID,
+                subcategoryID = requestItemViewModel.SubCategoryID,
+                vendorID = requestItemViewModel.VendorID,
+                applicationUserID = requestItemViewModel.ApplicationUserID,
+                PageType = requestPageTypeEnum
+            });
+        }
 
     }
 }
