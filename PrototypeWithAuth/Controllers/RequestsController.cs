@@ -114,11 +114,13 @@ namespace PrototypeWithAuth.Controllers
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 6);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                 }
+
                 if (RequestStatusID == 0 || RequestStatusID == 2)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                 }
+
                 if (RequestStatusID == 0 || RequestStatusID == 3)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
