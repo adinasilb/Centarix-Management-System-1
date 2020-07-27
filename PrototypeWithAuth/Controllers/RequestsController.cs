@@ -2615,37 +2615,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public IActionResult ApproveReorder(RequestItemViewModel requestItemViewModel)
-        {
-
-            try
-            {
-                var request = _context.Requests.OfType<Quote>().Where(r => r.RequestID == requestItemViewModel.Request.RequestID).FirstOrDefault();
-                request.RequestStatusID = 6; //approved
-                request.QuoteStatusID = 1; //awaiting quote request
-                _context.Update(request);
-            }
-            catch(Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
-            }
-            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
-
-            return RedirectToAction("Index", new
-            {
-                page = requestItemViewModel.Page,
-                requestStatusID = requestItemViewModel.RequestStatusID,
-                subcategoryID = requestItemViewModel.SubCategoryID,
-                vendorID = requestItemViewModel.VendorID,
-                applicationUserID = requestItemViewModel.ApplicationUserID,
-                PageType = requestPageTypeEnum
-            });
-        }
+      
 
     }
 }

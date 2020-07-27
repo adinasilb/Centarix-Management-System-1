@@ -671,91 +671,104 @@ $.fn.CalculateSumPlusVat = function () {
 	$.fn.ShowResults($iptBox, $sumTotalVatDollars);
 };
 
-//$.fn.ChangeSubUnitDropdown = function () {
-//	var selected = $(':selected', $("#Request_UnitTypeID"));
-//	var selected2 = $(':selected', $("#select-options-Request_UnitTypeID"));
-//	console.log("u selected: " + selected);
-//	var optgroup = selected.closest('optgroup').attr('label');
-//	var optgroup2 = selected2.closest('optgroup').attr('label');
-//	console.log("u optgroup: " + optgroup);
-//	console.log("u optgroup2: " + optgroup2);
-//	//the following is based on the fact that the unit types and parents are seeded with primary key values
-//	switch (optgroup) {
-//		case "Units":
-//			console.log("optgroup units");
-//			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-//			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-//			$("#Request_SubUnitTypeID optgroup[label='Units'] li").show();
-//			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-//			break;
-//		case "Weight/Volume":
-//			console.log("optgroup weight/volume");
-//			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-//			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-//			$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-//			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-//			break;
-//		case "Test":
-//			console.log("optgroup test");
-//			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-//			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-//			$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-//			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").hide();
-//			break;
-//	}
-//	switch (optgroup2) {
-//		case "Units":
-//			console.log("optgroup2 units");
-//			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-//			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-//			break;
-//		case "Weight/Volume":
-//			console.log("optgroup2 weight/volume");
-//			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-//			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-//			break;
-//		case "Test":
-//			console.log("optgroup2 test");
-//			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-//			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-//			break;
-//	}
-//};
-////change sub sub unit dropdown
-//$.fn.ChangeSubSubUnitDropdown = function () {
-//	var selected = $(':selected', $("#Request_SubUnitTypeID"));
-//	var selected2 = $(':selected', $("#select-options-Request_SubUnitTypeID"));
-//	var optgroup = selected.closest('optgroup').attr('label');
-//	var optgroup2 = selected.closest('optgroup').attr('label');
-//	switch (optgroup) {
-//		case "Units":
-//			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-//			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-//			break;
-//		case "Weight/Volume":
-//			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-//			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-//			break;
-//		case "Test":
-//			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-//			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-//			break;
-//	}
-//	switch (optgroup2) {
-//		case "Units":
-//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-//			break;
-//		case "Weight/Volume":
-//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-//			break;
-//		case "Test":
-//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-//			break;
-//	}
-//};
+$.fn.ChangeSubUnitDropdown = function () {
+	var selected = $(':selected', $("#Request_UnitTypeID"));
+	var selected2 = $(':selected', $("#select-options-Request_UnitTypeID"));
+	console.log("u selected: " + selected);
+	var optgroup = selected.closest('optgroup').attr('label');
+	var optgroup2 = selected2.closest('optgroup').attr('label');
+	console.log("u optgroup: " + optgroup);
+	console.log("u optgroup2: " + optgroup2);
+	//the following is based on the fact that the unit types and parents are seeded with primary key values
+	switch (optgroup) {
+		case "Units":
+			console.log("inside optgroup units");
+			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', false).prop('hidden', false);
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").show();
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").css("display", "none");
+			//$("#Request_SubUnitTypeID optgroup[label='Units'] li").show();
+			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+			break;
+		case "Weight/Volume":
+			console.log("inside optgroup weight/volume");
+			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', true).prop('hidden', true);
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+			//$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+			break;
+		case "Test":
+			console.log("inside optgroup test");
+			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', true).prop('hidden', true);
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', true).prop('hidden', true);
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+			//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").hide();
+			//$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").hide();
+			break;
+	}
+	switch (optgroup2) {
+		case "Units":
+			console.log("inside optgroup2 units");
+			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Weight/Volume":
+			console.log("inside optgroup2 weight/volume");
+			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Test":
+			console.log("inside optgroup2 test");
+			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+			break;
+	}
+};
+//change sub sub unit dropdown
+$.fn.ChangeSubSubUnitDropdown = function () {
+	var selected = $(':selected', $("#Request_SubUnitTypeID"));
+	var selected2 = $(':selected', $("#select-options-Request_SubUnitTypeID"));
+	var optgroup = selected.closest('optgroup').attr('label');
+	var optgroup2 = selected.closest('optgroup').attr('label');
+	switch (optgroup) {
+		case "Units":
+			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Weight/Volume":
+			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Test":
+			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+			break;
+	}
+	switch (optgroup2) {
+		case "Units":
+			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Weight/Volume":
+			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+			break;
+		case "Test":
+			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+			break;
+	}
+};
 
 $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
 	var theResult = parseFloat($value);
