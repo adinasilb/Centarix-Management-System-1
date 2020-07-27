@@ -132,6 +132,7 @@ $("#Request_ParentRequest_Installments").change(function () {
 });
 
 
+
 $.fn.AddNewPaymentLine = function (increment, date) {
 	var htmlTR = "";
 	htmlTR += "<tr class='payment-line'>";
@@ -259,6 +260,170 @@ $(".view-docs").click(function (clickEvent) {
 });
 
 
+$("#Request_ExpectedSupplyDays").change(function () {
+	console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
+	var date = $("#Request_ParentRequest_InvoiceDate").val().split("-");
+	var dd = parseInt(date[2]);
+	var mm = parseInt(date[1]);
+	var yyyy = parseInt(date[0]);
+
+	for (i = 0; i < $(this).val(); i++) {
+		switch (mm) {
+			case 1:
+			case 3:
+			case 5:
+			case 7:
+			case 8:
+			case 10:
+			case 12:
+				if (dd == 31) {
+					dd = 1;
+					if (mm == 12) {
+						mm = 1;
+						yyyy = yyyy + 1;
+					}
+					else {
+						mm = mm + 1;
+					}
+				}
+				else {
+					dd = dd + 1;
+				}
+				break;
+			case 4:
+			case 6:
+			case 9:
+			case 11:
+				if (dd == 30) {
+					dd = 1;
+					if (mm == 12) {
+						mm = 1;
+						yyyy = yyyy + 1;
+					}
+					else {
+						mm = mm + 1;
+					}
+				}
+				else {
+					dd = dd + 1;
+				}
+				break;
+			case 2:
+				var endDayOfFeb = 28;
+				if (yyyy % 4 === 0) {
+					endDayOfFeb = 29;
+				}
+				console.log("dd: " + dd)
+				if (dd == endDayOfFeb) {
+					dd = 1;
+					if (mm == 12) {
+						mm = 1;
+						yyyy = yyyy + 1;
+					}
+					else {
+						mm = mm + 1;
+					}
+				}
+				else {
+					dd = dd + 1;
+				}
+				break;
+		}
+	}
+	if (dd < 10) { dd = '0' + dd }
+	if (mm < 10) { mm = '0' + mm }
+	var supplyDate = yyyy + '-' + mm + '-' + dd;
+	$("input[name='expected-supply-days']").val(supplyDate);
+
+});
+
+
+$("#expected-supply-date").change(function () {
+	console.log("-------expected supply date: " + $(this).val())
+	var SupplyDate = $(this).val().split("-");
+	var Sdd = parseInt(SupplyDate[2]);
+	var Smm = parseInt(SupplyDate[1]);
+	var Syyyy = parseInt(SupplyDate[0]);
+	console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
+	var InvoiceDate = $("#Request_ParentRequest_InvoiceDate").val().split("-");
+	var Idd = parseInt(InvoiceDate[2]);
+	var Imm = parseInt(InvoiceDate[1]);
+	var Iyyyy = parseInt(InvoiceDate[0]);
+	console.log("idd + imm + iyyyy: " + Idd + " " + Imm + " " + Iyyyy);
+
+	var amountOfDays = 0;
+	var flag = false;
+	while (!flag) {
+		if (Sdd != Idd || Smm != Imm || Syyyy != Iyyyy) {
+			amountOfDays++;
+			switch (Imm) {
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+				case 8:
+				case 10:
+				case 12:
+					if (Idd == 31) {
+						Idd = 1;
+						if (Imm == 12) {
+							Imm = 1;
+							Iyyyy = Iyyyy + 1;
+						}
+						else {
+							Imm = Imm + 1;
+						}
+					}
+					else {
+						Idd = Idd + 1;
+					}
+					break;
+				case 4:
+				case 6:
+				case 9:
+				case 11:
+					if (Idd == 30) {
+						Idd = 1;
+						if (Imm == 12) {
+							Imm = 1;
+							Iyyyy = Iyyyy + 1;
+						}
+						else {
+							Imm = Imm + 1;
+						}
+					}
+					else {
+						Idd = Idd + 1;
+					}
+					break;
+				case 2:
+					var endDayOfFeb = 28;
+					if (Iyyyy % 4 === 0) {
+						endDayOfFeb = 29;
+					}
+					if (Idd == endDayOfFeb) {
+						Idd = 1;
+						if (Imm == 12) {
+							Imm = 1;
+							Iyyyy = Iyyyy + 1;
+						}
+						else {
+							Imm = Imm + 1;
+						}
+					}
+					else {
+						Idd = Idd + 1;
+					}
+					break;
+			}
+			console.log("amount of days: " + amountOfDays);
+		}
+		else {
+			flag = true;
+		}
+	}
+	$("input[name='Request.ExpectedSupplyDays']").val(amountOfDays);
+});
 
 $("#Request_Warranty").change(function () {
 	var date = $("#Request_ParentRequest_InvoiceDate").val().split("-");
@@ -506,91 +671,91 @@ $.fn.CalculateSumPlusVat = function () {
 	$.fn.ShowResults($iptBox, $sumTotalVatDollars);
 };
 
-$.fn.ChangeSubUnitDropdown = function () {
-	var selected = $(':selected', $("#Request_UnitTypeID"));
-	var selected2 = $(':selected', $("#select-options-Request_UnitTypeID"));
-	console.log("u selected: " + selected);
-	var optgroup = selected.closest('optgroup').attr('label');
-	var optgroup2 = selected2.closest('optgroup').attr('label');
-	console.log("u optgroup: " + optgroup);
-	console.log("u optgroup2: " + optgroup2);
-	//the following is based on the fact that the unit types and parents are seeded with primary key values
-	switch (optgroup) {
-		case "Units":
-			console.log("optgroup units");
-			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			$("#Request_SubUnitTypeID optgroup[label='Units'] li").show();
-			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-			break;
-		case "Weight/Volume":
-			console.log("optgroup weight/volume");
-			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-			break;
-		case "Test":
-			console.log("optgroup test");
-			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-			$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").hide();
-			break;
-	}
-	switch (optgroup2) {
-		case "Units":
-			console.log("optgroup2 units");
-			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Weight/Volume":
-			console.log("optgroup2 weight/volume");
-			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Test":
-			console.log("optgroup2 test");
-			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-			break;
-	}
-};
-//change sub sub unit dropdown
-$.fn.ChangeSubSubUnitDropdown = function () {
-	var selected = $(':selected', $("#Request_SubUnitTypeID"));
-	var selected2 = $(':selected', $("#select-options-Request_SubUnitTypeID"));
-	var optgroup = selected.closest('optgroup').attr('label');
-	var optgroup2 = selected.closest('optgroup').attr('label');
-	switch (optgroup) {
-		case "Units":
-			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Weight/Volume":
-			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Test":
-			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-			break;
-	}
-	switch (optgroup2) {
-		case "Units":
-			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Weight/Volume":
-			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			break;
-		case "Test":
-			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-			break;
-	}
-};
+//$.fn.ChangeSubUnitDropdown = function () {
+//	var selected = $(':selected', $("#Request_UnitTypeID"));
+//	var selected2 = $(':selected', $("#select-options-Request_UnitTypeID"));
+//	console.log("u selected: " + selected);
+//	var optgroup = selected.closest('optgroup').attr('label');
+//	var optgroup2 = selected2.closest('optgroup').attr('label');
+//	console.log("u optgroup: " + optgroup);
+//	console.log("u optgroup2: " + optgroup2);
+//	//the following is based on the fact that the unit types and parents are seeded with primary key values
+//	switch (optgroup) {
+//		case "Units":
+//			console.log("optgroup units");
+//			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+//			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+//			$("#Request_SubUnitTypeID optgroup[label='Units'] li").show();
+//			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+//			break;
+//		case "Weight/Volume":
+//			console.log("optgroup weight/volume");
+//			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+//			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+//			$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+//			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+//			break;
+//		case "Test":
+//			console.log("optgroup test");
+//			//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+//			//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+//			$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+//			$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").hide();
+//			break;
+//	}
+//	switch (optgroup2) {
+//		case "Units":
+//			console.log("optgroup2 units");
+//			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+//			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+//			break;
+//		case "Weight/Volume":
+//			console.log("optgroup2 weight/volume");
+//			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+//			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+//			break;
+//		case "Test":
+//			console.log("optgroup2 test");
+//			$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+//			$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+//			break;
+//	}
+//};
+////change sub sub unit dropdown
+//$.fn.ChangeSubSubUnitDropdown = function () {
+//	var selected = $(':selected', $("#Request_SubUnitTypeID"));
+//	var selected2 = $(':selected', $("#select-options-Request_SubUnitTypeID"));
+//	var optgroup = selected.closest('optgroup').attr('label');
+//	var optgroup2 = selected.closest('optgroup').attr('label');
+//	switch (optgroup) {
+//		case "Units":
+//			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+//			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+//			break;
+//		case "Weight/Volume":
+//			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+//			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+//			break;
+//		case "Test":
+//			$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+//			$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+//			break;
+//	}
+//	switch (optgroup2) {
+//		case "Units":
+//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+//			break;
+//		case "Weight/Volume":
+//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+//			break;
+//		case "Test":
+//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+//			$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+//			break;
+//	}
+//};
 
 $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
 	var theResult = parseFloat($value);
@@ -1905,7 +2070,7 @@ $("#reorderRequest").click(function () {
 	console.log($("#reorderForm").valid());
 	if (!$("#reorderForm").valid()) {
 		$("#reorderRequest").prop("disabled", true);
-	
+
 	}
 	$("#reorderRequest").prop("disabled", false);
 

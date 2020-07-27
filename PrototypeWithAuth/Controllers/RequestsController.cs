@@ -67,7 +67,10 @@ namespace PrototypeWithAuth.Controllers
         {
 
             //instantiate your list of requests to pass into the index
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Where(r => r.IsDeleted == false).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).OrderBy(r => r.ParentRequest.OrderDate);
+            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser)
+                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
+                .Where(r => r.IsDeleted == false).Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .OrderBy(r => r.ParentRequest.OrderDate);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
             TempData["RequestStatusID"] = RequestStatusID;
@@ -2213,7 +2216,7 @@ namespace PrototypeWithAuth.Controllers
             int RSRecieved = 0;
             int RSOrdered = 0;
             int RSNew = 0;
-            IQueryable<Request> requestsSearched = _context.Requests.AsQueryable();
+            IQueryable<Request> requestsSearched = _context.Requests.AsQueryable().Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
 
             //convert the bools into thier corresponding IDs
             if (requestsSearchViewModel.Inventory)

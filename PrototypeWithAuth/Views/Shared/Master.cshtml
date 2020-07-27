@@ -275,6 +275,7 @@
         $(".load-product-details").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
+            $("#loading").show();
             //takes the item value and calls the Products controller with the ModalView view to render the modal inside
             var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "details");
@@ -285,6 +286,7 @@
             console.log("inside of load product edit")
             e.preventDefault();
             e.stopPropagation();
+            $("#loading").show();
             //takes the item value and calls the Products controller with the ModalView view to render the modal inside
             var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
             console.log("itemurl: " + $itemurl);
@@ -295,6 +297,7 @@
         $(".create-product-details").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
+            $("#loading").show();
             //takes the item value and calls the Products controller with the ModalView view to render the modal inside
             var $itemurl = "Requests/CreateModalView";
             //var $itemurl = "Requests/DetailsModalView/?id=62";
@@ -306,6 +309,7 @@
             console.log("in confirm delete");
             e.preventDefault();
             e.stopPropagation();
+            $("#loading").show();
             var $itemurl = "Requests/DeleteModal/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "delete");
             return false;
@@ -315,6 +319,7 @@
             console.log("in order details");
             e.preventDefault();
             e.stopPropagation();
+            $("#loading").show();
             //takes the item value and calls the Products controller with the ModalView view to render the modal inside
             var $itemurl = "Requests/ReOrderFloatModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
             $.fn.CallPageRequest($itemurl, "reorder");           
@@ -324,6 +329,7 @@
         $(".load-receive-and-location").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
+            $("#loading").show();
             //takes the item value and calls the Products controller with the ModalView view to render the modal inside
             var $itemurl = "Requests/ReceivedModal?RequestID=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "received");
@@ -342,6 +348,7 @@
         $(".load-confirm-email").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
+            $("#loading").show();
             var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
@@ -361,6 +368,7 @@
 
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
+            console.log("itemurl " + $itemurl);
             //delete existing modals
             $('.modal').replaceWith('');
             $(".modal-backdrop").remove();
@@ -430,6 +438,7 @@
                 //    console.log("ajax call went wrong:" /*+ request.responseText*/);
                 //}
             });
+            $("#loading").hide();
         }
 
         $.fn.OnOpenModalView = function () {

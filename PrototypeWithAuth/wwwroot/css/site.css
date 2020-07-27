@@ -22,11 +22,11 @@ html.wf-loading * {
     border: 3px solid rgba(0, 0, 0, .54);
 }
 
-    /*MDBootstrap material select*/
-    [type=checkbox]:checked + label:before {
-        border-right: 2px solid white !important;
-        border-bottom: 2px solid white !important;
-    }
+/*MDBootstrap material select*/
+[type=checkbox]:checked + label:before {
+    border-right: 2px solid white !important;
+    border-bottom: 2px solid white !important;
+}
 /*
 [type=checkbox]:checked{
     color: black;
@@ -72,8 +72,13 @@ center-horizontally {
     margin: auto;
 }
 
-.module-button:hover > img, .main-permissions div:hover > img {
+/*.module-button:hover > img, .main-permissions div:hover > img {
     filter: drop-shadow(5px 5px 5px #a7a7a7);
+}*/
+
+.module-button-div:hover, .main-permissions div:hover {
+    border-radius: 15px;
+    background-color: rgba(0,0,0,.03);
 }
 
 .clicked-border {
@@ -137,7 +142,7 @@ center-horizontally {
     display:none;
 }*/
 
-.dropdown-select-div{
+.dropdown-select-div {
     display: inline-block;
     vertical-align: top;
 }
@@ -147,6 +152,7 @@ center-horizontally {
         margin: -5px -20px -5px -5px;
         overflow-y: hidden;
     }
+
 .orders-view .dropdown-primary .dropdown-content li a,
 .orders-view .dropdown-primary .dropdown-content li span:hover {
     background-color: rgba(48,188,201, .5) !important;
@@ -398,9 +404,9 @@ input.select-dropdown {
     text-transform: uppercase;
 }
 
-.inv-user-button.disabled-submit{
-    border: 0 !important;
-}
+    .inv-user-button.disabled-submit {
+        border: 0 !important;
+    }
 
 .inv-supplier-button {
     background-color: #A26FF0;
@@ -430,7 +436,7 @@ input.select-dropdown {
     height: 2.5em;
 }
 
-    /*.inv-permissions-button input {
+/*.inv-permissions-button input {
         border-bottom: none !important;
     }
 
@@ -611,10 +617,10 @@ table td {
     font-weight: 300;
 }
 
-table td .btn {
-    font-size: 1rem;
-    font-weight: 200;
-}
+    table td .btn {
+        font-size: 1rem;
+        font-weight: 200;
+    }
 
 table th {
     font-size: 1rem;
@@ -762,6 +768,7 @@ table tr td button.btn-link:hover {
 
 .module-button span {
     font-size: 1.25em;
+    color: black;
 }
 
 a.owner-link {
@@ -1269,9 +1276,10 @@ td .btn {
     font-size: 1rem;
 }
 
-.rounded-reorder{
+.rounded-reorder {
     border-radius: 1rem !important
 }
+
 .reorder-modal {
     max-height: 100%;
     width: 54%;
