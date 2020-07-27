@@ -566,11 +566,11 @@ namespace PrototypeWithAuth.Data
                     RequestStatusID = 5,
                     RequestStatusDescription = "Clarify" // request page, under order
                 },
-                 new RequestStatus
-                 {
-                     RequestStatusID = 6,
-                     RequestStatusDescription = "AwaitingQuote" // request page, under reorder
-                 }
+                new RequestStatus
+                {
+                    RequestStatusID = 6,
+                    RequestStatusDescription = "Approved" // request page, under order
+                }
              );
             modelBuilder.Entity<UnitParentType>().HasData
          (
@@ -870,7 +870,18 @@ namespace PrototypeWithAuth.Data
                     MenuImageURL = "/images/css/main_menu_icons/users.png"
                 }
             );
-
+            modelBuilder.Entity<QuoteStatus>().HasData(
+                  new QuoteStatus
+                  {
+                      QuoteStatusID = 1,
+                      QuoteStatusDescription = "AwaitingRequestOfQuote" // request page, under reorder
+                  },
+                  new QuoteStatus
+                  {
+                      QuoteStatusID = 2,
+                      QuoteStatusDescription = "AwaitingQuoteResponse" // lab quote manange page, under quotes
+                  }
+            );
 
         }
     }
