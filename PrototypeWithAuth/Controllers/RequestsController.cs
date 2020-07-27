@@ -2184,7 +2184,22 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> LabManageQuotes()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.RequestStatusID == 6)
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 2)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.ParentRequest.ApplicationUser)
+                .ToLookup(r => r.Product.Vendor);
+            TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
+            return View(labManageQuotesViewModel);GenericUriParser quotes
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, LabManagement")]
+        public async Task<IActionResult> LabManageOrders()
+        {
+            LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 1)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ParentRequest.ApplicationUser)
@@ -2192,7 +2207,6 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
             return View(labManageQuotesViewModel);
         }
-
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //[Authorize(Roles = "Admin, OrdersAndInventory")]

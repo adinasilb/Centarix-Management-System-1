@@ -612,6 +612,19 @@ select option[value="US"] {
         text-decoration: none;
     }
 
+
+.lab-man-link-clr {
+    color: black;
+    box-shadow: none;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+    .lab-man-link-clr:hover {
+        font-weight: bold;
+        color: #7D9BAA;
+        text-decoration: none;
+    }
 table td {
     font-size: 1rem;
     font-weight: 300;
@@ -711,6 +724,10 @@ a.bold-hover-effects {
 
 .ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
     filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
+}
+
+.ourNavBar li.activeNavLinkLabMan a, .ourNavBar a.activeNavLabMan {
+    filter: invert(67%) sepia(16%) saturate(520%) hue-rotate(155deg) brightness(88%) contrast(81%);
 }
 
 .ourNavBar .activeUserClass {

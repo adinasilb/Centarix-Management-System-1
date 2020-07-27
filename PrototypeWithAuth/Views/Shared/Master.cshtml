@@ -353,6 +353,14 @@
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
+        $(".load-approval").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "Requests/ApproveOrder/?id=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "approveReOrder");
+            return false;
+        });
 
         function AddTempDataMemory() {
             //console.log("about to get set the hidden fors in the modal view to remember where the user was");
