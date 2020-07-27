@@ -871,16 +871,21 @@ namespace PrototypeWithAuth.Data
                 }
             );
             modelBuilder.Entity<QuoteStatus>().HasData(
-                  new QuoteStatus
-                  {
-                      QuoteStatusID = 1,
-                      QuoteStatusDescription = "AwaitingRequestOfQuote" // request page, under reorder
-                  },
-                  new QuoteStatus
-                  {
-                      QuoteStatusID = 2,
-                      QuoteStatusDescription = "AwaitingQuoteResponse" // lab quote manange page, under quotes
-                  }
+                new QuoteStatus
+                {
+                    QuoteStatusID = -1,
+                    QuoteStatusDescription = "NoStatus" // request page, under reorder
+                },
+                new QuoteStatus
+                {
+                    QuoteStatusID = 1,
+                    QuoteStatusDescription = "AwaitingRequestOfQuote" // request page, under reorder
+                },
+                new QuoteStatus
+                {
+                    QuoteStatusID = 2,
+                    QuoteStatusDescription = "AwaitingQuoteResponse" // lab quote manange page, under quotes
+                }
             );
 
         }
