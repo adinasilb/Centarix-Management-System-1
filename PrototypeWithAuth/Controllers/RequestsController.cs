@@ -2718,7 +2718,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Admin, LabManagement")]
-        public IActionResult EditQuoteDetails(Quote quote)
+        public IActionResult EditQuoteDetails(List<Quote> quotes)
         {
             
 
