@@ -380,6 +380,21 @@ input.select-dropdown {
         /*text-transform: uppercase;*/
     }
 
+.form-control-file-lab::-webkit-file-upload-button:hover {
+    font-weight: 550;
+    /*text-transform: uppercase;*/
+}
+.form-control-file-lab::-webkit-file-upload-button {
+    background-color: #7D9BAA;
+    border: 1px solid #7D9BAA;
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.35rem 2rem;
+    font-size: 1.125rem;
+    line-height: 2;
+    /*text-transform: uppercase;*/
+}
 .inv-lab-button {
     background-color: #7D9BAA;
     border: 1px solid #7D9BAA;
@@ -392,6 +407,17 @@ input.select-dropdown {
     text-transform: uppercase;
 }
 
+.quote-lab-button {
+    background-color: #7D9BAA;
+    border: 1px solid #7D9BAA;
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.56rem 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
 .inv-user-button {
     background-color: #DB669D;
     border: 1px solid #DB669D;
@@ -612,6 +638,19 @@ select option[value="US"] {
         text-decoration: none;
     }
 
+
+.lab-man-link-clr {
+    color: black;
+    box-shadow: none;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+    .lab-man-link-clr:hover {
+        font-weight: bold;
+        color: #7D9BAA;
+        text-decoration: none;
+    }
 table td {
     font-size: 1rem;
     font-weight: 300;
@@ -711,6 +750,10 @@ a.bold-hover-effects {
 
 .ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
     filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
+}
+
+.ourNavBar li.activeNavLinkLabMan a, .ourNavBar a.activeNavLabMan {
+    filter: invert(67%) sepia(16%) saturate(520%) hue-rotate(155deg) brightness(88%) contrast(81%);
 }
 
 .ourNavBar .activeUserClass {
