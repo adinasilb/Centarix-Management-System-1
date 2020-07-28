@@ -2235,7 +2235,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> LabManageOrders()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.RequestStatusID == 2)
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 3)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ParentRequest.ApplicationUser)
@@ -2696,18 +2696,25 @@ namespace PrototypeWithAuth.Controllers
                 PageType = requestPageTypeEnum
             });
         }
-
+        [HttpGet]
         [Authorize(Roles = "Admin, LabManagement")]
         public IActionResult EditQuoteDetails(int id, int requestID=0)
         {
             if (requestID !=0)
             {
                 //user wants to edit only one quote
-                var requests = _context.Requests.OfType<Quote>().Where(r => r.RequestID ==requestID)
-               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
-               .Include(r => r.ParentQuote).Include(r => r.UnitType).Include(r => r.SubSubUnitType).Include(r => r.SubUnitType).ToList();
-
-                return PartialView(requests);
+                var requests = _context.Requests.OfType<Quote>().Where(r => r.RequestID == requestID)
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.ParentQuote)
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList();
+                var vendor = _context.Vendors.Where(v => v.VendorID == id).FirstOrDefault();
+                EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
+                {
+                    Quotes = requests,
+                    Vendor = vendor,
+                    QuoteDate = DateTime.Now,
+                };
+                return PartialView(editQuoteDetailsViewModel);
             }
             else
             {
@@ -2720,14 +2727,25 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Admin, LabManagement")]
-        public IActionResult EditQuoteDetails(Quote quote)
+        public IActionResult EditQuoteDetails(EditQuoteDetailsViewModel editQuoteDetailsViewModel)
         {
-            
-
-            return RedirectToAction("Index", new
+            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == editQuoteDetailsViewModel.Vendor.VendorID).Include(x=>x.ParentQuote);
+            var quoteDate = editQuoteDetailsViewModel.QuoteDate;
+            var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
+            foreach (var quote in editQuoteDetailsViewModel.Quotes)
             {
-               
-            });
+                var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
+                request.QuoteStatusID = 3;
+                request.ParentQuote.QuoteDate = quoteDate ;
+                request.ParentQuote.QuoteNumber = quoteNumber;
+                request.Cost = quote.Cost;
+                request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+            //save file
+
+            return RedirectToAction("LabManageOrders");
         }
 
     }

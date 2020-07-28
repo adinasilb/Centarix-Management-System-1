@@ -260,9 +260,9 @@ $(".view-docs").click(function (clickEvent) {
 });
 
 
-$("#Request_ExpectedSupplyDays").change(function () {
+$(".expected-supply-days").change(function () {
 	console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
-	var date = $("#Request_ParentRequest_InvoiceDate").val().split("-");
+	var date = $(".for-supply-date-calc").val().split("-");
 	var dd = parseInt(date[2]);
 	var mm = parseInt(date[1]);
 	var yyyy = parseInt(date[0]);
@@ -345,7 +345,7 @@ $("#expected-supply-date").change(function () {
 	var Smm = parseInt(SupplyDate[1]);
 	var Syyyy = parseInt(SupplyDate[0]);
 	console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
-	var InvoiceDate = $("#Request_ParentRequest_InvoiceDate").val().split("-");
+	var InvoiceDate = $(".for-supply-date-calc").val().split("-");
 	var Idd = parseInt(InvoiceDate[2]);
 	var Imm = parseInt(InvoiceDate[1]);
 	var Iyyyy = parseInt(InvoiceDate[0]);

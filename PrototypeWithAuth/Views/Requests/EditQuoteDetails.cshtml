@@ -1,4 +1,4 @@
-﻿@model List<PrototypeWithAuth.Models.Quote>
+﻿@model PrototypeWithAuth.ViewModels.EditQuoteDetailsViewModel
 @using PrototypeWithAuth.AppData
 
 
@@ -16,10 +16,9 @@
                 </div>
 
                 @*
-                    NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
-                        they need the hiddenfors that are right underneath it
+        NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+            they need the hiddenfors that are right underneath it
                 *@
-
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <!-- Modal Header -->
                 <div class="new-modal-header no-box-shadow" style="padding: 0.5em 6em">
@@ -29,123 +28,124 @@
                         <br />
                     }
 
-                <div class="form-group mb-3 ">
-                    <div class="row">
-                        <div class="col-2">
-                            <h4><strong>Update Quote</strong></h4>
-                        </div>
-                        <div class="col-4">
-                            <h4>@Model.FirstOrDefault().Product.Vendor.VendorEnName</h4>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group d-inline-flex">
-                                <label asp-for="@Model.FirstOrDefault().ParentQuote.QuoteNumber" class="control-label" style="width:100%;"></label>
-                                <input asp-for="@Model.FirstOrDefault().ParentQuote.QuoteNumber" class="form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1"  />
-                                <span asp-validation-for="@Model.FirstOrDefault().ParentQuote.QuoteNumber" class="text-danger"></span>
+                    <div class="form-group mb-3 ">
+                        <div class="row">
+                            <div class="col-2">
+                                <h4><strong>Update Quote</strong></h4>
                             </div>
-                        </div>
-
-                        <div class="col-3">
-                            <div class="form-group d-inline-flex">
-                                <label asp-for="@Model.FirstOrDefault().ParentQuote.QuoteNumber" class="control-label" style="width:100%;"></label>
-                                <input asp-for="@Model.FirstOrDefault().ParentQuote.QuoteNumber" class="form-control-plaintext border-bottom align-with-select m-0 p-0" min="1" />
-                                <span asp-validation-for="@Model.FirstOrDefault().ParentQuote.QuoteNumber" class="text-danger"></span>
+                            <div class="col-4">
+                                <h4>@Model.Vendor.VendorEnName</h4>
                             </div>
-                        </div>                     
+                            <input type="hidden" asp-for="@Model.Vendor.VendorID" />
+                            <div class="col-3">
+                                <div class="form-group d-inline-flex">
+                                    <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
+                                    <span asp-validation-for="@Model.QuoteNumber" class="text-danger"></span>
+                                </div>
+                            </div>
 
-                    </div>
-                    <div class="row">
-                        <hr class="col-12" />
-                    </div>
-                    <table class="table table-headerspaced table-borderless mb-5">
-                        <thead>
-                            <tr >
-                                <td class="pb-0" width="15%"></td>
-                                <td class="pb-0" style="width:15%;">
-                                    Name
-                                </td>
-                                <td class="pb-0" style="width:15%;">
-                                    Units
-                                </td>
-                                <td class="pb-0" style="width:15%">
-                                    TotalPrice
-                                </td>
-                                <td class="pb-0" style="width:15%">
-                                    Expected Supply Days
-                                </td>
-                                <td class="pb-0" style="width:15%">
-                                    Expected Supply Date
-                                </td>                             
-                            </tr>
-                        </thead>                     
-                        <tbody>
+                            <div class="col-3">
+                                <div class="form-group d-inline-flex">
+                                    <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
+                                    <span asp-validation-for="@Model.QuoteDate" class="text-danger"></span>
+                                </div>
+                            </div>
 
-                            @foreach (var request in Model)
-                            {
-                                @Html.HiddenFor(model => request.RequestID)
-                                <tr class="">
-                                    <td class="" width="15%">
-                                        <input type="hidden" asp-for="@request.RequestID" />
-                                        @if (request.Product.ProductSubcategory.ImageURL != null)
-                                        {
-                                            var imageurl = request.Product.ProductSubcategory.ImageURL;
-                                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
-                                        }
-                                        else
-                                        {
-                                            <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
-                                        }
+                        </div>
+                        <div class="row">
+                            <hr class="col-12" />
+                        </div>
+                        <table class="table table-headerspaced table-borderless mb-5">
+                            <thead>
+                                <tr>
+                                    <td class="pb-0" width="15%"></td>
+                                    <td class="pb-0" style="width:15%;">
+                                        Name
                                     </td>
-                                    <td width="15%">
-                                        @request.Product.Vendor.VendorEnName
+                                    <td class="pb-0" style="width:15%;">
+                                        Units
                                     </td>
-                                    <td width="15%">
-                                        @request.Unit &nbsp;@request.UnitType.UnitTypeDescription
-                                        @if (request.SubUnitType != null)
-                                        {
-                                            <br />
-                                            @request.SubUnit  @request.SubUnitType.UnitTypeDescription
-                                            @if (request.SubSubUnitType != null)
-                                            {
-                                                <br />@request.SubSubUnit @request.SubSubUnitType.UnitTypeDescription
-                                            }
-                                        }
-                                    </td>                                
-                                    <td width="15%">
-                                        <div class="form-group">
-                                            <input asp-for="@request.Cost" class="form-control-plaintext border-bottom align-with-select" min="1" />
-                                            <span asp-validation-for="@request.Cost" class="text-danger"></span>
-                                        </div>
+                                    <td class="pb-0" style="width:15%">
+                                        TotalPrice
                                     </td>
-                                    <td width="15%">
-                                        <div class="form-group">
-                                            <input asp-for="@request.ExpectedSupplyDays" class="form-control-plaintext border-bottom align-with-select" min="1" />
-                                            <span asp-validation-for="@request.ExpectedSupplyDays" class="text-danger"></span>
-                                        </div>
+                                    <td class="pb-0" style="width:15%">
+                                        Expected Supply Days
                                     </td>
-                                    <td width="15%">
-                                        <div class="form-group">
-                                            <input id="expectedSupplyDate" class="form-control-plaintext border-bottom align-with-select " min="1" disabled />
-                                        </div>
+                                    <td class="pb-0" style="width:15%">
+                                        Expected Supply Date
                                     </td>
                                 </tr>
-                            }
-                            <tr class="border-0 mb-3 no-hover">
-                                <td colspan="4">
-                                    <input type="file"  class="  form-control-file-lab pt-1" accept=".pdf">
-                                </td>
-                                <td colspan="3">
-                                    <div class="form-group text-center my-5">
-                                        <input type="submit" name="OrderType" value="Save" class="inv-lab-button mr-3 px-5"  />
-                                        <button type="button" class="cancel-button px-5" data-dismiss="modal" >Cancel</button>
-                                    </div>
-                                </td>
+                            </thead>
+                            <tbody>
 
-                            </tr>
+                                @for (int i = 0; i < Model.Quotes.Count(); i++)
+                                {
+                                    @Html.HiddenFor(model => Model.Quotes[i].RequestID)
+                                    <tr class="">
+                                        <td class="" width="15%">
+                                            <input type="hidden" asp-for="@Model.Quotes[i].RequestID" />                                           
+                                            @if (Model.Quotes[i].Product.ProductSubcategory.ImageURL != null)
+                                            {
+                                                var imageurl = Model.Quotes[i].Product.ProductSubcategory.ImageURL;
+                                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                                            }
+                                        </td>
+                                        <td width="15%">
+                                            @Model.Quotes[i].Product.Vendor.VendorEnName
+                                        </td>
+                                        <td width="15%">
+                                            @Model.Quotes[i].Unit &nbsp;@Model.Quotes[i].UnitType.UnitTypeDescription
+                                            @if (Model.Quotes[i].SubUnitType != null)
+                                            {
+                                                <br />
+                                                @Model.Quotes[i].SubUnit @Model.Quotes[i].SubUnitType.UnitTypeDescription
+                                                @if (Model.Quotes[i].SubSubUnitType != null)
+                                                {
+                                                    <br />@Model.Quotes[i].SubSubUnit @Model.Quotes[i].SubSubUnitType.UnitTypeDescription
+                                                }
+                                            }
+                                        </td>
+                                        <td width="15%">
+                                            <div class="form-group">
+                                                <input asp-for="@Model.Quotes[i].Cost" class="form-control-plaintext border-bottom align-with-select" min="1" />
+                                                <span asp-validation-for="@Model.Quotes[i].Cost" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="form-group">
+                                                <input asp-for="@Model.Quotes[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom align-with-select expected-supply-days" min="1" />
+                                                <span asp-validation-for="@Model.Quotes[i].ExpectedSupplyDays" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="form-group">
+                                                <input value="00-00-0000" class="form-control-plaintext border-bottom datepicker" type="date" name="expected-supply-days" id="expected-supply-date" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr class="border-0 mb-3 no-hover">
+                                    <td colspan="4">
+                                        <input type="file" class="  form-control-file-lab pt-1" accept=".pdf" required>
+                                    </td>
+                                    <td colspan="3">
+                                        <div class="form-group text-center my-5">
+                                            <input type="submit" asp-action="EditQuoteDetails" name="OrderType" value="Save" class="inv-lab-button mr-3 px-5" />
+                                            <button type="button" class="cancel-button px-5" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </td>
 
-                        </tbody>
-                    </table>
-                </div>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </form>
         </div>

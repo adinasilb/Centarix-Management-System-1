@@ -330,7 +330,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "EditQuoteDetails/?id="+$("#Key").val() + "&requestID=" + $(this).val();
+            var $itemurl = "EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "quote");
             return false;
         });

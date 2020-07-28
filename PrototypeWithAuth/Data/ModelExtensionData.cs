@@ -885,7 +885,12 @@ namespace PrototypeWithAuth.Data
                 {
                     QuoteStatusID = 2,
                     QuoteStatusDescription = "AwaitingQuoteResponse" // lab quote manange page, under quotes
-                }
+                },
+                 new QuoteStatus
+                 {
+                     QuoteStatusID = 3,
+                     QuoteStatusDescription = "AwaitingQuoteOrder" // lab quote manange page, under quotes
+                 }
             );
 
         }

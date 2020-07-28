@@ -4,8 +4,8 @@
     Layout = "~/Views/Shared/LabManageOrdersSideBar.cshtml";
 }
 
-    <form method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-        <input type="hidden" asp-for="@Model.RequestsByVendor.FirstOrDefault().Key" />
+    <form method="post" enctype="multipart/form-data" style="height: 100%; overflow-y:auto">
+        <input type="hidden" asp-for="@Model.RequestsByVendor.FirstOrDefault().Key.VendorID" class="key-vendor-id" />
         @foreach (var vendor in Model.RequestsByVendor)
         {
 
