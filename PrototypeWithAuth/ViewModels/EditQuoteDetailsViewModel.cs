@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Models;
+﻿using Microsoft.AspNetCore.Http;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +19,8 @@ namespace PrototypeWithAuth.ViewModels
         public DateTime QuoteDate { get; set; }
         [Display(Name = "Quote Number")]
         public int? QuoteNumber { get; set; }
+        public IFormFile QuoteFileUpload { get; set; }
+        public int ParentQuoteID { get; set; }
 
     }
 }

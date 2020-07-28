@@ -2713,6 +2713,7 @@ namespace PrototypeWithAuth.Controllers
                     Quotes = requests,
                     Vendor = vendor,
                     QuoteDate = DateTime.Now,
+                    ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
                 };
                 return PartialView(editQuoteDetailsViewModel);
             }
@@ -2729,23 +2730,42 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, LabManagement")]
         public IActionResult EditQuoteDetails(EditQuoteDetailsViewModel editQuoteDetailsViewModel)
         {
-            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == editQuoteDetailsViewModel.Vendor.VendorID).Include(x=>x.ParentQuote);
-            var quoteDate = editQuoteDetailsViewModel.QuoteDate;
-            var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
-            foreach (var quote in editQuoteDetailsViewModel.Quotes)
+            try
             {
-                var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
-                request.QuoteStatusID = 3;
-                request.ParentQuote.QuoteDate = quoteDate ;
-                request.ParentQuote.QuoteNumber = quoteNumber;
-                request.Cost = quote.Cost;
-                request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
-                _context.Update(request);
-                _context.SaveChanges();
-            }
-            //save file
+                var requests = _context.Requests.OfType<Quote>().Include(x => x.ParentQuote).Select(r => r);
+                var quoteDate = editQuoteDetailsViewModel.QuoteDate;
+                var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
+                foreach (var quote in editQuoteDetailsViewModel.Quotes)
+                {
+                    var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
 
-            return RedirectToAction("LabManageOrders");
+                    request.QuoteStatusID = 3;
+                    request.ParentQuote.QuoteDate = quoteDate;
+                    request.ParentQuote.QuoteNumber = quoteNumber;
+                    request.Cost = quote.Cost;
+                    request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
+                    _context.Update(request);
+                    _context.SaveChanges();
+                    //save file
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    string requestFolder = Path.Combine(uploadFolder, quote.RequestID.ToString());
+                    string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                    Directory.CreateDirectory(folderPath);
+                    string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
+                    string filePath = Path.Combine(folderPath, uniqueFileName);
+                    editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                }
+                return RedirectToAction("LabManageOrders");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
+            }
+          
+
         }
 
     }

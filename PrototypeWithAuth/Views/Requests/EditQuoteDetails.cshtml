@@ -37,6 +37,7 @@
                                 <h4>@Model.Vendor.VendorEnName</h4>
                             </div>
                             <input type="hidden" asp-for="@Model.Vendor.VendorID" />
+                            <input type="hidden" asp-for="@Model.ParentQuoteID" />
                             <div class="col-3">
                                 <div class="form-group d-inline-flex">
                                     <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
@@ -132,7 +133,7 @@
                                 }
                                 <tr class="border-0 mb-3 no-hover">
                                     <td colspan="4">
-                                        <input type="file" class="  form-control-file-lab pt-1" accept=".pdf" required>
+                                        <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1" accept=".pdf" required>
                                     </td>
                                     <td colspan="3">
                                         <div class="form-group text-center my-5">
