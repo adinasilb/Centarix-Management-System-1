@@ -1,0 +1,108 @@
+﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel;
+<script src="~/js/DocumentModalJS.js" asp-append-version="true"></script>
+
+<div class="modal modal-document fader" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+    <div class="modal-dialog reorder-modal  modal-lg " role="document">
+        <div class="modal-content d-inline-block" style="border-radius:2rem;">
+            <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5">
+                <div class="modal-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-2">
+                                <h2>@Model.RequestFolderName</h2>
+                            </div>
+                            <div class="col-2 offset-8">
+                                <button class="inv-button btn-block float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
+
+                        <!--Controls-->
+                        <div class="controls-top">
+                            <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                            <a class="btn-floating" href="#carousel-example-multi" data-slide="next">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+                        <!--/.Controls-->
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            @for(int i = 0; i < Model.FileStrings.Count; i++)
+                            {
+                                string indicatorClass = "";
+                                if (i == 0)
+                                {
+                                    indicatorClass = "active";
+                                }
+                                <li data-target="#carousel-example-multi" data-slide-to="@i" class="@indicatorClass"></li>
+                            }
+                        </ol>
+                        <!--/.Indicators-->
+
+                        <div class="carousel-inner v-2" role="listbox">
+
+                            <div class="carousel-item active">
+                                <div class="col-12 col-md-4">
+                                    <div class="card mb-2">
+                                        <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/img (36).jpg"
+                                             alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title font-weight-bold">Card title</h4>
+                                            <p class="card-text">
+                                                Some quick example text to build on the card title and make up the bulk of the
+                                                card's content.
+                                            </p>
+                                            <a class="btn btn-primary btn-md btn-rounded">Button</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-12 col-md-4">
+                                    <div class="card mb-2">
+                                        <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/img (34).jpg"
+                                             alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title font-weight-bold">Card title</h4>
+                                            <p class="card-text">
+                                                Some quick example text to build on the card title and make up the bulk of the
+                                                card's content.
+                                            </p>
+                                            <a class="btn btn-primary btn-md btn-rounded">Button</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-12 col-md-4">
+                                    <div class="card mb-2">
+                                        <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/img (38).jpg"
+                                             alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title font-weight-bold">Card title</h4>
+                                            <p class="card-text">
+                                                Some quick example text to build on the card title and make up the bulk of the
+                                                card's content.
+                                            </p>
+                                            <a class="btn btn-primary btn-md btn-rounded">Button</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

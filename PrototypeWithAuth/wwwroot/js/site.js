@@ -1072,6 +1072,37 @@ $(".documents-tab").click(function (e) {
 //	$(".file-select-8").click();
 //});
 
+$(".open-document-modal").on("click", function (e) {
+	console.log("in open doc modal click");
+	e.preventDefault();
+	e.stopPropagation();
+	var enumString = $(this).data("string");
+	var requestId = $(this).data("id");
+	$.fn.OpenDocumentsModal(enumString, requestId);
+	return false;
+});
+
+$.fn.OpenDocumentsModal = function (enumString, requestId) {
+	console.log("in open doc modal");
+	$("#documentsModal").replaceWith('');
+	//$(".modal-backdrop").first().removeClass();
+	$.ajax({
+		async: true,
+		url: "Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString,
+		type: 'GET',
+		cache: false,
+		success: function (data) {
+			var modal = $(data);
+			$('body').append(modal);
+			$("#documentsModal").modal({
+				backdrop: false,
+				keyboard: true,
+			});
+			$(".modal").modal('show');
+		}
+	});
+};
+
 $(".file-select").on("change", function (e) {
 	console.log("file was changed");
 	$cardDiv = $(this).closest("div.card");

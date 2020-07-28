@@ -2625,6 +2625,35 @@ namespace PrototypeWithAuth.Controllers
         /*
          * END RECEIVED MODAL
          */
+         [HttpGet]
+         [Authorize(Roles ="Admin, OrdersAndInventory")]
+         public ActionResult DocumentsModal(int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum)
+        {
+            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+            {
+                Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
+                RequestFolderName = RequestFolderNameEnum
+            };
+
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder2 = Path.Combine(uploadFolder1, id.ToString());
+            string uploadFolder3 = Path.Combine(uploadFolder2, RequestFolderNameEnum.ToString());
+
+            if (Directory.Exists(uploadFolder3))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
+                //searching for the partial file name in the directory
+                FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
+                documentsModalViewModel.FileStrings = new List<String>();
+                foreach (var docfile in docfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(docfile.FullName);
+                    documentsModalViewModel.FileStrings.Add(newFileString);
+                }
+            }
+
+            return PartialView(documentsModalViewModel);
+        }
 
 
 

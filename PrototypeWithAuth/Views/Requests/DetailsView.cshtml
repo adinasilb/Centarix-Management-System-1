@@ -568,7 +568,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
 
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
-                                <div class="row orders-view border rounded shadow text-center mb-5">
+                                @*<div class="row orders-view border rounded shadow text-center mb-5">
                                     <div class="col-md-8 border-right border-dark">
                                         Preview coming soon...
                                     </div>
@@ -703,7 +703,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                         }
                                         <br />
                                     </div>
-                                </div>
+                                </div>*@
 
                                 <div class="row">
                                     <div class="col-md-3">
@@ -720,11 +720,10 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/order.png" style="margin-top:3rem;" alt="order" />
                                             </div>
-                                            <div class="card-footer" style="display:flex; justify-content: space-between">
+                                            @*<div class="card-footer" style="display:flex; justify-content: space-between">
                                                 <div class="custom-file text-center">
                                                     <label for="OrderFiles">
                                                         <i class="icon-centarix-icons-07 upload-file-1 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                                                        @*<img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-1 mr-5" />*@
                                                     </label>
                                                     <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                     @if (boolOrders)
@@ -732,7 +731,6 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                         <a class="show-orders-view">
                                                             <label>
                                                                 <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
-                                                                @*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
                                                             </label>
                                                         </a>
                                                     }
@@ -740,11 +738,10 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                     {
                                                         <label>
                                                             <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                                                            @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
                                                         </label>
                                                     }
                                                 </div>
-                                            </div>
+                                            </div>*@
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
                                     </div>
@@ -762,25 +759,24 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/invoice.png" style="margin-top:3rem;" alt="order" />
                                             </div>
-                                            <div class="card-footer">
+                                            @*<div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label for="InvoiceFiles"><i class="icon-centarix-icons-07 upload-file-2 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-2 mr-5" />*@</label>
+                                                    <label for="InvoiceFiles"><i class="icon-centarix-icons-07 upload-file-2 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
                                                     <input type="file" asp-for="InvoiceFiles" class="file-select file-select-2" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                     @if (boolInvoice)
                                                     {
                                                         <a class="show-invoices-view">
                                                             <label>
                                                                 <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
-                                                                @*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
                                                             </label>
                                                         </a>
                                                     }
                                                     else
                                                     {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
                                                     }
                                                 </div>
-                                            </div>
+                                            </div>*@
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
                                     </div>
@@ -798,25 +794,24 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/shipment.png" style="margin-top:3rem;" alt="order" />
                                             </div>
-                                            <div class="card-footer">
+                                            @*<div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label for="ShipmentFiles"><i class="icon-centarix-icons-07 upload-file-3 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-3 mr-5" />*@</label>
+                                                    <label for="ShipmentFiles"><i class="icon-centarix-icons-07 upload-file-3 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
                                                     <input type="file" asp-for="ShipmentFiles" class="file-select file-select-3" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                     @if (boolShipment)
                                                     {
                                                         <a class="show-shipments-view">
                                                             <label>
                                                                 <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
-                                                                @*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
                                                             </label>
                                                         </a>
                                                     }
                                                     else
                                                     {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
                                                     }
                                                 </div>
-                                            </div>
+                                            </div>*@
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                     </div>
@@ -834,20 +829,20 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/quote.png" style="margin-top:3rem;" alt="order" />
                                             </div>
-                                            <div class="card-footer">
+                                            @*<div class="card-footer">
                                                 <div class="custom-file text-center">
-                                                    <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-4 mr-5" />*@</label>
+                                                    <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
                                                     <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                     @if (boolQuote)
                                                     {
-                                                        <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> @*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@ </label></a>
+                                                        <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
                                                     }
                                                     else
                                                     {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
                                                     }
                                                 </div>
-                                            </div>
+                                            </div>*@
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
                                     </div>
