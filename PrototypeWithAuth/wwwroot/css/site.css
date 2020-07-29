@@ -791,7 +791,9 @@ a.bold-hover-effects {
 .ourNavBar li.activeNavLinkLabMan a, .ourNavBar a.activeNavLabMan {
     filter: invert(67%) sepia(16%) saturate(520%) hue-rotate(155deg) brightness(88%) contrast(81%);
 }
-
+a.activeNavLabMan {
+    filter: invert(67%) sepia(16%) saturate(520%) hue-rotate(155deg) brightness(88%) contrast(81%);
+}
 .ourNavBar .activeUserClass {
     opacity: 1;
     filter: brightness(0) saturate(100%) invert(67%) sepia(32%) saturate(3488%) hue-rotate(294deg) brightness(89%) contrast(91%);

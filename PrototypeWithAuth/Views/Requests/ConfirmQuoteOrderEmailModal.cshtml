@@ -1,7 +1,7 @@
-﻿@model PrototypeWithAuth.ViewModels.ConfirmQuoteEmailViewModel
+﻿@model PrototypeWithAuth.ViewModels.ConfirmQuoteOrderEmailViewModel
 
 
-<div class="modal modal-view " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view email-model " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:60rem; ">
 
@@ -12,7 +12,8 @@
             </div>
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;">
-                @Html.HiddenFor(model => model.VendorID)
+                <input asp-for="VendorID" style="display: none;" />
+
 
                 <div style="padding:1rem 2rem">
                     <header class="page-header">
@@ -76,7 +77,7 @@
                                         <td>@Model.Requests[i].CatalogNumber</td>
                                         <td>@Model.Requests[i].Unit</td>
                                         @{double unitPrice = (Model.Requests[i].Cost) / (Model.Requests[i].Unit);}
-                                        <td>@unitPrice.ToString("N2");</td>
+                                        <td>@unitPrice.ToString("N2")</td>
                                         <td>@Model.Requests[i].Cost</td>
                                     </tr>
 
@@ -128,8 +129,8 @@
                     <br />
                     <br />
                     <div class="modal-footer p-4" style="justify-content:space-evenly;">
-                        <input type="submit" class="inv-lab-button" asp-action="ConfirmQuoteEmailModal" value="Confirm & Send Email" />
-                        <button class="cancel-button" data-dismiss="modal">Cancel</button>@*FAIGE: should this delete the request?*@
+                        <input type="submit" class="inv-lab-button" asp-action="ConfirmQuoteOrderEmailModal" value="Confirm & Send Email" />
+                        <button class="cancel-button cancel-email" data-dismiss="modal">Cancel</button>@*FAIGE: should this delete the request?*@
                     </div>
                 </div>
 

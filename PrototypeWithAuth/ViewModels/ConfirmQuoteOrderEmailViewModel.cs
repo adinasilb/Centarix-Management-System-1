@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class ConfirmQuoteEmailViewModel
+    public class ConfirmQuoteOrderEmailViewModel
     {
         public List<Quote> Requests { get; set; }
         public int VendorID { get; set; }

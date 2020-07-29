@@ -92,7 +92,7 @@
                             <td width="7%">
                                 @if (request.QuoteStatusID == 2)
                                 {
-                                    <button class="inv-lab-button float-right">resend</button>
+                                    <button class="inv-lab-button float-right text-center confirm-quote-resend" value="@request.RequestID">resend</button>
                                 }
                             </td>
                             <td width="13%" class="text-right">
@@ -119,8 +119,11 @@
                         </td>
 
                         <td>
+                            @if (vendor.Where(r => r.QuoteStatusID == 1).Count()!=0)
+                            {
+                                <button class="inv-lab-button float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
+                            }
 
-                            <button class="inv-lab-button float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
                         </td>
 
 

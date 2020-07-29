@@ -1,22 +1,50 @@
-﻿
+﻿@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "LabManageOrdersSideBar";
     Layout = "~/Views/Shared/LabManageView.cshtml";
+
+    var pageType = AppUtility.LabManagementSidebarEnum.None;
+
+    //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
+    if (TempData["SideBarPageType"] != null)
+    {
+        pageType = (AppUtility.LabManagementSidebarEnum)Enum.Parse(typeof(AppUtility.LabManagementSidebarEnum), TempData["SideBarPageType"].ToString());
+    }
+
+    //passing the
+    string initalClasses = "opac87 align-text-bottom";
+    string currentClasses = " text-dark activeNavLabMan";
+    string ordersClass = initalClasses;
+    string quotesClass = initalClasses;
+
+
+
+
+    switch (pageType)
+    {
+        case AppUtility.LabManagementSidebarEnum.Orders:
+            ordersClass += currentClasses;
+            break;
+        case AppUtility.LabManagementSidebarEnum.Quotes:
+            quotesClass += currentClasses;
+            break;       
+    }
 }
 
-    <div style="display: flex;">
+<div style="display: flex;">
 
-        <div style="width: 110px; min-height: 100rem;" class="p-2 sidebar-shadow text-center p-3">
-            <ul class="nav flex-column nav-pills nav-stacked mt-3 ">
-                <li class="nav-item pb-4">
-                    <a href="@Url.Action("LabManageOrders", "Requests")" class="lab-man-link-clr" > <i class="icon-shopping_cart-24px" style="font-size: 2rem;"></i> <br /> Orders </a>
-                </li>
-                <li class="nav-item pb-4">
-                    <a href="@Url.Action("LabManageQuotes", "Requests")" class="lab-man-link-clr" > <i class="icon-book-24px" style="font-size: 2rem;"></i> <br /> Quotes </a>
-                </li>
-            </ul>
-        </div>
-        <div style="flex-grow: 1; position:relative; padding: 2rem;">
-            @RenderBody()
-        </div>
+    <div style="width: 110px; min-height: 100rem;" class="p-2 sidebar-shadow text-center p-3">
+        <ul class="nav flex-column nav-pills nav-stacked mt-3 ">
+            <li class="nav-item pb-4">
+                <a href="@Url.Action("LabManageOrders", "Requests")" class="lab-man-link-clr @ordersClass"> <i class="icon-shopping_cart-24px " style="font-size: 2rem;"></i> <br /> Orders </a>
+            </li>
+            <li class="nav-item pb-4">
+                <a href="@Url.Action("LabManageQuotes", "Requests")" class="lab-man-link-clr @quotesClass"> <i class="icon-book-24px " style="font-size: 2rem;"></i> <br /> Quotes </a>
+            </li>
+        </ul>
     </div>
+    <div style="flex-grow: 1; position:relative; padding: 2rem;">
+        @RenderBody()
+    </div>
+</div>

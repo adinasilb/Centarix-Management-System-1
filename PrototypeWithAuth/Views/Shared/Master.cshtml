@@ -382,6 +382,14 @@
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
+        $(".confirm-quote-resend").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "ConfirmQuoteEmailModal/?id=" + $(this).val() + "&isResend=true";
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
         $(".confirm-quote-order").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -722,7 +730,7 @@
                 $("#sublist").html(item);
             });
         });
-
+       
     </script>
 
 </body>
