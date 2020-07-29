@@ -10,6 +10,7 @@
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(model => model.Request.RequestID)
+                @Html.HiddenFor(model => model.IsQuote)
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -51,34 +52,34 @@
                         </div>
 
                         @*<div class="row">
-                            <div class="col-4 font-weight-bold">
-                                @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)&nbsp;:
-                                <br />
-                                @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)&nbsp;:
-                                <br />
-                                @Html.DisplayNameFor(model => model.Request.Product.Vendor.VendorEnName)&nbsp;:
-                            </div>
-                            <div class="col-4">
-                                @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-                                <br />
-                                @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
-                                <br />
-                                @Html.DisplayFor(model => model.Request.Product.Vendor.VendorEnName)
-                            </div>
-                        </div>*@
+                    <div class="col-4 font-weight-bold">
+                        @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)&nbsp;:
+                        <br />
+                        @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)&nbsp;:
+                        <br />
+                        @Html.DisplayNameFor(model => model.Request.Product.Vendor.VendorEnName)&nbsp;:
+                    </div>
+                    <div class="col-4">
+                        @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+                        <br />
+                        @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+                        <br />
+                        @Html.DisplayFor(model => model.Request.Product.Vendor.VendorEnName)
+                    </div>
+                </div>*@
 
                     </div>
 
                     @*@Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription) &nbsp;: &ensp;
-                    @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-                    <br />
-                    @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription) &nbsp;: &ensp;
-                    @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
-                    <br />
-                    @Html.DisplayNameFor(model => model.Request.Product.Vendor.VendorEnName) &nbsp;: &ensp;
-                    @Html.DisplayFor(model => model.Request.Product.Vendor.VendorEnName)*@
+            @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+            <br />
+            @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription) &nbsp;: &ensp;
+            @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+            <br />
+            @Html.DisplayNameFor(model => model.Request.Product.Vendor.VendorEnName) &nbsp;: &ensp;
+            @Html.DisplayFor(model => model.Request.Product.Vendor.VendorEnName)*@
 
-                    
+
                 </div>
 
                 <div class="modal-footer-nope" style="padding: 2em;">

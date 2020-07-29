@@ -9,6 +9,7 @@ namespace PrototypeWithAuth.ViewModels
     public class DeleteRequestViewModel
     {
         public Request Request { get; set; } 
+        public bool IsQuote { get; set; }
         
         //The following properties are for remembering where you are on the request Index to follow through to the right page
         public int? Page { get; set; }

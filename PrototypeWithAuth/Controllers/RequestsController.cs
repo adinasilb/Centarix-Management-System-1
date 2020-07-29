@@ -72,7 +72,7 @@ namespace PrototypeWithAuth.Controllers
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser)
                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-                .Where(r => r.IsDeleted == false).Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .OrderBy(r => r.ParentRequest.OrderDate);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
@@ -244,16 +244,17 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> DeleteModal(int? id)
+        public async Task<IActionResult> DeleteModal(int? id, bool isQuote = false)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
+           
             var request = await _context.Requests
-                .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
-                .FirstOrDefaultAsync(m => m.RequestID == id);
+               .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
+               .FirstOrDefaultAsync(m => m.RequestID == id);
+           
             if (request == null)
             {
                 return NotFound();
@@ -261,7 +262,8 @@ namespace PrototypeWithAuth.Controllers
 
             DeleteRequestViewModel deleteRequestViewModel = new DeleteRequestViewModel()
             {
-                Request = request
+                Request = request,
+                IsQuote = isQuote
             };
 
             return View(deleteRequestViewModel);
@@ -286,18 +288,46 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(requestLocationInstance);
                 _context.Update(locationInstance);
             }
+            
             await _context.SaveChangesAsync();
-
-            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
-            return RedirectToAction("Index", new
+            if(deleteRequestViewModel.IsQuote)
             {
-                page = deleteRequestViewModel.Page,
-                requestStatusID = deleteRequestViewModel.RequestStatusID,
-                subcategoryID = deleteRequestViewModel.SubCategoryID,
-                vendorID = deleteRequestViewModel.VendorID,
-                applicationUserID = deleteRequestViewModel.ApplicationUserID,
-                PageType = requestPageTypeEnum
-            });
+                Quote quote = (Quote)request;
+                if (quote.QuoteStatusID == 3)
+                {
+                    return RedirectToAction("LabManageOrders", new
+                    {
+                        RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 3)
+                  .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                  .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                  .Include(r => r.ParentRequest.ApplicationUser)
+                  .ToLookup(r => r.Product.Vendor)
+                    });
+                }
+                return RedirectToAction("LabManageQuotes", new
+                {
+                    RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 3)
+                  .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                  .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                  .Include(r => r.ParentRequest.ApplicationUser)
+                  .ToLookup(r => r.Product.Vendor)
+                });
+
+            }
+            else
+            {
+                AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
+                return RedirectToAction("Index", new
+                {
+                    page = deleteRequestViewModel.Page,
+                    requestStatusID = deleteRequestViewModel.RequestStatusID,
+                    subcategoryID = deleteRequestViewModel.SubCategoryID,
+                    vendorID = deleteRequestViewModel.VendorID,
+                    applicationUserID = deleteRequestViewModel.ApplicationUserID,
+                    PageType = requestPageTypeEnum
+                });
+            }
+           
         }
 
         // GET: Requests/Details/5

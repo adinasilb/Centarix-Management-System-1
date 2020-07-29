@@ -403,6 +403,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 foreach (var contact in contacts)
                 {
+                    //don't actually remove set a boolean
                     _context.Remove(contact);
                     _context.SaveChanges();
                 }

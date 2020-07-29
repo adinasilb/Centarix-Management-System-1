@@ -314,6 +314,16 @@
             return false;
         });
 
+        $(".load-confirm-delete-quote").on("click", function (e) {
+            console.log("in confirm delete");
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "DeleteModal/?id=" + $(this).val() + "&isQuote=true";
+            $.fn.CallPageRequest($itemurl, "delete");
+            return false;
+        });
+
         $(".load-order-details").on("click", function (e) {
             console.log("in order details");
             e.preventDefault();
