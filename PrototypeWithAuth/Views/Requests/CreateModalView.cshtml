@@ -174,7 +174,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom create-modal-invoice-date" />
+                                        <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext for-supply-date-calc border-bottom create-modal-invoice-date" />
                                         <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger invoice-date" />
                                     </div>
                                 </div>
@@ -200,7 +200,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days" />
                                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-4">

@@ -1368,3 +1368,11 @@ td .btn {
     left: 50%;
     transform: translate(-50%, -50%) !important;
 }
+
+.no-arrow-input::-webkit-inner-spin-button,
+.no-arrow-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}

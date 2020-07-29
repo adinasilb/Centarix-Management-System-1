@@ -62,6 +62,7 @@ namespace PrototypeWithAuth.Models
         ///[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
         [Range(1, Double.MaxValue, ErrorMessage = "Field must be more than 0")]
         [Display(Name = "Price")]
+        [Required]
         public double Cost { get; set; } //this is always shekel no matter what currency is
         public string Currency { get; set; }
 

@@ -4,11 +4,11 @@
     Layout = "~/Views/Shared/LabManageOrdersSideBar.cshtml";
 }
 
-    <form method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-        <input type="hidden" asp-for="@Model.RequestsByVendor.FirstOrDefault().Key" />
+    <form method="post" enctype="multipart/form-data" style="height: 100%; ">
+
         @foreach (var vendor in Model.RequestsByVendor)
         {
-
+            <input type="hidden" asp-for="@vendor.Key.VendorID" class="key-vendor-id" />
             <table class="table table-headerspaced table-borderless table-hover mb-5">
                 <thead>
                     <tr class="text-center">
@@ -120,7 +120,7 @@
 
                         <td>
 
-                            <input type="submit" id="reorderRequest" value="Ask For Quote" asp-action="LabManageQuotes" asp-route-id="@vendor.Key.VendorID" class="inv-lab-button float-right" />
+                            <button class="inv-lab-button float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
                         </td>
 
 
