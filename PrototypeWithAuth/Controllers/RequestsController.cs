@@ -2366,7 +2366,12 @@ namespace PrototypeWithAuth.Controllers
             var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == id && r.QuoteStatusID == 3)
                 .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).ToList();
 
+            ConfirmQuoteEmailViewModel confirmEmail1 = new ConfirmQuoteEmailViewModel
+            {
+                Requests = requests,
+                VendorID = id
 
+            };
             ConfirmQuoteOrderEmailViewModel confirmEmail = new ConfirmQuoteOrderEmailViewModel
             {
                 Requests = requests,
@@ -2378,7 +2383,7 @@ namespace PrototypeWithAuth.Controllers
             var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
 
             //render the purchase order view into a string using a the confirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("PurchaseQuoteOrderView", confirmEmail);
+            string renderedView = await RenderPartialViewToString("PurchaseQuoteOrderView", confirmEmail1);
             //instantiate a html to pdf converter object
             HtmlToPdf converter = new HtmlToPdf();
 
