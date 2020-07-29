@@ -325,6 +325,7 @@
             return false;
         });
 
+
         $(".load-quote-details").on("click", function (e) {
             console.log("in order details");
             e.preventDefault();
@@ -359,6 +360,15 @@
             e.stopPropagation();
             $("#loading").show();
             var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+
+        $(".confirm-quote").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "ConfirmQuoteEmailModal/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
