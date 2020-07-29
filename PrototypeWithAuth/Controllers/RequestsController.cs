@@ -2071,151 +2071,6 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-
-        [HttpPost]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmQuoteEmailModal(ConfirmQuoteEmailViewModel confirmEmail)
-        {
-            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == confirmEmail.VendorID && r.QuoteStatusID == 1)
-                     .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor);
-            string uploadFolder1 = Path.Combine("~", "files");
-                string uploadFolder = Path.Combine("wwwroot", "files");
-                string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
-                string uploadFolder3 = Path.Combine(uploadFolder2, "Quotes");
-                string uploadFile = Path.Combine(uploadFolder3, "QuotePDF.pdf");           
-
-            if (System.IO.File.Exists(uploadFile))
-            {
-                //instatiate mimemessage
-                var message = new MimeMessage();
-
-                //instantiate the body builder
-                var builder = new BodyBuilder();
-
-
-                string ownerEmail = requests.FirstOrDefault().ParentRequest.ApplicationUser.Email;
-                string ownerUsername = requests.FirstOrDefault().ParentRequest.ApplicationUser.FirstName + " " + requests.FirstOrDefault().ParentRequest.ApplicationUser.LastName;
-                string ownerPassword = requests.FirstOrDefault().ParentRequest.ApplicationUser.SecureAppPass;
-                string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
-                string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
-
-                //add a "From" Email
-                message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
-
-                // add a "To" Email
-                message.To.Add(new MailboxAddress(vendorName, vendorEmail));
-
-                //subject
-                message.Subject = "Order from Centarix to " + vendorName;
-
-                //body
-                builder.TextBody = @"Please see attached order" + "\n" + "Thank you";
-                builder.Attachments.Add(uploadFile);
-
-                message.Body = builder.ToMessageBody();
-
-                bool wasSent = false;
-
-                using (var client = new SmtpClient())
-                {
-
-                    client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, "gmailpassword");// ownerPassword);//
-
-                    //"FakeUser@123"); // set up two step authentication and get app password
-                    try
-                    {
-                        client.Send(message);
-                        wasSent = true;
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-
-                    client.Disconnect(true);
-                    if (wasSent)
-                    {
-                        var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));                       
-                        foreach (var quote in requests)
-                        {
-                            quote.QuoteStatusID = 2;
-                            quote.ParentQuote.ApplicationUserID = currentUser.Id;
-                            //_context.Update(quote.ParentQuote);
-                            //_context.SaveChanges();
-                            _context.Update(quote);
-                            _context.SaveChanges();
-                        }
-
-                    }
-
-                }
-                return RedirectToAction("LabManageQuotes", new
-                {
-                   RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 1 || r.QuoteStatusID == 2)
-                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Include(r => r.ParentRequest.ApplicationUser)
-                    .ToLookup(r => r.Product.Vendor)
-                });
-            }
-
-            else
-            {
-                return RedirectToAction("Error");
-            }
-
-
-        }
-
-
-        [HttpGet]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmQuoteEmailModal(int id)
-        {
-            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == id && r.QuoteStatusID == 1)
-                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).ToList(); 
-
-        
-            ConfirmQuoteEmailViewModel confirmEmail = new ConfirmQuoteEmailViewModel
-            {
-                Requests = requests,
-                VendorID = id
-
-            };
-            //base url needs to be declared - perhaps should be getting from js?
-            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
-            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
-
-            //render the purchase order view into a string using a the confirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("PurchaseQuoteOrderView", confirmEmail);
-            //instantiate a html to pdf converter object
-            HtmlToPdf converter = new HtmlToPdf();
-
-            PdfDocument doc = new PdfDocument();
-            // create a new pdf document converting an url
-            doc = converter.ConvertHtmlString(renderedView, baseUrl);
-
-            foreach (var request in requests)
-            {
-                //creating the path for the file to be saved
-                string path1 = Path.Combine("wwwroot", "files");
-                string path2 = Path.Combine(path1, request.RequestID.ToString());
-                //create file
-                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                Directory.CreateDirectory(folderPath);
-                string uniqueFileName = "QuotePDF.pdf";
-                string filePath = Path.Combine(folderPath, uniqueFileName);
-                // save pdf document
-                doc.Save(filePath);
-            }
-            // close pdf document
-            doc.Close();
-
-            return PartialView(confirmEmail);
-        }
-
-
-
         [HttpPost]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)
@@ -2310,6 +2165,288 @@ namespace PrototypeWithAuth.Controllers
          * END SEND EMAIL
          */
 
+        [HttpPost]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> ConfirmQuoteEmailModal(ConfirmQuoteEmailViewModel confirmEmail)
+        {
+            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == confirmEmail.VendorID && r.QuoteStatusID == 1)
+                     .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor);
+            string uploadFolder1 = Path.Combine("~", "files");
+            string uploadFolder = Path.Combine("wwwroot", "files");
+            string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
+            string uploadFolder3 = Path.Combine(uploadFolder2, "Quotes");
+            string uploadFile = Path.Combine(uploadFolder3, "QuotePDF.pdf");
+
+            if (System.IO.File.Exists(uploadFile))
+            {
+                //instatiate mimemessage
+                var message = new MimeMessage();
+
+                //instantiate the body builder
+                var builder = new BodyBuilder();
+
+
+                string ownerEmail = requests.FirstOrDefault().ParentRequest.ApplicationUser.Email;
+                string ownerUsername = requests.FirstOrDefault().ParentRequest.ApplicationUser.FirstName + " " + requests.FirstOrDefault().ParentRequest.ApplicationUser.LastName;
+                string ownerPassword = requests.FirstOrDefault().ParentRequest.ApplicationUser.SecureAppPass;
+                string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
+                string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
+
+                //add a "From" Email
+                message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
+
+                // add a "To" Email
+                message.To.Add(new MailboxAddress(vendorName, vendorEmail));
+
+                //subject
+                message.Subject = "Order from Centarix to " + vendorName;
+
+                //body
+                builder.TextBody = @"Please see attached order" + "\n" + "Thank you";
+                builder.Attachments.Add(uploadFile);
+
+                message.Body = builder.ToMessageBody();
+
+                bool wasSent = false;
+
+                using (var client = new SmtpClient())
+                {
+
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate(ownerEmail, "gmailpassword");// ownerPassword);//
+
+                    //"FakeUser@123"); // set up two step authentication and get app password
+                    try
+                    {
+                        client.Send(message);
+                        wasSent = true;
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+                    client.Disconnect(true);
+                    if (wasSent)
+                    {
+                        var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                        foreach (var quote in requests)
+                        {
+                            quote.QuoteStatusID = 2;
+                            quote.ParentQuote.ApplicationUserID = currentUser.Id;
+                            //_context.Update(quote.ParentQuote);
+                            //_context.SaveChanges();
+                            _context.Update(quote);
+                            _context.SaveChanges();
+                        }
+
+                    }
+
+                }
+                return RedirectToAction("LabManageQuotes", new
+                {
+                    RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 1 || r.QuoteStatusID == 2)
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                    .Include(r => r.ParentRequest.ApplicationUser)
+                    .ToLookup(r => r.Product.Vendor)
+                });
+            }
+
+            else
+            {
+                return RedirectToAction("Error");
+            }
+
+
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> ConfirmQuoteEmailModal(int id)
+        {
+            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == id && r.QuoteStatusID == 1)
+                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).ToList();
+
+
+            ConfirmQuoteEmailViewModel confirmEmail = new ConfirmQuoteEmailViewModel
+            {
+                Requests = requests,
+                VendorID = id
+
+            };
+            //base url needs to be declared - perhaps should be getting from js?
+            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+
+            //render the purchase order view into a string using a the confirmEmailViewModel
+            string renderedView = await RenderPartialViewToString("PurchaseQuoteView", confirmEmail);
+            //instantiate a html to pdf converter object
+            HtmlToPdf converter = new HtmlToPdf();
+
+            PdfDocument doc = new PdfDocument();
+            // create a new pdf document converting an url
+            doc = converter.ConvertHtmlString(renderedView, baseUrl);
+
+            foreach (var request in requests)
+            {
+                //creating the path for the file to be saved
+                string path1 = Path.Combine("wwwroot", "files");
+                string path2 = Path.Combine(path1, request.RequestID.ToString());
+                //create file
+                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                Directory.CreateDirectory(folderPath);
+                string uniqueFileName = "QuotePDF.pdf";
+                string filePath = Path.Combine(folderPath, uniqueFileName);
+                // save pdf document
+                doc.Save(filePath);
+            }
+            // close pdf document
+            doc.Close();
+
+            return PartialView(confirmEmail);
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> ConfirmQuoteOrderEmailModal(int id)
+        {
+            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == id && r.QuoteStatusID == 3)
+                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).ToList();
+
+
+            ConfirmQuoteEmailViewModel confirmEmail = new ConfirmQuoteEmailViewModel
+            {
+                Requests = requests,
+                VendorID = id
+
+            };
+            //base url needs to be declared - perhaps should be getting from js?
+            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+
+            //render the purchase order view into a string using a the confirmEmailViewModel
+            string renderedView = await RenderPartialViewToString("PurchaseQuoteOrderView", confirmEmail);
+            //instantiate a html to pdf converter object
+            HtmlToPdf converter = new HtmlToPdf();
+
+            PdfDocument doc = new PdfDocument();
+            // create a new pdf document converting an url
+            doc = converter.ConvertHtmlString(renderedView, baseUrl);
+
+            foreach (var request in requests)
+            {
+                //creating the path for the file to be saved
+                string path1 = Path.Combine("wwwroot", "files");
+                string path2 = Path.Combine(path1, request.RequestID.ToString());
+                //create file
+                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+                Directory.CreateDirectory(folderPath);
+                string uniqueFileName = "OrderPDF.pdf";
+                string filePath = Path.Combine(folderPath, uniqueFileName);
+                // save pdf document
+                doc.Save(filePath);
+            }
+            // close pdf document
+            doc.Close();
+
+            return PartialView(confirmEmail);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> ConfirmQuoteOrderEmailModal(ConfirmQuoteEmailViewModel confirmEmail)
+        {
+            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == confirmEmail.VendorID && r.QuoteStatusID == 2)
+                     .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor);
+            string uploadFolder1 = Path.Combine("~", "files");
+            string uploadFolder = Path.Combine("wwwroot", "files");
+            string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
+            string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
+            string uploadFile = Path.Combine(uploadFolder3, "OrderPDF.pdf");
+
+            if (System.IO.File.Exists(uploadFile))
+            {
+                //instatiate mimemessage
+                var message = new MimeMessage();
+
+                //instantiate the body builder
+                var builder = new BodyBuilder();
+
+
+                string ownerEmail = requests.FirstOrDefault().ParentRequest.ApplicationUser.Email;
+                string ownerUsername = requests.FirstOrDefault().ParentRequest.ApplicationUser.FirstName + " " + requests.FirstOrDefault().ParentRequest.ApplicationUser.LastName;
+                string ownerPassword = requests.FirstOrDefault().ParentRequest.ApplicationUser.SecureAppPass;
+                string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
+                string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
+
+                //add a "From" Email
+                message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
+
+                // add a "To" Email
+                message.To.Add(new MailboxAddress(vendorName, vendorEmail));
+
+                //subject
+                message.Subject = "Order from Centarix to " + vendorName;
+
+                //body
+                builder.TextBody = @"Please see attached order" + "\n" + "Thank you";
+                builder.Attachments.Add(uploadFile);
+
+                message.Body = builder.ToMessageBody();
+
+                bool wasSent = false;
+
+                using (var client = new SmtpClient())
+                {
+
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate(ownerEmail, "gmailpassword");// ownerPassword);//
+
+                    //"FakeUser@123"); // set up two step authentication and get app password
+                    try
+                    {
+                        client.Send(message);
+                        wasSent = true;
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+                    client.Disconnect(true);
+                    if (wasSent)
+                    {
+                        var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                        foreach (var quote in requests)
+                        {
+                            quote.RequestStatusID = 2;
+                            quote.ParentRequest.InvoiceDate = DateTime.Now;
+                            //_context.Update(quote.ParentQuote);
+                            //_context.SaveChanges();
+                            _context.Update(quote);
+                            _context.SaveChanges();
+                        }
+
+                    }
+
+                }
+                return RedirectToAction("LabManageOrders", new
+                {
+                    RequestsByVendor = _context.Requests.OfType<Quote>().Where(r =>  r.QuoteStatusID == 3)
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                    .Include(r => r.ParentRequest.ApplicationUser)
+                    .ToLookup(r => r.Product.Vendor)
+                });
+            }
+
+            else
+            {
+                return RedirectToAction("Error");
+            }
+
+
+        }
 
 
 

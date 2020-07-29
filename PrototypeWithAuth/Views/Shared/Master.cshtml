@@ -372,6 +372,14 @@
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
+        $(".confirm-quote-order").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "ConfirmQuoteOrderEmailModal/?id=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
 
         function AddTempDataMemory() {
             //console.log("about to get set the hidden fors in the modal view to remember where the user was");

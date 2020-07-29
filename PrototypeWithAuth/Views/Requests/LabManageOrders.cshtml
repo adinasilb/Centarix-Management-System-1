@@ -6,9 +6,11 @@
     if (Model.RequestsByVendor.Count() == 0)
     {
         <div><h5>There are currently no orders</h5></div>
+        }
     }
-    foreach (var vendor in Model.RequestsByVendor)
-    {
+    <form method="post" enctype="multipart/form-data" style="height: 100%; ">
+        @foreach (var vendor in Model.RequestsByVendor)
+        {
         <table class="table table-headerspaced table-borderless table-hover mb-5">
             <thead>
                 <tr class="text-center">
@@ -111,12 +113,12 @@
                         <h5><strong>Total: @stringTotalCost</strong></h5>
                     </td>
                     <td>
-                        <button class="inv-lab-button float-right" type="submit" asp-action="LabManageQuotes" asp-route-id="@vendor.Key.VendorID">Order</button>
+                        <button class="inv-lab-button float-right confirm-quote-order" type="submit" value="@vendor.Key.VendorID">Order</button>
                     </td>
                 </tr>
 
             </tbody>
         </table>
-    }
-}
+        }
+        </form>
 
