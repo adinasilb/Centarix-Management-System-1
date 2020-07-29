@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SelectPdf;
 using Microsoft.AspNetCore.Authorization;
 using Org.BouncyCastle.Ocsp;
+using System.Diagnostics;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
@@ -1767,6 +1768,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
+                foreach (var result in results) Debug.WriteLine(result.ErrorMessage);
                 return View("~/Views/Shared/RequestError.cshtml");
             }
             //return RedirectToAction("Index");

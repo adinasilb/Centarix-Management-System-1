@@ -17,6 +17,42 @@ html.wf-loading * {
     border: 1px solid rgba(0, 0, 0, .54);
 }
 
+#carousel-example-multi a.btn-floating {
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+/*#custom-document-indicator {
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+.carousel-indicators li.custom-document-indicator {
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}*/
+
+i.fas {
+    color: rgba(150, 150, 150, .9) !important;
+    background-color: #fff !important;
+    /*border: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;*/
+}
+
+    i.fas:hover {
+        text-shadow: 0px 1px 3px rgba(150, 150, 150, 1);
+    }
+
+.carousel-item div.doc-image-div {
+    border: 1px solid #30BCC9;
+    border-radius: 10px;
+    box-shadow: none !important;
+}
+
 .user-image-bold {
     border-radius: 50%;
     border: 3px solid rgba(0, 0, 0, .54);
