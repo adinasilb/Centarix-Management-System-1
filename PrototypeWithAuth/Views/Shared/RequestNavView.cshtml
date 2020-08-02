@@ -27,16 +27,20 @@
 
     string originalNavClasses = " ";
     string activeClass = " font-weight-bold activeNavLink  ";
-
+    string lastItem = originalNavClasses;
     string type = originalNavClasses;
     string vendor = originalNavClasses;
     string owner = originalNavClasses;
     string location = originalNavClasses;
     string cart = originalNavClasses;
+    string addItem = originalNavClasses;
 
     var SidebarType = TempData["SidebarTitle"];
     switch (SidebarType)
     {
+        case AppUtility.RequestSidebarEnum.LastItem:
+            lastItem += activeClass;
+            break;
         case AppUtility.RequestSidebarEnum.Type:
             type += activeClass;
             break;
@@ -51,6 +55,9 @@
             break;
         case AppUtility.RequestSidebarEnum.Cart:
             cart += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.AddItem:
+            addItem += activeClass;
             break;
     }
 
@@ -86,15 +93,20 @@
 <div style="display: flex">
     <div style="min-width: 100px; min-height:100rem; padding: 5px;" class=" d-md-block sidebar-shadow   navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
         @*<nav class="navbar navbar-expand-lg">*@
-        <ul class="nav flex-column nav-pills nav-stacked mt-4" >
+        <ul class="nav flex-column nav-pills nav-stacked mt-4">
 
             @if (Requests || Inventory)
             {
-                <li class="nav-item my-1 p-0">
 
-                    <button class="btn btn-link opac87 create-product-details bold-hover-effects p-1 add-item-btn " id="sidebar-add-item" onclick="addActive(id)">
-                        <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
-                    </button>
+                <li class="nav-item my-1 @lastItem">
+                    <a href="@Url.ActionLink("Index", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1 add-item"><img src="~/images/css/inventory/sidebar/list.png" alt="Last item" /><br />Last Item</a>
+                </li>
+            }
+
+            @if (Requests || Inventory)
+            {
+                <li class="nav-item my-1 @addItem">
+                    <a href="@Url.ActionLink("CreateModalNewView", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1">  <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item</a>
                 </li>
             }
             @if (Requests || Inventory)
