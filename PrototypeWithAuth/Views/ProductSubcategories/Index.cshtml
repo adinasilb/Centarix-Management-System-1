@@ -34,7 +34,16 @@
                     @*@Html.ActionLink(Model.ElementAt(i).ProductSubcategoryDescription, "Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)*@
 
                     <a href="@Url.ActionLink("Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)">
-                        <img class="rounded-sm" style="height:100px" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle"/> <br />@Model.ElementAt(i).ProductSubcategoryDescription
+                        @if (Model.ElementAt(i).ImageURL != null)
+                        {
+                            <img class="rounded-sm" style="height:100px" src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
+                        }
+                        else
+                        {
+
+                            <img class="rounded-sm" style="height:100px" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle" />
+                        }
+                        <br />@Model.ElementAt(i).ProductSubcategoryDescription
                     </a>
 
                 </fieldset>

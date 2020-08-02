@@ -146,10 +146,16 @@ namespace PrototypeWithAuth.Controllers
 
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
-            else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
+            else if (PageType == AppUtility.RequestPageTypeEnum.Inventory )
             {
                 //partial and clarify?
                 RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3);
+            }
+            else if (PageType == AppUtility.RequestPageTypeEnum.Summary)
+            {
+                //partial and clarify?
+                //RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).GroupBy(x => x.Product).Select(y => y.First()).Distinct();
+
             }
             else
             {
