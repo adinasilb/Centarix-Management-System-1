@@ -2199,17 +2199,17 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmQuoteEmailModal(ConfirmQuoteEmailViewModel confirmEmail)
+        public async Task<IActionResult> ConfirmQuoteEmailModal(ConfirmQuoteEmailViewModel confirmQuoteEmail)
         {
             List<Quote> requests;
-            if (confirmEmail.IsResend)
+            if (confirmQuoteEmail.IsResend)
             {
-                requests = _context.Requests.OfType<Quote>().Where(r => r.RequestID == confirmEmail.RequestID)
+                requests = _context.Requests.OfType<Quote>().Where(r => r.RequestID == confirmQuoteEmail.RequestID)
                .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
             }
             else
             {
-                requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == confirmEmail.VendorID && r.QuoteStatusID == 1)
+                requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.QuoteStatusID == 1)
                                .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
             }
       
@@ -2322,7 +2322,7 @@ namespace PrototypeWithAuth.Controllers
             ConfirmQuoteEmailViewModel confirmEmail = new ConfirmQuoteEmailViewModel
             {
                 Requests = requests,
-                VendorID = id,
+                VendorId = id,
                 RequestID = id
 
             };
@@ -2360,22 +2360,17 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
+  
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmQuoteOrderEmailModal(int id)
         {
             var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == id && r.QuoteStatusID == 3)
                 .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).ToList();
 
-            ConfirmQuoteEmailViewModel confirmEmail1 = new ConfirmQuoteEmailViewModel
-            {
-                Requests = requests,
-                VendorID = id
-
-            };
             ConfirmQuoteOrderEmailViewModel confirmEmail = new ConfirmQuoteOrderEmailViewModel
             {
                 Requests = requests,
-                VendorID = id
+                VendorId = id
 
             };
             //base url needs to be declared - perhaps should be getting from js?
@@ -2383,7 +2378,7 @@ namespace PrototypeWithAuth.Controllers
             var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
 
             //render the purchase order view into a string using a the confirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("PurchaseQuoteOrderView", confirmEmail1);
+            string renderedView = await RenderPartialViewToString("PurchaseQuoteOrderView", confirmEmail);
             //instantiate a html to pdf converter object
             HtmlToPdf converter = new HtmlToPdf();
 
@@ -2411,10 +2406,11 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmQuoteOrderEmailModal(ConfirmQuoteOrderEmailViewModel confirmEmail)
+        public async Task<IActionResult> ConfirmQuoteOrderEmailModal(ConfirmQuoteOrderEmailViewModel confirmQuoteOrderEmail)
         {
-            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == confirmEmail.VendorID && r.QuoteStatusID == 3)
+            var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == confirmQuoteOrderEmail.VendorId && r.QuoteStatusID == 3)
                      .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor);
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");

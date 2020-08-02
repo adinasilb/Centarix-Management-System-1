@@ -9,8 +9,7 @@ namespace PrototypeWithAuth.ViewModels
     public class ConfirmQuoteOrderEmailViewModel
     {
         public List<Quote> Requests { get; set; }
-        public int VendorID { get; set; }
-        public int RequestID { get; set; }
-        public bool IsResend { get; set; }
+        public int VendorId { get; set; }
+
     }
 }
