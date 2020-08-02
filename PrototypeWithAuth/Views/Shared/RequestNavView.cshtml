@@ -12,6 +12,7 @@
     bool Cart = false;
     bool Requests = false;
     bool Inventory = false;
+    bool Summary = false;
     switch (pageType)
     {
         case AppUtility.RequestPageTypeEnum.Request:
@@ -19,6 +20,9 @@
             break;
         case AppUtility.RequestPageTypeEnum.Inventory:
             Inventory = true;
+            break;
+        case AppUtility.RequestPageTypeEnum.Summary:
+            Summary = true;
             break;
         case AppUtility.RequestPageTypeEnum.Cart:
             Cart = true;
@@ -95,7 +99,7 @@
         @*<nav class="navbar navbar-expand-lg">*@
         <ul class="nav flex-column nav-pills nav-stacked mt-4">
 
-            @if (Requests || Inventory)
+            @if (Requests || Inventory || Summary)
             {
 
                 <li class="nav-item my-1 @lastItem">
@@ -103,27 +107,27 @@
                 </li>
             }
 
-            @if (Requests || Inventory)
+            @if (Requests || Inventory || Summary)
             {
                 <li class="nav-item my-1 @addItem">
                     <a href="@Url.ActionLink("CreateModalNewView", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1">  <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item</a>
                 </li>
             }
-            @if (Requests || Inventory)
+            @if (Requests || Inventory || Summary)
             {
                 <li class="nav-item bold-hover-effects my-1 @type">
                     <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
                 </li>
 
             }
-            @if (Requests || Inventory)
+            @if (Requests || Inventory || Summary)
             {
 
                 <li class="nav-item my-1 @vendor">
                     <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
                 </li>
             }
-            @if (Requests || Inventory)
+            @if (Requests || Inventory || Summary)
             {
                 @*have to create contorller for application user?*@
 
@@ -131,7 +135,7 @@
                     <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
                 </li>
             }
-            @if (Inventory)
+            @if (Inventory || Summary)
             {
 
                 @*Redo the location class in the controller*@

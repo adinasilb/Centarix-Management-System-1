@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.AppData
     public static class AppUtility
     {
         public enum CommentTypeEnum { Warning, Comment}
-        public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location }
+        public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location, Summary }
         public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers, Payments } //these are all going to the ParentRequestIndex
         public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, Search }
         public enum LabManagementSidebarEnum { None, Orders, Quotes }
