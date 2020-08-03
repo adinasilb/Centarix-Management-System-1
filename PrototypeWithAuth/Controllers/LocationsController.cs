@@ -48,11 +48,19 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public IActionResult Index()
+        public IActionResult Index(AppUtility.MenuItems SectionType)
         {
-
+            TempData["SectionType"] = SectionType;
             // Added by Dani because to make CSS work better
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
+            if (SectionType.Equals(AppUtility.MenuItems.LabManagement))
+            {
+                TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Locations;
+            }
+            else
+            {
+                TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
+            }
+          
             LocationTypeViewModel locationTypeViewModel = new LocationTypeViewModel()
             {
                 LocationTypes = _context.LocationTypes.Where(lt => lt.Depth == 0)

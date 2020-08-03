@@ -2854,10 +2854,10 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> Search()
+        public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
         {
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Search;
-
+            TempData["SectionType"] = SectionType;
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
                 ParentCategories = await _context.ParentCategories.ToListAsync(),

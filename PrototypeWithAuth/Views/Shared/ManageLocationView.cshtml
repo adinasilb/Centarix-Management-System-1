@@ -1,87 +1,94 @@
-﻿
-@{
+﻿@using PrototypeWithAuth.Data;
+@using PrototypeWithAuth.AppData;
+@if (TempData["SectionType"].Equals(AppUtility.MenuItems.LabManagement))
+{
+    ViewData["Title"] = "ManageLocationView";
+    Layout = "~/Views/Shared/LabManageView.cshtml";
+}
+else
+{
     ViewData["Title"] = "ManageLocationView";
     Layout = "~/Views/Shared/View.cshtml";
 }
-    <div style="display: flex;">
 
-        <div style="width: 110px; min-height: 100rem;" class="p-2 sidebar-shadow text-center p-3">
-            <ul class="nav flex-column nav-pills nav-stacked mt-3 ">
-                <li class="nav-item">
-                    <a href="#" class="inv-link-clr" style="        color: #2196F3;"> <i class="icon-zoom_in-24px-01" style="font-size: 2rem;"></i> <br /> List </a>
-                </li>
-            </ul>
-        </div>
-        <div style="flex-grow: 1; position:relative; padding: 2rem;">
-            @RenderBody()
-        </div>
+<div style="display: flex;">
+    <div style="width: 110px; min-height: 100rem;" class="p-2 sidebar-shadow text-center p-3">
+        <ul class="nav flex-column nav-pills nav-stacked mt-3 ">
+            <li class="nav-item">
+                <a href="#" class="inv-link-clr" style="        color: #2196F3;"> <i class="icon-zoom_in-24px-01" style="font-size: 2rem;"></i> <br /> List</a>
+            </li>
+        </ul>
     </div>
+    <div style="flex-grow: 1; position:relative; padding: 2rem;">
+        @RenderBody()
+        </ div >
+        </ div >
 
-<!-- Add Location Modal -->
-<div class="modal location-modal-view" id="myModal" role="dialog" aria-labelledby="Request">
-</div>
+        < !--Add Location Modal -->
+        <div class="modal location-modal-view" id="myModal" role="dialog" aria-labelledby="Request">
+        </div>
 
-@*<script src="~/js/site.js" asp-append-version="true"></script>*@
+        @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 
-<script>
-    $(".load-add-location").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var $itemurl = "Locations/AddLocation";
-        var $modal = $(".location-modal-view");
-        $.fn.CallPage($itemurl, $modal, true);
-        return false;
-    });
+        <script>
+            $(".load-add-location").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $itemurl = "Locations/AddLocation";
+                var $modal = $(".location-modal-view");
+                $.fn.CallPage($itemurl, $modal, true);
+                return false;
+            });
 
 
-    $.fn.CallPage = function ($itemurl, $modal, $isaddlocation) {
-        $.ajax({
-            async: true,
-            url: $itemurl,
-            type: 'GET',
-            cache: false,
-            success: function (data) {
-                console.log("success!");
-                //replaces the modal-view class with the ModalView view
-                $modal.html(data);
-                //turn off data dismiss by clicking out of the box and by pressing esc
-                $modal.modal({
-                    backdrop: 'static',
-                    keyboard: false
+            $.fn.CallPage = function ($itemurl, $modal, $isaddlocation) {
+                $.ajax({
+                    async: true,
+                    url: $itemurl,
+                    type: 'GET',
+                    cache: false,
+                    success: function (data) {
+                        console.log("success!");
+                        //replaces the modal-view class with the ModalView view
+                        $modal.html(data);
+                        //turn off data dismiss by clicking out of the box and by pressing esc
+                        $modal.modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+                        //shows the modal
+                        $(".modal").modal('show');
+                        //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                        $(".modal-backdrop").remove();
+
+
+                        if ($isaddlocation) {
+                            console.log("inside of modal if statement");
+                            $(".load-add-location-type").on("click", function (e) {
+
+                                console.log("load add location type 3");
+                                e.preventDefault();
+                                e.stopPropagation();
+                                var $itemurl = "Locations/AddLocationType";
+                                var $modal = $(".location-modal-view");
+                                $("location-modal-view").css("display", "none");
+                                //IMPT REOPEN ON CLOSING
+                                $.fn.CallPage($itemurl, $modal, false);
+                            });
+
+
+                        }
+                        else {
+                            $(".addSublocation").hide();
+                            $(".btnAddSublocation").on("click", function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log("Location manage location view js");
+                                $.fn.AddSublocation();
+                            });
+                        }
+
+                    }
                 });
-                //shows the modal
-                $(".modal").modal('show');
-                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                $(".modal-backdrop").remove();
-
-
-                if ($isaddlocation) {
-                    console.log("inside of modal if statement");
-                    $(".load-add-location-type").on("click", function (e) {
-
-                        console.log("load add location type 3");
-                        e.preventDefault();
-                        e.stopPropagation();
-                        var $itemurl = "Locations/AddLocationType";
-                        var $modal = $(".location-modal-view");
-                        $("location-modal-view").css("display", "none");
-                        //IMPT REOPEN ON CLOSING
-                        $.fn.CallPage($itemurl, $modal, false);
-                    });
-
-
-                }
-                else {
-                    $(".addSublocation").hide();
-                    $(".btnAddSublocation").on("click", function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log("Location manage location view js");
-                        $.fn.AddSublocation();
-                    });
-                }
-
             }
-        });
-    }
-</script>
+        </script>
