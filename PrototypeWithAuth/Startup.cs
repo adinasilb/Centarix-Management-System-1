@@ -83,21 +83,8 @@ namespace PrototypeWithAuth
         {
             if (env.IsDevelopment())
             {
-
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
-                app.UseRouting();
-                app.UseAuthentication();
-                app.UseAuthorization();
-
-                app.UseSession();
-
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                    endpoints.MapRazorPages();
-                });
             }
             else
             {
@@ -106,12 +93,13 @@ namespace PrototypeWithAuth
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            //app.UseStaticFiles();
 
-            //app.UseRouting();
-
-            // app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
+            app.UseRouting();
+            
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
