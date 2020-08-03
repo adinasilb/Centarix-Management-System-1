@@ -314,6 +314,16 @@
             return false;
         });
 
+        $(".load-confirm-delete-quote").on("click", function (e) {
+            console.log("in confirm delete");
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "DeleteModal/?id=" + $(this).val() + "&isQuote=true";
+            $.fn.CallPageRequest($itemurl, "delete");
+            return false;
+        });
+
         $(".load-order-details").on("click", function (e) {
             console.log("in order details");
             e.preventDefault();
@@ -352,32 +362,6 @@
             e.stopPropagation();
             var $itemurl = "Requests/ConfirmEmailModal";
             $.fn.CallPageRequest($itemurl, "email");
-            return false;
-        });
-
-        $(".load-confirm-email").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
-            $.fn.CallPageRequest($itemurl, "confirmemail");
-            return false;
-        });
-
-        $(".confirm-quote").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "ConfirmQuoteEmailModal/?id=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "confirmemail");
-            return false;
-        });
-        $(".confirm-quote-order").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "ConfirmQuoteOrderEmailModal/?id=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
 
@@ -510,6 +494,42 @@
             $.fn.ChangeVendorBusinessId(vendorid);
 
         }
+
+
+        $(".load-confirm-email").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+
+        $(".confirm-quote").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "ConfirmQuoteEmailModal/?id=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+        $(".confirm-quote-resend").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "ConfirmQuoteEmailModal/?id=" + $(this).val() + "&isResend=true";
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+        $(".confirm-quote-order").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "ConfirmQuoteOrderEmailModal/?id=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+
 
         function addActive(id) {
             var item = document.getElementById(id);
@@ -713,6 +733,8 @@
             });
         });
 
+        
+        
     </script>
 
 </body>

@@ -12,6 +12,7 @@
     bool Cart = false;
     bool Requests = false;
     bool Inventory = false;
+    bool Summary = false;
     switch (pageType)
     {
         case AppUtility.RequestPageTypeEnum.Request:
@@ -20,6 +21,9 @@
         case AppUtility.RequestPageTypeEnum.Inventory:
             Inventory = true;
             break;
+        case AppUtility.RequestPageTypeEnum.Summary:
+            Summary = true;
+            break;
         case AppUtility.RequestPageTypeEnum.Cart:
             Cart = true;
             break;
@@ -27,16 +31,20 @@
 
     string originalNavClasses = " ";
     string activeClass = " font-weight-bold activeNavLink  ";
-
+    string lastItem = originalNavClasses;
     string type = originalNavClasses;
     string vendor = originalNavClasses;
     string owner = originalNavClasses;
     string location = originalNavClasses;
     string cart = originalNavClasses;
+    string addItem = originalNavClasses;
 
     var SidebarType = TempData["SidebarTitle"];
     switch (SidebarType)
     {
+        case AppUtility.RequestSidebarEnum.LastItem:
+            lastItem += activeClass;
+            break;
         case AppUtility.RequestSidebarEnum.Type:
             type += activeClass;
             break;
@@ -51,6 +59,9 @@
             break;
         case AppUtility.RequestSidebarEnum.Cart:
             cart += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.AddItem:
+            addItem += activeClass;
             break;
     }
 
@@ -86,32 +97,37 @@
 <div style="display: flex">
     <div style="min-width: 100px; min-height:100rem; padding: 5px;" class=" d-md-block sidebar-shadow   navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
         @*<nav class="navbar navbar-expand-lg">*@
-        <ul class="nav flex-column nav-pills nav-stacked mt-4" >
+        <ul class="nav flex-column nav-pills nav-stacked mt-4">
 
-            @if (Requests || Inventory)
+            @if (Requests || Inventory || Summary)
             {
-                <li class="nav-item my-1 p-0">
 
-                    <button class="btn btn-link opac87 create-product-details bold-hover-effects p-1 add-item-btn " id="sidebar-add-item" onclick="addActive(id)">
-                        <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item
-                    </button>
+                <li class="nav-item my-1 @lastItem">
+                    <a href="@Url.ActionLink("Index", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1 add-item"><img src="~/images/css/inventory/sidebar/list.png" alt="Last item" /><br />Last Item</a>
                 </li>
             }
-            @if (Requests || Inventory)
+
+            @if (Requests || Inventory || Summary)
+            {
+                <li class="nav-item my-1 @addItem">
+                    <a href="@Url.ActionLink("CreateModalNewView", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1">  <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item</a>
+                </li>
+            }
+            @if (Requests || Inventory || Summary)
             {
                 <li class="nav-item bold-hover-effects my-1 @type">
                     <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
                 </li>
 
             }
-            @if (Requests || Inventory)
+            @if (Requests || Inventory || Summary)
             {
 
                 <li class="nav-item my-1 @vendor">
                     <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
                 </li>
             }
-            @if (Requests || Inventory)
+            @if (Requests || Inventory )
             {
                 @*have to create contorller for application user?*@
 
@@ -119,7 +135,7 @@
                     <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
                 </li>
             }
-            @if (Inventory)
+            @if (Inventory || Summary)
             {
 
                 @*Redo the location class in the controller*@

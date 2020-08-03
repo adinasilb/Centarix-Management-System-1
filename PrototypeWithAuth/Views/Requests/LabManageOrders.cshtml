@@ -91,8 +91,7 @@
                             @request.ParentRequest.ApplicationUser.FirstName @request.ParentRequest.ApplicationUser.LastName
                         </td>
                         <td width="10%">
-                            <button class="btn no-box-shadow p-0" data-title="delete" @*value="@item.RequestID"*@><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button> @*delete*@
-
+                            <button class="btn no-box-shadow p-0 mx-5 load-confirm-delete-quote" data-title="delete" value="@request.RequestID"><img src="~/images/css/inventory/add-item/other icons/delete_dis.png" /></button>
                         </td>
                     </tr>
                 }
@@ -113,7 +112,7 @@
                         <h5><strong>Total: @stringTotalCost</strong></h5>
                     </td>
                     <td>
-                        <button class="inv-lab-button float-right confirm-quote-order" type="submit" value="@vendor.Key.VendorID">Order</button>
+                        <button class="inv-lab-button float-right confirm-quote-order" type="button" value="@vendor.Key.VendorID">Order</button>
                     </td>
                 </tr>
 

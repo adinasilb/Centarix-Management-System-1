@@ -13,10 +13,11 @@ namespace PrototypeWithAuth.AppData
     public static class AppUtility
     {
         public enum CommentTypeEnum { Warning, Comment}
-        public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location }
+        public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location, Summary }
         public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers, Payments } //these are all going to the ParentRequestIndex
         public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, Search }
-        public enum RequestSidebarEnum { None, Type, Vendor, Owner, Location, Cart }
+        public enum LabManagementSidebarEnum { None, Orders, Quotes }
+        public enum RequestSidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem }
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits} //Listed in the site.js (if you change here must change there)
         public enum UserPageTypeEnum { None, Index, Add }
         public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }

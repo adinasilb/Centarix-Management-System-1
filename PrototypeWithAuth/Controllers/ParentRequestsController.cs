@@ -136,7 +136,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> GeneralPaymentList()
         {
 
-            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests
+            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Where(pr=>pr.Requests.Count()!=0)
                 .Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.ProductSubcategory)
                 .ThenInclude(ps => ps.ParentCategory).Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(pr => pr.Vendor)
                 .Include(pr => pr.Requests).ThenInclude( r=> r.UnitType)
@@ -380,6 +380,7 @@ namespace PrototypeWithAuth.Controllers
                          */
                         .Select(pr => pr.ParentRequest.ParentRequestID).ToList();
                     ParentRequestsFiltered = _context.ParentRequests
+                        .Where(pr=>pr.Requests.FirstOrDefault()!=null)
                         .Where(pr => parentRequestIds.Contains(pr.ParentRequestID))
                         .Select(pr => new ParentRequestListViewModel
                         {

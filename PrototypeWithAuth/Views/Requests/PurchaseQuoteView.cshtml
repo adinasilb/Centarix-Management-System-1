@@ -17,7 +17,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-    <title>Order Summary</title>
+    <title>Quote Summary</title>
 </head>
 <body style="font-family: 'Roboto', sans-serif;">
     @Html.HiddenFor(vm => Model.Requests)
@@ -87,13 +87,18 @@
                         </tr>
 
                     }
+                    }
+                    @{ double total = @Model.Requests.Sum(r => r.Cost);
+                        double vat = total * .17;
+                        double totalWithVat = total + vat;}
                     <tr>
                         <td colspan="3" rowspan="5" class="borderless-cell">
                             <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
                         </td>
                         <td>Total</td>
-                        <td></td>
+                        <td>@total.ToString("N2")</td>
                     </tr>
+
                     <tr>
                         <td>Discount @*@Html.DisplayFor(modelItem => Model.Request.)*@</td>
                         @*@{double discount = Model.Request.Cost * Model.Request.Discount; }*@
@@ -107,14 +112,14 @@
                     </tr>
                     <tr>
                         <td>VAT [17%]</td>
-                        @* @{ double vat = totalWithDis * Model.Request.VAT }*@
-                        <td>@*@vat*@</td>
+                        @* make the vat a global variable*@
+                        <td>@vat.ToString("N2")</td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold;">Total To Pay</td>
-                        <td style="font-weight: bold;">@*@vat+totalWithDis*@</td>
-                    </tr>
 
+                        <td style="font-weight: bold;">@totalWithVat.ToString("N2")</td>
+                    </tr>
                 </tbody>
             </table>
         </div>

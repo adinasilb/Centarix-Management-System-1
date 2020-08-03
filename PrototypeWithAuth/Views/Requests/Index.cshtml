@@ -78,6 +78,7 @@
     //saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
     bool Request = false;
     bool Inventory = false;
+    bool Summary = false;
     if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
     {
         Request = true;
@@ -85,6 +86,10 @@
     else if (PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
     {
         Inventory = true;
+    }
+    else if (PageType.Equals(AppUtility.RequestPageTypeEnum.Summary))
+    {
+        Summary = true;
     }
 
     string newButtonText = "";
@@ -191,7 +196,12 @@
                 <th>Item Name</th>
                 @*<th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>*@
                 <th>Vendor</th>
-                <th>Amount</th> @*Placeholder until we insert total*@
+                @if (!Summary)
+                {
+                    <th>Amount</th>
+                }
+
+                @*Placeholder until we insert total*@
                 <th>@Html.DisplayNameFor(m => m[0].Cost)</th>
                 @*Later on should have a better location...*@
                 @if (Inventory)
@@ -200,8 +210,16 @@
                 }
                 <th>@Html.DisplayNameFor(m => m[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
                 @*<th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>*@
-                <th>Owner</th>
-                <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
+
+                @if (!Summary)
+                {
+                    <th>Owner</th>
+                    <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
+                }
+                else
+                {
+                    <th>LastOrdered</th>
+                }
                 <th></th>
                 <th></th>
             </tr>
@@ -209,116 +227,119 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr class="text-center inv-list-item">
-                    <td>
-                        @if (item.Product.ProductSubcategory.ImageURL != null)
+            <tr class="text-center inv-list-item">
+                <td>
+                    @if (item.Product.ProductSubcategory.ImageURL != null)
+                    {
+                        var imageurl = item.Product.ProductSubcategory.ImageURL;
+                        <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                    }
+                    else
+                    {
+                        <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                    }
+                </td>
+
+                <td> <button class="btn inv-link-clr load-product-details no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
+
+                <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
+
+                <td>
+                    <ul style="list-style: none;">
+
+                        @if (item.Unit != null)
                         {
-                            var imageurl = item.Product.ProductSubcategory.ImageURL;
-                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
-                        }
-                        else
-                        {
-                            <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
-                        }
-                    </td>
-
-                    <td> <button class="btn inv-link-clr load-product-details no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
-
-                    <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
-
-                    <td>
-                        <ul style="list-style: none;">
-
-                            @if (item.Unit != null)
+                            <li>
+                                @Html.DisplayFor(modelItem => item.Unit)
+                                @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                            </li>
+                            @if (item.SubUnit != null)
                             {
                                 <li>
-                                    @Html.DisplayFor(modelItem => item.Unit)
-                                    @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                                    @Html.DisplayFor(modelItem => item.SubUnit)
+                                    @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
                                 </li>
-                                @if (item.SubUnit != null)
+                                @if (item.SubSubUnit != null)
                                 {
                                     <li>
-                                        @Html.DisplayFor(modelItem => item.SubUnit)
-                                        @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
+                                        @Html.DisplayFor(modelItem => item.SubSubUnit)
+                                        @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
                                     </li>
-                                    @if (item.SubSubUnit != null)
-                                    {
-                                        <li>
-                                            @Html.DisplayFor(modelItem => item.SubSubUnit)
-                                            @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
-                                        </li>
-                                    }
                                 }
-
                             }
 
-
-                        </ul>
-                    </td> @*Computed column?*@
-                    <td>
-                        @*@Html.DisplayFor(modelItem => item.Cost)*@
-                        @{
-                            decimal cost = (decimal)item.Cost;
-                            string formattedCost = cost.ToString("C02");
                         }
-                        @formattedCost
-                    </td>
-                    @*Later on should have a better location...*@
-                    @if (Inventory)
-                    {
 
-                        <td>
-                            @if (item.RequestLocationInstances != null)
-                            {
-                                @Html.DisplayFor(modelItem => item.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName)
-                            }
-                        </td>
+
+                    </ul>
+                </td> @*Computed column?*@
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.Cost)*@
+                    @{
+                        decimal cost = (decimal)item.Cost;
+                        string formattedCost = cost.ToString("C02");
                     }
-                    <td> @Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription) </td>
+                    @formattedCost
+                </td>
+                @*Later on should have a better location...*@
+                @if (Inventory)
+                {
+
+                    <td>
+                        @if (item.RequestLocationInstances != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName)
+                        }
+                    </td>
+                }
+                <td> @Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription) </td>
+                @if (!Summary)
+                {
                     <td> @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName) </td>
+                }
 
-                    <td> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
+                <td> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
 
-                    <td style="width:3rem;">
-                        @if (item.RequestStatusID == 1)
+                <td style="width:3rem;">
+                    @if (item.RequestStatusID == 1)
+                    {
+                        //this is a nested if b/c if user can't approve then i still don't want it to go the the else
+                        if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
                         {
-                            //this is a nested if b/c if user can't approve then i still don't want it to go the the else
-                            if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
+                            if (item is Quote)
                             {
-                                if (item is Quote)
-                                {                            
-                                    <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder", new { id = item.RequestID })">
-                                        <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
-                                    </a>
-                                }
-                                else
-                                {
-                                    @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
-
-                                    <button asp-action="ConfirmeEmailModal" value="@item.RequestID" data-title="approve" class="btn load-confirm-email no-box-shadow"><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i> </button> //approve
-                                }
-
-
+                                <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder", new { id = item.RequestID })">
+                                    <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
+                                </a>
                             }
-                        }
-                        else if (item.RequestStatusID == 2)
-                        {
-                            <button class="btn load-receive-and-location no-box-shadow" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
-                        }
-                        else
-                        {
-                            @*work on getting the correct syntax to create a new product with*@
-                            <button class="btn load-order-details no-box-shadow" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
-                        }
-                    </td>
-                    @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
-                    <td style="width:3rem;">
-                        <button class="btn load-confirm-delete no-box-shadow" data-title="delete" value="@item.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button> @*delete*@
+                            else
+                            {
+                                @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
 
-                        @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
-                        @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
-                    </td>
-                </tr>
+                                <button asp-action="ConfirmeEmailModal" value="@item.RequestID" data-title="approve" class="btn load-confirm-email no-box-shadow"><i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i> </button> //approve
+                            }
+
+
+                        }
+                    }
+                    else if (item.RequestStatusID == 2)
+                    {
+                        <button class="btn load-receive-and-location no-box-shadow" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
+                    }
+                    else
+                    {
+                        @*work on getting the correct syntax to create a new product with*@
+                        <button class="btn load-order-details no-box-shadow" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
+                    }
+                </td>
+                @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
+                <td style="width:3rem;">
+                    <button class="btn load-confirm-delete no-box-shadow" data-title="delete" value="@item.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button> @*delete*@
+
+                    @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
+                    @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
+                </td>
+            </tr>
             }
         </tbody>
     </table>

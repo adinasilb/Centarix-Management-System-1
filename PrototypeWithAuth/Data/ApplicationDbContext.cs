@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
-
-
+using Abp.Domain.Entities;
 
 namespace PrototypeWithAuth.Data
 {
@@ -117,10 +116,11 @@ namespace PrototypeWithAuth.Data
             //.OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Request>()
+            .HasQueryFilter(item => !item.IsDeleted)
             .HasOne<RequestStatus>(r => r.RequestStatus)
             .WithMany(rs => rs.Requests)
             .HasForeignKey(r => r.RequestStatusID);
-
+            
             //modelBuilder.Entity<Vendor>()
             //.HasOne<ParentCategory>(v => v.ParentCategory)
             //.WithMany(pc => pc.Vendors)

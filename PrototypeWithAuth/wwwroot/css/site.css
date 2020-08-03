@@ -48,7 +48,7 @@ i.fas {
     }
 
 .carousel-item div.doc-image-div {
-    border: 1px solid #30BCC9;
+    border: 1px solid #2196F3;
     border-radius: 10px;
     box-shadow: none !important;
 }
@@ -377,8 +377,8 @@ input.select-dropdown {
     }
 
 .inv-button {
-    background-color: #30BCC9;
-    border: 1px solid #30BCC9;
+    background-color: #2196F3;
+    border: 1px solid #2196F3;
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -670,7 +670,7 @@ select option[value="US"] {
 
     .inv-link-clr:hover {
         font-weight: bold;
-        color: #30BCC9;
+        color: #2196F3;
         text-decoration: none;
     }
 
@@ -776,12 +776,12 @@ a.bold-hover-effects {
 /*.ourNavBar li a { color: #333 }*/
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     opacity: 1;
-    filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
+    filter: invert(45%) sepia(99%) saturate(2048%) hue-rotate(185deg) brightness(100%) contrast(91%);
 }
 
 .ourNavBar li button.add-item-btn.active {
     opacity: 1;
-    color: #30BCC9;
+    color: #2196F3;
 }
 
 .ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
@@ -791,7 +791,9 @@ a.bold-hover-effects {
 .ourNavBar li.activeNavLinkLabMan a, .ourNavBar a.activeNavLabMan {
     filter: invert(67%) sepia(16%) saturate(520%) hue-rotate(155deg) brightness(88%) contrast(81%);
 }
-
+a.activeNavLabMan {
+    filter: invert(67%) sepia(16%) saturate(520%) hue-rotate(155deg) brightness(88%) contrast(81%);
+}
 .ourNavBar .activeUserClass {
     opacity: 1;
     filter: brightness(0) saturate(100%) invert(67%) sepia(32%) saturate(3488%) hue-rotate(294deg) brightness(89%) contrast(91%);
@@ -891,8 +893,8 @@ a.nav-link {
 .container-fluid ul li a.nav-link.active {
     background-color: transparent;
     border-width: 0px;
-    border-bottom: 4px solid #30BCC9;
-    color: #30BCC9;
+    border-bottom: 4px solid #2196F3;
+    color: #2196F3;
 }
 
 .container-fluid ul li a.user-nav-link.active {
@@ -959,16 +961,16 @@ a.nav-link {
     .new-button:hover {
         /*background-color: #338f84;*/
         opacity: 1;
-        color: #30BCC9;
+        color: #2196F3;
         background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
         border-radius: 3px;
         text-decoration: none;
     }
 
     .new-button.active {
-        color: #30BCC9;
+        color: #2196F3;
         font-weight: 500;
-        border-bottom: 4px solid #30BCC9;
+        border-bottom: 4px solid #2196F3;
     }
 
 .zoom-in-btn {
@@ -994,12 +996,12 @@ a.nav-link {
 /*<<<< Location selected coloring >>>>*/
 .td-selected {
     opacity: 1;
-    filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
+    filter: invert(45%) sepia(99%) saturate(2048%) hue-rotate(185deg) brightness(100%) contrast(91%);
 }
 
 .td-selected-inside {
     opacity: 1;
-    filter: invert(67%) sepia(92%) saturate(371%) hue-rotate(134deg) brightness(82%) contrast(90%);
+    filter: invert(45%) sepia(99%) saturate(2048%) hue-rotate(185deg) brightness(100%) contrast(91%);
 }
 
 .home-outer-tag {
@@ -1023,7 +1025,7 @@ a.nav-link {
 }
 
 .td-selected-outer {
-    border-left: .3rem solid #30BCC9 !important;
+    border-left: .3rem solid #2196F3 !important;
     border-right: 0 !important;
     background: #F4F7F9 0% 0% no-repeat padding-box;
 }
@@ -1175,7 +1177,7 @@ table.table.visualzoom {
 
 /* When the checkbox is checked, add a blue background */
 .checktainer input:checked ~ .checkmark {
-    background-color: #30BCC9;
+    background-color: #2196F3;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -1265,9 +1267,9 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
             left: 4px;
             font-size: 1.7em;
             line-height: 0.8;
-            background-color: #30BCC9;
+            background-color: #2196F3;
             color: white;
-            border: 1px solid #30BCC9;
+            border: 1px solid #2196F3;
             border-radius: 2px;
             transition: all .1s;
             font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', Arial;

@@ -92,12 +92,12 @@
                             <td width="7%">
                                 @if (request.QuoteStatusID == 2)
                                 {
-                                    <button class="inv-lab-button float-right">resend</button>
+                                    <button class="inv-lab-button float-right text-center confirm-quote-resend" value="@request.RequestID">resend</button>
                                 }
                             </td>
                             <td width="13%" class="text-right">
                                 <button class="btn no-box-shadow p-0 load-quote-details mr-3" data-title="edit" value="@request.RequestID"> <img src="~/images/css/accounting/icons/payment.png" /></button>
-                                <button class="btn no-box-shadow p-0 mr-5" data-title="delete" @*value="@item.RequestID"*@><img src="~/images/css/inventory/add-item/other icons/delete_dis.png" /></button> @*delete*@
+                                <button class="btn no-box-shadow p-0 mr-5 load-confirm-delete-quote" data-title="delete" value="@request.RequestID"><img src="~/images/css/inventory/add-item/other icons/delete_dis.png" /></button>
                             </td>
                         </tr>
                     }
@@ -119,8 +119,11 @@
                         </td>
 
                         <td>
+                            @if (vendor.Where(r => r.QuoteStatusID == 1).Count()!=0)
+                            {
+                                <button class="inv-lab-button float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
+                            }
 
-                            <button class="inv-lab-button float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
                         </td>
 
 

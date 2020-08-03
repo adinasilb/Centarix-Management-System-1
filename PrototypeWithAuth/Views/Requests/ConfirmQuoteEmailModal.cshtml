@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.ConfirmQuoteEmailViewModel
 
 
-<div class="modal modal-view " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view  overflow-auto" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:60rem; ">
 
@@ -12,13 +12,10 @@
             </div>
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;">
-                <input type="hidden" value="@Model.VendorID" data-val="true" data-val-required="The VendorID field is required." id="VendorID" name="VendorID">
-                1.
-                @Html.DisplayFor(m => m.VendorID)<br />
-                2.
-                @Model.VendorID <br />
-                3.
-                <input asp-for="VendorID" style="display: none;" />
+                <input asp-for="VendorId" style="display: none;" />
+                <input asp-for="RequestID" style="display: none;" />
+                @Html.HiddenFor(model => model.IsResend)
+
 
                 <div style="padding:1rem 2rem">
                     <header class="page-header">
@@ -82,18 +79,21 @@
                                         <td>@Model.Requests[i].CatalogNumber</td>
                                         <td>@Model.Requests[i].Unit</td>
                                         @{double unitPrice = (Model.Requests[i].Cost) / (Model.Requests[i].Unit);}
-                                        <td>@unitPrice.ToString("N2");</td>
+                                        <td>@unitPrice.ToString("N2")</td>
                                         <td>@Model.Requests[i].Cost</td>
                                     </tr>
 
 
                                 }
+                                @{ double total = @Model.Requests.Sum(r => r.Cost);
+                                    double vat = total * .17;
+                                    double totalWithVat = total + vat;}
                                 <tr>
                                     <td colspan="3" rowspan="5" class="borderless-cell">
                                         <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
                                     </td>
                                     <td>Total</td>
-                                    <td></td>
+                                    <td>@total.ToString("N2")</td>
                                 </tr>
 
                                 <tr>
@@ -109,12 +109,13 @@
                                 </tr>
                                 <tr>
                                     <td>VAT [17%]</td>
-                                    @* @{ double vat = totalWithDis * Model.Request.VAT }*@
-                                    <td>@*@vat*@</td>
+                                    @* make the vat a global variable*@
+                                    <td>@vat.ToString("N2")</td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold;">Total To Pay</td>
-                                    <td style="font-weight: bold;">@*@vat+totalWithDis*@</td>
+
+                                    <td style="font-weight: bold;">@totalWithVat.ToString("N2")</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -136,7 +137,7 @@
                     <br />
                     <div class="modal-footer p-4" style="justify-content:space-evenly;">
                         <input type="submit" class="inv-lab-button" asp-action="ConfirmQuoteEmailModal" value="Confirm & Send Email" />
-                        <button class="cancel-button" data-dismiss="modal">Cancel</button>@*FAIGE: should this delete the request?*@
+                        <button class="cancel-button cancel-email" data-dismiss="modal">Cancel</button>@*FAIGE: should this delete the request?*@
                     </div>
                 </div>
 
@@ -152,8 +153,3 @@
         </div>
     </div>
 </div>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
