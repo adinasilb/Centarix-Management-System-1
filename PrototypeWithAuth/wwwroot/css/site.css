@@ -12,7 +12,7 @@ for details on configuring this project to bundle and minify static web assets. 
     --order-inv-color: #2196F3;
     --acc-color: #673AB7;
     --protocol-color: #009688;
-    --expense-color: #673AB7;
+    --expense-color: #30BCC9;
     --income-color: #4CAF50;
     --timekeeper-color: #FF9800;
     --biomarkers-color: #F44336;
@@ -489,8 +489,8 @@ input.select-dropdown {
     }
 
 .inv-supplier-button {
-    background-color: #A26FF0;
-    border: 1px solid #A26FF0;
+    background-color: var(--acc-color);
+    border: 1px solid var(--acc-color);
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -725,7 +725,7 @@ table th {
 
     .acc-link-clr:hover {
         font-weight: bold;
-        color: #A26FF0;
+        color: var(--acc-color);
         text-decoration: none;
     }
 
@@ -755,12 +755,12 @@ table th {
     }
 
 .expenses-color-module {
-    color: #E27933;
+    color: var(--expense-color);
     opacity: 0.87;
 }
 
     .expenses-color-module:hover {
-        color: #E27933;
+        color: var(--expense-color);
         opacity: 1;
         text-decoration: none;
     }
@@ -803,7 +803,7 @@ a.bold-hover-effects {
 }
 
 .ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
-    filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
+    filter: var(--acc-filter);
     color:black;
 }
 
@@ -825,7 +825,7 @@ a.activeNavLabMan {
 }
 
 ul li.acc-sidebar.active {
-    filter: invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);
+    filter: var(--acc-filter);
 }
 
 .sidebar-customization a {
@@ -844,7 +844,7 @@ ul li.acc-sidebar.active {
 
 .usersview .ourNavBar li.nav-item a.active {
     opacity: 1;
-    filter: invert(67%) sepia(32%) saturate(3488%) hue-rotate(294deg) brightness(89%) contrast(91%);
+    filter: var(--users-filter);
     text-decoration: none;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
@@ -929,8 +929,8 @@ a.nav-link {
 .container-fluid ul li a.supplier-nav-link.active {
     background-color: transparent;
     border-width: 0px;
-    border-bottom: 4px solid #A26FF0;
-    color: #A26FF0;
+    border-bottom: 4px solid var(--acc-color);
+    color: var(--acc-color);
 }
 
 /*<<<< Modal Side Slide >>>>*/
@@ -1367,7 +1367,7 @@ body {
     text-align: center;
     font-size: 12px;
     line-height: 1.42857;
-    background-color: #A26FF0;
+    background-color: var(--acc-color);
     color: white;
 }
 
