@@ -218,7 +218,7 @@
                 }
                 else
                 {
-                    <th>LastOrdered</th>
+                    <th>Last Ordered</th>
                 }
                 <th></th>
                 <th></th>
@@ -243,36 +243,40 @@
                 <td> <button class="btn inv-link-clr load-product-details no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
 
                 <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
+                @if (!Summary)
+                {
+                    <td>
+                        <ul style="list-style: none;">
 
-                <td>
-                    <ul style="list-style: none;">
-
-                        @if (item.Unit != null)
-                        {
-                            <li>
-                                @Html.DisplayFor(modelItem => item.Unit)
-                                @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
-                            </li>
-                            @if (item.SubUnit != null)
+                            @if (item.Unit != null)
                             {
                                 <li>
-                                    @Html.DisplayFor(modelItem => item.SubUnit)
-                                    @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
+                                    @Html.DisplayFor(modelItem => item.Unit)
+                                    @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
                                 </li>
-                                @if (item.SubSubUnit != null)
+                                @if (item.SubUnit != null)
                                 {
                                     <li>
-                                        @Html.DisplayFor(modelItem => item.SubSubUnit)
-                                        @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
+                                        @Html.DisplayFor(modelItem => item.SubUnit)
+                                        @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
                                     </li>
+                                    @if (item.SubSubUnit != null)
+                                    {
+                                        <li>
+                                            @Html.DisplayFor(modelItem => item.SubSubUnit)
+                                            @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
+                                        </li>
+                                    }
                                 }
+
                             }
 
-                        }
 
+                        </ul>
+                    </td>
+                    @*Computed column?*@
+                }
 
-                    </ul>
-                </td> @*Computed column?*@
                 <td>
                     @*@Html.DisplayFor(modelItem => item.Cost)*@
                     @{
