@@ -35,6 +35,10 @@ html.wf-loading * {
     border-radius: 0 !important;
 }*/
 
+.RequestUnitCard div , .RequestSubunitCard div , .RequestSubsubunitCard div {
+    border-radius: 18px;
+}
+
 i.fas {
     color: rgba(150, 150, 150, .9) !important;
     background-color: #fff !important;
