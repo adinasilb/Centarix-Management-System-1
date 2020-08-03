@@ -14,8 +14,11 @@
                             <div class="col-2">
                                 <h2>@Model.RequestFolderName</h2>
                             </div>
-                            <div class="col-2 offset-8">
-                                <button class="inv-button btn-block float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
+                            <div class="col-2 offset-8">                              
+                                <div class="upload-btn-wrapper">
+                                    <button class="inv-button btn-block float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
+                                    <input type="file" asp-for="Files" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" multiple>
+                                </div>
                             </div>
                         </div>
                     </div>

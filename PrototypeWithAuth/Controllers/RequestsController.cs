@@ -3211,6 +3211,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
                 RequestFolderName = RequestFolderNameEnum
+                
             };
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -3227,6 +3228,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     string newFileString = AppUtility.GetLastFourFiles(docfile.FullName);
                     documentsModalViewModel.FileStrings.Add(newFileString);
+                    documentsModalViewModel.Files.Add(docfile);
                 }
             }
 
