@@ -717,7 +717,7 @@ select option[value="US"] {
 
     .lab-man-link-clr:hover {
         font-weight: bold;
-        color: black;
+        filter: var(--lab-man-filter);
         text-decoration: none;
     }
 table td {
@@ -740,7 +740,7 @@ table th {
 
     .acc-link-clr:hover {
         font-weight: bold;
-        color:black;
+        filter: var(--acc-filter);
         text-decoration: none;
     }
 

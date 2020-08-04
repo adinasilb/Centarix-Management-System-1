@@ -1,21 +1,25 @@
 ﻿@using PrototypeWithAuth.Data;
 @using PrototypeWithAuth.AppData;
-@if (TempData["SectionType"].Equals(AppUtility.MenuItems.LabManagement))
-{
-    ViewData["Title"] = "ManageLocationView";
-    Layout = "~/Views/Shared/LabManageView.cshtml";
-}
-else
-{
-    ViewData["Title"] = "ManageSharedView";
-    Layout = "~/Views/Shared/View.cshtml";
-}
+@{ 
+    string color = "";
+    if (TempData["SectionType"].Equals(AppUtility.MenuItems.LabManagement))
+    {
+        ViewData["Title"] = "ManageLocationView";
+        Layout = "~/Views/Shared/LabManageView.cshtml";
+        color = "var(--lab-man-color)";
+    }
+    else
+    {
+        ViewData["Title"] = "ManageSharedView";
+        Layout = "~/Views/Shared/View.cshtml";
+        color = "var(--order-inv-color)";
+    }
 <div style="display:flex;">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div style="width: 110px; min-height: 100rem;" class="p-2 sidebar-shadow text-center p-3">
         <ul class="nav flex-column nav-pills nav-stacked mt-3 ">
             <li class="nav-item">
-                <a href="#" class="inv-link-clr" style="        color: #2196F3;"> <i class="icon-zoom_in-24px-01" style="font-size: 2rem;"></i> <br /> Search </a>
+                <a href="#" class="inv-link-clr" style="        color: @color;"> <i class="icon-zoom_in-24px-01" style="font-size: 2rem;"></i> <br /> Search </a>
             </li>
         </ul>
     </div>
@@ -23,4 +27,4 @@ else
         @RenderBody()
     </div>
 </div>
-
+    }
