@@ -5,8 +5,26 @@ for details on configuring this project to bundle and minify static web assets. 
     Good resource to create filter:
     https://codepen.io/sosuke/pen/Pjoqqp
 */
-
-
+/*Colors*/
+:root {
+    --user-color: #795548;
+    --lab-man-color: #607D8B;
+    --order-inv-color: #2196F3;
+    --acc-color: #673AB7;
+    --protocol-color: #009688;
+    --expense-color: #30BCC9;
+    --income-color: #4CAF50;
+    --timekeeper-color: #FF9800;
+    --biomarkers-color: #F44336;
+    --operations-color: #3F51B5;
+    --order-inv-filter: invert(57%) sepia(42%) saturate(5293%) hue-rotate(184deg) brightness(96%) contrast(99%);
+    --lab-man-filter: invert(44%) sepia(48%) saturate(220%) hue-rotate(155deg) brightness(96%) contrast(87%);
+    --acc-filter: invert(30%) sepia(32%) saturate(2825%) hue-rotate(237deg) brightness(86%) contrast(102%);
+    --users-filter: invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
+}
+.order-inv-color {
+    color: var(--order-inv-color);
+}
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 html.wf-loading * {
     opacity: 0;
@@ -52,7 +70,7 @@ i.fas {
     }
 
 .carousel-item div.doc-image-div {
-    border: 1px solid #2196F3;
+    border: 1px solid var(--order-inv-color);
     border-radius: 10px;
     box-shadow: none !important;
 }
@@ -381,8 +399,8 @@ input.select-dropdown {
     }
 
 .inv-button {
-    background-color: #2196F3;
-    border: 1px solid #2196F3;
+    background-color: var(--order-inv-color);
+    border: 1px solid var(--order-inv-color);
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -397,8 +415,8 @@ input.select-dropdown {
     }
 
 .form-control-file::-webkit-file-upload-button {
-    background-color: #DB669D;
-    border: 1px solid #DB669D;
+    background-color: var(--user-color);
+    border: 1px solid var(--user-color);
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -410,7 +428,7 @@ input.select-dropdown {
 
     .form-control-file::-webkit-file-upload-button:hover {
         background-color: rgba(219, 102, 157, .5);
-        border: 1px solid #DB669D;
+        border: 1px solid var(--user-color);
         border-radius: 3rem;
         color: white;
         font-weight: 550;
@@ -425,8 +443,8 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 .form-control-file-lab::-webkit-file-upload-button {
-    background-color: #7D9BAA;
-    border: 1px solid #7D9BAA;
+    background-color: var(--lab-man-color);
+    border: 1px solid var(--lab-man-color);
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -436,8 +454,8 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 .inv-lab-button {
-    background-color: #7D9BAA;
-    border: 1px solid #7D9BAA;
+    background-color: var(--lab-man-color);
+    border: 1px solid var(--lab-man-color);
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -448,8 +466,8 @@ input.select-dropdown {
 }
 
 .quote-lab-button {
-    background-color: #7D9BAA;
-    border: 1px solid #7D9BAA;
+    background-color: var(--lab-man-color);
+    border: 1px solid var(--lab-man-color);
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -459,8 +477,8 @@ input.select-dropdown {
     text-transform: uppercase;
 }
 .inv-user-button {
-    background-color: #DB669D;
-    border: 1px solid #DB669D;
+    background-color: var(--user-color);
+    border: 1px solid var(--user-color);
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -475,8 +493,8 @@ input.select-dropdown {
     }
 
 .inv-supplier-button {
-    background-color: #A26FF0;
-    border: 1px solid #A26FF0;
+    background-color: var(--acc-color);
+    border: 1px solid var(--acc-color);
     border-radius: 3rem;
     color: white;
     font-weight: 500;
@@ -674,7 +692,7 @@ select option[value="US"] {
 
     .inv-link-clr:hover {
         font-weight: bold;
-        color: #2196F3;
+        color: var(--order-inv-color);
         text-decoration: none;
     }
 
@@ -688,7 +706,7 @@ select option[value="US"] {
 
     .lab-man-link-clr:hover {
         font-weight: bold;
-        color: #7D9BAA;
+        color: var(--lab-man-color);
         text-decoration: none;
     }
 table td {
@@ -711,7 +729,7 @@ table th {
 
     .acc-link-clr:hover {
         font-weight: bold;
-        color: #A26FF0;
+        color: var(--acc-color);
         text-decoration: none;
     }
 
@@ -741,12 +759,12 @@ table th {
     }
 
 .expenses-color-module {
-    color: #E27933;
+    color: var(--expense-color);
     opacity: 0.87;
 }
 
     .expenses-color-module:hover {
-        color: #E27933;
+        color: var(--expense-color);
         opacity: 1;
         text-decoration: none;
     }
@@ -785,29 +803,33 @@ a.bold-hover-effects {
 
 .ourNavBar li button.add-item-btn.active {
     opacity: 1;
-    color: #2196F3;
+    color: var(--order-inv-color);
 }
 
 .ourNavBar li.activeNavLinkAcc a, .ourNavBar a.activeNavLinkAcc {
-    filter: invert(60%) sepia(64%) saturate(3409%) hue-rotate(224deg) brightness(91%) contrast(109%);
+    filter: var(--acc-filter);
+    color:black;
 }
 
 .ourNavBar li.activeNavLinkLabMan a, .ourNavBar a.activeNavLabMan {
-    filter: invert(67%) sepia(16%) saturate(520%) hue-rotate(155deg) brightness(88%) contrast(81%);
+    filter: var(--lab-man-filter);
+    color:black;
 }
 a.activeNavLabMan {
-    filter: invert(67%) sepia(16%) saturate(520%) hue-rotate(155deg) brightness(88%) contrast(81%);
+    filter: var(--lab-man-filter);
+    color:black
 }
 .ourNavBar .activeUserClass {
     opacity: 1;
-    filter: brightness(0) saturate(100%) invert(67%) sepia(32%) saturate(3488%) hue-rotate(294deg) brightness(89%) contrast(91%);
+    filter: var(--users-filter);
     text-decoration: none;
     -webkit-text-stroke-width: 0px;
     -webkit-text-stroke-color: black;
+    color:black
 }
 
 ul li.acc-sidebar.active {
-    filter: invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);
+    filter: var(--acc-filter);
 }
 
 .sidebar-customization a {
@@ -826,14 +848,14 @@ ul li.acc-sidebar.active {
 
 .usersview .ourNavBar li.nav-item a.active {
     opacity: 1;
-    filter: invert(67%) sepia(32%) saturate(3488%) hue-rotate(294deg) brightness(89%) contrast(91%);
+    filter: var(--users-filter);
     text-decoration: none;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
 }
 
 .users-tr:hover {
-    border: 2px double #DB669D !important;
+    border: 2px double var(--user-color) !important;
 }
 
 
@@ -897,22 +919,22 @@ a.nav-link {
 .container-fluid ul li a.nav-link.active {
     background-color: transparent;
     border-width: 0px;
-    border-bottom: 4px solid #2196F3;
-    color: #2196F3;
+    border-bottom: 4px solid var(--order-inv-color);
+    color: var(--order-inv-color);
 }
 
 .container-fluid ul li a.user-nav-link.active {
     background-color: transparent;
     border-width: 0px;
-    border-bottom: 4px solid #DB669D;
-    color: #DB669D;
+    border-bottom: 4px solid var(--user-color);
+    color: var(--user-color);
 }
 
 .container-fluid ul li a.supplier-nav-link.active {
     background-color: transparent;
     border-width: 0px;
-    border-bottom: 4px solid #A26FF0;
-    color: #A26FF0;
+    border-bottom: 4px solid var(--acc-color);
+    color: var(--acc-color);
 }
 
 /*<<<< Modal Side Slide >>>>*/
@@ -965,16 +987,16 @@ a.nav-link {
     .new-button:hover {
         /*background-color: #338f84;*/
         opacity: 1;
-        color: #2196F3;
+        color: var(--order-inv-color);
         background-color: rgba(218, 223, 225, .25); /* rgba(48, 188, 201,0.05);*/
         border-radius: 3px;
         text-decoration: none;
     }
 
     .new-button.active {
-        color: #2196F3;
+        color: var(--order-inv-color);
         font-weight: 500;
-        border-bottom: 4px solid #2196F3;
+        border-bottom: 4px solid var(--order-inv-color);
     }
 
 .zoom-in-btn {
@@ -1029,7 +1051,7 @@ a.nav-link {
 }
 
 .td-selected-outer {
-    border-left: .3rem solid #2196F3 !important;
+    border-left: .3rem solid var(--order-inv-color) !important;
     border-right: 0 !important;
     background: #F4F7F9 0% 0% no-repeat padding-box;
 }
@@ -1181,7 +1203,7 @@ table.table.visualzoom {
 
 /* When the checkbox is checked, add a blue background */
 .checktainer input:checked ~ .checkmark {
-    background-color: #2196F3;
+    background-color: var(--order-inv-color);
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -1271,9 +1293,9 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
             left: 4px;
             font-size: 1.7em;
             line-height: 0.8;
-            background-color: #2196F3;
+            background-color: var(--order-inv-color);
             color: white;
-            border: 1px solid #2196F3;
+            border: 1px solid var(--order-inv-color);
             border-radius: 2px;
             transition: all .1s;
             font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', Arial;
@@ -1349,7 +1371,7 @@ body {
     text-align: center;
     font-size: 12px;
     line-height: 1.42857;
-    background-color: #A26FF0;
+    background-color: var(--acc-color);
     color: white;
 }
 
@@ -1381,4 +1403,17 @@ td .btn {
     -moz-appearance: none;
     appearance: none;
     margin: 0;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
 }

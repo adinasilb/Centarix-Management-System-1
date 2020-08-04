@@ -71,11 +71,11 @@
                 </li>
 
                 <li class="nav-item mx-5">
-                    @Html.ActionLink("Search", "Search", "Requests", new { }, new { @class = searchClass, @id = "request-link" /*why is the role and id here?*/ })
+                    @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = searchClass, @id = "request-link" /*why is the role and id here?*/ })
                 </li>
                 <li class="nav-item mx-5">
                     @*Redo the location class in the controller*@
-                    @Html.ActionLink("Location", "Index", "Locations", new { }, new { @class = locationClass, @id = "request-link" })
+                    @Html.ActionLink("Location", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = locationClass, @id = "request-link" })
                 </li>
                 <li class="nav-item mx-5">
                     @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "request-link" /*why is the role and id here?*/ })

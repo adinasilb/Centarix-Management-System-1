@@ -93,6 +93,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = PageType;
             //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
+
             if (ViewData["ReturnRequests"] != null)
             {
                 RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
@@ -153,9 +154,8 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (PageType == AppUtility.RequestPageTypeEnum.Summary)
             {
-                //partial and clarify?
-                //RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).GroupBy(x => x.Product).Select(y => y.First()).Distinct();
-
+               RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();                
             }
             else
             {
@@ -241,8 +241,6 @@ namespace PrototypeWithAuth.Controllers
                     .ToPagedListAsync(pageNumber, 25);
 
                 onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
-
-
             }
             catch (Exception ex)
             {
@@ -2857,10 +2855,10 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> Search()
+        public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
         {
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Search;
-
+            TempData["SectionType"] = SectionType;
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
                 ParentCategories = await _context.ParentCategories.ToListAsync(),
@@ -3218,6 +3216,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
                 RequestFolderName = RequestFolderNameEnum
+                
             };
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -3234,6 +3233,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     string newFileString = AppUtility.GetLastFourFiles(docfile.FullName);
                     documentsModalViewModel.FileStrings.Add(newFileString);
+                    documentsModalViewModel.Files.Add(docfile);
                 }
             }
 

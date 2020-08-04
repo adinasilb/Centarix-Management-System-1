@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Models;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     public class LocationTypeViewModel
     {
         public IEnumerable<LocationType> LocationTypes { get; set; }
+
     }
 }

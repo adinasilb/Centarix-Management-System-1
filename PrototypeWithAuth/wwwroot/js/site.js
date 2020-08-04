@@ -1110,6 +1110,8 @@ $(".file-select").on("change", function (e) {
 	$cardDiv.addClass("document-border");
 });
 
+
+
 $.fn.HideAllDocs = function () {
 	//$(".orders-view").hide();
 	$(".invoices-view").hide();

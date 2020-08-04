@@ -60,7 +60,7 @@
                     @Html.ActionLink("Suppliers", "IndexForLabManage", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = suppliersClass })
                 </li>
                 <li class="nav-item ml-5 ">
-                    @Html.ActionLink("Locations", "Index", "Locations", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class =locationsClass })
+                    @Html.ActionLink("Locations", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.LabManagement }, new { @class =locationsClass })
                 </li>
                 <li class="nav-item ml-5">
                     <a class="@equipmentClass">Equipment</a>
@@ -71,7 +71,7 @@
                     @*<a href="" class = "opac87 align-text-bottom">Orders</a>*@
                 </li>
                 <li class="nav-item ml-5">
-                    @Html.ActionLink("Search", "Search", "Requests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = searchClass })
+                    @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.LabManagement }, new { @class = searchClass })
                 </li>
             </ul>
         </div>
