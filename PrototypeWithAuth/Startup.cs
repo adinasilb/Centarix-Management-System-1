@@ -41,13 +41,13 @@ namespace PrototypeWithAuth
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("AzureConnection")));
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("CentarixConnection")));
+            //        Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("CentarixConnection")));
 
 
             //add identity
