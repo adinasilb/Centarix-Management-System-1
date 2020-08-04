@@ -93,7 +93,7 @@
 
                 <button id="profile-img" class="btn no-box-shadow pl-0 pr-1 pt-1 pb-0">
                     @{
-                        var src = "UserImages/profile_circle_big.png";
+                        var src = "/UserImages/profile_circle_big.png";
                         if (UserManager.GetUserAsync(User).Result.UserImage != null)
                         {
                             src = UserManager.GetUserAsync(User).Result.UserImage;

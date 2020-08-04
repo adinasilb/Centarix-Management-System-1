@@ -718,20 +718,20 @@
             }
         });
 
-        $("#parentlist").change(function () {
-            console.log('  $("#parentlist").change(')
-            var parentCategoryId = $("#parentlist").val();
-            var url = "/Requests/GetSubCategorsyList";
+        //$("#parentlist").change(function () {
+        //    console.log('  $("#parentlist").change(')
+        //    var parentCategoryId = $("#parentlist").val();
+        //    var url = "/Requests/GetSubCategorsyList";
 
-            $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-                var item = "<option value=''>Select a Subcategory</option>";
-                $("#sublist").empty();
-                $.each(data, function (i, subCategory) {
-                    item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-                });
-                $("#sublist").html(item);
-            });
-        });
+        //    $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+        //        var item = "<option value=''>Select a Subcategory</option>";
+        //        $("#sublist").empty();
+        //        $.each(data, function (i, subCategory) {
+        //            item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+        //        });
+        //        $("#sublist").html(item);
+        //    });
+        //});
 
         
         
