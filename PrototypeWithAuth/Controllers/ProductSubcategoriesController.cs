@@ -27,11 +27,12 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["PageType"] = PageType;
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Type;
-            var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory);
+            var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
+                .Where(ps => ps.ParentCategory.CategoryTypeID == 1);
             return View(await applicationDbContext.ToListAsync());
         }
         
-        [HttpGet] //send a json to that the subcategory list is filered
+        [HttpGet] //send a json to that the subcategory list is filtered
         public JsonResult GetSubCategoryList(int? ParentCategoryId)
         {
             var subCategoryList = _context.ProductSubcategories.ToList();
