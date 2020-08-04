@@ -17,10 +17,10 @@ for details on configuring this project to bundle and minify static web assets. 
     --timekeeper-color: #FF9800;
     --biomarkers-color: #F44336;
     --operations-color: #3F51B5;
-    --order-inv-filter: invert(57%) sepia(42%) saturate(5293%) hue-rotate(184deg) brightness(96%) contrast(99%);
-    --lab-man-filter: invert(44%) sepia(48%) saturate(220%) hue-rotate(155deg) brightness(96%) contrast(87%);
-    --acc-filter:  invert(30%) sepia(32%) saturate(2825%) hue-rotate(237deg) brightness(86%) contrast(102%);
-    --users-filter:  invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
+    --order-inv-filter: brightness(0) saturate(100%) invert(57%) sepia(42%) saturate(5293%) hue-rotate(184deg) brightness(96%) contrast(99%);
+    --lab-man-filter: brightness(0) saturate(100%) invert(44%) sepia(48%) saturate(220%) hue-rotate(155deg) brightness(96%) contrast(87%);
+    --acc-filter: brightness(0) saturate(100%) invert(30%) sepia(32%) saturate(2825%) hue-rotate(237deg) brightness(86%) contrast(102%);
+    --users-filter: brightness(0) saturate(100%) invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
 }
 .order-inv-color {
     color: var(--order-inv-color);
@@ -717,7 +717,7 @@ select option[value="US"] {
 
     .lab-man-link-clr:hover {
         font-weight: bold;
-        filter: brightness(0) saturate(100%) var(--lab-man-filter);
+        filter: var(--lab-man-filter);
         text-decoration: none;
     }
 table td {
@@ -840,11 +840,12 @@ a.activeNavLabMan {
 }
 
 ul li.acc-sidebar.active {
-    filter: brightness(0) saturate(100%) var(--acc-filter);
+
+    filter: var(--acc-filter);
 }
 
 ul li.lab-man-sidebar.active {
-    filter: brightness(0) saturate(100%) var(--lab-man-filter);
+    filter: var(--lab-man-filter);
 }
 
 .sidebar-customization a {
