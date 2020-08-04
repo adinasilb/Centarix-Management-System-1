@@ -2,22 +2,46 @@
 @{
     ViewData["Title"] = "SuppliersNavViewForLabManage";
     Layout = "~/Views/Shared/LabManageView.cshtml";
-}
+    var allClasses = "nav-item my-4 lab-man-sidebar";
+    var activeClass = " active";
+    var allClass = allClasses;
+    var newSupplierClass = allClasses;
+    var searchClass = allClasses;
+   
+
+    if (TempData["Action"] != null)
+    {
+        var PageType = TempData["Action"];
+        switch (PageType)
+        {
+            case AppUtility.SuppliersEnum.All:
+                allClass += activeClass;
+                break;
+            case AppUtility.SuppliersEnum.NewSupplier:
+                newSupplierClass += activeClass;
+                break;
+            case AppUtility.SuppliersEnum.Search:
+                searchClass += activeClass;
+                break;
+         
+        }
+    }
+
 
 <div style="display:flex;">
     <div style="min-width:110px; min-height:100rem;" class="sidebar-shadow text-center">
         @*<nav class="navbar flex-grow-1">*@
-        <ul class="nav flex-column nav-pills nav-stacked">
-            <li class="nav-item my-md-4 acc-sidebar">
-                <a class="acc-link-clr" href="@Url.ActionLink("IndexForPayment", "Vendors", new { @SectionType = AppUtility.MenuItems.LabManagement })"> <i class="icon-storefront-24px1" style="font-size:1.6rem;"></i> <br /> All</a>
+        <ul class="nav flex-column nav-pills nav-stacked mt-3">
+            <li class="nav-item my-md-4 @allClass">
+                <a class="lab-man-link-clr" href="@Url.ActionLink("IndexForPayment", "Vendors", new { @SectionType = AppUtility.MenuItems.LabManagement })"> <i class="icon-storefront-24px1" style="font-size:1.6rem;"></i> <br /> All</a>
                 @*@Html.ActionLink("All", "IndexForPayment", "Vendors", new { }, new { @class = "btn btn-link text-dark" })*@
             </li>
-            <li class="nav-item my-md-4 acc-sidebar">
-                <a class="acc-link-clr new-supplier" href="@Url.ActionLink("Create", "Vendors", new { @SectionType = AppUtility.MenuItems.LabManagement })"> <i class="icon-add_circle_outline-24px" style="font-size:1.6rem;"></i> <br /> New Supplier</a>
+            <li class="nav-item my-md-4  @newSupplierClass">
+                <a class="lab-man-link-clr new-supplier" href="@Url.ActionLink("Create", "Vendors", new { @SectionType = AppUtility.MenuItems.LabManagement })"> <i class="icon-add_circle_outline-24px" style="font-size:1.6rem;"></i> <br /> New Supplier</a>
                 @*@Html.ActionLink("New Supplier", "Create", "Vendors", new { }, new { @class = "btn btn-link text-dark" })*@
             </li>
-            <li class="nav-item my-md-4 acc-sidebar">
-                <a class="acc-link-clr" href="@Url.ActionLink("Search", "Vendors",  new { @SectionType = AppUtility.MenuItems.LabManagement })">  <i class="icon-zoom_in-24px-01" style="font-size:1.6rem;"></i> <br /> Search</a>
+            <li class="nav-item my-md-4 @searchClass">
+                <a class="lab-man-link-clr" href="@Url.ActionLink("Search", "Vendors", new { @SectionType = AppUtility.MenuItems.LabManagement })">  <i class="icon-zoom_in-24px-01" style="font-size:1.6rem;"></i> <br /> Search</a>
             </li>
         </ul>
         @*</nav>*@
@@ -26,3 +50,4 @@
         @RenderBody()
     </div>
 </div>
+    }

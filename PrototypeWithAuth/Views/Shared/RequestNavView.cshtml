@@ -102,7 +102,7 @@
             @if (Requests || Inventory || Summary)
             {
 
-                <li class="nav-item my-1 @lastItem">
+                <li class="nav-item mb-1 @lastItem">
                     <a href="@Url.ActionLink("Index", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1 add-item"><img src="~/images/css/inventory/sidebar/list.png" alt="Last item" /><br />Last Item</a>
                 </li>
             }

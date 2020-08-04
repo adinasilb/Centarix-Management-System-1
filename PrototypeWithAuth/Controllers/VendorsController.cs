@@ -51,6 +51,7 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
             TempData["SectionType"] = SectionType;
+            TempData["Action"] = AppUtility.SuppliersEnum.All;
             return View(await _context.Vendors.ToListAsync());
 
         }
@@ -59,7 +60,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> IndexForLabManage()
         {
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-
+            TempData["Action"] = AppUtility.SuppliersEnum.All;
             return View(await _context.Vendors.ToListAsync());
 
         }
@@ -116,8 +117,7 @@ namespace PrototypeWithAuth.Controllers
             createSupplierViewModel.VendorComments = vendorComments;
 
             //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;           
             return View(createSupplierViewModel);
         }
 
@@ -137,7 +137,7 @@ namespace PrototypeWithAuth.Controllers
 
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-
+            TempData["Action"] = AppUtility.SuppliersEnum.Search;
             //return View(vendorSearchViewModel);
             if (AppUtility.IsAjaxRequest(this.Request))
                 return PartialView(vendorSearchViewModel);
@@ -233,8 +233,8 @@ namespace PrototypeWithAuth.Controllers
         {
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-            
-             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
+            TempData["Action"] = AppUtility.SuppliersEnum.NewSupplier;
+            CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
             createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
             List<AddCommentViewModel> vendorComments = new List<AddCommentViewModel>();

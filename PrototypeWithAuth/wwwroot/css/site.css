@@ -464,6 +464,17 @@ input.select-dropdown {
     line-height: 1.5;
     text-transform: uppercase;
 }
+.inv-lab-button-submit {
+    background-color: var(--lab-man-color);
+    border: 1px solid var(--lab-man-color);
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.56rem 1.5rem;
+    font-size: 1.5625rem;
+    line-height: 1.5;
+    text-transform: capitalize;
+}
 
 .quote-lab-button {
     background-color: var(--lab-man-color);
@@ -706,7 +717,7 @@ select option[value="US"] {
 
     .lab-man-link-clr:hover {
         font-weight: bold;
-        color: var(--lab-man-color);
+        color: black;
         text-decoration: none;
     }
 table td {
@@ -833,6 +844,10 @@ ul li.acc-sidebar.active {
     filter: var(--acc-filter);
 }
 
+ul li.lab-man-sidebar.active {
+    filter: var(--lab-man-filter);
+}
+
 .sidebar-customization a {
     font-size: 1rem;
     text-transform: capitalize
@@ -936,6 +951,12 @@ a.nav-link {
     border-width: 0px;
     border-bottom: 4px solid var(--acc-color);
     color: var(--acc-color);
+}
+.container-fluid ul li a.lab-man-nav-link.active {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid var(--lab-man-color);
+    color: var(--lab-man-color);
 }
 
 /*<<<< Modal Side Slide >>>>*/
@@ -1372,7 +1393,6 @@ body {
     text-align: center;
     font-size: 12px;
     line-height: 1.42857;
-    background-color: var(--acc-color);
     color: white;
 }
 
