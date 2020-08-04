@@ -127,13 +127,12 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")]
         public IActionResult Search(AppUtility.MenuItems SectionType)
         {
-            TempData["SectionType"] = SectionType;
+     
             VendorSearchViewModel vendorSearchViewModel = new VendorSearchViewModel
             {
                 ParentCategories = _context.ParentCategories.ToList(),
                 Vendors = _context.Vendors.ToList(),
-                Vendor = new Vendor()
-  
+                SectionType = SectionType
             };
 
             //tempdata page type for active tab link
@@ -155,41 +154,41 @@ namespace PrototypeWithAuth.Controllers
         {
             IQueryable<Vendor> filteredVendors = _context.Vendors.AsQueryable();
             filteredVendors = filteredVendors
-                .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorEnName) || fv.VendorEnName.Contains(vendorSearchViewModel.Vendor.VendorEnName))
+                .Where(fv => (String.IsNullOrEmpty(vendorSearchViewModel.VendorEnName) || fv.VendorEnName.Contains(vendorSearchViewModel.VendorEnName))
                  &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorHeName) || fv.VendorHeName.Contains(vendorSearchViewModel.Vendor.VendorHeName))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorHeName) || fv.VendorHeName.Contains(vendorSearchViewModel.VendorHeName))
              &&
-             (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBuisnessID) || fv.VendorBuisnessID.Contains(vendorSearchViewModel.Vendor.VendorBuisnessID))
+             (String.IsNullOrEmpty(vendorSearchViewModel.VendorBuisnessID) || fv.VendorBuisnessID.Contains(vendorSearchViewModel.VendorBuisnessID))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.InfoEmail) || fv.InfoEmail.Contains(vendorSearchViewModel.Vendor.InfoEmail))
+            (String.IsNullOrEmpty(vendorSearchViewModel.InfoEmail) || fv.InfoEmail.Contains(vendorSearchViewModel.InfoEmail))
             &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.OrdersEmail) || fv.OrdersEmail.Contains(vendorSearchViewModel.Vendor.OrdersEmail))
+            (String.IsNullOrEmpty(vendorSearchViewModel.OrdersEmail) || fv.OrdersEmail.Contains(vendorSearchViewModel.OrdersEmail))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorTelephone) || fv.VendorTelephone.Contains(vendorSearchViewModel.Vendor.VendorTelephone))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorTelephone) || fv.VendorTelephone.Contains(vendorSearchViewModel.VendorTelephone))
               &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorCellPhone) || fv.VendorCellPhone.Contains(vendorSearchViewModel.Vendor.VendorCellPhone))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCellPhone) || fv.VendorCellPhone.Contains(vendorSearchViewModel.VendorCellPhone))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.Vendor.VendorFax))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorFax) || fv.VendorFax.Contains(vendorSearchViewModel.VendorFax))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorCity) || fv.VendorCity.Contains(vendorSearchViewModel.Vendor.VendorCity))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorCity) || fv.VendorCity.Contains(vendorSearchViewModel.VendorCity))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorStreet) || fv.VendorStreet.Contains(vendorSearchViewModel.Vendor.VendorStreet))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorStreet) || fv.VendorStreet.Contains(vendorSearchViewModel.VendorStreet))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorZip) || fv.VendorZip.Contains(vendorSearchViewModel.Vendor.VendorZip))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorZip) || fv.VendorZip.Contains(vendorSearchViewModel.VendorZip))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorWebsite) || fv.VendorWebsite.Contains(vendorSearchViewModel.Vendor.VendorWebsite))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorWebsite) || fv.VendorWebsite.Contains(vendorSearchViewModel.VendorWebsite))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBank) || fv.VendorBank.Contains(vendorSearchViewModel.Vendor.VendorBank))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBank) || fv.VendorBank.Contains(vendorSearchViewModel.VendorBank))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBankBranch) || fv.VendorBankBranch.Contains(vendorSearchViewModel.Vendor.VendorBankBranch))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBankBranch) || fv.VendorBankBranch.Contains(vendorSearchViewModel.VendorBankBranch))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorAccountNum) || fv.VendorAccountNum.Contains(vendorSearchViewModel.Vendor.VendorAccountNum))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorAccountNum) || fv.VendorAccountNum.Contains(vendorSearchViewModel.VendorAccountNum))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorSwift) || fv.VendorSwift.Contains(vendorSearchViewModel.Vendor.VendorSwift))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorSwift) || fv.VendorSwift.Contains(vendorSearchViewModel.VendorSwift))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorBIC) || fv.VendorBIC.Contains(vendorSearchViewModel.Vendor.VendorBIC))
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorBIC) || fv.VendorBIC.Contains(vendorSearchViewModel.VendorBIC))
              &&
-            (String.IsNullOrEmpty(vendorSearchViewModel.Vendor.VendorGoldAccount) || fv.VendorGoldAccount.Contains(vendorSearchViewModel.Vendor.VendorGoldAccount)));
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorGoldAccount) || fv.VendorGoldAccount.Contains(vendorSearchViewModel.VendorGoldAccount)));
 
 
             if (vendorSearchViewModel.SelectedParentCategoryID > 0)
@@ -214,7 +213,8 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
             }
-
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+            TempData["SectionType"] = vendorSearchViewModel.SectionType;
             return View("IndexForPayment", filteredVendors.ToList());
         }
 
