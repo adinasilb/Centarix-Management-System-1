@@ -44,7 +44,7 @@
                         @Html.DisplayFor(modelItem => item.VendorID)
                     </td>
                     <td>
-                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="acc-link-clr">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
+                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="acc-link-clr" asp-route-SectionType="@AppUtility.MenuItems.LabManagement">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorHeName)

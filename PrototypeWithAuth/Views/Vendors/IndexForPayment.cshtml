@@ -3,10 +3,15 @@
 
 @{
     ViewData["Title"] = "IndexForPayment";
-    Layout = "~/Views/Shared/SuppliersNavView.cshtml";
-   // string pageType = TempData["PageType"].ToString();
 }
-
+@if (TempData["SectionType"].Equals(AppUtility.MenuItems.LabManagement))
+{
+    Layout = "~/Views/Shared/SuppliersNavViewForLabManage.cshtml";
+}
+else
+{
+    Layout = "~/Views/Shared/SuppliersNavView.cshtml";
+}
 <div class="ml-5 mt-4">
     <table class="table table-headerspaced table-noheaderlines text-center">
         <thead>
@@ -34,45 +39,45 @@
                 </th>
                 @*<th>
 
-                </th>*@
+                    </th>*@
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-            <tr class="vendor-list-item">
-                <td>
-                    @Html.DisplayFor(modelItem => item.VendorID)
-                </td>
-                <td>
-                    <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="acc-link-clr">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VendorHeName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VendorBuisnessID)
-                </td>
+                <tr class="vendor-list-item">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorID)
+                    </td>
+                    <td>
+                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="acc-link-clr" asp-route-SectionType="@TempData["SectionType"]">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorHeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorBuisnessID)
+                    </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.OrdersEmail)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VendorTelephone)
-                </td>
-                @*<td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrdersEmail)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorTelephone)
+                    </td>
+                    @*<td>
 
-            @Html.ActionLink("orders", "Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)
-        </td>*@
-                <!--<td>
-        @*<a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |*@
-        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /></a>
-        @*<a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>*@
-    </td>-->
-            @*<td>
-                <a asp-action="Delete" asp-route-id="@item.VendorID"><img src="~/images/css/inventory/add-item/other icons/delete_dis.png" /></a>
-            </td>*@
-            </tr>
+                            @Html.ActionLink("orders", "Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)
+                        </td>*@
+                    <!--<td>
+                        @*<a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |*@
+                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /></a>
+                        @*<a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>*@
+                    </td>-->
+                    @*<td>
+                            <a asp-action="Delete" asp-route-id="@item.VendorID"><img src="~/images/css/inventory/add-item/other icons/delete_dis.png" /></a>
+                        </td>*@
+                </tr>
             }
         </tbody>
     </table>

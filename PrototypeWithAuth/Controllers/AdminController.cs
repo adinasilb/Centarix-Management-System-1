@@ -173,6 +173,7 @@ namespace PrototypeWithAuth.Controllers
                     LastName = registerUserViewModel.LastName,
                     SecureAppPass = registerUserViewModel.SecureAppPass,
                     CentarixID = registerUserViewModel.CentarixID,
+                    PhoneNumber = registerUserViewModel.PhoneNumber,
                     UserNum = usernum,
                     LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
                     LabUnitLimit = registerUserViewModel.LabUnitLimit,
@@ -299,6 +300,7 @@ namespace PrototypeWithAuth.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
                     CentarixID = u.CentarixID,
                     UserImageSaved = u.UserImage,
                     //do we want to show the secure app pass??
@@ -410,6 +412,7 @@ namespace PrototypeWithAuth.Controllers
             userEditted.FirstName = editUserViewModel.FirstName;
             userEditted.LastName = editUserViewModel.LastName;
             userEditted.Email = editUserViewModel.Email;
+            userEditted.PhoneNumber = editUserViewModel.PhoneNumber;
             if (editUserViewModel.SecureAppPass != null)
             {
                 userEditted.SecureAppPass = editUserViewModel.SecureAppPass;

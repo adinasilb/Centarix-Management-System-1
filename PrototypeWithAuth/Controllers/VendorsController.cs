@@ -46,14 +46,15 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Vendors
-        [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> IndexForPayment()
+        [Authorize(Roles = "Admin, Accounting,  LabManagement")]
+        public async Task<IActionResult> IndexForPayment(AppUtility.MenuItems SectionType)
         {
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-
+            TempData["SectionType"] = SectionType;
             return View(await _context.Vendors.ToListAsync());
 
         }
+
         [Authorize(Roles = "Admin, LabManagement")]
         public async Task<IActionResult> IndexForLabManage()
         {
@@ -91,41 +92,42 @@ namespace PrototypeWithAuth.Controllers
         }
         // GET: Vendors/Details/5
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> DetailsForPayment(int? id) // should not have to repeat this code - but for now just doing things quick
+        public async Task<IActionResult> DetailsForPayment(int? id, AppUtility.MenuItems SectionType) // should not have to repeat this code - but for now just doing things quick
         {
             if (id == null)
             {
                 return NotFound();
             }
-            VendorDetailsViewModel vendorDetailsViewModel = new VendorDetailsViewModel
-            {
-                ParentCategories = _context.ParentCategories.ToList(),
-                Products = _context.Products.Where(p => p.VendorID == id).Include(p =>p.ProductSubcategory).ThenInclude(p => p.ParentCategory),
-                Vendors = _context.Vendors,
-                Vendor = await _context.Vendors.FirstOrDefaultAsync(m => m.VendorID == id),
-            // Requests = _context.Requests.ToList(),
-            //check if we need this here
-        };
-            
 
-            
-            if (vendorDetailsViewModel.Vendor == null)
+            CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
+
+            createSupplierViewModel.Vendor = await _context.Vendors.FindAsync(id);
+            createSupplierViewModel.SectionType = SectionType;
+            if (createSupplierViewModel.Vendor == null)
             {
                 return NotFound();
             }
+            createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+            List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
+            List<AddCommentViewModel> vendorComments = new List<AddCommentViewModel>();
+            _context.VendorContacts.Where(c => c.VendorID == id).ToList().ForEach(c => vendorContacts.Add(new AddContactViewModel { VendorContact = c, IsActive = true }));
+            _context.VendorComments.Where(c => c.VendorID == id).ToList().ForEach(c => vendorComments.Add(new AddCommentViewModel { VendorComment = c, IsActive = true }));
+            createSupplierViewModel.VendorContacts = vendorContacts;
+            createSupplierViewModel.VendorComments = vendorComments;
 
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
 
-            return View(vendorDetailsViewModel);
+            return View(createSupplierViewModel);
         }
 
      
         // GET: Vendors/Search
         [HttpGet]
         [Authorize(Roles = "Admin, Accounting")]
-        public IActionResult Search()
+        public IActionResult Search(AppUtility.MenuItems SectionType)
         {
+            TempData["SectionType"] = SectionType;
             VendorSearchViewModel vendorSearchViewModel = new VendorSearchViewModel
             {
                 ParentCategories = _context.ParentCategories.ToList(),
@@ -227,7 +229,7 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: Vendors/Create
         [Authorize(Roles = "Admin, Accounting")]
-        public IActionResult Create()
+        public IActionResult Create(AppUtility.MenuItems SectionType)
         {
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
@@ -245,6 +247,7 @@ namespace PrototypeWithAuth.Controllers
             }
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
+            createSupplierViewModel.SectionType = SectionType;
             return View(createSupplierViewModel);
         }
 
@@ -307,7 +310,8 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(vendorComment.VendorComment);
                     _context.SaveChanges();
                 }
-                return RedirectToAction(nameof(IndexForPayment));
+
+                return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
             }
 
 
@@ -316,24 +320,38 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: Vendors/Edit/5
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, AppUtility.MenuItems SectionType)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var vendor = await _context.Vendors.FindAsync(id);
-            if (vendor == null)
+            CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
+            createSupplierViewModel.Vendor = await _context.Vendors.FindAsync(id);
+            createSupplierViewModel.SectionType = SectionType;
+            if (createSupplierViewModel.Vendor == null)
             {
                 return NotFound();
             }
-
-
+            createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+            List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
+            List<AddCommentViewModel> vendorComments = new List<AddCommentViewModel>();
+            _context.VendorContacts.Where(c => c.VendorID == id).ToList().ForEach(c => vendorContacts.Add(new AddContactViewModel { VendorContact = c, IsActive = true }));
+            _context.VendorComments.Where(c => c.VendorID == id).ToList().ForEach(c => vendorComments.Add(new AddCommentViewModel { VendorComment = c, IsActive = true }));
+            int count = vendorContacts.Count;
+            for (int i = count-1; i < 10; i++)
+            {
+                vendorContacts.Add(new AddContactViewModel());
+                vendorComments.Add(new AddCommentViewModel());
+            }
+            createSupplierViewModel.VendorContacts = vendorContacts;
+            createSupplierViewModel.VendorComments = vendorComments;
+      
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
 
-            return View(vendor);
+            return View(createSupplierViewModel);
         }
 
         // POST: Vendors/Edit/5
@@ -342,34 +360,51 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> Edit(int id, [Bind("VendorID,VendorEnName,VendorHeName,VendorBuisnessID,ContactPerson,ContactEmail,OrderEmail,VendorContactPhone1,VendorContactPhone2,VendorFax,VendorCity,VendorStreet,VendorZip,VendorWebsite,VendorBank,VendorBankBranch,VendorAccountNum,VendorSwift,VendorBIC,VendorGoldAccount")] Vendor vendor)
+        public async Task<IActionResult> Edit(CreateSupplierViewModel createSupplierViewModel)
         {
-            if (id != vendor.VendorID)
+            List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
+            List<AddCommentViewModel> vendorComments = new List<AddCommentViewModel>();
+            for (int i = 0; i < createSupplierViewModel.VendorContacts.Count(); i++)
             {
-                return NotFound();
+                if (!createSupplierViewModel.VendorContacts[i].IsActive)
+                {
+                    ModelState.Remove($"VendorContacts[{i}].VendorContact.VendorContactName");
+                    ModelState.Remove($"VendorContacts[{i}].VendorContact.VendorContactEmail");
+                    ModelState.Remove($"VendorContacts[{i}].VendorContact.VendorContactPhone");
+                }
+                else
+                {
+                    vendorContacts.Add(createSupplierViewModel.VendorContacts[i]);
+                }
             }
-
+            for (int i = 0; i < createSupplierViewModel.VendorComments.Count(); i++)
+            {
+                if (createSupplierViewModel.VendorComments[i].IsActive)
+                {
+                    vendorComments.Add(createSupplierViewModel.VendorComments[i]);
+                }
+            }
             if (ModelState.IsValid)
             {
-                try
+                _context.Update(createSupplierViewModel.Vendor);
+                _context.SaveChanges();
+                foreach (var vendorContact in vendorContacts)
                 {
-                    _context.Update(vendor);
-                    await _context.SaveChangesAsync();
+                    vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                    _context.Update(vendorContact.VendorContact);
+                    _context.SaveChanges();
                 }
-                catch (DbUpdateConcurrencyException)
+                foreach (var vendorComment in vendorComments)
                 {
-                    if (!VendorExists(vendor.VendorID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    vendorComment.VendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
+                    _context.Update(vendorComment.VendorComment);
+                    _context.SaveChanges();
                 }
-                return RedirectToAction(nameof(IndexForPayment));
+                return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType});
             }
-            return View(vendor);
+
+
+            return View(createSupplierViewModel);
         }
 
         // GET: Vendors/Delete/5

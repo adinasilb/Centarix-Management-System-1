@@ -729,7 +729,7 @@ table th {
 
     .acc-link-clr:hover {
         font-weight: bold;
-        color: var(--acc-color);
+        color:black;
         text-decoration: none;
     }
 
@@ -829,6 +829,7 @@ a.activeNavLabMan {
 }
 
 ul li.acc-sidebar.active {
+
     filter: var(--acc-filter);
 }
 

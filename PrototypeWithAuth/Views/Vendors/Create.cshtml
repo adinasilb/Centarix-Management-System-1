@@ -1,9 +1,14 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel;
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
-@{
-    ViewData["Title"] = "Create";
+@if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
+{
+    Layout = "~/Views/Shared/SuppliersNavViewForLabManage.cshtml";
+}
+else
+{
     Layout = "~/Views/Shared/SuppliersNavView.cshtml";
 }
 
@@ -11,9 +16,9 @@
     <div class="card-body" id="addVendorModal">
         <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
-            <div asp-validation-summary="All" class="text-danger"></div>
-
-            <div class="new-modal-header border-bottom box-shadow container-fluid" style="padding: 0.5em 6em">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(c=>c.SectionType)
+            <div class="new-modal-header border-bottom container-fluid" style="padding: 0.5em 6em">
                 <div class="row mt-3 mb-5">
                     <div class="col-8 offset-0">
                         <h2 class="mt-1">New Supplier</h2>
@@ -189,11 +194,11 @@
 
                             <div class="text-right p-2 row popover-div">
                                 <div class="col-9"> <h2 class="text-left">Comments, Warnings, and Discounts</h2></div>
-                                
+
                                 <div class=" container col-2">
                                     <ul class="list-unstyled">
                                         <li><button href="#" id="addSupplierComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" class="btn btn-circle btn-xl">   +</button></li>
-                                       
+
                                         <div style="display:none;" id="popover-content">
                                             @foreach (var item in Model.CommentTypes)
                                             {
@@ -207,27 +212,27 @@
                             <div id="comment-info">
                                 @for (int i = 0; i < Model.VendorComments.Count(); i++)
                                 {
-                                <div class="table comment-info border p-2 mb-3" style="display:none">
-                                    @Html.HiddenFor(x => x.VendorComments[i].IsActive, htmlAttributes: new { @class = "comment-active" })
-                                    @Html.HiddenFor(x => x.VendorComments[i].VendorComment.CommentType, htmlAttributes: new { @class = "comment-type" })
+                                    <div class="table comment-info border p-2 mb-3" style="display:none">
+                                        @Html.HiddenFor(x => x.VendorComments[i].IsActive, htmlAttributes: new { @class = "comment-active" })
+                                        @Html.HiddenFor(x => x.VendorComments[i].VendorComment.CommentType, htmlAttributes: new { @class = "comment-type" })
 
-                                    <div class="row ml-2  border-bottom-0">
-                                        <div class="ml-2 mt-auto mb-auto ">
-                                            <img src="~/images/css/profile_circle_big.png" height="45" alt="default User image" />
-                                        </div>
-                                        <div class="col-8 mr-4 ">
-                                            <div class=" p-3 ">
-                                                <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
-                                                <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
-                                                <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
-                                                <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0" />
-                                                <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger"></span>
+                                        <div class="row ml-2  border-bottom-0">
+                                            <div class="ml-2 mt-auto mb-auto ">
+                                                <img src="~/images/css/profile_circle_big.png" height="45" alt="default User image" />
+                                            </div>
+                                            <div class="col-8 mr-4 ">
+                                                <div class=" p-3 ">
+                                                    <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
+                                                    <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
+                                                    <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
+                                                    <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0" />
+                                                    <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger"></span>
+                                                </div>
+
                                             </div>
 
                                         </div>
-
                                     </div>
-                                </div>
                                 }
                             </div>
 

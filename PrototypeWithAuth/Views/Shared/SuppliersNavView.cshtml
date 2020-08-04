@@ -14,11 +14,12 @@
                 @*@Html.ActionLink("All", "IndexForPayment", "Vendors", new { }, new { @class = "btn btn-link text-dark" })*@
             </li>
             <li class="nav-item my-md-4 acc-sidebar">
-                <a class="acc-link-clr new-supplier" href="@Url.ActionLink("Create", "Vendors")"> <i class="icon-add_circle_outline-24px" style="font-size:1.6rem;"></i> <br /> New Supplier</a>
+                <a class="acc-link-clr new-supplier" href="@Url.ActionLink("Create", "Vendors", new { 
+                                                          @SectionType = AppUtility.MenuItems.Accounting })"> <i class="icon-add_circle_outline-24px" style="font-size:1.6rem;"></i> <br /> New Supplier</a>
                 @*@Html.ActionLink("New Supplier", "Create", "Vendors", new { }, new { @class = "btn btn-link text-dark" })*@
             </li>
             <li class="nav-item my-md-4 acc-sidebar">
-                <a class="acc-link-clr" href="@Url.ActionLink("Search", "Vendors")">  <i class="icon-zoom_in-24px-01" style="font-size:1.6rem;"></i> <br /> Search</a>
+                <a class="acc-link-clr" href="@Url.ActionLink("Search", "Vendors", new { @SectionType = AppUtility.MenuItems.Accounting })">  <i class="icon-zoom_in-24px-01" style="font-size:1.6rem;"></i> <br /> Search</a>
             </li>
         </ul>
         @*</nav>*@

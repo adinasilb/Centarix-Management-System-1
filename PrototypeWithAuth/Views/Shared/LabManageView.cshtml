@@ -57,7 +57,7 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
                 <li class="nav-item ml-4 d-table ">
-                    @Html.ActionLink("Suppliers", "IndexForLabManage", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers }, new { @class = suppliersClass })
+                    @Html.ActionLink("Suppliers", "IndexForPayment", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers, @SectionType = AppUtility.MenuItems.LabManagement }, new { @class = suppliersClass })
                 </li>
                 <li class="nav-item ml-5 ">
                     @Html.ActionLink("Locations", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.LabManagement }, new { @class =locationsClass })

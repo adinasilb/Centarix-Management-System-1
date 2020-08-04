@@ -56,6 +56,11 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Google Secure App Password")]
         public string SecureAppPass { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Phone Number")]
+        [Required]
+        public string PhoneNumber { get; set; }
+
 
         //Permissions
         public List<UserRoleViewModel> OrderRoles { get; set; }
