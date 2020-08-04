@@ -32,13 +32,18 @@ namespace PrototypeWithAuth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
 
 
-            //Set database Connection from application json file
+
+            ////Set database Connection from application json file
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("AzureConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
 
 
             //add identity
@@ -119,21 +124,56 @@ namespace PrototypeWithAuth
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
-            
-            IdentityResult roleResult;
-            foreach (var roleName in roleNames)
-            {
-                bool roleExist = await RoleManager.RoleExistsAsync(roleName);
-                if (!roleExist)
-                {
-                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
-                }
-            }
-            var poweruser = new ApplicationUser();
-            poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+            //string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
 
-            await UserManager.AddToRoleAsync(poweruser, "Admin");
+            IdentityResult roleResult;
+            //var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            //foreach (var roleName in roleNames)
+            //{
+            //    bool roleExist = await RoleManager.RoleExistsAsync(roleName);
+            //    if (!roleExist)
+            //    {
+            //        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+            //    }
+            //}
+            roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            //var poweruser = new ApplicationUser();
+            //poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+
+            //await UserManager.AddToRoleAsync(poweruser, "Admin");
+
+            var adminuser = new ApplicationUser()
+            {
+                UserName = "adina@centarix.com",
+                Email = "adina@centarix.com",
+                FirstName = "Adina",
+                LastName = "Gayer",
+                EmailConfirmed = true
+            };
+            var createAdminUser = await UserManager.CreateAsync(adminuser, "adinabCE2063*");
+            adminuser.EmailConfirmed = true;
+            var result = await UserManager.UpdateAsync(adminuser);
+            if (createAdminUser.Succeeded)
+            {
+                await UserManager.AddToRoleAsync(adminuser, "Admin");
+            }
+
+            //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+            // //{
+            // //    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
+            // //    Email = Configuration.GetSection("UserSettings")["UserEmail"]
+            // //};
+            //string UserPassword = /*Configuration.GetSection("UserSettings")["UserEmail"]*/ "adinabCE2063*!";
+            //var _user = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
+            //if (_user == null)
+            //{
+            //    var createPowerUser = await UserManager.CreateAsync(poweruser, UserPassword);
+            //    if (createPowerUser.Succeeded)
+            //    {
+            //        await UserManager.AddToRoleAsync(poweruser, "Admin");
+            //    }
+            //}
+            //  }
         }
     }
 } 
