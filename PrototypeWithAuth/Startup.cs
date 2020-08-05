@@ -41,9 +41,13 @@ namespace PrototypeWithAuth
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("AzureConnection")));
 
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("CentarixConnection")));
 
 
             //add identity
@@ -124,19 +128,22 @@ namespace PrototypeWithAuth
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            //string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
+            string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
 
             IdentityResult roleResult;
-            //var roleCheck = await RoleManager.RoleExistsAsync("Admin");
-            //foreach (var roleName in roleNames)
-            //{
-            //    bool roleExist = await RoleManager.RoleExistsAsync(roleName);
-            //    if (!roleExist)
-            //    {
-            //        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
-            //    }
-            //}
-            roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            if (!roleCheck)
+            {
+                roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+            foreach (var roleName in roleNames)
+            {
+                bool roleExist = await RoleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
             //var poweruser = new ApplicationUser();
             //poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
 

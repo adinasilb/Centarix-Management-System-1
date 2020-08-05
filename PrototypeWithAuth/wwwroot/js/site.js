@@ -15,6 +15,7 @@ function showmodal() {
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#parentlist").change(function () {
+	console.log("in parent list");
 	var parentCategoryId = $("#parentlist").val();
 	var url = "/Requests/GetSubCategoryList";
 
