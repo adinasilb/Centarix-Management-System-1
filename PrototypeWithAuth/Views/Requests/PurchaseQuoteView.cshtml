@@ -74,21 +74,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var request in Model.Requests)
+                    @for (int i = 0; i < Model.Requests.Count(); i++)
                     {
 
                         <tr>
-                            <td style="font-weight: 500;">@request.SubUnit @request.Product.ProductName</td>
-                            <td>request.CatalogNumber</td>
-                            <td>request.Unit</td>
-                            @{double unitPrice = (request.Cost) / (request.Unit);}
+                            <td style="font-weight: 500;">@Model.Requests[i].SubUnit @Model.Requests[i].Product.ProductName</td>
+                            <td>@Model.Requests[i].CatalogNumber</td>
+                            <td>@Model.Requests[i].Unit</td>
+                            @{double unitPrice = (Model.Requests[i].Cost) / (Model.Requests[i].Unit);}
                             <td>@unitPrice.ToString("N2")</td>
-                            <td>@request.Cost</td>
+                            <td>@Model.Requests[i].Cost</td>
                         </tr>
 
+
                     }
-                    }
-                    @{ double total = @Model.Requests.Sum(r => r.Cost);
+                    @{ double total = Model.Requests.Sum(r => r.Cost);
                         double vat = total * .17;
                         double totalWithVat = total + vat;}
                     <tr>
@@ -134,13 +134,6 @@
                     <span class="payment-terms">@Model.Requests.FirstOrDefault().Terms</span>
                 </div>
             </div>
-        </div>
-        <br>
-        <br>
-        <div class="modal-footer p-4" style="justify-content:space-evenly;">
-            <input type="submit" class="inv-button" value="Confirm & Send Email" />
-            @*I removed the asp-action="ConfirmEmailModal" since this isnt in the modal*@
-            <button class="cancel-button" data-dismiss="modal">Cancel Email</button>@*FAIGE: should this delete the request?*@
         </div>
     </div>
 

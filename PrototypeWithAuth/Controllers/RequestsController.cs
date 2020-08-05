@@ -2465,7 +2465,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, "gmailpassword");// ownerPassword);//
+                    client.Authenticate(ownerEmail, request.ParentRequest.ApplicationUser.SecureAppPass);// ownerPassword);//
 
                     //"FakeUser@123"); // set up two step authentication and get app password
                     try
@@ -2569,7 +2569,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, "gmailpassword");// ownerPassword);//
+                    client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
 
                     //"FakeUser@123"); // set up two step authentication and get app password
                     try
@@ -2588,7 +2588,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (var quote in requests)
                         {
                             quote.QuoteStatusID = 2;
-                            quote.ParentQuote.ApplicationUserID = currentUser.Id;
+                            quote.ParentRequest.ApplicationUserID = currentUser.Id;
                             //_context.Update(quote.ParentQuote);
                             //_context.SaveChanges();
                             _context.Update(quote);
@@ -2725,7 +2725,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmQuoteOrderEmailModal(ConfirmQuoteOrderEmailViewModel confirmQuoteOrderEmail)
         {
             var requests = _context.Requests.OfType<Quote>().Where(r => r.Product.VendorID == confirmQuoteOrderEmail.VendorId && r.QuoteStatusID == 3)
-                     .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor);
+                     .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
             string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
@@ -2768,7 +2768,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, "gmailpassword");// ownerPassword);//
+                    client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
 
                     //"FakeUser@123"); // set up two step authentication and get app password
                     try
@@ -2838,7 +2838,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> LabManageOrders()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 3)
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Quote>().Where(r => r.QuoteStatusID == 3 && r.RequestStatusID!=2)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ParentRequest.ApplicationUser)
@@ -3192,15 +3192,13 @@ namespace PrototypeWithAuth.Controllers
                 return View("~/Views/Shared/RequestError.cshtml");
             }
 
-            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)receivedLocationViewModel.PageType;
             return RedirectToAction("Index", new
             {
                 page = receivedLocationViewModel.Page,
                 requestStatusID = receivedLocationViewModel.RequestStatusID,
                 subcategoryID = receivedLocationViewModel.SubCategoryID,
                 vendorID = receivedLocationViewModel.VendorID,
-                applicationUserID = receivedLocationViewModel.ApplicationUserID,
-                PageType = requestPageTypeEnum
+                applicationUserID = receivedLocationViewModel.ApplicationUserID
             });
         }
 
