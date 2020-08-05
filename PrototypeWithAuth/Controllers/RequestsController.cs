@@ -3215,8 +3215,8 @@ namespace PrototypeWithAuth.Controllers
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
-                RequestFolderName = RequestFolderNameEnum
-                
+                RequestFolderName = RequestFolderNameEnum,
+                Files = new List<FileInfo>()
             };
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -3379,6 +3379,12 @@ namespace PrototypeWithAuth.Controllers
                 return View("~/Views/Shared/RequestError.cshtml");
             }
           
+
+        }
+
+
+        public void SaveDocumentFiles(string FileType, FileInfo File)
+        {
 
         }
 
