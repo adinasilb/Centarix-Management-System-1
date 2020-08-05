@@ -1446,6 +1446,190 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> DetailsSummaryModalView(int? id, bool NewRequestFromProduct = false)
+        {
+            //string ModalViewType = "";
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var parentcategories = await _context.ParentCategories.ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var projects = await _context.Projects.ToListAsync();
+            var subprojects = await _context.SubProjects.ToListAsync();
+            var vendors = await _context.Vendors.ToListAsync();
+            //redo the unit types when seeded
+            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            var paymenttypes = await _context.PaymentTypes.ToListAsync();
+            var companyaccounts = await _context.CompanyAccounts.ToListAsync();
+
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
+            {
+                ParentCategories = parentcategories,
+                ProductSubcategories = productsubactegories,
+                Projects = projects,
+                SubProjects = subprojects,
+                Vendors = vendors,
+                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
+                PaymentTypes = paymenttypes,
+                CompanyAccounts = companyaccounts
+            };
+
+            if (id == 0)
+            {
+                return RedirectToAction("CreateModalView");
+            }
+
+            else
+            {
+
+                requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
+                    .Include(r => r.ParentRequest)
+                    .Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.Product.ProductSubcategory.ParentCategory)
+                    .Include(r => r.RequestStatus)
+                    .Include(r => r.ParentRequest.ApplicationUser)
+                    .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                    .Include(r => r.SubProject)
+                    .ThenInclude(sp => sp.Project)
+                    .SingleOrDefault(x => x.RequestID == id);
+
+                //check if this works once there are commments
+                var comments = Enumerable.Empty<Comment>();
+                comments = _context.Comments
+                    .Include(r => r.ApplicationUser)
+                    .Where(r => r.Request.RequestID == id);
+                //needs to be instantiated here so it doesn't throw an error if nothing is in it
+                /*
+                 *I think it should be an ienumerable and look like
+                 *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
+                 *ike before but it's not recognizing the syntax
+                */
+                requestItemViewModel.OldComments = comments.ToList();
+
+                //may be able to do this together - combining the path for the orders folders
+                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());              
+                string uploadFolderInfo = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Info.ToString());
+                string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
+           
+                //the partial file name that we will search for (1- because we want the first one)
+                //creating the directory from the path made earlier
+
+             
+                if (Directory.Exists(uploadFolderInfo))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInfo);
+                    FileInfo[] infofilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.InfoFileStrings = new List<string>();
+                    foreach (var infofile in infofilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(infofile.FullName);
+                        requestItemViewModel.InfoFileStrings.Add(newFileString);
+                    }
+                }
+                if (Directory.Exists(uploadFolderPictures))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderPictures);
+                    FileInfo[] picturefilesfound = DirectoryToSearch.GetFiles("*.*");
+                    requestItemViewModel.PictureFileStrings = new List<string>();
+                    foreach (var picturefile in picturefilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(picturefile.FullName);
+                        requestItemViewModel.PictureFileStrings.Add(newFileString);
+                    }
+                }
+         
+
+                //GET PAYMENTS HERE
+                var payments = _context.Payments
+                    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+                    .Where(p => p.ParentRequestID == requestItemViewModel.Request.ParentRequestID).ToList();
+                requestItemViewModel.NewPayments = payments;
+
+                if (payments.Count > 0)
+                {
+                    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+                    var totalPaymentsToDate = 0;
+                    foreach (var payment in payments)
+                    {
+                        if (payment.PaymentDate <= DateTime.Now)
+                        {
+                            totalPaymentsToDate++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+                }
+                else
+                {
+                    requestItemViewModel.Debt = 0;
+                }
+
+
+                //locations:
+                //get the list of requestLocationInstances in this request
+                //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
+                var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
+                var requestLocationInstances = request1.RequestLocationInstances.ToList();
+                //if it has => (which it should once its in a details view)
+                if (requestLocationInstances.Any())
+                {
+                    //get the parent location instances of the first one
+                    //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
+                    //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
+                    requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    //need to test b/c the model is int? which is nullable
+                    if (requestItemViewModel.ParentLocationInstance != null)
+                    {
+                        //inserting list of childrenslocationinstances to show on the frontend
+                        requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
+                            .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
+                            .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+                        //var x = 0; //place in cli
+                        //requestItemViewModel.ChildrenLocationInstancesRequests = new List<Request>();
+                        //foreach (var cli in requestItemViewModel.ChildrenLocationInstances)
+                        //{
+                        //    var req = _context.Requests
+                        //        .Include(r => r.RequestLocationInstances.Select(rli => rli.LocationInstanceID == cli.LocationInstanceID)).Include(r => r.Product)
+                        //        .FirstOrDefault();
+                        //    if (req != null)
+                        //    {
+                        //        requestItemViewModel.ChildrenLocationInstancesRequests.Add(req);
+                        //    }
+                        //}
+
+                    }
+                }
+
+                if (requestItemViewModel.Request == null)
+                {
+                    TempData["InnerMessage"] = "The request sent in was null";
+                }
+            }
+
+            //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
+            //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
+            //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
+            if (AppUtility.IsAjaxRequest(this.Request))
+            {
+                TempData["IsFull"] = false;
+                return PartialView(requestItemViewModel);
+            }
+            else
+            {
+                TempData["IsFull"] = true;
+                return View(requestItemViewModel);
+            }
+
+        }
+
 
         //CAN TAKE OUT THIS ENTIRE HTTPPOST FOR THE DETAILS MODAL VIEW B/C ITS NEVER USED
         [HttpPost]
@@ -1862,6 +2046,196 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> EditSummaryModalView(int? id, bool NewRequestFromProduct = false)
+        {
+            string ModalViewType = "";
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var parentcategories = await _context.ParentCategories.ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var projects = await _context.Projects.ToListAsync();
+            var vendors = await _context.Vendors.ToListAsync();
+            //redo the unit types when seeded
+            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            var paymenttypes = await _context.PaymentTypes.ToListAsync();
+            var companyaccounts = await _context.CompanyAccounts.ToListAsync();
+
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
+            {
+                ParentCategories = parentcategories,
+                ProductSubcategories = productsubactegories,
+                Vendors = vendors,
+                Projects = projects,
+                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
+                PaymentTypes = paymenttypes,
+                CompanyAccounts = companyaccounts
+            };
+
+            ModalViewType = "Edit";
+
+            requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product.ProductSubcategory)
+                .Include(r => r.Product.ProductSubcategory.ParentCategory)
+                .Include(r => r.RequestStatus)
+                .Include(r => r.ParentRequest.ApplicationUser)
+                .Include(r => r.ParentRequest.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
+                .Include(r => r.SubProject)
+                .Include(r => r.SubProject.Project)
+                .SingleOrDefault(x => x.RequestID == id);
+
+            //load the correct list of subprojects
+            var subprojects = await _context.SubProjects
+                .Where(sp => sp.ProjectID == requestItemViewModel.Request.SubProject.ProjectID)
+                .ToListAsync();
+            requestItemViewModel.SubProjects = subprojects;
+
+            var comments = Enumerable.Empty<Comment>();
+            comments = _context.Comments
+                .Include(r => r.ApplicationUser)
+                .Where(r => r.Request.RequestID == id);
+            //needs to be instantiated here so it doesn't throw an error if nothing is in it
+            /*
+             *I think it should be an ienumerable and look like
+             *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
+             *ike before but it's not recognizing the syntax
+            */
+            requestItemViewModel.OldComments = comments.ToList();
+
+            //may be able to do this together - combining the path for the orders folders
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
+            string uploadFolderInfo = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Info.ToString());
+            string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
+            //the partial file name that we will search for (1- because we want the first one)
+            //creating the directory from the path made earlier
+
+      
+            if (Directory.Exists(uploadFolderInfo))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInfo);
+                FileInfo[] infofilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.InfoFileStrings = new List<string>();
+                foreach (var infofile in infofilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(infofile.FullName);
+                    requestItemViewModel.InfoFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderPictures))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderPictures);
+                FileInfo[] picturefilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.PictureFileStrings = new List<string>();
+                foreach (var picturefile in picturefilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(picturefile.FullName);
+                    requestItemViewModel.PictureFileStrings.Add(newFileString);
+                }
+            }
+
+            //GET PAYMENTS HERE
+            var payments = _context.Payments
+                .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+                .Where(p => p.ParentRequestID == requestItemViewModel.Request.ParentRequestID).ToList();
+            requestItemViewModel.NewPayments = payments;
+
+            if (payments.Count > 0)
+            {
+                var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+                var totalPaymentsToDate = 0;
+                foreach (var payment in payments)
+                {
+                    if (payment.PaymentDate <= DateTime.Now)
+                    {
+                        totalPaymentsToDate++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+            }
+            else
+            {
+                requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
+            }
+
+            //setting the lists of companyaccounts by payment type id (so easy filtering on the frontend)
+
+            //first get the list of payment types there are
+            var paymentTypeIds = _context.CompanyAccounts.Select(ca => ca.PaymentTypeID).Distinct().ToList();
+            //initialize the dictionary
+            requestItemViewModel.CompanyAccountListsByPaymentTypeID = new Dictionary<int, IEnumerable<CompanyAccount>>();
+            //foreach paymenttype
+            foreach (var paymentTypeID in paymentTypeIds)
+            {
+                var caList = _context.CompanyAccounts.Where(ca => ca.PaymentTypeID == paymentTypeID);
+                requestItemViewModel.CompanyAccountListsByPaymentTypeID.Add(paymentTypeID, caList);
+            }
+
+
+
+            //locations:
+            //get the list of requestLocationInstances in this request
+            //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
+            var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
+            var requestLocationInstances = request1.RequestLocationInstances.ToList();
+            //if it has => (which it should once its in a details view)
+            if (requestLocationInstances.Any())
+            {
+                //get the parent location instances of the first one
+                //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
+                //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
+                requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                //need to test b/c the model is int? which is nullable
+                if (requestItemViewModel.ParentLocationInstance != null)
+                {
+                    //inserting list of childrenslocationinstances to show on the frontend
+                    requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
+                        .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
+                        .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+                    //var x = 0; //place in cli
+                    //requestItemViewModel.ChildrenLocationInstancesRequests = new List<Request>();
+                    //foreach (var cli in requestItemViewModel.ChildrenLocationInstances)
+                    //{
+                    //    var req = _context.Requests
+                    //        .Include(r => r.RequestLocationInstances.Select(rli => rli.LocationInstanceID == cli.LocationInstanceID)).Include(r => r.Product)
+                    //        .FirstOrDefault();
+                    //    if (req != null)
+                    //    {
+                    //        requestItemViewModel.ChildrenLocationInstancesRequests.Add(req);
+                    //    }
+                    //}
+
+                }
+            }
+
+            if (requestItemViewModel.Request == null)
+            {
+                TempData["InnerMessage"] = "The request sent in was null";
+            }
+
+            ViewData["ModalViewType"] = ModalViewType;
+            //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
+            //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
+            //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
+            if (AppUtility.IsAjaxRequest(this.Request))
+            {
+                return PartialView(requestItemViewModel);
+            }
+            else
+            {
+                return View(requestItemViewModel);
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
@@ -2117,6 +2491,187 @@ namespace PrototypeWithAuth.Controllers
                 return View("~/Views/Shared/RequestError.cshtml");
             }
             //return RedirectToAction("Index");
+            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+            return RedirectToAction("Index", new
+            {
+                page = requestItemViewModel.Page,
+                requestStatusID = requestItemViewModel.RequestStatusID,
+                subcategoryID = requestItemViewModel.SubCategoryID,
+                vendorID = requestItemViewModel.VendorID,
+                applicationUserID = requestItemViewModel.ApplicationUserID,
+                PageType = requestPageTypeEnum
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> EditSummaryModalView(RequestItemViewModel requestItemViewModel, string OrderType)
+        {
+            ////initializing the boolean here
+            ////b/c need to check if the requestID is 0 but then pass in the new request ID
+            //bool WithOrder = false;
+
+            ////fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
+            //requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+            //requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
+            //requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
+
+            ////in case we need to return to the modal view
+            //requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
+            //requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
+            //requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+            ////redo the unit types when seeded
+            //var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            //requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
+
+            ////declared outside the if b/c it's used farther down to (for parent request the new comment too)
+            //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+
+            ////checks if it's a new request --> don't need this b/c edit won't be on something new
+            ////if (requestItemViewModel.Request.ParentRequestID == 0)
+            ////{
+            ////    //use application user of whoever signed in
+            ////    requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
+            ////}
+
+            ////can we combine this with the one above?
+            ////if it's a new request need to put in a request status
+            //if (requestItemViewModel.Request.RequestStatusID == null)
+            //{
+            //    //all new ones will be "new" until actually ordered after the confirm email
+            //    requestItemViewModel.Request.RequestStatusID = 1;
+            //    //if it's less than 5500 shekel OR the user is an admin it will be ordered
+            //    if ((requestItemViewModel.Request.Cost < 5500 || User.IsInRole("Admin")) && OrderType.Equals("Order"))
+            //    {
+            //        WithOrder = true;
+            //    }
+            //}
+            ////in case we need to redirect to action
+            ////TempData["ModalView"] = true;
+            //TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+
+            //if (requestItemViewModel.Request.Terms == -1)
+            //{
+            //    requestItemViewModel.Request.ParentRequest.Payed = true;
+            //}
+
+
+            //var context = new ValidationContext(requestItemViewModel.Request, null, null);
+            //var results = new List<ValidationResult>();
+            //if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
+            //{
+            //    /*
+            //     * the viewmodel loads the request.product with a primary key of 0
+            //     * so if you don't insert the request.productid into the request.product.productid
+            //     * it will create a new one instead of updating the existing one
+            //     * only need this if using an existing product
+            //     */
+            //    requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
+            //    requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
+            //    try
+            //    {
+            //        //_context.Update(requestItemViewModel.Request.Product.SubProject);
+            //        //_context.Update(requestItemViewModel.Request.Product);
+            //        _context.Update(requestItemViewModel.Request);
+            //        await _context.SaveChangesAsync();
+
+            //        if (!String.IsNullOrEmpty(requestItemViewModel.NewComment.CommentText))
+            //        {
+            //            try
+            //            {
+            //                //save the new comment
+            //                requestItemViewModel.NewComment.ApplicationUserID = currentUser.Id;
+            //                requestItemViewModel.NewComment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+            //                requestItemViewModel.NewComment.RequestID = requestItemViewModel.Request.RequestID;
+            //                _context.Add(requestItemViewModel.NewComment);
+            //                await _context.SaveChangesAsync();
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                //Tell the user that the comment didn't save here
+            //            }
+            //        }
+
+            //        //check if there are any files to upload first
+            //        //save the files
+            //        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            //        string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
+
+            //        if (requestItemViewModel.InfoFiles != null) //test for more than one???
+            //        {
+            //            var x = 1;
+            //            foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
+            //            {
+            //                //create file
+            //                string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Info.ToString());
+            //                Directory.CreateDirectory(folderPath);
+            //                string uniqueFileName = x + infoFile.FileName;
+            //                string filePath = Path.Combine(folderPath, uniqueFileName);
+            //                infoFile.CopyTo(new FileStream(filePath, FileMode.Create));
+            //                x++;
+            //            }
+            //        }
+            //        if (requestItemViewModel.PictureFiles != null) //test for more than one???
+            //        {
+            //            var x = 1;
+            //            foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
+            //            {
+            //                //create file
+            //                string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
+            //                Directory.CreateDirectory(folderPath);
+            //                string uniqueFileName = x + pictureFile.FileName;
+            //                string filePath = Path.Combine(folderPath, uniqueFileName);
+            //                pictureFile.CopyTo(new FileStream(filePath, FileMode.Create));
+            //                x++;
+            //            }
+            //        }
+
+            //        //test that this works
+            //        if (WithOrder)
+            //        {
+            //            return RedirectToAction("ConfirmEmailModal", new { id = requestItemViewModel.Request.RequestID });
+            //        }
+
+            //        //Saving the Payments - each one should come in with a 1) date 2) companyAccountID
+            //        if (requestItemViewModel.NewPayments != null)
+            //        {
+            //            foreach (Payment payment in requestItemViewModel.NewPayments)
+            //            {
+            //                payment.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+            //                payment.CompanyAccount = null;
+            //                //payment.Reference = "TEST";
+            //                try
+            //                {
+            //                    _context.Payments.Update(payment);
+            //                    await _context.SaveChangesAsync();
+            //                }
+            //                catch (Exception ex)
+            //                {
+
+            //                }
+            //            }
+            //        }
+            //    }
+            //    catch (DbUpdateException ex)
+            //    {
+            //        TempData["ErrorMessage"] = ex.Message.ToString();
+            //        TempData["InnerMessage"] = ex.InnerException.ToString();
+            //        return View("~/Views/Shared/RequestError.cshtml");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        TempData["ErrorMessage"] = ex.Message.ToString();
+            //        TempData["InnerMessage"] = ex.InnerException.ToString();
+            //        return View("~/Views/Shared/RequestError.cshtml");
+            //    }
+            //}
+            //else
+            //{
+            //    foreach (var result in results) Debug.WriteLine(result.ErrorMessage);
+            //    return View("~/Views/Shared/RequestError.cshtml");
+            //}
+            ////return RedirectToAction("Index");
             AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
             return RedirectToAction("Index", new
             {

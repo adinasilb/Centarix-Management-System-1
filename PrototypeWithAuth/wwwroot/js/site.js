@@ -588,7 +588,9 @@ $.fn.CheckSubUnitsFilled = function () {
 $.fn.EnableSubUnits = function () {
 	console.log("enable subunits");
 	$("#Request_SubUnit").prop("disabled", false);
-	$("#Request_SubUnitTypeID").prop("disabled", false);
+	$("#Request_SubUnitTypeID").materialSelect("destroy")
+	$("#Request_SubUnitTypeID").removeAttr("disabled")
+	$('#Request_SubUnitTypeID').materialSelect();
 	//$("#select-options-Request_SubUnitTypeID").prop("disabled", false);
 	//$("#select-options-Request_SubUnitTypeID").removeAttr("disabled");
 	$('[data-activates="select-options-Request_SubUnitTypeID"]').prop('disabled', false);
@@ -596,7 +598,9 @@ $.fn.EnableSubUnits = function () {
 
 $.fn.EnableSubSubUnits = function () {
 	$("#Request_SubSubUnit").prop("disabled", false);
-	$("#Request_SubSubUnitTypeID").prop("disabled", false);
+	$("#Request_SubSubUnitTypeID").materialSelect("destroy")
+	$("#Request_SubSubUnitTypeID").removeAttr("disabled")
+	$('#Request_SubSubUnitTypeID').materialSelect();
 	//$("#select-options-Request_SubSubUnitTypeID").prop("disabled", false);
 	//$("#select-options-Request_SubSubUnitTypeID").removeAttr("disabled");
 	$('[data-activates="select-options-Request_SubSubUnitTypeID"]').prop('disabled', false);
@@ -1226,6 +1230,17 @@ $(".load-product-edit").on("click", function (e) {
 	e.stopPropagation();
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+	console.log("itemurl: " + $itemurl);
+	$.fn.CallPageRequest($itemurl, "edit");
+	return false;
+});
+
+$(".load-product-edit-summary").on("click", function (e) {
+	console.log("inside of load product edit")
+	e.preventDefault();
+	e.stopPropagation();
+	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
+	var $itemurl = "Requests/EditSummaryModalView/?id=" + $(this).val();
 	console.log("itemurl: " + $itemurl);
 	$.fn.CallPageRequest($itemurl, "edit");
 	return false;
