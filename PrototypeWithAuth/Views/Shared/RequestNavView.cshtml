@@ -156,11 +156,8 @@
 
         </li>
                 <li class="nav-item mb-3 bold-hover-effects">
-                    <i class="fas icon-notifications-24px" style="        font-size: 1.75rem;
-        color: black !important;
-        opacity: .87;
-"></i>
-                    <a class="@notifications bold-hover-effects opac87 p-1">Notifications</a>
+                    <i class="fas icon-notifications-24px" style=" font-size: 1.75rem;  color: black !important;  opacity: .87;"></i>
+                    <a href="@Url.ActionLink("NotificationsView", "Requests", new { @PageType = pageType })" class="@notifications bold-hover-effects opac87 p-1">Notifications</a>
                 </li>
             }
 

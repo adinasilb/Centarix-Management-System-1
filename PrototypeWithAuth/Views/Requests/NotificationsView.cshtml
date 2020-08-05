@@ -1,0 +1,48 @@
+﻿@model List<PrototypeWithAuth.Models.Request>
+@{
+    ViewData["Title"] = "Index";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+<div class="mx-5 mt-3 pt-4 ">
+    <table class="table table-headerspaced table-noheaderlines table-hover ml-5 mt-4">
+        <thead>
+            <tr>
+                <th width="13%"></th>
+                <th width="13%">Name</th>
+                <th width="13%">Description</th>
+                <th width="13%">Date</th>
+                <th width="13%">Vendor</th>
+                <th width="30%"></th>               
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr class=" inv-list-item">
+                <td width="13%" class="p-5">
+                    icon
+                </td>
+                <td width="13%">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+                <td width="13%">@Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusDescription)</td>
+                <td width="13%"> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
+                <td width="13%"> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
+
+                @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
+                @if (item.RequestID == 4)
+                {
+                    <td width="30%">
+                        <button class="btn ask-arrival no-box-shadow danger-color rounded-pill text-white" data-title="Ask" style="padding: .50rem 1.25rem !important;" value="@item.RequestID">Ask</button>
+                    </td>
+                }
+                else
+                {
+                    <td >
+                    </td>
+                }
+
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

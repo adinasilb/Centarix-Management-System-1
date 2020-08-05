@@ -3934,6 +3934,19 @@ namespace PrototypeWithAuth.Controllers
           
 
         }
+        [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> NotificationsView()
+        {
+            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
+            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
+            var requests = _context.Requests.Where(r => r.RequestStatusID == 4).Include(r=>r.ParentRequest).Include(r=>r.Product).ThenInclude(p=>p.Vendor).Include(r=>r.RequestStatus).ToList();
+            var requests2 = _context.Requests.OrderByDescending(r => r.ParentRequest.OrderDate).Where(r => r.RequestStatusID != 4).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
+            requests = requests.Concat(requests2).ToList();
+            requests = requests.OrderByDescending(r => r.ParentRequest.OrderDate).ToList();
+            return View(requests);
+        }
+
 
     }
 }
