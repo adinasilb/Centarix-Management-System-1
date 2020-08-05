@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using MailKit.Net.Smtp;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +17,9 @@ using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
+using MimeKit;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -90,6 +94,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //await _userManager.AddToRoleAsync(user, registerUserViewModel.Role);
                     await _signManager.SignInAsync(user, false);
+                   
                     return RedirectToAction("Index", "ApplicationUsers");
                 }
                 else
@@ -275,6 +280,54 @@ namespace PrototypeWithAuth.Controllers
                         _context.SaveChanges();
                     }
 
+                    var userId = await _userManager.GetUserIdAsync(user);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    string confirmationLink  = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { area = "Identity", userId = userId, code = code },
+                protocol: Request.Scheme);
+           
+
+                var message = new MimeMessage();
+
+                    //instantiate the body builder
+                    var builder = new BodyBuilder();
+
+
+
+                    
+
+                    //add a "From" Email
+                    message.From.Add(new MailboxAddress("debbie", "debbie@centarix.com"));
+
+                    // add a "To" Email
+                    message.To.Add(new MailboxAddress(user.FirstName, user.Email));
+
+                    //subject
+                    message.Subject = "Confirm centarix sign-up Link";
+
+                    //body
+                    builder.TextBody =confirmationLink;
+
+                    message.Body = builder.ToMessageBody();
+
+                    using (var client = new SmtpClient())
+                    {
+
+                        client.Connect("smtp.gmail.com", 587, false);
+                        client.Authenticate("debbie@centarix.com", "tzrgiekggokytvro");
+                        try
+                        {
+                            client.Send(message);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+
+                        client.Disconnect(true);
+                    }
                 }
                 else
                 {
