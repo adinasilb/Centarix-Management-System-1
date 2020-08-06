@@ -3263,6 +3263,12 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult DeleteDocumentModal()
+        {
+            return View();
+        }
+
 
 
         [HttpGet]
