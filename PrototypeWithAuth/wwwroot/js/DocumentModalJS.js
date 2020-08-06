@@ -28,7 +28,7 @@ $(".save-document-files").on("click", function (e) {
 		data: formData,
 		success: (partialResult) => {
 			//this.options.noteModalElement.modal('hide');
-			$(".documentsModal .modal-body").empty();
+			$(".carousel-item").remove();
 			$("#documentsModal").replaceWith('');
 			var $enumString = $(".open-document-modal").data("string");
 			var $requestId = $(".open-document-modal").data("id");
