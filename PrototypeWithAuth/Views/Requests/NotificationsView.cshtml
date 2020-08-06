@@ -5,39 +5,87 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 <div class="mx-5 mt-3 pt-4 ">
-    <table class="table table-headerspaced table-noheaderlines table-hover ml-5 mt-4">
+    <table class="table table-headerspaced table-noheaderlines table-hover ml-5 mt-4 " style="width:95%;">
         <thead>
             <tr>
-                <th width="13%"></th>
-                <th width="13%">Name</th>
-                <th width="13%">Description</th>
-                <th width="13%">Date</th>
-                <th width="13%">Vendor</th>
-                <th width="30%"></th>               
+                <th></th>
+                <th >Name</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Vendor</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
+                string iconStyle = "";
+                string icon = "";
+                string color = "";
+                string description = item.RequestStatus.RequestStatusDescription;
+                switch (item.RequestStatusID)
+                {
+                    case 1:
+                        description = "item requested";
+                        color = "black";
+                        icon = "icon-centarix-icons-04";
+                        break;
+                    case 2:
+                        if (item.ParentRequest.InvoiceDate.AddDays(item.ExpectedSupplyDays) < DateTime.Now)
+                        {
+                            description = $"should have arrived {item.ParentRequest.InvoiceDate.AddDays(item.ExpectedSupplyDays).ToShortDateString()}";
+                            color = "#DB2127";
+                            icon = "fas fa-exclamation";
+                            iconStyle = "color: black!important;   background: transparent";
+                        }
+                        else
+                        {
+                            description = "item ordered";
+                            color = "#00CA72";
+                            icon = "icon-centarix-icons-03";
+                        }
+                        break;
+                    case 3:
+                        color = "var(--order-inv-color)";
+                        description = $"recieved by {item.ApplicationUserReceiver.FirstName}";
+                        icon = "fas fa-shopping-bag";
+                        iconStyle = "color: black!important;   background: transparent";
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        color = "#3F51B5";
+                        description = "item approved";
+                        icon = "icon-done-24px";
+                        break;
+                }
             <tr class=" inv-list-item">
-                <td width="13%" class="p-5">
-                    icon
+                <td class="p-5">
+                    <i style='font-size:1.4rem; @iconStyle' class='@icon '></i>
+                    
                 </td>
-                <td width="13%">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
-                <td width="13%">@Html.DisplayFor(modelItem => item.RequestStatus.RequestStatusDescription)</td>
-                <td width="13%"> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
-                <td width="13%"> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
+                <td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+                <td style="color: @color;">@description</td>
+                <td> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
+                <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
 
                 @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
-                @if (item.RequestID == 4)
-                {
-                    <td width="30%">
-                        <button class="btn ask-arrival no-box-shadow danger-color rounded-pill text-white" data-title="Ask" style="padding: .50rem 1.25rem !important;" value="@item.RequestID">Ask</button>
+                @if (item.RequestStatusID == 2 && item.ParentRequest.InvoiceDate.AddDays(item.ExpectedSupplyDays) < DateTime.Now)
+                    {
+                    <td>
+                    </td>
+                    <td class="text-right mr-3">
+                        <button class="btn order-late no-box-shadow danger-color rounded-pill text-white text-capitalize font-weight-normal" data-title="Ask" style="padding: .34rem 1.25rem !important;" value="@item.RequestID">Ask</button>
                     </td>
                 }
                 else
                 {
-                    <td >
+                    <td>
+                    </td>
+                    <td>
                     </td>
                 }
 

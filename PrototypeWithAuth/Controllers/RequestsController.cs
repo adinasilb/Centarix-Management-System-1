@@ -3940,13 +3940,77 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
-            var requests = _context.Requests.Where(r => r.RequestStatusID == 4).Include(r=>r.ParentRequest).Include(r=>r.Product).ThenInclude(p=>p.Vendor).Include(r=>r.RequestStatus).ToList();
-            var requests2 = _context.Requests.OrderByDescending(r => r.ParentRequest.OrderDate).Where(r => r.RequestStatusID != 4).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
+            var requests = _context.Requests.Where(r => r.RequestStatusID == 2 && r.ParentRequest.InvoiceDate.AddDays(r.ExpectedSupplyDays)<DateTime.Now).Include(r => r.ApplicationUserReceiver).Include(r=>r.ParentRequest).Include(r=>r.Product).ThenInclude(p=>p.Vendor).Include(r=>r.RequestStatus).ToList();
+            var requests2 = _context.Requests.OrderByDescending(r => r.ParentRequest.OrderDate).Where(r => !requests.Contains(r)).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
             requests = requests.Concat(requests2).ToList();
             requests = requests.OrderByDescending(r => r.ParentRequest.OrderDate).ToList();
             return View(requests);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> OrderLateModal(int id)
+        {
+            var request = _context.Requests.Where(r => r.RequestID ==id).Include(r => r.ParentRequest).ThenInclude(pr=>pr.ApplicationUser).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();          
+            return View(request);
+        }
 
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> OrderLateModal(Request request)
+        {
+            request = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r=>r.ParentRequest).ThenInclude(pr=>pr.ApplicationUser).Include(r=>r.Product).ThenInclude(p=>p.Vendor).FirstOrDefault();
+                //instatiate mimemessage
+                var message = new MimeMessage();
+
+                //instantiate the body builder
+                var builder = new BodyBuilder();
+
+
+                string ownerEmail = request.ParentRequest.ApplicationUser.Email;
+                string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
+                string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
+                string vendorEmail = request.Product.Vendor.OrdersEmail;
+                string vendorName = request.Product.Vendor.VendorEnName;
+
+                //add a "From" Email
+                message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
+
+                // add a "To" Email
+                message.To.Add(new MailboxAddress(vendorName, vendorEmail));
+
+                //subject
+                message.Subject = "Message to " + vendorName;
+
+                //body
+                builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName} , has not arrived yet.\n"+
+                        $"Please update us on the matter.\n"+
+                        $"Best regards,\n"+
+                        $"{request.ParentRequest.ApplicationUser.FirstName} { request.ParentRequest.ApplicationUser.FirstName}\n"+
+                        $"Centarix";
+
+                message.Body = builder.ToMessageBody();
+
+
+                using (var client = new SmtpClient())
+                {
+
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate(ownerEmail, ownerPassword);
+                    try
+                    {
+                        client.Send(message);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    client.Disconnect(true);
+
+                }
+                return RedirectToAction("NotificationsView");
+        }
     }
 }
