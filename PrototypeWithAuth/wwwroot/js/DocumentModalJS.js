@@ -28,6 +28,12 @@ $(".save-document-files").on("click", function (e) {
 		data: formData,
 		success: (partialResult) => {
 			//this.options.noteModalElement.modal('hide');
+			$(".documentsModal .modal-body").empty();
+			$("#documentsModal").replaceWith('');
+			var $enumString = $(".open-document-modal").data("string");
+			var $requestId = $(".open-document-modal").data("id");
+			console.log("enumstring: " + $enumString + "    : requestid: " + $requestId);
+			$.fn.OpenDocumentsModal($enumString, $requestId);
 			return false;
 		},
 
@@ -90,6 +96,28 @@ $(".save-document-files").on("click", function (e) {
 	//});
 	return false;
 });
+
+$.fn.OpenDocumentsModal = function (enumString, requestId) {
+	console.log("in open doc modal");
+	$("#documentsModal").replaceWith('');
+	//$(".modal-backdrop").first().removeClass();
+	$.ajax({
+		async: true,
+		url: "Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString,
+		type: 'GET',
+		cache: false,
+		success: function (data) {
+			var modal = $(data);
+			$('body').append(modal);
+			$("#documentsModal").modal({
+				backdrop: false,
+				keyboard: true,
+			});
+			$(".modal").modal('show');
+		}
+	});
+};
+
 
 //MDBootstrap Carousel
 $('.carousel.carousel-multi-item.v-2 .carousel-item').each(function () {

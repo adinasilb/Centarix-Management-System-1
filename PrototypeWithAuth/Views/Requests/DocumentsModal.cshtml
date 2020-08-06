@@ -11,133 +11,134 @@
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5" id="documentModalForm">
                 @*<a style="display: none;" id="ReopenDocModal" href="@Url.ActionLink("DocumentsModal","Requests", new { id = @Model.Request.RequestID, RequestFolderNameEnum = @Model.RequestFolderName})"></a>*@
                 <input type="hidden" asp-for="Request.RequestID" />
-                <div class="modal-header">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-2">
-                                <h2>@Model.RequestFolderName</h2>
-                            </div>
-                            <div class="col-2 offset-8">
-                                <div class="upload-btn-wrapper">
-                                    <button class="inv-button btn-block float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
-                                    <input type="file" asp-for="FilesToSave" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" multiple>
+                <a href="" class="open-document-modal" data-string="@Model.RequestFolderName" data-id="@Model.Request.RequestID" style="display: none;"></a>
+                    <div class="modal-header">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-2">
+                                    <h2>@Model.RequestFolderName</h2>
                                 </div>
-                                @*<input type="submit" value="Save" asp-action="DocumentsModal" class="btn btn-block inv-button save-document-files" />*@
-                                <input type="submit" value="Save" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" />
-                                @*<button class="btn inv-button save-document-files">Save</button>*@
-                                @*@Html.ActionLink("Save", "DocumentsModal", new { documentsModalViewModel = Model }, new { @class = "btn inv-button save-document-files" })*@
-                                @*@Html.ActionLink("Save", "DocumentsModal", new { }, new { @class = "btn inv-button save-document-files" })*@
-                                @*<button class="btn inv-button save-document-files"  data-string="@Html.ActionLink("Save","SaveDocumentFiles", n)">Save</button>*@
+                                <div class="col-2 offset-8">
+                                    <div class="upload-btn-wrapper">
+                                        <button class="inv-button btn-block float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
+                                        <input type="file" asp-for="FilesToSave" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" multiple>
+                                    </div>
+                                    @*<input type="submit" value="Save" asp-action="DocumentsModal" class="btn btn-block inv-button save-document-files" />*@
+                                    <input type="submit" value="Save" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" />
+                                    @*<button class="btn inv-button save-document-files">Save</button>*@
+                                    @*@Html.ActionLink("Save", "DocumentsModal", new { documentsModalViewModel = Model }, new { @class = "btn inv-button save-document-files" })*@
+                                    @*@Html.ActionLink("Save", "DocumentsModal", new { }, new { @class = "btn inv-button save-document-files" })*@
+                                    @*<button class="btn inv-button save-document-files"  data-string="@Html.ActionLink("Save","SaveDocumentFiles", n)">Save</button>*@
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-body">
-                    <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
+                    <div class="modal-body">
+                        <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
 
-                        <!--Controls-->
-                        <div class="controls-top mb-0">
-                            <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                            <a class="btn-floating" href="#carousel-example-multi" data-slide="next">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </div>
-                        <!--/.Controls-->
-                        <!-- Indicators -->
-                        <ol class="carousel-indicators">
-                            @for (int i = 0; i < Model.FileStrings.Count; i++)
-                            {
-                                string indicatorClass = "custom-document-indicator";
-                                if (i == 0)
+                            <!--Controls-->
+                            <div class="controls-top mb-0">
+                                <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                                <a class="btn-floating" href="#carousel-example-multi" data-slide="next">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
+                            <!--/.Controls-->
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                @for (int i = 0; i < Model.FileStrings.Count; i++)
                                 {
-                                    indicatorClass = " active";
+                                    string indicatorClass = "custom-document-indicator";
+                                    if (i == 0)
+                                    {
+                                        indicatorClass = " active";
+                                    }
+                                    <li data-target="#carousel-example-multi" id="custom-document-indicator" data-slide-to="@i" class="@indicatorClass"></li>
                                 }
-                                <li data-target="#carousel-example-multi" id="custom-document-indicator" data-slide-to="@i" class="@indicatorClass"></li>
-                            }
-                        </ol>
-                        <!--/.Indicators-->
+                            </ol>
+                            <!--/.Indicators-->
 
-                        <div class="carousel-inner v-2" role="listbox">
+                            <div class="carousel-inner v-2" role="listbox">
 
-                            @for (int i = 0; i < Model.FileStrings.Count; i++)
-                            {
-                                string carouselClass = "carousel-item";
-                                if (i == 0)
+                                @for (int i = 0; i < Model.FileStrings.Count; i++)
                                 {
-                                    carouselClass += " active";
+                                    string carouselClass = "carousel-item";
+                                    if (i == 0)
+                                    {
+                                        carouselClass += " active";
+                                    }
+                                    <div class="@carouselClass">
+                                        <div class="col-12 col-md-3">
+                                            <div class="card mb-2 doc-image-div">
+                                                <div class="card-body p-0">
+                                                    @{
+                                                        //string base64String = Convert.ToBase64String(Model.FileStrings[i]);
+                                                    }
+                                                    <img class="card-img-top" src="@Model.FileStrings[i]" alt="Card Image Cap" sizes="100%" />
+                                                </div>
+                                                <div class="card-footer">
+                                                    @Model.FileStrings[i]
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
-                                <div class="@carouselClass">
-                                    <div class="col-12 col-md-3">
-                                        <div class="card mb-2 doc-image-div">
-                                            <div class="card-body m-5 ">
-                                                @{
-                                                    //string base64String = Convert.ToBase64String(Model.FileStrings[i]);
-                                                }
-                                                <img class="card-img-top" src="" alt="Card Image Cap" />
-                                            </div>
-                                            <div class="card-footer">
-                                                @Model.FileStrings[i]
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
 
-                            @*<div class="carousel-item active">
-                                    <div class="col-12 col-md-4">
-                                        <div class="card mb-2">
-                                            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/img (36).jpg"
-                                                 alt="Card image cap">
-                                            <div class="card-body">
-                                                <h4 class="card-title font-weight-bold">Card title</h4>
-                                                <p class="card-text">
-                                                    Some quick example text to build on the card title and make up the bulk of the
-                                                    card's content.
-                                                </p>
-                                                <a class="btn btn-primary btn-md btn-rounded">Button</a>
+                                @*<div class="carousel-item active">
+                                        <div class="col-12 col-md-4">
+                                            <div class="card mb-2">
+                                                <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/img (36).jpg"
+                                                     alt="Card image cap">
+                                                <div class="card-body">
+                                                    <h4 class="card-title font-weight-bold">Card title</h4>
+                                                    <p class="card-text">
+                                                        Some quick example text to build on the card title and make up the bulk of the
+                                                        card's content.
+                                                    </p>
+                                                    <a class="btn btn-primary btn-md btn-rounded">Button</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="col-12 col-md-4">
-                                        <div class="card mb-2">
-                                            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/img (34).jpg"
-                                                 alt="Card image cap">
-                                            <div class="card-body">
-                                                <h4 class="card-title font-weight-bold">Card title</h4>
-                                                <p class="card-text">
-                                                    Some quick example text to build on the card title and make up the bulk of the
-                                                    card's content.
-                                                </p>
-                                                <a class="btn btn-primary btn-md btn-rounded">Button</a>
+                                    <div class="carousel-item">
+                                        <div class="col-12 col-md-4">
+                                            <div class="card mb-2">
+                                                <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/img (34).jpg"
+                                                     alt="Card image cap">
+                                                <div class="card-body">
+                                                    <h4 class="card-title font-weight-bold">Card title</h4>
+                                                    <p class="card-text">
+                                                        Some quick example text to build on the card title and make up the bulk of the
+                                                        card's content.
+                                                    </p>
+                                                    <a class="btn btn-primary btn-md btn-rounded">Button</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="col-12 col-md-4">
-                                        <div class="card mb-2">
-                                            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/img (38).jpg"
-                                                 alt="Card image cap">
-                                            <div class="card-body">
-                                                <h4 class="card-title font-weight-bold">Card title</h4>
-                                                <p class="card-text">
-                                                    Some quick example text to build on the card title and make up the bulk of the
-                                                    card's content.
-                                                </p>
-                                                <a class="btn btn-primary btn-md btn-rounded">Button</a>
+                                    <div class="carousel-item">
+                                        <div class="col-12 col-md-4">
+                                            <div class="card mb-2">
+                                                <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/img (38).jpg"
+                                                     alt="Card image cap">
+                                                <div class="card-body">
+                                                    <h4 class="card-title font-weight-bold">Card title</h4>
+                                                    <p class="card-text">
+                                                        Some quick example text to build on the card title and make up the bulk of the
+                                                        card's content.
+                                                    </p>
+                                                    <a class="btn btn-primary btn-md btn-rounded">Button</a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>*@
+                                    </div>*@
+
+                            </div>
 
                         </div>
-
                     </div>
-                </div>
             </form>
         </div>
     </div>
