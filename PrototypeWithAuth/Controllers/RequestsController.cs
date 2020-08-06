@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Authorization;
 using Org.BouncyCastle.Ocsp;
 using System.Xml.Linq;
 using System.Diagnostics;
+using Abp.Extensions;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
@@ -429,7 +430,27 @@ namespace PrototypeWithAuth.Controllers
             //initializing the boolean here
             //b/c need to check if the requestID is 0 but then pass in the new request ID
             bool WithOrder = false;
-
+            if (OrderType.Equals("Order"))
+            {
+                WithOrder = true;
+            }
+            //test that this works
+            if (WithOrder)
+            {
+                requestItemViewModel.Request.RequestStatusID = 1;
+                _context.Update(requestItemViewModel.Request);
+                await _context.SaveChangesAsync();
+                AppUtility.RequestPageTypeEnum requestPageTypeEnum1 = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+                return RedirectToAction("Index", new
+                {
+                    page = requestItemViewModel.Page,
+                    requestStatusID = requestItemViewModel.RequestStatusID,
+                    subcategoryID = requestItemViewModel.SubCategoryID,
+                    vendorID = requestItemViewModel.VendorID,
+                    applicationUserID = requestItemViewModel.ApplicationUserID,
+                    PageType = requestPageTypeEnum1
+                });
+            }
             //why do we need this here?
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
@@ -465,12 +486,12 @@ namespace PrototypeWithAuth.Controllers
                 //all new ones will be "new" until actually ordered after the confirm email
                 requestItemViewModel.Request.RequestStatusID = 1;
                 //if it's less than 5500 shekel OR the user is an admin it will be ordered
+                //check if more than monthly budget
+                var sumrequestCosts = _context.Requests.Where(r => r.ParentRequest.ApplicationUserID == _userManager.GetUserId(User))
+                    .Where(r => r.ParentRequest.InvoiceDate > new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1)).Sum(r => r.Cost);
                 if ((requestItemViewModel.Request.Cost < 5500 || User.IsInRole("Admin")) && OrderType.Equals("Order"))
                 {
-                    if (OrderType.Equals("Order"))
-                    {
-                        WithOrder = true;
-                    }
+                    
                 }
             }
             //in case we need to redirect to action
@@ -611,27 +632,7 @@ namespace PrototypeWithAuth.Controllers
                             pictureFile.CopyTo(new FileStream(filePath, FileMode.Create));
                             x++;
                         }
-                    }
-
-                    //not dealing with RETURNS AND CREDITS here b/c disabled on the frontend
-
-
-                    //test that this works
-                    if (WithOrder)
-                    {
-                        TempData["RequestID"] = requestItemViewModel.Request.RequestID;
-                        TempData["OpenConfirmEmailModal"] = true;
-                        AppUtility.RequestPageTypeEnum requestPageTypeEnum1 = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
-                        return RedirectToAction("Index", new
-                        {
-                            page = requestItemViewModel.Page,
-                            requestStatusID = requestItemViewModel.RequestStatusID,
-                            subcategoryID = requestItemViewModel.SubCategoryID,
-                            vendorID = requestItemViewModel.VendorID,
-                            applicationUserID = requestItemViewModel.ApplicationUserID,
-                            PageType = requestPageTypeEnum1
-                        });
-                    }
+                    }                  
                 }
                 catch (DbUpdateException ex)
                 {
@@ -2919,24 +2920,27 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmEmailModal(int? id, bool IsBeingApproved = false)
+        public async Task<IActionResult> ConfirmEmailModal(int id, bool isSingleOrder=false)
         {
-            Request request1 = await _context.Requests.Where(r => r.RequestID == id)
-                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).FirstOrDefaultAsync();
-
-            if (IsBeingApproved)
+            List<Request> requests = null;
+            if (isSingleOrder)
             {
-                TempData["IsBeingApproved"] = true;
+                 requests = await _context.Requests.Where(r => r.RequestID == id)
+                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).ToListAsync();
             }
             else
             {
-                TempData["IsBeingApproved"] = false;
+                requests = await _context.Requests.Where(r => r.Product.VendorID == id && r.RequestStatusID==6 && !(r is Quote))
+                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
             }
+           
 
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
-                Request = request1,
-
+                Requests = requests,
+                VendorId = id,
+                RequestID = id,
+                IsSingleOrder = isSingleOrder
             };
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -2944,28 +2948,25 @@ namespace PrototypeWithAuth.Controllers
 
             //render the purchase order view into a string using a the confirmEmailViewModel
             string renderedView = await RenderPartialViewToString("PurchaseOrderView", confirm);
-
-
-
-            //creating the path for the file to be saved
-            string path1 = Path.Combine("wwwroot", "files");
-            string path2 = Path.Combine(path1, request1.RequestID.ToString());
-            //create file
-            string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-            Directory.CreateDirectory(folderPath);
-            string uniqueFileName = "OrderPDF.pdf";
-            string filePath = Path.Combine(folderPath, uniqueFileName);
-
             //instantiate a html to pdf converter object
             HtmlToPdf converter = new HtmlToPdf();
 
             PdfDocument doc = new PdfDocument();
             // create a new pdf document converting an url
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
-
-            // save pdf document
-            doc.Save(filePath);
-
+            foreach (var request in requests)
+            {
+                //creating the path for the file to be saved
+                string path1 = Path.Combine("wwwroot", "files");
+                string path2 = Path.Combine(path1, request.RequestID.ToString());
+                //create file
+                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                Directory.CreateDirectory(folderPath);
+                string uniqueFileName = "OrderPDF.pdf";
+                string filePath = Path.Combine(folderPath, uniqueFileName);
+                // save pdf document
+                doc.Save(filePath);
+            }
             // close pdf document
             doc.Close();
        
@@ -2977,9 +2978,21 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)
         {
+            List<Request> requests = null;
+            if (confirmEmail.IsSingleOrder)
+            {
+                requests = await _context.Requests.Where(r => r.RequestID == confirmEmail.RequestID)
+               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).ToListAsync();
+            }
+            else
+            {
+                requests = await _context.Requests.Where(r => r.Product.VendorID == confirmEmail.VendorId && r.RequestStatusID == 6 && !(r is Quote))
+                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+            }
+
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
-            string uploadFolder2 = Path.Combine(uploadFolder, confirmEmail.Request.RequestID.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
             string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
             string uploadFile = Path.Combine(uploadFolder3, "OrderPDF.pdf");
 
@@ -2991,14 +3004,13 @@ namespace PrototypeWithAuth.Controllers
                 //instantiate the body builder
                 var builder = new BodyBuilder();
 
+               
 
-
-                var request = _context.Requests.Where(r => r.RequestID == confirmEmail.Request.RequestID).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).FirstOrDefault();
-                string ownerEmail = request.ParentRequest.ApplicationUser.Email;
-                string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
-                string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
-                string vendorEmail = request.Product.Vendor.OrdersEmail;
-                string vendorName = request.Product.Vendor.VendorEnName;
+                string ownerEmail = requests.FirstOrDefault().ParentRequest.ApplicationUser.Email;
+                string ownerUsername = requests.FirstOrDefault().ParentRequest.ApplicationUser.FirstName + " " + requests.FirstOrDefault().ParentRequest.ApplicationUser.LastName;
+                string ownerPassword = requests.FirstOrDefault().ParentRequest.ApplicationUser.SecureAppPass;
+                string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
+                string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
 
                 //add a "From" Email
                 message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
@@ -3021,7 +3033,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, request.ParentRequest.ApplicationUser.SecureAppPass);// ownerPassword);//
+                    client.Authenticate(ownerEmail, requests.FirstOrDefault().ParentRequest.ApplicationUser.SecureAppPass);// ownerPassword);//
 
                     //"FakeUser@123"); // set up two step authentication and get app password
                     try
@@ -3036,21 +3048,29 @@ namespace PrototypeWithAuth.Controllers
                     client.Disconnect(true);
                     if (wasSent)
                     {
-                        request.RequestStatusID = 2;
-                        await _context.SaveChangesAsync();
+                        foreach (var request in requests)
+                        {
+                            _context.SaveChanges();
+                            requests.FirstOrDefault().RequestStatusID = 2;
+                            _context.Update(request);
+                            await _context.SaveChangesAsync();
+                        }
+                       
                     }
 
                 }
 
                 AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)confirmEmail.PageType;
+                TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
                 return RedirectToAction("Index", new
                 {
                     page = confirmEmail.Page,
-                    requestStatusID = confirmEmail.RequestStatusID,
+                    requestStatusID = 2,
                     subcategoryID = confirmEmail.SubCategoryID,
                     vendorID = confirmEmail.VendorID,
                     applicationUserID = confirmEmail.ApplicationUserID,
-                    PageType = requestPageTypeEnum
+                    PageType = AppUtility.RequestPageTypeEnum.Request
+
                 });
             }
 
@@ -3852,6 +3872,34 @@ namespace PrototypeWithAuth.Controllers
                 PageType = requestPageTypeEnum
             });
         }
+
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public IActionResult Approve(int id)
+        {
+            var request = _context.Requests.Where(r => r.RequestID == id).FirstOrDefault();
+            try
+            {
+                request.RequestStatusID = 6; //approved
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
+            }
+            AppUtility.RequestPageTypeEnum requestPageTypeEnum = AppUtility.RequestPageTypeEnum.Request;
+
+            return RedirectToAction("Index", new
+            {
+                requestStatusID = 6,
+                PageType = requestPageTypeEnum
+            });
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin, LabManagement")]
         public IActionResult EditQuoteDetails(int id, int requestID=0)
@@ -3940,20 +3988,16 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Cart()
         {
-           // TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Cart;
-           // TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
-           //LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
-           // labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r=>r.ParentRequest.ApplicationUserID== _userManager.GetUserId(User)).Where(r => r.RequestStatusID ==6)
-           //     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-           //     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-           //     .Include(r => r.ParentRequest.ApplicationUser)
-           //     .ToLookup(r => r.Product.Vendor);
+            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Cart;
+            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
+            CartViewModel cartViewModel = new CartViewModel();
+            cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ParentRequest.ApplicationUserID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 6 && !(r is Quote))
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.ParentRequest.ApplicationUser)
+                .ToLookup(r => r.Product.Vendor);
 
-           // TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
-           // TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Orders;
-           // return View(labManageQuotesViewModel);
-
-           // return View();
+            return View(cartViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]

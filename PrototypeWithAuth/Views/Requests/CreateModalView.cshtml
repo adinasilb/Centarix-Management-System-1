@@ -721,7 +721,7 @@
                                 <br />
                                 <div class="form-group">
                                     @*you can only add to cart if you are creating a new one*@
-                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="inv-button mr-1" />
+                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" asp-route-isSingleOrder="true" class="inv-button mr-1" />
                                     <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="inv-button mr-1" />
                                     <input type="submit" value="Add To Cart" asp-action="AddToCart" class="inv-button" />
                                     <button type="button" class="cancel-button float-right" data-dismiss="modal">Cancel</button>

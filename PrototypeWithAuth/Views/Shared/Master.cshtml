@@ -514,7 +514,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
+            var $itemurl = "ConfirmEmailModal/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
