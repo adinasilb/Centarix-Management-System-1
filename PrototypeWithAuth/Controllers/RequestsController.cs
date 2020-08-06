@@ -3244,23 +3244,23 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
-            //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            //string requestFolder = Path.Combine(uploadFolder, documentsModalViewModel.Request.RequestID.ToString());
-            //Directory.CreateDirectory(requestFolder);
-            //if (documentsModalViewModel.FilesToSave != null) //test for more than one???
-            //{
-            //    var x = 1;
-            //    foreach (IFormFile file in documentsModalViewModel.FilesToSave)
-            //    {
-            //        //create file
-            //        string folderPath = Path.Combine(requestFolder, documentsModalViewModel.RequestFolderName.ToString());
-            //        Directory.CreateDirectory(folderPath);
-            //        string uniqueFileName = x + file.FileName;
-            //        string filePath = Path.Combine(folderPath, uniqueFileName);
-            //        file.CopyTo(new FileStream(filePath, FileMode.Create));
-            //        x++;
-            //    }
-            //}
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string requestFolder = Path.Combine(uploadFolder, documentsModalViewModel.Request.RequestID.ToString());
+            Directory.CreateDirectory(requestFolder);
+            if (documentsModalViewModel.FilesToSave != null) //test for more than one???
+            {
+                var x = 1;
+                foreach (IFormFile file in documentsModalViewModel.FilesToSave)
+                {
+                    //create file
+                    string folderPath = Path.Combine(requestFolder, documentsModalViewModel.RequestFolderName.ToString());
+                    Directory.CreateDirectory(folderPath);
+                    string uniqueFileName = x + file.FileName;
+                    string filePath = Path.Combine(folderPath, uniqueFileName);
+                    file.CopyTo(new FileStream(filePath, FileMode.Create));
+                    x++;
+                }
+            }
         }
 
 
