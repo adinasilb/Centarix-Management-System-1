@@ -49,7 +49,6 @@ $(".file-select").on("change", function (e) {
 });
 
 $.fn.OpenDocumentsModal = function (enumString, requestId) {
-	console.log("in open doc modal");
 	$("#documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
@@ -72,6 +71,13 @@ $.fn.OpenDocumentsModal = function (enumString, requestId) {
 $.fn.ChangeColorsOfModal = function () {
 
 };
+
+$(".delete-document").on("click", function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	console.log("delete doc clicked");
+	return false;
+});
 
 
 //MDBootstrap Carousel

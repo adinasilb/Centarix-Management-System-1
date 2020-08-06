@@ -24,7 +24,7 @@
                                     <input type="file" asp-for="FilesToSave" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" multiple>
                                 </div>
                                 @*<div class="upload-btn-wrapper">*@
-                                    <input type="submit" value="Save" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
+                                <input type="submit" value="Save" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
                                 @*</div>*@
                                 @*<input type="submit" value="Save" asp-action="DocumentsModal" class="btn btn-block inv-button save-document-files" />*@
                                 @*<button class="btn inv-button save-document-files">Save</button>*@
@@ -98,9 +98,13 @@
                                                             <div class="card document-border m-0">
                                                                 <div class="card-body responsive-iframe-container">
                                                                     @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
-                                                                    <iframe src="@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no" ></iframe>
+                                                                    <iframe src="@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
                                                                 </div>
-                                                                <div class="card-body">
+                                                                <div class="card-body text-center">
+                                                                    <a href="" style="display: none;"></a>
+                                                                    <a href="" class="delete-document">
+                                                                        <img src="~/images/css/inventory/add-item/other icons/delete_dis.png" width="15" />
+                                                                    </a>
                                                                     @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@
                                                                     @*<p class="align-to-bottom w-100">@Model.FileStrings[i]</p>*@
                                                                 </div>
