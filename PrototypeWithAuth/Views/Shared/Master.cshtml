@@ -226,6 +226,7 @@
 
     <script>
         $(document).ready(function () {
+           
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
             });
@@ -455,6 +456,10 @@
                             console.log('case "quote":');
                             AddTempDataMemory();
                             break;
+                        case "orderlate":
+                            console.log('case "orderlate":');
+                            AddTempDataMemory();
+                            break;
                     }
 
                 }
@@ -536,6 +541,15 @@
             $("#loading").show();
             var $itemurl = "ConfirmQuoteOrderEmailModal/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+
+        $(".order-late").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "OrderLateModal/?id=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "orderlate");
             return false;
         });
 

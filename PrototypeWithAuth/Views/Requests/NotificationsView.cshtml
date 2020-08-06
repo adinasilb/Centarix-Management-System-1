@@ -62,13 +62,13 @@
                         icon = "icon-done-24px";
                         break;
                 }
-            <tr class=" inv-list-item">
-                <td class="p-5">
+            <tr style="height:100px;">
+                <td class="px-5" style="width:10%;">
                     <i style='font-size:1.4rem; @iconStyle' class='@icon '></i>
                     
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
-                <td style="color: @color;">@description</td>
+                <td style="width:20%;">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+                <td style="color: @color; width:20%;">@description</td>
                 <td> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
                 <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
 
