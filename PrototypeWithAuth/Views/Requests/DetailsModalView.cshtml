@@ -575,133 +575,70 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
-                               MH
+                               
 
                                 <div class="row">
                                     <div class="col-md-3">
                                         @{
-                                            var orderCardClass = "card";
-                                            var boolOrders = false;
+                                            var filterClass = "";
                                             if (Model.OrderFileStrings != null)
                                             {
-                                                orderCardClass = "card document-border";
-                                                boolOrders = true;
+                                                filterClass = "order-inv-filter";
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" >
-                                            <div class="@orderCardClass">
+                                            <div class="card document-border ">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/order.png" style="margin-top:3rem;" alt="order" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/order_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
-                                                @*<div class="card-footer" style="display:flex; justify-content: space-between">
-                <div class="custom-file text-center">
-                    <label for="OrderFiles">
-                        <i class="icon-centarix-icons-07 upload-file-1 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                    </label>
-                    <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                    @if (boolOrders)
-                    {
-                        <a class="show-orders-view">
-                            <label>
-                                <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
-                            </label>
-                        </a>
-                    }
-                    else
-                    {
-                        <label>
-                            <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                        </label>
-                    }
-                </div>
-            </div>*@
+                                                
                                             </div>
                                         </a>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
                                     </div>
                                     <div class="col-md-3">
                                         @{
-                                            var invoiceCardClass = "card";
-                                            var boolInvoice = false;
+                                            filterClass = "";
                                             if (Model.InvoiceFileStrings != null)
                                             {
-                                                invoiceCardClass = "card document-border";
-                                                boolInvoice = true;
+                                                filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="@invoiceCardClass">
+                                        <div class="card document-border">
                                             <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/invoice.png" style="margin-top:3rem;" alt="order" />
+                                                <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
-                                            @*<div class="card-footer">
-                                                    <div class="custom-file text-center">
-                                                        <label for="InvoiceFiles"><i class="icon-centarix-icons-07 upload-file-2 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                        <input type="file" asp-for="InvoiceFiles" class="file-select file-select-2" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                        @if (boolInvoice)
-                                                        {
-                                                            <a class="show-invoices-view">
-                                                                <label>
-                                                                    <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
-                                                                </label>
-                                                            </a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                        }
-                                                    </div>
-                                                </div>*@
+                                           
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
                                     </div>
                                     <div class="col-md-3">
                                         @{
-                                            var shipmentCardClass = "card";
-                                            var boolShipment = false;
+                                            filterClass = "";
                                             if (Model.ShipmentFileStrings != null)
                                             {
-                                                shipmentCardClass = "card document-border";
-                                                boolShipment = true;
+                                                filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="@shipmentCardClass">
+                                        <div class="card document-border">
                                             <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/shipment.png" style="margin-top:3rem;" alt="order" />
+                                                <img src="~/images/css/inventory/add-item/other icons/shipment_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
-                                            @*<div class="card-footer">
-                                                    <div class="custom-file text-center">
-                                                        <label for="ShipmentFiles"><i class="icon-centarix-icons-07 upload-file-3 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                        <input type="file" asp-for="ShipmentFiles" class="file-select file-select-3" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                        @if (boolShipment)
-                                                        {
-                                                            <a class="show-shipments-view">
-                                                                <label>
-                                                                    <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
-                                                                </label>
-                                                            </a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                        }
-                                                    </div>
-                                                </div>*@
+                                            
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                     </div>
                                     <div class="col-md-3">
                                         @{
-                                            var quoteCardClass = "card";
-                                            var boolQuote = false;
+                                            filterClass = "";
                                             if (Model.QuoteFileStrings != null)
                                             {
-                                                quoteCardClass = "card document-border";
-                                                boolQuote = true;
+                                                filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="@quoteCardClass">
+                                        <div class="card document-border">
                                             <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/quote.png" style="margin-top:3rem;" alt="order" />
+                                                <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
                                             @*<div class="card-footer">
                                                     <div class="custom-file text-center">
@@ -724,7 +661,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 <div class="row">
                                     <div class="col-md-3">
                                         @{
-                                            var infoCardClass = "card";
+                                            var infoCardClass  = "card document-border";
                                             var boolInfo = false;
                                             if (Model.InfoFileStrings != null)
                                             {
@@ -756,7 +693,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     </div>
                                     <div class="col-md-3">
                                         @{
-                                            var pictureCardClass = "card";
+                                            var pictureCardClass  = "card document-border";
                                             var boolPicture = false;
                                             if (Model.PictureFileStrings != null)
                                             {
@@ -788,7 +725,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     </div>
                                     <div class="col-md-3">
                                         @{
-                                            var returnCardClass = "card";
+                                            var returnCardClass  = "card document-border";
                                             var boolReturn = false;
                                             if (Model.ReturnFileStrings != null)
                                             {
@@ -820,7 +757,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     </div>
                                     <div class="col-md-3">
                                         @{
-                                            var creditCardClass = "card";
+                                            var creditCardClass  = "card document-border";
                                             var boolCredit = false;
                                             if (Model.CreditFileStrings != null)
                                             {

@@ -15,6 +15,7 @@ for details on configuring this project to bundle and minify static web assets. 
     --expense-color: #30BCC9;
     --income-color: #4CAF50;
     --timekeeper-color: #FF9800;
+    --timekeeper-color: #FF9800;
     --biomarkers-color: #F44336;
     --operations-color: #3F51B5;
     --order-inv-filter: invert(57%) sepia(42%) saturate(5293%) hue-rotate(184deg) brightness(96%) contrast(99%);
@@ -25,6 +26,10 @@ for details on configuring this project to bundle and minify static web assets. 
 .order-inv-color {
     color: var(--order-inv-color);
 }
+.order-inv-filter {
+    filter: invert(50%) sepia(19%) saturate(6552%) hue-rotate(184deg) brightness(99%) contrast(92%);
+}
+
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 html.wf-loading * {
     opacity: 0;
@@ -85,14 +90,41 @@ i.fas {
     border-right: 2px solid white !important;
     border-bottom: 2px solid white !important;
 }
-/*
+
+
+.responsive-iframe-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 75%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+    /*background: #000;*/
+    webkit-border-radius: 18px;
+    -moz-border-radius: 18px;
+    border-radius: 18px;
+    /*width: 560px;*/
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+/* Then style the iframe to fit in the container div with full height and width */
+.responsive-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+    /*
 [type=checkbox]:checked{
     color: black;
 }*/
-.form-check [type="checkbox"][class*='filled-in']:checked + label:after {
-    border-color: black;
-    background-color: black;
-}
+    .form-check [type="checkbox"][class*='filled-in']:checked + label:after {
+        border-color: black;
+        background-color: black;
+    }
 
 body {
     min-height: 100% !important;
@@ -107,7 +139,8 @@ body {
 }
 
 .document-border {
-    border: 2px solid rgba(48, 188, 201, 0.60); /*Dani - edited color. 200622*/
+    border: 1px solid black !important; /*Dani - edited color. 200622*/
+    border-radius: 18px;
 }
 
 .category-image {
@@ -1416,4 +1449,10 @@ td .btn {
     left: 0;
     top: 0;
     opacity: 0;
+}
+
+.align-to-bottom {
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
