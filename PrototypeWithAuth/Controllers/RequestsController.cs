@@ -1770,6 +1770,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> AddToCart(RequestItemViewModel requestItemViewModel)
         {
+
             return RedirectToAction("Cart");
         }
 
@@ -3554,18 +3555,6 @@ namespace PrototypeWithAuth.Controllers
          * END SEARCH
          */
 
-        /*
-         * BEGIN CART
-         */
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> Cart()
-        {
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
-            return View();
-        }
-        /*
-         * END CART
-         */
 
 
         /*
@@ -3940,13 +3929,32 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
-            var requests = _context.Requests.Where(r => r.RequestStatusID == 2 && r.ParentRequest.InvoiceDate.AddDays(r.ExpectedSupplyDays)<DateTime.Now).Include(r => r.ApplicationUserReceiver).Include(r=>r.ParentRequest).Include(r=>r.Product).ThenInclude(p=>p.Vendor).Include(r=>r.RequestStatus).ToList();
-            var requests2 = _context.Requests.OrderByDescending(r => r.ParentRequest.OrderDate).Where(r => !requests.Contains(r)).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
+            var requests = _context.Requests.Where(r=>r.ParentRequest.ApplicationUserID== _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 2 && r.ParentRequest.InvoiceDate.AddDays(r.ExpectedSupplyDays)<DateTime.Now).Include(r => r.ApplicationUserReceiver).Include(r=>r.ParentRequest).Include(r=>r.Product).ThenInclude(p=>p.Vendor).Include(r=>r.RequestStatus).ToList();
+            var requests2 = _context.Requests.Where(r => r.ParentRequest.ApplicationUserID == _userManager.GetUserId(User)).Where(r=>r.RequestStatusID!=1).OrderByDescending(r => r.ParentRequest.OrderDate).Where(r => !requests.Contains(r)).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
             requests = requests.Concat(requests2).ToList();
             requests = requests.OrderByDescending(r => r.ParentRequest.OrderDate).ToList();
             return View(requests);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> Cart()
+        {
+           // TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Cart;
+           // TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
+           //LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
+           // labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r=>r.ParentRequest.ApplicationUserID== _userManager.GetUserId(User)).Where(r => r.RequestStatusID ==6)
+           //     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+           //     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+           //     .Include(r => r.ParentRequest.ApplicationUser)
+           //     .ToLookup(r => r.Product.Vendor);
+
+           // TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
+           // TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Orders;
+           // return View(labManageQuotesViewModel);
+
+           // return View();
+        }
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> OrderLateModal(int id)
