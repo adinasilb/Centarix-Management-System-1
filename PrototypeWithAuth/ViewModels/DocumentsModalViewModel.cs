@@ -15,5 +15,6 @@ namespace PrototypeWithAuth.ViewModels
         public Request Request { get; set; }
         public List<string> FileStrings { get; set; }
         public List<FileInfo> Files { get; set; }
+        public List<IFormFile> FilesToSave { get; set; }
     }
 }

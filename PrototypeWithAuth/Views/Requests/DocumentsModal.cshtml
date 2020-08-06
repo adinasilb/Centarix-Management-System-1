@@ -1,5 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel;
 <script src="~/js/DocumentModalJS.js" asp-append-version="true"></script>
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
 <div class="modal modal-document fader" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog reorder-modal  modal-sm " role="document">
@@ -7,19 +8,26 @@
             <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5">
+            <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5" id="documentModalForm">
+                @*<a style="display: none;" id="ReopenDocModal" href="@Url.ActionLink("DocumentsModal","Requests", new { id = @Model.Request.RequestID, RequestFolderNameEnum = @Model.RequestFolderName})"></a>*@
+                <input type="hidden" asp-for="Request.RequestID" />
                 <div class="modal-header">
                     <div class="container">
                         <div class="row">
                             <div class="col-2">
                                 <h2>@Model.RequestFolderName</h2>
                             </div>
-                            <div class="col-2 offset-8">                              
+                            <div class="col-2 offset-8">
                                 <div class="upload-btn-wrapper">
                                     <button class="inv-button btn-block float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
-                                    <input type="file" asp-for="Files" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" multiple>
+                                    <input type="file" asp-for="FilesToSave" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" multiple>
                                 </div>
-                                <button class="btn inv-button save-document-files" data-string="@Model.RequestFolderName">Save</button>
+                                @*<input type="submit" value="Save" asp-action="DocumentsModal" class="btn btn-block inv-button save-document-files" />*@
+                                <input type="submit" value="Save" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" />
+                                @*<button class="btn inv-button save-document-files">Save</button>*@
+                                @*@Html.ActionLink("Save", "DocumentsModal", new { documentsModalViewModel = Model }, new { @class = "btn inv-button save-document-files" })*@
+                                @*@Html.ActionLink("Save", "DocumentsModal", new { }, new { @class = "btn inv-button save-document-files" })*@
+                                @*<button class="btn inv-button save-document-files"  data-string="@Html.ActionLink("Save","SaveDocumentFiles", n)">Save</button>*@
                             </div>
                         </div>
                     </div>
@@ -64,8 +72,8 @@
                                     <div class="col-12 col-md-3">
                                         <div class="card mb-2 doc-image-div">
                                             <div class="card-body m-5 ">
-                                                @{ 
-//string base64String = Convert.ToBase64String(Model.FileStrings[i]);
+                                                @{
+                                                    //string base64String = Convert.ToBase64String(Model.FileStrings[i]);
                                                 }
                                                 <img class="card-img-top" src="" alt="Card Image Cap" />
                                             </div>
