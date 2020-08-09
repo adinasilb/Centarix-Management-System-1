@@ -4,21 +4,46 @@
 	var link = $('#submitDelete').attr("href");
 	console.log("link: " + link)
 	var formData = new FormData($("#DeleteDocumentModalForm")[0]);
+	$foldername = $("#FolderName").val();
+	$requestId = $("#RequestID").val();
+	console.log("foldername: " + $foldername);
+	console.log("$requestId: " + $requestId);
 	$.ajax({
 		url: link,
 		method: 'POST',
 		data: formData,
 		success: (partialResult) => {
 			$("#DeleteDocumentsModal").replaceWith('');
-			$foldername = $("#FolderName").val();
-			$requestId = $("#RequestID").val();
-			//$.fn.OpenDocumentsModal();
+			$.fn.OpenDocumentsModal($foldername, $requestId);
+			ChangeColorsOfDocs($foldername);
+			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
 		contentType: false
 	})
 	return false;
 });
+
+function ChangeColorsOfDocs($foldername) {
+	console.log("foldername: " + $foldername);
+	var numCards = $(".card.document-border").length;
+	console.log("numcards: " + numCards);
+}
+
+$.fn.ChangeColorsOfDocs = function ($foldername) {
+	console.log("foldername: " + $foldername);
+	var numCards = $(".card.document-border").length;
+	console.log("numcards: " + numCards);
+
+	var div = $("#" + $foldername + " img");
+	console.log("div: " + div);
+	//if (div.hasClass("order-inv-filter")) {
+	//	console.log("has class already");
+	//} else {
+	//	console.log("does not class already");
+	//	div.addClass("order-inv-filter");
+	//}
+};
 
 $.fn.OpenDocumentsModal = function (enumString, requestId) {
 	$("#documentsModal").replaceWith('');

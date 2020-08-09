@@ -3282,7 +3282,14 @@ namespace PrototypeWithAuth.Controllers
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, deleteDocumentsViewModel.FileName);
             if (System.IO.File.Exists(uploadFolder))
             {
-                System.IO.File.Delete(uploadFolder);
+                try
+                {
+                    System.IO.File.Delete(uploadFolder);
+                }
+                catch(Exception ex)
+                {
+                    //do something here
+                }
             }
         }
 

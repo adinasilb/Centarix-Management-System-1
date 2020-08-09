@@ -581,12 +581,12 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     <div class="col-md-3">
                                         @{
                                             var filterClass = "";
-                                            if (Model.OrderFileStrings != null)
+                                            if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
                                             {
                                                 filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" >
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" >
                                             <div class="card document-border ">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/order_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
@@ -599,7 +599,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     <div class="col-md-3">
                                         @{
                                             filterClass = "";
-                                            if (Model.InvoiceFileStrings != null)
+                                            if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
                                             {
                                                 filterClass = "order-inv-filter";
                                             }
@@ -615,7 +615,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     <div class="col-md-3">
                                         @{
                                             filterClass = "";
-                                            if (Model.ShipmentFileStrings != null)
+                                            if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
                                             {
                                                 filterClass = "order-inv-filter";
                                             }
@@ -631,7 +631,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     <div class="col-md-3">
                                         @{
                                             filterClass = "";
-                                            if (Model.QuoteFileStrings != null)
+                                            if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
                                             {
                                                 filterClass = "order-inv-filter";
                                             }
@@ -663,7 +663,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         @{
                                             var infoCardClass  = "card document-border";
                                             var boolInfo = false;
-                                            if (Model.InfoFileStrings != null)
+                                            if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
                                             {
                                                 infoCardClass = "card document-border";
                                                 boolInfo = true;
@@ -695,7 +695,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         @{
                                             var pictureCardClass  = "card document-border";
                                             var boolPicture = false;
-                                            if (Model.PictureFileStrings != null)
+                                            if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
                                             {
                                                 pictureCardClass = "card document-border";
                                                 boolPicture = true;
@@ -727,7 +727,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         @{
                                             var returnCardClass  = "card document-border";
                                             var boolReturn = false;
-                                            if (Model.ReturnFileStrings != null)
+                                            if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
                                             {
                                                 returnCardClass = "card document-border";
                                                 boolReturn = true;
@@ -759,7 +759,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         @{
                                             var creditCardClass  = "card document-border";
                                             var boolCredit = false;
-                                            if (Model.CreditFileStrings != null)
+                                            if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
                                             {
                                                 creditCardClass = "card document-border";
                                                 boolCredit = true;

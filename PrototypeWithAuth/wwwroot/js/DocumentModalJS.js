@@ -37,8 +37,8 @@ $(".file-select").on("change", function (e) {
 			var $enumString = $(".open-document-modal").data("string");
 			var $requestId = $(".open-document-modal").data("id");
 			console.log("enumstring: " + $enumString + "    : requestid: " + $requestId);
+			$.fn.ChangeColorsOfModal($enumString);
 			$.fn.OpenDocumentsModal($enumString, $requestId);
-			$.fn.ChangeColorsOfModal();
 			return false;
 		},
 		processData: false,
@@ -70,8 +70,19 @@ $.fn.OpenDocumentsModal = function (enumString, requestId) {
 	});
 };
 
-$.fn.ChangeColorsOfModal = function () {
+$.fn.ChangeColorsOfModal = function ($foldername) {
+	console.log("foldername: " + $foldername);
+	var numCards = $(".card.document-border").length;
+	console.log("numcards: " + numCards);
 
+	var div = $("#"+$foldername + " img");
+	console.log("div: " + div);
+	if (div.hasClass("order-inv-filter")) {
+		console.log("has class already");
+	} else {
+		console.log("does not class already");
+		div.addClass("order-inv-filter");
+	}
 };
 
 $("#delete-file-document").on("click", function (e) {
