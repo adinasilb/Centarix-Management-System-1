@@ -340,11 +340,11 @@ $(".expected-supply-days").change(function () {
 
 
 $("#expected-supply-date").change(function () {
-	console.log("-------expected supply date: " + $(this).val())
-	var SupplyDate = $(this).val().split("-");
-	var Sdd = parseInt(SupplyDate[2]);
-	var Smm = parseInt(SupplyDate[1]);
-	var Syyyy = parseInt(SupplyDate[0]);
+	var date = new Date($(this).val());
+	console.log("-------expected supply date: " + date)
+	var Sdd = parseInt(date.getDate());
+	var Smm = parseInt(date.getMonth()+1);
+	var Syyyy = parseInt(date.getFullYear());
 	console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
 	var InvoiceDate = $(".for-supply-date-calc").val().split("-");
 	var Idd = parseInt(InvoiceDate[2]);
@@ -423,7 +423,7 @@ $("#expected-supply-date").change(function () {
 			flag = true;
 		}
 	}
-	$("input[name='Request.ExpectedSupplyDays']").val(amountOfDays);
+	$(".expected-supply-days").val(amountOfDays);
 });
 
 $("#Request_Warranty").change(function () {
@@ -1634,7 +1634,6 @@ $("#Request_Terms").change(function () {
 
 $.fn.validatePriceTab = function () {
 	//all the true and falses are opposite because fo the ariainvalid is true if invalid
-	$("#item-tab").prop("disabled", true);
 	$("#documents-tab").prop("disabled", true);
 	$("#comments-tab").prop("disabled", true);
 	$("#archive-tab").prop("disabled", true);
