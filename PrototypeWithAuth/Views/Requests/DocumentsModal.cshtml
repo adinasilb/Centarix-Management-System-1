@@ -1,5 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel;
-<script src="~/js/DocumentModalJS.js" asp-append-version="true"></script>
+<script src="~/js/DocumentModalJS.js"></script>
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
 <div class="modal modal-document fader" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
@@ -95,28 +95,28 @@
                                                     <div class="col-12 col-md-4 m-0">
                                                         @if (ModelCount > i)
                                                         {
-                                                                <div class="card document-border m-0">
-                                                                    <div class="card-body responsive-iframe-container">
-                                                                        @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
+                                                            <div class="card document-border m-0">
+                                                                <div class="card-body responsive-iframe-container">
+                                                                    @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
-                                                                        @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
-                                                                            <div class="blocker"></div>*@
-                                                                            <iframe src="@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
+                                                                    @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
+                                                                        <div class="blocker"></div>*@
+                                                                    <iframe src="@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
-                                                                        @*</a>*@
-                                                                    </div>
-                                                                    <div class="card-body text-center">
-                                                                        <a href="@Url.Action("DeleteDocumentModal","Requests", new { FileString = Model.FileStrings[i], id = Model.Request.RequestID, FolderName = Model.RequestFolderName } )" id="deleteUrl" style="display: none;"></a>
-                                                                        <a href="@Model.FileStrings[i]" target="_blank" class="mx-3">
-                                                                            <img src="~/images/css/inventory/add-item/other icons/view_dis.png" />
-                                                                        </a>
-                                                                        <a href="" class="delete-document mx-3">
-                                                                            <img src="~/images/css/inventory/add-item/other icons/delete_dis.png" width="15" />
-                                                                        </a>
-                                                                        @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@
-                                                                        @*<p class="align-to-bottom w-100">@Model.FileStrings[i]</p>*@
-                                                                    </div>
+                                                                    @*</a>*@
                                                                 </div>
+                                                                <div class="card-body text-center">
+                                                                    <a href="@Url.Action("DeleteDocumentModal","Requests", new { FileString = Model.FileStrings[i], id = Model.Request.RequestID, FolderName = Model.RequestFolderName } )" id="deleteUrl" style="display: none;"></a>
+                                                                    <a href="@Model.FileStrings[i]" target="_blank" class="mx-3">
+                                                                        <img src="~/images/css/inventory/add-item/other icons/view_dis.png" />
+                                                                    </a>
+                                                                    <a href="" class="delete-document mx-3" id="delete-file-document">
+                                                                        <img src="~/images/css/inventory/add-item/other icons/delete_dis.png" width="15" />
+                                                                    </a>
+                                                                    @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@
+                                                                    @*<p class="align-to-bottom w-100">@Model.FileStrings[i]</p>*@
+                                                                </div>
+                                                            </div>
 
                                                         }
                                                     </div>

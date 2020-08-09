@@ -74,7 +74,7 @@ $.fn.ChangeColorsOfModal = function () {
 
 };
 
-$(".delete-document").on("click", function (e) {
+$("#delete-file-document").on("click", function (e) {
 	e.preventDefault();
 	e.stopPropagation();
 	console.log("delete doc clicked");
