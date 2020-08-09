@@ -1458,7 +1458,7 @@ namespace PrototypeWithAuth.Controllers
             bool WithOrder = false;
 
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
-            requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+            //requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
@@ -1872,7 +1872,7 @@ namespace PrototypeWithAuth.Controllers
             bool WithOrder = false;
 
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
-            requestItemViewModel.Request.ParentRequest.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+            requestItemViewModel.Request.ParentRequest.ParentRequestID = (Int32)requestItemViewModel.Request.ParentRequestID;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
@@ -2083,7 +2083,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         foreach (Payment payment in requestItemViewModel.NewPayments)
                         {
-                            payment.ParentRequestID = requestItemViewModel.Request.ParentRequestID;
+                            payment.ParentRequestID = (Int32)requestItemViewModel.Request.ParentRequestID;
                             payment.CompanyAccount = null;
                             //payment.Reference = "TEST";
                             try
@@ -3264,9 +3264,26 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal()
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum)
         {
-            return View();
+            DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
+            {
+                FileName = FileString,
+                RequestID = id,
+                FolderName = RequestFolderNameEnum
+            };
+            return View(deleteDocumentsViewModel);
+        }
+
+        [HttpPost]
+        public void DeleteDocumentModal(DeleteDocumentsViewModel deleteDocumentsViewModel)
+        {
+            string[] FileNameParts = deleteDocumentsViewModel.FileName.Split('\\');
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, deleteDocumentsViewModel.FileName);
+            if (System.IO.File.Exists(uploadFolder))
+            {
+
+            }
         }
 
 

@@ -22,7 +22,7 @@ $(".file-select").on("change", function (e) {
 	var formData = new FormData($("#documentModalForm")[0]);
 	var data = $("#documentModalForm").serialize();
 	//var formData = new FormData($(this));
-	console.log("data : " + data);
+	//console.log("data : " + data);
 	console.log("formData : " + formData);
 	//console.log("form data : " + formData);
 
@@ -47,6 +47,8 @@ $(".file-select").on("change", function (e) {
 	return false;
 
 });
+
+
 
 $.fn.OpenDocumentsModal = function (enumString, requestId) {
 	$("#documentsModal").replaceWith('');
@@ -76,6 +78,23 @@ $(".delete-document").on("click", function (e) {
 	e.preventDefault();
 	e.stopPropagation();
 	console.log("delete doc clicked");
+	var link = $("#deleteUrl").attr("href");
+	console.log("link: " + link);
+	$.ajax({
+		async: true,
+		url: link,
+		type: 'GET',
+		cache: false,
+		success: function (data) {
+			var modal = $(data);
+			$('body').append(modal);
+			$("#DeleteDocumentsModal").modal({
+				backdrop: false,
+				keyboard: true,
+			});
+			$(".modal").modal('show');
+		}
+	});
 	return false;
 });
 

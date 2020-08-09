@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.Models
         public int RequestID { get; set; }
         public int ProductID { get; set; }
         public Product Product { get; set; }
-        public int ParentRequestID { get; set; }
+        public int? ParentRequestID { get; set; }
         public ParentRequest ParentRequest { get; set; }
         public int SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
