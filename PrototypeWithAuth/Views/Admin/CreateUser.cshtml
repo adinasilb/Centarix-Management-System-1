@@ -37,8 +37,9 @@
                                 <li class="nav-item"><a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Details</a></li>
 
                                 <li class="nav-item"><a data-toggle="tab" href="#permissions" id="user-permissions-tab" class="nav-link user-nav-link permissions-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Permissions</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#images" id="user-images-tab" class="nav-link user-nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Image</a></li>
+
                                 <li class="nav-item"><a data-toggle="tab" href="#budget" id="user-budget-tab" class="nav-link user-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#images" id="user-images-tab" class="nav-link user-nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Image</a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#more" id="user-more-tab" class="nav-link user-nav-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />More</a></li>
                             </ul>
                         </div>
@@ -79,6 +80,11 @@
                                     <input asp-for="CentarixID" class="form-control-plaintext border-bottom" />
                                     <span asp-validation-for="CentarixID" class="text-danger"></span>
                                 </div>
+                                <div class="col-6">
+                                    <label asp-for="PhoneNumber" class="control-label"></label>
+                                    <input asp-for="PhoneNumber" class="form-control-plaintext border-bottom" required />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
@@ -93,16 +99,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="images" class="tab-pane fade">
-                            <div class="row">
-                                <div class="col-6">
-                                    <label asp-for="UserImage" class="control-label"></label>
-                                    <input type="file" asp-for="UserImage" class="form-control-file pt-1" accept=".png, .jpg, .jpeg, .pdf">
-                                    <span asp-validation-for="UserImage" class="text-danger"></span>
-                                    <img id="user-image" max-width="400" />
-                                </div>
-                            </div>
-                        </div>
+
                         <div id="permissions" class="tab-pane fade">
                             <div class="main-permissions row mt-5">
                                 <div class="col-10 offset-1 text-center">
@@ -402,7 +399,7 @@
                                     <label asp-for="LabMonthlyLimit" class="control-label"></label>
                                     <div class="input-group">
                                         <span class="input-group-text">&#x20aa;</span>
-                                        <input asp-for="LabMonthlyLimit" class="form-control-plaintext border-bottom "  />
+                                        <input asp-for="LabMonthlyLimit" class="form-control-plaintext border-bottom " />
                                     </div>
                                     <span asp-validation-for="LabMonthlyLimit" class="text-danger"></span>
                                 </div>
@@ -448,6 +445,16 @@
                                         <input asp-for="OperaitonOrderLimit" class="form-control-plaintext border-bottom " />
                                     </div>
                                     <span asp-validation-for="OperaitonOrderLimit" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="images" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label asp-for="UserImage" class="control-label"></label>
+                                    <input type="file" asp-for="UserImage" class="form-control-file pt-1" accept=".png, .jpg, .jpeg, .pdf">
+                                    <span asp-validation-for="UserImage" class="text-danger"></span>
+                                    <img id="user-image" max-width="400" />
                                 </div>
                             </div>
                         </div>

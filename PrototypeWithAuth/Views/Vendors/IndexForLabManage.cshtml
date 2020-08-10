@@ -7,7 +7,7 @@
     // string pageType = TempData["PageType"].ToString();
 }
 
-<div class="ml-5">
+<div class="ml-5 mt-4">
     <table class="table table-headerspaced table-noheaderlines text-center">
         <thead>
             <tr>
@@ -44,7 +44,7 @@
                         @Html.DisplayFor(modelItem => item.VendorID)
                     </td>
                     <td>
-                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="acc-link-clr">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
+                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="lab-man-link-clr" asp-route-SectionType="@AppUtility.MenuItems.LabManagement">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorHeName)

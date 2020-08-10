@@ -24,6 +24,7 @@ namespace PrototypeWithAuth.AppData
         public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }
         public enum NotificationsEnum {  NoInvoice, DidntArrive, PartialDelivery, ForClarification }
         public enum PaymentsEnum { ToPay, PayNow}
+        public enum SuppliersEnum { All, NewSupplier, Search }
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
         {
             int ReturnList = 0;

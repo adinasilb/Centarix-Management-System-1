@@ -20,8 +20,8 @@ for details on configuring this project to bundle and minify static web assets. 
     --operations-color: #3F51B5;
     --order-inv-filter: invert(57%) sepia(42%) saturate(5293%) hue-rotate(184deg) brightness(96%) contrast(99%);
     --lab-man-filter: invert(44%) sepia(48%) saturate(220%) hue-rotate(155deg) brightness(96%) contrast(87%);
-    --acc-filter: invert(30%) sepia(32%) saturate(2825%) hue-rotate(237deg) brightness(86%) contrast(102%);
-    --users-filter: invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
+    --acc-filter:  invert(30%) sepia(32%) saturate(2825%) hue-rotate(237deg) brightness(86%) contrast(102%);
+    --users-filter:  invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
 }
 .order-inv-color {
     color: var(--order-inv-color);
@@ -513,6 +513,17 @@ input.select-dropdown {
     line-height: 1.5;
     text-transform: uppercase;
 }
+.inv-lab-button-submit {
+    background-color: var(--lab-man-color);
+    border: 1px solid var(--lab-man-color);
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.56rem 1.5rem;
+    font-size: 1.5625rem;
+    line-height: 1.5;
+    text-transform: capitalize;
+}
 
 .quote-lab-button {
     background-color: var(--lab-man-color);
@@ -755,7 +766,7 @@ select option[value="US"] {
 
     .lab-man-link-clr:hover {
         font-weight: bold;
-        color: var(--lab-man-color);
+        filter: brightness(0) saturate(100%) var(--lab-man-filter);
         text-decoration: none;
     }
 table td {
@@ -778,7 +789,7 @@ table th {
 
     .acc-link-clr:hover {
         font-weight: bold;
-        color: var(--acc-color);
+        filter: var(--acc-filter);
         text-decoration: none;
     }
 
@@ -878,7 +889,11 @@ a.activeNavLabMan {
 }
 
 ul li.acc-sidebar.active {
-    filter: var(--acc-filter);
+    filter: brightness(0) saturate(100%) var(--acc-filter);
+}
+
+ul li.lab-man-sidebar.active {
+    filter: brightness(0) saturate(100%) var(--lab-man-filter);
 }
 
 .sidebar-customization a {
@@ -984,6 +999,12 @@ a.nav-link {
     border-width: 0px;
     border-bottom: 4px solid var(--acc-color);
     color: var(--acc-color);
+}
+.container-fluid ul li a.lab-man-nav-link.active {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid var(--lab-man-color);
+    color: var(--lab-man-color);
 }
 
 /*<<<< Modal Side Slide >>>>*/
@@ -1420,7 +1441,6 @@ body {
     text-align: center;
     font-size: 12px;
     line-height: 1.42857;
-    background-color: var(--acc-color);
     color: white;
 }
 
