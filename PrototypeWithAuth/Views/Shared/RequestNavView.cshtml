@@ -38,6 +38,7 @@
     string location = originalNavClasses;
     string cart = originalNavClasses;
     string addItem = originalNavClasses;
+    string notifications = originalNavClasses;
 
     var SidebarType = TempData["SidebarTitle"];
     switch (SidebarType)
@@ -62,6 +63,9 @@
             break;
         case AppUtility.RequestSidebarEnum.AddItem:
             addItem += activeClass;
+            break;
+        case AppUtility.RequestSidebarEnum.Notifications:
+            notifications += activeClass;
             break;
     }
 
@@ -110,7 +114,7 @@
             @if (Requests || Inventory || Summary)
             {
                 <li class="nav-item my-1 @addItem">
-                    <a href="@Url.ActionLink("CreateModalNewView", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1">  <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item</a>
+                    <a href="@Url.ActionLink("CreateModalView", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1">  <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item</a>
                 </li>
             }
             @if (Requests || Inventory || Summary)
@@ -127,7 +131,7 @@
                     <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
                 </li>
             }
-            @if (Requests || Inventory )
+            @if (Requests || Inventory)
             {
                 @*have to create contorller for application user?*@
 
@@ -145,9 +149,11 @@
             }
             @if (Cart)
             {
-                <li class="nav-item my-1">
-                    <i class="fas fa-shopping-cart"></i>
-                    <a class="@cart">Cart</a>
+                <li class="nav-item  mt-4 mb-4 bold-hover-effects">           
+                    <a href="@Url.ActionLink("Cart", "Requests", new { @PageType = pageType })" class="@cart bold-hover-effects opac87 p-1"> <i class=" icon-shopping_cart-24px" style="font-size:1.5rem;"></i><br />Cart</a>
+                </li>
+                <li class="nav-item mb-3 bold-hover-effects">                  
+                    <a href="@Url.ActionLink("NotificationsView", "Requests", new { @PageType = pageType })" class="@notifications bold-hover-effects opac87 p-1">  <i class=" icon-notifications-24px" style=" font-size: 1.75rem;  "></i><br/>Notifications</a>
                 </li>
             }
 

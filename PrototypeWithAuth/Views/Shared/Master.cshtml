@@ -226,6 +226,7 @@
 
     <script>
         $(document).ready(function () {
+           
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
             });
@@ -258,6 +259,7 @@
             $("#user-budget-tab").prop("disabled", true);
             $("#user-more-tab").prop("disabled", true);
 
+
         });
 
 
@@ -281,6 +283,15 @@
             return false;
         });
 
+        $(".load-product-details-summary").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+            var $itemurl = "Requests/DetailsSummaryModalView/?id=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "details");
+            return false;
+        });
         $(".load-product-edit").on("click", function (e) {
             console.log("inside of load product edit")
             e.preventDefault();
@@ -331,7 +342,7 @@
             $("#loading").show();
             //takes the item value and calls the Products controller with the ModalView view to render the modal inside
             var $itemurl = "Requests/ReOrderFloatModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true";
-            $.fn.CallPageRequest($itemurl, "reorder");           
+            $.fn.CallPageRequest($itemurl, "reorder");
             return false;
         });
 
@@ -446,6 +457,10 @@
                             console.log('case "quote":');
                             AddTempDataMemory();
                             break;
+                        case "orderlate":
+                            console.log('case "orderlate":');
+                            AddTempDataMemory();
+                            break;
                     }
 
                 }
@@ -500,7 +515,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "Requests/ConfirmEmailModal/?id=" + $(this).val() + "&IsBeingApproved=true";
+            var $itemurl = "ConfirmEmailModal/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
@@ -527,6 +542,15 @@
             $("#loading").show();
             var $itemurl = "ConfirmQuoteOrderEmailModal/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "confirmemail");
+            return false;
+        });
+
+        $(".order-late").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "OrderLateModal/?id=" + $(this).val();
+            $.fn.CallPageRequest($itemurl, "orderlate");
             return false;
         });
 
@@ -733,10 +757,68 @@
         //    });
         //});
 
-        
-        
-    </script>
+        $(".load-add-location").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $itemurl = "Locations/AddLocation";
+            var $modal = $(".location-modal-view");
+            $.fn.CallPageLocation($itemurl, $modal, true);
+            return false;
+        });
 
+
+        $.fn.CallPageLocation = function ($itemurl, $modal, $isaddlocation) {
+            $.ajax({
+                async: true,
+                url: $itemurl,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    console.log("success!");
+                    //replaces the modal-view class with the ModalView view
+                    $modal.html(data);
+                    //turn off data dismiss by clicking out of the box and by pressing esc
+                    $modal.modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    //shows the modal
+                    $(".modal").modal('show');
+                    //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+                    $(".modal-backdrop").remove();
+
+
+                    if ($isaddlocation) {
+                        console.log("inside of modal if statement");
+                        $(".load-add-location-type").on("click", function (e) {
+
+                            console.log("load add location type 3");
+                            e.preventDefault();
+                            e.stopPropagation();
+                            var $itemurl = "Locations/AddLocationType";
+                            var $modal = $(".location-modal-view");
+                            $("location-modal-view").css("display", "none");
+                            //IMPT REOPEN ON CLOSING
+                            $.fn.CallPage($itemurl, $modal, false);
+                        });
+
+
+                    }
+                    else {
+                        $(".addSublocation").hide();
+                        $(".btnAddSublocation").on("click", function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log("Location manage location view js");
+                            $.fn.AddSublocation();
+                        });
+                    }
+
+                }
+            });
+        }
+
+    </script>
 </body>
 </html>
 

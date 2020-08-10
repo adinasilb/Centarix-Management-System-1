@@ -85,7 +85,7 @@
 
 
                                 }
-                                @{ double total = @Model.Requests.Sum(r => r.Cost);
+                                @{ double total = Model.Requests.Sum(r => r.Cost);
                                     double vat = total * .17;
                                     double totalWithVat = total + vat;}
                                 <tr>

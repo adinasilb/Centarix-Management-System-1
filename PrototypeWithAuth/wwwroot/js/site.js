@@ -340,11 +340,11 @@ $(".expected-supply-days").change(function () {
 
 
 $("#expected-supply-date").change(function () {
-	console.log("-------expected supply date: " + $(this).val())
-	var SupplyDate = $(this).val().split("-");
-	var Sdd = parseInt(SupplyDate[2]);
-	var Smm = parseInt(SupplyDate[1]);
-	var Syyyy = parseInt(SupplyDate[0]);
+	var date = new Date($(this).val());
+	console.log("-------expected supply date: " + date)
+	var Sdd = parseInt(date.getDate());
+	var Smm = parseInt(date.getMonth()+1);
+	var Syyyy = parseInt(date.getFullYear());
 	console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
 	var InvoiceDate = $(".for-supply-date-calc").val().split("-");
 	var Idd = parseInt(InvoiceDate[2]);
@@ -423,7 +423,7 @@ $("#expected-supply-date").change(function () {
 			flag = true;
 		}
 	}
-	$("input[name='Request.ExpectedSupplyDays']").val(amountOfDays);
+	$(".expected-supply-days").val(amountOfDays);
 });
 
 $("#Request_Warranty").change(function () {
@@ -588,7 +588,9 @@ $.fn.CheckSubUnitsFilled = function () {
 $.fn.EnableSubUnits = function () {
 	console.log("enable subunits");
 	$("#Request_SubUnit").prop("disabled", false);
-	$("#Request_SubUnitTypeID").prop("disabled", false);
+	$("#Request_SubUnitTypeID").materialSelect("destroy")
+	$("#Request_SubUnitTypeID").removeAttr("disabled")
+	$('#Request_SubUnitTypeID').materialSelect();
 	//$("#select-options-Request_SubUnitTypeID").prop("disabled", false);
 	//$("#select-options-Request_SubUnitTypeID").removeAttr("disabled");
 	$('[data-activates="select-options-Request_SubUnitTypeID"]').prop('disabled', false);
@@ -596,7 +598,9 @@ $.fn.EnableSubUnits = function () {
 
 $.fn.EnableSubSubUnits = function () {
 	$("#Request_SubSubUnit").prop("disabled", false);
-	$("#Request_SubSubUnitTypeID").prop("disabled", false);
+	$("#Request_SubSubUnitTypeID").materialSelect("destroy")
+	$("#Request_SubSubUnitTypeID").removeAttr("disabled")
+	$('#Request_SubSubUnitTypeID').materialSelect();
 	//$("#select-options-Request_SubSubUnitTypeID").prop("disabled", false);
 	//$("#select-options-Request_SubSubUnitTypeID").removeAttr("disabled");
 	$('[data-activates="select-options-Request_SubSubUnitTypeID"]').prop('disabled', false);
@@ -1231,6 +1235,17 @@ $(".load-product-edit").on("click", function (e) {
 	return false;
 });
 
+$(".load-product-edit-summary").on("click", function (e) {
+	console.log("inside of load product edit")
+	e.preventDefault();
+	e.stopPropagation();
+	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
+	var $itemurl = "Requests/EditSummaryModalView/?id=" + $(this).val();
+	console.log("itemurl: " + $itemurl);
+	$.fn.CallPageRequest($itemurl, "edit");
+	return false;
+});
+
 
 $.fn.updateDebt = function () {
 	console.log("in update debt");
@@ -1619,7 +1634,6 @@ $("#Request_Terms").change(function () {
 
 $.fn.validatePriceTab = function () {
 	//all the true and falses are opposite because fo the ariainvalid is true if invalid
-	$("#item-tab").prop("disabled", true);
 	$("#documents-tab").prop("disabled", true);
 	$("#comments-tab").prop("disabled", true);
 	$("#archive-tab").prop("disabled", true);
@@ -2118,3 +2132,4 @@ $("#reorderRequest").click(function () {
 	$("#reorderRequest").prop("disabled", false);
 
 });
+

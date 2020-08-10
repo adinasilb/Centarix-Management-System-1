@@ -21,7 +21,7 @@
     }
 
     //passing the
-    string initalClasses = "opac87 align-text-bottom";
+    string initalClasses = "opac87 align-text-bottom  py-3";
     string currentClasses = " activeNavLink  ";
     string inventoryClass = initalClasses;
     string summaryClass = initalClasses;
@@ -62,23 +62,23 @@
         <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
 
         <div class="collapse navbar-collapse">
-            <ul class="navbar-nav dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
+            <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; ">
+                <li class="nav-item mx-5 ">
+                    @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link " })
+                </li> 
                 <li class="nav-item mx-5">
-                    @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link" })
-                </li>
-                <li class="nav-item mx-5">
-                    @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Summary }, new { @class = summaryClass, @id = "request-link" })
+                    @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Summary }, new { @class = summaryClass, @id = "summary-link" })
                 </li>
 
-                <li class="nav-item mx-5">
-                    @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = searchClass, @id = "request-link" /*why is the role and id here?*/ })
+                <li class="nav-item mx-5  ">
+                    @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = searchClass, @id = "search-link " /*why is the role and id here?*/ })
                 </li>
                 <li class="nav-item mx-5">
                     @*Redo the location class in the controller*@
-                    @Html.ActionLink("Location", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = locationClass, @id = "request-link" })
+                    @Html.ActionLink("Location", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = locationClass, @id = "location-link" })
                 </li>
-                <li class="nav-item mx-5">
-                    @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "request-link" /*why is the role and id here?*/ })
+                <li class="nav-item mx-5 ">
+                    @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "cart-link " /*why is the role and id here?*/ })
                 </li>
                 <li class="nav-item mx-4 d-table ">
                     @Html.ActionLink("Full Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
