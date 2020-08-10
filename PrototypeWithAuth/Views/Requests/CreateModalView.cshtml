@@ -159,7 +159,7 @@
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
                                     @*starts off at today and disabled so can't change*@
-                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" readonly />
+                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom for-supply-date-calc datepicker" readonly />
                                     <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
                                 </div>
                             </div>
@@ -172,7 +172,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext for-supply-date-calc border-bottom create-modal-invoice-date" />
+                                    <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext  border-bottom create-modal-invoice-date" />
                                     <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger invoice-date" />
                                 </div>
                             </div>

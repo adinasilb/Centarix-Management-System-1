@@ -648,7 +648,16 @@ namespace PrototypeWithAuth.Controllers
                     //not dealing with RETURNS AND CREDITS here b/c disabled on the frontend
                     try
                     {
-                        requestItemViewModel.Request.RequestStatusID = 1; //new request
+                        if (OrderType.Equals("Without Order"))
+                        {
+                            requestItemViewModel.Request.ParentRequest.WithOrder = false;
+                        }
+                        else
+                        {
+                            requestItemViewModel.Request.ParentRequest.WithOrder = true;
+                        }
+
+                            requestItemViewModel.Request.RequestStatusID = 1; //new request
                         _context.Update(requestItemViewModel.Request);
                         _context.SaveChanges();
                     }
@@ -3080,7 +3089,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (var quote in requests)
                         {
                             quote.RequestStatusID = 2;
-                            quote.ParentRequest.InvoiceDate = DateTime.Now;
+                            quote.ParentRequest.OrderDate = DateTime.Now;
                             //_context.Update(quote.ParentQuote);
                             //_context.SaveChanges();
                             _context.Update(quote);
@@ -3747,7 +3756,7 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
-            var requests = _context.Requests.Where(r=>r.ParentRequest.ApplicationUserID== _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 2 && r.ParentRequest.InvoiceDate.AddDays(r.ExpectedSupplyDays)<DateTime.Now).Include(r => r.ApplicationUserReceiver).Include(r=>r.ParentRequest).Include(r=>r.Product).ThenInclude(p=>p.Vendor).Include(r=>r.RequestStatus).ToList();
+            var requests = _context.Requests.Where(r=>r.ParentRequest.ApplicationUserID== _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 2 && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays)<DateTime.Now).Include(r => r.ApplicationUserReceiver).Include(r=>r.ParentRequest).Include(r=>r.Product).ThenInclude(p=>p.Vendor).Include(r=>r.RequestStatus).ToList();
             var requests2 = _context.Requests.Where(r => r.ParentRequest.ApplicationUserID == _userManager.GetUserId(User)).Where(r=>r.RequestStatusID!=1).OrderByDescending(r => r.ParentRequest.OrderDate).Where(r => !requests.Contains(r)).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
             requests = requests.Concat(requests2).ToList();
             requests = requests.OrderByDescending(r => r.ParentRequest.OrderDate).ToList();

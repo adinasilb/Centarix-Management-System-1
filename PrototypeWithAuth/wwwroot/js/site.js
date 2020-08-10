@@ -346,10 +346,10 @@ $("#expected-supply-date").change(function () {
 	var Smm = parseInt(date.getMonth()+1);
 	var Syyyy = parseInt(date.getFullYear());
 	console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
-	var InvoiceDate = $(".for-supply-date-calc").val().split("-");
-	var Idd = parseInt(InvoiceDate[2]);
-	var Imm = parseInt(InvoiceDate[1]);
-	var Iyyyy = parseInt(InvoiceDate[0]);
+	var OrderDate = $(".for-supply-date-calc").val().split("-");
+	var Idd = parseInt(OrderDate[2]);
+	var Imm = parseInt(OrderDate[1]);
+	var Iyyyy = parseInt(OrderDate[0]);
 	console.log("idd + imm + iyyyy: " + Idd + " " + Imm + " " + Iyyyy);
 
 	var amountOfDays = 0;
@@ -1485,7 +1485,7 @@ $.fn.validateItemTab = function () {
 	}
 	console.log("valid6: " + valid);
 	valid = $("#Request_ParentRequest_InvoiceDate").attr('aria-invalid');
-	if (valid == "true" || $("#Request_ParentRequest_InvoiceDate").val() == "") {
+	if (valid == "true") {
 		return;
 	}
 	var validDate = true;
