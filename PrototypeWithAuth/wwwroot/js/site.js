@@ -1484,12 +1484,12 @@ $.fn.validateItemTab = function () {
 		return;
 	}
 	console.log("valid6: " + valid);
-	valid = $("#Request_ParentRequest_InvoiceDate").attr('aria-invalid');
+	valid = $("#Request_ParentQuote_QuoteDate").attr('aria-invalid');
 	if (valid == "true") {
 		return;
 	}
 	var validDate = true;
-	var dateVal = $(".create-modal-invoice-date").val();
+	var dateVal = $(".create-modal-quote-date").val();
 	console.log("date val: " + dateVal)
 	if (dateVal != undefined) {
 
@@ -1497,9 +1497,11 @@ $.fn.validateItemTab = function () {
 	}
 	valid = "" + !validDate;
 	console.log("valid date: " + valid);
-	if (valid == "true" || $("#Request_ParentRequest_InvoiceDate").val() == "") {
+	if (valid == "true" || $("#Request_ParentRequest_QuoteDate").val() == "") {
 		return;
 	}
+
+
 	console.log("valid7: " + valid);
 	valid = $("#Request_ExpectedSupplyDays").attr('aria-invalid');
 	if (valid == "true" || $("#Request_ExpectedSupplyDays").val() == "") {

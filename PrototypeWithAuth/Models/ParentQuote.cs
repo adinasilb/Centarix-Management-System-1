@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int ParentQuoteID { get; set; }
-        public IEnumerable<Quote> Quotes { get; set; }
+        public IEnumerable<Request> Requests { get; set; }
         public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
 
         [ForeignKey("ApplicationUserID")]
@@ -20,8 +20,12 @@ namespace PrototypeWithAuth.Models
 
         [DataType(DataType.Date)]
         [Display(Name = "Quote Date")]
+        //should not really be null just waiting till figure out how else to do the parentquote in create modal
         public DateTime QuoteDate { get; set; }
         [Display(Name = "Quote Number")]
-        public int? QuoteNumber { get; set; }
+       
+        public int QuoteNumber { get; set; }
+        public int QuoteStatusID { get; set; }
+        public QuoteStatus QuoteStatus { get; set; }
     }
 }

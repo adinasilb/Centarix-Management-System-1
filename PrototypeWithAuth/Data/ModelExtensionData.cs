@@ -894,12 +894,7 @@ namespace PrototypeWithAuth.Data
                   new QuoteStatus
                   {
                       QuoteStatusID = 4,
-                      QuoteStatusDescription = "QuoteOrdered" 
-                  },
-                  new QuoteStatus
-                  {
-                      QuoteStatusID = 5,
-                      QuoteStatusDescription = "AwaitingInvoice"
+                      QuoteStatusDescription = "QuoteRecieved" 
                   }
             );
 

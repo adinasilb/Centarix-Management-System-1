@@ -164,16 +164,16 @@
                                 </div>
                             </div>
                             <br />
-                            <div class="row">
+                            <div class="row">                               
                                 <div class="col-md-6 pr-4">
-                                    <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control-plaintext border-bottom " />
-                                    <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
+                                    <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
+                                    <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
+                                    <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger" />
                                 </div>
                                 <div class="col-md-6">
-                                    <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext  border-bottom create-modal-invoice-date" />
-                                    <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger invoice-date" />
+                                    <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
+                                    <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
+                                    <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger quote-date" />
                                 </div>
                             </div>
                             <br />

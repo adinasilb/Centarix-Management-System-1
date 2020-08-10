@@ -92,7 +92,8 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         [Display(Name = "Arrival Date")]
         public DateTime ArrivalDate { get; set; }
-
+        public int? ParentQuoteID { get; set; }
+        public ParentQuote ParentQuote { get; set; }
         //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         //public DateTime DateToBePaid //note until this is changed from negative one 
         //{

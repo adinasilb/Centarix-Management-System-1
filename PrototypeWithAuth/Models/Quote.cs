@@ -9,10 +9,6 @@ namespace PrototypeWithAuth.Models
 {
     public class Quote : Request
     {
-      
-        public int ParentQuoteID { get; set; }
-        public ParentQuote ParentQuote { get; set; }
-        public int QuoteStatusID { get; set; }
-        public QuoteStatus QuoteStatus { get; set; }
+
     }
 }
