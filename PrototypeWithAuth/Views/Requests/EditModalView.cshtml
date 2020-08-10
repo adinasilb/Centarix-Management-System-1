@@ -451,10 +451,11 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label  class="control-label">VAT</label>
+                                            <label asp-for="Request.VAT" class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input  class="form-control-plaintext border-bottom vat" disabled />
+                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " />
+                                                <span class="text-danger" asp-validation-for="Request.VAT"></span>
                                             </div>
                                         </div>
                                     </div>

@@ -6,6 +6,9 @@
 //global Exchange Rate variable (usd --> nis)
 
 
+var VatPercentage = .17;
+
+
 function showmodal() {
 	$("#modal").modal('show');
 };
@@ -650,7 +653,13 @@ $.fn.CalculateSubSubUnitAmounts = function () {
 
 $.fn.CalculateSumPlusVat = function () {
 	var $exchangeRate = $("#Request_ExchangeRate").val();
-	var vatInShekel = $("#Request_VAT").val();
+	var sumShek = $("#Request_Cost").val();
+	console.log("sumShek: " + sumShek);
+	var vatCalc = sumShek * .17;
+	console.log("VatPercentage: " + VatPercentage);
+	console.log("vatCalc: " + vatCalc);
+	//$("#Request_VAT").val(vatCalc)
+	//var vatInShekel = $("#Request_VAT").val();
 	if ($("#sum-dollars").prop("disabled")) {
 		$sumDollars = parseFloat($("#Request_Cost").val()) / $exchangeRate;
 		$iptBox = $('input[name="sum-dollars"]');
@@ -662,9 +671,9 @@ $.fn.CalculateSumPlusVat = function () {
 		$.fn.ShowResults($iptBox, $sumShekel);
 	}
 	$sumShekel = parseFloat($("#Request_Cost").val());
-	$vatOnshekel = $sumShekel * parseFloat(vatInShekel);
-	$('.vat').val($vatOnshekel.toFixed(2));
-	$sumTotalVatShekel = $sumShekel + $vatOnshekel;
+	//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
+	$('#Request_VAT').val(vatCalc.toFixed(2));
+	$sumTotalVatShekel = $sumShekel + vatCalc;
 	$iptBox = $("input[name='sumPlusVat-Shekel']");
 	$.fn.ShowResults($iptBox, $sumTotalVatShekel);
 	$sumTotalVatDollars = $sumTotalVatShekel / $exchangeRate;

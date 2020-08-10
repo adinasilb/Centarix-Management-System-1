@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
@@ -425,6 +427,16 @@ namespace PrototypeWithAuth.Controllers
             userEditted.OperaitonOrderLimit = editUserViewModel.OperaitonOrderLimit;
             _context.Update(userEditted);
             _context.SaveChanges();
+
+            //if password isn't blank - reset the password:
+            if (editUserViewModel.Password != null)
+            {
+                ApplicationUser cUser = await _userManager.FindByIdAsync(editUserViewModel.ApplicationUserID);
+                string hashpassword = _userManager.PasswordHasher.HashPassword(cUser, editUserViewModel.Password);
+                cUser.PasswordHash = hashpassword;
+                await _userManager.UpdateAsync(cUser);
+            }
+
 
             var rolesList = await _userManager.GetRolesAsync(userEditted).ConfigureAwait(false);
 
