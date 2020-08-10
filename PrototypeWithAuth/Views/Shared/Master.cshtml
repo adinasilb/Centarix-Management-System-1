@@ -65,6 +65,7 @@
 
 <body style="display:none">
     @RenderBody()
+
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
@@ -226,7 +227,7 @@
 
     <script>
         $(document).ready(function () {
-           
+
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
             });
@@ -245,7 +246,6 @@
 
             $('#createModalForm a:first').tab('show');
 
-
             //vendors
 
           //  $('[data-toggle="popover"]').popover();
@@ -259,10 +259,51 @@
             $("#user-budget-tab").prop("disabled", true);
             $("#user-more-tab").prop("disabled", true);
 
+             if ($("#tdconfirmemail").val()) {
+            console.log("tdconfirm email .val() = 'true'");
+            $("#tdconfirmemail").hide();
+                 var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
+            console.log("itemurl: " + $itemurl);
+            $("#loading").show();
+            $.fn.CallPage($itemurl, "confirmemail");
+        }
 
         });
 
+        $.fn.CallPage = function ($itemurl, $type) {
+            console.log("in call page function");
+            //delete existing modals
+            $('.modal').replaceWith('');
+            $(".modal-backdrop").remove();
+            $.ajax({
+                async: true,
+                url: $itemurl,
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    $("#loading").hide();
+                    console.log("success!");
+                    var modal = $(data);
+                    $('body').append(modal);
+                    //replaces the modal-view class with the ModalView view
+                    //$(".modal-view").html(data);
+                    //turn off data dismiss by clicking out of the box and by pressing esc
+                    $(".modal-view").modal({
+                        backdrop: true,
+                        keyboard: false,
+                    });
+                    //shows the modal
+                    $(".modal").modal('show');
+                    //reset so do not open the modal again
+                    $('#tdconfirmemail').val('');
+                    $.fn.OnOpenModalView();
+                    AddTempDataMemory();
+                
 
+                }
+         
+            });
+        }
         $(".prevent-js-reload").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();

@@ -2786,12 +2786,8 @@ namespace PrototypeWithAuth.Controllers
                 return RedirectToAction("Index", new
                 {
                     page = confirmEmail.Page,
-                    requestStatusID = 2,
-                    subcategoryID = confirmEmail.SubCategoryID,
-                    vendorID = confirmEmail.VendorID,
-                    applicationUserID = confirmEmail.ApplicationUserID,
+                    requestStatusID = 2,                   
                     PageType = AppUtility.RequestPageTypeEnum.Request
-
                 });
             }
 

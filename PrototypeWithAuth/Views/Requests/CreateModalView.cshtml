@@ -465,7 +465,7 @@
                                         <label class="control-label">Discount:</label>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                @*<div class="col-md-2">
                                     <div class="form-group">
                                         <label class="control-label">Terms:</label>
                                         @Html.DropDownListFor(
@@ -474,10 +474,11 @@
                                                                 htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
                                                             )
                                     </div>
-                                </div>
+                                </div>*@
                                 <div class="col-md-2">
                                     <div class="form-check">
-                                        <label class="form-check-label"><input class="form-check-input" type="checkbox" id="paid_checkbox" onchange="changeTerms(this)" />Paid</label>
+                                        <label class="form-check-label">Paid</label>
+                                        <input class="form-check-input opacity-100" type="checkbox" id="paid_checkbox" onchange="changeTerms(this)" />
                                     </div>
                                 </div>
                             </div>
@@ -689,56 +690,56 @@
 </div>
 </div>
 
-<div id="comments" class="tab-pane fade">
-    <span style="font-size: 1.7em;">Comments</span>
-    <br />
-    <br />
+                        <div id="comments" class="tab-pane fade">
+                            <span style="font-size: 1.7em;">Comments</span>
+                            <br />
+                            <br />
 
-    @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
-    <div class="card rounded">
-        <div class="card-body">
-            <div class="font-weight-bold">+NewComment</div>
-            <div class="form-group">
-                <label asp-for="NewComment.CommentText" class="control-label"></label>
-                <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
-                <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
+                            @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
+                            <div class="card rounded">
+                                <div class="card-body">
+                                    <div class="font-weight-bold">+NewComment</div>
+                                    <div class="form-group">
+                                        <label asp-for="NewComment.CommentText" class="control-label"></label>
+                                        <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
+                                        <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="archive" class="tab-pane fade">
+                            <span style="font-size: 1.7em;">Archive</span>
+                            <br />
+                            <br />
+                            <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
+                        </div>
+
+                        <div id="history" class="tab-pane fade">
+                            <span style="font-size: 1.7em;">History</span>
+                            <br />
+                            <br />
+                            <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
+                        </div>
+
+                        <div id="order" class="tab-pane fade">
+                            <span style="font-size: 1.7em;">Order</span>
+                            <br />
+                            <br />
+                            <div class="form-group">
+                                @*you can only add to cart if you are creating a new one*@
+                                <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="inv-button create-modal-submit mr-1" />
+
+                                <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="inv-button create-modal-submit mr-1" />
+                                <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="inv-button create-modal-submit mr-1" />
+                                <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="inv-button  create-modal-submit" />
+                                <button type="button" class="cancel-button float-right" data-dismiss="modal">Cancel</button>
+                                @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div id="archive" class="tab-pane fade">
-    <span style="font-size: 1.7em;">Archive</span>
-    <br />
-    <br />
-    <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
-</div>
-
-<div id="history" class="tab-pane fade">
-    <span style="font-size: 1.7em;">History</span>
-    <br />
-    <br />
-    <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
-</div>
-
-<div id="order" class="tab-pane fade">
-    <span style="font-size: 1.7em;">Order</span>
-    <br />
-    <br />
-    <div class="form-group">
-        @*you can only add to cart if you are creating a new one*@
-        <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="inv-button create-modal-submit mr-1" />
-
-        <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="inv-button create-modal-submit mr-1" />
-        <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="inv-button create-modal-submit mr-1" />
-        <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="inv-button  create-modal-submit" />
-        <button type="button" class="cancel-button float-right" data-dismiss="modal">Cancel</button>
-        @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
-    </div>
-</div>
-</div>
-</div>
-</div>
 
 <!-- Modal footer -->
 <!--<div class="modal-footer">
