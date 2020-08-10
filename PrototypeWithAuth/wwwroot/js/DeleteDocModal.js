@@ -15,7 +15,6 @@
 		success: (partialResult) => {
 			$("#DeleteDocumentsModal").replaceWith('');
 			$.fn.OpenDocumentsModal($foldername, $requestId);
-			ChangeColorsOfDocs($foldername);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
@@ -26,7 +25,7 @@
 
 function ChangeColorsOfDocs($foldername) {
 	console.log("foldername: " + $foldername);
-	var numCards = $(".card.document-border").length;
+	var numCards = $(".carousel-inner").length;
 	console.log("numcards: " + numCards);
 }
 
@@ -61,6 +60,8 @@ $.fn.OpenDocumentsModal = function (enumString, requestId) {
 				keyboard: true,
 			});
 			$(".modal").modal('show');
+			console.log("Here");
+			ChangeColorsOfDocs($foldername);
 		}
 	});
 };
