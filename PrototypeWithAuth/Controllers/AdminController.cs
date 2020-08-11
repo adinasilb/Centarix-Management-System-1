@@ -24,15 +24,15 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private SignInManager<ApplicationUser> _signManager;
         private UserManager<ApplicationUser> _userManager;
-        private RoleManager<IdentityRole> _roleManager;
+        //private RoleManager<IdentityRole> _roleManager;
         private readonly IHostingEnvironment _hostingEnvironment;
         public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment)
+            SignInManager<ApplicationUser> signManager/*, RoleManager<IdentityRole> roleManager*/, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _signManager = signManager;
-            _roleManager = roleManager;
+            //_roleManager = roleManager;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -53,7 +53,7 @@ namespace PrototypeWithAuth.Controllers
 
         {
             TempData["PageType"] = AppUtility.UserPageTypeEnum.Add;
-            var roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
+            //var roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
             {
                 //Roles = roles

@@ -43,11 +43,11 @@ namespace PrototypeWithAuth
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("CentarixConnection")));
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("CentarixConnection")));
+            //        Configuration.GetConnectionString("DefaultConnection")));
 
 
             //add identity
@@ -117,7 +117,7 @@ namespace PrototypeWithAuth
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-            CreateRoles(serviceProvider).Wait();
+            //CreateRoles(serviceProvider).Wait();
 
 
         }
