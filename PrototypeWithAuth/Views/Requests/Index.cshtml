@@ -19,6 +19,25 @@
     /*
      * BEGIN REMEMBERING DATA
      */
+    var backTextBool = false;
+    string backText = "";
+    string backLink = "";
+    string pgt = "";
+
+    //paged list booleans
+    AppUtility.RequestPageTypeEnum plPageType = AppUtility.RequestPageTypeEnum.Request;
+    int plRequestStatusID = 1;
+    int plSubcategoryID = 0;
+    int plVendorID = 0;
+    string plApplicationUserID = null;
+    int plParentLocationInstanceID = 0;
+
+
+    if (TempData["TempPageType"] != null)
+    {
+        pgt = TempData["TempPageType"].ToString();
+        TempData["TempPageType"] = TempData["TempPageType"];
+    }
     if (TempData["TempPage"] != null)
     {
         TempData["TempPage"] = TempData["TempPage"];
@@ -29,19 +48,37 @@
     }
     if (TempData["TempSubcategoryID"] != null)
     {
+        if ((Int32)TempData["TempSubcategoryID"] > 0)
+        {
+            backTextBool = true;
+            backText = TempData["TempSubcategoryID"].ToString();
+            backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pgt }).ToString();
+        }
         TempData["TempSubcategoryID"] = TempData["TempSubcategoryID"];
     }
     if (TempData["TempVendorID"] != null)
     {
+        if ((Int32)TempData["TempVendorID"] > 0)
+        {
+            backTextBool = true;
+            backText = TempData["TempVendorID"].ToString();
+            backLink = Url.ActionLink("Index", "Vendors", new { @PageType = pgt }).ToString();
+        }
         TempData["TempVendorID"] = TempData["TempVendorID"];
     }
     if (TempData["TempApplicationUserID"] != null)
     {
+        if ((Int32)TempData["TempApplicationUserID"] > 0)
+        {
+            backTextBool = true;
+            backText = TempData["TempApplicationUserID"].ToString();
+            backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pgt }).ToString();
+        }
         TempData["TempApplicationUserID"] = TempData["TempApplicationUserID"];
     }
-    if (TempData["TempPageType"] != null)
+    if (TempData["ParentLocationInstanceID"] != null)
     {
-        TempData["TempPageType"] = TempData["TempPageType"];
+        TempData["ParentLocationInstanceID"] = TempData["ParentLocationInstanceID"];
     }
     /*RequestsSearchViewModel?
     TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;*/
@@ -150,6 +187,15 @@
 @if (TempData["OpenConfirmEmailModal"] != null)
 {
     <input type="text" id="tdconfirmemail" class="hidden" value="@TempData["RequestID"]" />
+}
+
+@if(backTextBool)
+{
+    <div class="row ml-5 mt-5">
+        <a href="@backLink">
+            <i class="fas fa-long-arrow-alt-left"></i> @backText
+        </a>
+    </div>
 }
 
 @if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
