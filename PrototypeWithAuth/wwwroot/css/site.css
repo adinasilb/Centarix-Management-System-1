@@ -1047,7 +1047,9 @@ a.nav-link {
 }
 
 .new-button {
-    padding: 5px 18px;
+    /*padding: 5px 18px;*/
+    padding-bottom: .1em;
+    margin: 0 1.5em 0 0 ;
     background-color: #fff;
     color: #000;
     opacity: 0.87;
