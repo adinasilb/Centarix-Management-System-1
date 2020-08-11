@@ -174,15 +174,15 @@
                                 </div>
                                 <br />
                                 <div class="row">
-                                    <div class="col-6 pr-4">
-                                        <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.InvoiceNumber" min="0" asp-format="" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
+                                    <div class="col-md-6 pr-4">
+                                        <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
+                                        <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger" />
                                     </div>
-                                    <div class="col-6">
-                                        <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom  " />
-                                        <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
+                                    <div class="col-md-6">
+                                        <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
+                                        <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger quote-date" />
                                     </div>
                                 </div>
                                 <br />
@@ -200,10 +200,10 @@
                                     <div class="col-3">
                                         <label class="control-label">End Date</label>
                                         @*@{
-                                                //get this just to return the date (not the time)
-                                                //adding the amount of months of the warranty to the invoice date
-                                                var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                                            }*@
+                                    //get this just to return the date (not the time)
+                                    //adding the amount of months of the warranty to the invoice date
+                                    var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                                }*@
                                         <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                     </div>
                                 </div>
@@ -451,10 +451,10 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label  class="control-label">VAT</label>
+                                            <label class="control-label">VAT</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input  class="form-control-plaintext border-bottom vat" disabled />
+                                                <input class="form-control-plaintext border-bottom vat" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -735,13 +735,17 @@
                                                     <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                     @if (boolOrders)
                                                     {
-                                                        <a class="show-orders-view"><label><i class="icon-centarix-icons-09 hover-bold order-inv-color" style="   cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+                                                        <a class="show-orders-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold order-inv-color" style="   cursor: pointer;
+        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@
+            </label>
+            </a>
+        }
+        else
+        {
+            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+        }
                                                 </div>
                                             </div>
                                         </div>
@@ -767,13 +771,17 @@
                                                     <input type="file" asp-for="InvoiceFiles" class="file-select file-select-2" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                     @if (boolInvoice)
                                                     {
-                                                        <a class="show-invoices-view"><label><i class="icon-centarix-icons-09 hover-bold order-inv-color" style="  cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+                                                        <a class="show-invoices-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold order-inv-color" style="  cursor: pointer;
+        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@
+            </label>
+            </a>
+        }
+        else
+        {
+            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+        }
                                                 </div>
                                             </div>
                                         </div>
@@ -799,13 +807,17 @@
                                                     <input type="file" asp-for="ShipmentFiles" class="file-select file-select-3" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                     @if (boolShipment)
                                                     {
-                                                        <a class="show-shipments-view"><label><i class="icon-centarix-icons-09 hover-bold order-inv-color" style="  cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+                                                        <a class="show-shipments-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold order-inv-color" style="  cursor: pointer;
+        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@
+            </label>
+            </a>
+        }
+        else
+        {
+            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+        }
                                                 </div>
                                             </div>
                                         </div>
@@ -831,16 +843,20 @@
                                                     <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                     @if (boolQuote)
                                                     {
-                                                        <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold order-inv-color" style=" cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                                                            @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
-                                                        </label>
-                                                    }
+                                                        <a class="show-quotes-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold order-inv-color" style=" cursor: pointer;
+        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@
+            </label>
+            </a>
+        }
+        else
+        {
+            <label>
+                <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
+                @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
+            </label>
+        }
                                                 </div>
                                             </div>
                                         </div>
@@ -871,16 +887,20 @@
                                                     <input type="file" asp-for="InfoFiles" class="file-select file-select-5" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                     @if (boolInfo)
                                                     {
-                                                        <a class="show-info-view"><label><i class="icon-centarix-icons-09 hover-bold order-inv-color" style="cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                                                            @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
-                                                        </label>
-                                                    }
+                                                        <a class="show-info-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold order-inv-color" style="cursor: pointer;
+        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@
+            </label>
+            </a>
+        }
+        else
+        {
+            <label>
+                <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
+                @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
+            </label>
+        }
                                                 </div>
                                             </div>
                                         </div>
@@ -906,16 +926,20 @@
                                                     <input type="file" asp-for="PictureFiles" class="file-select file-select-6" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                     @if (boolPicture)
                                                     {
-                                                        <a class="show-pictures-view"><label><i class="icon-centarix-icons-09 hover-bold order-inv-color" style=" cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                                                            @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
-                                                        </label>
-                                                    }
+                                                        <a class="show-pictures-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold order-inv-color" style=" cursor: pointer;
+        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@
+            </label>
+            </a>
+        }
+        else
+        {
+            <label>
+                <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
+                @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
+            </label>
+        }
                                                 </div>
                                             </div>
                                         </div>
@@ -941,16 +965,20 @@
                                                     <input type="file" asp-for="ReturnFiles" class="file-select file-select-7" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                     @if (boolReturn)
                                                     {
-                                                        <a class="show-returns-view"><label><i class="icon-centarix-icons-09 hover-bold order-inv-color" style=" cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                                                            @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
-                                                        </label>
-                                                    }
+                                                        <a class="show-returns-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold order-inv-color" style=" cursor: pointer;
+        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@
+            </label>
+            </a>
+        }
+        else
+        {
+            <label>
+                <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
+                @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
+            </label>
+        }
                                                 </div>
                                             </div>
                                         </div>
@@ -976,16 +1004,20 @@
                                                     <input type="file" asp-for="CreditFiles" class="file-select file-select-8" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple>
                                                     @if (boolCredit)
                                                     {
-                                                        <a class="show-credits-view"><label><i class="icon-centarix-icons-09 hover-bold order-inv-color" style="cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                                                            @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
-                                                        </label>
-                                                    }
+                                                        <a class="show-credits-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold order-inv-color" style="cursor: pointer;
+        font-size: 1.8rem;"></i>@*<img style="cursor:pointer;" src="~/images/css/inventory/add-item/other icons/view.png" />*@
+            </label>
+            </a>
+        }
+        else
+        {
+            <label>
+                <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
+                @*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@
+            </label>
+        }
                                                 </div>
                                             </div>
                                         </div>
@@ -1012,8 +1044,8 @@
                                                                 <div class="col-md-2">
                                                                     <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
                                                                     @*Insert Pic
-                                                                        <img src="" />
-                                                                        changing this to the user's profile picture*@
+                                                            <img src="" />
+                                                            changing this to the user's profile picture*@
                                                                 </div>
                                                                 <div class="col-md-10">
                                                                     <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
@@ -1061,6 +1093,7 @@
                 @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
                 @Html.HiddenFor(vm => vm.Request.RequestStatusID)
                 @Html.HiddenFor(vm => vm.Request.ParentRequestID)
+                @Html.HiddenFor(vm => vm.Request.ParentQuoteID)
                 @*End Hidden Inputs*@
 
                 @*Hidden Input for Product Subcategory*@
