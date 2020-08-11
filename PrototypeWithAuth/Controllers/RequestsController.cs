@@ -494,7 +494,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
-                            requestItemViewModel.Request.ParentRequestID = null;
+                            //requestItemViewModel.Request.ParentRequestID = null;
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
                             _context.Update(requestItemViewModel.Request);
@@ -514,7 +514,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     try
                     {
-                        requestItemViewModel.Request.ParentRequestID = null;
+                        //requestItemViewModel.Request.ParentRequestID = null;
                         requestItemViewModel.Request.RequestStatusID = 6; //approved
                         requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                         _context.Update(requestItemViewModel.Request);
