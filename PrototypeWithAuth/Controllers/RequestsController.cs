@@ -455,6 +455,9 @@ namespace PrototypeWithAuth.Controllers
             //}
             requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
             requestItemViewModel.Request.ParentRequest.ApplicationUser = currentUser;
+            requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
+            requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
+            requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             //can we combine this with the one above?
             //if it's a new request need to put in a request status --CREATE MODAL so should always go here
             if (requestItemViewModel.Request.RequestStatusID == null)
@@ -531,11 +534,11 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (OrderType.Equals("Without Order"))
                     {
-                        Request request = requestItemViewModel.Request;
-                        request.ParentRequest.WithOrder = false;
-                        request.RequestStatusID = 2;
+                        requestItemViewModel.Request.ParentRequest.WithOrder = false;
+                        requestItemViewModel.Request.RequestStatusID = 2;
                         requestItemViewModel.RequestStatusID = 2;
-                        _context.Update(request);
+                        requestItemViewModel.Request.ParentQuote = null;
+                        _context.Update(requestItemViewModel.Request);
                         _context.SaveChanges();
                     }
                     else if (OrderType.Equals("Order"))
@@ -672,12 +675,11 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
 
-                    AppUtility.RequestPageTypeEnum requestPageTypeEnum1 = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
                     return RedirectToAction("Index", new
                     {
                         page = requestItemViewModel.Page,
                         requestStatusID = requestItemViewModel.Request.RequestStatusID,
-                        PageType = requestPageTypeEnum1
+                        PageType = AppUtility.RequestPageTypeEnum.Request
                     });
                 }
                 catch (DbUpdateException ex)
