@@ -68,6 +68,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         // GET: Requests
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
+        //ALSO when changing defaults -> change the defaults on the index page for paged list 
+
+
         public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
         {
 
@@ -231,7 +234,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["TempPageType"] = (int)PageType;
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
-
+            TempData["ParentLocationInstanceID"] = parentLocationInstanceID;
             //Getting the page that is going to be seen (if no page was specified it will be one)
             var pageNumber = page ?? 1;
             var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
@@ -240,7 +243,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .ToPagedListAsync(pageNumber, 25);
+                    .ToPagedListAsync(pageNumber, 5);
 
                 onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
             }
