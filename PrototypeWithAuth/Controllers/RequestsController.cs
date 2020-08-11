@@ -76,7 +76,7 @@ namespace PrototypeWithAuth.Controllers
 
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser)
-                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
+                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(x=>x.ParentQuote)
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .OrderBy(r => r.ParentRequest.OrderDate);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
@@ -243,7 +243,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 onePageOfProducts = await RequestsPassedIn.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .ToPagedListAsync(pageNumber, 5);
+                    .ToPagedListAsync(pageNumber, 25);
 
                 onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
             }
@@ -314,7 +314,7 @@ namespace PrototypeWithAuth.Controllers
                         RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID==6)
                   .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                   .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                  .Include(r => r.ParentRequest.ApplicationUser)
+                  .Include(r => r.ParentRequest.ApplicationUser).Include(r => r.ParentQuote)
                   .ToLookup(r => r.Product.Vendor)
                     });
                 }
@@ -323,7 +323,7 @@ namespace PrototypeWithAuth.Controllers
                     RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 3)
                   .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                   .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                  .Include(r => r.ParentRequest.ApplicationUser)
+                  .Include(r => r.ParentRequest.ApplicationUser).Include(r=>r.ParentQuote)
                   .ToLookup(r => r.Product.Vendor)
                 });
 
@@ -494,15 +494,32 @@ namespace PrototypeWithAuth.Controllers
                 //requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
 
                 //if it is out of the budget get sent to get approved automatically and user is not in role admin !User.IsInRole("Admin")
-                if (!User.IsInRole("Admin"))
+                if (!User.IsInRole("Admin") && (OrderType.Equals("Ask For Permission") || !checkIfInBudget(requestItemViewModel.Request)))
                 {
-                    if (OrderType.Equals("Ask For Permission") || !checkIfInBudget(requestItemViewModel.Request))
+                    try
+                    {
+                        //requestItemViewModel.Request.ParentRequestID = null;
+                        requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
+                        requestItemViewModel.Request.RequestStatusID = 1; //new request
+                        _context.Update(requestItemViewModel.Request);
+                        _context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["ErrorMessage"] = ex.Message;
+                        TempData["InnerMessage"] = ex.InnerException;
+                        return View("~/Views/Shared/RequestError.cshtml");
+                    }
+                }                
+                else
+                {
+                    if (OrderType.Equals("Add To Cart"))
                     {
                         try
                         {
                             //requestItemViewModel.Request.ParentRequestID = null;
+                            requestItemViewModel.Request.RequestStatusID = 6; //approved
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
-                            requestItemViewModel.Request.RequestStatusID = 1; //new request
                             _context.Update(requestItemViewModel.Request);
                             _context.SaveChanges();
                         }
@@ -513,18 +530,29 @@ namespace PrototypeWithAuth.Controllers
                             return View("~/Views/Shared/RequestError.cshtml");
                         }
                     }
-
-                }
-
-                if (OrderType.Equals("Add To Cart"))
-                {
                     try
                     {
-                        //requestItemViewModel.Request.ParentRequestID = null;
-                        requestItemViewModel.Request.RequestStatusID = 6; //approved
-                        requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
-                        _context.Update(requestItemViewModel.Request);
-                        _context.SaveChanges();
+                        if (OrderType.Equals("Without Order"))
+                        {
+                            requestItemViewModel.Request.ParentRequest.WithOrder = false;
+                            requestItemViewModel.Request.RequestStatusID = 2;
+                            requestItemViewModel.RequestStatusID = 2;
+                            requestItemViewModel.Request.ParentQuote = null;
+                            _context.Update(requestItemViewModel.Request);
+                            _context.SaveChanges();
+                        }
+                        else if (OrderType.Equals("Order"))
+                        {
+                            requestItemViewModel.Request.ParentRequest.WithOrder = true;
+                            requestItemViewModel.Request.RequestStatusID = 1; //new request
+                            requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
+                            requestItemViewModel.RequestStatusID = 1;
+                            _context.Update(requestItemViewModel.Request);
+                            _context.SaveChanges();
+                            TempData["OpenConfirmEmailModal"] = true;
+                            TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+                        }
+
                     }
                     catch (Exception ex)
                     {
@@ -532,37 +560,6 @@ namespace PrototypeWithAuth.Controllers
                         TempData["InnerMessage"] = ex.InnerException;
                         return View("~/Views/Shared/RequestError.cshtml");
                     }
-                }
-                try
-                {
-                    if (OrderType.Equals("Without Order"))
-                    {
-                        requestItemViewModel.Request.ParentRequest.WithOrder = false;
-                        requestItemViewModel.Request.RequestStatusID = 2;
-                        requestItemViewModel.RequestStatusID = 2;
-                        requestItemViewModel.Request.ParentQuote = null;
-                        _context.Update(requestItemViewModel.Request);
-                        _context.SaveChanges();
-                    }
-                    else if (OrderType.Equals("Order"))
-                    {
-                        requestItemViewModel.Request.ParentRequest.WithOrder = true;
-                        requestItemViewModel.Request.RequestStatusID = 1; //new request
-                        requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
-                        requestItemViewModel.RequestStatusID = 1;
-                        _context.Update(requestItemViewModel.Request);
-                        _context.SaveChanges();
-                        TempData["OpenConfirmEmailModal"] = true;
-                        TempData["RequestID"] = requestItemViewModel.Request.RequestID;
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    TempData["ErrorMessage"] = ex.Message;
-                    TempData["InnerMessage"] = ex.InnerException;
-                    return View("~/Views/Shared/RequestError.cshtml");
                 }
                 try
                 {
@@ -2831,12 +2828,12 @@ namespace PrototypeWithAuth.Controllers
             if (confirmQuoteEmail.IsResend)
             {
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == confirmQuoteEmail.RequestID)
-               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
+               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r=>r.ParentQuote).ToList();
             }
             else
             {
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 1)
-                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
+                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
 
             string uploadFolder1 = Path.Combine("~", "files");
@@ -2915,7 +2912,7 @@ namespace PrototypeWithAuth.Controllers
                     RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Include(r => r.ParentRequest.ApplicationUser)
+                    .Include(r => r.ParentRequest.ApplicationUser).Include(r => r.ParentQuote)
                     .ToLookup(r => r.Product.Vendor)
                 });
             }
@@ -2936,12 +2933,12 @@ namespace PrototypeWithAuth.Controllers
             if (isResend)
             {
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id)
-               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
+               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
             else
             {
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 1)
-                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
+                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
 
 
@@ -2991,7 +2988,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmQuoteOrderEmailModal(int id)
         {
             var requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID==6)
-                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).ToList();
+                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.ParentQuote).ToList();
 
             ConfirmQuoteOrderEmailViewModel confirmEmail = new ConfirmQuoteOrderEmailViewModel
             {
@@ -3037,7 +3034,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmQuoteOrderEmailModal(ConfirmQuoteOrderEmailViewModel confirmQuoteOrderEmail)
         {
             var requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == confirmQuoteOrderEmail.VendorId && r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID ==6)
-                     .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
+                     .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
             string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
@@ -3114,7 +3111,7 @@ namespace PrototypeWithAuth.Controllers
                     RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID ==6 )
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Include(r => r.ParentRequest.ApplicationUser)
+                    .Include(r => r.ParentRequest.ApplicationUser).Include(r => r.ParentQuote)
                     .ToLookup(r => r.Product.Vendor)
                 });
             }
@@ -3138,7 +3135,7 @@ namespace PrototypeWithAuth.Controllers
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.ParentRequest.ApplicationUser)
+                .Include(r => r.ParentRequest.ApplicationUser).Include(r => r.ParentQuote)
                 .ToLookup(r => r.Product.Vendor);
             TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
             TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Quotes;
@@ -3153,7 +3150,7 @@ namespace PrototypeWithAuth.Controllers
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID ==4 && r.RequestStatusID == 6)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.ParentRequest.ApplicationUser)
+                .Include(r => r.ParentRequest.ApplicationUser).Include(r => r.ParentQuote)
                 .ToLookup(r => r.Product.Vendor);
             TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
             TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Orders;
@@ -3639,7 +3636,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult ApproveReorder(int id)
         {
-            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).FirstOrDefault();
+            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x=>x.ParentQuote).FirstOrDefault();
             try
             {
                 request.RequestStatusID = 6; //approved
@@ -3876,7 +3873,7 @@ namespace PrototypeWithAuth.Controllers
                       .Where(r => r.ParentRequest.ApplicationUserID == request.ParentRequest.ApplicationUserID)
                       .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
                       .Sum(r => r.Cost);
-                if (monthsSpending > request.ParentRequest.ApplicationUser.LabMonthlyLimit)
+                if (monthsSpending+ request.Cost > request.ParentRequest.ApplicationUser.LabMonthlyLimit)
                 {
                     return false;
                 }
@@ -3899,7 +3896,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.ParentRequest.ApplicationUserID == request.ParentRequest.ApplicationUserID)
                     .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
                     .Sum(r => r.Cost);
-                if (monthsSpending > request.ParentRequest.ApplicationUser.OperationMonthlyLimit)
+                if (monthsSpending + request.Cost > request.ParentRequest.ApplicationUser.OperationMonthlyLimit)
                 {
                     return false;
                 }
