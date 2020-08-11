@@ -2788,7 +2788,6 @@ namespace PrototypeWithAuth.Controllers
                     {
                         foreach (var request in requests)
                         {
-                            _context.SaveChanges();
                             requests.FirstOrDefault().RequestStatusID = 2;
                             _context.Update(request);
                             await _context.SaveChangesAsync();
