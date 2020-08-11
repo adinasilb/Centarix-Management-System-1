@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Quote : Request
+    public class Reorder : Request
     {
-      
-        public int ParentQuoteID { get; set; }
-        public ParentQuote ParentQuote { get; set; }
-        public int QuoteStatusID { get; set; }
-        public QuoteStatus QuoteStatus { get; set; }
+       
+
     }
 }

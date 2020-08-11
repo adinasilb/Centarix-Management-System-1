@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class EditQuoteDetailsViewModel
     {
-        public List<Quote> Quotes { get; set; }
+        public List<Reorder> Reorders { get; set; }
         [DataType(DataType.Date)]
         public Vendor Vendor { get; set; }
 
@@ -18,9 +18,9 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Quote Date")]
         public DateTime QuoteDate { get; set; }
         [Display(Name = "Quote Number")]
-        public int? QuoteNumber { get; set; }
+        public int QuoteNumber { get; set; }
         public IFormFile QuoteFileUpload { get; set; }
-        public int ParentQuoteID { get; set; }
+        public int? ParentQuoteID { get; set; }
 
     }
 }

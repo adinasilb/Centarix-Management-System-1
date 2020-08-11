@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200810110438_ChangedStatusToQuoteRecieved")]
+    partial class ChangedStatusToQuoteRecieved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -603,17 +605,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("QuoteDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("QuoteNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuoteStatusID")
+                    b.Property<int?>("QuoteNumber")
                         .HasColumnType("int");
 
                     b.HasKey("ParentQuoteID");
 
                     b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("QuoteStatusID");
 
                     b.ToTable("ParentQuotes");
                 });
@@ -1374,9 +1371,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ParentQuoteID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ParentRequestID")
                         .HasColumnType("int");
 
@@ -1435,8 +1429,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("RequestID");
 
                     b.HasIndex("ApplicationUserReceiverID");
-
-                    b.HasIndex("ParentQuoteID");
 
                     b.HasIndex("ParentRequestID");
 
@@ -1903,11 +1895,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("VendorContacts");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Reorder", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.Quote", b =>
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.Request");
 
-                    b.HasDiscriminator().HasValue("Reorder");
+                    b.Property<int>("ParentQuoteID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuoteStatusID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("ParentQuoteID");
+
+                    b.HasIndex("QuoteStatusID");
+
+                    b.HasDiscriminator().HasValue("Quote");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -2026,12 +2028,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
-                        .WithMany("ParentQuotes")
-                        .HasForeignKey("QuoteStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentRequest", b =>
@@ -2086,11 +2082,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserReceiver")
                         .WithMany()
                         .HasForeignKey("ApplicationUserReceiverID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.ParentQuote", "ParentQuote")
-                        .WithMany("Requests")
-                        .HasForeignKey("ParentQuoteID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
@@ -2190,6 +2181,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
                         .WithMany("VendorContacts")
                         .HasForeignKey("VendorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Quote", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.ParentQuote", "ParentQuote")
+                        .WithMany("Quotes")
+                        .HasForeignKey("ParentQuoteID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
+                        .WithMany("Quotes")
+                        .HasForeignKey("QuoteStatusID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

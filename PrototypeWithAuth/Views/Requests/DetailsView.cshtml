@@ -190,15 +190,15 @@
                                 </div>
                                 <br />
                                 <div class="row">
-                                    <div class="col-6 pr-4">
-                                        <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control-plaintext border-bottom" disabled />
-                                        <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
+                                    <div class="col-md-6 pr-4">
+                                        <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
+                                        <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger" />
                                     </div>
-                                    <div class="col-6">
-                                        <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom" disabled />
-                                        <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
+                                    <div class="col-md-6">
+                                        <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
+                                        <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger quote-date" />
                                     </div>
                                 </div>
                                 <br />
@@ -569,141 +569,141 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
                                 @*<div class="row orders-view border rounded shadow text-center mb-5">
-                                    <div class="col-md-8 border-right border-dark">
-                                        Preview coming soon...
-                                    </div>
-                                    <div class="col-md-4 border-left border-dark">
-                                        <h3>Order</h3>
-                                        <hr />
-                                        @if (Model.OrderFileStrings != null)
-                                        {
-                                            foreach (var orderFileString in Model.OrderFileStrings)
-                                            {
-                                                <a href="@orderFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
-                                            }
-                                        }
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="row invoices-view border rounded shadow text-center mb-5">
-                                    <div class="col-md-8 border-right border-dark">
-                                        Preview coming soon...
-                                    </div>
-                                    <div class="col-md-4 border-left border-dark">
-                                        <h3>Invoice</h3>
-                                        <hr />
-                                        @if (Model.InvoiceFileStrings != null)
-                                        {
-                                            foreach (var invoiceFileString in Model.InvoiceFileStrings)
-                                            {
-                                                <a href="@invoiceFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
-                                            }
-                                        }
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="row shipments-view border rounded shadow text-center mb-5">
-                                    <div class="col-md-8 border-right border-dark">
-                                        Preview coming soon...
-                                    </div>
-                                    <div class="col-md-4 border-left border-dark">
-                                        <h3>Shipment</h3>
-                                        <hr />
-                                        @if (Model.ShipmentFileStrings != null)
-                                        {
-                                            foreach (var shipmentFileString in Model.ShipmentFileStrings)
-                                            {
-                                                <a href="@shipmentFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
-                                            }
-                                        }
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="row quotes-view border rounded shadow text-center mb-5">
-                                    <div class="col-md-8 border-right border-dark">
-                                        Preview coming soon...
-                                    </div>
-                                    <div class="col-md-4 border-left border-dark">
-                                        <h3>Quote</h3>
-                                        <hr />
-                                        @if (Model.QuoteFileStrings != null)
-                                        {
-                                            foreach (var quoteFileString in Model.QuoteFileStrings)
-                                            {
-                                                <a href="@quoteFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
-                                            }
-                                        }
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="row info-view border rounded shadow text-center mb-5">
-                                    <div class="col-md-8 border-right border-dark">
-                                        Preview coming soon...
-                                    </div>
-                                    <div class="col-md-4 border-left border-dark">
-                                        <h3>Info</h3>
-                                        <hr />
-                                        @if (Model.InfoFileStrings != null)
-                                        {
-                                            foreach (var infoFileString in Model.InfoFileStrings)
-                                            {
-                                                <a href="@infoFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
-                                            }
-                                        }
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="row pictures-view border rounded shadow text-center mb-5">
-                                    <div class="col-md-8 border-right border-dark">
-                                        Preview coming soon...
-                                    </div>
-                                    <div class="col-md-4 border-left border-dark">
-                                        <h3>Picture</h3>
-                                        <hr />
-                                        @if (Model.PictureFileStrings != null)
-                                        {
-                                            foreach (var pictureFileString in Model.PictureFileStrings)
-                                            {
-                                                <a href="@pictureFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
-                                            }
-                                        }
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="row returns-view border rounded shadow text-center mb-5">
-                                    <div class="col-md-8 border-right border-dark">
-                                        Preview coming soon...
-                                    </div>
-                                    <div class="col-md-4 border-left border-dark">
-                                        <h3>Return</h3>
-                                        <hr />
-                                        @if (Model.ReturnFileStrings != null)
-                                        {
-                                            foreach (var returnFileString in Model.ReturnFileStrings)
-                                            {
-                                                <a href="@returnFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
-                                            }
-                                        }
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="row credits-view border rounded shadow text-center mb-5">
-                                    <div class="col-md-8 border-right border-dark">
-                                        Preview coming soon...
-                                    </div>
-                                    <div class="col-md-4 border-left border-dark">
-                                        <h3>Credit</h3>
-                                        <hr />
-                                        @if (Model.CreditFileStrings != null)
-                                        {
-                                            foreach (var creditFileString in Model.CreditFileStrings)
-                                            {
-                                                <a href="@creditFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
-                                            }
-                                        }
-                                        <br />
-                                    </div>
-                                </div>*@
+                        <div class="col-md-8 border-right border-dark">
+                            Preview coming soon...
+                        </div>
+                        <div class="col-md-4 border-left border-dark">
+                            <h3>Order</h3>
+                            <hr />
+                            @if (Model.OrderFileStrings != null)
+                            {
+                                foreach (var orderFileString in Model.OrderFileStrings)
+                                {
+                                    <a href="@orderFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                }
+                            }
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row invoices-view border rounded shadow text-center mb-5">
+                        <div class="col-md-8 border-right border-dark">
+                            Preview coming soon...
+                        </div>
+                        <div class="col-md-4 border-left border-dark">
+                            <h3>Invoice</h3>
+                            <hr />
+                            @if (Model.InvoiceFileStrings != null)
+                            {
+                                foreach (var invoiceFileString in Model.InvoiceFileStrings)
+                                {
+                                    <a href="@invoiceFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                }
+                            }
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row shipments-view border rounded shadow text-center mb-5">
+                        <div class="col-md-8 border-right border-dark">
+                            Preview coming soon...
+                        </div>
+                        <div class="col-md-4 border-left border-dark">
+                            <h3>Shipment</h3>
+                            <hr />
+                            @if (Model.ShipmentFileStrings != null)
+                            {
+                                foreach (var shipmentFileString in Model.ShipmentFileStrings)
+                                {
+                                    <a href="@shipmentFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                }
+                            }
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row quotes-view border rounded shadow text-center mb-5">
+                        <div class="col-md-8 border-right border-dark">
+                            Preview coming soon...
+                        </div>
+                        <div class="col-md-4 border-left border-dark">
+                            <h3>Quote</h3>
+                            <hr />
+                            @if (Model.QuoteFileStrings != null)
+                            {
+                                foreach (var quoteFileString in Model.QuoteFileStrings)
+                                {
+                                    <a href="@quoteFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                }
+                            }
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row info-view border rounded shadow text-center mb-5">
+                        <div class="col-md-8 border-right border-dark">
+                            Preview coming soon...
+                        </div>
+                        <div class="col-md-4 border-left border-dark">
+                            <h3>Info</h3>
+                            <hr />
+                            @if (Model.InfoFileStrings != null)
+                            {
+                                foreach (var infoFileString in Model.InfoFileStrings)
+                                {
+                                    <a href="@infoFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                }
+                            }
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row pictures-view border rounded shadow text-center mb-5">
+                        <div class="col-md-8 border-right border-dark">
+                            Preview coming soon...
+                        </div>
+                        <div class="col-md-4 border-left border-dark">
+                            <h3>Picture</h3>
+                            <hr />
+                            @if (Model.PictureFileStrings != null)
+                            {
+                                foreach (var pictureFileString in Model.PictureFileStrings)
+                                {
+                                    <a href="@pictureFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                }
+                            }
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row returns-view border rounded shadow text-center mb-5">
+                        <div class="col-md-8 border-right border-dark">
+                            Preview coming soon...
+                        </div>
+                        <div class="col-md-4 border-left border-dark">
+                            <h3>Return</h3>
+                            <hr />
+                            @if (Model.ReturnFileStrings != null)
+                            {
+                                foreach (var returnFileString in Model.ReturnFileStrings)
+                                {
+                                    <a href="@returnFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                }
+                            }
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row credits-view border rounded shadow text-center mb-5">
+                        <div class="col-md-8 border-right border-dark">
+                            Preview coming soon...
+                        </div>
+                        <div class="col-md-4 border-left border-dark">
+                            <h3>Credit</h3>
+                            <hr />
+                            @if (Model.CreditFileStrings != null)
+                            {
+                                foreach (var creditFileString in Model.CreditFileStrings)
+                                {
+                                    <a href="@creditFileString" target="_blank" class="btn btn-block btn-secondary">view doc</a>
+                                }
+                            }
+                            <br />
+                        </div>
+                    </div>*@
 
                                 <div class="row">
                                     <div class="col-md-3">
@@ -721,27 +721,27 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                 <img src="~/images/css/inventory/add-item/other icons/order.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             @*<div class="card-footer" style="display:flex; justify-content: space-between">
-                                                <div class="custom-file text-center">
-                                                    <label for="OrderFiles">
-                                                        <i class="icon-centarix-icons-07 upload-file-1 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                                                    </label>
-                                                    <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                    @if (boolOrders)
-                                                    {
-                                                        <a class="show-orders-view">
-                                                            <label>
-                                                                <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
-                                                            </label>
-                                                        </a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
-                                                        </label>
-                                                    }
-                                                </div>
-                                            </div>*@
+                                    <div class="custom-file text-center">
+                                        <label for="OrderFiles">
+                                            <i class="icon-centarix-icons-07 upload-file-1 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>
+                                        </label>
+                                        <input type="file" asp-for="OrderFiles" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                        @if (boolOrders)
+                                        {
+                                            <a class="show-orders-view">
+                                                <label>
+                                                    <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
+                                                </label>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <label>
+                                                <i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>
+                                            </label>
+                                        }
+                                    </div>
+                                </div>*@
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
                                     </div>
@@ -760,23 +760,23 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                 <img src="~/images/css/inventory/add-item/other icons/invoice.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             @*<div class="card-footer">
-                                                <div class="custom-file text-center">
-                                                    <label for="InvoiceFiles"><i class="icon-centarix-icons-07 upload-file-2 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                    <input type="file" asp-for="InvoiceFiles" class="file-select file-select-2" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                    @if (boolInvoice)
-                                                    {
-                                                        <a class="show-invoices-view">
-                                                            <label>
-                                                                <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
-                                                            </label>
-                                                        </a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                    }
-                                                </div>
-                                            </div>*@
+                                    <div class="custom-file text-center">
+                                        <label for="InvoiceFiles"><i class="icon-centarix-icons-07 upload-file-2 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                        <input type="file" asp-for="InvoiceFiles" class="file-select file-select-2" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                        @if (boolInvoice)
+                                        {
+                                            <a class="show-invoices-view">
+                                                <label>
+                                                    <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
+                                                </label>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                        }
+                                    </div>
+                                </div>*@
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
                                     </div>
@@ -795,23 +795,23 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                 <img src="~/images/css/inventory/add-item/other icons/shipment.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             @*<div class="card-footer">
-                                                <div class="custom-file text-center">
-                                                    <label for="ShipmentFiles"><i class="icon-centarix-icons-07 upload-file-3 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                    <input type="file" asp-for="ShipmentFiles" class="file-select file-select-3" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                    @if (boolShipment)
-                                                    {
-                                                        <a class="show-shipments-view">
-                                                            <label>
-                                                                <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
-                                                            </label>
-                                                        </a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                    }
-                                                </div>
-                                            </div>*@
+                                    <div class="custom-file text-center">
+                                        <label for="ShipmentFiles"><i class="icon-centarix-icons-07 upload-file-3 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                        <input type="file" asp-for="ShipmentFiles" class="file-select file-select-3" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                        @if (boolShipment)
+                                        {
+                                            <a class="show-shipments-view">
+                                                <label>
+                                                    <i class="icon-centarix-icons-09 hover-bold" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i>
+                                                </label>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                        }
+                                    </div>
+                                </div>*@
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                     </div>
@@ -830,19 +830,19 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                 <img src="~/images/css/inventory/add-item/other icons/quote.png" style="margin-top:3rem;" alt="order" />
                                             </div>
                                             @*<div class="card-footer">
-                                                <div class="custom-file text-center">
-                                                    <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                    <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                    @if (boolQuote)
-                                                    {
-                                                        <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                                    }
-                                                </div>
-                                            </div>*@
+                                    <div class="custom-file text-center">
+                                        <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                        <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                        @if (boolQuote)
+                                        {
+                                            <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
+                                        }
+                                        else
+                                        {
+                                            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                        }
+                                    </div>
+                                </div>*@
                                         </div>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
                                     </div>
@@ -868,14 +868,18 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                     <input type="file" asp-for="InfoFiles" class="file-select file-select-5" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                     @if (boolInfo)
                                                     {
-                                                        <a class="show-info-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="        color: #2196F3;
+                                                        <a class="show-info-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold align-bottom" style="        color: #2196F3;
         cursor: pointer;
-        font-size: 1.8rem;"></i> @*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+        font-size: 1.8rem;"></i> @*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
+                </label>
+                </a>
+            }
+            else
+            {
+                <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+            }
                                                 </div>
                                             </div>
                                         </div>
@@ -901,14 +905,18 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                     <input type="file" asp-for="PictureFiles" class="file-select file-select-6" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                     @if (boolPicture)
                                                     {
-                                                        <a class="show-pictures-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="        color: #2196F3;
+                                                        <a class="show-pictures-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold align-bottom" style="        color: #2196F3;
         cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+        font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
+                </label>
+                </a>
+            }
+            else
+            {
+                <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+            }
                                                 </div>
                                             </div>
                                         </div>
@@ -934,14 +942,18 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                     <input type="file" asp-for="ReturnFiles" class="file-select file-select-7" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                     @if (boolReturn)
                                                     {
-                                                        <a class="show-returns-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="        color: #2196F3;
+                                                        <a class="show-returns-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold align-bottom" style="        color: #2196F3;
         cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+        font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
+                </label>
+                </a>
+            }
+            else
+            {
+                <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+            }
                                                 </div>
                                             </div>
                                         </div>
@@ -967,14 +979,18 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                     <input type="file" asp-for="CreditFiles" class="file-select file-select-8" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
                                                     @if (boolCredit)
                                                     {
-                                                        <a class="show-credits-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="        color: #2196F3;
+                                                        <a class="show-credits-view">
+                                                            <label>
+                                                                <i class="icon-centarix-icons-09 hover-bold align-bottom" style="        color: #2196F3;
         cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@</label></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+        font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
+                </label>
+                </a>
+            }
+            else
+            {
+                <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
+            }
                                                 </div>
                                             </div>
                                         </div>
@@ -1000,8 +1016,8 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                                                                 <div class="col-md-2">
                                                                     <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
                                                                     @*Insert Pic
-                                                                        <img src="" />
-                                                                        changing this to the user's profile picture*@
+                                                        <img src="" />
+                                                        changing this to the user's profile picture*@
                                                                 </div>
                                                                 <div class="col-md-10">
                                                                     <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
@@ -1024,7 +1040,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
 
                     <!-- Modal footer -->
                     @*<div class="modal-footer">
-                        </div>*@
+        </div>*@
 
                     @*Begin Hidden Inputs:*@
                     @Html.HiddenFor(vm => vm.Request.ProductID)
@@ -1032,6 +1048,7 @@ htmlAttributes: new { @class = "form-control-plaintext border-bottom", @disabled
                     @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
                     @Html.HiddenFor(vm => vm.Request.RequestStatusID)
                     @Html.HiddenFor(vm => vm.Request.ParentRequestID)
+                    @Html.HiddenFor(vm => vm.Request.ParentQuoteID)
                     @*End Hidden Inputs*@
 
                     @*Hidden Input for Product Subcategory*@

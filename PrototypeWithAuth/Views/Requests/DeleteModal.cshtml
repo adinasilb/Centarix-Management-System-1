@@ -10,7 +10,7 @@
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(model => model.Request.RequestID)
-                @Html.HiddenFor(model => model.IsQuote)
+                @Html.HiddenFor(model => model.IsReorder)
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
