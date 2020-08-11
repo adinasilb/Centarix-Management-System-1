@@ -8,7 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class ConfirmQuoteOrderEmailViewModel
     {
-        public List<Quote> Requests { get; set; }
+        public List<Reorder> Requests { get; set; }
         public int VendorId { get; set; }
 
     }

@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.ViewModels
     //this is the model for the modal view - this views a specific request and details - CRU (D)
     public class RequestItemViewModel
     {
-        public Quote Request { get; set; } // requests already include the product, we do not need to include a separate product
+        public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }

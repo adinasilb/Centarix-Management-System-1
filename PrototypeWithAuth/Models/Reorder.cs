@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Quote : Request
+    public class Reorder : Request
     {
+       
 
     }
 }

@@ -10,8 +10,8 @@ using PrototypeWithAuth.Data;
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200810124734_ChangedQuoteStatusToTakeParentQuote")]
-    partial class ChangedQuoteStatusToTakeParentQuote
+    [Migration("20200811044123_EmptyQuoteOfFieldsAndChangeNameToReorder")]
+    partial class EmptyQuoteOfFieldsAndChangeNameToReorder
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1388,6 +1388,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<long>("Quantity")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("QuoteStatusID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("RequestStatusID")
                         .HasColumnType("int");
 
@@ -1443,6 +1446,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ParentRequestID");
 
                     b.HasIndex("ProductID");
+
+                    b.HasIndex("QuoteStatusID");
 
                     b.HasIndex("RequestStatusID");
 
@@ -1905,11 +1910,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("VendorContacts");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Quote", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.Reorder", b =>
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.Request");
 
-                    b.HasDiscriminator().HasValue("Quote");
+                    b.HasDiscriminator().HasValue("Reorder");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -2030,7 +2035,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
-                        .WithMany("Quotes")
+                        .WithMany()
                         .HasForeignKey("QuoteStatusID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -2105,6 +2110,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", null)
+                        .WithMany("Requests")
+                        .HasForeignKey("QuoteStatusID")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.RequestStatus", "RequestStatus")
                         .WithMany("Requests")

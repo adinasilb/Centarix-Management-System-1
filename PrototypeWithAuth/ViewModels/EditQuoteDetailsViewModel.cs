@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class EditQuoteDetailsViewModel
     {
-        public List<Quote> Quotes { get; set; }
+        public List<Reorder> Reorders { get; set; }
         [DataType(DataType.Date)]
         public Vendor Vendor { get; set; }
 

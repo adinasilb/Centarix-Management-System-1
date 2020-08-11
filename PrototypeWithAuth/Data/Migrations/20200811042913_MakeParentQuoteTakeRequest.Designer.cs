@@ -10,8 +10,8 @@ using PrototypeWithAuth.Data;
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200810124433_MadeParentRequestNullable")]
-    partial class MadeParentRequestNullable
+    [Migration("20200811042913_MakeParentQuoteTakeRequest")]
+    partial class MakeParentQuoteTakeRequest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1909,7 +1909,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.Request");
 
-                    b.Property<int?>("QuoteStatusID")
+                    b.Property<int>("QuoteStatusID")
                         .HasColumnType("int");
 
                     b.HasIndex("QuoteStatusID");
@@ -2203,10 +2203,11 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Quote", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", null)
+                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
                         .WithMany("Quotes")
                         .HasForeignKey("QuoteStatusID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

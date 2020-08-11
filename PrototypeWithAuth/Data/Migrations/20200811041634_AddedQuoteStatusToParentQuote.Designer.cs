@@ -10,8 +10,8 @@ using PrototypeWithAuth.Data;
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200810124313_MovedParentQuoteToRequest")]
-    partial class MovedParentQuoteToRequest
+    [Migration("20200811041634_AddedQuoteStatusToParentQuote")]
+    partial class AddedQuoteStatusToParentQuote
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1376,7 +1376,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ParentQuoteID")
+                    b.Property<int?>("ParentQuoteID")
                         .HasColumnType("int");
 
                     b.Property<int?>("ParentRequestID")
@@ -1437,8 +1437,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("RequestID");
 
                     b.HasIndex("ApplicationUserReceiverID");
-
-                    b.HasIndex("ParentQuoteID");
 
                     b.HasIndex("ParentRequestID");
 
@@ -1909,8 +1907,10 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.Request");
 
-                    b.Property<int?>("QuoteStatusID")
+                    b.Property<int>("QuoteStatusID")
                         .HasColumnType("int");
+
+                    b.HasIndex("ParentQuoteID");
 
                     b.HasIndex("QuoteStatusID");
 
@@ -2095,12 +2095,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserReceiverID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.ParentQuote", "ParentQuote")
-                        .WithMany("Requests")
-                        .HasForeignKey("ParentQuoteID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
                         .WithMany("Requests")
                         .HasForeignKey("ParentRequestID")
@@ -2204,10 +2198,16 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Quote", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", null)
+                    b.HasOne("PrototypeWithAuth.Models.ParentQuote", "ParentQuote")
+                        .WithMany("Quotes")
+                        .HasForeignKey("ParentQuoteID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
                         .WithMany("Quotes")
                         .HasForeignKey("QuoteStatusID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
