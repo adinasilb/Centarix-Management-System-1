@@ -67,6 +67,16 @@
     <Compile Remove="Data\Migrations\20200720113347_createdCategoryTypeAndCategoryTypeParentCategoryTables.Designer.cs" />
     <Compile Remove="Data\Migrations\20200720115846_changedCategoryTypeToOneToManyRelationship.cs" />
     <Compile Remove="Data\Migrations\20200720115846_changedCategoryTypeToOneToManyRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200811040942_MadeRequestTakeParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20200811040942_MadeRequestTakeParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200811041634_AddedQuoteStatusToParentQuote.cs" />
+    <Compile Remove="Data\Migrations\20200811041634_AddedQuoteStatusToParentQuote.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200811042913_MakeParentQuoteTakeRequest.cs" />
+    <Compile Remove="Data\Migrations\20200811042913_MakeParentQuoteTakeRequest.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200811044123_EmptyQuoteOfFieldsAndChangeNameToReorder.cs" />
+    <Compile Remove="Data\Migrations\20200811044123_EmptyQuoteOfFieldsAndChangeNameToReorder.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200811081302_MadeQuoteStatusTakeParent.cs" />
+    <Compile Remove="Data\Migrations\20200811081302_MadeQuoteStatusTakeParent.Designer.cs" />
   </ItemGroup>
 
 

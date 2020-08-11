@@ -10,8 +10,8 @@ using PrototypeWithAuth.Data;
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200811041634_AddedQuoteStatusToParentQuote")]
-    partial class AddedQuoteStatusToParentQuote
+    [Migration("20200811094252_RedidRequestAndParentQuote")]
+    partial class RedidRequestAndParentQuote
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1438,6 +1438,8 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ApplicationUserReceiverID");
 
+                    b.HasIndex("ParentQuoteID");
+
                     b.HasIndex("ParentRequestID");
 
                     b.HasIndex("ProductID");
@@ -1903,18 +1905,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("VendorContacts");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Quote", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.Reorder", b =>
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.Request");
 
-                    b.Property<int>("QuoteStatusID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("ParentQuoteID");
-
-                    b.HasIndex("QuoteStatusID");
-
-                    b.HasDiscriminator().HasValue("Quote");
+                    b.HasDiscriminator().HasValue("Reorder");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -2035,7 +2030,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
-                        .WithMany()
+                        .WithMany("ParentQuotes")
                         .HasForeignKey("QuoteStatusID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -2093,6 +2088,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserReceiver")
                         .WithMany()
                         .HasForeignKey("ApplicationUserReceiverID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.ParentQuote", "ParentQuote")
+                        .WithMany("Requests")
+                        .HasForeignKey("ParentQuoteID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
@@ -2192,20 +2192,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
                         .WithMany("VendorContacts")
                         .HasForeignKey("VendorID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Quote", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.ParentQuote", "ParentQuote")
-                        .WithMany("Quotes")
-                        .HasForeignKey("ParentQuoteID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.QuoteStatus", "QuoteStatus")
-                        .WithMany("Quotes")
-                        .HasForeignKey("QuoteStatusID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
