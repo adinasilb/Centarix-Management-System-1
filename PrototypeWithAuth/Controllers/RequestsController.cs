@@ -75,7 +75,7 @@ namespace PrototypeWithAuth.Controllers
         {
 
             //instantiate your list of requests to pass into the index
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser)
+            IQueryable<Request> fullRequestsList = _context.Requests.Include(pr => pr.ApplicationUserCreator)
                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(x=>x.ParentQuote)
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .OrderBy(r => r.ParentRequest.OrderDate);
@@ -475,7 +475,7 @@ namespace PrototypeWithAuth.Controllers
             *when we implement parent requests then there will be more logic
             */
             //}
-            requestItemViewModel.Request.ApplicationUserID = currentUser.Id;
+            requestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
             requestItemViewModel.Request.ParentRequest.ApplicationUser = currentUser;
             requestItemViewModel.Request.ParentQuote.ApplicationUser = currentUser;
             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
