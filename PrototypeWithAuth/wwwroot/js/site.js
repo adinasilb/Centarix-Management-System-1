@@ -1353,9 +1353,6 @@ $("#Request_ParentRequest_Installments").change(function () {
 	$.fn.updateDebt();
 });
 
-$('#submitAddLocation').click(function () {
-	$('#loading').show();
-});
 
 
 

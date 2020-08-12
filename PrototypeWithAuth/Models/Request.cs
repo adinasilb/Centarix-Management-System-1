@@ -22,6 +22,9 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public int? RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }
+        public string ApplicationUserCreatorID { get; set; }
+        [ForeignKey("ApplicationUserCreatorID")]
+        public ApplicationUser ApplicationUserCreator { get; set; }
         public string ApplicationUserReceiverID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
 
         [ForeignKey("ApplicationUserReceiverID")]

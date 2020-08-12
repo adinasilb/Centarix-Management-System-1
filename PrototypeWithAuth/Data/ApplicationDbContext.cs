@@ -90,6 +90,15 @@ namespace PrototypeWithAuth.Data
                .WithMany()
                .HasForeignKey(ltc => ltc.LocationTypeChildID);
 
+            modelBuilder.Entity<Request>()
+                .HasOne(r => r.ApplicationUserCreator)
+                .WithMany(au => au.RequestsCreated)
+                .HasForeignKey(r => r.ApplicationUserCreatorID);
+            modelBuilder.Entity<Request>()
+                .HasOne(r => r.ApplicationUserReceiver)
+                .WithMany(au => au.RequestsReceived)
+                .HasForeignKey(r => r.ApplicationUserReceiverID);
+
 
 
             // configures one-to-many relationship between Inventory and InventorySubcategories
@@ -134,6 +143,8 @@ namespace PrototypeWithAuth.Data
 
             modelBuilder.Entity<ParentQuote>()
            .HasQueryFilter(item => !item.IsDeleted);
+
+
 
 
 

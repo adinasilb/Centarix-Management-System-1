@@ -35,6 +35,9 @@ namespace PrototypeWithAuth.Data
         public string UserImage { get; set; }
         public string PhoneNumber { get; set; }
 
+        public IEnumerable<Request> RequestsReceived { get; set; }
+        public IEnumerable<Request> RequestsCreated { get; set; }
+
         // public string URLPic { get; set; }
 
     }
