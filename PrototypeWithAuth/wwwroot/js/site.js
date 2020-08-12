@@ -27,6 +27,8 @@ jQuery.fn.extend({
 //modal adjust scrollability/height
 //$("#myModal").modal('handleUpdate');
 
+var firsttime = 0;
+
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#parentlist").change(function () {
 	console.log("in parent list");
@@ -42,7 +44,10 @@ $("#parentlist").change(function () {
 		//sublist.material_select('destroy');
 		//sublist.materialSelect({ destroy: true });
 		sublist.empty();
-		$(".mdb-select-sublist").materialSelect({ destroy: true }) ;
+		$(".mdb-select-sublist").materialSelect({ destroy: true });
+		if (firstime == 0) {
+			$(".mdb-select-sublist").first().hide();
+		}
 
 		$.each(data, function (i, subCategory) {
 			item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
@@ -52,6 +57,7 @@ $("#parentlist").change(function () {
 		sublist.html(item);
 		$(".mdb-select-sublist").materialSelect();
 	});
+	firsttime++;
 });
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
