@@ -14,7 +14,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int ParentRequestID { get; set; }
         public IEnumerable<Request> Requests { get; set; }
-        public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
+        public string ApplicationUserID { get; set; } //this is the person who placed the order
 
         [ForeignKey("ApplicationUserID")]
         public ApplicationUser ApplicationUser { get; set; }

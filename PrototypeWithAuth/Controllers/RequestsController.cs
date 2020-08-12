@@ -475,10 +475,10 @@ namespace PrototypeWithAuth.Controllers
             *when we implement parent requests then there will be more logic
             */
             //}
-            requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
+            requestItemViewModel.Request.ApplicationUserID = currentUser.Id;
             requestItemViewModel.Request.ParentRequest.ApplicationUser = currentUser;
+            requestItemViewModel.Request.ParentQuote.ApplicationUser = currentUser;
             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
-            requestItemViewModel.Request.ParentRequest.InvoiceDate = DateTime.Now;
             requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             //can we combine this with the one above?
             //if it's a new request need to put in a request status --CREATE MODAL so should always go here
@@ -520,6 +520,7 @@ namespace PrototypeWithAuth.Controllers
                         //requestItemViewModel.Request.ParentRequestID = null;
                         requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                         requestItemViewModel.Request.RequestStatusID = 1; //new request
+                        requestItemViewModel.Request.ParentRequest = null;
                         _context.Update(requestItemViewModel.Request);
                         _context.SaveChanges();
                     }
@@ -539,6 +540,7 @@ namespace PrototypeWithAuth.Controllers
                             //requestItemViewModel.Request.ParentRequestID = null;
                             requestItemViewModel.Request.RequestStatusID = 6; //approved
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
+                            requestItemViewModel.Request.ParentRequest = null;
                             _context.Update(requestItemViewModel.Request);
                             _context.SaveChanges();
                         }
