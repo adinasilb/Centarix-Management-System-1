@@ -23,7 +23,7 @@ namespace PrototypeWithAuth.Models
         //should not really be null just waiting till figure out how else to do the parentquote in create modal
         public DateTime QuoteDate { get; set; }
         [Display(Name = "Quote Number")]
-       
+        public bool IsDeleted { get; set; } //will be set to true if all requests under parent are delted
         public int QuoteNumber { get; set; }
         public int QuoteStatusID { get; set; }
         [ForeignKey("QuoteStatusID")]

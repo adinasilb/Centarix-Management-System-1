@@ -292,18 +292,41 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.RequestLocationInstances).FirstOrDefault();
             request.IsDeleted = true;
             _context.Update(request);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
+            var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID ).FirstOrDefault();
+            if (parentRequest != null){
+                //todo figure out the soft delete with child of a parent entity so we could chnage it to 0 or null
+                if(parentRequest.Requests.Count() <=1)
+                {
+                    parentRequest.IsDeleted = true;
+                    _context.Update(parentRequest);
+                    await _context.SaveChangesAsync();
+                }
 
+            }
+            var parentQuote = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == request.ParentQuoteID).FirstOrDefault();
+            if (parentQuote != null)
+            {
+                //todo figure out the soft delete with child of a parent entity so we could chnage it to 0 or null
+                if (parentQuote.Requests.Count() <= 1)
+                {
+                    parentQuote.IsDeleted = true;
+                    _context.Update(parentQuote);
+                    await _context.SaveChangesAsync();
+                }
+
+            }
             foreach (var requestLocationInstance in request.RequestLocationInstances)
             {
                 requestLocationInstance.IsDeleted = true;
                 var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
                 locationInstance.IsFull = false;
                 _context.Update(requestLocationInstance);
+                _context.SaveChanges();
                 _context.Update(locationInstance);
+                _context.SaveChanges();
             }
 
-            await _context.SaveChangesAsync();
             if (deleteRequestViewModel.IsReorder)
             {
                 Reorder quote = (Reorder)request;
@@ -330,15 +353,11 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
+               // AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
                 return RedirectToAction("Index", new
                 {
-                    page = deleteRequestViewModel.Page,
-                    requestStatusID = deleteRequestViewModel.RequestStatusID,
-                    subcategoryID = deleteRequestViewModel.SubCategoryID,
-                    vendorID = deleteRequestViewModel.VendorID,
-                    applicationUserID = deleteRequestViewModel.ApplicationUserID,
-                    PageType = requestPageTypeEnum
+                    requestStatusID = request.RequestStatusID,                    
+                    PageType = AppUtility.RequestPageTypeEnum.Request
                 });
             }
 
@@ -393,6 +412,7 @@ namespace PrototypeWithAuth.Controllers
                 CompanyAccounts = companyaccounts
             };
 
+            requestItemViewModel.Request = new Request();
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentQuote = new ParentQuote();
             requestItemViewModel.Request.ParentRequest = new ParentRequest();

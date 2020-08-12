@@ -50,19 +50,23 @@ namespace PrototypeWithAuth.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<RequestLocationInstance>()
+                .HasQueryFilter(item => !item.IsDeleted)
                 .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
 
             modelBuilder.Entity<RequestLocationInstance>()
+                .HasQueryFilter(item => !item.IsDeleted)
                 .HasOne(rl => rl.Request)
                 .WithMany(r => r.RequestLocationInstances)
                 .HasForeignKey(rl => rl.RequestID);
 
             modelBuilder.Entity<RequestLocationInstance>()
+                .HasQueryFilter(item => !item.IsDeleted)
                 .HasOne(rl => rl.LocationInstance)
                 .WithMany(l => l.RequestLocationInstances)
                 .HasForeignKey(rl => rl.LocationInstanceID);
 
             modelBuilder.Entity<RequestLocationInstance>()
+                .HasQueryFilter(item => !item.IsDeleted)
                 .HasOne(rl => rl.ParentLocationInstance)
                 .WithMany(l => l.AllRequestLocationInstances)
                 .HasForeignKey(rl => rl.ParentLocationInstanceID);
@@ -105,6 +109,7 @@ namespace PrototypeWithAuth.Data
            .HasForeignKey(ut => ut.UnitParentTypeID);
 
             modelBuilder.Entity<ParentRequest>()
+            .HasQueryFilter(item => !item.IsDeleted)
             .HasOne<ApplicationUser>(pr => pr.ApplicationUser)
             .WithMany(au => au.ParentRequests)
             .HasForeignKey(r => r.ApplicationUserID);
@@ -120,12 +125,17 @@ namespace PrototypeWithAuth.Data
             .HasOne<RequestStatus>(r => r.RequestStatus)
             .WithMany(rs => rs.Requests)
             .HasForeignKey(r => r.RequestStatusID);
-            
+
             //modelBuilder.Entity<Vendor>()
             //.HasOne<ParentCategory>(v => v.ParentCategory)
             //.WithMany(pc => pc.Vendors)
             //.HasForeignKey(v => v.ParentCategoryID)
             //.OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ParentQuote>()
+           .HasQueryFilter(item => !item.IsDeleted);
+
+
 
 
             modelBuilder.Seed();
