@@ -808,6 +808,12 @@
         });
 
 
+        $('#submitAddLocation').click(function () {
+            e.preventDefault();
+            $('#loading').show();
+        });
+
+
         $.fn.CallPageLocation = function ($itemurl, $modal, $isaddlocation) {
             $.ajax({
                 async: true,

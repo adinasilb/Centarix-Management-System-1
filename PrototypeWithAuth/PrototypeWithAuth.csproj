@@ -77,6 +77,8 @@
     <Compile Remove="Data\Migrations\20200811044123_EmptyQuoteOfFieldsAndChangeNameToReorder.Designer.cs" />
     <Compile Remove="Data\Migrations\20200811081302_MadeQuoteStatusTakeParent.cs" />
     <Compile Remove="Data\Migrations\20200811081302_MadeQuoteStatusTakeParent.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200812121147_ApplicationUserIenumerableForRequestsReceiver.cs" />
+    <Compile Remove="Data\Migrations\20200812121147_ApplicationUserIenumerableForRequestsReceiver.Designer.cs" />
   </ItemGroup>
 
 
