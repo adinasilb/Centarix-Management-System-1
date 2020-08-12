@@ -16,6 +16,7 @@ namespace PrototypeWithAuth.ViewModels
     public class RequestItemViewModel
     {
         public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
+        public List<Request> RequestsByProduct { get; set; }
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }

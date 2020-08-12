@@ -393,7 +393,6 @@ namespace PrototypeWithAuth.Controllers
                 CompanyAccounts = companyaccounts
             };
 
-            requestItemViewModel.Request = new Reorder();
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentQuote = new ParentQuote();
             requestItemViewModel.Request.ParentRequest = new ParentRequest();
@@ -1230,7 +1229,11 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.SubProject)
                     .ThenInclude(sp => sp.Project)
                     .SingleOrDefault(x => x.RequestID == id);
-
+                requestItemViewModel.RequestsByProduct = _context.Requests.Where(r => r.ProductID == requestItemViewModel.Request.ProductID && ( r.RequestStatusID ==2 || r.RequestStatusID == 3))
+                     .Include(r => r.ParentRequest)
+                    .Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.ParentRequest.ApplicationUser) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                    .ToList();
                 //check if this works once there are commments
                 var comments = Enumerable.Empty<Comment>();
                 comments = _context.Comments
@@ -1825,7 +1828,11 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.SubProject)
                 .Include(r => r.SubProject.Project)
                 .SingleOrDefault(x => x.RequestID == id);
-
+           requestItemViewModel.RequestsByProduct = _context.Requests.Where(r => r.ProductID == requestItemViewModel.Request.ProductID && (r.RequestStatusID == 2 || r.RequestStatusID == 3))
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product.ProductSubcategory)
+                .Include(r => r.ParentRequest.ApplicationUser) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                .ToList();
             //load the correct list of subprojects
             var subprojects = await _context.SubProjects
                 .Where(sp => sp.ProjectID == requestItemViewModel.Request.SubProject.ProjectID)
@@ -2594,16 +2601,11 @@ namespace PrototypeWithAuth.Controllers
                 await populateRequestItemViewModel(requestItemViewModel, oldRequest);
                 return PartialView(requestItemViewModel);
             }
-            //return RedirectToAction("Index");
-            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
             return RedirectToAction("Index", new
             {
                 page = requestItemViewModel.Page,
-                requestStatusID = requestItemViewModel.RequestStatusID,
-                subcategoryID = requestItemViewModel.SubCategoryID,
-                vendorID = requestItemViewModel.VendorID,
-                applicationUserID = requestItemViewModel.ApplicationUserID,
-                PageType = requestPageTypeEnum
+                requestStatusID = 1,
+                PageType = AppUtility.RequestPageTypeEnum.Request
             });
         }
 
