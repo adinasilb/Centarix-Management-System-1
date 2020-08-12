@@ -43,7 +43,7 @@ namespace PrototypeWithAuth
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("CentarixConnection")));
+                    Configuration.GetConnectionString("CentarixAzureConnection")));
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
