@@ -94,8 +94,8 @@
                                     <div class="form-group sublist">
                                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-                                        new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-                                        "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist" })
+                                        Enumerable.Empty<SelectListItem>(),
+                                        "Select Subcategory", new { @class = "mdb-select mdb-select-sublist md-form  colorful-select dropdown-primary", @id = "sublist" })
                                         <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -119,9 +119,9 @@
                             <br />
                             <div class="row" style="height: 100px;">
                                 <div class="col-md-4">
-                                    <div class="form-group">
+                                    <div class="form-group SubProject">
                                         <label class="control-label">Sub Project:</label>
-                                        <select asp-for="Request.SubProjectID" id="SubProject" class="align-bottom mdb-select md-form  colorful-select dropdown-primary SubProject"></select>
+                                        <select asp-for="Request.SubProjectID" id="SubProject" class="align-bottom mdb-select md-form  colorful-select dropdown-primary"></select>
                                         <span asp-validation-for="Request.SubProjectID" class="text-danger"></span>
                                     </div>
                                 </div>

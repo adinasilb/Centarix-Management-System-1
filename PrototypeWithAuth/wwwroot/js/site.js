@@ -13,8 +13,21 @@ function showmodal() {
 	$("#modal").modal('show');
 };
 
+jQuery.fn.extend({
+	destroyMaterialSelect: function () {
+		return this.each(function () {
+			let wrapper = $(this).parent();
+			let core = wrapper.find('select');
+			wrapper.after(core.removeClass('initialized').prop('outerHTML'));
+			wrapper.remove();
+		});
+	}
+});
+
 //modal adjust scrollability/height
 //$("#myModal").modal('handleUpdate');
+
+var firsttime = 0;
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#parentlist").change(function () {
@@ -22,14 +35,29 @@ $("#parentlist").change(function () {
 	var parentCategoryId = $("#parentlist").val();
 	var url = "/Requests/GetSubCategoryList";
 
+	//for material select
+	var sublist = $("#sublist");
+
 	$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
 		var item = "<option value=''>Select Subcategory</option>";
-		$("#sublist").empty();
+		//the following lines are for material select
+		//sublist.material_select('destroy');
+		//sublist.materialSelect({ destroy: true });
+		sublist.empty();
+		$(".mdb-select-sublist").materialSelect({ destroy: true });
+		if (firstime == 0) {
+			$(".mdb-select-sublist").first().hide();
+		}
+
 		$.each(data, function (i, subCategory) {
 			item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
 		});
-		$("#sublist").html(item);
+		console.log("item: " + item);
+		//sublist = 
+		sublist.html(item);
+		$(".mdb-select-sublist").materialSelect();
 	});
+	firsttime++;
 });
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
@@ -39,11 +67,14 @@ $(".Project").change(function () {
 	var url = "/Requests/GetSubProjectList";
 
 	$.getJSON(url, { ProjectID: projectId }, function (data) {
-		var item = "<option value=''>Select Subcategory</option>";
+		var item = "<option value=''>Select Sub Project</option>";
 		$("#SubProject").empty();
+		$(".SubProject .mdb-select").materialSelect({ destroy: true });
+		$(".SubProject .mdb-select").materialSelect();
 		$.each(data, function (i, subproject) {
 			item += '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
 		});
+		console.log("item: ---------------" + item);
 		$("#SubProject").html(item);
 	});
 
@@ -346,7 +377,7 @@ $("#expected-supply-date").change(function () {
 	var date = new Date($(this).val());
 	console.log("-------expected supply date: " + date)
 	var Sdd = parseInt(date.getDate());
-	var Smm = parseInt(date.getMonth()+1);
+	var Smm = parseInt(date.getMonth() + 1);
 	var Syyyy = parseInt(date.getFullYear());
 	console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
 	var OrderDate = $(".for-supply-date-calc").val().split("-");
