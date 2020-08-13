@@ -1143,6 +1143,7 @@ $(".open-document-modal").on("click", function (e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var enumString = $(this).data("string");
+	console.log("EnumString: " + enumString);
 	var requestId = $(this).data("id");
 	$.fn.OpenDocumentsModal(enumString, requestId);
 	return false;
@@ -1151,10 +1152,12 @@ $(".open-document-modal").on("click", function (e) {
 $.fn.OpenDocumentsModal = function (enumString, requestId) {
 	console.log("in open doc modal");
 	$("#documentsModal").replaceWith('');
+	var urlToGo = "Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString;
+	console.log("urltogo: " + urlToGo);
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: "Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString,
+		url: urlToGo,
 		type: 'GET',
 		cache: false,
 		success: function (data) {

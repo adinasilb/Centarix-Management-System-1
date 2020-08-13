@@ -605,12 +605,14 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                 filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="card document-border">
-                                            <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
-                                            </div>
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()">
+                                            <div class="card document-border ">
+                                                <div class="card-body text-center" style="height:150px;">
+                                                    <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="invoice" class="@filterClass" />
+                                                </div>
 
-                                        </div>
+                                            </div>
+                                        </a>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
                                     </div>
                                     <div class="col-md-3">

@@ -35,7 +35,9 @@ $(".file-select").on("change", function (e) {
 			$(".carousel-item").remove();
 			$("#documentsModal").replaceWith('');
 			var $enumString = $(".open-document-modal").data("string");
+			console.log("enumstring: " + enumString);
 			var $requestId = $(".open-document-modal").data("id");
+			console.log("requestid: " + requestId);
 			console.log("enumstring: " + $enumString + "    : requestid: " + $requestId);
 			$.fn.ChangeColorsOfModal($enumString);
 			$.fn.OpenDocumentsModal($enumString, $requestId);
