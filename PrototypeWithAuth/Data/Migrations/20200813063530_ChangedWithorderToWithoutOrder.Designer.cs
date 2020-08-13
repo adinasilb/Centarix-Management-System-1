@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200813063530_ChangedWithorderToWithoutOrder")]
+    partial class ChangedWithorderToWithoutOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -634,6 +636,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("Discount")
                         .HasColumnType("float");
 
+                    b.Property<long>("Installments")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
 
@@ -648,6 +653,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("OrderNumber")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Payed")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("WithOutOrder")
                         .HasColumnType("bit");
@@ -669,20 +677,20 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("CompanyAccountID")
                         .HasColumnType("int");
 
+                    b.Property<int>("ParentRequestID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
                     b.HasKey("PaymentID");
 
                     b.HasIndex("CompanyAccountID");
 
-                    b.HasIndex("RequestID");
+                    b.HasIndex("ParentRequestID");
 
                     b.ToTable("Payments");
                 });
@@ -1371,9 +1379,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<byte>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
-                    b.Property<long>("Installments")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
@@ -1385,9 +1390,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("ParentRequestID")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Payed")
-                        .HasColumnType("bit");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
@@ -2061,9 +2063,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                    b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
                         .WithMany("Payments")
-                        .HasForeignKey("RequestID")
+                        .HasForeignKey("ParentRequestID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

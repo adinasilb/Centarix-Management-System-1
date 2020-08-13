@@ -34,11 +34,8 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Invoice Date")]
         public DateTime InvoiceDate { get; set; }
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
-        public bool WithOrder { get; set; } //do we need this here?
+        public bool WithOutOrder { get; set; }
         public double Discount { get; set; }
-        public bool Payed { get; set; }
-        public uint Installments { get; set; } //number of installments
-        public IEnumerable<Payment> Payments { get; set; }
     }
 }
 //list of request, owner, order date, (order number for an entire order or is it just for specific request) same for invoice number
