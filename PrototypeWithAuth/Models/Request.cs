@@ -80,7 +80,7 @@ namespace PrototypeWithAuth.Models
         //public string ExpenseDescription { get; set; } - this is really the product name - so when view products, only return those with a specific subcategoryID,
 
         [Range(0, 255, ErrorMessage = "Field must be positive")]
-        public byte Warranty { get; set; } // this is the amount of months of the warranty. the datetime when it ends will be calculated on the frontend (now it's from the date ordered, but should it be from the date received instead?)
+        public byte? Warranty { get; set; } // this is the amount of months of the warranty. the datetime when it ends will be calculated on the frontend (now it's from the date ordered, but should it be from the date received instead?)
 
         public double VAT { get; set; } // should this be coded into the model or should we set it elsewhere?
         [Display(Name = "Exchange Rate")]
@@ -89,7 +89,7 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Expected Supply Days")]
 
         [Range(0, 2147483647, ErrorMessage = "Field must be a positive number")]
-        public byte ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
+        public byte? ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
         /*public string RequestComment { get; set; }*/ //can take this out - Adina
 
         [DataType(DataType.Date)]
