@@ -138,7 +138,7 @@
     string orderedActiveClass = "";
     string receivedActiveClass = "";
     string approvedActiveClass = "";
-
+    int requestStatusID = 0;
     if (!search)
     {
         newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
@@ -153,7 +153,7 @@
         approvedActiveClass = "new-button";
 
         //changing the classes for the action links based on the tempdata of request status
-        int requestStatusID = 0;
+
         int.TryParse(TempData["RequestStatusID"].ToString(), out requestStatusID);
         switch (requestStatusID)
         {
@@ -258,7 +258,18 @@
                 @if (!Summary)
                 {
                     <th>Owner</th>
-                    <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
+                    if (requestStatusID == 2)
+                    {
+                        <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
+                    }
+                    else if (requestStatusID == 3)
+                    {
+                        <th>@Html.DisplayNameFor(m => m[0].ArrivalDate)</th>
+                    }
+                    else
+                    {
+                        <th>Request Date</th>
+                    }
                 }
                 else
                 {
@@ -350,11 +361,22 @@
                 <td> @Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription) </td>
                 @if (!Summary)
                 {
-                    <td> @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName) </td>
+                    <td> @Html.DisplayFor(modelItem => item.ApplicationUserCreator.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUserCreator.LastName) </td>
                 }
-
-                <td> @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate) </td>
-
+                @{
+                    if (requestStatusID == 2 || Summary)
+                    {
+                        <th>@Html.DisplayFor(m => item.ParentRequest.OrderDate)</th>
+                    }
+                    else if (requestStatusID == 3)
+                    {
+                        <th>@Html.DisplayFor(m => item.ArrivalDate)</th>
+                    }
+                    else
+                    {
+                        <th>@Html.DisplayFor(m => item.CreationDate)</th>
+                    }
+                }
                 <td style="width:3rem;">
                     @if (item.RequestStatusID == 1)
                     {
