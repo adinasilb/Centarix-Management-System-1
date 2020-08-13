@@ -34,7 +34,7 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Invoice Date")]
         public DateTime InvoiceDate { get; set; }
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
-        public bool WithOutOrder { get; set; }
+        public bool WithoutOrder { get; set; }
         public double Discount { get; set; }
     }
 }

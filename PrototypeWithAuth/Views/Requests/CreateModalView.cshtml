@@ -152,20 +152,6 @@
                             <br />
                             <div class="row">
                                 <div class="col-md-6 pr-4">
-                                    <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                                    <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" readonly />
-                                    <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                    @*starts off at today and disabled so can't change*@
-                                    <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom for-supply-date-calc datepicker" readonly />
-                                    <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
-                                </div>
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-md-6 pr-4">
                                     <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
                                     <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
                                     <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger" />
@@ -749,7 +735,6 @@
         @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
         @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
         @Html.HiddenFor(vm => vm.Request.RequestStatusID)
-        @Html.HiddenFor(vm => vm.Request.ParentRequestID)
         @Html.HiddenFor(vm => vm.Request.ParentQuoteID)
         @*End Hidden Inputs*@
         @*Hidden Input for Product Subcategory*@

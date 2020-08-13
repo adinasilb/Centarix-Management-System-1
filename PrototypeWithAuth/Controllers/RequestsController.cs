@@ -26,6 +26,7 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using Abp.Extensions;
 using SQLitePCL;
+using Microsoft.AspNetCore.Localization;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
@@ -365,28 +366,6 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        // GET: Requests/Details/5
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var request = await _context.Requests
-                .Include(r => r.ApplicationUserCreator)
-                .Include(r => r.Product)
-                .Include(r => r.RequestStatus)
-                .FirstOrDefaultAsync(m => m.RequestID == id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            return View(request);
-        }
-
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> CreateModalView()
         {
@@ -453,40 +432,22 @@ namespace PrototypeWithAuth.Controllers
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
 
-            //declared outside the if b/c it's used farther down too (for parent request the new comment too)
+            //declared outside the if b/c it's used farther down too 
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
-            ////checks if it's a new request -- CREATE MODAL So should always go into here
-            //if (requestItemViewModel.Request.ParentRequestID == 0)
-            //{
-            //use application user of whoever signed in
-            /*Right now since it's a new parent request for each request then it gives a new Application UserID but in the future
-            *when we implement parent requests then there will be more logic
-            */
-            //}
             requestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
+            requestItemViewModel.Request.ApplicationUserCreator = currentUser;
             requestItemViewModel.Request.ParentQuote.ApplicationUser = currentUser;
             requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
-            //can we combine this with the one above?
-            //if it's a new request need to put in a request status --CREATE MODAL so should always go here
-            if (requestItemViewModel.Request.RequestStatusID == null)
-            {
-                //all new ones will be "new" until actually ordered after the confirm email
-                requestItemViewModel.Request.RequestStatusID = 1;
 
-            }
+            //all new ones will be "new" until actually ordered after the confirm email
+            requestItemViewModel.Request.RequestStatusID = 1;
+
             //in case we need to redirect to action
             //TempData["ModalView"] = true;
-            //why is this here?
-
-
-            //PAYED NEEDS TO BE DONE DIFFERENTLY IN THE FUTURE:
-            if (requestItemViewModel.Request.Terms == -1)
-            {
-                requestItemViewModel.Request.ParentRequest.Payed = true;
-            }
-
+            //todo why is this here?
+            //todo terms and installements and paid
             var context = new ValidationContext(requestItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
             if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
@@ -505,10 +466,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     try
                     {
-                        //requestItemViewModel.Request.ParentRequestID = null;
                         requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                         requestItemViewModel.Request.RequestStatusID = 1; //new request
-                        requestItemViewModel.Request.ParentRequest = null;
                         _context.Update(requestItemViewModel.Request);
                         _context.SaveChanges();
                     }
@@ -525,10 +484,8 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
-                            //requestItemViewModel.Request.ParentRequestID = null;
                             requestItemViewModel.Request.RequestStatusID = 6; //approved
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
-                            requestItemViewModel.Request.ParentRequest = null;
                             _context.Update(requestItemViewModel.Request);
                             _context.SaveChanges();
                         }
@@ -543,7 +500,16 @@ namespace PrototypeWithAuth.Controllers
                     {
                         if (OrderType.Equals("Without Order"))
                         {
-                            requestItemViewModel.Request.ParentRequest.WithOrder = false;
+                            requestItemViewModel.Request.ParentRequest = new ParentRequest();
+                            int lastParentRequestOrderNum = 0;
+                            requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
+                            if (_context.ParentRequests.Any())
+                            {
+                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                            }
+                            requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+                            requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
+                            requestItemViewModel.Request.ParentRequest.WithoutOrder = true;
                             requestItemViewModel.Request.RequestStatusID = 2;
                             requestItemViewModel.RequestStatusID = 2;
                             requestItemViewModel.Request.ParentQuote = null;
@@ -552,7 +518,6 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else if (OrderType.Equals("Order"))
                         {
-                            requestItemViewModel.Request.ParentRequest.WithOrder = true;
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.RequestStatusID = 1;
@@ -571,9 +536,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
                 try
-                {
-                    //int lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-                    //requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+                {                   
                     //var subprojectid = requestItemViewModel.Request.Product.SubProjectID;
                     //var subproject = requestItemViewModel.Request.Product.SubProject;
                     requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
