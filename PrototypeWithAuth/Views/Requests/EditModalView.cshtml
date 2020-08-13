@@ -505,9 +505,9 @@
                                 <div class="row installments">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
-                                            <input asp-for="Request.ParentRequest.Installments" min="1" class="form-control-plaintext border-bottom" />
-                                            <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
+                                            <label asp-for="Request.Installments" class="control-label"></label>
+                                            <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
+                                            <span asp-validation-for="Request.Installments" class="text-danger"></span>
                                         </div>
                                         @if (Model.NewPayments != null && Model.NewPayments.Any())
                                         {
@@ -556,7 +556,7 @@
                                                                     <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
                                                                 </td>
                                                                 @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
-                                                                @Html.HiddenFor(m => m.NewPayments[counter].ParentRequestID)
+                                                                @Html.HiddenFor(m => m.NewPayments[counter].RequestID)
                                                             </tr>
                                                             counter++;
                                                         }

@@ -485,9 +485,9 @@
                             <div class="row installments">
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.Installments" min="1" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
+                                        <label asp-for="Request.Installments" class="control-label"></label>
+                                        <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom " />
+                                        <span asp-validation-for="Request.Installments" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-8 rounded card p-3">
@@ -502,7 +502,7 @@
                                         </thead>
                                         @{
 
-                                            for (int x = 0; x < Model.Request.ParentRequest.Installments; x++)
+                                            for (int x = 0; x < Model.Request.Installments; x++)
                                             {
                                                 <tr>
                                                     <td>
