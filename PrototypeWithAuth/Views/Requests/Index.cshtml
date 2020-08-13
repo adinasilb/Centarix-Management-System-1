@@ -68,7 +68,7 @@
     }
     if (TempData["TempApplicationUserID"] != null)
     {
-        if ((Int32)TempData["TempApplicationUserID"] > 0)
+        if (string.IsNullOrEmpty(TempData["TempApplicationUserID"].ToString()))
         {
             backTextBool = true;
             backText = TempData["TempApplicationUserID"].ToString();

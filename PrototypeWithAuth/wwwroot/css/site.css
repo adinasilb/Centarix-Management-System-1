@@ -82,7 +82,7 @@ i.fas {
 
 .user-image-bold {
     border-radius: 50%;
-    border: 3px solid rgba(0, 0, 0, .54);
+    border: 1px solid rgba(0, 0, 0, .54);
 }
 
 /*MDBootstrap material select*/
