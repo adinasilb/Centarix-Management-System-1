@@ -27,37 +27,58 @@ jQuery.fn.extend({
 //modal adjust scrollability/height
 //$("#myModal").modal('handleUpdate');
 
-var firsttime = 0;
+//var firsttime = 0;
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#parentlist").change(function () {
+	//$("#sublist-div").empty();
 	console.log("in parent list");
 	var parentCategoryId = $("#parentlist").val();
+	console.log("parentcategoryid: " + parentCategoryId);
 	var url = "/Requests/GetSubCategoryList";
+	console.log("url: " + url);
 
 	//for material select
 	var sublist = $("#sublist");
+	console.log("sublist: " + sublist);
 
 	$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-		var item = "<option value=''>Select Subcategory</option>";
+		console.log("in getjson");
+		var firstitem = '<li class="active " role="option" aria-selected="true" aria-disabled="false" value=""><span class="filtrable "> Select Subcategory </span></li>';
+		//console.log("item: " + item);
 		//the following lines are for material select
 		//sublist.material_select('destroy');
 		//sublist.materialSelect({ destroy: true });
-		sublist.empty();
+		//sublist.empty();
+		//console.log("emptied sublist");
 		$(".mdb-select-sublist").materialSelect({ destroy: true });
-		if (firstime == 0) {
-			$(".mdb-select-sublist").first().hide();
-		}
+		$(".mdb-select-sublist ul").empty();
+		$(".mdb-select-sublist ul").append(firstitem);
+		//if (firstime == 0) {
+		//$(".mdb-select-sublist").first().hide();
+		//}
+		console.log("ONE");
 
 		$.each(data, function (i, subCategory) {
-			item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
+			console.log("IN LOOP...");
+			//item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
+			var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
+			var newitem2 = '<span class="filtrable ">' + subCategory.productSubcategoryDescription + '</span>';
+			var newitem = '<li class=" " role="option" aria-selected="false" aria-disabled="false" value="' + subCategory.productSubcategoryID + '"><span class="filtrable ">' + subCategory.productSubcategoryDescription + ' </span></li>';
+			$(".mdb-select-sublist ul").append(newitem);
 		});
-		console.log("item: " + item);
+		//var sublistdata = '<div class="mdb-select mdb-select-sublist md-form  colorful-select dropdown-primary" id="sublist">';
+		//sublistdata += '<ul id="select-options-vendorList" class="dropdown-content select-dropdown w-100">'
+		//sublistdata += item;
+		//sublistdata += '</select ></div > ';
+		//console.log("item: " + item);
+		//$("#sublist-div").html(sublistdata);
 		//sublist = 
-		sublist.html(item);
-		$(".mdb-select-sublist").materialSelect();
+		//sublist.html(item);
+		//$(".mdb-select-sublist").materialSelect();
 	});
-	firsttime++;
+	//firsttime++;
+	return false;
 });
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
