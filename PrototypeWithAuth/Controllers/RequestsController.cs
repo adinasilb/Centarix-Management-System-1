@@ -340,7 +340,7 @@ namespace PrototypeWithAuth.Controllers
                         RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID==6)
                   .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                   .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                  .Include(r => r.ApplicationUserCreator).Include(r => r.ParentQuote)
+                  .Include(r => r.ApplicationUserCreator)
                   .ToLookup(r => r.Product.Vendor)
                     });
                 }
@@ -2313,7 +2313,7 @@ namespace PrototypeWithAuth.Controllers
                     RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID ==6 )
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Include(r => r.ParentRequest.ApplicationUser).Include(r => r.ParentQuote)
+                    .Include(r => r.ApplicationUserCreator).Include(r => r.ParentQuote)
                     .ToLookup(r => r.Product.Vendor)
                 });
             }
@@ -2337,7 +2337,7 @@ namespace PrototypeWithAuth.Controllers
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.ParentRequest.ApplicationUser).Include(r => r.ParentQuote)
+                .Include(r => r.ParentQuote)
                 .ToLookup(r => r.Product.Vendor);
             TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
             TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Quotes;
@@ -2352,14 +2352,11 @@ namespace PrototypeWithAuth.Controllers
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID ==4 && r.RequestStatusID == 6)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.ParentRequest.ApplicationUser).Include(r => r.ParentQuote)
                 .ToLookup(r => r.Product.Vendor);
             TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
             TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Orders;
             return View(labManageQuotesViewModel);
         }
-
-
 
         /*
          * BEGIN SEARCH
@@ -2914,7 +2911,8 @@ namespace PrototypeWithAuth.Controllers
             //just here for now for future implmentation
             else
             {
-                var requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == id && (r.ParentQuote.QuoteStatusID==2 ||r.ParentQuote.QuoteStatusID==1)&& r.RequestStatusID ==6)
+                var requests = _context.Requests.OfType<Reorder>()
+              .Where(r => r.Product.VendorID == id && (r.ParentQuote.QuoteStatusID==2 ||r.ParentQuote.QuoteStatusID==1)&& r.RequestStatusID ==6)
               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
               .Include(r => r.ParentQuote).Include(r => r.UnitType).Include(r => r.SubSubUnitType).Include(r => r.SubUnitType).ToList();
 
@@ -2968,10 +2966,10 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
-            var requests = _context.Requests.Where(r => r.ParentRequest.ApplicationUserID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 2 && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays) < DateTime.Now).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).ToList();
-            var requests2 = _context.Requests.Where(r => r.ParentRequest.ApplicationUserID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID != 1).OrderByDescending(r => r.ParentRequest.OrderDate).Where(r => !requests.Contains(r)).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
+            var requests = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 2 && r.ExpectedSupplyDays !=null && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays??0) < DateTime.Now ).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).ToList();
+            var requests2 = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID != 1).OrderByDescending(r => r.ParentRequest==null ? r.ParentRequest.OrderDate: r.CreationDate ).Where(r => !requests.Contains(r)).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
             requests = requests.Concat(requests2).ToList();
-            requests = requests.OrderByDescending(r => r.ParentRequest.OrderDate).ToList();
+            requests = requests.OrderByDescending(r => r.ParentRequest == null ? r.ParentRequest.OrderDate : r.CreationDate).ToList();
             return View(requests);
         }
 
@@ -2985,7 +2983,7 @@ namespace PrototypeWithAuth.Controllers
             cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ParentRequest.ApplicationUserID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 6 && !(r is Reorder))
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.ParentRequest.ApplicationUser)
+                .Include(r => r.ApplicationUserCreator)
                 .ToLookup(r => r.Product.Vendor);
 
             return View(cartViewModel);
@@ -3062,20 +3060,20 @@ namespace PrototypeWithAuth.Controllers
             if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
             { //lab
                 var pricePerUnit = request.Cost / request.Unit;
-                if (pricePerUnit > request.ParentRequest.ApplicationUser.LabUnitLimit)
+                if (pricePerUnit > request.ApplicationUserCreator.LabUnitLimit)
                 {
                     return false;
                 }
-                if (request.Cost > request.ParentRequest.ApplicationUser.LabOrderLimit)
+                if (request.Cost > request.ApplicationUserCreator.LabOrderLimit)
                 {
                     return false;
                 }
                 var monthsSpending = _context.Requests
                       .Where(r => request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                      .Where(r => r.ParentRequest.ApplicationUserID == request.ParentRequest.ApplicationUserID)
+                      .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID)
                       .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
                       .Sum(r => r.Cost);
-                if (monthsSpending+ request.Cost > request.ParentRequest.ApplicationUser.LabMonthlyLimit)
+                if (monthsSpending+ request.Cost > request.ApplicationUserCreator.LabMonthlyLimit)
                 {
                     return false;
                 }
@@ -3084,21 +3082,21 @@ namespace PrototypeWithAuth.Controllers
             else if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
             {//operational
                 var pricePerUnit = request.Cost / request.Unit;
-                if (pricePerUnit > request.ParentRequest.ApplicationUser.OperationUnitLimit)
+                if (pricePerUnit > request.ApplicationUserCreator.OperationUnitLimit)
                 {
                     return false;
                 }
-                if (request.Cost > request.ParentRequest.ApplicationUser.OperaitonOrderLimit)
+                if (request.Cost > request.ApplicationUserCreator.OperaitonOrderLimit)
                 {
                     return false;
                 }
 
                 var monthsSpending = _context.Requests
                     .Where(r => request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
-                    .Where(r => r.ParentRequest.ApplicationUserID == request.ParentRequest.ApplicationUserID)
+                    .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID)
                     .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
                     .Sum(r => r.Cost);
-                if (monthsSpending + request.Cost > request.ParentRequest.ApplicationUser.OperationMonthlyLimit)
+                if (monthsSpending + request.Cost > request.ApplicationUserCreator.OperationMonthlyLimit)
                 {
                     return false;
                 }
