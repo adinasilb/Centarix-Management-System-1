@@ -215,7 +215,7 @@
                                     </div>
                                     <div class="col-3">
                                         <label class="control-label">End Date</label>
-                                        <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
+                                        <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
                                     </div>
                                 </div>
                                 <br />
@@ -229,7 +229,7 @@
                                         @{
                                             //get this just to return the date (not the time)
                                             //adding the amount of months of the expected supply days to the invoice date
-                                            var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
+                                            var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays??0);
                                         }
                                         <label class="control-label">Expected supply date</label>
                                         <input value="@endSupplyDate" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />

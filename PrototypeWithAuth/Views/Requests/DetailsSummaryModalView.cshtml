@@ -17,7 +17,7 @@
 
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
-                @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
+                @Html.HiddenFor(model => model.Request.ApplicationUserCreatorID)
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@

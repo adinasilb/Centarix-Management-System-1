@@ -17,7 +17,7 @@
 
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
-                @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
+                @Html.HiddenFor(model => model.Request.ApplicationUserCreatorID)
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -183,19 +183,23 @@
                                     </div>
                                 </div>
                                 <br />
-                                <div class="row">
-                                    <div class="col-6 pr-4">
-                                        <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
-                                        <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
+                                @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
+                                {
+                                    <div class="row">
+                                        <div class="col-6 pr-4">
+                                            <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
+                                            <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
+                                            <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-6">
+                                            <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
+                                            <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
+                                            <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
+                                        </div>
                                     </div>
-                                    <div class="col-6">
-                                        <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
-                                        <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
-                                    </div>
-                                </div>
-                                <br />
+                                    <br />
+                                }
+
                                 <div class="row">
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
@@ -212,38 +216,60 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                                        <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom" disabled />
+                                        <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-3">
                                         <label asp-for="Request.Warranty" class="control-label"></label>
-                                        <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom" disabled />
+                                        <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.Warranty" class="text-danger"></span>
                                     </div>
-                                    <div class="col-3">
-                                        <label class="control-label">End Date</label>
-                                        <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
-                                    </div>
+                                    @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
+                                    {
+                                        <div class="col-3">
+                                            <label class="control-label">End Date</label>
+                                            @*@{
+                        //get this just to return the date (not the time)
+                        //adding the amount of months of the warranty to the invoice date
+                        var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                    }*@
+                                            <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-3">
+                                            <label class="control-label">Estimated End Date</label>
+                                            <input value="@DateTime.Now.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                        </div>
+                                    }
+
                                 </div>
                                 <br />
                                 <div class="row">
                                     <div class="col-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom" disabled />
+                                        <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                     </div>
-                                    <div class="col-4">
-                                        @{
-                                            //get this just to return the date (not the time)
-                                            //adding the amount of months of the expected supply days to the invoice date
-                                            var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
-                                        }
-                                        <label class="control-label">Expected supply date</label>
-                                        <input value="@endSupplyDate" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
-                                    </div>
+                                    @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
+                                    {
+                                        <div class="col-4">
+                                            <label class="control-label">Expected supply date</label>
+                                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-4">
+                                            <label class="control-label">Esitmated Expected supply date</label>
+                                            <input value="@DateTime.Now.AddDays(Model.Request.ExpectedSupplyDays ?? 0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
+                                        </div>
+                                    }
+
                                     <div class="col-4">
                                         <label asp-for="Request.URL" class="control-label"></label>
-                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom" disabled />
+                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.URL" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -259,29 +285,29 @@
                                 <table class="table table-sm border">
                                     @{
                                             int z = -1; //initiated to -1 b/c it didn't let me put the z++ on the bottom of the fx. Really should be 0.
-                                    }
-                                    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+    }
+    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
                                         {
                                     <tr>
                                         @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                                                 {
                                                     z++;
                                                     var backgroundClass = "border";
-                                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
-                                                    {
-                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
-                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
+    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+    {
+        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
+        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
 
-                                                        if (Model.ChildrenLocationInstances[z].IsFull)
-                                                        {
-                                                            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
-                                                            {
-                                                                backgroundClass += " bg-info text-light text-center";
-                                                            }
-                                                            else //why is this else here? it doesn't seem to ever get used.
-                                                            {
-                                                                backgroundClass += " bg-secondary";
-                                                            }
+        if (Model.ChildrenLocationInstances[z].IsFull)
+        {
+            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
+            {
+                backgroundClass += " bg-info text-light text-center";
+            }
+            else //why is this else here? it doesn't seem to ever get used.
+            {
+                backgroundClass += " bg-secondary";
+            }
                                         <td class="@backgroundClass">
                                             @Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName
                                         </td>

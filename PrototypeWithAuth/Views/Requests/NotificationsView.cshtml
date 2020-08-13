@@ -32,9 +32,9 @@
                         icon = "icon-centarix-icons-04";
                         break;
                     case 2:
-                        if (item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays) < DateTime.Now)
+                        if (item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays??0) < DateTime.Now)
                         {
-                            description = $"should have arrived {item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays).ToShortDateString()}";
+                            description = $"should have arrived {item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays??0).ToShortDateString()}";
                             color = "#DB2127";
                             icon = "fas fa-exclamation";
                             iconStyle = "color: black!important;   background: transparent";
@@ -73,7 +73,7 @@
                 <td>@Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
 
                 @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
-                @if (item.RequestStatusID == 2 && item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays) < DateTime.Now)
+                @if (item.RequestStatusID == 2 && item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays??0) < DateTime.Now)
                     {
                     <td>
                     </td>
