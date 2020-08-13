@@ -2967,9 +2967,9 @@ namespace PrototypeWithAuth.Controllers
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
             var requests = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 2 && r.ExpectedSupplyDays !=null && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays??0) < DateTime.Now ).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).ToList();
-            var requests2 = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID != 1).OrderByDescending(r => r.ParentRequest==null ? r.ParentRequest.OrderDate: r.CreationDate ).Where(r => !requests.Contains(r)).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
+            var requests2 = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID != 1).OrderByDescending(r => r.ParentRequest!=null ? r.ParentRequest.OrderDate: r.CreationDate ).Where(r => !requests.Contains(r)).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
             requests = requests.Concat(requests2).ToList();
-            requests = requests.OrderByDescending(r => r.ParentRequest == null ? r.ParentRequest.OrderDate : r.CreationDate).ToList();
+            requests = requests.OrderByDescending(r => r.ParentRequest!= null ? r.ParentRequest.OrderDate : r.CreationDate).ToList();
             return View(requests);
         }
 
@@ -2980,7 +2980,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Cart;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
             CartViewModel cartViewModel = new CartViewModel();
-            cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ParentRequest.ApplicationUserID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 6 && !(r is Reorder))
+            cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 6 && !(r is Reorder))
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ApplicationUserCreator)
