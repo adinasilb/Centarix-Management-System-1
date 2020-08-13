@@ -33,11 +33,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Index(int? subcategoryID, int? vendorID, int? RequestStatusID, int? page, AppUtility.PaymentPageTypeEnum PageType = AppUtility.PaymentPageTypeEnum.Notifications)
         {
-            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.ApplicationUser).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory).ThenInclude(pr => pr.ParentCategory).Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.Vendor);
-
-            //if (PageType == AppUtility.PaymentPageTypeEnum.Notifications)
-            //{
-
+            IEnumerable<ParentRequest> fullParentRequestsList = _context.ParentRequests.Include(pr => pr.ApplicationUser)
+                .Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.ProductSubcategory)
+                .ThenInclude(pr => pr.ParentCategory)
+                .Include(pr => pr.Requests).ThenInclude(pr => pr.Product).ThenInclude(pr => pr.Vendor);
             List<List<ParentRequest>> ReturnParentRequestList = new List<List<ParentRequest>>();
             List<ParentRequest> NotPayedList = new List<ParentRequest>();
             List<ParentRequest> NoInvoiceList = new List<ParentRequest>();
@@ -49,10 +48,10 @@ namespace PrototypeWithAuth.Controllers
 
             foreach (var parentRequest in fullParentRequestsList)
             {
-                if (parentRequest.Payed != true)
-                {
-                    NotPayedList.Add(parentRequest);
-                }
+                //if (parentRequest.Payed != true)
+                //{
+                //    NotPayedList.Add(parentRequest);
+                //}
                 if (parentRequest.InvoiceNumber == null)
                 {
                     NoInvoiceList.Add(parentRequest);
