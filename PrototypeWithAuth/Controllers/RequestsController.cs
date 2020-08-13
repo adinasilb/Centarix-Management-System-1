@@ -1839,36 +1839,31 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEmailModal(int id, bool isSingleOrder = false)
-        {
-            requestItemViewModel.Request.ParentRequest = new ParentRequest();
-
-            //DO WE NEED THIS LINE OR IS IT GIVING AN ERROR SOMETIMES
-            int lastParentRequestOrderNum = 0;
-            requestItemViewModel.Request.ParentRequest.ApplicationUser = new ApplicationUser();
-            if (_context.ParentRequests.Any())
-            {
-                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-            }
-            requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-
-            //if you are creating a new one set the dates to today to prevent problems in the front end
-            //in the future use jquery datepicker (For smooth ui on the front end across all browsers)
-            //(already imported it)
-            requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
+        {          
             List<Request> requests = null;
             if (isSingleOrder)
             {
                 requests = await _context.Requests.Where(r => r.RequestID == id)
-               .Include(r => r.Product).ThenInclude(r => r.Vendor)
-               .Include(r => r.ParentRequest)
-               .Include(r => r.ApplicationUserCreator).ToListAsync();
+               .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
             }
             else
             {
                 requests = await _context.Requests.Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
-                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                               .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
             }
-
+            ParentRequest parentRequest = new ParentRequest();
+            foreach(var request in requests)
+            {
+                request.ParentRequest = parentRequest;
+                int lastParentRequestOrderNum = 0;
+                request.ParentRequest.ApplicationUserID = _userManager.GetUserId(User);
+                if (_context.ParentRequests.Any())
+                {
+                    lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                }
+                request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+                request.ParentRequest.OrderDate = DateTime.Now;
+            }          
 
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
@@ -1917,12 +1912,12 @@ namespace PrototypeWithAuth.Controllers
             if (confirmEmail.IsSingleOrder)
             {
                 requests = await _context.Requests.Where(r => r.RequestID == confirmEmail.RequestID)
-               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).ToListAsync();
+               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ApplicationUserCreator).ToListAsync();
             }
             else
             {
                 requests = await _context.Requests.Where(r => r.Product.VendorID == confirmEmail.VendorId && r.RequestStatusID == 6 && r.ParentQuote.QuoteStatusID==4)
-                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                    .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
             }
 
             string uploadFolder1 = Path.Combine("~", "files");
@@ -1940,10 +1935,10 @@ namespace PrototypeWithAuth.Controllers
                 var builder = new BodyBuilder();
 
 
-
-                string ownerEmail = requests.FirstOrDefault().ParentRequest.ApplicationUser.Email;
-                string ownerUsername = requests.FirstOrDefault().ParentRequest.ApplicationUser.FirstName + " " + requests.FirstOrDefault().ParentRequest.ApplicationUser.LastName;
-                string ownerPassword = requests.FirstOrDefault().ParentRequest.ApplicationUser.SecureAppPass;
+                var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                string ownerEmail = currentUser.Email;
+                string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
+                string ownerPassword = currentUser.SecureAppPass;
                 string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
                 string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
 
@@ -1968,7 +1963,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, requests.FirstOrDefault().ParentRequest.ApplicationUser.SecureAppPass);// ownerPassword);//
+                    client.Authenticate(ownerEmail, requests.FirstOrDefault().ApplicationUserCreator.SecureAppPass);// ownerPassword);//
 
                     //"FakeUser@123"); // set up two step authentication and get app password
                     try
@@ -1985,6 +1980,16 @@ namespace PrototypeWithAuth.Controllers
                     {
                         foreach (var request in requests)
                         {
+                            ParentRequest parentRequest = new ParentRequest();                       
+                            request.ParentRequest = parentRequest;
+                            int lastParentRequestOrderNum = 0;
+                            request.ParentRequest.ApplicationUserID =currentUser.Id;
+                            if (_context.ParentRequests.Any())
+                            {
+                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                            }
+                            request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+                            request.ParentRequest.OrderDate = DateTime.Now;
                             requests.FirstOrDefault().RequestStatusID = 2;
                             _context.Update(request);
                             await _context.SaveChangesAsync();
@@ -2025,12 +2030,12 @@ namespace PrototypeWithAuth.Controllers
             if (confirmQuoteEmail.IsResend)
             {
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == confirmQuoteEmail.RequestID)
-               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r=>r.ParentQuote).ToList();
+           .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r=>r.ParentQuote).ToList();
             }
             else
             {
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 1)
-                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
 
             string uploadFolder1 = Path.Combine("~", "files");
@@ -2047,10 +2052,10 @@ namespace PrototypeWithAuth.Controllers
                 //instantiate the body builder
                 var builder = new BodyBuilder();
 
-
-                string ownerEmail = requests.FirstOrDefault().ParentRequest.ApplicationUser.Email;
-                string ownerUsername = requests.FirstOrDefault().ParentRequest.ApplicationUser.FirstName + " " + requests.FirstOrDefault().ParentRequest.ApplicationUser.LastName;
-                string ownerPassword = requests.FirstOrDefault().ParentRequest.ApplicationUser.SecureAppPass;
+                var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                string ownerEmail = currentUser.Email;
+                string ownerUsername = currentUser.FirstName + " " +currentUser.LastName;
+                string ownerPassword = currentUser.SecureAppPass;
                 string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
                 string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
 
@@ -2090,11 +2095,10 @@ namespace PrototypeWithAuth.Controllers
                     client.Disconnect(true);
                     if (wasSent)
                     {
-                        var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
                         foreach (var quote in requests)
                         {
                             quote.ParentQuote.QuoteStatusID = 2;
-                            quote.ParentRequest.ApplicationUserID = currentUser.Id;
+                            quote.ParentQuote.ApplicationUserID = currentUser.Id;
                             //_context.Update(quote.ParentQuote);
                             //_context.SaveChanges();
                             _context.Update(quote);
@@ -2109,7 +2113,7 @@ namespace PrototypeWithAuth.Controllers
                     RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Include(r => r.ParentRequest.ApplicationUser).Include(r => r.ParentQuote)
+                    .Include(r => r.ApplicationUserCreator).Include(r => r.ParentQuote)
                     .ToLookup(r => r.Product.Vendor)
                 });
             }
@@ -2130,12 +2134,13 @@ namespace PrototypeWithAuth.Controllers
             if (isResend)
             {
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id)
-               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+               .Include(r => r.Product).ThenInclude(r => r.Vendor)
+               .ToList();
             }
             else
             {
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 1)
-                               .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+                          .Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
             }
 
 
@@ -2185,7 +2190,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmQuoteOrderEmailModal(int id)
         {
             var requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID==6)
-                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.ParentQuote).ToList();
+                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).Include(r => r.ParentQuote).ToList();
 
             ConfirmQuoteOrderEmailViewModel confirmEmail = new ConfirmQuoteOrderEmailViewModel
             {
