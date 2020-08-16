@@ -463,8 +463,9 @@
                             </div>*@
                                 <div class="col-md-2">
                                     <div class="form-check">
-                                        <label class="form-check-label">Paid</label>
-                                        <input class="form-check-input opacity-100" type="checkbox" id="paid_checkbox" onchange="changeTerms(this)" />
+                                        <label class="form-check-label-left" asp-for="Request.Paid"></label>
+                                        <input class="form-check-input float-left opacity-100" type="checkbox" asp-for="Request.Paid"  id="paid_checkbox" onchange="changeTerms(this)" />
+                                        <span asp-validation-for="Request.Paid" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>

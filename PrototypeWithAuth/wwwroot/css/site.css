@@ -91,9 +91,15 @@ i.fas {
     border-bottom: 2px solid white !important;
 }
 
-
-/*iframe clickable href*/
-/*.linkwrap{
+input[type='checkbox'],
+input[type='checkbox']:checked,
+input[type='checkbox']:not(:checked) {
+    opacity:1;
+    position: relative;
+    pointer-events:inherit;
+}
+    /*iframe clickable href*/
+    /*.linkwrap{
     position: relative;
     display: inline-block;
 }
@@ -107,8 +113,7 @@ i.fas {
 .linkwrap iframe{
     z-index: 2;
 }*/
-
-.responsive-iframe-container {
+    .responsive-iframe-container {
     position: relative;
     overflow: hidden;
     width: 100%;

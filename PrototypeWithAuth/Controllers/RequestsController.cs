@@ -1410,8 +1410,12 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
-            requestItemViewModel.Request.ParentRequest.ParentRequestID = (Int32)requestItemViewModel.Request.ParentRequestID;
-            requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentRequestID;
+            requestItemViewModel.Request.ParentRequest = null;         
+            requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
+            var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
+            parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
+            parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
+            requestItemViewModel.Request.ParentQuote = parentQuote;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
@@ -1890,7 +1894,7 @@ namespace PrototypeWithAuth.Controllers
                 string path1 = Path.Combine("wwwroot", "files");
                 string path2 = Path.Combine(path1, request.RequestID.ToString());
                 //create file
-                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
                 Directory.CreateDirectory(folderPath);
                 string uniqueFileName = "OrderPDF.pdf";
                 string filePath = Path.Combine(folderPath, uniqueFileName);

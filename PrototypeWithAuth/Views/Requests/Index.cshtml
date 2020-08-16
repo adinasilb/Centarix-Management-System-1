@@ -366,15 +366,15 @@
                 @{
                     if (requestStatusID == 2 || Summary)
                     {
-                        <th>@Html.DisplayFor(m => item.ParentRequest.OrderDate)</th>
+                        <td>@Html.DisplayFor(m => item.ParentRequest.OrderDate)</td>
                     }
                     else if (requestStatusID == 3)
                     {
-                        <th>@Html.DisplayFor(m => item.ArrivalDate)</th>
+                        <td>@Html.DisplayFor(m => item.ArrivalDate)</td>
                     }
                     else
                     {
-                        <th>@Html.DisplayFor(m => item.CreationDate)</th>
+                        <td>@Html.DisplayFor(m => item.CreationDate)</td>
                     }
                 }
                 <td style="width:3rem;">

@@ -100,7 +100,7 @@ namespace PrototypeWithAuth.Models
         public int? ParentQuoteID { get; set; }
         public ParentQuote ParentQuote { get; set; }
 
-        public bool Payed { get; set; }
+        public bool Paid { get; set; }
         public uint? Installments { get; set; } //number of installments
         public IEnumerable<Payment> Payments { get; set; }
         //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
