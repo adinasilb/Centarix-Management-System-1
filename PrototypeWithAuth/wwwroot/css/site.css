@@ -1406,17 +1406,6 @@ input.bigger-box {
     background-color: #ffffff;
 }
 
-.logout-div {
-    margin-top: -.55%;
-    position: absolute;
-    right: .05%;
-}
-
-.logout-button {
-    display: none;
-    background: white;
-    z-index: 500
-}
 
 body {
     display: block !important

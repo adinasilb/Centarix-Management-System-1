@@ -50,86 +50,160 @@
             locationClass = initalClasses + currentClasses;
             break;
     }
-    /*Determine Active Nav Link END*/
-
-}
 
 
-@*<<<<< Inventory/Requests Header >>>>>*@
-<header class="sticky-top">
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
+    @*<<<<< Inventory/Requests Header >>>>>*@
+    <header class="sticky-top">
 
-        <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
 
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; ">
-                <li class="nav-item mx-5 ">
-                    @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link " })
-                </li> 
-                <li class="nav-item mx-5">
-                    @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Summary }, new { @class = summaryClass, @id = "summary-link" })
-                </li>
+            <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
 
-                <li class="nav-item mx-5  ">
-                    @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = searchClass, @id = "search-link " /*why is the role and id here?*/ })
-                </li>
-                <li class="nav-item mx-5">
-                    @*Redo the location class in the controller*@
-                    @Html.ActionLink("Location", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = locationClass, @id = "location-link" })
-                </li>
-                <li class="nav-item mx-5 ">
-                    @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "cart-link " /*why is the role and id here?*/ })
-                </li>
-                <li class="nav-item mx-4 d-table ">
-                    @Html.ActionLink("Full Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
-                </li>
-            </ul>
-        </div>
-        <div class="form-inline">
-            <div class="md-form my-0">
-                <a href="#" class="text-dark">
-                    @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
-                </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; ">
+                    <li class="nav-item mx-5 ">
+                        @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link " })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Summary }, new { @class = summaryClass, @id = "summary-link" })
+                    </li>
 
-                <button id="profile-img" class="btn no-box-shadow pl-0 pr-1 pt-1 pb-0">
-                    @{
-                        var src = "/UserImages/profile_circle_big.png";
-                        if (UserManager.GetUserAsync(User).Result.UserImage != null)
-                        {
-                            src = UserManager.GetUserAsync(User).Result.UserImage;
-                        }
-                    }
-                    <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
-                </button>
+                    <li class="nav-item mx-5  ">
+                        @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = searchClass, @id = "search-link " /*why is the role and id here?*/ })
+                    </li>
+                    <li class="nav-item mx-5">
+                        @*Redo the location class in the controller*@
+                        @Html.ActionLink("Location", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = locationClass, @id = "location-link" })
+                    </li>
+                    <li class="nav-item mx-5 ">
+                        @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "cart-link " /*why is the role and id here?*/ })
+                    </li>
+                    <li class="nav-item mx-4 d-table ">
+                        @Html.ActionLink("Full Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
+                    </li>
+                </ul>
             </div>
-        </div>
+           <div class="  container col-1  pl-5">
+                <ul class="list-unstyled m-0">
+                    <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link"> <i style='font-size:1.4rem; ' class='far fa-bell fa-lg '></i> </button> </li>
+                    <div style="display:none;" id="notifications-popover">
+                        @*<div id="myNotifyList">
+                          @foreach (var item in Model)
+                          {
+                              string iconStyle = "";
+                              string icon = "";
+                              string color = "";
+                              string description = item.RequestStatus.RequestStatusDescription;
+                              switch (item.RequestStatusID)
+                              {
+                                  case 1:
+                                      description = "item requested";
+                                      color = "black";
+                                      icon = "icon-centarix-icons-04";
+                                      break;
+                                  case 2:
+                                      if (item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays ?? 0) < DateTime.Now && item.ExpectedSupplyDays != null)
+                                      {
+                                          description = $"should have arrived {item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays ?? 0).ToShortDateString()}";
+                                          color = "#DB2127";
+                                          icon = "fas fa-exclamation";
+                                          iconStyle = "color: black!important;   background: transparent";
+                                      }
+                                      else
+                                      {
+                                          description = "item ordered";
+                                          color = "#00CA72";
+                                          icon = "icon-centarix-icons-03";
+                                      }
+                                      break;
+                                  case 3:
+                                      color = "var(--order-inv-color)";
+                                      description = $"recieved by {item.ApplicationUserReceiver.FirstName}";
+                                      icon = "fas fa-shopping-bag";
+                                      iconStyle = "color: black!important;   background: transparent";
+                                      break;
+                                  case 4:
+                                      break;
+                                  case 5:
+                                      break;
+                                  case 6:
+                                      color = "#3F51B5";
+                                      description = "item approved";
+                                      icon = "icon-done-24px";
+                                      break;
+                              }
+                              <div class="row ml-2  border-bottom-0">
+                                  <div class="ml-2 mt-auto mb-auto ">
+                                      <i style='font-size:1.4rem; @iconStyle' class='@icon '></i>
 
-    </nav>
-    <div class=" logout-div">
-        <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button type="submit" id="logout-form" class="nav-link border no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
-        </form>
-    </div>
-</header>
-<!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
-<!--for now i am using an aside just to help me viuslly see thing on the side-->
+                                  </div>
+                                  <div class="col-8 mr-4 ">
+                                      <div class=" p-3 ">
+                                          <label>@item.Product.ProductName</label>
+                                          <label style="color: @color; width:20%;">@description</label>
+                                      </div>
 
-<div class="container-fluid pl-0">
+                                  </div>
+
+                              </div>
+                    </div>
+
+                          }*@
+
+                        notifications will go here
+                    </div>
+                </ul>
+            </div>
+            <div class="  ">
+                <ul class="list-unstyled mb-0 ">
+                    <li><div class="form-inline pr-3">
+                            <div class="md-form my-0 p-2">
+                                <a href="#" class="text-dark">
+                                    @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
+                                </a>
+                                <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0">
+                                    @{
+                                        var src = "/UserImages/profile_circle_big.png";
+                                        if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                                        {
+                                            src = UserManager.GetUserAsync(User).Result.UserImage;
+                                        }
+                                    }
+                                    <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
+                                </button>
+                            </div>
+                        </div></li>
+                    <div style="display:none;" id="logout-popover">
+                        <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" id="logout-form" class="nav-link  border-0 no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
+                        </form>
+                    </div>
+                    </ul>
+                </div>
+                        
+
+        </nav>
+        
+    </header>
+    <!-- This should be a partial view that rnders whatever side bar we should be viewing, this should just display the template of a side nav bar - this can be donw with css-->
+    <!--for now i am using an aside just to help me viuslly see thing on the side-->
+
+    <div class="container-fluid pl-0">
         <main role="main">
             @*<div class="spinner-border center" role="status" id="loading" style="display:none;">
-                <span class="sr-only">Loading...</span>
-            </div>*@
+                    <span class="sr-only">Loading...</span>
+                </div>*@
             <div class="center" role="status" id="loading" style="display:none;">
                 <img src="~/images/css/Loading/centarix_loading3.gif" />
             </div>
             @RenderBody()
         </main>
-</div>
-
-@*<footer class="border-top footer text-muted">
-        <div class="container text-center">
-            &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>*@
+    </div>
+                            }
+    @*<footer class="border-top footer text-muted">
+            <div class="container text-center">
+                &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>*@
 
 
