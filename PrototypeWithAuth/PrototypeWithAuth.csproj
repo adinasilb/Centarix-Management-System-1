@@ -79,6 +79,8 @@
     <Compile Remove="Data\Migrations\20200811081302_MadeQuoteStatusTakeParent.Designer.cs" />
     <Compile Remove="Data\Migrations\20200812121147_ApplicationUserIenumerableForRequestsReceiver.cs" />
     <Compile Remove="Data\Migrations\20200812121147_ApplicationUserIenumerableForRequestsReceiver.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200817072714_addUserToRequests.cs" />
+    <Compile Remove="Data\Migrations\20200817072714_addUserToRequests.Designer.cs" />
   </ItemGroup>
 
 
