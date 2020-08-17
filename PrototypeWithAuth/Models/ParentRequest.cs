@@ -14,7 +14,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int ParentRequestID { get; set; }
         public IEnumerable<Request> Requests { get; set; }
-        public string ApplicationUserID { get; set; } //this is the owner of the request - do we have every received request have its own reciever?
+        public string ApplicationUserID { get; set; } //this is the person who placed the order
 
         [ForeignKey("ApplicationUserID")]
         public ApplicationUser ApplicationUser { get; set; }
@@ -34,11 +34,8 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Invoice Date")]
         public DateTime InvoiceDate { get; set; }
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
-        public bool WithOrder { get; set; } //do we need this here?
+        public bool WithoutOrder { get; set; }
         public double Discount { get; set; }
-        public bool Payed { get; set; }
-        public uint Installments { get; set; } //number of installments
-        public IEnumerable<Payment> Payments { get; set; }
     }
 }
 //list of request, owner, order date, (order number for an entire order or is it just for specific request) same for invoice number

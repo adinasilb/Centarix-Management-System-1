@@ -318,7 +318,12 @@ $(".view-docs").click(function (clickEvent) {
 
 $(".expected-supply-days").change(function () {
 	console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
-	var date = $(".for-supply-date-calc").val().split("-");
+	var date;
+	if ($("#Request_ParentRequest_OrderDate").length > 0) {
+		var date = $(".for-supply-date-calc").val().split("-");
+	} else {
+		date = new Date();
+	}	
 	var dd = parseInt(date[2]);
 	var mm = parseInt(date[1]);
 	var yyyy = parseInt(date[0]);
@@ -401,7 +406,12 @@ $("#expected-supply-date").change(function () {
 	var Smm = parseInt(date.getMonth() + 1);
 	var Syyyy = parseInt(date.getFullYear());
 	console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
-	var OrderDate = $(".for-supply-date-calc").val().split("-");
+	var OrderDate;
+	if ($("#Request_ParentRequest_OrderDate").length > 0) {
+		OrderDate = $(".for-supply-date-calc").val().split("-");
+	} else {
+		OrderDate = new Date();
+	}	
 	var Idd = parseInt(OrderDate[2]);
 	var Imm = parseInt(OrderDate[1]);
 	var Iyyyy = parseInt(OrderDate[0]);
@@ -482,7 +492,12 @@ $("#expected-supply-date").change(function () {
 });
 
 $("#Request_Warranty").change(function () {
-	var date = $("#Request_ParentRequest_InvoiceDate").val().split("-");
+	var date = null;
+	if ($("#Request_ParentRequest_OrderDate").length > 0) {
+		date = $("#Request_ParentRequest_OrderDate").val().split("-");
+	} else {
+		date = new Date();
+	}
 	console.log("Date: " + date);
 	var dd = date[2];
 	var mm = parseInt(date[1]); //January is 0! ?? do we still need th get month???
@@ -1142,6 +1157,8 @@ $(".open-document-modal").on("click", function (e) {
 	console.log("in open doc modal click");
 	e.preventDefault();
 	e.stopPropagation();
+	$(".open-document-modal").removeClass("active-document-modal");
+	$(this).addClass("active-document-modal");
 	var enumString = $(this).data("string");
 	console.log("EnumString: " + enumString);
 	var requestId = $(this).data("id");

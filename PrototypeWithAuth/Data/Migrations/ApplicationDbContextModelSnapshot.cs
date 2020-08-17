@@ -634,9 +634,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("Discount")
                         .HasColumnType("float");
 
-                    b.Property<long>("Installments")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
 
@@ -652,10 +649,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("OrderNumber")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Payed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("WithOrder")
+                    b.Property<bool>("WithoutOrder")
                         .HasColumnType("bit");
 
                     b.HasKey("ParentRequestID");
@@ -675,20 +669,20 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("CompanyAccountID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParentRequestID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
                     b.HasKey("PaymentID");
 
                     b.HasIndex("CompanyAccountID");
 
-                    b.HasIndex("ParentRequestID");
+                    b.HasIndex("RequestID");
 
                     b.ToTable("Payments");
                 });
@@ -1361,6 +1355,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
@@ -1371,13 +1368,19 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("ExchangeRate")
                         .HasColumnType("float");
 
-                    b.Property<byte>("ExpectedSupplyDays")
+                    b.Property<byte?>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
+
+                    b.Property<long?>("Installments")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Paid")
                         .HasColumnType("bit");
 
                     b.Property<int?>("ParentQuoteID")
@@ -1435,7 +1438,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("VAT")
                         .HasColumnType("float");
 
-                    b.Property<byte>("Warranty")
+                    b.Property<byte?>("Warranty")
                         .HasColumnType("tinyint");
 
                     b.HasKey("RequestID");
@@ -2058,9 +2061,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("Payments")
-                        .HasForeignKey("ParentRequestID")
+                        .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

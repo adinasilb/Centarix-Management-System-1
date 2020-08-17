@@ -227,7 +227,6 @@
 
     <script>
         $(document).ready(function () {
-
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
             });
@@ -270,6 +269,7 @@
 
         });
 
+       
         $.fn.CallPage = function ($itemurl, $type) {
             console.log("in call page function");
             //delete existing modals
@@ -763,7 +763,7 @@
         });
 
         $("#addSupplierComment").click(function () {
-
+            $('[data-toggle="popover"]').popover('dispose');
             $('[data-toggle="popover"]').popover({
                 sanitize: false,
                 placement: 'bottom',
@@ -772,7 +772,38 @@
                     return $('#popover-content').html();
                 }
             });
-            $('[data-toggle="popover"]').popover('toggle');
+            $('#addSupplierComment').popover('toggle');
+
+        });
+
+  
+
+        $("#openNotifications").click(function () {
+            $('[data-toggle="popover"]').popover('dispose');
+            $('[data-toggle="popover"]').popover({
+                sanitize: false,
+                placement: 'bottom',
+                html: true,
+                content: function () {
+                    return $('#notifications-popover').html();
+                }
+            });
+            $('#openNotifications').popover('toggle');
+
+        });
+
+
+        $("#profile-img").click(function () {
+            $('[data-toggle="popover"]').popover('dispose');
+            $('[data-toggle="popover"]').popover({
+                sanitize: false,
+                placement: 'bottom',
+                html: true,
+                content: function () {
+                    return $('#logout-popover').html();
+                }
+            });
+            $('#profile-img').popover('toggle');
 
         });
 

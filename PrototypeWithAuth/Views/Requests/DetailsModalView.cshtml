@@ -17,7 +17,7 @@
 
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
-                @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
+                @Html.HiddenFor(model => model.Request.ApplicationUserCreatorID)
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -72,7 +72,7 @@
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                     <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#price" id="price-tab" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
                                     @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li>
@@ -183,19 +183,23 @@
                                     </div>
                                 </div>
                                 <br />
-                                <div class="row">
-                                    <div class="col-6 pr-4">
-                                        <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
-                                        <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
+                                @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
+                                {
+                                    <div class="row">
+                                        <div class="col-6 pr-4">
+                                            <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
+                                            <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
+                                            <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-6">
+                                            <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
+                                            <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
+                                            <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
+                                        </div>
                                     </div>
-                                    <div class="col-6">
-                                        <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
-                                        <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
-                                    </div>
-                                </div>
-                                <br />
+                                    <br />
+                                }
+
                                 <div class="row">
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
@@ -212,38 +216,60 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                                        <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom" disabled />
+                                        <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-3">
                                         <label asp-for="Request.Warranty" class="control-label"></label>
-                                        <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom" disabled />
+                                        <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.Warranty" class="text-danger"></span>
                                     </div>
-                                    <div class="col-3">
-                                        <label class="control-label">End Date</label>
-                                        <input value="@Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
-                                    </div>
+                                    @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
+                                    {
+                                        <div class="col-3">
+                                            <label class="control-label">End Date</label>
+                                            @*@{
+                        //get this just to return the date (not the time)
+                        //adding the amount of months of the warranty to the invoice date
+                        var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                    }*@
+                                            <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-3">
+                                            <label class="control-label">Estimated End Date</label>
+                                            <input value="@DateTime.Now.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                        </div>
+                                    }
+
                                 </div>
                                 <br />
                                 <div class="row">
                                     <div class="col-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom" disabled />
+                                        <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                     </div>
-                                    <div class="col-4">
-                                        @{
-                                            //get this just to return the date (not the time)
-                                            //adding the amount of months of the expected supply days to the invoice date
-                                            var endSupplyDate = Model.Request.ParentRequest.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays);
-                                        }
-                                        <label class="control-label">Expected supply date</label>
-                                        <input value="@endSupplyDate" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
-                                    </div>
+                                    @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
+                                    {
+                                        <div class="col-4">
+                                            <label class="control-label">Expected supply date</label>
+                                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-4">
+                                            <label class="control-label">Esitmated Expected supply date</label>
+                                            <input value="@DateTime.Now.AddDays(Model.Request.ExpectedSupplyDays ?? 0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
+                                        </div>
+                                    }
+
                                     <div class="col-4">
                                         <label asp-for="Request.URL" class="control-label"></label>
-                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom" disabled />
+                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.URL" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -259,29 +285,29 @@
                                 <table class="table table-sm border">
                                     @{
                                             int z = -1; //initiated to -1 b/c it didn't let me put the z++ on the bottom of the fx. Really should be 0.
-                                    }
-                                    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+    }
+    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
                                         {
                                     <tr>
                                         @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                                                 {
                                                     z++;
                                                     var backgroundClass = "border";
-                                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
-                                                    {
-                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
-                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
+    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+    {
+        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
+        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
 
-                                                        if (Model.ChildrenLocationInstances[z].IsFull)
-                                                        {
-                                                            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
-                                                            {
-                                                                backgroundClass += " bg-info text-light text-center";
-                                                            }
-                                                            else //why is this else here? it doesn't seem to ever get used.
-                                                            {
-                                                                backgroundClass += " bg-secondary";
-                                                            }
+        if (Model.ChildrenLocationInstances[z].IsFull)
+        {
+            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
+            {
+                backgroundClass += " bg-info text-light text-center";
+            }
+            else //why is this else here? it doesn't seem to ever get used.
+            {
+                backgroundClass += " bg-secondary";
+            }
                                         <td class="@backgroundClass">
                                             @Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName
                                         </td>
@@ -524,9 +550,9 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 <div class="row installments">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label asp-for="Request.ParentRequest.Installments" class="control-label"></label>
-                                            <input asp-for="Request.ParentRequest.Installments" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.ParentRequest.Installments" class="text-danger"></span>
+                                            <label asp-for="Request.Installments" class="control-label"></label>
+                                            <input asp-for="Request.Installments" class="form-control-plaintext border-bottom" disabled />
+                                            <span asp-validation-for="Request.Installments" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-8 p-3">
@@ -623,13 +649,15 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                 filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="card document-border">
-                                            <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/shipment_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
-                                            </div>
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()">
+                                            <div class="card document-border">
+                                                <div class="card-body text-center" style="height:150px;">
+                                                    <img src="~/images/css/inventory/add-item/other icons/shipment_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                </div>
 
-                                        </div>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
+                                            </div>
+                                            </a>
+                                            <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                     </div>
                                     <div class="col-md-3">
                                         @{
@@ -639,171 +667,98 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                 filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="card document-border">
-                                            <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()">
+                                            <div class="card document-border">
+                                                <div class="card-body text-center" style="height:150px;">
+                                                    <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                </div>
+
+                                                @*<div class="card-footer">
+                    <div class="custom-file text-center">
+                        <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                        <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                        @if (boolQuote)
+                        {
+                            <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
+                        }
+                        else
+                        {
+                            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                        }
+                    </div>
+                </div>*@
                                             </div>
-                                            @*<div class="card-footer">
-                                    <div class="custom-file text-center">
-                                        <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                        <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                        @if (boolQuote)
-                                        {
-                                            <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
-                                        }
-                                        else
-                                        {
-                                            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                        }
-                                    </div>
-                                </div>*@
-                                        </div>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
+                                            </a>
+                                            <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
                                         @{
-                                            var infoCardClass  = "card document-border";
-                                            var boolInfo = false;
+                                            filterClass = "";
                                             if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
                                             {
-                                                infoCardClass = "card document-border";
-                                                boolInfo = true;
+                                                filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="@infoCardClass">
-                                            <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" />
-                                            </div>
-                                            <div class="card-footer">
-                                                <div class="custom-file text-center">
-                                                    <label for="InfoFiles"><i class="icon-centarix-icons-07 upload-file-5 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-5 mr-5" />*@</label>
-                                                    <input type="file" asp-for="InfoFiles" class="file-select file-select-5" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                    @if (boolInfo)
-                                                    {
-                                                    <a class="show-info-view">
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09 hover-bold align-bottom order-inv-color" style="cursor: pointer;
-        font-size: 1.8rem;"></i> @*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
-                </label>
-                </a>
-                                                    }
-                                                    else
-                                                    {
-                <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()">
+                                            <div class="card document-border">
+                                                <div class="card-body text-center" style="height:150px;">
+                                                    <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Info</label>
                                     </div>
                                     <div class="col-md-3">
                                         @{
-                                            var pictureCardClass  = "card document-border";
-                                            var boolPicture = false;
+                                            filterClass = "";
                                             if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
                                             {
-                                                pictureCardClass = "card document-border";
-                                                boolPicture = true;
+                                                filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="@pictureCardClass">
-                                            <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" />
-                                            </div>
-                                            <div class="card-footer">
-                                                <div class="custom-file text-center">
-                                                    <label for="PictureFiles"><i class="icon-centarix-icons-07 upload-file-6 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-6 mr-5" />*@</label>
-                                                    <input type="file" asp-for="PictureFiles" class="file-select file-select-6" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                    @if (boolPicture)
-                                                    {
-                                                    <a class="show-pictures-view">
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09 hover-bold align-bottom order-inv-color" style=" cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
-                </label>
-                </a>
-                                                    }
-                                                    else
-                                                    {
-                <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()">
+                                            <div class="card document-border">
+                                                <div class="card-body text-center" style="height:150px;">
+                                                    <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Picture</label>
                                     </div>
                                     <div class="col-md-3">
                                         @{
-                                            var returnCardClass  = "card document-border";
-                                            var boolReturn = false;
+                                            filterClass = "";
                                             if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
                                             {
-                                                returnCardClass = "card document-border";
-                                                boolReturn = true;
+                                                filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="@returnCardClass">
-                                            <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" />
-                                            </div>
-                                            <div class="card-footer">
-                                                <div class="custom-file text-center">
-                                                    <label for="ReturnFiles"><i class="icon-centarix-icons-07 upload-file-7 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-7 mr-5" />*@</label>
-                                                    <input type="file" asp-for="ReturnFiles" class="file-select file-select-7" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                    @if (boolReturn)
-                                                    {
-                                                    <a class="show-returns-view">
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09 hover-bold align-bottom order-inv-color" style="cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
-                </label>
-                </a>
-                                                    }
-                                                    else
-                                                    {
-                <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()">
+                                            <div class="card document-border">
+                                                <div class="card-body text-center" style="height:150px;">
+                                                    <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Return</label>
                                     </div>
                                     <div class="col-md-3">
                                         @{
-                                            var creditCardClass  = "card document-border";
-                                            var boolCredit = false;
+                                            filterClass = "";
                                             if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
                                             {
-                                                creditCardClass = "card document-border";
-                                                boolCredit = true;
+                                                filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <div class="@creditCardClass">
-                                            <div class="card-body text-center" style="height:150px;">
-                                                <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" />
-                                            </div>
-                                            <div class="card-footer">
-                                                <div class="custom-file text-center">
-                                                    <label for="CreditFiles"><i class="icon-centarix-icons-07 upload-file-8 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/upload_first.png" class="upload-file-8 mr-5" />*@</label>
-                                                    <input type="file" asp-for="CreditFiles" class="file-select file-select-8" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                                    @if (boolCredit)
-                                                    {
-                                                    <a class="show-credits-view">
-                                                        <label>
-                                                            <i class="icon-centarix-icons-09 hover-bold align-bottom order-inv-color" style=" cursor: pointer;
-        font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view.png" />*@
-                </label>
-                </a>
-                                                    }
-                                                    else
-                                                    {
-                <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i>@*<img src="~/images/css/inventory/add-item/other icons/view_dis.png" />*@</label>
-                                                    }
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()">
+                                            <div class="card document-border">
+                                                <div class="card-body text-center" style="height:150px;">
+                                                       <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Credit</label>
                                     </div>
                                 </div>
