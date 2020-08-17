@@ -64,6 +64,10 @@
 </head>
 
 <body style="display:none">
+
+    <div class="center" role="status" id="loading" style="display:none;">
+        <img src="~/images/css/Loading/centarix_loading3.gif" />
+    </div>
     @RenderBody()
 
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -260,13 +264,13 @@
             console.log("tdconfirm email .val() = 'true'");
             $("#tdconfirmemail").hide();
                  var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
-            $("#loading").show();
+            //$("#loading").show();
             $.fn.CallPage($itemurl, "confirmemail");
         }
 
         });
 
-       
+
         $.fn.CallPage = function ($itemurl, $type) {
             console.log("in call page function");
             //delete existing modals
@@ -295,10 +299,10 @@
                     $('#tdconfirmemail').val('');
                     $.fn.OnOpenModalView();
                     AddTempDataMemory();
-                
+
 
                 }
-         
+
             });
         }
         $(".prevent-js-reload").on("click", function (e) {
@@ -761,7 +765,7 @@
 
         });
 
-  
+
 
         $("#openNotifications").click(function () {
             $('[data-toggle="popover"]').popover('dispose');
