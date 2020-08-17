@@ -44,11 +44,11 @@ $("#parentlist").change(function () {
 		console.log("ONE");
 
 		$.each(data, function (i, subCategory) {
-			console.log("IN LOOP...");
 			var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 			$("#sublist").append(newitem1);
 		});
 		$("#sublist").materialSelect();
+		return false;
 	});
 	return false;
 });
@@ -68,8 +68,9 @@ $(".Project").change(function () {
 			$("#SubProject").append(item);
 		});
 		$("#SubProject").materialSelect();
+		return false
 	});
-
+	return false;
 });
 
 
@@ -213,6 +214,13 @@ $.fn.AdjustPaymentDates = function () {
 
 };
 
+$('select').on('change', function () {
+	if ($(this).val()) {
+		$(this).prev().prev().css('border-bottom-color', 'var(--order-inv-color)');
+	} else {
+		$(this).prev().prev().css('border-bottom-color', 'red');
+	}
+});
 
 ////Location Add View - Change dropdownlist
 //$("LocationInstance_LocationTypeID").change(function () {
@@ -629,7 +637,7 @@ $.fn.CheckSubUnitsFilled = function () {
 $.fn.EnableSubUnits = function () {
 	console.log("enable subunits");
 	$("#Request_SubUnit").prop("disabled", false);
-	$("#Request_SubUnitTypeID").materialSelect("destroy")
+	$("#Request_SubUnitTypeID").destroyMaterialSelect();
 	$("#Request_SubUnitTypeID").removeAttr("disabled")
 	$('#Request_SubUnitTypeID').materialSelect();
 	//$("#select-options-Request_SubUnitTypeID").prop("disabled", false);
@@ -639,7 +647,7 @@ $.fn.EnableSubUnits = function () {
 
 $.fn.EnableSubSubUnits = function () {
 	$("#Request_SubSubUnit").prop("disabled", false);
-	$("#Request_SubSubUnitTypeID").materialSelect("destroy")
+	$("#Request_SubSubUnitTypeID").destroyMaterialSelect()
 	$("#Request_SubSubUnitTypeID").removeAttr("disabled")
 	$('#Request_SubSubUnitTypeID').materialSelect();
 	//$("#select-options-Request_SubSubUnitTypeID").prop("disabled", false);

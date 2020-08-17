@@ -61,7 +61,7 @@ html.wf-loading * {
     border-radius: 0 !important;
 }*/
 
-.RequestUnitCard div , .RequestSubunitCard div , .RequestSubsubunitCard div {
+.RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
 }
 
