@@ -1162,14 +1162,16 @@ $(".open-document-modal").on("click", function (e) {
 	var enumString = $(this).data("string");
 	console.log("EnumString: " + enumString);
 	var requestId = $(this).data("id");
-	$.fn.OpenDocumentsModal(enumString, requestId);
+	var isEdittable = $(this).data("val");
+	console.log("isEdittable: " + isEdittable);
+	$.fn.OpenDocumentsModal(enumString, requestId, isEdittable);
 	return false;
 });
 
-$.fn.OpenDocumentsModal = function (enumString, requestId) {
+$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
 	console.log("in open doc modal");
 	$("#documentsModal").replaceWith('');
-	var urlToGo = "Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString;
+	var urlToGo = "Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;
 	console.log("urltogo: " + urlToGo);
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
