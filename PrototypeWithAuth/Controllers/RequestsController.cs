@@ -2755,7 +2755,9 @@ namespace PrototypeWithAuth.Controllers
                     Directory.CreateDirectory(folderPath);
                     string uniqueFileName = x + file.FileName;
                     string filePath = Path.Combine(folderPath, uniqueFileName);
-                    file.CopyTo(new FileStream(filePath, FileMode.Create));
+                    FileStream filestream = new FileStream(filePath, FileMode.Create);
+                    file.CopyTo(filestream);
+                    filestream.Close();
                     x++;
                 }
             }

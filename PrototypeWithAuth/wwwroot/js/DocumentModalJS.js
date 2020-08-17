@@ -4,7 +4,6 @@
 	return false;
 });
 
-
 $(".file-select").on("change", function (e) {
 	e.preventDefault();
 	e.stopPropagation();
@@ -24,7 +23,7 @@ $(".file-select").on("change", function (e) {
 	//var formData = new FormData($(this));
 	//console.log("data : " + data);
 	console.log("formData : " + formData);
-	//console.log("form data : " + formData);
+	//console.log("data : " + model);
 
 	$.ajax({
 		url: url,
@@ -34,8 +33,8 @@ $(".file-select").on("change", function (e) {
 			//this.options.noteModalElement.modal('hide');
 			$(".carousel-item").remove();
 			$("#documentsModal").replaceWith('');
-			var $enumString = $(".open-document-modal").data("string");
-			var $requestId = $(".open-document-modal").data("id");
+			var $enumString = $(".open-document-modal.active-document-modal").data("string");
+			var $requestId = $(".open-document-modal.active-document-modal").data("id");
 			console.log("enumstring: " + $enumString + "    : requestid: " + $requestId);
 			$.fn.ChangeColorsOfModal($enumString);
 			$.fn.OpenDocumentsModal($enumString, $requestId);

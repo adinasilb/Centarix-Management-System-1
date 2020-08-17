@@ -1136,6 +1136,8 @@ $(".open-document-modal").on("click", function (e) {
 	console.log("in open doc modal click");
 	e.preventDefault();
 	e.stopPropagation();
+	$(".open-document-modal").removeClass("active-document-modal");
+	$(this).addClass("active-document-modal");
 	var enumString = $(this).data("string");
 	var requestId = $(this).data("id");
 	$.fn.OpenDocumentsModal(enumString, requestId);

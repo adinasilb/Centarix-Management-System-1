@@ -1,6 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel;
 
-<script src="~/js/DocumentModalJS.js"></script>
+    <script src="~/js/DocumentModalJS.js">
+    </script>
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
 <div class="modal modal-document fader" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
@@ -9,10 +10,11 @@
             <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5" id="documentModalForm">
+            <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data"  style="height: 100%; overflow: auto;" class="m-5" id="documentModalForm">
                 @*<a style="display: none;" id="ReopenDocModal" href="@Url.ActionLink("DocumentsModal","Requests", new { id = @Model.Request.RequestID, RequestFolderNameEnum = @Model.RequestFolderName})"></a>*@
                 <input type="hidden" asp-for="Request.RequestID" />
-                <a href="" class="open-document-modal" data-string="@Model.RequestFolderName" data-id="@Model.Request.RequestID" style="display: none;"></a>
+                <input type="hidden" asp-for="RequestFolderName"/>
+                <a href="" class="open-document-modal active-document-modal" data-string="@Model.RequestFolderName" data-id="@Model.Request.RequestID" style="display: none;"></a>
                 <div class="modal-header">
                     <div class="container">
                         <div class="row">
@@ -22,7 +24,7 @@
                             <div class="col-2 offset-8">
                                 <div class="upload-btn-wrapper">
                                     <button class="inv-button btn-block float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
-                                    <input type="file" asp-for="FilesToSave" class="file-select file-select-1" accept=".png, .jpg, .jpeg, .pdf" multiple>
+                                    <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple>
                                 </div>
                                 @*<div class="upload-btn-wrapper">*@
                                 <input type="submit" value="Save" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
