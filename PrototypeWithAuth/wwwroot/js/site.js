@@ -51,9 +51,9 @@ $("#parentlist").change(function () {
 		//sublist.materialSelect({ destroy: true });
 		//sublist.empty();
 		//console.log("emptied sublist");
-		$(".mdb-select-sublist").materialSelect({ destroy: true });
-		$(".mdb-select-sublist ul").empty();
-		$(".mdb-select-sublist ul").append(firstitem);
+		//$(".mdb-select-sublist").materialSelect({ destroy: true });
+		$(".mdb-select-sublist").empty();
+		$(".mdb-select-sublist").append(firstitem);
 		//if (firstime == 0) {
 		//$(".mdb-select-sublist").first().hide();
 		//}
@@ -65,7 +65,7 @@ $("#parentlist").change(function () {
 			var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 			var newitem2 = '<span class="filtrable ">' + subCategory.productSubcategoryDescription + '</span>';
 			var newitem = '<li class=" " role="option" aria-selected="false" aria-disabled="false" value="' + subCategory.productSubcategoryID + '"><span class="filtrable ">' + subCategory.productSubcategoryDescription + ' </span></li>';
-			$(".mdb-select-sublist ul").append(newitem);
+			$(".mdb-select-sublist").append(newitem);
 		});
 		//var sublistdata = '<div class="mdb-select mdb-select-sublist md-form  colorful-select dropdown-primary" id="sublist">';
 		//sublistdata += '<ul id="select-options-vendorList" class="dropdown-content select-dropdown w-100">'
