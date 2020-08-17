@@ -10,10 +10,11 @@
             <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data"  style="height: 100%; overflow: auto;" class="m-5" id="documentModalForm">
+            <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5" id="documentModalForm">
                 @*<a style="display: none;" id="ReopenDocModal" href="@Url.ActionLink("DocumentsModal","Requests", new { id = @Model.Request.RequestID, RequestFolderNameEnum = @Model.RequestFolderName})"></a>*@
                 <input type="hidden" asp-for="Request.RequestID" />
-                <input type="hidden" asp-for="RequestFolderName"/>
+                <input type="hidden" asp-for="RequestFolderName" />
+                <input type="hidden" asp-for="IsEdittable" />
                 <a href="" class="open-document-modal active-document-modal" data-string="@Model.RequestFolderName" data-id="@Model.Request.RequestID" style="display: none;"></a>
                 <div class="modal-header">
                     <div class="container">
@@ -21,20 +22,25 @@
                             <div class="col-2">
                                 <h2><input type="text" class="form-control-plaintext" asp-for="RequestFolderName" /></h2>
                             </div>
-                            <div class="col-2 offset-8">
-                                <div class="upload-btn-wrapper">
-                                    <button class="inv-button btn-block float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
-                                    <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple>
+
+                            @if (Model.IsEdittable)
+                            {
+                                <div class="col-2 offset-8">
+                                    <div class="upload-btn-wrapper">
+                                        <button class="inv-button btn-block float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
+                                        <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple>
+                                    </div>
+                                    @*<div class="upload-btn-wrapper">*@
+                                    <input type="submit" value="Save" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
+                                    @*</div>*@
+                                    @*<input type="submit" value="Save" asp-action="DocumentsModal" class="btn btn-block inv-button save-document-files" />*@
+                                    @*<button class="btn inv-button save-document-files">Save</button>*@
+                                    @*@Html.ActionLink("Save", "DocumentsModal", new { documentsModalViewModel = Model }, new { @class = "btn inv-button save-document-files" })*@
+                                    @*@Html.ActionLink("Save", "DocumentsModal", new { }, new { @class = "btn inv-button save-document-files" })*@
+                                    @*<button class="btn inv-button save-document-files"  data-string="@Html.ActionLink("Save","SaveDocumentFiles", n)">Save</button>*@
                                 </div>
-                                @*<div class="upload-btn-wrapper">*@
-                                <input type="submit" value="Save" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
-                                @*</div>*@
-                                @*<input type="submit" value="Save" asp-action="DocumentsModal" class="btn btn-block inv-button save-document-files" />*@
-                                @*<button class="btn inv-button save-document-files">Save</button>*@
-                                @*@Html.ActionLink("Save", "DocumentsModal", new { documentsModalViewModel = Model }, new { @class = "btn inv-button save-document-files" })*@
-                                @*@Html.ActionLink("Save", "DocumentsModal", new { }, new { @class = "btn inv-button save-document-files" })*@
-                                @*<button class="btn inv-button save-document-files"  data-string="@Html.ActionLink("Save","SaveDocumentFiles", n)">Save</button>*@
-                            </div>
+                            }
+
                         </div>
                     </div>
                 </div>
@@ -44,22 +50,22 @@
                         <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
 
                             @*@if (Model.FileStrings.Count > 3)
-                                {
-                                    <div class="controls-top">
-                                        <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
-                                            <i class="fas fa-chevron-left"></i>
-                                        </a>
-                                        <a class="btn-floating" href="#carousel-example-multi" data-slide="next">
-                                            <i class="fas fa-chevron-right"></i>
-                                        </a>
-                                    </div>
+                    {
+                        <div class="controls-top">
+                            <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                            <a class="btn-floating" href="#carousel-example-multi" data-slide="next">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
 
 
-                                    <ol class="carousel-indicators">
-                                            <li data-target="#carousel-example-multi" data-slide-to="0" class="active"></li>
-                                            <li data-target="#carousel-example-multi" data-slide-to="1"></li>
-                                        </ol>
-                                }*@
+                        <ol class="carousel-indicators">
+                                <li data-target="#carousel-example-multi" data-slide-to="0" class="active"></li>
+                                <li data-target="#carousel-example-multi" data-slide-to="1"></li>
+                            </ol>
+                    }*@
 
 
                             <div class="row">
@@ -103,7 +109,7 @@
                                                                     @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
                                                                     @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
-                                                                        <div class="blocker"></div>*@
+                                                            <div class="blocker"></div>*@
                                                                     <iframe src="@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
                                                                     @*</a>*@
@@ -128,32 +134,32 @@
 
                                         }
                                         @*<div class="carousel-item active">
-                                                <div class="col-12 col-md-4">
-                                                    <div class="card mb-2">
-                                                        <img class="card-img-top" src="@Model.FileStrings[0]"
-                                                             alt="Card image cap">
-                                                        <div class="card-body">
-                                                            <h4 class="card-title font-weight-bold">@Model.FileStrings[0]</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                    <div class="col-12 col-md-4">
+                                        <div class="card mb-2">
+                                            <img class="card-img-top" src="@Model.FileStrings[0]"
+                                                 alt="Card image cap">
+                                            <div class="card-body">
+                                                <h4 class="card-title font-weight-bold">@Model.FileStrings[0]</h4>
                                             </div>
-                                            <div class="carousel-item">
-                                                <div class="col-12 col-md-4">
-                                                    <div class="card mb-2">
-                                                        <img class="card-img-top" src="@Model.FileStrings[1]"
-                                                             alt="Card image cap">
-                                                        <div class="card-body">
-                                                            <h4 class="card-title font-weight-bold">@Model.FileStrings[1]</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="col-12 col-md-4">
+                                        <div class="card mb-2">
+                                            <img class="card-img-top" src="@Model.FileStrings[1]"
+                                                 alt="Card image cap">
+                                            <div class="card-body">
+                                                <h4 class="card-title font-weight-bold">@Model.FileStrings[1]</h4>
                                             </div>
-                                            <div class="carousel-item">
-                                                <div class="col-12 col-md-4">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="col-12 col-md-4">
 
-                                                </div>
-                                            </div>*@
+                                    </div>
+                                </div>*@
                                     </div>
                                 </div>
 
