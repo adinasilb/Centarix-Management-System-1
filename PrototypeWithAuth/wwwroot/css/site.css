@@ -89,6 +89,12 @@ i.fas {
 }
 
 /*MDBootstrap material select*/
+.md-form input[type="text"]:not(.browser-default).valid {
+    border-bottom: 1px solid #db2127 !important;
+    -webkit-box-shadow: 0 1px 0 0 #db2127 !important;
+    box-shadow: 0 1px 0 0 #db2127 !important;
+}
+
 [type=checkbox]:checked + label:before {
     border-right: 2px solid white !important;
     border-bottom: 2px solid white !important;

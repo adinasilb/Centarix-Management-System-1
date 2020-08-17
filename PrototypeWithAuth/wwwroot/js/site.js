@@ -4,7 +4,15 @@
 // Write your JavaScript code.
 
 //global Exchange Rate variable (usd --> nis)
-
+jQuery.event.special.touchstart = {
+	setup: function (_, ns, handle) {
+		if (ns.includes("noPreventDefault")) {
+			this.addEventListener("touchstart", handle, { passive: false });
+		} else {
+			this.addEventListener("touchstart", handle, { passive: true });
+		}
+	}
+};
 
 var VatPercentage = .17;
 
@@ -44,11 +52,13 @@ $("#parentlist").change(function () {
 		console.log("ONE");
 
 		$.each(data, function (i, subCategory) {
-			console.log("IN LOOP...");
 			var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 			$("#sublist").append(newitem1);
 		});
+		console.log("about to add new ms");
 		$("#sublist").materialSelect();
+		console.log("added new ms");
+		return false;
 	});
 	return false;
 });
@@ -788,6 +798,7 @@ $.fn.ChangeSubUnitDropdown = function () {
 };
 //change sub sub unit dropdown
 $.fn.ChangeSubSubUnitDropdown = function () {
+	console.log("in change subsubunit dropdown");
 	var selected = $(':selected', $("#Request_SubUnitTypeID"));
 	var selected2 = $(':selected', $("#select-options-Request_SubUnitTypeID"));
 	var optgroup = selected.closest('optgroup').attr('label');
