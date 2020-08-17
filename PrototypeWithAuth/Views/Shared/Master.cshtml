@@ -269,7 +269,7 @@
 
         });
 
-       
+
         $.fn.CallPage = function ($itemurl, $type) {
             console.log("in call page function");
             //delete existing modals
@@ -298,10 +298,10 @@
                     $('#tdconfirmemail').val('');
                     $.fn.OnOpenModalView();
                     AddTempDataMemory();
-                
+
 
                 }
-         
+
             });
         }
         $(".prevent-js-reload").on("click", function (e) {
@@ -435,12 +435,14 @@
             //delete existing modals
             $('.modal').replaceWith('');
             $(".modal-backdrop").remove();
+            $('#loading').show();
             $.ajax({
                 async: true,
                 url: $itemurl,
                 type: 'GET',
                 cache: false,
                 success: function (data) {
+                    $('#loading').hide();
                     console.log("success!");
                     var modal = $(data);
                     $('body').append(modal);
@@ -509,7 +511,7 @@
                 //    console.log("ajax call went wrong:" /*+ request.responseText*/);
                 //}
             });
-            $("#loading").hide();
+            //$("#loading").hide();
         }
 
         $.fn.OnOpenModalView = function () {
@@ -776,7 +778,7 @@
 
         });
 
-  
+
 
         $("#openNotifications").click(function () {
             $('[data-toggle="popover"]').popover('dispose');
