@@ -25,6 +25,7 @@ $(".file-select").on("change", function (e) {
 	console.log("formData : " + formData);
 	//console.log("data : " + model);
 
+
 	$.ajax({
 		url: url,
 		method: 'POST',
