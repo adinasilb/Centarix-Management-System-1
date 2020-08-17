@@ -27,57 +27,29 @@ jQuery.fn.extend({
 //modal adjust scrollability/height
 //$("#myModal").modal('handleUpdate');
 
-//var firsttime = 0;
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#parentlist").change(function () {
-	//$("#sublist-div").empty();
 	console.log("in parent list");
 	var parentCategoryId = $("#parentlist").val();
 	console.log("parentcategoryid: " + parentCategoryId);
 	var url = "/Requests/GetSubCategoryList";
 	console.log("url: " + url);
 
-	//for material select
-	var sublist = $("#sublist");
-	console.log("sublist: " + sublist);
-
 	$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
 		console.log("in getjson");
-		var firstitem = '<li class="active " role="option" aria-selected="true" aria-disabled="false" value=""><span class="filtrable "> Select Subcategory </span></li>';
-		//console.log("item: " + item);
-		//the following lines are for material select
-		//sublist.material_select('destroy');
-		//sublist.materialSelect({ destroy: true });
-		//sublist.empty();
-		//console.log("emptied sublist");
-		//$(".mdb-select-sublist").materialSelect({ destroy: true });
-		$(".mdb-select-sublist").empty();
-		$(".mdb-select-sublist").append(firstitem);
-		//if (firstime == 0) {
-		//$(".mdb-select-sublist").first().hide();
-		//}
+		var firstitem1 = '<option value=""> Select Subcategory</option>';
+		$("#sublist").empty();
+		$("#sublist").append(firstitem1);
 		console.log("ONE");
 
 		$.each(data, function (i, subCategory) {
 			console.log("IN LOOP...");
-			//item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 			var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
-			var newitem2 = '<span class="filtrable ">' + subCategory.productSubcategoryDescription + '</span>';
-			var newitem = '<li class=" " role="option" aria-selected="false" aria-disabled="false" value="' + subCategory.productSubcategoryID + '"><span class="filtrable ">' + subCategory.productSubcategoryDescription + ' </span></li>';
-			$(".mdb-select-sublist").append(newitem);
+			$("#sublist").append(newitem1);
 		});
-		//var sublistdata = '<div class="mdb-select mdb-select-sublist md-form  colorful-select dropdown-primary" id="sublist">';
-		//sublistdata += '<ul id="select-options-vendorList" class="dropdown-content select-dropdown w-100">'
-		//sublistdata += item;
-		//sublistdata += '</select ></div > ';
-		//console.log("item: " + item);
-		//$("#sublist-div").html(sublistdata);
-		//sublist = 
-		//sublist.html(item);
-		//$(".mdb-select-sublist").materialSelect();
+		$("#sublist").materialSelect();
 	});
-	//firsttime++;
 	return false;
 });
 
@@ -90,13 +62,12 @@ $(".Project").change(function () {
 	$.getJSON(url, { ProjectID: projectId }, function (data) {
 		var item = "<option value=''>Select Sub Project</option>";
 		$("#SubProject").empty();
-		$(".SubProject .mdb-select").materialSelect({ destroy: true });
-		$(".SubProject .mdb-select").materialSelect();
+		$("#SubProject").append(item);
 		$.each(data, function (i, subproject) {
-			item += '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
+			item = '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
+			$("#SubProject").append(item);
 		});
-		console.log("item: ---------------" + item);
-		$("#SubProject").html(item);
+		$("#SubProject").materialSelect();
 	});
 
 });
