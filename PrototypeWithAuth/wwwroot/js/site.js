@@ -1767,10 +1767,6 @@ $.fn.validatePriceTab = function () {
 	}
 	return valid;
 }
-$("#profile-img").click(function () {
-	$("#logout-form").toggle();
-});
-
 
 $(".create-user .permissions-tab").on("click", function () {
 	console.log("permissions tab opened");
