@@ -56,7 +56,6 @@
                             <div class="container-fluid div-tabs text-center">
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                     <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#comments"  class="nav-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
@@ -93,42 +92,7 @@
             "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist" })
                                             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
                                         </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label class="control-label">Project:</label>
-                                            @Html.DropDownListFor(
-                                                vm => vm.Request.SubProject.ProjectID,
-                                                new SelectList(
-                                                    Model.Projects,
-                                                    "ProjectID",
-                                                    "ProjectDescription"
-                                                    ),
-                                                "Select Project",
-                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary Project" }
-                                            )
-                                            <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br />
-                                <div class="row">
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label class="control-label">Sub Project:</label>
-                                            @Html.DropDownListFor(
-                                                vm => vm.Request.SubProjectID,
-                                                new SelectList(
-                                                    Model.SubProjects,
-                                                    "SubProjectID",
-                                                    "SubProjectDescription"
-                                                    ),
-                                                "Select Sub Project",
-                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary SubProject", @id = "SubProject" }
-                                            )
-                                            <span asp-validation-for="Request.SubProjectID" class="text-danger"></span>
-                                        </div>
-                                    </div>
+                                    </div> 
                                     <div class="col-4 px-4">
                                         <div class="form-group">
                                             <label asp-for="Request.Product.Vendor" class="control-label"></label>
@@ -144,6 +108,10 @@
                                             <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
                                         </div>
                                     </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    
                                     <div class="col-4">
                                         <div class="form-group">
                                             @* IN MIDDLE *@
@@ -173,7 +141,7 @@
                                     <br />
                                 }
 
-                                <div class="row">
+                            @*    <div class="row">
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
                                         <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
@@ -184,7 +152,7 @@
                                         <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
                                         <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger quote-date" />
                                     </div>
-                                </div>
+                                </div>*@
                                 <br />
                                 <div class="row">
                                     <div class="col-6">
@@ -326,126 +294,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br />
-                                <div class="row" id="edit">
-                                    <div class="col-4 RequestUnitCard">
-                                        <div class="border p-3">
-                                            <div class="row">
-                                                <div class="col-md-6 form-group">
-                                                    <label asp-for="Request.Unit" class="control-label"></label>
-                                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" min="1" />
-                                                    <span asp-validation-for="Request.Unit" class="text-danger"></span>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label asp-for="Request.UnitType" class="control-label"></label>
-                                                        @Html.DropDownListFor(
-        vm => vm.Request.UnitTypeID,
-        Model.UnitTypeList,
-        "",
-        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
-        )
-                                                        <span asp-validation-for="Request.UnitType" class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">Price:</label>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">&#36;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="unit-price-dollars" id="unit-price-dollars" disabled />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">&#x20aa;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="unit-price-shekel" id="unit-price-shekel" disabled />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4 pl-0 RequestSubunitCard">
-                                        <div class="border p-3">
-                                            <div class="row">
-                                                <div class="col-md-6 form-group">
-                                                    <label asp-for="Request.SubUnit" class="control-label"></label>
-                                                    <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                    <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
-                                                </div>
-                                                <div class="col-md-6 form-group">
-                                                    <label asp-for="Request.SubUnitType" class="control-label"></label>
-                                                    @Html.DropDownListFor(
-                 vm => vm.Request.SubUnitTypeID,
-                 Model.UnitTypeList,
-                 "",
-                 htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
-             )
-                                                    <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">Price:</label>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">&#36;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" disabled />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">&#x20aa;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4 pl-0 RequestSubsubunitCard">
-                                        <div class="border p-3">
-                                            <div class="row">
-                                                <div class="col-md-6 form-group">
-                                                    <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                                    <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
-                                                </div>
-                                                <div class="col-md-6 form-group">
-                                                    <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
-                                                    @Html.DropDownListFor(
-                                                        vm => vm.Request.SubSubUnitTypeID,
-                                                        Model.UnitTypeList,
-                                                        "",
-                                                        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
-                                                        )
-                                                    <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">Price:</label>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">&#36;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">&#x20aa;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br />
+                               <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
