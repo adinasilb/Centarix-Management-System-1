@@ -528,7 +528,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                             <span style="font-size: 1.7em;">Documents</span>
 
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         var filterClass = "";
                                         filterClass = "";
@@ -538,7 +538,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()">
-                                        <div class="card document-border">
+                                        <div class="card document-border" style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
@@ -546,7 +546,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     </a>
                                     <label class="control-label text-center" style="width:100%; line-height:2.5;">Info</label>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         filterClass = "";
                                         if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
@@ -555,7 +555,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()">
-                                        <div class="card document-border">
+                                        <div class="card document-border" style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>

@@ -536,7 +536,7 @@
 
 
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         var filterClass = "";
                                         if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
@@ -545,7 +545,7 @@
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
-                                        <div class="card document-border ">
+                                        <div class="card document-border " style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/order_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
@@ -554,7 +554,7 @@
                                     </a>
                                     <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         filterClass = "";
                                         if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
@@ -563,7 +563,7 @@
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@true">
-                                        <div class="card document-border">
+                                        <div class="card document-border" style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
@@ -572,7 +572,7 @@
                                     </a>
                                     <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         filterClass = "";
                                         if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
@@ -581,7 +581,7 @@
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@true">
-                                        <div class="card document-border">
+                                        <div class="card document-border" style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/shipment_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
@@ -590,7 +590,7 @@
                                     </a>
                                     <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         filterClass = "";
                                         if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
@@ -599,7 +599,7 @@
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
-                                        <div class="card document-border">
+                                        <div class="card document-border" style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
@@ -624,7 +624,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         filterClass = "";
                                         if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
@@ -633,7 +633,7 @@
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
-                                        <div class="card document-border">
+                                        <div class="card document-border" style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
@@ -641,7 +641,7 @@
                                     </a>
                                     <label class="control-label text-center" style="width:100%; line-height:2.5;">Info</label>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         filterClass = "";
                                         if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
@@ -650,7 +650,7 @@
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
-                                        <div class="card document-border">
+                                        <div class="card document-border" style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
@@ -658,7 +658,7 @@
                                     </a>
                                     <label class="control-label text-center" style="width:100%; line-height:2.5;">Picture</label>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         filterClass = "";
                                         if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
@@ -667,7 +667,7 @@
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
-                                        <div class="card document-border">
+                                        <div class="card document-border" style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
@@ -675,7 +675,7 @@
                                     </a>
                                     <label class="control-label text-center" style="width:100%; line-height:2.5;">Return</label>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-4">
                                     @{
                                         filterClass = "";
                                         if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
@@ -684,7 +684,7 @@
                                         }
                                     }
                                     <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
-                                        <div class="card document-border">
+                                        <div class="card document-border" style="height:86%">
                                             <div class="card-body text-center" style="height:150px;">
                                                 <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                             </div>
