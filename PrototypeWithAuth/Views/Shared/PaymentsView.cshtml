@@ -1,21 +1,35 @@
-﻿@{
+﻿@using PrototypeWithAuth.AppData
+@{
     Layout = "~/Views/Shared/PaymentView.cshtml";
+
 
     var allClasses = "nav-item my-4 sidebar-customization acc-sidebar";
     var activeClass = " active";
-    var toPayClass = allClasses;
-    var payNowClass = allClasses;
+    var mpClass = allClasses;
+    var pnClass = allClasses;
+    var plClass = allClasses;
+    var inClass = allClasses;
+    var soClass = allClasses;
 
     if (TempData["Action"] != null)
     {
-        var PageType = TempData["Action"].ToString();
+        var PageType = TempData["Action"];
         switch (PageType)
         {
-            case "ToPay":
-                toPayClass += activeClass;
+            case AppUtility.AccountingPaymentsEnum.MonthlyPayment:
+                mpClass += activeClass;
                 break;
-            case "PayNow":
-                payNowClass += activeClass;
+            case AppUtility.AccountingPaymentsEnum.PayNow:
+                pnClass += activeClass;
+                break;
+            case AppUtility.AccountingPaymentsEnum.PayLater:
+                plClass += activeClass;
+                break;
+            case AppUtility.AccountingPaymentsEnum.Installments:
+                inClass += activeClass;
+                break;
+            case AppUtility.AccountingPaymentsEnum.StandingOrders:
+                soClass += activeClass;
                 break;
 
         }
@@ -26,12 +40,37 @@
 
     <div style="min-width: 110px; min-height:100rem; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar ">
         <ul style="position:fixed;" class="nav flex-column nav-pills nav-stacked mb-lg-3 mt-4">
-            <li class="@toPayClass">
-                <a href="@Url.Action("Payments", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.PaymentsEnum.ToPay })" class="bold-hover-effects"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br />Monthly Payment</a>
+            <li class="@mpClass">
+                <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.MonthlyPayment })" class="bold-hover-effects">
+                    <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i>
+                    <br />Monthly Payment
+                    <br />[#]
+                </a>
             </li>
 
-            <li class="@payNowClass">
-                <a href="@Url.Action("Payments", "ParentRequests" , new { id = PrototypeWithAuth.AppData.AppUtility.PaymentsEnum.PayNow })" class="bold-hover-effects"> <i class="icon-payment-24px" style="font-size:1.6rem;"></i><br /> Pay Now <br /></a>
+            <li class="@pnClass">
+                <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.PayNow })" class="bold-hover-effects">
+                    <i class="icon-payment-24px" style="font-size:1.6rem;"></i>
+                    <br /> Pay Now <br />[#]
+                </a>
+            </li>
+            <li class="@plClass">
+                <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.PayLater })" class="bold-hover-effects">
+                    <i class="icon-payment-24px" style="font-size:1.6rem;"></i>
+                    <br /> Pay Later <br />[#]
+                </a>
+            </li>
+            <li class="@inClass">
+                <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.Installments })" class="bold-hover-effects">
+                    <i class="icon-payment-24px" style="font-size:1.6rem;"></i>
+                    <br /> Installments <br />[#]
+                </a>
+            </li>
+            <li class="@soClass">
+                <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.StandingOrders })" class="bold-hover-effects">
+                    <i class="icon-payment-24px" style="font-size:1.6rem;"></i>
+                    <br /> Standing Orders <br />[#]
+                </a>
             </li>
         </ul>
     </div>

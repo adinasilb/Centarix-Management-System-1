@@ -1,0 +1,23 @@
+﻿@model PrototypeWithAuth.ViewModels.AccountingPaymentsViewModel
+@{
+    ViewData["Title"] = "AccountingPayments";
+    Layout = "~/Views/Shared/PaymentsView.cshtml";
+}
+
+<table class="table table-headerspaced table-borderless table-hover">
+    <thead>
+        <tr style="border-color:transparent;">
+            <th colspan="8" style="border-color:transparent;" class="pt-2">
+                <h5>
+                    <strong>@Model.AccountingPaymentsEnum</strong> &nbsp; [#]
+                    @{
+                        var totalCost = 0;
+                        var decCost = (decimal)totalCost;
+                        var formattedTotalCost = decCost.ToString("C02");
+                    }
+                    <span>&emsp; Total: </span><span>@formattedTotalCost</span>
+                </h5>
+            </th>
+        </tr>
+    </thead>
+</table>

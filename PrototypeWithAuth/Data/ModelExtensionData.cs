@@ -819,7 +819,7 @@ namespace PrototypeWithAuth.Data
                 {
                     menuID = 5,
                     MenuDescription = AppUtility.MenuItems.TimeKeeper.ToString(),
-                    MenuViewName = "TimeKeeper",
+                    MenuViewName = "Time Keeper",
                     ControllerName = "",
                     ActionName = "",
                     MenuImageURL = "/images/css/main_menu_icons/timekeeper.png"
@@ -838,8 +838,8 @@ namespace PrototypeWithAuth.Data
                     menuID = 7,
                     MenuDescription = AppUtility.MenuItems.Accounting.ToString(),
                     MenuViewName = "Accounting",
-                    ControllerName = "ParentRequests",
-                    ActionName = "Payments",
+                    ControllerName = "Requests",
+                    ActionName = "AccountingPayments",
                     MenuImageURL = "/images/css/main_menu_icons/accounting.png"
                 },
                 new Menu
