@@ -55,7 +55,7 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav dropdown-menu-md-left  " style="font-size:1.25rem;  ">
                 <li class="nav-item mx-4 d-table">
-                    @Html.ActionLink("Payments", "Payments", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Payments }, new { @class = paymentClass })
+                    @Html.ActionLink("Payments", "AccountingPayments", "ParentRequests", new { @accountingPaymentsEnum=AppUtility.AccountingPaymentsEnum.MonthlyPayment }, new { @class = paymentClass })
                 </li>
                 <li class="nav-item mx-5">
                     @Html.ActionLink("Notifications", "Notifications", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = notificationsClass })

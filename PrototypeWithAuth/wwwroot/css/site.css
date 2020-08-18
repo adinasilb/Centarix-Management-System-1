@@ -455,7 +455,7 @@ input.select-dropdown {
     padding: 0.56rem 1.5rem;
     font-size: 1.125rem;
     line-height: 1.5;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
     .cancel-button:hover {
@@ -471,7 +471,7 @@ input.select-dropdown {
     padding: 0.56rem 1.5rem;
     font-size: 1.125rem;
     line-height: 1.5;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
     .inv-button:hover, inv-user-button:hover {
@@ -526,7 +526,7 @@ input.select-dropdown {
     padding: 0.56rem 1.5rem;
     font-size: 1.125rem;
     line-height: 1.5;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 .inv-lab-button-submit {
     background-color: var(--lab-man-color);
@@ -537,7 +537,7 @@ input.select-dropdown {
     padding: 0.56rem 1.5rem;
     font-size: 1.5625rem;
     line-height: 1.5;
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 }
 
 .quote-lab-button {
@@ -560,7 +560,7 @@ input.select-dropdown {
     padding: 0.56rem 1.5rem;
     font-size: 1.125rem;
     line-height: 1.5;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
     .inv-user-button.disabled-submit {
@@ -590,7 +590,7 @@ input.select-dropdown {
     /*padding: 0.56rem 1.5rem;*/
     /*font-size: 1.125rem;*/
     line-height: 1.5;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     margin: 1em 0;
     height: 2.5em;
 }

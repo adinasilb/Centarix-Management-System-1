@@ -534,6 +534,11 @@
                         <div id="documents" class="tab-pane fade">
                             <span style="font-size: 1.7em;">Documents</span>
 
+                            @{ 
+                                var urlAction = Url.Action("DocumentsModal", "Requests");
+                            }
+
+                            <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" />
 
                             <div class="row">
                                 <div class="col-md-3 mb-4">
@@ -605,19 +610,19 @@
                                             </div>
 
                                             @*<div class="card-footer">
-                                <div class="custom-file text-center">
-                                    <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                    <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                    @if (boolQuote)
-                                    {
-                                        <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
-                                    }
-                                    else
-                                    {
-                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                    }
-                                </div>
-                            </div>*@
+                            <div class="custom-file text-center">
+                                <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                @if (boolQuote)
+                                {
+                                    <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
+                                }
+                                else
+                                {
+                                    <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                }
+                            </div>
+                        </div>*@
                                         </div>
                                     </a>
                                     <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>

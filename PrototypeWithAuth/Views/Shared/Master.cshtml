@@ -64,6 +64,10 @@
 </head>
 
 <body style="display:none">
+
+    <div class="center" role="status" id="loading" style="display:none;">
+        <img src="~/images/css/Loading/centarix_loading3.gif" />
+    </div>
     @RenderBody()
 
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -236,9 +240,7 @@
             });
             $('#dtBasicExample').DataTable();
             $('.dataTables_length').addClass('bs-select');
-            console.log("before mdb select 1");
             $('.mdb-select').materialSelect();
-            console.log("after mdb select 1");
             $('.datepicker').pickadate();
             $('#request-search a:first').tab('show'); @* I had to put this in here b / c otherwise it wasn't coming up on .search-link.click*@
             $('.edit-user a:first').tab('show');
@@ -262,8 +264,7 @@
             console.log("tdconfirm email .val() = 'true'");
             $("#tdconfirmemail").hide();
                  var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
-            console.log("itemurl: " + $itemurl);
-            $("#loading").show();
+            //$("#loading").show();
             $.fn.CallPage($itemurl, "confirmemail");
         }
 
@@ -282,7 +283,7 @@
                 cache: true,
                 success: function (data) {
                     $("#loading").hide();
-                    console.log("success!");
+                    //console.log("success!");
                     var modal = $(data);
                     $('body').append(modal);
                     //replaces the modal-view class with the ModalView view
@@ -464,44 +465,35 @@
                     //$(".modal").popover('hide')
                     switch ($type) {
                         case "details":
-                            console.log('case "details":');
                             $.fn.OnOpenModalView();
                             AddTempDataMemory();
                             break;
                         case "edit":
-                            console.log('case "edit":');
                             $.fn.OnOpenModalView();
                             AddTempDataMemory();
                             break;
                         case "reorder":
-                            console.log('case "reorder":');
                             $.fn.OnOpenModalView();
                             AddTempDataMemory();
                             $("#Request_Cost").trigger('change');
                             break;
                         case "create":
-                            console.log('case "create":');
                             $.fn.OnOpenModalView();
                             AddTempDataMemory();
                             break;
                         case "received":
-                            console.log('case "received":');
                             AddTempDataMemory();
                             break;
                         case "confirmemail":
-                            console.log('case "confirmemail":');
                             AddTempDataMemory();
                             break;
                         case "delete":
-                            console.log('case "delete":');
                             AddTempDataMemory();
                             break;
                         case "quote":
-                            console.log('case "quote":');
                             AddTempDataMemory();
                             break;
                         case "orderlate":
-                            console.log('case "orderlate":');
                             AddTempDataMemory();
                             break;
                     }
@@ -515,9 +507,7 @@
         }
 
         $.fn.OnOpenModalView = function () {
-            console.log("before mdb select 2");
             $('.mdb-select').materialSelect();
-            console.log("after mdb select 2");
             $('.modal-content a:first').tab('show');
             var parentCategoryId = $("#parentlist").val();
             var subcategoryId1 = $("#sublist").val();
@@ -626,7 +616,6 @@
         });
 
         $.fn.CallPageUser = function ($itemurl) {
-            console.log("in call page function");
             //delete existing modals
             $('.modal').replaceWith('');
             $(".modal-backdrop").remove();
@@ -637,7 +626,7 @@
                 cache: true,
                 success: function (data) {
                     //$("#loading").hide();
-                    console.log("success!");
+                    //console.log("success!");
                     var modal = $(data);
                     $('body').append(modal);
                     $(".modal-view").modal({
@@ -856,7 +845,7 @@
                 type: 'GET',
                 cache: false,
                 success: function (data) {
-                    console.log("success!");
+                    //console.log("success!");
                     //replaces the modal-view class with the ModalView view
                     $modal.html(data);
                     //turn off data dismiss by clicking out of the box and by pressing esc
