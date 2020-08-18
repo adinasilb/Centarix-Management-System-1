@@ -1158,12 +1158,13 @@ $(".open-document-modal").on("click", function (e) {
 $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
 	console.log("in open doc modal");
 	$("#documentsModal").replaceWith('');
-	var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;
-	console.log("urltogo: " + urlToGo);
+	var urltogo = $("#documentSubmit").attr("href");
+	//var urlToGo = @Url.Action("Requests", "DocumentsModal", new { id = requestId, RequestFolderNameEnum = enumString, IsEdittable = isEdittable }) /* "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
+	console.log("urltogo: " + urltogo);
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: urlToGo,
+		url: urltogo,
 		type: 'GET',
 		cache: false,
 		success: function (data) {
