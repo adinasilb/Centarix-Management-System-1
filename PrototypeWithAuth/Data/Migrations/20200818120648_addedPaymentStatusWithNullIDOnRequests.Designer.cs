@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200818120648_addedPaymentStatusWithNullIDOnRequests")]
+    partial class addedPaymentStatusWithNullIDOnRequests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -700,28 +702,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("PaymentStatusID");
 
                     b.ToTable("PaymentStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            PaymentStatusID = 1,
-                            PaymentStatusDescription = "None"
-                        },
-                        new
-                        {
-                            PaymentStatusID = 2,
-                            PaymentStatusDescription = "Pay Now"
-                        },
-                        new
-                        {
-                            PaymentStatusID = 3,
-                            PaymentStatusDescription = "Installments"
-                        },
-                        new
-                        {
-                            PaymentStatusID = 4,
-                            PaymentStatusDescription = "Paid"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.PaymentType", b =>

@@ -3177,7 +3177,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
                 .ToLookup(r => r.Product.Vendor);
                     break;
             }

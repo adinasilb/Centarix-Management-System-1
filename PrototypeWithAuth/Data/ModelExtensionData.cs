@@ -14,6 +14,28 @@ namespace PrototypeWithAuth.Data
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<PaymentStatus>().HasData(
+                new PaymentStatus
+                {
+                    PaymentStatusID = 1,
+                    PaymentStatusDescription = "None"
+                },
+                new PaymentStatus
+                {
+                    PaymentStatusID = 2,
+                    PaymentStatusDescription = "Pay Now"
+                },
+                new PaymentStatus
+                {
+                    PaymentStatusID = 3,
+                    PaymentStatusDescription = "Installments"
+                },
+                new PaymentStatus
+                {
+                    PaymentStatusID = 4,
+                    PaymentStatusDescription = "Paid"
+                }
+            );
 
             modelBuilder.Entity<CategoryType>().HasData(
                 new CategoryType
@@ -894,7 +916,7 @@ namespace PrototypeWithAuth.Data
                   new QuoteStatus
                   {
                       QuoteStatusID = 4,
-                      QuoteStatusDescription = "QuoteRecieved" 
+                      QuoteStatusDescription = "QuoteRecieved"
                   }
             );
 

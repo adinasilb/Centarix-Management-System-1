@@ -81,6 +81,10 @@
     <Compile Remove="Data\Migrations\20200812121147_ApplicationUserIenumerableForRequestsReceiver.Designer.cs" />
     <Compile Remove="Data\Migrations\20200817072714_addUserToRequests.cs" />
     <Compile Remove="Data\Migrations\20200817072714_addUserToRequests.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200818115847_addedPaymentStatus.cs" />
+    <Compile Remove="Data\Migrations\20200818115847_addedPaymentStatus.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200818120111_addedPaymentStatus.cs" />
+    <Compile Remove="Data\Migrations\20200818120111_addedPaymentStatus.Designer.cs" />
   </ItemGroup>
 
 

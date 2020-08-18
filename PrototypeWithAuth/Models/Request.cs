@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using PrototypeWithAuth.Data;
 using System.ComponentModel.DataAnnotations.Schema;
+using MimeKit.Cryptography;
 
 namespace PrototypeWithAuth.Models
 {
@@ -103,6 +104,10 @@ namespace PrototypeWithAuth.Models
         public bool Paid { get; set; }
         public uint? Installments { get; set; } //number of installments
         public IEnumerable<Payment> Payments { get; set; }
+
+        public int? PaymentStatusID { get; set; }
+        [ForeignKey("PaymentStatusID")]
+        public PaymentStatus PaymentStatus { get; set; }
         //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         //public DateTime DateToBePaid //note until this is changed from negative one 
         //{
