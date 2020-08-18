@@ -19,5 +19,95 @@
                 </h5>
             </th>
         </tr>
+        <tr class="text-center">
+            <td style="width:11.1%;">
+                No
+            </td>
+            <td style="width:11.1%;"></td>
+            <td style="width:11.1%;">
+                Name
+            </td>
+            <td style="width:11.1%">
+                Units
+            </td>
+            <td style="width:11.1%">
+                Price
+            </td>
+            <td style="width:11.1%">
+                Vendor
+            </td>
+            <td style="width:11.1%">
+                Category
+            </td>
+            <td style="width:11.1%">
+                Date
+            </td>
+            <td style="width:11.1%">
+            </td>
+        </tr>
     </thead>
 </table>
+@foreach (var Vendor in Model.Requests)
+{
+    <div class="mt-5 mr-5">
+        <div class=" row text-dark ">
+            <div class="col-2"><h5>@Vendor.Key.VendorEnName</h5></div>
+            <div class="col-10"><hr /></div>
+        </div>
+        <table class="table table-headerspaced table-borderless table-hover mt-3 ">
+            <tbody>
+                @foreach (var Request in Vendor)
+                {
+                <tr class="text-center">
+                    <td class="text-center" style="width:11.1%;">
+                        <div class="form-check text-center">
+                            <input type="checkbox" class="form-check-input" id="@Request.RequestID" /><br />
+                            <label for="@Request.RequestID" class="form-check-label pl-0" style="margin-left: -1.7rem">
+                                @Html.DisplayFor(modelItem => Request.RequestID)
+                            </label>
+                        </div>
+                    </td>
+                    <td style="width:11.1%;">
+                        @if (Request.Product.ProductSubcategory.ImageURL != null)
+                        {
+                            var imageurl = Request.Product.ProductSubcategory.ImageURL;
+                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                        }
+                    </td>
+                    <td style="width:11.1%;">
+                        @Request.Product.ProductName
+                    </td>
+                    <td style="width:11.1%">
+                        @Request.Unit @if (Request.UnitType != null)
+                        {@Request.UnitType.UnitTypeDescription<br />}
+                        @Request.SubUnit @if (Request.SubUnitType != null)
+                        {@Request.SubUnitType.UnitTypeDescription<br />}
+                        @Request.SubSubUnit @if (Request.SubSubUnitType != null)
+                        {@Request.SubSubUnitType.UnitTypeDescription<br />}
+                    </td>
+                    <td style="width:11.1%">
+                        @{
+                            var requestCost = Request.Cost;
+                            var decRequestCost = (decimal)requestCost;
+                            var formattedRequestCost = decRequestCost.ToString("C02");
+                        }
+                        @formattedRequestCost
+                    </td>
+                    <td style="width:11.1%">
+                        @Vendor.Key.VendorEnName
+                    </td>
+                    <td style="width:11.1%">
+                        @Request.Product.ProductSubcategory.ProductSubcategoryDescription
+                    </td>
+                    <td style="width:11.1%">
+                        @Request.CreationDate
+                    </td>
+                    <td style="width:11.1%">
+                        **
+                    </td>
+                </tr>
+            }
+                </tbody>
+            </table>
+    </div>
+}

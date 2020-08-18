@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     public class AccountingPaymentsViewModel
     {
         public AppUtility.AccountingPaymentsEnum AccountingPaymentsEnum { get; set; }
+        public ILookup<Vendor, Request> Requests { get; set; }
     }
 }

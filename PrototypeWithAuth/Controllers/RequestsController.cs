@@ -2356,7 +2356,7 @@ namespace PrototypeWithAuth.Controllers
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r=>r.ApplicationUserCreator)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator)
                 .ToLookup(r => r.Product.Vendor);
             TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
             TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Orders;
@@ -3128,22 +3128,63 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["Action"] = accountingPaymentsEnum;
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Payments;
+            ILookup<Vendor, Request> requests = _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.Installments < 2)
+                .ToLookup(r => r.Product.Vendor);
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.AccountingPaymentsEnum.MonthlyPayment:
+                    requests = _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.Paid == false)
+                .ToLookup(r => r.Product.Vendor);
                     break;
                 case AppUtility.AccountingPaymentsEnum.PayNow:
+                    requests = _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .ToLookup(r => r.Product.Vendor);
                     break;
                 case AppUtility.AccountingPaymentsEnum.PayLater:
+                    requests = _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .ToLookup(r => r.Product.Vendor);
                     break;
                 case AppUtility.AccountingPaymentsEnum.Installments:
+                    requests = _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.Paid == false)
+                .Where(r => r.Installments > 2)
+                .ToLookup(r => r.Product.Vendor);
                     break;
                 case AppUtility.AccountingPaymentsEnum.StandingOrders:
+                    requests = _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .ToLookup(r => r.Product.Vendor);
                     break;
             }
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
             {
-                AccountingPaymentsEnum = accountingPaymentsEnum
+                AccountingPaymentsEnum = accountingPaymentsEnum,
+                Requests = requests
             };
             return View(accountingPaymentsViewModel);
         }
