@@ -7,7 +7,7 @@
 $(".file-select").on("change", function (e) {
 	e.preventDefault();
 	e.stopPropagation();
-	console.log("upload file clicked");
+	console.log("upload file submitted");
 
 	var inputButton = $('input[type="submit"]');
 
@@ -16,6 +16,7 @@ $(".file-select").on("change", function (e) {
 	//console.log("form: " + $form);
 	//$(this).ajaxSubmit();
 	//var url = $("#documentModalForm").data('string');
+	console.log("input button: " + inputButton);
 	var url = inputButton.attr("href");
 	console.log("url : " + url);
 	var formData = new FormData($("#documentModalForm")[0]);
