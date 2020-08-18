@@ -2341,7 +2341,7 @@ namespace PrototypeWithAuth.Controllers
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.ParentQuote)
+                .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator)
                 .ToLookup(r => r.Product.Vendor);
             TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
             TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Quotes;
@@ -2355,7 +2355,7 @@ namespace PrototypeWithAuth.Controllers
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID ==4 && r.RequestStatusID == 6)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r=>r.ApplicationUserCreator)
                 .ToLookup(r => r.Product.Vendor);
             TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
             TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Orders;
