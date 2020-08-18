@@ -1,0 +1,163 @@
+﻿@model PrototypeWithAuth.ViewModels.EditQuoteDetailsViewModel
+@using PrototypeWithAuth.AppData
+
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+
+    <div class="modal-dialog reorder-modal  modal-lg " style="min-width:1300PX !important" role="document">
+
+        <div class="modal-content d-inline-block" style="border-radius:2rem;">
+
+            <form action="" method="post" id="reorderForm" enctype="multipart/form-data" style="height: 100%;">
+                <div class="text-right mr-5 mt-4">
+                    <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close" style="font-size:2.5rem; font-weight:400;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                @*
+        NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+            they need the hiddenfors that are right underneath it
+                *@
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <!-- Modal Header -->
+                <div class="new-modal-header no-box-shadow" style="padding: 0.5em 6em">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                        <br />
+                    }
+
+                    <div class="form-group mb-3 ">
+                        <div class="row">
+                            <div class="col-2">
+                                <h4><strong>Update Quote</strong></h4>
+                            </div>
+                            <div class="col-4">
+                                <h4>@Model.Vendor.VendorEnName</h4>
+                            </div>
+                            <input type="hidden" asp-for="@Model.Vendor.VendorID" />
+                            <input type="hidden" asp-for="@Model.ParentQuoteID" />
+                            <div class="col-3">
+                                <div class="form-group d-inline-flex">
+                                    <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
+                                    <span asp-validation-for="@Model.QuoteNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-3">
+                                <div class="form-group d-inline-flex">
+                                    <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
+                                    <span asp-validation-for="@Model.QuoteDate" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <hr class="col-12" />
+                        </div>
+                        <table class="table table-headerspaced table-borderless mb-5">
+                            <thead>
+                                <tr>
+                                    <td class="pb-0" width="15%"></td>
+                                    <td class="pb-0" style="width:15%;">
+                                        Name
+                                    </td>
+                                    <td class="pb-0" style="width:15%;">
+                                        Units
+                                    </td>
+                                    <td class="pb-0" style="width:15%">
+                                        TotalPrice
+                                    </td>
+                                    <td class="pb-0" style="width:15%">
+                                        Expected Supply Days
+                                    </td>
+                                    <td class="pb-0" style="width:15%">
+                                        Expected Supply Date
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @for (int i = 0; i < Model.Reorders.Count(); i++)
+                                {
+                                    @Html.HiddenFor(model => Model.Reorders[i].RequestID)
+                                    <tr class="">
+                                        <td class="" width="15%">
+                                            <input type="hidden" asp-for="@Model.Reorders[i].RequestID" />                                           
+                                            @if (Model.Reorders[i].Product.ProductSubcategory.ImageURL != null)
+                                            {
+                                                var imageurl = Model.Reorders[i].Product.ProductSubcategory.ImageURL;
+                                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                                            }
+                                        </td>
+                                        <td width="15%">
+                                            @Model.Reorders[i].Product.Vendor.VendorEnName
+                                        </td>
+                                        <td width="15%">
+                                            @Model.Reorders[i].Unit &nbsp;@Model.Reorders[i].UnitType.UnitTypeDescription
+                                            @if (Model.Reorders[i].SubUnitType != null)
+                                            {
+                                                <br />
+                                                @Model.Reorders[i].SubUnit @Model.Reorders[i].SubUnitType.UnitTypeDescription
+                                                @if (Model.Reorders[i].SubSubUnitType != null)
+                                                {
+                                                    <br />@Model.Reorders[i].SubSubUnit @Model.Reorders[i].SubSubUnitType.UnitTypeDescription
+                                                }
+                                            }
+                                        </td>
+                                        <td width="15%">
+                                            <div class="form-group">
+                                                <input asp-for="@Model.Reorders[i].Cost" class="form-control-plaintext border-bottom align-with-select" min="1" />
+                                                <span asp-validation-for="@Model.Reorders[i].Cost" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="form-group">
+                                                <input asp-for="@Model.Reorders[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom align-with-select   expected-supply-days" min="1" />
+                                                <span asp-validation-for="@Model.Reorders[i].ExpectedSupplyDays" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="form-group">
+                                                <input value="00-00-0000" class="form-control-plaintext border-bottom datepicker" type="date" name="expected-supply-days" id="expected-supply-date" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr class="border-0 mb-3 no-hover">
+                                    <td colspan="4">
+                                        <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1" accept=".pdf" required>
+                                    </td>
+                                    <td colspan="3">
+                                        <div class="form-group text-center my-5">
+                                            <input type="submit" asp-action="EditQuoteDetails" name="OrderType" value="Save" class="inv-lab-button mr-3 px-5" />
+                                            <button type="button" class="cancel-button px-5" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+
+
+@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
+@*This will work for the EDIT (putting in the already loaded product subcategory)*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

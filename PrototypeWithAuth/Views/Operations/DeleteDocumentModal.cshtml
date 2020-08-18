@@ -1,0 +1,39 @@
+﻿@model PrototypeWithAuth.ViewModels.DeleteDocumentsViewModel
+<script src="~/js/DeleteDocModal.js"></script>
+<div class="modal modal-document-delete fader" id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+    <div class="modal-dialog reorder-modal  modal-sm " role="document">
+        <div class="modal-content d-inline-block" style="border-radius:2rem;">
+            <form action="" method="post" id="DeleteDocumentModalForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="RequestID" type="hidden" />
+                <input asp-for="FileName" type="hidden" />
+                <input asp-for="FolderName" type="hidden" />
+                <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-header">
+                    <h4>Delete File</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4 offset-4">
+                                <div class="card document-border m-0">
+                                    <div class="card-body responsive-iframe-container">
+                                        <iframe src="@Model" title="View" class="responsive-iframe" scrolling="no"></iframe>
+
+                                    </div>
+                                    <div class="card-body text-center">
+                                        Are you sure you want to delete?
+                                        <input type="submit" value="Save" href="@Url.Action("DeleteDocumentModal", "Requests")" id="submitDelete" style="display: none;" />
+                                        <button class="inv-button delete-file-perm">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

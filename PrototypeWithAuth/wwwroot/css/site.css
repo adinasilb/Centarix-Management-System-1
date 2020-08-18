@@ -22,6 +22,7 @@ for details on configuring this project to bundle and minify static web assets. 
     --lab-man-filter: brightness(0) saturate(100%) invert(44%) sepia(48%) saturate(220%) hue-rotate(155deg) brightness(96%) contrast(87%);
     --acc-filter: brightness(0) saturate(100%) invert(30%) sepia(32%) saturate(2825%) hue-rotate(237deg) brightness(86%) contrast(102%);
     --users-filter: brightness(0) saturate(100%) invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
+    --operations-filter: brightness(0) saturate(100%) invert(25%) sepia(82%) saturate(1564%) hue-rotate(217deg) brightness(90%) contrast(84%);
 }
 .order-inv-color {
     color: var(--order-inv-color);
@@ -872,8 +873,14 @@ a.bold-hover-effects {
 /*.ourNavBar li a { color: #333 }*/
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     opacity: 1;
-    filter: invert(45%) sepia(99%) saturate(2048%) hue-rotate(185deg) brightness(100%) contrast(91%);
+    filter: var(--order-inv-filter);
     font-weight:500;
+}
+
+.ourNavBar li.activeNavOperLink a, .ourNavBar a.activeNavOperLink, .ourNavBar li button.activeNavOperLink, .container li a.activeNavOperLink {
+    opacity: 1;
+    filter: var(--operations-filter);
+    font-weight: 500;
 }
 
 .ourNavBar li button.add-item-btn.active {

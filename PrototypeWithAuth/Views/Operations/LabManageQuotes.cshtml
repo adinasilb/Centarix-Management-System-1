@@ -1,0 +1,139 @@
+﻿@model PrototypeWithAuth.ViewModels.LabManageQuotesViewModel
+@{
+    ViewData["Title"] = "LabManageQuotes";
+    Layout = "~/Views/Shared/LabManageOrdersSideBar.cshtml";
+}
+
+    <form method="post" enctype="multipart/form-data" style="height: 100%; ">
+
+        @foreach (var vendor in Model.RequestsByVendor)
+        {
+            <input type="hidden" asp-for="@vendor.Key.VendorID" class="key-vendor-id" />
+            <table class="table table-headerspaced table-borderless table-hover mb-5">
+                <thead>
+                    <tr class="text-center">
+                        <td class="pb-0" width="15%"></td>
+                        <td class="pb-0" style="width:10%;">
+                            Item Name
+                        </td>
+                        <td class="pb-0" style="width:10%;">
+                            Vendor
+                        </td>
+                        <td class="pb-0" style="width:10%">
+                            Type
+                        </td>
+                        <td class="pb-0" style="width:10%">
+                            Amount
+                        </td>
+                        <td class="pb-0" style="width:10%">
+                            Price
+                        </td>
+                        <td class="pb-0" style="width:15%">
+                            Requested By
+                        </td>
+                        <td class="pb-0" style="width:7%">
+                        </td>
+                        <td class="pb-0" style="width:13%">
+                        </td>
+                    </tr>
+                </thead>
+                <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
+                    <td width="10%" class="p-0" rowspan="2"><h4><strong>@vendor.Key.VendorEnName</strong></h4></td>
+                    <td colspan="7" class="border-bottom"></td>
+                </tr>
+                <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
+                <tbody>
+                    @foreach (var request in vendor)
+                    {
+                        <tr class="text-center">
+                            <td class="text-center" width="15%">
+                                <input type="hidden" asp-for="@request.RequestID" />
+                                @if (request.Product.ProductSubcategory.ImageURL != null)
+                                {
+                                    var imageurl = request.Product.ProductSubcategory.ImageURL;
+                                    <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                                }
+                            </td>
+                            <td width="10%">
+                                @request.Product.ProductName
+                            </td>
+                            <td width="10%">
+                                @request.Product.Vendor.VendorEnName
+                            </td>
+                            <td>
+                                @request.Product.ProductSubcategory.ProductSubcategoryDescription
+                            </td>
+                            <td width="10%">
+                                @request.Unit @request.UnitType.UnitTypeDescription
+                                @if (request.SubUnitType != null)
+                                {
+                                    @request.SubUnit @request.SubUnitType.UnitTypeDescription
+                                }
+                                @if (request.SubSubUnitType != null)
+                                {
+                                    @request.SubSubUnit @request.SubSubUnitType.UnitTypeDescription
+                                }
+                            </td>
+                            <td width="10%">
+                                @{
+                                    var ItemCost = request.Cost;
+                                    var decItemCost = (decimal)ItemCost;
+                                    var stringItemCost = decItemCost.ToString("C02");
+                                }
+                                @stringItemCost
+                            </td>
+                            <td width="15%">
+                                @request.ApplicationUserCreator.FirstName @request.ApplicationUserCreator.LastName
+                            </td>
+                            <td width="7%">
+                                @if (request.ParentQuote.QuoteStatusID == 2)
+                                {
+                                    <button class="inv-lab-button float-right text-center confirm-quote-resend" value="@request.RequestID">resend</button>
+                                }
+                            </td>
+                            <td width="13%" class="text-right">
+                                <button class="btn no-box-shadow p-0 load-quote-details mr-3" data-title="edit" value="@request.RequestID"> <img src="~/images/css/accounting/icons/payment.png" /></button>
+                                <button class="btn no-box-shadow p-0 mr-5 load-confirm-delete-quote" data-title="delete" value="@request.RequestID"><img src="~/images/css/inventory/add-item/other icons/delete_dis.png" /></button>
+                            </td>
+                        </tr>
+                    }
+                    <tr class="border-0 mb-5 no-hover">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                        </td>
+                        <td>  <h5><strong>Items: @vendor.Count()</strong></h5></td>
+                        <td colspan="2">
+                            @{
+                                var totalCost = vendor.Sum(r => r.Cost);
+                                var decTotalCost = (decimal)totalCost;
+                                var stringTotalCost = decTotalCost.ToString("C02");
+                            }
+                            <h5><strong>Total: @stringTotalCost</strong></h5>
+                        </td>
+
+                        <td>
+                            @if (vendor.Where(r => r.ParentQuote.QuoteStatusID == 1).Count()!=0)
+                            {
+                                <button class="inv-lab-button float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
+                            }
+
+                        </td>
+
+
+
+                    </tr>
+
+                </tbody>
+            </table>
+
+        }
+    </form>
+
+
