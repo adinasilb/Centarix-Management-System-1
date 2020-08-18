@@ -27,6 +27,7 @@ for details on configuring this project to bundle and minify static web assets. 
 .order-inv-color {
     color: var(--order-inv-color);
 }
+
 .order-inv-filter {
     filter: invert(50%) sepia(19%) saturate(6552%) hue-rotate(184deg) brightness(99%) contrast(92%);
 }
@@ -91,9 +92,9 @@ i.fas {
 
 /*MDBootstrap material select*/
 .md-form input[type="text"]:not(.browser-default).valid {
-    border-bottom: 1px solid #db2127 !important;
-    -webkit-box-shadow: 0 1px 0 0 #db2127 !important;
-    box-shadow: 0 1px 0 0 #db2127 !important;
+    border-bottom: 1px solid #db2127 ;
+    -webkit-box-shadow: 0 1px 0 0 #db2127 ;
+    box-shadow: 0 1px 0 0 #db2127 ;
 }
 
 [type=checkbox]:checked + label:before {

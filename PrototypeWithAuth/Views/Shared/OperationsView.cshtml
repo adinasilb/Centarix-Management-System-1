@@ -62,13 +62,13 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; ">
                     <li class="nav-item mx-5 ">
-                        @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link "  })
+                        @Html.ActionLink("Requests", "Index", "Operations", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link "  })
                     </li>
                     <li class="nav-item mx-4 d-table ">
-                        @Html.ActionLink("Full Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
+                        @Html.ActionLink("Full Inventory", "Index", "Operations", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
                     </li>
                     <li class="nav-item mx-5  ">
-                        @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = searchClass, @id = "search-link " /*why is the role and id here?*/ })
+                        @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.Operation }, new { @class = searchClass, @id = "search-link " /*why is the role and id here?*/ })
                     </li>
                 </ul>
             </div>

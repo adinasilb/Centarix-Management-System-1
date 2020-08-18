@@ -824,8 +824,8 @@ namespace PrototypeWithAuth.Data
                     menuID = 3,
                     MenuDescription = AppUtility.MenuItems.Operation.ToString(),
                     MenuViewName = "Operation",
-                    ControllerName = "",
-                    ActionName = "",
+                    ControllerName = "Operations",
+                    ActionName = "Index",
                     MenuImageURL = "/images/css/main_menu_icons/operation.png"
                 },
                 new Menu
