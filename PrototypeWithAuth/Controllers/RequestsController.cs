@@ -3124,10 +3124,23 @@ namespace PrototypeWithAuth.Controllers
          */
 
         [HttpGet]
-        public async Task<IActionResult> AccountingPayments(AppUtility.PaymentsEnum paymentsEnum, AppUtility.AccountingPaymentsEnum accountingPaymentsEnum)
+        public async Task<IActionResult> AccountingPayments(AppUtility.AccountingPaymentsEnum accountingPaymentsEnum)
         {
             TempData["Action"] = accountingPaymentsEnum;
-            TempData["PageType"] = paymentsEnum;
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Payments;
+            switch (accountingPaymentsEnum)
+            {
+                case AppUtility.AccountingPaymentsEnum.MonthlyPayment:
+                    break;
+                case AppUtility.AccountingPaymentsEnum.PayNow:
+                    break;
+                case AppUtility.AccountingPaymentsEnum.PayLater:
+                    break;
+                case AppUtility.AccountingPaymentsEnum.Installments:
+                    break;
+                case AppUtility.AccountingPaymentsEnum.StandingOrders:
+                    break;
+            }
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
             {
                 AccountingPaymentsEnum = accountingPaymentsEnum
