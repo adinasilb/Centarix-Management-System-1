@@ -92,34 +92,36 @@
                                     <span asp-validation-for="Request.ArrivalDate" class="text-danger"></span>
                                 </div>
                                 <div class="col-4">
-                                    <label asp-for="Request.ApplicationUserReceiverID" class="control-label"></label>
-                                    <select asp-for="Request.ApplicationUserReceiverID" class="mdb-select border-bottom">
-                                        @foreach (var user in Model.ApplicationUsers)
-                                        {
-                                            <option value="@user.Id">@user.UserName</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="Request.ApplicationUserReceiverID" class="text-danger"></span>
+                                    <div class="form-group">
+                                        <label class="control-label">Application User Receiver</label>
+                                        <select asp-for="Request.ApplicationUserReceiverID" class="mdb-select border-bottom">
+                                            @foreach (var user in Model.ApplicationUsers)
+                                            {
+                                                <option value="@user.Id">@user.UserName</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Request.ApplicationUserReceiverID" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    @*<div class="col-1 text-center">
+            <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+            <label asp-for="Arrival">Arrival</label>
+        </div>*@
+                                    <div class="col-2 text-center">
+                                        <label asp-for="Clarify">Clarify</label>
+                                        <br />
+                                        <input type="checkbox" asp-for="Clarify" class="bigger-box" />
+                                    </div>
+                                    <div class="col-2 text-center">
+                                        <label asp-for="PartialDelivery">Partial Delivery</label>
+                                        <br />
+                                        <input type="checkbox" asp-for="PartialDelivery" class="bigger-box" />
+                                    </div>
+                                    @*<div class="col-1 text-center">
+            <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+            <label for="test-chkbx">Trial</label>
+        </div>*@
                                 </div>
-                                @*<div class="col-1 text-center">
-                                    <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                                    <label asp-for="Arrival">Arrival</label>
-                                </div>*@
-                                <div class="col-2 text-center">
-                                    <label asp-for="Clarify">Clarify</label>
-                                    <br />
-                                    <input type="checkbox" asp-for="Clarify" class="bigger-box" />
-                                </div>
-                                <div class="col-2 text-center">
-                                    <label asp-for="PartialDelivery">Partial Delivery</label>
-                                    <br />
-                                    <input type="checkbox" asp-for="PartialDelivery" class="bigger-box" />
-                                </div>
-                                @*<div class="col-1 text-center">
-                                    <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                                    <label for="test-chkbx">Trial</label>
-                                </div>*@
-                            </div>
                             <br />
                             <div class="row">
                                 <div class="col-4">
