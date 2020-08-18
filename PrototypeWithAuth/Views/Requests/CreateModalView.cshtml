@@ -534,7 +534,11 @@
                         <div id="documents" class="tab-pane fade">
                             <span style="font-size: 1.7em;">Documents</span>
 
-                            <input type="submit" style="display:none;" id="documentSubmit" href="@Url.Action("DocumentsModal", "Requests")" />
+                            @{ 
+                                var urlAction = Url.Action("DocumentsModal", "Requests");
+                            }
+
+                            <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" />
 
                             <div class="row">
                                 <div class="col-md-3">

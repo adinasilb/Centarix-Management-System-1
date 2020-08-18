@@ -1158,9 +1158,10 @@ $(".open-document-modal").on("click", function (e) {
 $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
 	console.log("in open doc modal");
 	$("#documentsModal").replaceWith('');
-	var urltogo = $("#documentSubmit").attr("href");
-	//var urlToGo = @Url.Action("Requests", "DocumentsModal", new { id = requestId, RequestFolderNameEnum = enumString, IsEdittable = isEdittable }) /* "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
+	var urltogo = $("#documentSubmit").attr("url");
+	//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
 	console.log("urltogo: " + urltogo);
+	urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
