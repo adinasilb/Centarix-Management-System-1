@@ -370,8 +370,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> CreateModalView()
         {
-            var parentcategories = await _context.ParentCategories.ToListAsync();
-            var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 2).ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();
@@ -421,10 +421,10 @@ namespace PrototypeWithAuth.Controllers
             //why do we need this here?
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.Include(ps => ps.ParentCategory).FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
-
             //in case we need to return to the modal view
-            requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
-            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
+            requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
+            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
+
             requestItemViewModel.Projects = await _context.Projects.ToListAsync();
             requestItemViewModel.SubProjects = await _context.SubProjects.ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
@@ -689,8 +689,9 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var parentcategories = await _context.ParentCategories.ToListAsync();
-            var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
+
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
@@ -944,8 +945,8 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var parentcategories = await _context.ParentCategories.ToListAsync();
-            var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
@@ -989,6 +990,7 @@ namespace PrototypeWithAuth.Controllers
                 //     .Include(r => r.ParentRequest)
                     .Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     .ToList();
                 //check if this works once there are commments
                 var comments = Enumerable.Empty<Comment>();
@@ -1421,8 +1423,8 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
             //in case we need to return to the modal view
-            requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
-            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
+            requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID==1).ToListAsync();
+            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
             //redo the unit types when seeded
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
@@ -2988,7 +2990,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Cart;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
             CartViewModel cartViewModel = new CartViewModel();
-            cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 6 && !(r is Reorder))
+            cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 6 && !(r is Reorder)).Where(r=>r.Product.ProductSubcategory.ParentCategory.CategoryTypeID==1)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ApplicationUserCreator)
@@ -3087,31 +3089,10 @@ namespace PrototypeWithAuth.Controllers
                 }
                 return true;
             }
-            else if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
-            {//operational
-                var pricePerUnit = request.Cost / request.Unit;
-                if (pricePerUnit > request.ApplicationUserCreator.OperationUnitLimit)
-                {
-                    return false;
-                }
-                if (request.Cost > request.ApplicationUserCreator.OperaitonOrderLimit)
-                {
-                    return false;
-                }
-
-                var monthsSpending = _context.Requests
-                    .Where(r => request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
-                    .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID)
-                    .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
-                    .Sum(r => r.Cost);
-                if (monthsSpending + request.Cost > request.ApplicationUserCreator.OperationMonthlyLimit)
-                {
-                    return false;
-                }
-                return true;
-            }
+            
             else
             {
+                //should never reach here because we are in the lab section
                 //probably will never happen
                 return false; //not any type of operation and therefore cannot be ordered without being approved
             }
