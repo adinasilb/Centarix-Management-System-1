@@ -229,7 +229,7 @@
 
 
 
-    <script>
+<script>
         $(document).ready(function () {
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
@@ -259,13 +259,21 @@
             $("#user-permissions-tab").prop("disabled", true);
             $("#user-budget-tab").prop("disabled", true);
             $("#user-more-tab").prop("disabled", true);
+            if ($("#tdterms").val()) {
+                $("#tdterms").hide();
+                var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true";
+                //$("#loading").show();
+                $.fn.CallPage($itemurl, "terms");
+                }
 
-             if ($("#tdconfirmemail").val()) {
-            console.log("tdconfirm email .val() = 'true'");
-            $("#tdconfirmemail").hide();
-                 var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
-            //$("#loading").show();
-            $.fn.CallPage($itemurl, "confirmemail");
+            if ($("#tdconfirmemail").val()) {
+                $("#tdconfirmemail").hide();
+                var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
+                //$("#loading").show();
+                $.fn.CallPage($itemurl, "confirmemail");
+            
+            
+            
         }
 
         });
@@ -494,6 +502,9 @@
                             AddTempDataMemory();
                             break;
                         case "orderlate":
+                            AddTempDataMemory();
+                            break;
+                        case "terms":
                             AddTempDataMemory();
                             break;
                     }
@@ -893,7 +904,7 @@
             });
         }
 
-    </script>
+</script>
 </body>
 </html>
 

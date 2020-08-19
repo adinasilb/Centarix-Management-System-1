@@ -1,0 +1,45 @@
+﻿@model PrototypeWithAuth.ViewModels.TermsViewModel;
+
+<div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:35rem; overflow-y:auto;">
+        <div class="modal-content d-inline-block" style="width:35rem;">
+            <form action="TermsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+                <div class="modal-header">
+                    <div class="col-10 float-left">
+                        <h5>Terms</h5>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-2">
+                                <label asp-for="Paid" class="control-label"></label>
+                                <select asp-for="Paid" class="form-control-plaintext border-bottom">
+                                    <option value=false>Select</option>
+                                    <option value=true>Yes</option>
+                                    <option value=false>No</option>
+                                </select>
+                                <span asp-validation-for="Paid" class="text-danger"></span>
+                            </div>
+                            <div class="col-2">
+
+                            </div>
+                            <div class="col-2">
+
+                            </div>
+                            <div class="col-2">
+
+                            </div>
+                            <div class="col-2">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" asp value="Save" class="inv-button" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
