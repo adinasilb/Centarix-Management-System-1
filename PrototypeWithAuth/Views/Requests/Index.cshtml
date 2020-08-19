@@ -188,6 +188,10 @@
 {
     <input type="text" id="tdconfirmemail" class="hidden" value="@TempData["RequestID"]" />
 }
+@if (TempData["OpenTermsModal"] != null)
+{
+    <input type="text" id="tdterms" class="hidden" value="@TempData["RequestID"]" />
+}
 
 @if(backTextBool)
 {

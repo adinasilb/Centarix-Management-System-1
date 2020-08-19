@@ -27,6 +27,7 @@ using System.Diagnostics;
 using Abp.Extensions;
 using SQLitePCL;
 using Microsoft.AspNetCore.Localization;
+using JetBrains.Annotations;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
@@ -285,7 +286,7 @@ namespace PrototypeWithAuth.Controllers
 
             return View(deleteRequestViewModel);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
@@ -442,32 +443,13 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
-            //all new ones will be "new" until actually ordered after the confirm email
-            //requestItemViewModel.Request.RequestStatusID = 1;
-            //if (requestItemViewModel.Paid)
-            //{
-            //    requestItemViewModel.Request.PaymentStatusID = 6;
-            //}
-            //else if (requestItemViewModel.PayNow)
-            //{
-            //    requestItemViewModel.Request.PaymentStatusID = 3;
-            //}
-            //else if (requestItemViewModel.PayLater)
-            //{
-            //    requestItemViewModel.Request.PaymentStatusID = 4;
-            //}
-            //else if (requestItemViewModel.Request.Installments != null && requestItemViewModel.Request.Installments > 0)//TODO: should this be more than 1 to ensure that it was put in correctly? 
-            //{
-            //    requestItemViewModel.Request.PaymentStatusID = 5;
-            //}
-            //else if ()
-                
 
-                //in case we need to redirect to action
-                //TempData["ModalView"] = true;
-                //todo why is this here?
-                //todo terms and installements and paid
-                var context = new ValidationContext(requestItemViewModel.Request, null, null);
+
+            //in case we need to redirect to action
+            //TempData["ModalView"] = true;
+            //todo why is this here?
+            //todo terms and installements and paid
+            var context = new ValidationContext(requestItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
             if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
             {
@@ -483,6 +465,7 @@ namespace PrototypeWithAuth.Controllers
                 //if it is out of the budget get sent to get approved automatically and user is not in role admin !User.IsInRole("Admin")
                 if (!User.IsInRole("Admin") && (OrderType.Equals("Ask For Permission") || !checkIfInBudget(requestItemViewModel.Request)))
                 {
+                    requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
                     try
                     {
                         requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
@@ -499,6 +482,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
+                    requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
                     if (OrderType.Equals("Add To Cart"))
                     {
                         try
@@ -517,6 +501,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     try
                     {
+                        requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
                         if (OrderType.Equals("Without Order"))
                         {
                             requestItemViewModel.Request.ParentRequest = new ParentRequest();
@@ -540,9 +525,10 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.RequestStatusID = 1;
-                            _context.Update(requestItemViewModel.Request);
+                            _context.Add(requestItemViewModel.Request);
                             _context.SaveChanges();
-                            TempData["OpenConfirmEmailModal"] = true;
+                            TempData["OpenTermsModal"] = true;
+                            //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
                             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
                         }
 
@@ -558,7 +544,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //var subprojectid = requestItemViewModel.Request.Product.SubProjectID;
                     //var subproject = requestItemViewModel.Request.Product.SubProject;
-                    requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
+                    requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
                     if (!String.IsNullOrEmpty(requestItemViewModel.NewComment.CommentText))
                     {
                         try
@@ -578,97 +564,97 @@ namespace PrototypeWithAuth.Controllers
 
                     //check if there are any files to upload first
                     //save the files
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
-                    Directory.CreateDirectory(requestFolder);
-                    if (requestItemViewModel.OrderFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + orderfile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.InvoiceFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile invoiceFile in requestItemViewModel.InvoiceFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + invoiceFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            invoiceFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.ShipmentFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile shipmentFile in requestItemViewModel.ShipmentFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + shipmentFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            shipmentFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.QuoteFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile quoteFile in requestItemViewModel.QuoteFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + quoteFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            quoteFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.InfoFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Info.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + infoFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            infoFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.PictureFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + pictureFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            pictureFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
+                    //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    //string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
+                    //Directory.CreateDirectory(requestFolder);
+                    //if (requestItemViewModel.OrderFiles != null) //test for more than one???
+                    //{
+                    //    var x = 1;
+                    //    foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
+                    //    {
+                    //        //create file
+                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+                    //        Directory.CreateDirectory(folderPath);
+                    //        string uniqueFileName = x + orderfile.FileName;
+                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
+                    //        orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    //        x++;
+                    //    }
+                    //}
+                    //if (requestItemViewModel.InvoiceFiles != null) //test for more than one???
+                    //{
+                    //    var x = 1;
+                    //    foreach (IFormFile invoiceFile in requestItemViewModel.InvoiceFiles)
+                    //    {
+                    //        //create file
+                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                    //        Directory.CreateDirectory(folderPath);
+                    //        string uniqueFileName = x + invoiceFile.FileName;
+                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
+                    //        invoiceFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    //        x++;
+                    //    }
+                    //}
+                    //if (requestItemViewModel.ShipmentFiles != null) //test for more than one???
+                    //{
+                    //    var x = 1;
+                    //    foreach (IFormFile shipmentFile in requestItemViewModel.ShipmentFiles)
+                    //    {
+                    //        //create file
+                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
+                    //        Directory.CreateDirectory(folderPath);
+                    //        string uniqueFileName = x + shipmentFile.FileName;
+                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
+                    //        shipmentFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    //        x++;
+                    //    }
+                    //}
+                    //if (requestItemViewModel.QuoteFiles != null) //test for more than one???
+                    //{
+                    //    var x = 1;
+                    //    foreach (IFormFile quoteFile in requestItemViewModel.QuoteFiles)
+                    //    {
+                    //        //create file
+                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                    //        Directory.CreateDirectory(folderPath);
+                    //        string uniqueFileName = x + quoteFile.FileName;
+                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
+                    //        quoteFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    //        x++;
+                    //    }
+                    //}
+                    //if (requestItemViewModel.InfoFiles != null) //test for more than one???
+                    //{
+                    //    var x = 1;
+                    //    foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
+                    //    {
+                    //        //create file
+                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Info.ToString());
+                    //        Directory.CreateDirectory(folderPath);
+                    //        string uniqueFileName = x + infoFile.FileName;
+                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
+                    //        infoFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    //        x++;
+                    //    }
+                    //}
+                    //if (requestItemViewModel.PictureFiles != null) //test for more than one???
+                    //{
+                    //    var x = 1;
+                    //    foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
+                    //    {
+                    //        //create file
+                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
+                    //        Directory.CreateDirectory(folderPath);
+                    //        string uniqueFileName = x + pictureFile.FileName;
+                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
+                    //        pictureFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    //        x++;
+                    //    }
+                    //}
 
                     return RedirectToAction("Index", new
                     {
-                        page = requestItemViewModel.Page,
+                        //page = requestItemViewModel.Page, //don't need this here b/c create is not a modal anymore
                         requestStatusID = requestItemViewModel.Request.RequestStatusID,
                         PageType = AppUtility.RequestPageTypeEnum.Request
                     });
@@ -1441,7 +1427,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
             //in case we need to return to the modal view
-            requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID==1).ToListAsync();
+            requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
             //redo the unit types when seeded
@@ -1859,6 +1845,22 @@ namespace PrototypeWithAuth.Controllers
 
                 return writer.GetStringBuilder().ToString();
             }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> TermsModal(int id, bool isSingleRequest) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
+        {
+            //TODO: add temp data memory here
+            TermsViewModel termsViewModel = new TermsViewModel();
+            return PartialView(termsViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
+        {
+            return RedirectToAction("Index"); //todo: put in tempdata memory here
         }
 
         [HttpGet]
@@ -3008,7 +3010,9 @@ namespace PrototypeWithAuth.Controllers
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Cart;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
             CartViewModel cartViewModel = new CartViewModel();
-            cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 6 && !(r is Reorder)).Where(r=>r.Product.ProductSubcategory.ParentCategory.CategoryTypeID==1)
+            cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                .Where(r => r.RequestStatusID == 6 && !(r is Reorder))
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ApplicationUserCreator)
@@ -3107,7 +3111,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 return true;
             }
-            
+
             else
             {
                 //should never reach here because we are in the lab section
