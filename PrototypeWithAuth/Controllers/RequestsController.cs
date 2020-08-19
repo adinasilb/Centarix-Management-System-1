@@ -526,8 +526,18 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.RequestStatusID = 1;
+
+                            requestItemViewModel.Request.ParentRequest = new ParentRequest();
+                            int lastParentRequestOrderNum = 0;
+                            requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
+                            if (_context.ParentRequests.Any())
+                            {
+                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                            }
+
                             _context.Add(requestItemViewModel.Request);
                             _context.SaveChanges();
+                            
                             TempData["OpenTermsModal"] = true;
                             //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
                             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
@@ -1850,10 +1860,13 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> TermsModal(int id, bool isSingleRequest) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
+        public async Task<IActionResult> TermsModal(int id, bool isSingleRequest = false) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
             //TODO: add temp data memory here
-            TermsViewModel termsViewModel = new TermsViewModel();
+            TermsViewModel termsViewModel = new TermsViewModel()
+            {
+                //IsSingleRequest = isSingleRequest
+            };
             return PartialView(termsViewModel);
         }
 
@@ -1866,7 +1879,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmEmailModal(int id, bool isSingleOrder = false, bool cart=false)
+        public async Task<IActionResult> ConfirmEmailModal(int id, bool isSingleOrder = false, bool cart = false)
         {
             List<Request> requests = null;
             if (isSingleOrder)
@@ -1880,7 +1893,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
-                        .Where(r=>r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                        .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
                               .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
                 }
                 else
@@ -1888,7 +1901,7 @@ namespace PrototypeWithAuth.Controllers
                     requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
                               .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
                 }
-               
+
             }
             ParentRequest parentRequest = new ParentRequest();
             foreach (var request in requests)

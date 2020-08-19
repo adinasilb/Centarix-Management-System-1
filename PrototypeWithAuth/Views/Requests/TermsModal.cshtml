@@ -4,6 +4,7 @@
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:35rem; overflow-y:auto;">
         <div class="modal-content d-inline-block" style="width:35rem;">
             <form action="TermsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+                <input type="hidden" asp-for="ParentRequest.ParentRequestID" />
                 <div class="modal-header">
                     <div class="col-10 float-left">
                         <h5>Terms</h5>
@@ -37,7 +38,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" asp value="Save" class="inv-button" />
+                    <input type="submit" asp value="Save" class="inv-button" asp-action="TermsModal" />
                 </div>
             </form>
         </div>
