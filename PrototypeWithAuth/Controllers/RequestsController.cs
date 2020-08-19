@@ -1855,7 +1855,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                requests = await _context.Requests.Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
+                requests = await _context.Requests.Where(r=>r.Product.ProductSubcategory.ParentCategory.CategoryTypeID==1).Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
                                .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
             }
             ParentRequest parentRequest = new ParentRequest();
@@ -2384,7 +2384,8 @@ namespace PrototypeWithAuth.Controllers
                 Request = new Request(),
                 Inventory = false,
                 Ordered = false,
-                ForApproval = false
+                ForApproval = false,
+                SectionType = SectionType
                 //check if we need this here
             };
 
@@ -2397,10 +2398,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
         {
+            var categoryType = requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operation ? 2 : 1;
             int RSRecieved = 0;
             int RSOrdered = 0;
             int RSNew = 0;
-            IQueryable<Request> requestsSearched = _context.Requests.AsQueryable().Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+            IQueryable<Request> requestsSearched = _context.Requests.AsQueryable().Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType);
 
             //convert the bools into thier corresponding IDs
             if (requestsSearchViewModel.Inventory)

@@ -4,6 +4,14 @@
     ViewData["Title"] = "Index";
     var pagetype = TempData["PageType"];
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
+    {
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
+    else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
+    {
+        Layout = "~/Views/Shared/OperationsNavView.cshtml";
+    }
 }
 
 @*<<<<<<<<<<<< This is the Owner page >>>>>>>>>>>>>>>*@
@@ -16,29 +24,48 @@
             {
             @:</div><div class="row">
             }
-            <div class="col-auto">
-                @*<fieldset class="border">*@
-                @*@Html.ActionLink(Model.ElementAt(i).FirstName + " " + Model.ElementAt(i).LastName, "Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)*@
+                        <div class="col-auto">
+                            @*<fieldset class="border">*@
+                            @*@Html.ActionLink(Model.ElementAt(i).FirstName + " " + Model.ElementAt(i).LastName, "Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)*@
+                           @if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
+                            {
+                            <a href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
+                               class="owner-link bold-hover-effects" id="profile-img">
+                                @{
+                                    var src = "UserImages/profile_circle_big.png";
+                                    if (Model.ElementAt(i).UserImage != null)
+                                    {
+                                        src = Model.ElementAt(i).UserImage;
+                                    }
+                                }
+                                <img src="@src" class="user-image-bold ml-0" width="160" height="160" alt="default user circle" />
+                                <br />
+                                @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
+                            </a>
+                            }
+                            else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
+                            {
+                        <a href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
+                           class="owner-link bold-hover-effects" id="profile-img">
+                            @{
+                                var src = "UserImages/profile_circle_big.png";
+                                if (Model.ElementAt(i).UserImage != null)
+                                {
+                                    src = Model.ElementAt(i).UserImage;
+                                }
+                            }
+                            <img src="@src" class="user-image-bold ml-0" width="160" height="160" alt="default user circle" />
+                            <br />
+                            @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
+                        </a>
+                            }
+                            
+                            @*<button id="profile-img" class="btn no-box-shadow ">
 
-                <a href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)"
-                   class="owner-link bold-hover-effects" id="profile-img">
-                    @{
-                        var src = "UserImages/profile_circle_big.png";
-                        if (Model.ElementAt(i).UserImage != null)
-                        {
-                            src = Model.ElementAt(i).UserImage;
-                        }
-                    }
-                    <img src="@src" class="user-image-bold ml-0" width="160" height="160" alt="default user circle" />
-                    <br />
-                    @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
-                </a>
-                @*<button id="profile-img" class="btn no-box-shadow ">
-                    
-                    <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
-                </button>*@
-                @*</fieldset>*@
-            </div>
+            <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
+        </button>*@
+                            @*</fieldset>*@
+                        </div>
         }
     </div>
 </div>

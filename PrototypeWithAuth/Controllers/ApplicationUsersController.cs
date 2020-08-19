@@ -25,9 +25,10 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
 
         [Authorize(Roles = "Admin, Users")]
-        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
+        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.CategoryTypeEnum categoryType =AppUtility.CategoryTypeEnum.Lab)
         {
             TempData["PageType"] = PageType;
+            TempData["CategoryType"] = categoryType;
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Owner;
             return View(await _context.Users.ToListAsync());
         }

@@ -2,17 +2,21 @@
 @using PrototypeWithAuth.AppData;
 @{ 
     string color = "";
+    ViewData["Title"] = "ManageSharedView";
     if (TempData["SectionType"].Equals(AppUtility.MenuItems.LabManagement))
     {
-        ViewData["Title"] = "ManageLocationView";
         Layout = "~/Views/Shared/LabManageView.cshtml";
         color = "var(--lab-man-color)";
     }
-    else
+    else if (TempData["SectionType"].Equals(AppUtility.MenuItems.OrdersAndInventory))
     {
-        ViewData["Title"] = "ManageSharedView";
         Layout = "~/Views/Shared/View.cshtml";
         color = "var(--order-inv-color)";
+    }
+    else if (TempData["SectionType"].Equals(AppUtility.MenuItems.Operation))
+    {
+        Layout = "~/Views/Shared/OperationsView.cshtml";
+        color = "var(--operations-color)";
     }
 <div style="display:flex;">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

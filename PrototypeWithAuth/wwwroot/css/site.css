@@ -92,10 +92,11 @@ i.fas {
 
 /*MDBootstrap material select*/
 .md-form input[type="text"]:not(.browser-default).valid {
-    border-bottom: 1px solid #db2127 ;
-    -webkit-box-shadow: 0 1px 0 0 #db2127 ;
-    box-shadow: 0 1px 0 0 #db2127 ;
+    border-bottom: 1px solid var(--order-inv-color);
+    -webkit-box-shadow: 0 1px 0 0 var(--order-inv-color);
+    box-shadow: 0 1px 0 0 var(--order-inv-color);
 }
+
 
 [type=checkbox]:checked + label:before {
     border-right: 2px solid white !important;
@@ -475,6 +476,11 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 
+.oper-button {
+    background-color: var(--operations-color);
+    border: 1px solid var(--operations-color);
+   
+}
     .inv-button:hover, inv-user-button:hover {
         opacity: 0.67;
     }
@@ -1013,7 +1019,12 @@ a.nav-link {
     border-bottom: 4px solid var(--order-inv-color);
     color: var(--order-inv-color);
 }
-
+.container-fluid ul li a.oper-link.active {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid var(--operations-color);
+    color: var(--operations-color);
+}
 .container-fluid ul li a.user-nav-link.active {
     background-color: transparent;
     border-width: 0px;
@@ -1097,6 +1108,17 @@ a.nav-link {
         font-weight: 500;
         border-bottom: 4px solid var(--order-inv-color);
     }
+
+
+    .new-oper-button:hover {
+        color: var(--operations-color);
+     
+    }
+
+.new-oper-button.active {
+    color: var(--operations-color);
+    border-bottom: 4px solid var(--operations-color);
+}
 
 .zoom-in-btn {
     color: black;

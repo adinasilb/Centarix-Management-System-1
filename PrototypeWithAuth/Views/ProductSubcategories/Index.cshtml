@@ -2,9 +2,18 @@
 @using PrototypeWithAuth.AppData
 
 @{
+
     ViewData["Title"] = "Index";
     var pagetype = TempData["PageType"];
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (Model.FirstOrDefault().ParentCategory.CategoryTypeID == 1)
+    {
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
+    else if (Model.FirstOrDefault().ParentCategory.CategoryTypeID == 2)
+    {
+        Layout = "~/Views/Shared/OperationsNavView.cshtml";
+    }
+
 }
 
 @*<<<<<<<<<<<< This is the Types page divs >>>>>>>>>>>>>>>*@

@@ -50,7 +50,6 @@ $("#parentlist").change(function () {
 		$("#sublist").materialSelect();
 		return false;
 	});
-	return false;
 });
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
@@ -70,7 +69,6 @@ $(".Project").change(function () {
 		$("#SubProject").materialSelect();
 		return false
 	});
-	return false;
 });
 
 
@@ -213,14 +211,18 @@ $(".payments-table").on("change", ".paymentType", function (e) {
 $.fn.AdjustPaymentDates = function () {
 
 };
+//$('input[type=text]').on('blur', function () {
+//		$(this).prev().prev().css('border-bottom', '1px solid black');
+//		$(this).prev().prev().css('box-shadow', '0 1px 0 0 black');
+//		$(this).prev().prev().css('-webkit-box-shadow:', '0 1px 0 0 black');
+//}).on('focus', function () {
+//	if ($(this).val()) {
+//		$(this).prev().prev().css('border-bottom', '1px solid var(--order-inv-color)');
+//		$(this).prev().prev().css('box-shadow', '0 1px 0 0 var(--order-inv-color)');
+//		$(this).prev().prev().css('-webkit-box-shadow:', '0 1px 0 0 var(--order-inv-color)');
+//	}
+//});
 
-$('select').on('change', function () {
-	if ($(this).val()) {
-		$(this).prev().prev().css('border-bottom-color', 'var(--order-inv-color)');
-	} else {
-		$(this).prev().prev().css('border-bottom-color', 'red');
-	}
-});
 
 ////Location Add View - Change dropdownlist
 //$("LocationInstance_LocationTypeID").change(function () {
@@ -298,14 +300,18 @@ $(".view-docs").click(function (clickEvent) {
 $(".expected-supply-days").change(function () {
 	console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
 	var date;
-	if ($("#Request_ParentRequest_OrderDate").length > 0) {
+	if ($(".for-supply-date-calc").length > 0) {
+		console.log("in first of of check roder date")
 		var date = $(".for-supply-date-calc").val().split("-");
+		var dd = parseInt(date[2]);
+		var mm = parseInt(date[1]);
+		var yyyy = parseInt(date[0]);
 	} else {
 		date = new Date();
+		var dd = parseInt(date.getDate());
+		var mm = parseInt(date.getMonth()+1);
+		var yyyy = parseInt(date.getFullYear());
 	}	
-	var dd = parseInt(date[2]);
-	var mm = parseInt(date[1]);
-	var yyyy = parseInt(date[0]);
 
 	for (i = 0; i < $(this).val(); i++) {
 		switch (mm) {
@@ -386,14 +392,20 @@ $("#expected-supply-date").change(function () {
 	var Syyyy = parseInt(date.getFullYear());
 	console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
 	var OrderDate;
-	if ($("#Request_ParentRequest_OrderDate").length > 0) {
+	if ($('.for-supply-date-calc').length > 0) {
+		console.log("in first of of check roder date")
 		OrderDate = $(".for-supply-date-calc").val().split("-");
+		var Idd = parseInt(OrderDate[2]);
+		var Imm = parseInt(OrderDate[1]);
+		var Iyyyy = parseInt(OrderDate[0]);
 	} else {
 		OrderDate = new Date();
+		var Idd = parseInt(OrderDate.getDate());
+		var Imm = parseInt(OrderDate.getMonth()+1);
+		var Iyyyy = parseInt(OrderDate.getFullYear());
+
 	}	
-	var Idd = parseInt(OrderDate[2]);
-	var Imm = parseInt(OrderDate[1]);
-	var Iyyyy = parseInt(OrderDate[0]);
+
 	console.log("idd + imm + iyyyy: " + Idd + " " + Imm + " " + Iyyyy);
 
 	var amountOfDays = 0;
@@ -474,13 +486,17 @@ $("#Request_Warranty").change(function () {
 	var date = null;
 	if ($("#Request_ParentRequest_OrderDate").length > 0) {
 		date = $("#Request_ParentRequest_OrderDate").val().split("-");
+		var dd = date[2];
+		var mm = parseInt(date[1]); //January is 0! ?? do we still need th get month???
+		var yyyy = date[0];
 	} else {
 		date = new Date();
+		var dd = date.getDate();
+		var mm = parseInt(date.getMonth()+1); //January is 0! ?? do we still need th get month???
+		var yyyy = date.getFullYear();
 	}
 	console.log("Date: " + date);
-	var dd = date[2];
-	var mm = parseInt(date[1]); //January is 0! ?? do we still need th get month???
-	var yyyy = date[0];
+	
 	var newmm = parseInt(mm) + parseInt($(this).val());
 	mm = newmm;
 
@@ -1091,6 +1107,7 @@ function changeTerms(checkbox) {
 	}
 	else {
 		console.log("unchecked");
+		$(".installments").show()
 		$("#Request_Terms").attr("disabled", false);
 		$("#Request_Terms option[value='0']").remove();
 	}

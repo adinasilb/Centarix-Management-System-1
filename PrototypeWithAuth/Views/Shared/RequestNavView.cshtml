@@ -9,6 +9,8 @@
         pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
     }
 
+    var categoryType = AppUtility.CategoryTypeEnum.Lab;
+
     bool Cart = false;
     bool Requests = false;
     bool Inventory = false;
@@ -120,7 +122,7 @@
             @if (Requests || Inventory || Summary)
             {
                 <li class="nav-item bold-hover-effects my-1 @type">
-                    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
+                    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType, @categoryType=1 })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
                 </li>
 
             }
@@ -128,7 +130,7 @@
             {
 
                 <li class="nav-item my-1 @vendor">
-                    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
+                    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType,  @categoryType= categoryType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
                 </li>
             }
             @if (Requests || Inventory)
@@ -136,7 +138,7 @@
                 @*have to create contorller for application user?*@
 
                 <li class="nav-item my-1 @owner">
-                    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
+                    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType ,  @categoryType=categoryType})" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
                 </li>
             }
             @if (Inventory || Summary)

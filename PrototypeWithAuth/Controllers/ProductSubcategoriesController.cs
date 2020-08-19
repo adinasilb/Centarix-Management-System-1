@@ -23,12 +23,12 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: ProductSubcategories
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
+        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType=1)
         {
             TempData["PageType"] = PageType;
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Type;
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
-                .Where(ps => ps.ParentCategory.CategoryTypeID == 1);
+                .Where(ps => ps.ParentCategory.CategoryTypeID == categoryType);
             return View(await applicationDbContext.ToListAsync());
         }
         

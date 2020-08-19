@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.ViewModels
         public bool Inventory { get; set; }
         public bool Ordered { get; set; }
         public bool ForApproval { get; set; }
+        public PrototypeWithAuth.AppData.AppUtility.MenuItems SectionType { get; set; }
 
         public IQueryable<Request> ReturnRequests { get; set; }
     }
