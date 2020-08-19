@@ -296,7 +296,7 @@
                 }
                 else
                 {
-                    <td> <button class="btn inv-link-clr load-product-details no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
+                    <td> <button class="btn inv-link-clr load-product-details operations no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
                 }
 
 
@@ -348,7 +348,7 @@
                         {
                             if (item is Reorder)
                             {
-                                <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder", new { id = item.RequestID })">
+                                <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder",  "Requests", new { id = item.RequestID })">
                                     <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
                                 </a>
                             }
@@ -356,7 +356,7 @@
                             {
                                 @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
 
-                                <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("Approve", new { id = item.RequestID })">
+                                <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("Approve", "Requests", new { id = item.RequestID })">
                                     <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
                                 </a>
                             }

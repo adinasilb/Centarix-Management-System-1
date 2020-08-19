@@ -267,6 +267,7 @@
                 }
 
             if ($("#tdconfirmemail").val()) {
+                console.log("tdconfirmemail")
                 $("#tdconfirmemail").hide();
                 var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
                 //$("#loading").show();
@@ -327,8 +328,15 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-            var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
+            var $itemurl = "";
+            if ($(this).hasClass('operations')) {
+                $itemurl = "Operations/DetailsModalView/?id=" + $(this).val();
+            }
+            else {
+                console.log("Requests/EditModalView/?id")
+                //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+                $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
+            }
             $.fn.CallPageRequest($itemurl, "details");
             return false;
         });
@@ -347,8 +355,16 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-            var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+            var $itemurl = "";
+            if ($(this).hasClass('operations')) {
+                console.log("Operations/EditModalView/?id")
+                $itemurl = "Operations/EditModalView/?id=" + $(this).val();
+            }
+            else {
+                console.log("Requests/EditModalView/?id")
+                //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+                $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+            }
             console.log("itemurl: " + $itemurl);
             $.fn.CallPageRequest($itemurl, "edit");
             return false;

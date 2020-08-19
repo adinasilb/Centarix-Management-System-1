@@ -2915,10 +2915,10 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         //[ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, OrdersAndInventory, Operation")]
         public IActionResult Approve(int id)
         {
-            var request = _context.Requests.Where(r => r.RequestID == id).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == id).Include(r=>r.Product).ThenInclude(p=>p.ProductSubcategory).ThenInclude(px=>px.ParentCategory).FirstOrDefault();
             try
             {
                 request.RequestStatusID = 6; //approved
@@ -2932,12 +2932,24 @@ namespace PrototypeWithAuth.Controllers
                 return View("~/Views/Shared/RequestError.cshtml");
             }
             AppUtility.RequestPageTypeEnum requestPageTypeEnum = AppUtility.RequestPageTypeEnum.Request;
-
-            return RedirectToAction("Index", new
+            if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
             {
-                requestStatusID = 6,
-                PageType = requestPageTypeEnum
-            });
+                return RedirectToAction("Index", new
+                {
+                    requestStatusID = 6,
+                    PageType = requestPageTypeEnum
+                });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Operations", new
+                {
+                    requestStatusID = 6,
+                    PageType = requestPageTypeEnum
+                });
+            }
+
+         
         }
 
         [HttpGet]

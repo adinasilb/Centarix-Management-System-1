@@ -112,7 +112,7 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/DetailsModalView/?id=" + $(this).val();
+        var $itemurl = "Operations/DetailsModalView/?id=" + $(this).val();
         $("#loading").show();
         $.fn.CallPage($itemurl, "details");
         return false;
@@ -123,7 +123,7 @@
         e.preventDefault();
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        var $itemurl = "Requests/EditModalView?id=" + $(this).val();
+        var $itemurl = "Operations/EditModalView?id=" + $(this).val();
         console.log("itemurl: " + $itemurl);
         $("#loading").show();
         $.fn.CallPage($itemurl, "edit");

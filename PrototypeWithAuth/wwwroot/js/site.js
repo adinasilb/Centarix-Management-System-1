@@ -1317,8 +1317,14 @@ $(".load-product-edit").on("click", function (e) {
 	console.log("inside of load product edit")
 	e.preventDefault();
 	e.stopPropagation();
-	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
-	var $itemurl = "Requests/EditModalView/?id=" + $(this).val();
+	var $itemurl = "";
+	if ($(this).hasClass('operations')) {
+		$itemurl = "Operations/EditModalView/?id=" + $(this).val();
+	}
+	else {
+		//takes the item value and calls the Products controller with the ModalView view to render the modal inside
+		$itemurl = "Requests/EditModalView/?id=" + $(this).val();
+	}
 	console.log("itemurl: " + $itemurl);
 	$.fn.CallPageRequest($itemurl, "edit");
 	return false;

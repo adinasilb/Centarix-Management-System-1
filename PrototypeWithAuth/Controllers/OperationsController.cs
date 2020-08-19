@@ -66,7 +66,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, Operation")]
         // GET: Requests
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         //ALSO when changing defaults -> change the defaults on the index page for paged list 
@@ -247,7 +247,7 @@ namespace PrototypeWithAuth.Controllers
             return View(onePageOfProducts);
         }
 
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, Operation")]
         public async Task<IActionResult> CreateModalView()
         {
             var parentcategories = await _context.ParentCategories.Where(pr => pr.CategoryTypeID == 2).ToListAsync();
@@ -286,7 +286,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, Operation")]
         public async Task<IActionResult> CreateModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //why do we need this here?
@@ -544,8 +544,8 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [HttpGet]
+        [Authorize(Roles = "Admin, Operation")]
         public async Task<IActionResult> DetailsModalView(int? id, bool NewRequestFromProduct = false)
         {
             //string ModalViewType = "";
@@ -754,20 +754,8 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
-     
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public ActionResult DownloadPDF(string filename)
-        {
-            //string filename = orderFileInfo.FullName.ToString();
-            string concatShortFilename = "inline; filename=" +
-                filename.Substring(filename.LastIndexOf("\\") + 2); //follow through with this
-            Response.Headers.Add("Content-Disposition", concatShortFilename);
-            return File(filename, "application/pdf");
-        }
-
-
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [HttpGet]
+        [Authorize(Roles = "Admin, Operation")]
         public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false)
         {
             string ModalViewType = "";
@@ -801,16 +789,10 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.RequestStatus)
                 .Include(r => r.ApplicationUserCreator)
                 .Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
-                .Include(r => r.SubProject)
-                .Include(r => r.SubProject.Project)
-                .SingleOrDefault(x => x.RequestID == id);
+                .SingleOrDefault(r => r.RequestID == id);
 
             //load the correct list of subprojects
-            var subprojects = await _context.SubProjects
-                .Where(sp => sp.ProjectID == requestItemViewModel.Request.SubProject.ProjectID)
-                .ToListAsync();
-            requestItemViewModel.SubProjects = subprojects;
-
+            
             var comments = Enumerable.Empty<Comment>();
             comments = _context.Comments
                 .Include(r => r.ApplicationUser)
@@ -992,7 +974,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        //[Authorize(Roles = "Admin, OrdersAndInventory")]
+        //[Authorize(Roles = "Admin, Operation")]
         //public async Task<IActionResult> EditSummaryModalView(int? id, bool NewRequestFromProduct = false)
         //{
            
@@ -1001,7 +983,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, Operation")]
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)

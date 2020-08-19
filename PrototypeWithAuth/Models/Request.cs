@@ -18,7 +18,7 @@ namespace PrototypeWithAuth.Models
         public Product Product { get; set; }
         public int? ParentRequestID { get; set; }
         public ParentRequest ParentRequest { get; set; }
-        public int SubProjectID { get; set; }
+        public int? SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public int? RequestStatusID { get; set; }
@@ -35,10 +35,9 @@ namespace PrototypeWithAuth.Models
 
         public bool IsDeleted { get; set; } // check if this request's parentrequests requests are deleted - if so give parent request true for is deleted
         public bool IsApproved { get; set; }
-        [Range(1, uint.MaxValue, ErrorMessage = "Field must be more than 0")]
+      //  [Range(1, uint.MaxValue, ErrorMessage = "Field must be more than 0")]
         public uint Unit { get; set; } //largest unit the request comes in - amount of unit
         //public int Unit { get; set; }
-        [Required (ErrorMessage = "The UnitType field is required.")]
         public int? UnitTypeID { get; set; }
         [ForeignKey("UnitTypeID")]
         [Display(Name = "Unit Type")]
