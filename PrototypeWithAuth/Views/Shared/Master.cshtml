@@ -548,7 +548,11 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "ConfirmEmailModal/?id=" + $(this).val();
+            var cart = "";
+            if ($(this).hasClass("cart")) {
+                cart = "&cart=true" 
+            }
+            var $itemurl = "ConfirmEmailModal/?id=" + $(this).val() + cart;
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });

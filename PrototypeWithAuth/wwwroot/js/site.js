@@ -279,11 +279,11 @@ $.fn.ChangeVendorBusinessId = function (vendorid) {
 			//get the business id from json
 			newBusinessID = data.vendorBuisnessID;
 			//cannot only use the load outside. apparently it needs this one in order to work
-			$(".vendorBusinessId").html(newBusinessID);
+			$(".vendorBusinessId").val(newBusinessID);
 		})
 	}
 	//if nothing was selected want to load a blank
-	$(".vendorBusinessId").html(newBusinessID);
+	$(".vendorBusinessId").val(newBusinessID);
 	//put the business id into the form
 }
 
