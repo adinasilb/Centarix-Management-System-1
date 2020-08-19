@@ -285,7 +285,7 @@ namespace PrototypeWithAuth.Controllers
 
             return View(deleteRequestViewModel);
         }
-        // POST: Vendors/Delete/5
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
@@ -443,13 +443,31 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
             //all new ones will be "new" until actually ordered after the confirm email
-            requestItemViewModel.Request.RequestStatusID = 1;
+            //requestItemViewModel.Request.RequestStatusID = 1;
+            //if (requestItemViewModel.Paid)
+            //{
+            //    requestItemViewModel.Request.PaymentStatusID = 6;
+            //}
+            //else if (requestItemViewModel.PayNow)
+            //{
+            //    requestItemViewModel.Request.PaymentStatusID = 3;
+            //}
+            //else if (requestItemViewModel.PayLater)
+            //{
+            //    requestItemViewModel.Request.PaymentStatusID = 4;
+            //}
+            //else if (requestItemViewModel.Request.Installments != null && requestItemViewModel.Request.Installments > 0)//TODO: should this be more than 1 to ensure that it was put in correctly? 
+            //{
+            //    requestItemViewModel.Request.PaymentStatusID = 5;
+            //}
+            //else if ()
+                
 
-            //in case we need to redirect to action
-            //TempData["ModalView"] = true;
-            //todo why is this here?
-            //todo terms and installements and paid
-            var context = new ValidationContext(requestItemViewModel.Request, null, null);
+                //in case we need to redirect to action
+                //TempData["ModalView"] = true;
+                //todo why is this here?
+                //todo terms and installements and paid
+                var context = new ValidationContext(requestItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
             if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
             {
@@ -3114,7 +3132,8 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r => r.ParentRequest.WithoutOrder == false);
+                .Where(r => r.ParentRequest.WithoutOrder == false)
+                .Where(r => r.IsDeleted == false);
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.AccountingPaymentsEnum.MonthlyPayment:

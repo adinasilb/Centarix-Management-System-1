@@ -452,20 +452,34 @@
                                     </div>
                                 </div>
                                 @*<div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Terms:</label>
-                                            @Html.DropDownListFor(
-                                                                    model => model.Request.Terms,
-                                                                    new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-                                                                    htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
-                                                                )
-                                        </div>
-                                    </div>*@
+            <div class="form-group">
+                <label class="control-label">Terms:</label>
+                @Html.DropDownListFor(
+                                        model => model.Request.Terms,
+                                        new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
+                                        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
+                                    )
+            </div>
+        </div>*@
                                 <div class="col-md-2">
                                     <div class="form-check">
-                                        <label class="form-check-label-left" asp-for="Request.Paid"></label>
-                                        <input class="form-check-input float-left opacity-100" type="checkbox" asp-for="Request.Paid" id="paid_checkbox" onchange="changeTerms(this)" />
-                                        <span asp-validation-for="Request.Paid" class="text-danger"></span>
+                                        <label class="form-check-label-left" asp-for="Paid"></label>
+                                        <input class="form-check-input float-left opacity-100" type="checkbox" asp-for="Paid" id="paid_checkbox" onchange="changeTerms(this)" />
+                                        <span asp-validation-for="Paid" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <label class="form-check-label-left" asp-for="PayNow"></label>
+                                        <input class="form-check-input float-left opacity-100" type="checkbox" asp-for="PayNow" id="paynow_checkbox" onchange="changeTerms(this)" />
+                                        <span asp-validation-for="PayNow" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <label class="form-check-label-left" asp-for="PayLater"></label>
+                                        <input class="form-check-input float-left opacity-100" type="checkbox" asp-for="PayLater" id="paylater_checkbox" onchange="changeTerms(this)" />
+                                        <span asp-validation-for="PayLater" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
@@ -534,7 +548,7 @@
                         <div id="documents" class="tab-pane fade">
                             <span style="font-size: 1.7em;">Documents</span>
 
-                            @{ 
+                            @{
                                 var urlAction = Url.Action("DocumentsModal", "Requests");
                             }
 
@@ -610,19 +624,19 @@
                                             </div>
 
                                             @*<div class="card-footer">
-                            <div class="custom-file text-center">
-                                <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                @if (boolQuote)
-                                {
-                                    <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
-                                }
-                                else
-                                {
-                                    <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                }
-                            </div>
-                        </div>*@
+                                                    <div class="custom-file text-center">
+                                                        <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                                        <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
+                                                        @if (boolQuote)
+                                                        {
+                                                            <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
+                                                        }
+                                                    </div>
+                                                </div>*@
                                         </div>
                                     </a>
                                     <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
@@ -748,21 +762,21 @@
                             </div>
                         </div>
                     </div>
-        </div>
-        </div>
+                </div>
+            </div>
 
-<!-- Modal footer -->
-<!--<div class="modal-footer">
-</div>-->
-        @*Begin Hidden Inputs:*@
-        @Html.HiddenFor(vm => vm.Request.ProductID)
-        @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
-        @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
-        @Html.HiddenFor(vm => vm.Request.RequestStatusID)
-        @Html.HiddenFor(vm => vm.Request.ParentQuoteID)
-        @*End Hidden Inputs*@
-        @*Hidden Input for Product Subcategory*@
-        @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+            <!-- Modal footer -->
+            <!--<div class="modal-footer">
+            </div>-->
+            @*Begin Hidden Inputs:*@
+            @Html.HiddenFor(vm => vm.Request.ProductID)
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+            @Html.HiddenFor(vm => vm.Request.RequestStatusID)
+            @Html.HiddenFor(vm => vm.Request.ParentQuoteID)
+            @*End Hidden Inputs*@
+            @*Hidden Input for Product Subcategory*@
+            @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
         </form>
-</div>
+    </div>
 </div>
