@@ -8,6 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class TermsViewModel
     {
+        public ParentRequest ParentRequest { get; set; }
         public bool Paid { get; set; }
         public string Discount { get; set; }
         public int Terms { get; set; }
