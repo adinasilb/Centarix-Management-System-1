@@ -1219,7 +1219,7 @@ namespace PrototypeWithAuth.Controllers
             DateTime firstOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
             {//operational
-                var pricePerUnit = request.Cost / request.Unit;
+                var pricePerUnit = request.Cost;
                 if (pricePerUnit > request.ApplicationUserCreator.OperationUnitLimit)
                 {
                     return false;

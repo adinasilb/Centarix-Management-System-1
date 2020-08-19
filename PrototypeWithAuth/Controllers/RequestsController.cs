@@ -1885,7 +1885,7 @@ namespace PrototypeWithAuth.Controllers
             if (isSingleOrder)
             {
                 requests = await _context.Requests.Where(r => r.RequestID == id)
-               .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
             }
             else
             {
@@ -1894,7 +1894,8 @@ namespace PrototypeWithAuth.Controllers
                     requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
                         .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                             .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                             .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
                 }
                 else
                 {
@@ -1965,7 +1966,8 @@ namespace PrototypeWithAuth.Controllers
             if (confirmEmail.IsSingleOrder)
             {
                 requests = await _context.Requests.Where(r => r.RequestID == confirmEmail.RequestID)
-               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ApplicationUserCreator).ToListAsync();
+               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+               .Include(r => r.ApplicationUserCreator).ToListAsync();
             }
             else
             {
@@ -1974,7 +1976,8 @@ namespace PrototypeWithAuth.Controllers
                     requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         .Where(r => r.Product.VendorID == confirmEmail.VendorID && r.RequestStatusID == 6 && !(r is Reorder))
                         .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                              .Include(r => r.Product).ThenInclude(r => r.Vendor)
+                              .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
                 else
                 {
@@ -2063,13 +2066,27 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)confirmEmail.PageType;
-                TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
-                return RedirectToAction("Index", new
+                if (requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 {
-                    page = confirmEmail.Page,
-                    requestStatusID = 2,
-                    PageType = AppUtility.RequestPageTypeEnum.Request
-                });
+                    TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
+                    return RedirectToAction("Index", new
+                    {
+                        page = confirmEmail.Page,
+                        requestStatusID = 2,
+                        PageType = AppUtility.RequestPageTypeEnum.Request
+                    });
+                }
+                else
+                {
+                    TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
+                    return RedirectToAction("Index", "Operations", new
+                    {
+                        page = confirmEmail.Page,
+                        requestStatusID = 2,
+                        PageType = AppUtility.RequestPageTypeEnum.Request
+                    });
+                }
+              
             }
 
             else

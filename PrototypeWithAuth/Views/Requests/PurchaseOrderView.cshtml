@@ -67,25 +67,40 @@
             <table class="table confirm-table">
                 <thead style="background-color: #D0001C; color: #ffffff;">
                     <tr>
-                        <th style="width:40%;">Items</th>
-                        <th style="width:20%;">SKU</th>
-                        <th style="width:10%;">Units</th>
-                        <th style="width:20%;">Price</th>
-                        <th style="width:10%;">Total</th>
+                        @if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                        {
+                            <th style="width:40%;">Items</th>
+                            <th style="width:20%;">SKU</th>
+                            <th style="width:10%;">Units</th>
+                            <th style="width:20%;">Price</th>
+                            <th style="width:10%;">Total</th>
+                        }
+                        else
+                        {
+                            <th>Items</th>
+                            <th>SKU</th>
+
+                            <th>Total</th>
+                        }
+
                     </tr>
                 </thead>
                 <tbody>
                     @for (int i = 0; i < Model.Requests.Count(); i++)
                     {
 
-                        <tr>
-                            <td style="font-weight: 500;">@Model.Requests[i].SubUnit @Model.Requests[i].Product.ProductName</td>
-                            <td>@Model.Requests[i].CatalogNumber</td>
+                    <tr>
+                        <td style="font-weight: 500;">@Model.Requests[i].SubUnit @Model.Requests[i].Product.ProductName</td>
+                        <td>@Model.Requests[i].CatalogNumber</td>
+                        <td>@Model.Requests[i].Unit</td>
+                        @if (@Model.Requests[i].Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                        {
                             <td>@Model.Requests[i].Unit</td>
-                            @{double unitPrice = (Model.Requests[i].Cost) / (Model.Requests[i].Unit);}
+                            double unitPrice = (Model.Requests[i].Cost) / Model.Requests[i].Unit;
                             <td>@unitPrice.ToString("N2")</td>
-                            <td>@Model.Requests[i].Cost</td>
-                        </tr>
+                        }>
+                        <td>@Model.Requests[i].Cost</td>
+                    </tr>
 
 
                     }
@@ -93,7 +108,7 @@
                         double vat = total * .17;
                         double totalWithVat = total + vat;}
                     <tr>
-                        <td colspan="3" rowspan="5" class="borderless-cell">
+                        <td rowspan="5" class="borderless-cell">
                             <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
                         </td>
                         <td>Total</td>
