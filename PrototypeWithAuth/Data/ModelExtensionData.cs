@@ -18,21 +18,31 @@ namespace PrototypeWithAuth.Data
                 new PaymentStatus
                 {
                     PaymentStatusID = 1,
-                    PaymentStatusDescription = "None"
+                    PaymentStatusDescription = "No Invoice" //TODO: should this be renamed ordered or will none cover all bases?
                 },
                 new PaymentStatus
                 {
                     PaymentStatusID = 2,
-                    PaymentStatusDescription = "Pay Now"
+                    PaymentStatusDescription = "Not Paid"
                 },
                 new PaymentStatus
                 {
                     PaymentStatusID = 3,
-                    PaymentStatusDescription = "Installments"
+                    PaymentStatusDescription = "Pay Now"
                 },
                 new PaymentStatus
                 {
                     PaymentStatusID = 4,
+                    PaymentStatusDescription = "Pay Later"
+                },
+                new PaymentStatus
+                {
+                    PaymentStatusID = 5,
+                    PaymentStatusDescription = "Installments"
+                },
+                new PaymentStatus
+                {
+                    PaymentStatusID = 6,
                     PaymentStatusDescription = "Paid"
                 }
             );
