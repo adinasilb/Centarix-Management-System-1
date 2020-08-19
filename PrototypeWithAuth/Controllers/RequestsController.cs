@@ -1845,7 +1845,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmEmailModal(int id, bool isSingleOrder = false)
+        public async Task<IActionResult> ConfirmEmailModal(int id, bool isSingleOrder = false, bool cart=false)
         {
             List<Request> requests = null;
             if (isSingleOrder)
@@ -1855,8 +1855,19 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                requests = await _context.Requests.Where(r=>r.Product.ProductSubcategory.ParentCategory.CategoryTypeID==1).Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
-                               .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                if (cart)
+                {
+                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                        .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
+                        .Where(r=>r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                }
+                else
+                {
+                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
+                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                }
+               
             }
             ParentRequest parentRequest = new ParentRequest();
             foreach (var request in requests)
@@ -1877,7 +1888,8 @@ namespace PrototypeWithAuth.Controllers
                 Requests = requests,
                 VendorId = id,
                 RequestID = id,
-                IsSingleOrder = isSingleOrder
+                IsSingleOrder = isSingleOrder,
+                Cart = cart
             };
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -1923,8 +1935,18 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                requests = await _context.Requests.Where(r => r.Product.VendorID == confirmEmail.VendorId && r.RequestStatusID == 6 && r.ParentQuote.QuoteStatusID == 4)
-                    .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                if (confirmEmail.Cart)
+                {
+                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                        .Where(r => r.Product.VendorID == confirmEmail.VendorID && r.RequestStatusID == 6 && !(r is Reorder))
+                        .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                }
+                else
+                {
+                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == confirmEmail.VendorID && r.RequestStatusID == 6 && !(r is Reorder))
+                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                }
             }
 
             string uploadFolder1 = Path.Combine("~", "files");

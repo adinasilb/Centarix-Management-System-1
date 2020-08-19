@@ -269,6 +269,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentQuote = new ParentQuote();
+
             requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
