@@ -2514,7 +2514,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, OrdersAndInventory, Operations")]
         public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
         {
             var categoryType = requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operation ? 2 : 1;
@@ -2626,8 +2626,19 @@ namespace PrototypeWithAuth.Controllers
             }
 
             TempData["Search"] = "True";
-
+            if(requestsSearchViewModel.SectionType == AppUtility.MenuItems.OrdersAndInventory)
+            {
+                return View("Index", onePageOfProducts);
+            } else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                return RedirectToAction("IndexForLabManage", "Vendors", onePageOfProducts);
+            }
+            else if(requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operation)
+            {
+                return RedirectToAction("Index", "Operations", onePageOfProducts);
+            }
             return View("Index", onePageOfProducts);
+
         }
 
 
