@@ -28,6 +28,7 @@ using Abp.Extensions;
 using SQLitePCL;
 using Microsoft.AspNetCore.Localization;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore.Internal;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
@@ -1948,57 +1949,61 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("Index"); //todo: put in tempdata memory here
-            return RedirectToAction("ConfirmEmailModa", new { id = termsViewModel.ParentRequest.ParentRequestID });
+            return RedirectToAction("ConfirmEmailModal", new { id = termsViewModel.ParentRequest.ParentRequestID });
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmEmailModal(int id, bool isSingleOrder = false, bool cart = false)
+        public async Task<IActionResult> ConfirmEmailModal(int id)
         {
-            List<Request> requests = null;
-            if (isSingleOrder)
-            {
-                requests = await _context.Requests.Where(r => r.RequestID == id)
-               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
-            }
-            else
-            {
-                if (cart)
-                {
-                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                        .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
-                        .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-                             .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                             .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
-                }
-                else
-                {
-                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
-                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
-                }
+            //List<Request> requests = null;
+            //if (isSingleOrder)
+            //{
+            //    requests = await _context.Requests.Where(r => r.RequestID == id)
+            //   .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
+            //}
+            //else
+            //{
+            //    if (cart)
+            //    {
+            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+            //            .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
+            //            .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+            //                 .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+            //                 .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+            //    }
+            //    else
+            //    {
+            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
+            //                  .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+            //    }
 
-            }
-            ParentRequest parentRequest = new ParentRequest();
-            foreach (var request in requests)
-            {
-                request.ParentRequest = parentRequest;
-                int lastParentRequestOrderNum = 0;
-                request.ParentRequest.ApplicationUserID = _userManager.GetUserId(User);
-                if (_context.ParentRequests.Any())
-                {
-                    lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-                }
-                request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-                request.ParentRequest.OrderDate = DateTime.Now;
-            }
+            //}
+            //ParentRequest parentRequest = new ParentRequest();
+            //foreach (var request in parentRequest.Requests)
+            //{
+            //    request.ParentRequest = parentRequest;
+            //    int lastParentRequestOrderNum = 0;
+            //    request.ParentRequest.ApplicationUserID = _userManager.GetUserId(User);
+            //    if (_context.ParentRequests.Any())
+            //    {
+            //        lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+            //    }
+            //    request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+            //    request.ParentRequest.OrderDate = DateTime.Now;
+            //}
 
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
-                Requests = requests,
+                ParentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == id)
+                    .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
+                    .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                    .FirstOrDefault(),
+                //Requests = parentRequest.Requests.ToList(),
                 VendorId = id,
                 RequestID = id,
-                IsSingleOrder = isSingleOrder,
-                Cart = cart
+                //IsSingleOrder = isSingleOrder,
+                //Cart = cart
             };
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -2012,7 +2017,7 @@ namespace PrototypeWithAuth.Controllers
             PdfDocument doc = new PdfDocument();
             // create a new pdf document converting an url
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
-            foreach (var request in requests)
+            foreach (var request in parentRequest.Requests)
             {
                 //creating the path for the file to be saved
                 string path1 = Path.Combine("wwwroot", "files");
