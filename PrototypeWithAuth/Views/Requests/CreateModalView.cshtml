@@ -444,106 +444,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="control-label">Discount:</label>
-                                    </div>
-                                </div>
-                                @*<div class="col-md-2">
-            <div class="form-group">
-                <label class="control-label">Terms:</label>
-                @Html.DropDownListFor(
-                                        model => model.Request.Terms,
-                                        new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-                                        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
-                                    )
-            </div>
-        </div>*@
-                                <div class="col-md-2">
-                                    <div class="form-check">
-                                        <label class="form-check-label-left" asp-for="Paid"></label>
-                                        <input class="form-check-input float-left opacity-100" type="checkbox" asp-for="Paid" id="paid_checkbox" onchange="changeTerms(this)" />
-                                        <span asp-validation-for="Paid" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-check">
-                                        <label class="form-check-label-left" asp-for="PayNow"></label>
-                                        <input class="form-check-input float-left opacity-100" type="checkbox" asp-for="PayNow" id="paynow_checkbox" onchange="changeTerms(this)" />
-                                        <span asp-validation-for="PayNow" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-check">
-                                        <label class="form-check-label-left" asp-for="PayLater"></label>
-                                        <input class="form-check-input float-left opacity-100" type="checkbox" asp-for="PayLater" id="paylater_checkbox" onchange="changeTerms(this)" />
-                                        <span asp-validation-for="PayLater" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <br />
-                            <div class="row installments">
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label asp-for="Request.Installments" class="control-label"></label>
-                                        <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.Installments" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-8 rounded card p-3">
-                                    <table class="table table-sm payments-table">
-                                        <thead class="thead-light rounded">
-                                            <tr>
-                                                <th>Payment Date</th>
-                                                <th>Payment Type</th>
-                                                <th>Account</th>
-                                                <th>Reference</th>
-                                            </tr>
-                                        </thead>
-                                        @{
-
-                                            for (int x = 0; x < Model.Request.Installments; x++)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        <input asp-for="NewPayments[x].PaymentDate" class="form-control-plaintext border-bottom " />
-                                                        <span asp-validation-for="NewPayments[x].PaymentDate" class="text-danger"></span>
-                                                    </td>
-                                                    <td>
-                                                        @Html.DropDownListFor(
-                                                            model => model.NewPayments[x].CompanyAccount.PaymentType,
-                                                            new SelectList(
-                                                            Model.PaymentTypes,
-                                                dataValueField: "PaymentTypeID",
-                                                dataTextField: "PaymentTypeDescription"),
-                                                optionLabel: "Select A Payment Type ",
-                                                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
-                                                        )
-                                                        <span asp-validation-for="NewPayments[x].CompanyAccount.PaymentType" class="text-danger"></span>
-                                                    </td>
-                                                    <td>
-                                                        <select asp-for="NewPayments[x].CompanyAccount" form-control-plaintext border-bottom companyAccountNum"></select>
-                                                        <span asp-validation-for="NewPayments[x].CompanyAccount.CompanyAccountNum" class="text-danger"></span>
-                                                    </td>
-                                                    <td>
-                                                        <input asp-for="NewPayments[x].PaymentID" class="form-control-plaintext border-bottom " />
-                                                        <span asp-validation-for="NewPayments[x].PaymentID" class="text-danger"></span>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        }
-                                    </table>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="control-label">Debt</label>
-                                        <input class="form-control-plaintext border-bottom " value="To Be Calculated" disabled id="Debt" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            
 
                         <div id="documents" class="tab-pane fade">
                             <span style="font-size: 1.7em;">Documents</span>
@@ -732,18 +633,18 @@
                             </div>
                         </div>
 
-                        <div id="archive" class="tab-pane fade">
+                        @*<div id="archive" class="tab-pane fade">
                             <span style="font-size: 1.7em;">Archive</span>
                             <br />
                             <br />
                             <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
-                        </div>
+                        </div>*@
 
                         <div id="history" class="tab-pane fade">
                             <span style="font-size: 1.7em;">History</span>
                             <br />
                             <br />
-                            <h5>This is the History tab. This tab is Timeles, thus no past, present or future.....!</h5>
+                            <h5>This is the History tab.</h5>
                         </div>
 
                         <div id="order" class="tab-pane fade">

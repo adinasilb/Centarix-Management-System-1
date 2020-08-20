@@ -36,6 +36,9 @@ namespace PrototypeWithAuth.Models
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
         public bool WithoutOrder { get; set; }
         public double Discount { get; set; }
+        public double Taxes { get; set; }
+        public double Credit { get; set; }
+        public double Shipping { get; set; }
     }
 }
 //list of request, owner, order date, (order number for an entire order or is it just for specific request) same for invoice number

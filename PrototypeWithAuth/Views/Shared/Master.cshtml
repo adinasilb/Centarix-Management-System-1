@@ -229,7 +229,7 @@
 
 
 
-<script>
+    <script>
         $(document).ready(function () {
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
@@ -272,9 +272,9 @@
                 var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "confirmemail");
-            
-            
-            
+
+
+
         }
 
         });
@@ -570,6 +570,15 @@
 
         }
 
+        $(".load-terms-modal").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "TermsModal/?id=" + $(this).val() + "&IsCart=true";
+            console.log("itemurl: " + $itemurl);
+            $.fn.CallPageRequest($itemurl, "termsmodal");
+            return false;
+        });
 
         $(".load-confirm-email").on("click", function (e) {
             e.preventDefault();
@@ -577,7 +586,7 @@
             $("#loading").show();
             var cart = "";
             if ($(this).hasClass("cart")) {
-                cart = "&cart=true" 
+                cart = "&cart=true"
             }
             var $itemurl = "ConfirmEmailModal/?id=" + $(this).val() + cart;
             $.fn.CallPageRequest($itemurl, "confirmemail");
@@ -920,7 +929,7 @@
             });
         }
 
-</script>
+    </script>
 </body>
 </html>
 

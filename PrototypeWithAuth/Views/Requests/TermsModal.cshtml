@@ -1,8 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.TermsViewModel;
-
+<script src="~/js/TermsModal.js"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:35rem; overflow-y:auto;">
-        <div class="modal-content d-inline-block" style="width:35rem;">
+    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:60rem; ">
+        <div class="modal-content d-inline-block rounded" style="width:60rem;">
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 <input type="hidden" asp-for="ParentRequest.ParentRequestID" />
                 <div class="modal-header">
@@ -39,12 +39,60 @@
                                 <span asp-validation-for="Terms" class="text-danger"></span>
                             </div>
                             <div class="col-2">
-                                <label asp-for="Taxes" class="control-label"></label>
+                                <label asp-for="ParentRequest.Taxes" class="control-label"></label>
+                                <input type="text" asp-for="ParentRequest.Taxes" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="ParentRequest.Taxes" class="text-danger"></span>
                             </div>
                             <div class="col-2">
-
+                                <label asp-for="ParentRequest.Shipping" class="control-label"></label>
+                                <input type="text" asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="ParentRequest.Shipping" class="text-danger"></span>
+                            </div>
+                            <div class="col-2">
+                                <label asp-for="ParentRequest.Credit" class="control-label"></label>
+                                <input type="text" asp-for="ParentRequest.Credit" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="ParentRequest.Credit" class="text-danger"></span>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label asp-for="Installments" class="control-label"></label>
+                                    <input asp-for="Installments" min="1" class="form-control-plaintext border-bottom " />
+                                    <span asp-validation-for="Installments" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group payment-date">
+                                    <label class="control-label">Payment Date</label>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group payment-type">
+                                    <label class="control-label">Payment Type</label>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group payment-account">
+                                    <label class="control-label">Account</label>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group payment-reference">
+                                    <label class="control-label">Reference</label>
+                                </div>
+                            </div>
+                        </div>
+                        @*<table class="table table-sm payments-table">
+                                <thead>
+                                    <tr>
+                                        <th class="control-label">Payment Date</th>
+                                        <th class="control-label">Payment Type</th>
+                                        <th class="control-label">Account</th>
+                                        <th class="control-label">Reference</th>
+                                    </tr>
+                                </thead>
+                            </table>*@
                     </div>
                 </div>
                 <div class="modal-footer">
