@@ -1920,7 +1920,35 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
+            _context.Update(termsViewModel.ParentRequest);
+            await _context.SaveChangesAsync();
+            foreach (var request in termsViewModel.ParentRequest.Requests)
+            {
+                if (termsViewModel.Paid)
+                {
+                    request.PaymentStatusID = 6;
+                }
+                else if (termsViewModel.Terms == 0)
+                {
+                    request.PaymentStatusID = 3;
+                }
+                else if (termsViewModel.Terms == 15 || termsViewModel.Terms == 30 || termsViewModel.Terms == 45)
+                {
+                    request.PaymentStatusID = 4;
+                }
+                else if (termsViewModel.Installments > 0) //again : should we check if it needs more than 1?
+                {
+                    request.PaymentStatusID = 5;
+                }
+                else
+                {
+                    request.PaymentStatusID = 2;
+                }
+                _context.Update(request);
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction("Index"); //todo: put in tempdata memory here
+            return RedirectToAction("ConfirmEmailModa", new { id = termsViewModel.ParentRequest.ParentRequestID });
         }
 
         [HttpGet]
