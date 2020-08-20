@@ -26,22 +26,25 @@
         {
             <tr class="text-center users-tr">
                 <td>
-                    <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
+                    @*<a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
+                        @Html.DisplayFor(modelItem => user.UserNum)
+                    </a>*@
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
                         @Html.DisplayFor(modelItem => user.UserNum)
                     </a>
                 </td>
                 <td>
-                    <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
                         @Html.DisplayFor(modelItem => user.UserName)
                     </a>
                 </td>
                 <td>
-                    <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
                         @Html.DisplayFor(modelItem => user.Email)
                     </a>
                 </td>
                 <td>
-                    <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
                         @Html.DisplayFor(modelItem => user.DateCreated)
                     </a>
                 </td>
