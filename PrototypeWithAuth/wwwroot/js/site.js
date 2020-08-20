@@ -117,7 +117,16 @@ var prevmm = mm;
 var prevyyyy = yyyy;
 //insert the payment lines
 $("#Request_ParentRequest_Installments").change(function () {
-	var installments = $(this).val();
+	$.fn.ChangePaymentsTable($(this).val());
+});
+
+$("#Installments").on('change', function () {
+	console.log("installments changed...");
+	$.fn.ChangePaymentsTable($(this).val());
+});
+
+$.fn.ChangePaymentsTable = function (installments) {
+	//var installments = $(this).val();
 	var countPrevInstallments = $(".payment-line").length;
 	var difference = installments - countPrevInstallments;
 
@@ -155,7 +164,7 @@ $("#Request_ParentRequest_Installments").change(function () {
 			$(".payments-table tr:last").remove();
 		}
 	}
-});
+};
 
 
 

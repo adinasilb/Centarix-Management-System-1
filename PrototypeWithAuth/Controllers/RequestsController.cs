@@ -551,9 +551,9 @@ namespace PrototypeWithAuth.Controllers
 
                             _context.Add(requestItemViewModel.Request);
                             _context.SaveChanges();
-                            
-                           // TempData["OpenTermsModal"] = true;
-                            TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
+
+                            TempData["OpenTermsModal"] = "Single";
+                            //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
                             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
                         }
 
@@ -1874,13 +1874,45 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> TermsModal(int id, bool isSingleRequest = false) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
+        public async Task<IActionResult> TermsModal(int id, bool isSingleRequest = false, bool IsCart = false) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
-            //TODO: add temp data memory here
+            //TODO: add temp data memory here 
+            int lastParentRequestOrderNum = 0;
+            if (_context.ParentRequests.Any())
+            {
+                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+            }
+
             TermsViewModel termsViewModel = new TermsViewModel()
             {
-                //IsSingleRequest = isSingleRequest
+                ParentRequest = new ParentRequest()
+                {
+                    ApplicationUserID = _userManager.GetUserId(User),
+                    OrderNumber = lastParentRequestOrderNum + 1,
+                    OrderDate = DateTime.Now
+                }
             };
+            if (isSingleRequest)
+            {
+                var request = _context.Requests.Where(r => r.RequestID == id).FirstOrDefault();
+                request.ParentRequestID = termsViewModel.ParentRequest.ParentRequestID;
+                _context.Update(request);
+                await _context.SaveChangesAsync();
+            }
+            else if (IsCart)
+            {
+                termsViewModel.ParentRequest = new ParentRequest();
+                var requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                        .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
+                        .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+                foreach (Request req in requests)
+                {
+                    req.ParentRequestID = termsViewModel.ParentRequest.ParentRequestID;
+                    _context.Update(req);
+                    await _context.SaveChangesAsync();
+                }
+            }
             return PartialView(termsViewModel);
         }
 
@@ -2994,7 +3026,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory, Operation")]
         public IActionResult Approve(int id)
         {
-            var request = _context.Requests.Where(r => r.RequestID == id).Include(r=>r.Product).ThenInclude(p=>p.ProductSubcategory).ThenInclude(px=>px.ParentCategory).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).FirstOrDefault();
             try
             {
                 request.RequestStatusID = 6; //approved
@@ -3025,7 +3057,7 @@ namespace PrototypeWithAuth.Controllers
                 });
             }
 
-         
+
         }
 
         [HttpGet]
