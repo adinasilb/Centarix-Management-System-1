@@ -65,7 +65,7 @@
                         @Html.ActionLink("Requests", "Index", "Operations", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link "  })
                     </li>
                     <li class="nav-item mx-4 d-table ">
-                        @Html.ActionLink("Full Inventory", "Index", "Operations", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
+                        @Html.ActionLink("Inventory", "Index", "Operations", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
                     </li>
                     <li class="nav-item mx-5  ">
                         @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.Operation }, new { @class = searchClass, @id = "search-link " /*why is the role and id here?*/ })

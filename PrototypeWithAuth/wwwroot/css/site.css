@@ -777,7 +777,9 @@ select option[value="US"] {
         color: var(--order-inv-color);
         text-decoration: none;
     }
-
+    .oper-link-clr:hover {
+        color: var(--operations-color);
+    }
 
 .lab-man-link-clr {
     color: black;

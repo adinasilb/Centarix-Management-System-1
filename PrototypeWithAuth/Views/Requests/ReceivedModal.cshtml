@@ -18,6 +18,7 @@
                 @Html.HiddenFor(vm => vm.Request.ProductID)
                 @Html.HiddenFor(vm => vm.Request.ParentRequestID)
                 @Html.HiddenFor(vm => vm.Request.RequestStatusID)
+                @Html.HiddenFor(vm => vm.CategoryType);
                 @Html.HiddenFor(vm => vm.Request.AmountWithInLocation)
                 @Html.HiddenFor(vm => vm.Request.AmountWithOutLocation)
                 @Html.HiddenFor(vm => vm.Request.IsDeleted)
@@ -101,59 +102,65 @@
                                             }
                                         </select>
                                         <span asp-validation-for="Request.ApplicationUserReceiverID" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                @*<div class="col-1 text-center">
+                    <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                    <label asp-for="Arrival">Arrival</label>
+                </div>*@
+                                <div class="col-2 text-center">
+                                    <label asp-for="Clarify">Clarify</label>
+                                    <br />
+                                    <input type="checkbox" asp-for="Clarify" class="bigger-box" />
+                                </div>
+                                <div class="col-2 text-center">
+                                    <label asp-for="PartialDelivery">Partial Delivery</label>
+                                    <br />
+                                    <input type="checkbox" asp-for="PartialDelivery" class="bigger-box" />
+                                </div>
+                                @*<div class="col-1 text-center">
+                    <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                    <label for="test-chkbx">Trial</label>
+                </div>*@
+                            </div>
+
+                            <br />
+                            @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                            {
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
+                                            @Html.DropDownListFor(m => m.LocationTypeID,
+                                     new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
+                                     "Select Type", new { @class = "mdb-select border-bottom ", @id = "locationTypeDepthZero" })
                                         </div>
                                     </div>
-                                    @*<div class="col-1 text-center">
-            <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-            <label asp-for="Arrival">Arrival</label>
-        </div>*@
-                                    <div class="col-2 text-center">
-                                        <label asp-for="Clarify">Clarify</label>
-                                        <br />
-                                        <input type="checkbox" asp-for="Clarify" class="bigger-box" />
-                                    </div>
-                                    <div class="col-2 text-center">
-                                        <label asp-for="PartialDelivery">Partial Delivery</label>
-                                        <br />
-                                        <input type="checkbox" asp-for="PartialDelivery" class="bigger-box" />
-                                    </div>
-                                    @*<div class="col-1 text-center">
-            <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-            <label for="test-chkbx">Trial</label>
-        </div>*@
-                                </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="form-group">
-                                        <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
-                                        @Html.DropDownListFor(m => m.LocationTypeID,
-                                        new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-                                        "Select Type", new { @class = "mdb-select border-bottom ", @id = "locationTypeDepthZero" })
-                                    </div>
-                                </div>
-                                <div class="col-8">
-                                    <div class="divSublocations">
+                                    <div class="col-8">
+                                        <div class="divSublocations">
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <br />
-                            @*<div class="row">
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Location Details</label>
-                                        <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
-                                    </div>
-                                </div>
-                            </div>*@
-                        </div>
-                        <div class="col-4">
-                            <div class="visualView col-12 text-center">
-
-                            </div>
+                                <br />
+                                @*<div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="control-label">Location Details</label>
+                            <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
                         </div>
                     </div>
+                </div>*@}
+                        </div>
+                        @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                        {
+                            <div class="col-4">
+                                <div class="visualView col-12 text-center">
+
+                                </div>
+                            </div>
+                        }
+                        </div>
 
                 </div>
 

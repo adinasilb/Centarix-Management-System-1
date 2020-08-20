@@ -1214,6 +1214,42 @@ namespace PrototypeWithAuth.Controllers
             });
         }
 
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,  Operation")]
+        public IActionResult Order(int id)
+        {
+            var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).FirstOrDefault();
+            try
+            {
+                request.RequestStatusID = 2; //ordered
+                ParentRequest parentRequest = new ParentRequest();
+                parentRequest.ApplicationUserID = _userManager.GetUserId(User);
+                int lastParentRequestOrderNum = 0;
+                if (_context.ParentRequests.Any())
+                {
+                    lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                }
+                parentRequest.OrderDate = DateTime.Now;
+                parentRequest.OrderNumber = lastParentRequestOrderNum;
+                request.ParentRequest = parentRequest;
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
+            }
+            return RedirectToAction("Index", "Operations", new
+                {
+                    requestStatusID = 2,
+                    PageType = AppUtility.RequestPageTypeEnum.Request
+                });
+        }
+
+
         private bool checkIfInBudget(Request request)
         {
             DateTime firstOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);

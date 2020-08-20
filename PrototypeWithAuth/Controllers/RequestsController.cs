@@ -293,7 +293,9 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel)
         {
             var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID)
-                .Include(r => r.RequestLocationInstances).FirstOrDefault();
+                .Include(r => r.RequestLocationInstances).Include(r=>r.Product).ThenInclude(p=>p.ProductSubcategory)
+                .ThenInclude(ps=>ps.ParentCategory)
+                .FirstOrDefault();
             request.IsDeleted = true;
             _context.Update(request);
             _context.SaveChanges();
@@ -358,12 +360,24 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                // AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
-                return RedirectToAction("Index", new
+                if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                { 
+                    return RedirectToAction("Index", new
+                    {
+                        requestStatusID = request.RequestStatusID,
+                        PageType = AppUtility.RequestPageTypeEnum.Request
+                    });
+                }
+                else
                 {
-                    requestStatusID = request.RequestStatusID,
-                    PageType = AppUtility.RequestPageTypeEnum.Request
-                });
+                    // AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
+                    return RedirectToAction("Index", "Operations", new
+                    {
+                        requestStatusID = request.RequestStatusID,
+                        PageType = AppUtility.RequestPageTypeEnum.Request
+                    });
+                }
+
             }
 
         }
@@ -538,8 +552,8 @@ namespace PrototypeWithAuth.Controllers
                             _context.Add(requestItemViewModel.Request);
                             _context.SaveChanges();
                             
-                            TempData["OpenTermsModal"] = true;
-                            //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
+                           // TempData["OpenTermsModal"] = true;
+                            TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
                             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
                         }
 
@@ -2608,7 +2622,7 @@ namespace PrototypeWithAuth.Controllers
 
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
             {
-                Request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
+                Request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory)
                     .FirstOrDefault(),
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
@@ -2618,6 +2632,7 @@ namespace PrototypeWithAuth.Controllers
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             receivedLocationViewModel.Request.ApplicationUserReceiverID = currentUser.Id;
             receivedLocationViewModel.Request.ArrivalDate = DateTime.Today;
+            receivedLocationViewModel.CategoryType = receivedLocationViewModel.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID;
 
             return View(receivedLocationViewModel);
         }
@@ -2684,53 +2699,71 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             bool hasLocationInstances = false;
-
-            foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)
+            if (receivedLocationViewModel.CategoryType==1)
             {
-                bool flag = false;
-                LocationInstance parentLocationInstance = locationInstance;
-                while (!flag)
+                foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)
                 {
-                    var pli = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
-                    if (pli != null)
+                    bool flag = false;
+                    LocationInstance parentLocationInstance = locationInstance;
+                    while (!flag)
                     {
-                        parentLocationInstance = pli;
+                        var pli = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+                        if (pli != null)
+                        {
+                            parentLocationInstance = pli;
+                        }
+                        else
+                        {
+                            flag = true;
+                        }
+                    }
+
+                    var tempLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
+                    if (!tempLocationInstance.IsFull && locationInstance.IsFull)//only putting in the locationInstance.IsFull if it's false b/c sometimes it doesn't pass in the true value so we can end up taking things out by mistake
+                    {
+                        tempLocationInstance.IsFull = locationInstance.IsFull;
+                        _context.Update(tempLocationInstance);
+                        //coule be later on we'll want to save here too
+
+                        //this only works because we're using a one to many relationship with request and locationinstance instead of a many to many
+                        var requestLocationInstances = _context.LocationInstances
+                            .Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID)
+                            .FirstOrDefault().RequestLocationInstances;
+
+                        //if it doesn't have any requestlocationinstances
+                        //WHY DO WE NEED THIS??????
+                        if (requestLocationInstances == null)
+                        {
+                            RequestLocationInstance requestLocationInstance = new RequestLocationInstance()
+                            {
+                                RequestID = receivedLocationViewModel.Request.RequestID,
+                                LocationInstanceID = locationInstance.LocationInstanceID,
+                                ParentLocationInstanceID = parentLocationInstance.LocationInstanceID
+                            };
+                            _context.Add(requestLocationInstance);
+                            hasLocationInstances = true;
+                        }
+                        _context.SaveChanges();
+                    }
+                }
+                if (hasLocationInstances)
+                {
+                    if (receivedLocationViewModel.Clarify)
+                    {
+                        receivedLocationViewModel.Request.RequestStatusID = 5;
+                    }
+                    else if (receivedLocationViewModel.PartialDelivery)
+                    {
+                        receivedLocationViewModel.Request.RequestStatusID = 4;
                     }
                     else
                     {
-                        flag = true;
+                        receivedLocationViewModel.Request.RequestStatusID = 3;
                     }
                 }
 
-                var tempLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault();
-                if (!tempLocationInstance.IsFull && locationInstance.IsFull)//only putting in the locationInstance.IsFull if it's false b/c sometimes it doesn't pass in the true value so we can end up taking things out by mistake
-                {
-                    tempLocationInstance.IsFull = locationInstance.IsFull;
-                    _context.Update(tempLocationInstance);
-                    //coule be later on we'll want to save here too
-
-                    //this only works because we're using a one to many relationship with request and locationinstance instead of a many to many
-                    var requestLocationInstances = _context.LocationInstances
-                        .Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID)
-                        .FirstOrDefault().RequestLocationInstances;
-
-                    //if it doesn't have any requestlocationinstances
-                    //WHY DO WE NEED THIS??????
-                    if (requestLocationInstances == null)
-                    {
-                        RequestLocationInstance requestLocationInstance = new RequestLocationInstance()
-                        {
-                            RequestID = receivedLocationViewModel.Request.RequestID,
-                            LocationInstanceID = locationInstance.LocationInstanceID,
-                            ParentLocationInstanceID = parentLocationInstance.LocationInstanceID
-                        };
-                        _context.Add(requestLocationInstance);
-                        hasLocationInstances = true;
-                    }
-                    _context.SaveChanges();
-                }
             }
-            if (hasLocationInstances)
+            else
             {
                 if (receivedLocationViewModel.Clarify)
                 {
@@ -2745,7 +2778,6 @@ namespace PrototypeWithAuth.Controllers
                     receivedLocationViewModel.Request.RequestStatusID = 3;
                 }
             }
-
             try
             {
                 receivedLocationViewModel.Request.Product = _context.Products.Where(p => p.ProductID == receivedLocationViewModel.Request.ProductID).FirstOrDefault();
@@ -2769,15 +2801,29 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
-
-            return RedirectToAction("Index", new
+            if (receivedLocationViewModel.CategoryType == 1)
             {
-                page = receivedLocationViewModel.Page,
-                requestStatusID = receivedLocationViewModel.RequestStatusID,
-                subcategoryID = receivedLocationViewModel.SubCategoryID,
-                vendorID = receivedLocationViewModel.VendorID,
-                applicationUserID = receivedLocationViewModel.ApplicationUserID
-            });
+                return RedirectToAction("Index", new
+                {
+                    page = receivedLocationViewModel.Page,
+                    requestStatusID = receivedLocationViewModel.RequestStatusID,
+                    subcategoryID = receivedLocationViewModel.SubCategoryID,
+                    vendorID = receivedLocationViewModel.VendorID,
+                    applicationUserID = receivedLocationViewModel.ApplicationUserID
+                });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Operations", new
+                {
+                    page = receivedLocationViewModel.Page,
+                    requestStatusID = receivedLocationViewModel.RequestStatusID,
+                    subcategoryID = receivedLocationViewModel.SubCategoryID,
+                    vendorID = receivedLocationViewModel.VendorID,
+                    applicationUserID = receivedLocationViewModel.ApplicationUserID
+                });
+            }
+         
         }
 
 

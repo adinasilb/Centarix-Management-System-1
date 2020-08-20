@@ -1,15 +1,21 @@
 @font-face {
-  font-family: 'elixir-icons';
-  src:  url('elixir-icons.eot?azn5x4');
-  src:  url('elixir-icons.eot?azn5x4#iefix') format('embedded-opentype'),
-    url('elixir-icons.ttf?azn5x4') format('truetype'),
-    url('elixir-icons.woff?azn5x4') format('woff'),
-    url('elixir-icons.svg?azn5x4#elixir-icons') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
+    font-family: 'elixir-icons';
+    src: url('elixir-icons.eot?azn5x4');
+    src: url('elixir-icons.eot?azn5x4#iefix') format('embedded-opentype'), url('elixir-icons.ttf?azn5x4') format('truetype'), url('elixir-icons.woff?azn5x4') format('woff'), url('elixir-icons.svg?azn5x4#elixir-icons') format('svg');
+   /* src: url('fonts/elixir-icons.eot?jbtas1');
+    src: url('fonts/elixir-icons.eot?jbtas1#iefix') format('embedded-opentype'), url('fonts/elixir-icons.ttf?jbtas1') format('truetype'), url('fonts/elixir-icons.woff?jbtas1') format('woff'), url('fonts/elixir-icons.svg?jbtas1#elixir-icons') format('svg');*/
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
 }
-
+@font-face {
+    font-family: 'elixir-icons';
+    src: url('fonts/elixir-icons.eot?jbtas1');
+    src: url('fonts/elixir-icons.eot?jbtas1#iefix') format('embedded-opentype'), url('fonts/elixir-icons.ttf?jbtas1') format('truetype'), url('fonts/elixir-icons.woff?jbtas1') format('woff'), url('fonts/elixir-icons.svg?jbtas1#elixir-icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'elixir-icons' !important;
@@ -267,4 +273,102 @@
 }
 .icon-update-24px:before {
   content: "\e950";
+}
+.icon-report_problem-24px-2:before {
+    content: "\e900";
+}
+
+.icon-standing_orders-24px:before {
+    content: "\e901";
+}
+
+.icon-https-24px:before {
+    content: "\e902";
+}
+
+.icon-notifications_number-24px .path1:before {
+    content: "\e905";
+    color: rgb(128, 128, 128);
+}
+
+.icon-notifications_number-24px .path2:before {
+    content: "\e906";
+    margin-left: -1em;
+    color: rgb(233, 82, 82);
+}
+
+.icon-more-24px:before {
+    content: "\e907";
+}
+
+.icon-approve-24px:before {
+    content: "\e908";
+}
+
+.icon-back-24px:before {
+    content: "\e909";
+}
+
+.icon-account_box-24px-1:before {
+    content: "\e90b";
+}
+
+.icon-categories-24px:before {
+    content: "\e90c";
+}
+
+.icon-notifications-24px:before {
+    content: "\e90d";
+}
+
+.icon-add_circle_outline-24px-1:before {
+    content: "\e90e";
+}
+
+.icon-centarix-icons-19:before {
+    content: "\e903";
+}
+
+.icon-centarix-icons-20:before {
+    content: "\e904";
+}
+
+.icon-delete-24px:before {
+    content: "\e90a";
+}
+
+.icon-comment-24px:before {
+    content: "\e915";
+}
+
+.icon-centarix-icons-06:before {
+    content: "\e91c";
+}
+
+.icon-assignment-24px:before {
+    content: "\e921";
+}
+
+.icon-category-24px:before {
+    content: "\e924";
+}
+
+.icon-format_list_bulleted-24px-01:before {
+    content: "\e927";
+}
+
+.icon-face-24px:before {
+    content: "\e937";
+}
+
+.icon-perm_contact_calendar-24px:before {
+    content: "\e945";
+}
+
+.icon-place-24px:before {
+    content: "\e946";
+}
+
+.icon-storefront-24px:before {
+    content: "\e94f";
 }

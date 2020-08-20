@@ -27,6 +27,7 @@ namespace PrototypeWithAuth.ViewModels
         public int? Page { get; set; }
         public int RequestStatusID { get; set; }
         public int SubCategoryID { get; set; }
+        public int CategoryType { get; set; }
         public int VendorID { get; set; }
         public string ApplicationUserID { get; set; }
         public int /*AppUtility.RequestPageTypeEnum*/ PageType { get; set; }
