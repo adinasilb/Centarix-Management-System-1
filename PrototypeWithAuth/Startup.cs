@@ -117,6 +117,8 @@ namespace PrototypeWithAuth
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+
             CreateRoles(serviceProvider).Wait();
 
 
