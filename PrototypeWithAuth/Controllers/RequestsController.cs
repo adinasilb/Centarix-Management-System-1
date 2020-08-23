@@ -1925,6 +1925,12 @@ namespace PrototypeWithAuth.Controllers
         {
             _context.Update(termsViewModel.ParentRequest);
             await _context.SaveChangesAsync();
+
+            foreach (var payment in termsViewModel.NewPayments)
+            {
+                
+            }
+
             foreach (var request in termsViewModel.ParentRequest.Requests)
             {
                 if (termsViewModel.Paid)

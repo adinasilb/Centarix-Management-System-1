@@ -125,46 +125,46 @@ $("#Installments").on('change', function () {
 	$.fn.ChangePaymentsTable($(this).val());
 });
 
-$.fn.ChangePaymentsTable = function (installments) {
-	//var installments = $(this).val();
-	var countPrevInstallments = $(".payment-line").length;
-	var difference = installments - countPrevInstallments;
+//$.fn.ChangePaymentsTable = function (installments) {
+//	//var installments = $(this).val();
+//	var countPrevInstallments = $(".payment-line").length;
+//	var difference = installments - countPrevInstallments;
 
 
-	if (difference > 0) {
-		var newIncrementNumber = countPrevInstallments;
-		for (x = difference; x > 0; x--) {
+//	if (difference > 0) {
+//		var newIncrementNumber = countPrevInstallments;
+//		for (x = difference; x > 0; x--) {
 
-			var newmm = 0;
-			var newyyyy = 0;
-			if (prevmm < 12) {
-				newmm = parseInt(prevmm);
-				newmm = newmm + 1;
-				newyyyy = prevyyyy;
-			}
-			else {
-				newyyyy = parseInt(prevyyyy) + 1;
-				newmm = 1;
-			}
+//			var newmm = 0;
+//			var newyyyy = 0;
+//			if (prevmm < 12) {
+//				newmm = parseInt(prevmm);
+//				newmm = newmm + 1;
+//				newyyyy = prevyyyy;
+//			}
+//			else {
+//				newyyyy = parseInt(prevyyyy) + 1;
+//				newmm = 1;
+//			}
 
-			if (newmm < 10) { newmm = '0' + newmm }
+//			if (newmm < 10) { newmm = '0' + newmm }
 
-			var paymentDate = newyyyy + '-' + newmm + '-' + dd;
+//			var paymentDate = newyyyy + '-' + newmm + '-' + dd;
 
-			prevyyyy = newyyyy;
-			prevmm = newmm;
-			$.fn.AddNewPaymentLine(newIncrementNumber, paymentDate);
-			newIncrementNumber++;
-		};
+//			prevyyyy = newyyyy;
+//			prevmm = newmm;
+//			$.fn.AddNewPaymentLine(newIncrementNumber, paymentDate);
+//			newIncrementNumber++;
+//		};
 
-		$.fn.AdjustPaymentDates();
-	}
-	else if (difference < 0) { //installments were removed
-		for (x = difference; x < 0; x++) {
-			$(".payments-table tr:last").remove();
-		}
-	}
-};
+//		$.fn.AdjustPaymentDates();
+//	}
+//	else if (difference < 0) { //installments were removed
+//		for (x = difference; x < 0; x++) {
+//			$(".payments-table tr:last").remove();
+//		}
+//	}
+//};
 
 
 

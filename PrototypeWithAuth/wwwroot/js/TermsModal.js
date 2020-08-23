@@ -8,9 +8,9 @@ $.fn.ChangePaymentsTable = function (installments) {
 	//var installments = $(this).val();
 	var countPrevInstallments = $(".type-1").length;
 	var difference = installments - countPrevInstallments;
-	console.log("installments: " + installments);
-	console.log("countPrevInstallments: " + countPrevInstallments);
-	console.log("difference: " + difference);
+	//console.log("installments: " + installments);
+	//console.log("countPrevInstallments: " + countPrevInstallments);
+	//console.log("difference: " + difference);
 
 	if (difference > 0) {
 		console.log("in add");
@@ -42,12 +42,13 @@ $.fn.ChangePaymentsTable = function (installments) {
 		$.fn.AdjustPaymentDates();
 	}
 	else if (difference < 0) { //TODO: rework the remove
-		console.log("in subtract");
 		for (x = difference; x < 0; x++) {
-			$(".payment-date input:last").remove();
-			$(".payment-type select:last").remove();
-			$(".payment-account select:last").remove();
-			$(".payment-reference input:last").remove();
+			console.log("x: " + x);
+			$(".payment-date input").last().remove();
+			console.log($(".payment-date input").last().val());
+			$(".payment-type select").last().remove();
+			$(".payment-account select").last().remove();
+			$(".payment-reference input").last().remove();
 		}
 	}
 };
@@ -59,7 +60,7 @@ $.fn.AddNewPaymentLine = function (increment, date) {
 	//htmlTR += "<tr class='payment-line m-0 p-0'>";
 	//htmlTR += "<td class='m-0 p-0'>";
 	var htmlPD = "";
-	htmlPD += '<input class="form-control-plaintext border-bottom payment-date date-1" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
+	htmlPD += '<input class="form-control-plaintext border-bottom date-1" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
 	htmlPD += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
 	//htmlTR += '</td>';
 	//htmlTR += '<td class="m-0 p-0">';
@@ -79,8 +80,8 @@ $.fn.AddNewPaymentLine = function (increment, date) {
 	//htmlTR += '</td>';
 	//htmlTR += '<td class="m-0 p-0">';
 	var htmlPR = "";
-	htmlPR += '<input class="form-control-plaintext border-bottom reference1" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
-	htmlPR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
+	htmlPR += '<input class="form-control-plaintext border-bottom reference1" type="text" data-val="true" data-val-required="The Reference Number is required." id="NewPayments_' + increment + '__Reference" name="NewPayments[' + increment + '].Reference" value="" />';
+	htmlPR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].Reference" data-valmsg-replace="true"></span>';
 	//htmlTR += '</td>';
 	//htmlTR += '</tr >';
 	//$("body").append(htmlTR);
@@ -101,7 +102,7 @@ $.fn.AdjustInputHeights = function () {
 };
 
 //since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
-$(".payments-table").on("change", ".paymentType", function (e) {
+$("body").on("change", ".paymentType", function (e) {
 	var paymentTypeID = $(this).val();
 	var url = "/CompanyAccounts/GetAccountsByPaymentType";
 	var id = "" + $(this).attr('id');
