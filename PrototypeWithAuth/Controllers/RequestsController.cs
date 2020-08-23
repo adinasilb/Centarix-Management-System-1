@@ -1926,36 +1926,45 @@ namespace PrototypeWithAuth.Controllers
             _context.Update(termsViewModel.ParentRequest);
             await _context.SaveChangesAsync();
 
-            foreach (var payment in termsViewModel.NewPayments)
-            {
-                payment.ParentRequestID = termsViewModel.ParentRequest.ParentRequestID;
-                _context.Add(payment);
-                await _context.SaveChangesAsync();
-            }
+            var requests = _context.Requests.Where(r => r.ParentRequestID == termsViewModel.ParentRequest.ParentRequestID);
 
-            foreach (var request in termsViewModel.ParentRequest.Requests)
+            if (termsViewModel.NewPayments != null)
             {
-                if (termsViewModel.Paid)
+                foreach (var payment in termsViewModel.NewPayments)
                 {
-                    request.PaymentStatusID = 6;
+                    payment.ParentRequestID = termsViewModel.ParentRequest.ParentRequestID;
+                    _context.Add(payment);
                 }
-                else if (termsViewModel.Terms == 0)
+                await _context.SaveChangesAsync();
+            };
+
+            if (requests != null)
+            {
+                foreach (var request in requests)
                 {
-                    request.PaymentStatusID = 3;
+                    if (termsViewModel.Paid)
+                    {
+                        request.PaymentStatusID = 6;
+                    }
+                    else if (termsViewModel.Terms > 0)
+                    {
+                        request.PaymentStatusID = 3;
+                    }
+                    else if (termsViewModel.Terms == 15 || termsViewModel.Terms == 30 || termsViewModel.Terms == 45)
+                    {
+                        request.PaymentStatusID = 4;
+                    }
+                    else if (termsViewModel.Installments > 0) //again : should we check if it needs more than 1?
+                    {
+                        request.PaymentStatusID = 5;
+                        //the payments don't go here otherwise it would add for every request (needs to be added just once for the parent request)
+                    }
+                    else
+                    {
+                        request.PaymentStatusID = 2;
+                    }
+                    _context.Update(request);
                 }
-                else if (termsViewModel.Terms == 15 || termsViewModel.Terms == 30 || termsViewModel.Terms == 45)
-                {
-                    request.PaymentStatusID = 4;
-                }
-                else if (termsViewModel.Installments > 0) //again : should we check if it needs more than 1?
-                {
-                    request.PaymentStatusID = 5;
-                }
-                else
-                {
-                    request.PaymentStatusID = 2;
-                }
-                _context.Update(request);
                 await _context.SaveChangesAsync();
             }
             //return RedirectToAction("Index"); //todo: put in tempdata memory here
@@ -2051,7 +2060,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)
         {
-            List<Request> requests = null;
+            //List<Request> requests = null;
             //if (confirmEmail.IsSingleOrder)
             //{
             //    requests = await _context.Requests.Where(r => r.RequestID == confirmEmail.RequestID)
@@ -2075,9 +2084,11 @@ namespace PrototypeWithAuth.Controllers
             //    }
             //}
 
+            var firstRequest = _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID).FirstOrDefault();
+
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
-            string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder, firstRequest.RequestID.ToString());
             string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
             string uploadFile = Path.Combine(uploadFolder3, "OrderPDF.pdf");
 
@@ -2094,8 +2105,8 @@ namespace PrototypeWithAuth.Controllers
                 string ownerEmail = currentUser.Email;
                 string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                 string ownerPassword = currentUser.SecureAppPass;
-                string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
-                string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
+                string vendorEmail = firstRequest.Product.Vendor.OrdersEmail;
+                string vendorName = firstRequest.Product.Vendor.VendorEnName;
 
                 //add a "From" Email
                 message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
@@ -2118,7 +2129,8 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, requests.FirstOrDefault().ApplicationUserCreator.SecureAppPass);// ownerPassword);//
+                    var SecureAppPass = _context.Users.Where(u => u.Id == confirmEmail.ParentRequest.ApplicationUserID).FirstOrDefault().SecureAppPass;
+                    client.Authenticate(ownerEmail, SecureAppPass);// ownerPassword);//
 
                     //"FakeUser@123"); // set up two step authentication and get app password
                     try
@@ -2133,29 +2145,35 @@ namespace PrototypeWithAuth.Controllers
                     client.Disconnect(true);
                     if (wasSent)
                     {
-                        foreach (var request in requests)
+                        foreach(var request in _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID))
                         {
-                            ParentRequest parentRequest = new ParentRequest();
-                            request.ParentRequest = parentRequest;
-                            int lastParentRequestOrderNum = 0;
-                            request.ParentRequest.ApplicationUserID = currentUser.Id;
-                            if (_context.ParentRequests.Any())
-                            {
-                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-                            }
-                            request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-                            request.ParentRequest.OrderDate = DateTime.Now;
-                            requests.FirstOrDefault().RequestStatusID = 2;
+                            request.RequestStatusID = 2;
                             _context.Update(request);
-                            await _context.SaveChangesAsync();
                         }
+                        await _context.SaveChangesAsync();
+                        //foreach (var request in requests)
+                        //{
+                        //    ParentRequest parentRequest = new ParentRequest();
+                        //    request.ParentRequest = parentRequest;
+                        //    int lastParentRequestOrderNum = 0;
+                        //    request.ParentRequest.ApplicationUserID = currentUser.Id;
+                        //    if (_context.ParentRequests.Any())
+                        //    {
+                        //        lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                        //    }
+                        //    request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+                        //    request.ParentRequest.OrderDate = DateTime.Now;
+                        //    requests.FirstOrDefault().RequestStatusID = 2;
+                        //    _context.Update(request);
+                        //    await _context.SaveChangesAsync();
+                        //}
 
                     }
 
                 }
 
                 AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)confirmEmail.PageType;
-                if (requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                if (firstRequest.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 {
                     TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
                     return RedirectToAction("Index", new

@@ -1,4 +1,7 @@
-﻿
+﻿$(document).ready(function () {
+	$("#Terms").val("Select");
+});
+
 $("#Installments").on('change', function () {
 	console.log("installments changed...");
 	$.fn.ChangePaymentsTable($(this).val());
@@ -131,35 +134,31 @@ $.fn.AdjustPaymentDates = function () {
 $("#Paid").on('change', function () {
 	var val = $(this).val();
 	console.log("in paid fx " + val);
-	switch (val) {
-		case true:
-			console.log("true");
-			$("#Terms").attr("disabled", true);
-			$("#Installments").attr("disabled", true);
-			break;
-		case false:
-			console.log("false");
-			$("#Terms").attr("disabled", false);
-			$("#Installments").attr("disabled", false);
-			break;
+	if (val == 'true') {
+		console.log("true");
+		$("#Terms").attr("disabled", true);
+		$("#Installments").attr("disabled", true);
+	}
+	else {
+		console.log("false");
+		$("#Terms").attr("disabled", false);
+		$("#Installments").attr("disabled", false);
 	};
 });
 
 $("#Terms").on('change', function () {
 	var val = $(this).val();
 	console.log("in terms fx: " + val);
-	switch (val) {
-		case "select":
-			console.log("select");
-			$("#Paid").attr("disabled", true);
-			$("#Installments").attr("disabled", true);
-			break;
-		default:
-			console.log("default");
-			$("#Paid").attr("disabled", false);
-			$("#Installments").attr("disabled", false);
-			break;
-	};
+	if (val == "select") {
+		console.log("true");
+		$("#Terms").attr("disabled", false);
+		$("#Installments").attr("disabled", false);
+	}
+	else {
+		console.log("false");
+		$("#Terms").attr("disabled", true);
+		$("#Installments").attr("disabled", true);
+	}
 });
 
 $("#Installments").on('change', function () {
@@ -175,5 +174,5 @@ $("#Installments").on('change', function () {
 });
 
 $.fn.HideAndShowFields = function (type) {
-	
+
 };
