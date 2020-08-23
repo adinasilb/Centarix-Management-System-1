@@ -37,6 +37,7 @@ namespace PrototypeWithAuth.Data
 
         public IEnumerable<Request> RequestsReceived { get; set; }
         public IEnumerable<Request> RequestsCreated { get; set; }
+        public DateTime LockoutEndDate { get; internal set; }
 
         // public string URLPic { get; set; }
 

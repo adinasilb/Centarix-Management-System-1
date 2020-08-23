@@ -2669,7 +2669,7 @@ namespace PrototypeWithAuth.Controllers
                     .FirstOrDefault(),
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
-                ApplicationUsers = await _context.Users.ToListAsync()
+                ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled && u.LockoutEnd <= DateTime.Now).ToListAsync()
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));

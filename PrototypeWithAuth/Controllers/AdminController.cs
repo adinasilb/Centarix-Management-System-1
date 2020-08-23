@@ -47,9 +47,14 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult Index()
         {
             TempData["PageType"] = AppUtility.UserPageTypeEnum.Index;
-            var users = _context.Users
-                .Where(u => u.IsDeleted == false)
+            List<ApplicationUser> users = new List<ApplicationUser>();
+            users = _context.Users
+                .Where(u => !u.LockoutEnabled && u.LockoutEnd <= DateTime.Now)
                 .ToList();
+            if (User.IsInRole("Admin"))
+            {
+                users = _context.Users.ToList();
+            }
             return View(users);
         }
 
@@ -348,7 +353,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> EditUser(string id)
         {
-            var editUserViewModel = _context.Users.Where(u => u.Id == id).Where(u => u.IsDeleted == false)
+            var editUserViewModel = _context.Users.Where(u => u.Id == id).Where(u => !u.LockoutEnabled && u.LockoutEnd <= DateTime.Now)
                 .Select(u => new EditUserViewModel
                 {
                     ApplicationUserID = u.Id,
@@ -608,7 +613,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public IActionResult DeleteUserModal(string Id)
         {
-            var user = _context.Users.Where(u => u.Id == Id).Where(u => u.IsDeleted == false).FirstOrDefault();
+            var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
             return PartialView(user);
         }
 
@@ -618,6 +623,35 @@ namespace PrototypeWithAuth.Controllers
         {
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
             applicationUser.IsDeleted = true;
+            _context.Update(applicationUser);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult SuspendUserModal(string Id)
+        {
+            var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
+            return PartialView(user);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SuspendUserModal(ApplicationUser applicationUser)
+        {
+            applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
+            if(applicationUser.LockoutEnabled ==true && applicationUser.LockoutEndDate > DateTime.Now)
+            {
+                applicationUser.LockoutEnabled = false;
+                applicationUser.LockoutEnd = DateTime.Now;
+            }
+            else
+            {
+                applicationUser.LockoutEnabled = true;
+                applicationUser.LockoutEnd = new DateTime(2999, 01, 01);
+            }
             _context.Update(applicationUser);
             _context.SaveChanges();
             return RedirectToAction("Index");

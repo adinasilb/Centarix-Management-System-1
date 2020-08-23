@@ -1,4 +1,7 @@
 ﻿@model IEnumerable<PrototypeWithAuth.Data.ApplicationUser>
+@using PrototypeWithAuth.Data
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/UsersView.cshtml";
@@ -24,39 +27,55 @@
         </tr>
         @foreach (var user in Model)
         {
-            <tr class="text-center users-tr">
-                <td>
-                    @*<a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
-                        @Html.DisplayFor(modelItem => user.UserNum)
-                    </a>*@
-                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
-                        @Html.DisplayFor(modelItem => user.UserNum)
+    <tr class="text-center users-tr">
+        <td>
+            @*<a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
+                @Html.DisplayFor(modelItem => user.UserNum)
+            </a>*@
+            <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                @Html.DisplayFor(modelItem => user.UserNum)
+            </a>
+        </td>
+        <td>
+            <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                @Html.DisplayFor(modelItem => user.UserName)
+            </a>
+        </td>
+        <td>
+            <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                @Html.DisplayFor(modelItem => user.Email)
+            </a>
+        </td>
+        <td>
+            <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                @Html.DisplayFor(modelItem => user.DateCreated)
+            </a>
+        </td>
+        @if (User.IsInRole("Admin"))
+        {
+        <td>
+            @{
+                var userid = user.Id;
+
+
+
+                if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now)
+                {
+                    <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
+                        Unsuspend
                     </a>
-                </td>
-                <td>
-                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
-                        @Html.DisplayFor(modelItem => user.UserName)
+                }
+                if (!user.LockoutEnabled && user.LockoutEnd <= DateTime.Now)
+                {
+                    <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
+                        Suspend
                     </a>
-                </td>
-                <td>
-                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
-                        @Html.DisplayFor(modelItem => user.Email)
-                    </a>
-                </td>
-                <td>
-                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
-                        @Html.DisplayFor(modelItem => user.DateCreated)
-                    </a>
-                </td>
-                <td>
-                    @{ 
-                        var userid = user.Id;
-                    }
-                    <a href="" onclick="$.fn.DeleteUserModal('@userid')" class="prevent-js-reload">
-                        <img src="~/images/css/inventory/add-item/other icons/delete_dis.png" />
-                    </a>
-                </td>
-            </tr>
+                }
+            }
+        
+        </td>
+    }
+    </tr>
         }
     </tbody>
 </table>

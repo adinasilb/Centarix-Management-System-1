@@ -712,6 +712,13 @@
             return false;
         };
 
+        $.fn.SuspendUserModal = function (userid) {
+            console.log("in delete user modal function");
+            $itemurl = 'Admin/SuspendUserModal?id=' + userid;
+            $.fn.CallPageUser($itemurl, '');
+            return false;
+        };
+
         $.fn.CallPageUser = function ($itemurl) {
             console.log("item url: " + $itemurl);
             $('.modal').replaceWith('');
