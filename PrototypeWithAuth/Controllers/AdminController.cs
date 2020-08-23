@@ -49,7 +49,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = AppUtility.UserPageTypeEnum.Index;
             List<ApplicationUser> users = new List<ApplicationUser>();
             users = _context.Users
-                .Where(u => !u.LockoutEnabled && u.LockoutEnd <= DateTime.Now)
+                .Where(u => !u.LockoutEnabled && (u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null))
                 .ToList();
             if (User.IsInRole("Admin"))
             {
@@ -324,7 +324,7 @@ namespace PrototypeWithAuth.Controllers
                     {
 
                         client.Connect("smtp.gmail.com", 587, false);
-                        client.Authenticate("debbie@centarix.com", "tzrgiekggokytvro");
+                        client.Authenticate("debbie@centarix.com", "zxenlymcoblxkmyr");
                         try
                         {
                             client.Send(message);
@@ -353,7 +353,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> EditUser(string id)
         {
-            var editUserViewModel = _context.Users.Where(u => u.Id == id).Where(u => !u.LockoutEnabled && u.LockoutEnd <= DateTime.Now)
+            var editUserViewModel = _context.Users.Where(u => u.Id == id).Where(u => !u.LockoutEnabled && (u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null))
                 .Select(u => new EditUserViewModel
                 {
                     ApplicationUserID = u.Id,
@@ -631,7 +631,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult SuspendUserModal(string Id)
+        public IActionResult SuspendUserModal(string Id )
         {
             var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
             return PartialView(user);
@@ -642,7 +642,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> SuspendUserModal(ApplicationUser applicationUser)
         {
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
-            if(applicationUser.LockoutEnabled ==true && applicationUser.LockoutEndDate > DateTime.Now)
+            if(applicationUser.LockoutEnabled ==true && (applicationUser.LockoutEnd >DateTime.Now))
             {
                 applicationUser.LockoutEnabled = false;
                 applicationUser.LockoutEnd = DateTime.Now;

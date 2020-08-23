@@ -13,8 +13,15 @@
                     @Html.HiddenFor(model => model.Id)
                     <span class="mb-5">Are you sure you would like to suspend this user?</span>
                     <br />
-                    <input type="submit" value="Delete" asp-action="DeleteUserModal" class="inv-user-button float-left mt-4" />
-                    <input data-dismiss="modal" value="Cancel" class="cancel-button float-right mt-4" />
+                    @if (Model.LockoutEnabled && Model.LockoutEnd > DateTime.Now)
+                    {
+                      <input type="submit" value="Unsuspend" asp-action="SuspendUserModal" class="inv-user-button float-left mt-4" />
+                    }
+                    else
+                    {
+                        <input type="submit" value="Suspend" asp-action="SuspendUserModal" class="inv-user-button float-left mt-4" />
+                    }
+                    <input data-dismiss="modal" value="Cancel" class="cancel-button float-right mt-4 mr-4" />
                 </form>
             </div>
         </div>

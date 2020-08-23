@@ -53,27 +53,30 @@
         </td>
         @if (User.IsInRole("Admin"))
         {
-        <td>
-            @{
-                var userid = user.Id;
+    <td>
+        @{
+            var userid = user.Id;
 
-
-
+            if (userid != UserManager.GetUserId(User))
+            {
                 if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now)
                 {
                     <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
                         Unsuspend
                     </a>
                 }
-                if (!user.LockoutEnabled && user.LockoutEnd <= DateTime.Now)
+                else
                 {
                     <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
                         Suspend
                     </a>
                 }
             }
-        
-        </td>
+
+
+        }
+
+    </td>
     }
     </tr>
         }

@@ -712,7 +712,7 @@
             return false;
         };
 
-        $.fn.SuspendUserModal = function (userid) {
+        $.fn.SuspendUserModal = function (userid, suspend) {
             console.log("in delete user modal function");
             $itemurl = 'Admin/SuspendUserModal?id=' + userid;
             $.fn.CallPageUser($itemurl, '');
