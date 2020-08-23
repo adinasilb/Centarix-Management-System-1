@@ -1932,6 +1932,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 foreach (var payment in termsViewModel.NewPayments)
                 {
+                    payment.CompanyAccount = _context.CompanyAccounts.Where(ca => ca.CompanyAccountID == payment.CompanyAccountID).FirstOrDefault();
                     payment.ParentRequestID = termsViewModel.ParentRequest.ParentRequestID;
                     _context.Add(payment);
                 }

@@ -12,6 +12,7 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int PaymentID { get; set; }
+        public double Sum { get; set; }
         
         [DataType(DataType.Date)]
         public DateTime PaymentDate { get; set; }
