@@ -584,7 +584,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestStatus)
                     .Include(r => r.ApplicationUserCreator)
                     .Include(r => r.ParentQuote)
-                    .Include(r => r.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                    //.Include(r => r.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .SingleOrDefault(x => x.RequestID == id);
 
                 //check if this works once there are commments
@@ -705,32 +705,32 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 //GET PAYMENTS HERE
-                var payments = _context.Payments
-                    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
-                    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
-                requestItemViewModel.NewPayments = payments;
+                //var payments = _context.Payments
+                //    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+                //    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
+                //requestItemViewModel.NewPayments = payments;
 
-                if (payments.Count > 0)
-                {
-                    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
-                    var totalPaymentsToDate = 0;
-                    foreach (var payment in payments)
-                    {
-                        if (payment.PaymentDate <= DateTime.Now)
-                        {
-                            totalPaymentsToDate++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
-                }
-                else
-                {
-                    requestItemViewModel.Debt = 0;
-                }
+                //if (payments.Count > 0)
+                //{
+                //    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+                //    var totalPaymentsToDate = 0;
+                //    foreach (var payment in payments)
+                //    {
+                //        if (payment.PaymentDate <= DateTime.Now)
+                //        {
+                //            totalPaymentsToDate++;
+                //        }
+                //        else
+                //        {
+                //            break;
+                //        }
+                //    }
+                //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+                //}
+                //else
+                //{
+                //    requestItemViewModel.Debt = 0;
+                //}
 
                 if (requestItemViewModel.Request == null)
                 {
@@ -788,7 +788,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product.ProductSubcategory.ParentCategory)
                 .Include(r => r.RequestStatus)
                 .Include(r => r.ApplicationUserCreator)
-                .Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
+                //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(r => r.RequestID == id);
 
             //load the correct list of subprojects
@@ -910,32 +910,32 @@ namespace PrototypeWithAuth.Controllers
             }
 
             //GET PAYMENTS HERE
-            var payments = _context.Payments
-                .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
-                .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
-            requestItemViewModel.NewPayments = payments;
+            //var payments = _context.Payments
+            //    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+            //    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
+            //requestItemViewModel.NewPayments = payments;
 
-            if (payments.Count > 0)
-            {
-                var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
-                var totalPaymentsToDate = 0;
-                foreach (var payment in payments)
-                {
-                    if (payment.PaymentDate <= DateTime.Now)
-                    {
-                        totalPaymentsToDate++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
-            }
-            else
-            {
-                requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
-            }
+            //if (payments.Count > 0)
+            //{
+            //    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+            //    var totalPaymentsToDate = 0;
+            //    foreach (var payment in payments)
+            //    {
+            //        if (payment.PaymentDate <= DateTime.Now)
+            //        {
+            //            totalPaymentsToDate++;
+            //        }
+            //        else
+            //        {
+            //            break;
+            //        }
+            //    }
+            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+            //}
+            //else
+            //{
+            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
+            //}
 
             //setting the lists of companyaccounts by payment type id (so easy filtering on the frontend)
 
@@ -1164,24 +1164,24 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     //Saving the Payments - each one should come in with a 1) date 2) companyAccountID
-                    if (requestItemViewModel.NewPayments != null)
-                    {
-                        foreach (Payment payment in requestItemViewModel.NewPayments)
-                        {
-                            payment.RequestID = (Int32)requestItemViewModel.Request.RequestID;
-                            payment.CompanyAccount = null;
-                            //payment.Reference = "TEST";
-                            try
-                            {
-                                _context.Payments.Update(payment);
-                                await _context.SaveChangesAsync();
-                            }
-                            catch (Exception ex)
-                            {
+                    //if (requestItemViewModel.NewPayments != null)
+                    //{
+                    //    foreach (Payment payment in requestItemViewModel.NewPayments)
+                    //    {
+                    //        payment.RequestID = (Int32)requestItemViewModel.Request.RequestID;
+                    //        payment.CompanyAccount = null;
+                    //        //payment.Reference = "TEST";
+                    //        try
+                    //        {
+                    //            _context.Payments.Update(payment);
+                    //            await _context.SaveChangesAsync();
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
 
-                            }
-                        }
-                    }
+                    //        }
+                    //    }
+                    //}
                 }
                 catch (DbUpdateException ex)
                 {
