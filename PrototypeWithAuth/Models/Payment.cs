@@ -16,8 +16,10 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         public DateTime PaymentDate { get; set; }
         public string Reference { get; set; }
-        public int RequestID { get; set; }
-        public Request Request { get; set; }
+        //public int RequestID { get; set; }
+        //public Request Request { get; set; }
+        public int ParentRequestID { get; set; }
+        public ParentRequest ParentRequest { get; set; }
         public int CompanyAccountID { get; set; }
         public CompanyAccount CompanyAccount{ get; set; }
     }

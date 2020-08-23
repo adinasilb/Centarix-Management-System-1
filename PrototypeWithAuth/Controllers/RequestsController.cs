@@ -28,6 +28,7 @@ using Abp.Extensions;
 using SQLitePCL;
 using Microsoft.AspNetCore.Localization;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore.Internal;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
@@ -756,7 +757,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestStatus)
                     .Include(r => r.ApplicationUserCreator)
                     .Include(r => r.ParentQuote)
-                    .Include(r => r.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                    //.Include(r => r.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Include(r => r.SubProject)
                     .ThenInclude(sp => sp.Project)
                     .SingleOrDefault(x => x.RequestID == id);
@@ -879,32 +880,32 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 //GET PAYMENTS HERE
-                var payments = _context.Payments
-                    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
-                    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
-                requestItemViewModel.NewPayments = payments;
+                //var payments = _context.Payments
+                //    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+                //    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
+                //requestItemViewModel.NewPayments = payments;
 
-                if (payments.Count > 0)
-                {
-                    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
-                    var totalPaymentsToDate = 0;
-                    foreach (var payment in payments)
-                    {
-                        if (payment.PaymentDate <= DateTime.Now)
-                        {
-                            totalPaymentsToDate++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
-                }
-                else
-                {
-                    requestItemViewModel.Debt = 0;
-                }
+                //if (payments.Count > 0)
+                //{
+                //    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+                //    var totalPaymentsToDate = 0;
+                //    foreach (var payment in payments)
+                //    {
+                //        if (payment.PaymentDate <= DateTime.Now)
+                //        {
+                //            totalPaymentsToDate++;
+                //        }
+                //        else
+                //        {
+                //            break;
+                //        }
+                //    }
+                //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+                //}
+                //else
+                //{
+                //    requestItemViewModel.Debt = 0;
+                //}
 
 
                 //locations:
@@ -1010,7 +1011,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestStatus)
                     .Include(r => r.ParentQuote)
                     .Include(r => r.ApplicationUserCreator)
-                    .Include(r => r.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                    //.Include(r => r.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Include(r => r.SubProject)
                     .ThenInclude(sp => sp.Project)
                     .SingleOrDefault(x => x.RequestID == id);
@@ -1069,32 +1070,32 @@ namespace PrototypeWithAuth.Controllers
 
 
                 //GET PAYMENTS HERE
-                var payments = _context.Payments
-                    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
-                    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
-                requestItemViewModel.NewPayments = payments;
+                //var payments = _context.Payments
+                //    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+                //    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
+                //requestItemViewModel.NewPayments = payments;
 
-                if (payments.Count > 0)
-                {
-                    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
-                    var totalPaymentsToDate = 0;
-                    foreach (var payment in payments)
-                    {
-                        if (payment.PaymentDate <= DateTime.Now)
-                        {
-                            totalPaymentsToDate++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
-                }
-                else
-                {
-                    requestItemViewModel.Debt = 0;
-                }
+                //if (payments.Count > 0)
+                //{
+                //    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+                //    var totalPaymentsToDate = 0;
+                //    foreach (var payment in payments)
+                //    {
+                //        if (payment.PaymentDate <= DateTime.Now)
+                //        {
+                //            totalPaymentsToDate++;
+                //        }
+                //        else
+                //        {
+                //            break;
+                //        }
+                //    }
+                //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+                //}
+                //else
+                //{
+                //    requestItemViewModel.Debt = 0;
+                //}
 
 
                 //locations:
@@ -1204,7 +1205,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product.ProductSubcategory.ParentCategory)
                 .Include(r => r.RequestStatus)
                 .Include(r => r.ApplicationUserCreator)
-                .Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
+                //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .Include(r => r.SubProject)
                 .Include(r => r.SubProject.Project)
                 .SingleOrDefault(x => x.RequestID == id);
@@ -1332,32 +1333,32 @@ namespace PrototypeWithAuth.Controllers
             }
 
             //GET PAYMENTS HERE
-            var payments = _context.Payments
-                .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
-                .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
-            requestItemViewModel.NewPayments = payments;
+            //var payments = _context.Payments
+            //    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+            //    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
+            //requestItemViewModel.NewPayments = payments;
 
-            if (payments.Count > 0)
-            {
-                var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
-                var totalPaymentsToDate = 0;
-                foreach (var payment in payments)
-                {
-                    if (payment.PaymentDate <= DateTime.Now)
-                    {
-                        totalPaymentsToDate++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
-            }
-            else
-            {
-                requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
-            }
+            //if (payments.Count > 0)
+            //{
+            //    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+            //    var totalPaymentsToDate = 0;
+            //    foreach (var payment in payments)
+            //    {
+            //        if (payment.PaymentDate <= DateTime.Now)
+            //        {
+            //            totalPaymentsToDate++;
+            //        }
+            //        else
+            //        {
+            //            break;
+            //        }
+            //    }
+            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+            //}
+            //else
+            //{
+            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
+            //}
 
             //setting the lists of companyaccounts by payment type id (so easy filtering on the frontend)
 
@@ -1627,25 +1628,25 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
 
-                    //Saving the Payments - each one should come in with a 1) date 2) companyAccountID
-                    if (requestItemViewModel.NewPayments != null)
-                    {
-                        foreach (Payment payment in requestItemViewModel.NewPayments)
-                        {
-                            payment.RequestID = (Int32)requestItemViewModel.Request.RequestID;
-                            payment.CompanyAccount = null;
-                            //payment.Reference = "TEST";
-                            try
-                            {
-                                _context.Payments.Update(payment);
-                                await _context.SaveChangesAsync();
-                            }
-                            catch (Exception ex)
-                            {
+                    ////Saving the Payments - each one should come in with a 1) date 2) companyAccountID
+                    //if (requestItemViewModel.NewPayments != null)
+                    //{
+                    //    foreach (Payment payment in requestItemViewModel.NewPayments)
+                    //    {
+                    //        payment.RequestID = (Int32)requestItemViewModel.Request.RequestID;
+                    //        payment.CompanyAccount = null;
+                    //        //payment.Reference = "TEST";
+                    //        try
+                    //        {
+                    //            _context.Payments.Update(payment);
+                    //            await _context.SaveChangesAsync();
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
 
-                            }
-                        }
-                    }
+                    //        }
+                    //    }
+                    //}
                 }
                 catch (DbUpdateException ex)
                 {
@@ -1882,15 +1883,17 @@ namespace PrototypeWithAuth.Controllers
             {
                 lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
             }
-
+            ParentRequest pr = new ParentRequest()
+            {
+                ApplicationUserID = _userManager.GetUserId(User),
+                OrderNumber = lastParentRequestOrderNum + 1,
+                OrderDate = DateTime.Now
+            };
+            _context.Add(pr);
+            await _context.SaveChangesAsync();
             TermsViewModel termsViewModel = new TermsViewModel()
             {
-                ParentRequest = new ParentRequest()
-                {
-                    ApplicationUserID = _userManager.GetUserId(User),
-                    OrderNumber = lastParentRequestOrderNum + 1,
-                    OrderDate = DateTime.Now
-                }
+                ParentRequest = pr
             };
             if (isSingleRequest)
             {
@@ -1901,7 +1904,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (IsCart)
             {
-                termsViewModel.ParentRequest = new ParentRequest();
+                //termsViewModel.ParentRequest = new ParentRequest();
                 var requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
                         .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
@@ -1920,57 +1923,97 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
-            return RedirectToAction("Index"); //todo: put in tempdata memory here
+            _context.Update(termsViewModel.ParentRequest);
+            await _context.SaveChangesAsync();
+
+            foreach (var payment in termsViewModel.NewPayments)
+            {
+                payment.ParentRequestID = termsViewModel.ParentRequest.ParentRequestID;
+                _context.Add(payment);
+                await _context.SaveChangesAsync();
+            }
+
+            foreach (var request in termsViewModel.ParentRequest.Requests)
+            {
+                if (termsViewModel.Paid)
+                {
+                    request.PaymentStatusID = 6;
+                }
+                else if (termsViewModel.Terms == 0)
+                {
+                    request.PaymentStatusID = 3;
+                }
+                else if (termsViewModel.Terms == 15 || termsViewModel.Terms == 30 || termsViewModel.Terms == 45)
+                {
+                    request.PaymentStatusID = 4;
+                }
+                else if (termsViewModel.Installments > 0) //again : should we check if it needs more than 1?
+                {
+                    request.PaymentStatusID = 5;
+                }
+                else
+                {
+                    request.PaymentStatusID = 2;
+                }
+                _context.Update(request);
+                await _context.SaveChangesAsync();
+            }
+            //return RedirectToAction("Index"); //todo: put in tempdata memory here
+            return RedirectToAction("ConfirmEmailModal", new { id = termsViewModel.ParentRequest.ParentRequestID });
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmEmailModal(int id, bool isSingleOrder = false, bool cart = false)
+        public async Task<IActionResult> ConfirmEmailModal(int id)
         {
-            List<Request> requests = null;
-            if (isSingleOrder)
-            {
-                requests = await _context.Requests.Where(r => r.RequestID == id)
-               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
-            }
-            else
-            {
-                if (cart)
-                {
-                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                        .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
-                        .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-                             .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                             .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
-                }
-                else
-                {
-                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
-                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
-                }
+            //List<Request> requests = null;
+            //if (isSingleOrder)
+            //{
+            //    requests = await _context.Requests.Where(r => r.RequestID == id)
+            //   .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
+            //}
+            //else
+            //{
+            //    if (cart)
+            //    {
+            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+            //            .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
+            //            .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+            //                 .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+            //                 .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+            //    }
+            //    else
+            //    {
+            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
+            //                  .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+            //    }
 
-            }
-            ParentRequest parentRequest = new ParentRequest();
-            foreach (var request in requests)
-            {
-                request.ParentRequest = parentRequest;
-                int lastParentRequestOrderNum = 0;
-                request.ParentRequest.ApplicationUserID = _userManager.GetUserId(User);
-                if (_context.ParentRequests.Any())
-                {
-                    lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-                }
-                request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-                request.ParentRequest.OrderDate = DateTime.Now;
-            }
+            //}
+            //ParentRequest parentRequest = new ParentRequest();
+            //foreach (var request in parentRequest.Requests)
+            //{
+            //    request.ParentRequest = parentRequest;
+            //    int lastParentRequestOrderNum = 0;
+            //    request.ParentRequest.ApplicationUserID = _userManager.GetUserId(User);
+            //    if (_context.ParentRequests.Any())
+            //    {
+            //        lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+            //    }
+            //    request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+            //    request.ParentRequest.OrderDate = DateTime.Now;
+            //}
 
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
-                Requests = requests,
+                ParentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == id)
+                    .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
+                    .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                    .FirstOrDefault(),
+                //Requests = parentRequest.Requests.ToList(),
                 VendorId = id,
                 RequestID = id,
-                IsSingleOrder = isSingleOrder,
-                Cart = cart
+                //IsSingleOrder = isSingleOrder,
+                //Cart = cart
             };
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -1984,7 +2027,7 @@ namespace PrototypeWithAuth.Controllers
             PdfDocument doc = new PdfDocument();
             // create a new pdf document converting an url
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
-            foreach (var request in requests)
+            foreach (var request in confirm.ParentRequest.Requests)
             {
                 //creating the path for the file to be saved
                 string path1 = Path.Combine("wwwroot", "files");
@@ -2009,28 +2052,28 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)
         {
             List<Request> requests = null;
-            if (confirmEmail.IsSingleOrder)
-            {
-                requests = await _context.Requests.Where(r => r.RequestID == confirmEmail.RequestID)
-               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-               .Include(r => r.ApplicationUserCreator).ToListAsync();
-            }
-            else
-            {
-                if (confirmEmail.Cart)
-                {
-                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                        .Where(r => r.Product.VendorID == confirmEmail.VendorID && r.RequestStatusID == 6 && !(r is Reorder))
-                        .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-                              .Include(r => r.Product).ThenInclude(r => r.Vendor)
-                              .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
-                }
-                else
-                {
-                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == confirmEmail.VendorID && r.RequestStatusID == 6 && !(r is Reorder))
-                              .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
-                }
-            }
+            //if (confirmEmail.IsSingleOrder)
+            //{
+            //    requests = await _context.Requests.Where(r => r.RequestID == confirmEmail.RequestID)
+            //   .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+            //   .Include(r => r.ApplicationUserCreator).ToListAsync();
+            //}
+            //else
+            //{
+            //    if (confirmEmail.Cart)
+            //    {
+            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+            //            .Where(r => r.Product.VendorID == confirmEmail.VendorID && r.RequestStatusID == 6 && !(r is Reorder))
+            //            .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+            //                  .Include(r => r.Product).ThenInclude(r => r.Vendor)
+            //                  .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
+            //    }
+            //    else
+            //    {
+            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == confirmEmail.VendorID && r.RequestStatusID == 6 && !(r is Reorder))
+            //                  .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
+            //    }
+            //}
 
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
