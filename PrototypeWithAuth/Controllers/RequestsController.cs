@@ -2920,6 +2920,7 @@ namespace PrototypeWithAuth.Controllers
                 RequestNotification requestNotification = new RequestNotification();
                 requestNotification.RequestID = receivedLocationViewModel.Request.RequestID;
                 requestNotification.IsRead = false;
+                requestNotification.ApplicationUserID = receivedLocationViewModel.Request.ApplicationUserCreatorID;
                 requestNotification.RequestName = receivedLocationViewModel.Request.Product.ProductName;
                 requestNotification.RequestStatusID = receivedLocationViewModel.Request.RequestStatusID ??0;
                 requestNotification.Description = "received by "+ receivedLocationViewModel.Request.ApplicationUserReceiver.FirstName;
@@ -3116,6 +3117,7 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.RequestID = request.RequestID;
                 requestNotification.IsRead = false;
                 requestNotification.RequestName = request.Product.ProductName;
+                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
                 requestNotification.RequestStatusID = request.RequestStatusID??0;
                 requestNotification.Description = "item approved";
                 requestNotification.TimeStamp = DateTime.Now;
@@ -3152,6 +3154,7 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.RequestID = request.RequestID;
                 requestNotification.IsRead = false;
                 requestNotification.RequestName = request.Product.ProductName;
+                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
                 requestNotification.RequestStatusID = request.RequestStatusID??0;
                 requestNotification.Description = "item approved";
                 requestNotification.TimeStamp = DateTime.Now;

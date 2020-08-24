@@ -1,4 +1,5 @@
 ﻿using Castle.Components.DictionaryAdapter;
+using PrototypeWithAuth.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,5 +16,7 @@ namespace PrototypeWithAuth.Models
         public string Description { get; set; }
         public DateTime TimeStamp { get; set; }
         public bool IsRead { get; set; }
+        public string ApplicationUserID { get; set; }
+        public ApplicationUser ApplicationUser {get; set;}
     }
 }
