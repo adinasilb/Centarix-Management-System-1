@@ -231,6 +231,7 @@
 
     <script>
         $(document).ready(function () {
+            console.log("in doc ready!");
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
             });
@@ -263,9 +264,11 @@
             $("#user-more-tab").prop("disabled", true);
 
             if ($("#tdprconfirmemail").val()) {
+                console.log("tdprconfirmemail");
                 $("#tdprconfirmemail").hide();
-                @*var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["ParentRequestID"];
-                $.fn.CallPage($itemurl, "confirmemail");*@
+                var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["ParentRequestID"] + "";
+                $("#loading").show();
+                $.fn.CallPage($itemurl, "confirmemail");
             }
 
             if ($("#tdterms").val()) {
@@ -276,7 +279,7 @@
                 }
 
             if ($("#tdconfirmemail").val()) {
-                console.log("tdconfirmemail")
+                console.log("tdconfirmemail");
                 $("#tdconfirmemail").hide();
                 var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
                 //$("#loading").show();
@@ -316,6 +319,7 @@
                     $(".modal").modal('show');
                     //reset so do not open the modal again
                     $('#tdconfirmemail').val('');
+                    $('#tdprconfirmemail').val('');
                     $.fn.OnOpenModalView();
                     AddTempDataMemory();
 
