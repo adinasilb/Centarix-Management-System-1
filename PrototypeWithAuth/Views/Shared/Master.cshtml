@@ -249,7 +249,7 @@
 
             //vendors
 
-          //  $('[data-toggle="popover"]').popover();
+            //  $('[data-toggle="popover"]').popover();
             $("#vendor-payments-tab").prop("disabled", true);
             $("#vendor-categories-tab").prop("disabled", true);
             $("#vendor-comment-tab").prop("disabled", true);
@@ -261,6 +261,13 @@
             $("#user-permissions-tab").prop("disabled", true);
             $("#user-budget-tab").prop("disabled", true);
             $("#user-more-tab").prop("disabled", true);
+
+            if ($("#tdprconfirmemail").val()) {
+                $("#tdprconfirmemail").hide();
+                @*var $itemurl = "Requests/ConfirmEmailModal/?id=" + @TempData["ParentRequestID"];
+                $.fn.CallPage($itemurl, "confirmemail");*@
+            }
+
             if ($("#tdterms").val()) {
                 $("#tdterms").hide();
                 var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true";

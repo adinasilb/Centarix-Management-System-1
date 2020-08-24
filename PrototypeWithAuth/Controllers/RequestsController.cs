@@ -1989,8 +1989,10 @@ namespace PrototypeWithAuth.Controllers
                 }
                 await _context.SaveChangesAsync();
             }
-            //return RedirectToAction("Index"); //todo: put in tempdata memory here
-            return RedirectToAction("ConfirmEmailModal", new { id = termsViewModel.ParentRequest.ParentRequestID });
+            TempData["ParentRequestConfirmEmail"] = true;
+            TempData["ParentRequestID"] = termsViewModel.ParentRequest.ParentRequestID;
+            return RedirectToAction("Index"); //todo: put in tempdata memory here
+            //return RedirectToAction("ConfirmEmailModal", new { id = termsViewModel.ParentRequest.ParentRequestID });
         }
 
         [HttpGet]
