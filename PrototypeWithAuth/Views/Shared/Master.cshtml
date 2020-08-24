@@ -898,7 +898,7 @@
             e.stopPropagation();
             var $itemurl = "Locations/AddLocation";
             var $modal = $(".location-modal-view");
-            $.fn.CallPageLocation($itemurl, $modal, true);
+            $.fn.CallPageRequest($itemurl, "locations");
             return false;
         });
 

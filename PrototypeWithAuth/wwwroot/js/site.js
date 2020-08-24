@@ -1431,13 +1431,11 @@ $(".load-location-index-view").click(function (e) {
 });
 
 $.fn.setUpLocationIndexList = function (val) {
-	$("#loading3").show();
 	//fill up col 2 with the next one
+	$("#loading3").delay(1000).show(0);
 	var myDiv = $(".colOne");
 	var typeId = val;
-	//console.log("about to call ajax with a parentid of: " + parentId);
 	$.ajax({
-		//IMPORTANT: ADD IN THE ID
 		url: "/Locations/LocationIndex/?typeId=" + typeId,
 		type: 'GET',
 		cache: false,
@@ -1446,6 +1444,7 @@ $.fn.setUpLocationIndexList = function (val) {
 			$(".VisualBoxColumn").hide();
 			$(".colTwoSublocations").hide();
 			$("#loading3").hide();
+			$("#loading3").delay(1000).hide(0);
 			myDiv.show();
 			this.html(result);
 
@@ -1459,7 +1458,7 @@ $(".load-sublocation-view").click(function (e) {
 	//add or remove the background class in col 1
 	//$(".load-sublocation-view").parent().removeClass("td-selected");
 	//$(this).parent().addClass("td-selected");
-	$("#loading1").show();
+	$("#loading1").delay(1000).show(0);
 	//fill up col 2 with the next one
 	var myDiv = $(".colTwoSublocations");
 	var parentId = $(this).val();
@@ -1479,6 +1478,7 @@ $(".load-sublocation-view").click(function (e) {
 		success: function (result) {
 			myDiv.show();
 			$("#loading1").hide();
+			$("#loading1").delay(1000).hide(0);
 			this.html(result);
 
 		}
@@ -1490,7 +1490,7 @@ $(".load-sublocation-view").click(function (e) {
 });
 
 $.fn.setUpVisual = function (val) {
-	$("#loading2").show();
+	$("#loading2").delay(1000).show(0);
 	//fill up col three with the visual
 	var visualDiv = $(".VisualBoxColumn");
 	var visualContainerId = val;
@@ -1504,6 +1504,7 @@ $.fn.setUpVisual = function (val) {
 			visualDiv.show();
 			this.html(result);
 			$("#loading2").hide();
+			$("#loading2").delay(1000).hide(0);
 		}
 	});
 };

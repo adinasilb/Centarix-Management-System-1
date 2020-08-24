@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.Models
         public string RequestName { get; set; }
         public int RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }
+        //public PrototypeWithAuth.Model Model { get; set; }
     }
 }
