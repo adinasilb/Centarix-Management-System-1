@@ -9,7 +9,14 @@
         <tr style="border-color:transparent;">
             <th colspan="8" style="border-color:transparent;" class="pt-2">
                 <h5>
-                    <strong>@Model.AccountingPaymentsEnum</strong> &nbsp; [#]
+                    @{ 
+                        var count = 0;
+                        if (Model.Requests != null)
+                        {
+                            count = Model.Requests.Count;
+                        }
+                    }
+                    <strong>@Model.AccountingPaymentsEnum</strong> &nbsp; [@count]
                     @{
                         var totalCost = 0;
                         var decCost = (decimal)totalCost;

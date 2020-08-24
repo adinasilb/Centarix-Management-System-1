@@ -600,8 +600,11 @@ namespace PrototypeWithAuth.Controllers
                     //rename temp folder to the request id
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolder = Path.Combine(uploadFolder, "0");
-                    Directory.Move(requestFolder, Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString()));
-                    Directory.Delete(requestFolder);
+                    if (Directory.Exists(requestFolder))
+                    {
+                        Directory.Move(requestFolder, Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString()));
+                        Directory.Delete(requestFolder);
+                    }
                     //check if there are any files to upload first
                     //save the files
                     //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
