@@ -294,8 +294,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel)
         {
             var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID)
-                .Include(r => r.RequestLocationInstances).Include(r=>r.Product).ThenInclude(p=>p.ProductSubcategory)
-                .ThenInclude(ps=>ps.ParentCategory)
+                .Include(r => r.RequestLocationInstances).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
+                .ThenInclude(ps => ps.ParentCategory)
                 .FirstOrDefault();
             request.IsDeleted = true;
             _context.Update(request);
@@ -362,7 +362,7 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                { 
+                {
                     return RedirectToAction("Index", new
                     {
                         requestStatusID = request.RequestStatusID,
@@ -1893,7 +1893,14 @@ namespace PrototypeWithAuth.Controllers
             await _context.SaveChangesAsync();
             TermsViewModel termsViewModel = new TermsViewModel()
             {
-                ParentRequest = pr
+                ParentRequest = pr,
+                TermsList = new List<SelectListItem>()
+                {
+                    new SelectListItem{ Text="Pay Now", Value="0"},
+                    new SelectListItem{ Text="+15", Value="15"},
+                    new SelectListItem{ Text="+30", Value="30"},
+                    new SelectListItem{ Text="+45", Value="45"}
+                }
             };
             if (isSingleRequest)
             {
@@ -1947,11 +1954,11 @@ namespace PrototypeWithAuth.Controllers
                     {
                         request.PaymentStatusID = 6;
                     }
-                    else if (termsViewModel.Terms > 0)
+                    else if (termsViewModel.Terms == "0")
                     {
                         request.PaymentStatusID = 3;
                     }
-                    else if (termsViewModel.Terms == 15 || termsViewModel.Terms == 30 || termsViewModel.Terms == 45)
+                    else if (termsViewModel.Terms == "15" || termsViewModel.Terms == "30" || termsViewModel.Terms == "45")
                     {
                         request.PaymentStatusID = 4;
                     }
@@ -2146,7 +2153,7 @@ namespace PrototypeWithAuth.Controllers
                     client.Disconnect(true);
                     if (wasSent)
                     {
-                        foreach(var request in _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID))
+                        foreach (var request in _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID))
                         {
                             request.RequestStatusID = 2;
                             _context.Update(request);
@@ -2194,7 +2201,7 @@ namespace PrototypeWithAuth.Controllers
                         PageType = AppUtility.RequestPageTypeEnum.Request
                     });
                 }
-              
+
             }
 
             else
@@ -2688,14 +2695,15 @@ namespace PrototypeWithAuth.Controllers
             }
 
             TempData["Search"] = "True";
-            if(requestsSearchViewModel.SectionType == AppUtility.MenuItems.OrdersAndInventory)
+            if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.OrdersAndInventory)
             {
                 return View("Index", onePageOfProducts);
-            } else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
+            }
+            else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
             {
                 return RedirectToAction("IndexForLabManage", "Vendors", onePageOfProducts);
             }
-            else if(requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operation)
+            else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operation)
             {
                 return RedirectToAction("Index", "Operations", onePageOfProducts);
             }
@@ -2727,7 +2735,7 @@ namespace PrototypeWithAuth.Controllers
 
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
             {
-                Request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory)
+                Request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                     .FirstOrDefault(),
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
@@ -2804,7 +2812,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             bool hasLocationInstances = false;
-            if (receivedLocationViewModel.CategoryType==1)
+            if (receivedLocationViewModel.CategoryType == 1)
             {
                 foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)
                 {
@@ -2928,7 +2936,7 @@ namespace PrototypeWithAuth.Controllers
                     applicationUserID = receivedLocationViewModel.ApplicationUserID
                 });
             }
-         
+
         }
 
 

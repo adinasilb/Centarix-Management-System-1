@@ -29,13 +29,18 @@
                             </div>
                             <div class="col-2">
                                 <label asp-for="Terms" class="control-label"></label>
-                                <select asp-for="Terms" class="form-control-plaintext border-bottom">
-                                    <option selected="selected">Select</option>
+                                @Html.DropDownListFor(m => m.Terms,
+                                    Model.TermsList,
+                                    "Select",
+                                    new { @class="form-control-plaintext border-bottom" }
+                                )
+                                @*<select asp-for="Terms" asp-items="@Model.TermsList" class="form-control-plaintext border-bottom">
+                                    <option value="selected" selected="selected">Select</option>
                                     <option value="0">Pay Now</option>
                                     <option value="15">+15</option>
                                     <option value="30">+30</option>
                                     <option value="45">+45</option>
-                                </select>
+                                </select>*@
                                 <span asp-validation-for="Terms" class="text-danger"></span>
                             </div>
                             <div class="col-2">
