@@ -87,6 +87,8 @@
     <Compile Remove="Data\Migrations\20200818120111_addedPaymentStatus.Designer.cs" />
     <Compile Remove="Data\Migrations\20200823122532_AddedNotificationModel.cs" />
     <Compile Remove="Data\Migrations\20200823122532_AddedNotificationModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824062554_Test.cs" />
+    <Compile Remove="Data\Migrations\20200824062554_Test.Designer.cs" />
   </ItemGroup>
 
 

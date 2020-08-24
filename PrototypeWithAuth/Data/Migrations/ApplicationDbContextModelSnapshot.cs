@@ -717,9 +717,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Sum")
-                        .HasColumnType("float");
-
                     b.HasKey("PaymentID");
 
                     b.HasIndex("CompanyAccountID");

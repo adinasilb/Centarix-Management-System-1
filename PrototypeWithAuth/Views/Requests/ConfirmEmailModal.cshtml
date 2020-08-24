@@ -23,6 +23,7 @@
                 <form action="" method="post" enctype="multipart/form-data" style="height: 100%; ">
                     <input asp-for="VendorId" style="display: none;" />
                     <input asp-for="RequestID" style="display: none;" />
+                    <input asp-for="ParentRequest.ParentRequestID" style="display:none;" />
                     @*@Html.HiddenFor(model => model.IsSingleOrder)*@
                     @*@Html.HiddenFor(model => model.Cart)*@
                     @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@

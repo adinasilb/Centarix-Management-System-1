@@ -2075,6 +2075,7 @@ namespace PrototypeWithAuth.Controllers
             }
             // close pdf document
             doc.Close();
+            TempData["ParentRequestConfirmEmail"] = null;
 
             return View(confirm);
         }
@@ -2108,7 +2109,8 @@ namespace PrototypeWithAuth.Controllers
             //    }
             //}
 
-            var firstRequest = _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID).FirstOrDefault();
+            var firstRequest = _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
 
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
@@ -2125,7 +2127,8 @@ namespace PrototypeWithAuth.Controllers
                 var builder = new BodyBuilder();
 
 
-                var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                var currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
                 string ownerEmail = currentUser.Email;
                 string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                 string ownerPassword = currentUser.SecureAppPass;
@@ -2153,8 +2156,8 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    var SecureAppPass = _context.Users.Where(u => u.Id == confirmEmail.ParentRequest.ApplicationUserID).FirstOrDefault().SecureAppPass;
-                    client.Authenticate(ownerEmail, SecureAppPass);// ownerPassword);//
+                    //var SecureAppPass = _context.Users.Where(u => u.Id == confirmEmail.ParentRequest.ApplicationUserID).FirstOrDefault().SecureAppPass;
+                    client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
 
                     //"FakeUser@123"); // set up two step authentication and get app password
                     try
