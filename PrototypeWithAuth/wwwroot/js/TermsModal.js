@@ -154,14 +154,14 @@ $("#Paid").on('change', function () {
 $("#Terms").on('change', function () {
 	var val = $(this).val();
 	console.log("in terms fx: " + val);
-	if (val == "select") {
+	if (val=='') {
 		console.log("true");
-		$("#Terms").attr("disabled", false);
+		$("#Paid").attr("disabled", false);
 		$("#Installments").attr("disabled", false);
 	}
 	else {
 		console.log("false");
-		$("#Terms").attr("disabled", true);
+		$("#Paid").attr("disabled", true);
 		$("#Installments").attr("disabled", true);
 	}
 });

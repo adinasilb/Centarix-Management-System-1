@@ -417,6 +417,15 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
+
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string requestFolder = Path.Combine(uploadFolder, "0");
+            if (Directory.Exists(requestFolder))
+            {
+                Directory.Delete(requestFolder);
+            }
+            Directory.CreateDirectory(requestFolder);
+
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.AddItem;
             if (AppUtility.IsAjaxRequest(this.Request))
@@ -588,6 +597,11 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
 
+                    //rename temp folder to the request id
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    string requestFolder = Path.Combine(uploadFolder, "0");
+                    Directory.Move(requestFolder, Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString()));
+                    Directory.Delete(requestFolder);
                     //check if there are any files to upload first
                     //save the files
                     //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -3252,7 +3266,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> OrderLateModal(int id)
         {
-            var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == id).Include(r=>r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
             return View(request);
         }
 
@@ -3269,7 +3283,7 @@ namespace PrototypeWithAuth.Controllers
             var builder = new BodyBuilder();
 
 
-            string ownerEmail = request.ParentRequest.ApplicationUser.Email;
+            string ownerEmail = request.ApplicationUserCreator.Email;
             string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
             string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
             string vendorEmail = request.Product.Vendor.OrdersEmail;

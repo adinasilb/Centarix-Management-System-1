@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200823121911_AddedColumnDateLastReadNotofications")]
+    partial class AddedColumnDateLastReadNotofications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -534,33 +536,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Notification", b =>
-                {
-                    b.Property<int>("NotificationID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("NotificationID");
-
-                    b.ToTable("Notifications");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Notification");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
                 {
                     b.Property<int>("ParentCategoryID")
@@ -716,9 +691,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Sum")
-                        .HasColumnType("float");
 
                     b.HasKey("PaymentID");
 
@@ -2005,13 +1977,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("VendorID");
 
                     b.ToTable("VendorContacts");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotification", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.Notification");
-
-                    b.HasDiscriminator().HasValue("RequestNotification");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Reorder", b =>
