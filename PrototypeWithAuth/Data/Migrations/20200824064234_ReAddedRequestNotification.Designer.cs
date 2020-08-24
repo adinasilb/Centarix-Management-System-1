@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200824064234_ReAddedRequestNotification")]
+    partial class ReAddedRequestNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2011,17 +2013,6 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.Notification");
 
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RequestName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RequestStatusID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("RequestStatusID");
-
                     b.HasDiscriminator().HasValue("RequestNotification");
                 });
 
@@ -2320,15 +2311,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
                         .WithMany("VendorContacts")
                         .HasForeignKey("VendorID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotification", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.RequestStatus", "RequestStatus")
-                        .WithMany()
-                        .HasForeignKey("RequestStatusID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

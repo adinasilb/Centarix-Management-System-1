@@ -85,71 +85,9 @@
             </div>
            <div class="  container col-1  pl-5">
                 <ul class="list-unstyled m-0">
-                    <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link"> <i style='font-size:1.4rem; ' class='far fa-bell fa-lg '></i> </button> </li>
+                    <li ><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link "><div class="alerts-icon"><i style='font-size:1.7rem; ' class='far fa-bell fa-lg '></i> <div id="alertCount" class="alert-count px-1"></div></div>  </button> </li>
                     <div style="display:none;" id="notifications-popover">
-                        @*<div id="myNotifyList">
-                          @foreach (var item in Model)
-                          {
-                              string iconStyle = "";
-                              string icon = "";
-                              string color = "";
-                              string description = item.RequestStatus.RequestStatusDescription;
-                              switch (item.RequestStatusID)
-                              {
-                                  case 1:
-                                      description = "item requested";
-                                      color = "black";
-                                      icon = "icon-centarix-icons-04";
-                                      break;
-                                  case 2:
-                                      if (item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays ?? 0) < DateTime.Now && item.ExpectedSupplyDays != null)
-                                      {
-                                          description = $"should have arrived {item.ParentRequest.OrderDate.AddDays(item.ExpectedSupplyDays ?? 0).ToShortDateString()}";
-                                          color = "#DB2127";
-                                          icon = "fas fa-exclamation";
-                                          iconStyle = "color: black!important;   background: transparent";
-                                      }
-                                      else
-                                      {
-                                          description = "item ordered";
-                                          color = "#00CA72";
-                                          icon = "icon-centarix-icons-03";
-                                      }
-                                      break;
-                                  case 3:
-                                      color = "var(--order-inv-color)";
-                                      description = $"recieved by {item.ApplicationUserReceiver.FirstName}";
-                                      icon = "fas fa-shopping-bag";
-                                      iconStyle = "color: black!important;   background: transparent";
-                                      break;
-                                  case 4:
-                                      break;
-                                  case 5:
-                                      break;
-                                  case 6:
-                                      color = "#3F51B5";
-                                      description = "item approved";
-                                      icon = "icon-done-24px";
-                                      break;
-                              }
-                              <div class="row ml-2  border-bottom-0">
-                                  <div class="ml-2 mt-auto mb-auto ">
-                                      <i style='font-size:1.4rem; @iconStyle' class='@icon '></i>
-
-                                  </div>
-                                  <div class="col-8 mr-4 ">
-                                      <div class=" p-3 ">
-                                          <label>@item.Product.ProductName</label>
-                                          <label style="color: @color; width:20%;">@description</label>
-                                      </div>
-
-                                  </div>
-
-                              </div>
-                    </div>
-
-                          }*@
-
+                       
                         notifications will go here
                     </div>
                 </ul>

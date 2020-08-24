@@ -17,11 +17,13 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _logger = logger;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -36,7 +38,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         //Adina added in
-        [Authorize (Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult IndexAdmin()
         {
             IEnumerable<Menu> menu = _context.Menus.Select(x => x);
@@ -52,6 +54,26 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public int GetNotficationCount()
+        {
+            DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User)).DateLastReadNotifications;
+            int count = _context.Notifications.Where(n => n.TimeStamp > lastReadNotfication).Count();
+            return count;
+        }
+        [HttpGet]
+        public JsonResult GetLatestNotifications()
+        {
+            ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            DateTime lastReadNotfication = currentUser.DateLastReadNotifications;
+            currentUser.DateLastReadNotifications = DateTime.Now;
+            _context.Update(currentUser);
+            _context.SaveChangesAsync();
+            //todo: figure out exactly which notfications to show
+            var notification = _context.Notifications.Where(n => n.TimeStamp > DateTime.Now.AddDays(-5)).OrderByDescending(n=>n.TimeStamp);
+            return Json(notification);
         }
     }
 }

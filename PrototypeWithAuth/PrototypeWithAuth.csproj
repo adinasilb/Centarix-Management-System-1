@@ -87,6 +87,18 @@
     <Compile Remove="Data\Migrations\20200818120111_addedPaymentStatus.Designer.cs" />
     <Compile Remove="Data\Migrations\20200823122532_AddedNotificationModel.cs" />
     <Compile Remove="Data\Migrations\20200823122532_AddedNotificationModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824062222_AddedRStatusToNotfication.cs" />
+    <Compile Remove="Data\Migrations\20200824062222_AddedRStatusToNotfication.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824063637_RequestNotification.cs" />
+    <Compile Remove="Data\Migrations\20200824063637_RequestNotification.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824063753_RequestNotification.cs" />
+    <Compile Remove="Data\Migrations\20200824063753_RequestNotification.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824063934_RequestNotification.cs" />
+    <Compile Remove="Data\Migrations\20200824063934_RequestNotification.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824064323_ReAddedRequestNotificationFields.cs" />
+    <Compile Remove="Data\Migrations\20200824064323_ReAddedRequestNotificationFields.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824064908_ReAddedRequestNotificationFields.cs" />
+    <Compile Remove="Data\Migrations\20200824064908_ReAddedRequestNotificationFields.Designer.cs" />
   </ItemGroup>
 
 

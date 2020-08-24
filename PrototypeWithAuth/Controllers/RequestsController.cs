@@ -2753,7 +2753,7 @@ namespace PrototypeWithAuth.Controllers
                     .FirstOrDefault(),
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
-                ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled && (u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)).ToListAsync()
+                ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync()
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
@@ -2915,6 +2915,15 @@ namespace PrototypeWithAuth.Controllers
 
                 _context.Update(receivedLocationViewModel.Request);
                 await _context.SaveChangesAsync();
+                RequestNotification requestNotification = new RequestNotification();
+                requestNotification.RequestID = receivedLocationViewModel.Request.RequestID;
+                requestNotification.IsRead = false;
+                requestNotification.RequestName = receivedLocationViewModel.Request.Product.ProductName;
+                requestNotification.RequestStatusID = receivedLocationViewModel.Request.RequestStatusID ??0;
+                requestNotification.Description = "received by "+ receivedLocationViewModel.Request.ApplicationUserReceiver.FirstName;
+                requestNotification.TimeStamp = DateTime.Now;
+                _context.Update(requestNotification);
+                _context.SaveChanges();
             }
             catch (DbUpdateException ex)
             {
@@ -3093,12 +3102,22 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult ApproveReorder(int id)
         {
-            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x => x.ParentQuote).FirstOrDefault();
+            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x => x.ParentQuote).Include(r=>r.Product).FirstOrDefault();
             try
             {
                 request.RequestStatusID = 6; //approved
                 request.ParentQuote.QuoteStatusID = 1; //awaiting quote request
                 _context.Update(request);
+                _context.SaveChanges();
+
+                RequestNotification requestNotification = new RequestNotification();
+                requestNotification.RequestID = request.RequestID;
+                requestNotification.IsRead = false;
+                requestNotification.RequestName = request.Product.ProductName;
+                requestNotification.RequestStatusID = request.RequestStatusID??0;
+                requestNotification.Description = "item approved";
+                requestNotification.TimeStamp = DateTime.Now;
+                _context.Update(requestNotification);
                 _context.SaveChanges();
             }
             catch (Exception ex)
@@ -3126,6 +3145,15 @@ namespace PrototypeWithAuth.Controllers
             {
                 request.RequestStatusID = 6; //approved
                 _context.Update(request);
+                _context.SaveChanges();
+                RequestNotification requestNotification = new RequestNotification();
+                requestNotification.RequestID = request.RequestID;
+                requestNotification.IsRead = false;
+                requestNotification.RequestName = request.Product.ProductName;
+                requestNotification.RequestStatusID = request.RequestStatusID??0;
+                requestNotification.Description = "item approved";
+                requestNotification.TimeStamp = DateTime.Now;
+                _context.Update(requestNotification);
                 _context.SaveChanges();
             }
             catch (Exception ex)

@@ -7,9 +7,9 @@ namespace PrototypeWithAuth.Models
 {
     public class RequestNotification : Notification
     {
-        int RequestID { get; set; }
-        int RequestName { get; set; }
-        int RequestStatusID { get; set; }
-        RequestStatus RequestStatus { get; set; }
+        public int RequestID { get; set; }
+        public string RequestName { get; set; }
+        public int RequestStatusID { get; set; }
+        public RequestStatus RequestStatus { get; set; }
     }
 }

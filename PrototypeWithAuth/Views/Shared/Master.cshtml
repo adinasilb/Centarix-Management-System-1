@@ -277,7 +277,8 @@
 
 
 
-        }
+            }
+            $.fn.GetNotifcationCount();
 
         });
 
@@ -947,7 +948,68 @@
                 }
             });
         }
+        $.fn.GetNotifcationCount = function ($itemurl, $type) {
+            console.log("in call getNotofication function");
+            $.ajax({
+                async: true,
+                url: "Home/GetNotficationCount",
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    console.log("count: " + data);
+                    $("#alertCount").html(data);
+                }
+            });
+        }
+        $.fn.GetNotifications = function () {
+            console.log("in call page function");
+            //delete existing modals
+            $.ajax({
+                async: true,
+                url: "Home/GetLatestNotifications",
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    $.each(data, function (i, notification) {
+                        var newitem1 = '<div id="notification-info" class="d-none">'+
+                            '<div class="table comment-info border p-2 mb-3">'+
+                                '<div class="row ml-2  border-bottom-0">'+
+                                    '<div class="ml-2 mt-auto mb-auto ">'+
+                                        '<img src="~/images/css/profile_circle_big.png" id="notficationIcon" height="45" alt="default User image" />'
+                        '</div>' +
+                            '<div class="col-8 mr-4 ">' +
+                            '<div class=" p-3 ">' +
+                            '<label class="m-0" id="notificationTimestamp">' + notification.Timestamp + '</label>' +
+                            '<label class="m-0" id="notificationDescription">' + notification.Description + '</label>' +
+                            '<label class="m-0" id="requestName" >' + notification.RequestName + '</label>' +
+                            '</div>' +
 
+                            '</div>' +
+
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+                      
+                        $("#notifications-popover").append(newitem1);
+                        $('[data-toggle="popover"]').popover('dispose');
+                        $('[data-toggle="popover"]').popover({
+                            sanitize: false,
+                            placement: 'bottom',
+                            html: true,
+                            content: function () {
+                                return $('#notifications-popover').html();
+                            }
+                        });
+                        $('#openNotifications').popover('toggle');
+
+                    });
+                }
+
+            });
+        }
+        $("#openNotifications").click(function () {
+            $.fn.GetNotifications();           
+        });
     </script>
 </body>
 </html>

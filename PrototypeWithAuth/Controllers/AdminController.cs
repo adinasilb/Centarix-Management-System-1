@@ -49,7 +49,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = AppUtility.UserPageTypeEnum.Index;
             List<ApplicationUser> users = new List<ApplicationUser>();
             users = _context.Users
-                .Where(u => !u.LockoutEnabled && (u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null))
+                .Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
                 .ToList();
             if (User.IsInRole("Admin"))
             {
@@ -353,7 +353,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> EditUser(string id)
         {
-            var editUserViewModel = _context.Users.Where(u => u.Id == id).Where(u => !u.LockoutEnabled && (u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null))
+            var editUserViewModel = _context.Users.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
                 .Select(u => new EditUserViewModel
                 {
                     ApplicationUserID = u.Id,
