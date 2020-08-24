@@ -18,5 +18,9 @@ namespace PrototypeWithAuth.Models
         public bool IsRead { get; set; }
         public string ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser {get; set;}
+        public string Controller { get; set; }
+        public string Action { get; set; }
+        public int NotificationStatusID { get; set; }
+        public NotificationStatus NotificationStatus { get; set; }
     }
 }

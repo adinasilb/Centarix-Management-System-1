@@ -99,6 +99,10 @@
     <Compile Remove="Data\Migrations\20200824064323_ReAddedRequestNotificationFields.Designer.cs" />
     <Compile Remove="Data\Migrations\20200824064908_ReAddedRequestNotificationFields.cs" />
     <Compile Remove="Data\Migrations\20200824064908_ReAddedRequestNotificationFields.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824125104_AddedNotificationStatus.cs" />
+    <Compile Remove="Data\Migrations\20200824125104_AddedNotificationStatus.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824125704_AddedNotificationStatusFK.cs" />
+    <Compile Remove="Data\Migrations\20200824125704_AddedNotificationStatusFK.Designer.cs" />
   </ItemGroup>
 
 
