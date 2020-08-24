@@ -2110,7 +2110,8 @@ namespace PrototypeWithAuth.Controllers
             //}
 
             var firstRequest = _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
 
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
@@ -2203,22 +2204,25 @@ namespace PrototypeWithAuth.Controllers
                 if (firstRequest.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 {
                     TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
-                    return RedirectToAction("Index", new
-                    {
-                        page = confirmEmail.Page,
-                        requestStatusID = 2,
-                        PageType = AppUtility.RequestPageTypeEnum.Request
-                    });
+                    //return RedirectToAction("Index", new
+                    //{
+                    //    page = confirmEmail.Page,
+                    //    requestStatusID = 2,
+                    //    PageType = AppUtility.RequestPageTypeEnum.Request
+                    //});
+                    return RedirectToAction("Index"); //temp: todo: must add Tempdata
                 }
                 else
                 {
                     TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
-                    return RedirectToAction("Index", "Operations", new
-                    {
-                        page = confirmEmail.Page,
-                        requestStatusID = 2,
-                        PageType = AppUtility.RequestPageTypeEnum.Request
-                    });
+                    //return RedirectToAction("Index", "Operations", new
+                    //{
+                    //    page = confirmEmail.Page,
+                    //    requestStatusID = 2,
+                    //    PageType = AppUtility.RequestPageTypeEnum.Request
+                    //});
+
+                    return RedirectToAction("Index"); //temp: todo: must add Tempdata
                 }
 
             }
@@ -3387,27 +3391,27 @@ namespace PrototypeWithAuth.Controllers
             {
                 case AppUtility.AccountingPaymentsEnum.MonthlyPayment:
                     requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Where(r => r.PaymentStatusID == 1);
                     break;
                 case AppUtility.AccountingPaymentsEnum.PayNow:
                     requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Where(r => r.PaymentStatusID == 3);
                     break;
                 case AppUtility.AccountingPaymentsEnum.PayLater:
                     requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Where(r => r.PaymentStatusID == 4);
                     break;
                 case AppUtility.AccountingPaymentsEnum.Installments:
                     requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Where(r => r.PaymentStatusID == 5);
                     break;
                 case AppUtility.AccountingPaymentsEnum.StandingOrders:
                     requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2);
                     break;
             }
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
