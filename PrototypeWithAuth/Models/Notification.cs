@@ -14,6 +14,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int NotificationID { get; set; }
         public string Description { get; set; }
+        [DataType(DataType.Date)]
         public DateTime TimeStamp { get; set; }
         public bool IsRead { get; set; }
         public string ApplicationUserID { get; set; }

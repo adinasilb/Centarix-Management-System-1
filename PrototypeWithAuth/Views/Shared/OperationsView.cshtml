@@ -62,7 +62,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; ">
                     <li class="nav-item mx-5 ">
-                        @Html.ActionLink("Requests", "Index", "Operations", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link "  })
+                        @Html.ActionLink("Requests", "Index", "Operations", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link " })
                     </li>
                     <li class="nav-item mx-4 d-table ">
                         @Html.ActionLink("Inventory", "Index", "Operations", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
@@ -72,17 +72,21 @@
                     </li>
                 </ul>
             </div>
-           <div class="  container col-1  pl-5">
+            <div class="  container col-1  pl-5">
                 <ul class="list-unstyled m-0">
-                    <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link"> <i style='font-size:1.4rem; ' class='far fa-bell fa-lg '></i> </button> </li>
+                    <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link "><div class="alerts-icon"><i style='font-size:1.7rem; ' class='far fa-bell fa-lg '></i> <div id="alertCount" class="alert-count px-1"></div></div>  </button> </li>
                     <div style="display:none;" id="notifications-popover">
-                        notifications will go here
+                        <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
+                        <div style="width:410px" class="p-4">
+                            <h5><strong>Notifications</strong></h5>
+                        </div>
                     </div>
                 </ul>
             </div>
             <div class="  ">
                 <ul class="list-unstyled mb-0 ">
-                    <li><div class="form-inline pr-3">
+                    <li>
+                        <div class="form-inline pr-3">
                             <div class="md-form my-0 p-2">
                                 <a href="#" class="text-dark">
                                     @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
@@ -98,15 +102,16 @@
                                     <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
                                 </button>
                             </div>
-                        </div></li>
+                        </div>
+                    </li>
                     <div style="display:none;" id="logout-popover">
                         <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                             <button type="submit" id="logout-form" class="nav-link  border-0 no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
                         </form>
                     </div>
-                    </ul>
-                </div>
-                        
+                </ul>
+            </div>
+
 
         </nav>
         

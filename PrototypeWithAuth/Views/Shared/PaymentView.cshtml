@@ -55,7 +55,7 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav dropdown-menu-md-left  " style="font-size:1.25rem;  ">
                 <li class="nav-item mx-4 d-table">
-                    @Html.ActionLink("Payments", "AccountingPayments", "ParentRequests", new { @accountingPaymentsEnum=AppUtility.AccountingPaymentsEnum.MonthlyPayment }, new { @class = paymentClass })
+                    @Html.ActionLink("Payments", "AccountingPayments", "ParentRequests", new { @accountingPaymentsEnum = AppUtility.AccountingPaymentsEnum.MonthlyPayment }, new { @class = paymentClass })
                 </li>
                 <li class="nav-item mx-5">
                     @Html.ActionLink("Notifications", "Notifications", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.Notifications }, new { @class = notificationsClass })
@@ -66,6 +66,17 @@
                 <li class="nav-item mx-5">
                     @Html.ActionLink("Suppliers", "IndexForPayment", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers, @SectionType = AppUtility.MenuItems.Accounting }, new { @class = suppliersClass })
                 </li>
+            </ul>
+        </div>
+        <div class="  container col-1  pl-5">
+            <ul class="list-unstyled m-0">
+                <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link "><div class="alerts-icon"><i style='font-size:1.7rem; ' class='far fa-bell fa-lg '></i> <div id="alertCount" class="alert-count px-1"></div></div>  </button> </li>
+                <div style="display:none;" id="notifications-popover">
+                    <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
+                    <div style="width:410px" class="p-4">
+                        <h5><strong>Notifications</strong></h5>
+                    </div>
+                </div>
             </ul>
         </div>
         <div class="  ">

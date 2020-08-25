@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using SQLitePCL;
@@ -60,8 +61,9 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public int GetNotficationCount()
         {
-            DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User)).DateLastReadNotifications;
-            int count = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication).Count();
+            var currentUserID = _userManager.GetUserId(User);
+            DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id ==currentUserID).DateLastReadNotifications;
+            int count = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication & n.ApplicationUserID==currentUserID).Count();
             return count;
         }
         [HttpGet]
@@ -73,15 +75,19 @@ namespace PrototypeWithAuth.Controllers
              
              .Select(n => new
              {
+                 id = n.NotificationID,
                  timeStamp = n.TimeStamp,
                  description = n.Description,
                  requestName = n.RequestName,
                  icon = n.NotificationStatus.Icon,
-                 color = n.NotificationStatus.Color
-             });
+                 color = n.NotificationStatus.Color,
+                 controller = n.Controller,
+                 action = n.Action,
+                 isRead = n.IsRead
+             }).OrderByDescending(n => n.timeStamp).ToList();
 
             //var notificationsCombined = notification.Concat(rnotification).OrderByDescending(n=>n.timeStamp).ToList();
-            return Json(rnotification);
+            return Json(rnotification.Take(4));
         }
         [HttpPost]
         public bool UpdateLastReadNotifications()
@@ -93,5 +99,5 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();          
             return true;
         }
-    }
+        }
 }
