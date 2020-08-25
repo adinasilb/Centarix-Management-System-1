@@ -540,6 +540,12 @@
                             break;
                     }
 
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    console.log("in error..." + err.Description);
+                    $("#loading").hide();
+                    alert(err.Message);
                 }
                 //error: function (/*request, status, error*/) {
                 //    console.log("ajax call went wrong:" /*+ request.responseText*/);
@@ -899,7 +905,7 @@
             e.stopPropagation();
             var $itemurl = "Locations/AddLocation";
             var $modal = $(".location-modal-view");
-            $.fn.CallPageLocation($itemurl, $modal, true);
+            $.fn.CallPageRequest($itemurl, "locations");
             return false;
         });
 
@@ -907,6 +913,17 @@
         $('#submitAddLocation').click(function () {
             e.preventDefault();
             $('#loading').show();
+        });
+
+        $(".load-add-location-type").on("click", function (e) {
+            console.log("load add location type 3");
+            e.preventDefault();
+            e.stopPropagation();
+            var $itemurl = "Locations/AddLocationType";
+            var $modal = $(".location-modal-view");
+            //$("location-modal-view").css("display", "none");
+            //IMPT REOPEN ON CLOSING
+            $.fn.CallPageRequest($itemurl, "addlocation");
         });
 
 
@@ -933,28 +950,13 @@
 
                     if ($isaddlocation) {
                         console.log("inside of modal if statement");
-                        $(".load-add-location-type").on("click", function (e) {
-
-                            console.log("load add location type 3");
-                            e.preventDefault();
-                            e.stopPropagation();
-                            var $itemurl = "Locations/AddLocationType";
-                            var $modal = $(".location-modal-view");
-                            $("location-modal-view").css("display", "none");
-                            //IMPT REOPEN ON CLOSING
-                            $.fn.CallPage($itemurl, $modal, false);
-                        });
+                        
 
 
                     }
                     else {
                         $(".addSublocation").hide();
-                        $(".btnAddSublocation").on("click", function (e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            console.log("Location manage location view js");
-                            $.fn.AddSublocation();
-                        });
+                        
                     }
 
                 }

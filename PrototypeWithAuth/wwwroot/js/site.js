@@ -878,39 +878,6 @@ $.fn.ShowResults = function ($inputBox, $value) { //this function ensures that t
 //LOCATIONS:
 
 
-var $sublocationCounter = 1;
-$.fn.AddSublocation = function () {
-	if ($sublocationCounter == 0 && !$(".nameSublocation").val()) {
-		$(".nameError").html("Please input a name first");
-		return;
-	}
-	else if (false) {
-		//check if last sublocation is blank and make sure any other spans are blank
-	}
-	//check that the one on top is filled out
-	else {
-		$("span").html("");
-	}
-	console.log("Location site.js");
-
-	var newSublocationID = 'Sublocations_' + $sublocationCounter + '_';
-	console.log("newSublocationID: " + newSublocationID);
-	var newSublocationName = 'Sublocations[' + $sublocationCounter + ']';
-	console.log("newSublocationName: " + newSublocationName);
-	var newSublocationClass = 'sublocationName' + $sublocationCounter;
-	console.log("newSublocationClass: " + newSublocationClass);
-	var sublocationHtml = '<div class="col-md-4">';
-	sublocationHtml += '<label class="control-label">Sublocation ' + $sublocationCounter + ':</label>';
-	sublocationHtml += '<input type="text" class="form-control" id="' + newSublocationID + '" name="' + newSublocationName + '" class="' + newSublocationClass + '" />';
-	//sublocationHtml += '<input type="text" class="form-control" ' + newSublocationClass + '  />';
-	var spanClass = 'spanSublocation' + $sublocationCounter;
-	sublocationHtml += '<span class="text-danger ' + spanClass + '></span>"';
-	sublocationHtml += '</div>';
-	$(".addSublocation").append(sublocationHtml);
-	$(".addSublocation").show();
-	$sublocationCounter++;
-}
-
 //AJAX load full partial view for modalview manage locations
 $("#locationTypeDepthZero").change(function () {
 	var myDiv = $(".divSublocations");
@@ -1431,13 +1398,11 @@ $(".load-location-index-view").click(function (e) {
 });
 
 $.fn.setUpLocationIndexList = function (val) {
-	$("#loading3").show();
 	//fill up col 2 with the next one
+	$("#loading3").delay(1000).show(0);
 	var myDiv = $(".colOne");
 	var typeId = val;
-	//console.log("about to call ajax with a parentid of: " + parentId);
 	$.ajax({
-		//IMPORTANT: ADD IN THE ID
 		url: "/Locations/LocationIndex/?typeId=" + typeId,
 		type: 'GET',
 		cache: false,
@@ -1446,6 +1411,7 @@ $.fn.setUpLocationIndexList = function (val) {
 			$(".VisualBoxColumn").hide();
 			$(".colTwoSublocations").hide();
 			$("#loading3").hide();
+			$("#loading3").delay(1000).hide(0);
 			myDiv.show();
 			this.html(result);
 
@@ -1459,7 +1425,7 @@ $(".load-sublocation-view").click(function (e) {
 	//add or remove the background class in col 1
 	//$(".load-sublocation-view").parent().removeClass("td-selected");
 	//$(this).parent().addClass("td-selected");
-	$("#loading1").show();
+	$("#loading1").delay(1000).show(0);
 	//fill up col 2 with the next one
 	var myDiv = $(".colTwoSublocations");
 	var parentId = $(this).val();
@@ -1479,6 +1445,7 @@ $(".load-sublocation-view").click(function (e) {
 		success: function (result) {
 			myDiv.show();
 			$("#loading1").hide();
+			$("#loading1").delay(1000).hide(0);
 			this.html(result);
 
 		}
@@ -1490,7 +1457,7 @@ $(".load-sublocation-view").click(function (e) {
 });
 
 $.fn.setUpVisual = function (val) {
-	$("#loading2").show();
+	$("#loading2").delay(1000).show(0);
 	//fill up col three with the visual
 	var visualDiv = $(".VisualBoxColumn");
 	var visualContainerId = val;
@@ -1504,6 +1471,7 @@ $.fn.setUpVisual = function (val) {
 			visualDiv.show();
 			this.html(result);
 			$("#loading2").hide();
+			$("#loading2").delay(1000).hide(0);
 		}
 	});
 };
@@ -2236,3 +2204,52 @@ $("#reorderRequest").click(function () {
 
 });
 
+
+
+/*--------------------------------Accounting Payment Notifications--------------------------------*/
+$(".payments-pay-now").on("click", function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var vendorid = $(this).attr("vendor");
+	var paymentstatusid = $(this).attr("paymentstatus");
+	console.log("vendor: " + vendorid);
+	console.log("payment status: " + paymentstatusid);
+	//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
+	var itemurl = "PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid;
+	$("#loading").show();
+	$.fn.CallModal(itemurl);
+});
+
+
+$.fn.CallModal = function (url) {
+	console.log("in call modal, url: " + url);
+	$('.modal').replaceWith('');
+	$(".modal-backdrop").remove();
+	$.ajax({
+		async: false,
+		url: url,
+		type: 'GET',
+		cache: false,
+		success: function (data) {
+			$("#loading").hide();
+			var modal = $(data);
+			$('body').append(modal);
+			//replaces the modal-view class with the ModalView view
+			//$(".modal-view").html(data);
+			//turn off data dismiss by clicking out of the box and by pressing esc
+			$(".modal-view").modal({
+				backdrop: true,
+				keyboard: false,
+			});
+			//shows the modal
+			$(".modal").modal('show');
+		},
+		//error: function (data) {
+		//	$("#loading").hide();
+		//	console.log("error : " + data.responseText);
+		//	console.log("error : " + data.responseJSON);
+		//	console.log("error : " + data.responseXML);
+		//	console.log("error : " + data.readAsDataURL);
+		//}
+	});
+};

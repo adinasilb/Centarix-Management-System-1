@@ -705,16 +705,28 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
-                    TempData["ErrorMessage"] = ex.Message.ToString();
-                    TempData["InnerMessage"] = ex.InnerException.ToString();
+                    if (ex.Message != null)
+                    {
+                        TempData["ErrorMessage"] = ex.Message.ToString();
+                    }
+                    if (ex.InnerException != null)
+                    {
+                        TempData["InnerMessage"] = ex.InnerException.ToString();
+                    }
                     return View("~/Views/Shared/RequestError.cshtml");
                 }
                 catch (Exception ex)
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
-                    TempData["ErrorMessage"] = ex.Message.ToString();
-                    TempData["InnerMessage"] = ex.InnerException.ToString();
+                    if (ex.Message != null)
+                    {
+                        TempData["ErrorMessage"] = ex.Message.ToString();
+                    }
+                    if (ex.InnerException != null)
+                    {
+                        TempData["InnerMessage"] = ex.InnerException.ToString();
+                    }
                     return View("~/Views/Shared/RequestError.cshtml");
                 }
             }
@@ -2847,6 +2859,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
+            var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
+                .Include(r => r.Product).FirstOrDefault();
+
             bool hasLocationInstances = false;
             if (receivedLocationViewModel.CategoryType == 1)
             {
@@ -2899,15 +2914,15 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (receivedLocationViewModel.Clarify)
                     {
-                        receivedLocationViewModel.Request.RequestStatusID = 5;
+                        requestReceived.RequestStatusID = 5;
                     }
                     else if (receivedLocationViewModel.PartialDelivery)
                     {
-                        receivedLocationViewModel.Request.RequestStatusID = 4;
+                        requestReceived.RequestStatusID = 4;
                     }
                     else
                     {
-                        receivedLocationViewModel.Request.RequestStatusID = 3;
+                        requestReceived.RequestStatusID = 3;
                     }
                 }
 
@@ -2916,29 +2931,32 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (receivedLocationViewModel.Clarify)
                 {
-                    receivedLocationViewModel.Request.RequestStatusID = 5;
+                    requestReceived.RequestStatusID = 5;
                 }
                 else if (receivedLocationViewModel.PartialDelivery)
                 {
-                    receivedLocationViewModel.Request.RequestStatusID = 4;
+                    requestReceived.RequestStatusID = 4;
                 }
                 else
                 {
-                    receivedLocationViewModel.Request.RequestStatusID = 3;
+                    requestReceived.RequestStatusID = 3;
                 }
             }
             try
             {
-                receivedLocationViewModel.Request.Product = _context.Products.Where(p => p.ProductID == receivedLocationViewModel.Request.ProductID).FirstOrDefault();
-                receivedLocationViewModel.Request.ParentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == receivedLocationViewModel.Request.ParentRequestID).FirstOrDefault();
-                receivedLocationViewModel.Request.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
-                receivedLocationViewModel.Request.RequestStatus = _context.RequestStatuses.Where(rs => rs.RequestStatusID == receivedLocationViewModel.Request.RequestStatusID).FirstOrDefault();
-                receivedLocationViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == receivedLocationViewModel.Request.SubProjectID).FirstOrDefault();
-
-                _context.Update(receivedLocationViewModel.Request);
+                //receivedLocationViewModel.Request.Product = _context.Products.Where(p => p.ProductID == receivedLocationViewModel.Request.ProductID).FirstOrDefault();
+                //receivedLocationViewModel.Request.ParentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == receivedLocationViewModel.Request.ParentRequestID).FirstOrDefault();
+                //receivedLocationViewModel.Request.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
+                //receivedLocationViewModel.Request.RequestStatus = _context.RequestStatuses.Where(rs => rs.RequestStatusID == receivedLocationViewModel.Request.RequestStatusID).FirstOrDefault();
+                //receivedLocationViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == receivedLocationViewModel.Request.SubProjectID).FirstOrDefault();
+                requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
+                requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
+                requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
+                _context.Update(requestReceived);
                 await _context.SaveChangesAsync();
+
                 RequestNotification requestNotification = new RequestNotification();
-                requestNotification.RequestID = receivedLocationViewModel.Request.RequestID;
+                requestNotification.RequestID = requestReceived.RequestID;
                 requestNotification.IsRead = false;
                 requestNotification.ApplicationUserID = receivedLocationViewModel.Request.ApplicationUserCreatorID;
                 requestNotification.RequestName = receivedLocationViewModel.Request.Product.ProductName;
@@ -3420,6 +3438,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> AccountingPayments(AppUtility.AccountingPaymentsEnum accountingPaymentsEnum)
         {
             TempData["Action"] = accountingPaymentsEnum;
@@ -3465,6 +3484,32 @@ namespace PrototypeWithAuth.Controllers
             };
             return View(accountingPaymentsViewModel);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
+        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid/*, List<int>? requestIds*/)
+        {
+            List<Request> requestsToPay = new List<Request>();
+
+            if (vendorid != null && paymentstatusid != null)
+            {
+                requestsToPay = _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.Product.VendorID == vendorid)
+                .Where(r => r.PaymentStatusID == paymentstatusid).ToList();
+            }
+
+            PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
+            {
+                Requests = requestsToPay
+            };
+
+            //check if payment status type is installments to show the installments in the view model
+
+            return PartialView(paymentsPayModalViewModel);
+        }
+
 
         /*
          * 

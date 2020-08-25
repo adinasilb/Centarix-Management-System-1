@@ -15,35 +15,8 @@
                     in the future might want to change it to loading the request from this request id and then adding in the values
                     given here (done in the controller)*@
                 @Html.HiddenFor(vm => vm.Request.RequestID)
-                @Html.HiddenFor(vm => vm.Request.ProductID)
-                @Html.HiddenFor(vm => vm.Request.ParentRequestID)
-                @Html.HiddenFor(vm => vm.Request.RequestStatusID)
+                
                 @Html.HiddenFor(vm => vm.CategoryType);
-                @Html.HiddenFor(vm => vm.Request.AmountWithInLocation)
-                @Html.HiddenFor(vm => vm.Request.AmountWithOutLocation)
-                @Html.HiddenFor(vm => vm.Request.IsDeleted)
-                @Html.HiddenFor(vm => vm.Request.IsApproved)
-                @Html.HiddenFor(vm => vm.Request.Unit)
-                @Html.HiddenFor(vm => vm.Request.UnitTypeID)
-                @Html.HiddenFor(vm => vm.Request.SubUnit)
-                @Html.HiddenFor(vm => vm.Request.SubUnitTypeID)
-                @Html.HiddenFor(vm => vm.Request.SubSubUnit)
-                @Html.HiddenFor(vm => vm.Request.SubSubUnitTypeID)
-                @Html.HiddenFor(vm => vm.Request.UnitsOrdered)
-                @Html.HiddenFor(vm => vm.Request.UnitsInStock)
-                @Html.HiddenFor(vm => vm.Request.Quantity)
-                @Html.HiddenFor(vm => vm.Request.Cost)
-                @Html.HiddenFor(vm => vm.Request.Currency)
-                @Html.HiddenFor(vm => vm.Request.CatalogNumber)
-                @Html.HiddenFor(vm => vm.Request.SerialNumber)
-                @Html.HiddenFor(vm => vm.Request.URL)
-                @Html.HiddenFor(vm => vm.Request.Warranty)
-                @Html.HiddenFor(vm => vm.Request.VAT)
-                @Html.HiddenFor(vm => vm.Request.ExchangeRate)
-                @Html.HiddenFor(vm => vm.Request.Terms)
-                @Html.HiddenFor(vm => vm.Request.ExpectedSupplyDays)
-                @Html.HiddenFor(vm => vm.Request.SubProjectID)
-                @Html.HiddenFor(vm => vm.Request.SubProject.ProjectID)
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@

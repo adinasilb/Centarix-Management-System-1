@@ -1,0 +1,15 @@
+﻿@model PrototypeWithAuth.ViewModels.PaymentsPayModalViewModel
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+    <div class="modal-dialog reorder-modal  modal-lg " style="min-width:1300PX !important" role="document">
+        <div class="modal-content d-inline-block" style="border-radius:1rem;">
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4>Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</h4>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
