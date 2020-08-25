@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200825055606_AddedREquestNotificationStatusData")]
+    partial class AddedREquestNotificationStatusData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -534,9 +536,52 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Notification", b =>
+                {
+                    b.Property<int>("NotificationID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Controller")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("NotificationStatusID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("NotificationID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("NotificationStatusID");
+
+                    b.ToTable("Notifications");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Notification");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.NotificationStatus", b =>
                 {
-                    b.Property<int>("NotificationStatusID")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -554,7 +599,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Icon")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("NotificationStatusID");
+                    b.HasKey("id");
 
                     b.ToTable("NotificationStatuses");
 
@@ -716,6 +761,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Sum")
+                        .HasColumnType("float");
 
                     b.HasKey("PaymentID");
 
@@ -1581,49 +1629,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("RequestLocationInstance");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotification", b =>
-                {
-                    b.Property<int>("NotificationID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Controller")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("NotificationStatusID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RequestName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("NotificationID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("NotificationStatusID");
-
-                    b.ToTable("RequestNotifications");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestStatus", b =>
                 {
                     b.Property<int>("RequestStatusID")
@@ -2047,6 +2052,27 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("VendorContacts");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotification", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.Notification");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RequestName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RequestNotificationStatusid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatusID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("RequestNotificationStatusid");
+
+                    b.HasDiscriminator().HasValue("RequestNotification");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotificationStatus", b =>
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.NotificationStatus");
@@ -2056,28 +2082,28 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasData(
                         new
                         {
-                            NotificationStatusID = 1,
+                            id = 1,
                             Color = "--notifications-orderlate-color",
                             Description = "OrderLate",
                             Icon = "icon-centarix-icons-05"
                         },
                         new
                         {
-                            NotificationStatusID = 2,
+                            id = 2,
                             Color = "--notifications-ordered-color",
                             Description = "ItemOrdered",
                             Icon = "icon-centarix-icons-05"
                         },
                         new
                         {
-                            NotificationStatusID = 3,
+                            id = 3,
                             Color = "--notifications-approved-color",
                             Description = "ItemApproved",
                             Icon = "icon-centarix-icons-05"
                         },
                         new
                         {
-                            NotificationStatusID = 4,
+                            id = 4,
                             Color = "--notifications-received-color",
                             Description = "ItemReceived",
                             Icon = "icon-centarix-icons-05"
@@ -2190,6 +2216,20 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("LocationTypeParentID")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Notification", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.NotificationStatus", "NotificationStatus")
+                        .WithMany("Notifications")
+                        .HasForeignKey("NotificationStatusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -2342,20 +2382,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotification", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.RequestNotificationStatus", "NotificationStatus")
-                        .WithMany("RequestNotifications")
-                        .HasForeignKey("NotificationStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Project", "Project")
@@ -2395,6 +2421,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("VendorID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotification", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.RequestNotificationStatus", "RequestNotificationStatus")
+                        .WithMany()
+                        .HasForeignKey("RequestNotificationStatusid")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

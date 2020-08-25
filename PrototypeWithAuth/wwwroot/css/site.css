@@ -15,7 +15,6 @@ for details on configuring this project to bundle and minify static web assets. 
     --expense-color: #00BCD4;
     --income-color: #4CAF50;
     --timekeeper-color: #FF9800;
-    --timekeeper-color: #FF9800;
     --biomarkers-color: #F44336;
     --operations-color: #3F51B5;
     --order-inv-filter: brightness(0) saturate(100%) invert(57%) sepia(42%) saturate(5293%) hue-rotate(184deg) brightness(96%) contrast(99%);
@@ -23,6 +22,10 @@ for details on configuring this project to bundle and minify static web assets. 
     --acc-filter: brightness(0) saturate(100%) invert(30%) sepia(32%) saturate(2825%) hue-rotate(237deg) brightness(86%) contrast(102%);
     --users-filter: brightness(0) saturate(100%) invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
     --operations-filter: brightness(0) saturate(100%) invert(25%) sepia(82%) saturate(1564%) hue-rotate(217deg) brightness(90%) contrast(84%);
+    --notifications-orderlate-color: #DB2127;
+    --notifications-ordered-color: #F44336;
+    --notifications-approved-color: #00CA72;
+    --notifications-received-color: #5F79E2;
 }
 .order-inv-color {
     color: var(--order-inv-color);

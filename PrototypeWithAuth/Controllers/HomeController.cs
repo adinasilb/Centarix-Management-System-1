@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
@@ -60,20 +61,37 @@ namespace PrototypeWithAuth.Controllers
         public int GetNotficationCount()
         {
             DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User)).DateLastReadNotifications;
-            int count = _context.Notifications.Where(n => n.TimeStamp > lastReadNotfication).Count();
+            int count = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication).Count();
             return count;
         }
         [HttpGet]
         public JsonResult GetLatestNotifications()
         {
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            //todo: figure out exactly which notfications to show
+            var rnotification = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id && n.TimeStamp > DateTime.Now.AddDays(-5))
+             
+             .Select(n => new
+             {
+                 timeStamp = n.TimeStamp,
+                 description = n.Description,
+                 requestName = n.RequestName,
+                 icon = n.NotificationStatus.Icon,
+                 color = n.NotificationStatus.Color
+             });
+
+            //var notificationsCombined = notification.Concat(rnotification).OrderByDescending(n=>n.timeStamp).ToList();
+            return Json(rnotification);
+        }
+        [HttpPost]
+        public bool UpdateLastReadNotifications()
+        {
+            ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             DateTime lastReadNotfication = currentUser.DateLastReadNotifications;
             currentUser.DateLastReadNotifications = DateTime.Now;
             _context.Update(currentUser);
-            _context.SaveChangesAsync();
-            //todo: figure out exactly which notfications to show
-            var notification = _context.Notifications.Where(n => n.TimeStamp > DateTime.Now.AddDays(-5)).OrderByDescending(n=>n.TimeStamp);
-            return Json(notification);
+            _context.SaveChanges();          
+            return true;
         }
     }
 }

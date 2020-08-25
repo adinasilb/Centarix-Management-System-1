@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace PrototypeWithAuth.Models
+{
+    public class RequestNotificationStatus: NotificationStatus
+    {
+        public IEnumerable<RequestNotification> RequestNotifications { get; set; }
+    }
+}
