@@ -1,0 +1,58 @@
+﻿$(".load-add-location-type").on("click", function (e) {
+    console.log("load add location type 3");
+    e.preventDefault();
+    e.stopPropagation();
+    var $itemurl = "Locations/AddLocationType";
+    var $modal = $(".location-modal-view");
+    //$("location-modal-view").css("display", "none");
+    //IMPT REOPEN ON CLOSING
+    $.fn.CallPageRequest($itemurl, "addlocation");
+});
+
+//$(".btnAddSublocation").click(e){
+//    console.log("Location manage location view js");
+//    e.preventDefault();
+//    e.stopPropagation();
+//    $.fn.AddSublocation();
+//});
+
+$(".load-add-sublocation").on("click", function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	console.log("load add sublocation");
+	$.fn.AddSublocation();
+});
+
+
+var $sublocationCounter = 1;
+$.fn.AddSublocation = function () {
+	if ($sublocationCounter == 0 && !$(".nameSublocation").val()) {
+		$(".nameError").html("Please input a name first");
+		return;
+	}
+	else if (false) {
+		//check if last sublocation is blank and make sure any other spans are blank
+	}
+	//check that the one on top is filled out
+	else {
+		$("span").html("");
+	}
+	console.log("Location site.js");
+
+	var newSublocationID = 'Sublocations_' + $sublocationCounter + '_';
+	console.log("newSublocationID: " + newSublocationID);
+	var newSublocationName = 'Sublocations[' + $sublocationCounter + ']';
+	console.log("newSublocationName: " + newSublocationName);
+	var newSublocationClass = 'sublocationName' + $sublocationCounter;
+	console.log("newSublocationClass: " + newSublocationClass);
+	var sublocationHtml = '<div class="col-md-4">';
+	sublocationHtml += '<label class="control-label">Sublocation ' + $sublocationCounter + ':</label>';
+	sublocationHtml += '<input type="text" class="form-control" id="' + newSublocationID + '" name="' + newSublocationName + '" class="' + newSublocationClass + '" />';
+	//sublocationHtml += '<input type="text" class="form-control" ' + newSublocationClass + '  />';
+	var spanClass = 'spanSublocation' + $sublocationCounter;
+	sublocationHtml += '<span class="text-danger ' + spanClass + '></span>"';
+	sublocationHtml += '</div>';
+	$(".addSublocation").append(sublocationHtml);
+	$(".addSublocation").show();
+	$sublocationCounter++;
+}

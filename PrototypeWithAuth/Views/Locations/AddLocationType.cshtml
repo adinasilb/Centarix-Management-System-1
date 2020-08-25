@@ -1,5 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddLocationTypeViewModel
-
+    <script src="~/js/LocationType.js"></script>
 <div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
     <div class="modal-dialog  modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; overflow-y:auto; max-width: 30rem;">
         <div class="modal-content d-inline-block" style="width:30rem;">
@@ -13,17 +13,17 @@
                 @*<input type="text" class="form-control" asp-for="Sublocations[0]" />
                     <input type="text" class="form-control" asp-for="Sublocations[1]" />*@
 
-                <div class="modal-body">
-                    <label class="control-label">Name:</label>
-                    <input asp-for="Sublocations[0]" type="text" class="form-control nameSublocation" />
-                    <span class="text-danger nameError"></span>
-                    <br />
-                    <div class="addSublocation">
-                    </div>
-                    <br />
-                    <input type="button"
-                           class="btn btn-outline-secondary btn-sm btnAddSublocation" value="Add Sublocation" />
+            <div class="modal-body">
+                <label class="control-label">Name:</label>
+                <input asp-for="Sublocations[0]" type="text" class="form-control nameSublocation" />
+                <span class="text-danger nameError"></span>
+                <br />
+                <div class="addSublocation">
                 </div>
+                <br />
+                @*<input type="button" class="btn btn-outline-secondary btn-sm btnAddSublocation" value="Add Sublocation" />*@
+                <button class="btn btn-link load-add-sublocation float-none" style="color: #2196F3;">Add Sublocation</button>
+            </div>
 
                 <div class="modal-footer">
                     <input type="submit" value="SAVE" class="inv-button" asp-action="AddLocationType" />
