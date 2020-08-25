@@ -2204,3 +2204,52 @@ $("#reorderRequest").click(function () {
 
 });
 
+
+
+/*--------------------------------Accounting Payment Notifications--------------------------------*/
+$(".payments-pay-now").on("click", function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var vendorid = $(this).attr("vendor");
+	var paymentstatusid = $(this).attr("paymentstatus");
+	console.log("vendor: " + vendorid);
+	console.log("payment status: " + paymentstatusid);
+	//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
+	var itemurl = "PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid;
+	$("#loading").show();
+	$.fn.CallModal(itemurl);
+});
+
+
+$.fn.CallModal = function (url) {
+	console.log("in call modal, url: " + url);
+	$('.modal').replaceWith('');
+	$(".modal-backdrop").remove();
+	$.ajax({
+		async: false,
+		url: url,
+		type: 'GET',
+		cache: false,
+		success: function (data) {
+			$("#loading").hide();
+			var modal = $(data);
+			$('body').append(modal);
+			//replaces the modal-view class with the ModalView view
+			//$(".modal-view").html(data);
+			//turn off data dismiss by clicking out of the box and by pressing esc
+			$(".modal-view").modal({
+				backdrop: true,
+				keyboard: false,
+			});
+			//shows the modal
+			$(".modal").modal('show');
+		},
+		//error: function (data) {
+		//	$("#loading").hide();
+		//	console.log("error : " + data.responseText);
+		//	console.log("error : " + data.responseJSON);
+		//	console.log("error : " + data.responseXML);
+		//	console.log("error : " + data.readAsDataURL);
+		//}
+	});
+};

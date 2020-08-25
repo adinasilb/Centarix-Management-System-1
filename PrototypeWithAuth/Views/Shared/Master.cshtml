@@ -539,6 +539,12 @@
                             break;
                     }
 
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    console.log("in error..." + err.Description);
+                    $("#loading").hide();
+                    alert(err.Message);
                 }
                 //error: function (/*request, status, error*/) {
                 //    console.log("ajax call went wrong:" /*+ request.responseText*/);

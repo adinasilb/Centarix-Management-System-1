@@ -3413,6 +3413,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> AccountingPayments(AppUtility.AccountingPaymentsEnum accountingPaymentsEnum)
         {
             TempData["Action"] = accountingPaymentsEnum;
@@ -3458,6 +3459,32 @@ namespace PrototypeWithAuth.Controllers
             };
             return View(accountingPaymentsViewModel);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
+        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid/*, List<int>? requestIds*/)
+        {
+            List<Request> requestsToPay = new List<Request>();
+
+            if (vendorid != null && paymentstatusid != null)
+            {
+                requestsToPay = _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.Product.VendorID == vendorid)
+                .Where(r => r.PaymentStatusID == paymentstatusid).ToList();
+            }
+
+            PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
+            {
+                Requests = requestsToPay
+            };
+
+            //check if payment status type is installments to show the installments in the view model
+
+            return View(paymentsPayModalViewModel);
+        }
+
 
         /*
          * 

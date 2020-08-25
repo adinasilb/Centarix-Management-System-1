@@ -10,7 +10,7 @@ for details on configuring this project to bundle and minify static web assets. 
     --user-color: #795548;
     --lab-man-color: #607D8B;
     --order-inv-color: #2196F3;
-    --acc-color: #673AB7;
+    --acc-color: #A26FF0;
     --protocol-color: #009688;
     --expense-color: #00BCD4;
     --income-color: #4CAF50;
@@ -20,7 +20,7 @@ for details on configuring this project to bundle and minify static web assets. 
     --operations-color: #3F51B5;
     --order-inv-filter: brightness(0) saturate(100%) invert(57%) sepia(42%) saturate(5293%) hue-rotate(184deg) brightness(96%) contrast(99%);
     --lab-man-filter: brightness(0) saturate(100%) invert(44%) sepia(48%) saturate(220%) hue-rotate(155deg) brightness(96%) contrast(87%);
-    --acc-filter: brightness(0) saturate(100%) invert(30%) sepia(32%) saturate(2825%) hue-rotate(237deg) brightness(86%) contrast(102%);
+    --acc-filter: brightness(0) saturate(100%) invert(51%) sepia(93%) saturate(1777%) hue-rotate(225deg) brightness(93%) contrast(103%);
     --users-filter: brightness(0) saturate(100%) invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
     --operations-filter: brightness(0) saturate(100%) invert(25%) sepia(82%) saturate(1564%) hue-rotate(217deg) brightness(90%) contrast(84%);
 }
@@ -30,6 +30,18 @@ for details on configuring this project to bundle and minify static web assets. 
 
 .order-inv-filter {
     filter: invert(50%) sepia(19%) saturate(6552%) hue-rotate(184deg) brightness(99%) contrast(92%);
+}
+
+.accounting-color {
+    color: var(--acc-color);
+}
+
+.accounting-filter {
+    filter: var(--acc-filter);
+}
+
+.green-overlay {
+    filter: invert(56%) sepia(47%) saturate(3021%) hue-rotate(116deg) brightness(98%) contrast(101%);
 }
 
 .rounded-large {
@@ -583,6 +595,17 @@ input.select-dropdown {
     padding: 0.56rem 1.5rem;
     font-size: 1.5625rem;
     line-height: 1.5;
+}
+
+.inv-payments-button {
+    background-color: var(--acc-color);
+    border: 1px solid var(--acc-color);
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.56rem 3.25rem;
+    font-size: 1.2rem;
+    line-height: 1;
 }
 
 #createModalForm .mdb-select li:nth-child(2) {
