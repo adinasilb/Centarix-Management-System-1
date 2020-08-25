@@ -600,11 +600,11 @@ namespace PrototypeWithAuth.Controllers
                     //rename temp folder to the request id
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolder = Path.Combine(uploadFolder, "0");
-                    if (Directory.Exists(requestFolder))
-                    {
+                    //if (Directory.Exists(requestFolder))
+                    //{
                         Directory.Move(requestFolder, Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString()));
                         Directory.Delete(requestFolder);
-                    }
+                    //}
                     //check if there are any files to upload first
                     //save the files
                     //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -706,16 +706,28 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
-                    TempData["ErrorMessage"] = ex.Message.ToString();
-                    TempData["InnerMessage"] = ex.InnerException.ToString();
+                    if (ex.Message != null)
+                    {
+                        TempData["ErrorMessage"] = ex.Message.ToString();
+                    }
+                    if (ex.InnerException != null)
+                    {
+                        TempData["InnerMessage"] = ex.InnerException.ToString();
+                    }
                     return View("~/Views/Shared/RequestError.cshtml");
                 }
                 catch (Exception ex)
                 {
                     //ModelState.AddModelError();
                     ViewData["ModalViewType"] = "Create";
-                    TempData["ErrorMessage"] = ex.Message.ToString();
-                    TempData["InnerMessage"] = ex.InnerException.ToString();
+                    if (ex.Message != null)
+                    {
+                        TempData["ErrorMessage"] = ex.Message.ToString();
+                    }
+                    if (ex.InnerException != null)
+                    {
+                        TempData["InnerMessage"] = ex.InnerException.ToString();
+                    }
                     return View("~/Views/Shared/RequestError.cshtml");
                 }
             }
@@ -3482,7 +3494,7 @@ namespace PrototypeWithAuth.Controllers
 
             //check if payment status type is installments to show the installments in the view model
 
-            return View(paymentsPayModalViewModel);
+            return PartialView(paymentsPayModalViewModel);
         }
 
 
