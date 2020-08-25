@@ -7,5 +7,6 @@ namespace PrototypeWithAuth.Models
 {
     public class RequestNotificationStatus: NotificationStatus
     {
+        public IEnumerable<RequestNotification> RequestNotifications { get; set; }
     }
 }

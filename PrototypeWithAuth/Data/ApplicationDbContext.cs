@@ -23,7 +23,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<RequestNotificationStatus> RequestNotificationStatuses { get; set; }
         public DbSet<NotificationStatus> NotificationStatuses { get; set; }
         public DbSet<RequestNotification> RequestNotifications { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
+        //public DbSet<Notification<NotificationStatus>> Notifications { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
         public DbSet<Reorder> Reorder { get; set; }
         public DbSet<ParentQuote> ParentQuotes { get; set; }

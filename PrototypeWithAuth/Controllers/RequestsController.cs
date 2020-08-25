@@ -599,9 +599,11 @@ namespace PrototypeWithAuth.Controllers
 
                     //rename temp folder to the request id
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, "0");
-                    Directory.Move(requestFolder, Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString()));
-                    Directory.Delete(requestFolder);
+                    string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                    string requestFolderTo = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
+                    Directory.CreateDirectory(requestFolderTo);
+                    Directory.Move(requestFolderFrom, requestFolderTo);
+                    Directory.Delete(requestFolderFrom);
                     //check if there are any files to upload first
                     //save the files
                     //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -2173,6 +2175,17 @@ namespace PrototypeWithAuth.Controllers
                         {
                             request.RequestStatusID = 2;
                             _context.Update(request);
+                            RequestNotification requestNotification = new RequestNotification();
+                            requestNotification.RequestID = request.RequestID;
+                            requestNotification.IsRead = false;
+                            requestNotification.RequestName = request.Product.ProductName;
+                            requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
+                            requestNotification.Description = "item ordered";
+                            requestNotification.NotificationStatusID = 2;
+                            requestNotification.TimeStamp = DateTime.Now;
+                            _context.Update(requestNotification);
+                            _context.SaveChanges();
+
                         }
                         await _context.SaveChangesAsync();
                         //foreach (var request in requests)
@@ -2191,7 +2204,7 @@ namespace PrototypeWithAuth.Controllers
                         //    _context.Update(request);
                         //    await _context.SaveChangesAsync();
                         //}
-
+                     
                     }
 
                 }
@@ -2922,7 +2935,7 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.IsRead = false;
                 requestNotification.ApplicationUserID = receivedLocationViewModel.Request.ApplicationUserCreatorID;
                 requestNotification.RequestName = receivedLocationViewModel.Request.Product.ProductName;
-                requestNotification.RequestStatusID = receivedLocationViewModel.Request.RequestStatusID ??0;
+                requestNotification.NotificationStatusID = 4;
                 requestNotification.Description = "received by "+ receivedLocationViewModel.Request.ApplicationUserReceiver.FirstName;
                 requestNotification.TimeStamp = DateTime.Now;
                 _context.Update(requestNotification);
@@ -3118,8 +3131,8 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.IsRead = false;
                 requestNotification.RequestName = request.Product.ProductName;
                 requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                requestNotification.RequestStatusID = request.RequestStatusID??0;
                 requestNotification.Description = "item approved";
+                requestNotification.NotificationStatusID = 3;
                 requestNotification.TimeStamp = DateTime.Now;
                 _context.Update(requestNotification);
                 _context.SaveChanges();
@@ -3155,8 +3168,8 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.IsRead = false;
                 requestNotification.RequestName = request.Product.ProductName;
                 requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                requestNotification.RequestStatusID = request.RequestStatusID??0;
                 requestNotification.Description = "item approved";
+                requestNotification.NotificationStatusID = 3;
                 requestNotification.TimeStamp = DateTime.Now;
                 _context.Update(requestNotification);
                 _context.SaveChanges();

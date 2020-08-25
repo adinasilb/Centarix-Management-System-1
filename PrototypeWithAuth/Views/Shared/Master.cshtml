@@ -990,9 +990,11 @@
                         '<div class="table border p-4  mb-3" >' +
                         '<div class="row border-bottom-0">' +                 
                         '<div class="col-10  ">' +
+                        '<i class="' + notification.icon + '" style="font-size: 2rem; color:var(' + notification.color +');"></i>' +
+                        '</div>' +
                         '<div class=" ">' +
                         '<label class="m-0" id="notificationTimestamp">' + timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getFullYear() +  ' &nbsp;</label>' +
-                        '<label class="m-0 " id="notificationDescription">' + notification.description + '</label> </br>' +
+                        '<label class="m-0 " id="notificationDescription" style="color:var('+notification.color+');">' + notification.description + '</label> </br>' +
                         '<label class="m-0" id="requestName" >' + notification.requestName + '</label>' +
                         '</div>' +
 
@@ -1028,4 +1030,3 @@
     </script>
 </body>
 </html>
-

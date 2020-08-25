@@ -103,6 +103,16 @@
     <Compile Remove="Data\Migrations\20200824125104_AddedNotificationStatus.Designer.cs" />
     <Compile Remove="Data\Migrations\20200824125704_AddedNotificationStatusFK.cs" />
     <Compile Remove="Data\Migrations\20200824125704_AddedNotificationStatusFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200825073837_MadeNotificationAbstract.cs" />
+    <Compile Remove="Data\Migrations\20200825073837_MadeNotificationAbstract.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200825074335_MadeNotificationAbstract2.cs" />
+    <Compile Remove="Data\Migrations\20200825074335_MadeNotificationAbstract2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200825074617_MadeNotificationAbstract.cs" />
+    <Compile Remove="Data\Migrations\20200825074617_MadeNotificationAbstract.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200825075129_MadeNotificationAbstract.cs" />
+    <Compile Remove="Data\Migrations\20200825075129_MadeNotificationAbstract.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200825080126_MadeNotificationAbstract.cs" />
+    <Compile Remove="Data\Migrations\20200825080126_MadeNotificationAbstract.Designer.cs" />
   </ItemGroup>
 
 

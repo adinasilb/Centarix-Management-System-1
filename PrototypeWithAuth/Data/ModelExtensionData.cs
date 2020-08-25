@@ -929,6 +929,36 @@ namespace PrototypeWithAuth.Data
                       QuoteStatusDescription = "QuoteRecieved"
                   }
             );
+            modelBuilder.Entity<RequestNotificationStatus>().HasData(
+                new RequestNotificationStatus
+                {
+                    NotificationStatusID = 1,
+                    Icon = "icon-centarix-icons-05",
+                    Color = "--notifications-orderlate-color",
+                    Description = "OrderLate"
+                },
+                new RequestNotificationStatus
+                {
+                    NotificationStatusID = 2,
+                    Icon = "icon-centarix-icons-05",
+                    Color = "--notifications-ordered-color",
+                    Description = "ItemOrdered"
+                },
+                new RequestNotificationStatus
+                {
+                    NotificationStatusID = 3,
+                    Icon = "icon-centarix-icons-05",
+                    Color = "--notifications-approved-color",
+                    Description = "ItemApproved"
+                },
+                new RequestNotificationStatus
+                {
+                    NotificationStatusID = 4,
+                    Icon = "icon-centarix-icons-05",
+                    Color = "--notifications-received-color",
+                    Description = "ItemReceived"
+                }
+          );
 
         }
     }

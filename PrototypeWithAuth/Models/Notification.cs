@@ -9,7 +9,7 @@ using KeyAttribute = System.ComponentModel.DataAnnotations.KeyAttribute;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Notification
+    public abstract class Notification<T> where T: NotificationStatus
     {
         [Key]
         public int NotificationID { get; set; }
@@ -21,6 +21,6 @@ namespace PrototypeWithAuth.Models
         public string Controller { get; set; }
         public string Action { get; set; }
         public int NotificationStatusID { get; set; }
-        public NotificationStatus NotificationStatus { get; set; }
+        public T NotificationStatus { get; set; }
     }
 }

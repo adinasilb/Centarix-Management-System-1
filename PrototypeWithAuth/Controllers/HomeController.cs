@@ -61,7 +61,7 @@ namespace PrototypeWithAuth.Controllers
         public int GetNotficationCount()
         {
             DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User)).DateLastReadNotifications;
-            int count = _context.Notifications.Where(n => n.TimeStamp > lastReadNotfication).Count();
+            int count = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication).Count();
             return count;
         }
         [HttpGet]
@@ -69,23 +69,19 @@ namespace PrototypeWithAuth.Controllers
         {
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             //todo: figure out exactly which notfications to show
-            var notification = _context.Notifications.Where(n => !(n is RequestNotification)).Where(n => n.ApplicationUserID == currentUser.Id && n.TimeStamp > DateTime.Now.AddDays(-5))
-                .Select(n => new
-                {
-                    timeStamp = n.TimeStamp,
-                    description = n.Description,
-                    requestName = ""
-                });
-            var rnotification = _context.Notifications.OfType<RequestNotification>().Where(n => n.ApplicationUserID == currentUser.Id && n.TimeStamp > DateTime.Now.AddDays(-5))
+            var rnotification = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id && n.TimeStamp > DateTime.Now.AddDays(-5))
+             
              .Select(n => new
              {
                  timeStamp = n.TimeStamp,
                  description = n.Description,
-                 requestName = n.RequestName
+                 requestName = n.RequestName,
+                 icon = n.NotificationStatus.Icon,
+                 color = n.NotificationStatus.Color
              });
 
-            var notificationsCombined = notification.Concat(rnotification).ToList();
-            return Json(notificationsCombined);
+            //var notificationsCombined = notification.Concat(rnotification).OrderByDescending(n=>n.timeStamp).ToList();
+            return Json(rnotification);
         }
         [HttpPost]
         public bool UpdateLastReadNotifications()

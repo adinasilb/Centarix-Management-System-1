@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200825065410_FixedNotificationSTatusFK")]
+    partial class FixedNotificationSTatusFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -534,9 +536,46 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Notification<PrototypeWithAuth.Models.NotificationStatus>", b =>
+                {
+                    b.Property<int>("NotificationID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Controller")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("NotificationStatusID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("NotificationID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("NotificationStatusID");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.NotificationStatus", b =>
                 {
-                    b.Property<int>("NotificationStatusID")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -554,7 +593,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Icon")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("NotificationStatusID");
+                    b.HasKey("id");
 
                     b.ToTable("NotificationStatuses");
 
@@ -2059,28 +2098,28 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasData(
                         new
                         {
-                            NotificationStatusID = 1,
+                            id = 1,
                             Color = "--notifications-orderlate-color",
                             Description = "OrderLate",
                             Icon = "icon-centarix-icons-05"
                         },
                         new
                         {
-                            NotificationStatusID = 2,
+                            id = 2,
                             Color = "--notifications-ordered-color",
                             Description = "ItemOrdered",
                             Icon = "icon-centarix-icons-05"
                         },
                         new
                         {
-                            NotificationStatusID = 3,
+                            id = 3,
                             Color = "--notifications-approved-color",
                             Description = "ItemApproved",
                             Icon = "icon-centarix-icons-05"
                         },
                         new
                         {
-                            NotificationStatusID = 4,
+                            id = 4,
                             Color = "--notifications-received-color",
                             Description = "ItemReceived",
                             Icon = "icon-centarix-icons-05"
@@ -2193,6 +2232,20 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("LocationTypeParentID")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Notification<PrototypeWithAuth.Models.NotificationStatus>", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.NotificationStatus", "NotificationStatus")
+                        .WithMany("Notifications")
+                        .HasForeignKey("NotificationStatusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -2353,7 +2406,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.RequestNotificationStatus", "NotificationStatus")
-                        .WithMany("RequestNotifications")
+                        .WithMany()
                         .HasForeignKey("NotificationStatusID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
