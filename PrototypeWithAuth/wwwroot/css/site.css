@@ -1564,6 +1564,12 @@ td .btn {
     position: relative;
 }
 
+.more-icon-popover {
+    width: 30px;
+    height: 30px;
+    position: relative;
+}
+
 .alert-count {
     background-color: red;
     font-size: xx-small;

@@ -118,7 +118,27 @@
                             </a>
                             <a href="">
                                 <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
+
                             </a>
+                            <button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link ">
+                                <div class="more-icon-popover">
+                                    <i style='font-size:1.7rem; ' class='far fa-bell fa-lg '></i>
+                                    <div id="alertCount" class="alert-count px-1">
+                                    </div>
+                                </div>
+                            </button>
+                            <div style="display:none;" id="notifications-popover">
+                                <div style="width:1000px">
+                                    <ul>
+                                        <li class="block">Share</li>
+                                        <li class="block">Order</li>
+                                        <li class="block">Pay Now</li>
+                                        <li class="block">Pay Later</li>
+                                        <li class="block">Clarification</li>
+                                        <li class="block">Installments</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 }
