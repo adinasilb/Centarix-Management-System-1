@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public List<Request> Requests { get; set; }
         public List<Payment> Payments { get; set; }
+
     }
 }
