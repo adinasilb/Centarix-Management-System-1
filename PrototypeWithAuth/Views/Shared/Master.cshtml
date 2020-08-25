@@ -939,9 +939,9 @@
                             e.stopPropagation();
                             var $itemurl = "Locations/AddLocationType";
                             var $modal = $(".location-modal-view");
-                            $("location-modal-view").css("display", "none");
+                            //$("location-modal-view").css("display", "none");
                             //IMPT REOPEN ON CLOSING
-                            $.fn.CallPage($itemurl, $modal, false);
+                            $.fn.CallPageRequest($itemurl, "addlocation");
                         });
 
 
