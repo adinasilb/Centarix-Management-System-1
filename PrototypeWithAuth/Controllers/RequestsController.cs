@@ -2103,7 +2103,7 @@ namespace PrototypeWithAuth.Controllers
             doc.Close();
             TempData["ParentRequestConfirmEmail"] = null;
 
-            return View(confirm);
+            return PartialView(confirm);
         }
 
 
@@ -3358,11 +3358,11 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> NotificationsView(int id=0)
+        public async Task<IActionResult> NotificationsView(int requestID = 0)
         {
-            if (id != 0)
+            if (requestID != 0)
             {
-                var notification = _context.RequestNotifications.Where(rn => rn.NotificationID == id).FirstOrDefault();
+                var notification = _context.RequestNotifications.Where(rn => rn.NotificationID == requestID).FirstOrDefault();
                 notification.IsRead = true;
                 _context.Update(notification);
                 await _context.SaveChangesAsync();

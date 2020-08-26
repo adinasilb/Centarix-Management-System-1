@@ -50,7 +50,7 @@
                         <i style='font-size:1.4rem; @iconStyle' class='@icon '></i>
 
                     </td>
-                    <td style="width:20%;"><a href="@Url.Action("NotificationsView", new { id =item.NotificationID} )">@Html.DisplayFor(modelItem => item.RequestName)</a></td>
+                    <td style="width:20%;"><a href="@Url.Action("NotificationsView", new { requestID =item.NotificationID} )">@Html.DisplayFor(modelItem => item.RequestName)</a></td>
                     <td style="color: @color; width:20%;">@description</td>
                     <td> @Html.DisplayFor(modelItem => item.TimeStamp) </td>
                     <td>@Html.DisplayFor(modelItem => item.Vendor) </td>

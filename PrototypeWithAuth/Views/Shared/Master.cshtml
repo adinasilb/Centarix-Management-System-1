@@ -1007,7 +1007,7 @@
                    }
                }
            });
-       }d get
+       }
         $.fn.UpdateNotificationLastRead = function () {
             $.ajax({
                 async: true,
@@ -1024,9 +1024,7 @@
             $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
                     var timestamp = new Date(notification.timeStamp)
-                    var link = '@Url.Action("-1", "-2", new { id = "-3" } )';
-                    link = link.replace("-1", notification.action);
-                    link = link.replace("-2", notification.controller);
+                    var link = '/Requests/NotificationsView?requestID=-3';
                     link = link.replace("-3", notification.id);
                     var bold = "";
                     console.log( notification.isRead);
@@ -1051,7 +1049,6 @@
                         '</div>' +
                         '</div>' +
                         '</div></a>';
-                    console.log(newitem1);
                     $("#notifications-popover").append(newitem1);
 
                 });
