@@ -960,11 +960,12 @@ namespace PrototypeWithAuth.Data
                 }
           );
 
+
             modelBuilder.Entity<LocationType>().HasData(
                 new LocationType
                 {
                     LocationTypeID = 100,
-                    LocationTypeName = "-196",
+                    LocationTypeName = "-196°C",
                     LocationTypeChildID = 101,
                     Depth = 0
                 },
