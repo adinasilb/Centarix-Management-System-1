@@ -78,6 +78,10 @@ html.wf-loading * {
     border-radius: 0 !important;
 }*/
 
+.hidden{
+    display: none;
+}
+
 .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
 }

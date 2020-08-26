@@ -27,6 +27,12 @@ jQuery.fn.extend({
 //modal adjust scrollability/height
 //$("#myModal").modal('handleUpdate');
 
+$(".stop-event").on("click", function (e) {
+	console.log("in stop event");
+	e.preventDefault();
+	e.stopPropagation();
+	return false;
+});
 
 //change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 $("#parentlist").change(function () {
@@ -2253,3 +2259,22 @@ $.fn.CallModal = function (url) {
 		//}
 	});
 };
+
+
+$("#share-payment").on("click", function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	console.log("in share payments site.js");
+});
+
+function SharePayment(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	console.log("in share payments fx site.js");
+};
+
+$(body).on("click", "#share-payment", function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	console.log("in share payments body fx site.js");
+});

@@ -116,29 +116,32 @@
                             <a href="">
                                 <i class="icon-favorite_border-24px accounting-filter px-1" style="font-size:1.6rem;"></i>
                             </a>
-                            <a href="">
-                                <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
+                            @*<a href="">
+            <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
 
+        </a>*@
+                            <a href="" type="button" class="stop-event" data-popover-content="#mypop" data-placement="bottom" data-toggle="popover" data-trigger="focus" @*title="Popover title"*@
+                               @*data-content="#popover-content"*@>
+                                <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
                             </a>
-                            <button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link ">
-                                <div class="more-icon-popover">
-                                    <i style='font-size:1.7rem; ' class='far fa-bell fa-lg '></i>
-                                    <div id="alertCount" class="alert-count px-1">
-                                    </div>
+                            <div class="hidden" id="mypop">
+                                <div class="popover-heading">
+                                    
                                 </div>
-                            </button>
-                            <div style="display:none;" id="notifications-popover">
-                                <div style="width:1000px">
-                                    <ul>
-                                        <li class="block">Share</li>
-                                        <li class="block">Order</li>
-                                        <li class="block">Pay Now</li>
-                                        <li class="block">Pay Later</li>
-                                        <li class="block">Clarification</li>
-                                        <li class="block">Installments</li>
-                                    </ul>
+                                <div class="popover-body">
+                                    This is the body
+                                    <a href='' class='share-payment' value='@Request.RequestID'>Share</a><hr />
                                 </div>
                             </div>
+                            <div class="popover-body" id="popover-body" style="display: none;">
+                                <script src="~/js/site.js"></script>
+                                <button id="share-payment" class='share-payment stop-event btn btn-black' onclick="SharePayment()" value='@Request.RequestID'>Share</button><hr />
+                            </div>
+                            @*</div>*@
+                            @{
+                                //var dataToggle
+                            }
+                            
                         </td>
                     </tr>
                 }
@@ -158,4 +161,17 @@
         </div>
     </div>
 }
+
+<script>
+    $(".share-payment").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("in share payments accounting payments");
+    });
+    $("body").on("click", ".share-payment"), function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("in share payments accounting payments - body click");
+    });
+</script>
 

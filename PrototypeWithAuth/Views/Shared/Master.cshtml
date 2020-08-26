@@ -231,6 +231,7 @@
 
     <script>
         $(document).ready(function () {
+
             console.log("in doc ready!");
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
@@ -289,7 +290,7 @@
 
             }
             $.fn.GetNotifcationCount();
-            $.fn.GetNotifications(); 
+            $.fn.GetNotifications();
 
         });
 
@@ -861,12 +862,40 @@
 
         });
 
+        //$('[data-toggle="popover6"]').popover({
+        //    html: true,
+        //    placement: 'bottom',
+        //    trigger: 'manual',
+        //    content: function () {
+        //        return $('#popover-card-content').html();
+        //    }
+        //});
+
+        $(document).popover({
+            selector: '[data-toggle=popover]',
+            html: true,
+            content: $("#popover-body").html(),
+            //sanitize: false,
+            trigger: 'focus'
+        });
+
+        $("[data-toggle=popover]").popover({
+            html: true,
+            content: function () {
+                var content = $(this).attr("data-popover-content");
+                return $(content).children(".popover-body").html();
+            },
+            title: function () {
+                var title = $(this).attr("data-popover-content");
+                return $(title).children(".popover-heading").html();
+            }
+        });
 
         $("#profile-img").click(function () {
             $('[data-toggle="popover"]').popover('dispose');
             $('#profile-img').popover({
                 sanitize: false,
-                placement: 'bottom',
+                placement: 'top',
                 html: true,
                 content: function () {
                     return $('#logout-popover').html();
@@ -950,13 +979,13 @@
 
                     if ($isaddlocation) {
                         console.log("inside of modal if statement");
-                        
+
 
 
                     }
                     else {
                         $(".addSublocation").hide();
-                        
+
                     }
 
                 }
@@ -982,7 +1011,7 @@
                 type: 'POST',
                 cache: true,
                 success: function (data) {
-          
+
                 }
             });
         }
@@ -994,7 +1023,7 @@
                     var timestamp = new Date(notification.timeStamp)
                     var newitem1 = '<div id="notification-info" >' +
                         '<div class="table border p-4  mb-3" >' +
-                        '<div class="row border-bottom-0">' +                 
+                        '<div class="row border-bottom-0">' +
                         '<div class="col-10  ">' +
                         '<i class="' + notification.icon + '" style="font-size: 2rem; color:var(' + notification.color +');"></i>' +
                         '</div>' +
@@ -1013,12 +1042,12 @@
                     $("#notifications-popover").append(newitem1);
 
                 });
-           
+
             }
-                
+
             );
         }
-        $("#openNotifications").click(function (e) { 
+        $("#openNotifications").click(function (e) {
             e.preventDefault();
             e.stopPropagation();
             $('[data-toggle="popover"]').popover('dispose');
