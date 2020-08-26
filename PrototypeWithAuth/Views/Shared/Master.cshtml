@@ -229,7 +229,7 @@
 
 
 
-    <script>
+<script>
         $(document).ready(function () {
 
             console.log("in doc ready!");
@@ -993,21 +993,28 @@
         }
         $.fn.GetNotifcationCount = function () {
             console.log("in call getNotofication function");
+            var link = '@Url.Action("GetNotficationCount", "Home")';
             $.ajax({
                 async: true,
-                url: "Home/GetNotficationCount",
+                url: link,
                 type: 'GET',
                 cache: true,
                 success: function (data) {
                     console.log("count: " + data);
                     $("#alertCount").html(data);
+                    if (data == "0") {
+                        $("#alertCount").hide();
+                    }
+                    else {
+                        $("#alertCount").show();
+                    }
                 }
             });
         }
         $.fn.UpdateNotificationLastRead = function () {
             $.ajax({
                 async: true,
-                url: "Home/UpdateLastReadNotifications",
+                url: "/Home/UpdateLastReadNotifications",
                 type: 'POST',
                 cache: true,
                 success: function (data) {
@@ -1018,17 +1025,27 @@
         $.fn.GetNotifications = function () {
             console.log("in call page function");
             //delete existing modals
-            $.getJSON("Home/GetLatestNotifications", function (data) {
+            $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
                     var timestamp = new Date(notification.timeStamp)
-                    var newitem1 = '<div id="notification-info" >' +
-                        '<div class="table border p-4  mb-3" >' +
-                        '<div class="row border-bottom-0">' +
-                        '<div class="col-10  ">' +
+                    var link = '@Url.Action("-1", "-2", new { id = "-3" } )';
+                    link = link.replace("-1", notification.action);
+                    link = link.replace("-2", notification.controller);
+                    link = link.replace("-3", notification.id);
+                    var bold = "";
+                    console.log( notification.isRead);
+                    if (notification.isRead == false) {
+                        bold = "font-weight-bold";
+                    }
+
+                    var newitem1 = '<a class="opac87  '+bold+' " href="'+ link+'"><div id="notification-info" class="px-3 pb-2 mb-3 ">' +
+                        '<div class="col-12 border-right-0 border-left-0 border-top-0 border-bottom  pb-2 mb-3 " >' +
+                        '<div class="row ">' +
+                        '<div class=" float-left " >' +
                         '<i class="' + notification.icon + '" style="font-size: 2rem; color:var(' + notification.color +');"></i>' +
                         '</div>' +
-                        '<div class=" ">' +
-                        '<label class="m-0" id="notificationTimestamp">' + timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getFullYear() +  ' &nbsp;</label>' +
+                        '<div class=" col-10">' +
+                        '<label class="m-0 mr-5" id="notificationTimestamp">' + timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getFullYear() +  ' </label>' +
                         '<label class="m-0 " id="notificationDescription" style="color:var('+notification.color+');">' + notification.description + '</label> </br>' +
                         '<label class="m-0" id="requestName" >' + notification.requestName + '</label>' +
                         '</div>' +
@@ -1037,7 +1054,7 @@
 
                         '</div>' +
                         '</div>' +
-                        '</div>';
+                        '</div></a>';
                     console.log(newitem1);
                     $("#notifications-popover").append(newitem1);
 
@@ -1061,7 +1078,8 @@
             });
             $('#openNotifications').popover('toggle');
             $.fn.UpdateNotificationLastRead();
+            $.fn.GetNotifcationCount();
         });
-    </script>
+</script>
 </body>
 </html>

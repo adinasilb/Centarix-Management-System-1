@@ -10,5 +10,7 @@ namespace PrototypeWithAuth.Models
     {
         public int RequestID { get; set; }
         public string RequestName { get; set; }
+        public string Vendor { get; set; }
+        public DateTime? OrderDate { get; set; }
     }
 }

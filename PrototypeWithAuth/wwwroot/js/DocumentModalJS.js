@@ -56,7 +56,7 @@ $.fn.OpenDocumentsModal = function (enumString, requestId) {
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: "Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString,
+		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString,
 		type: 'GET',
 		cache: false,
 		success: function (data) {
