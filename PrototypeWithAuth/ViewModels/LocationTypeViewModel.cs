@@ -10,6 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     public class LocationTypeViewModel
     {
         public IEnumerable<LocationType> LocationTypes { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
 
     }
 }

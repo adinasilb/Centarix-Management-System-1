@@ -63,7 +63,8 @@ namespace PrototypeWithAuth.Controllers
           
             LocationTypeViewModel locationTypeViewModel = new LocationTypeViewModel()
             {
-                LocationTypes = _context.LocationTypes.Where(lt => lt.Depth == 0)
+                LocationTypes = _context.LocationTypes.Where(lt => lt.Depth == 0),
+                SectionType = SectionType
             };
             
             return View(locationTypeViewModel);

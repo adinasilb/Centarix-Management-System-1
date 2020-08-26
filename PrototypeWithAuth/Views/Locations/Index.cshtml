@@ -1,11 +1,12 @@
 ﻿@model PrototypeWithAuth.ViewModels.LocationTypeViewModel;
+@using PrototypeWithAuth.AppData;
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/ManageLocationView.cshtml";
 }
 <div class="locations-page">
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
-    @if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
+    @if ((@User.IsInRole("Admin") || @User.IsInRole("Manager")) && Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
         <div class="row mt-4">
             <div class="col-2 offset-1">
