@@ -988,23 +988,26 @@
                 }
             });
         }
-        $.fn.GetNotifcationCount = function () {
-            $.ajax({
-                async: true,
-                url: link,
-                type: 'GET',
-                cache: true,
-                success: function (data) {
-                    $("#alertCount").html(data);
-                    if (data == "0") {
-                        $("#alertCount").hide();
-                    }
-                    else {
-                        $("#alertCount").show();
-                    }
-                }
-            });
-        }
+       $.fn.GetNotifcationCount = function () {
+           console.log("in call getNotofication function");
+           var link = '@Url.Action("GetNotficationCount", "Home")';
+           $.ajax({
+               async: true,
+               url: link,
+               type: 'GET',
+               cache: true,
+               success: function (data) {
+                   console.log("count: " + data);
+                   $("#alertCount").html(data);
+                   if (data == "0") {
+                       $("#alertCount").hide();
+                   }
+                   else {
+                       $("#alertCount").show();
+                   }
+               }
+           });
+       }d get
         $.fn.UpdateNotificationLastRead = function () {
             $.ajax({
                 async: true,
