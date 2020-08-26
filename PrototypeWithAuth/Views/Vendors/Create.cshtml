@@ -65,17 +65,23 @@
                                     <div class="col-12">
                                         <label asp-for="Vendor.VendorHeName" class="control-label"></label>
                                         <input asp-for="Vendor.VendorHeName" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="Vendor.VendorHeName" class="text-danger"></span>
+                                        <span asp-validation-for="Vendor.VendorHeName" class="text-danger "></span>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-6">
-                                        <label class="control-label">Category</label>
-                                        <input class="form-control-plaintext border-bottom" />
+                                        <label  class="control-label">Category</label>
+                                        @Html.DropDownListFor(m => m.CategoryTypeID,
+                                       new List<SelectListItem>
+                                        {
+                                           new SelectListItem{ Text="Lab", Value = "1" },
+                                           new SelectListItem{ Text="Operational", Value = "2" },
+                                           new SelectListItem{ Text="Both", Value = "3" } },
+                                       htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary " })
                                     </div>
                                     <div class="col-6">
                                         <label asp-for="Vendor.VendorBuisnessID" class="control-label"></label>
-                                        <input asp-for="Vendor.VendorBuisnessID" class="form-control-plaintext border-bottom" />
+                                        <input asp-for="Vendor.VendorBuisnessID" class="form-control-plaintext border-bottom align-with-select" />
                                         <span asp-validation-for="Vendor.VendorBuisnessID" class="text-danger"></span>
                                     </div>
                                 </div>

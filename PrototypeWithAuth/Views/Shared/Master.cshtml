@@ -231,7 +231,7 @@
 
 <script>
         $(document).ready(function () {
-
+     $("#alertCount").hide();
             console.log("in doc ready!");
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
@@ -863,7 +863,7 @@
         });
 
 
-      /*  $(document).popover({
+       /* $(document).popover({
             selector: '[data-toggle=popover]',
             html: true,
             content: $("#popover-body").html(),
@@ -877,8 +877,8 @@
                 var content = $(this).attr("data-popover-content");
                 return $(content).children(".popover-body").html();
             }
-        });
-    */
+        });*/
+    
         $("#profile-img").click(function () {
             $('[data-toggle="popover"]').popover('dispose');
             $('#profile-img').popover({

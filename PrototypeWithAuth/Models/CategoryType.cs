@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.Models
         public string CategoryTypeDescription { get; set; }
 
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
+        public IEnumerable<VendorCategoryType> VendorCategoryTypes { get; set; }
     }
 }

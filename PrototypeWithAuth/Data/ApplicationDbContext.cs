@@ -54,6 +54,9 @@ namespace PrototypeWithAuth.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<VendorCategoryType>()
+                .HasKey(v => new { v.VendorID, v.CategoryTypeID });
+
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasQueryFilter(item => !item.IsDeleted)
                 .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
