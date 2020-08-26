@@ -35,6 +35,7 @@ namespace PrototypeWithAuth.Data
         public string UserImage { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime DateLastReadNotifications { get; set; }
+        public DateTime LastLogin { get; set; }
         public IEnumerable<Request> RequestsReceived { get; set; }
         public IEnumerable<Request> RequestsCreated { get; set; }
 

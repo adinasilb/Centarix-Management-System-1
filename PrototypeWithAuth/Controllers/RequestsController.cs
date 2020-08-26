@@ -2452,6 +2452,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).Include(r => r.ParentQuote).ToList();
             ParentRequest parentRequest = new ParentRequest();
             parentRequest.OrderDate = DateTime.Now;
+            parentRequest.ApplicationUserID = _userManager.GetUserId(User);
             int lastParentRequestOrderNum = 0;
             if (_context.ParentRequests.Any())
             {
@@ -2576,6 +2577,20 @@ namespace PrototypeWithAuth.Controllers
                             //_context.Update(quote.ParentQuote);
                             //_context.SaveChanges();
                             _context.Update(quote);
+                            _context.SaveChanges();
+                            RequestNotification requestNotification = new RequestNotification();
+                            requestNotification.RequestID = quote.RequestID;
+                            requestNotification.IsRead = false;
+                            requestNotification.RequestName = quote.Product.ProductName;
+                            requestNotification.ApplicationUserID = quote.ApplicationUserCreatorID;
+                            requestNotification.Description = "item ordered";
+                            requestNotification.NotificationStatusID = 2;
+                            requestNotification.TimeStamp = DateTime.Now;
+                            requestNotification.Controller = "Requests";
+                            requestNotification.Action = "NotificationsView";
+                            requestNotification.OrderDate = DateTime.Now;
+                            requestNotification.Vendor = quote.Product.Vendor.VendorEnName;
+                            _context.Update(requestNotification);
                             _context.SaveChanges();
                         }
 

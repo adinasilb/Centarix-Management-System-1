@@ -30,6 +30,35 @@ namespace PrototypeWithAuth.Controllers
 
         public IActionResult Index()
         {
+            //debbie added in
+            var currentUserID = _userManager.GetUserId(User);
+            var user = _context.Users.Where(u => u.Id == currentUserID).FirstOrDefault();
+            if(user.LastLogin != DateTime.Today)
+            {
+                var lateOrders = _context.Requests.Where(r=>r.ApplicationUserCreatorID==currentUserID).Where(r => r.RequestStatusID == 2)
+                    .Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0) >= user.LastLogin && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0) < DateTime.Today)
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.ParentRequest);
+                foreach(var request in lateOrders)
+                {
+                    RequestNotification requestNotification = new RequestNotification();
+                    requestNotification.RequestID = request.RequestID;
+                    requestNotification.IsRead = false;
+                    requestNotification.RequestName = request.Product.ProductName;
+                    requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
+                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd/MM/yyyy");
+                    requestNotification.NotificationStatusID = 1;
+                    requestNotification.TimeStamp = DateTime.Now;
+                    requestNotification.Controller = "Requests";
+                    requestNotification.Action = "NotificationsView";
+                    requestNotification.OrderDate = request.ParentRequest.OrderDate;
+                    requestNotification.Vendor = request.Product.Vendor.VendorEnName;
+                    _context.Update(requestNotification);            
+                }
+                _context.SaveChanges();
+                user.LastLogin = DateTime.Today;
+                _context.Update(user);
+                _context.SaveChanges();
+            }
             //Adina added in 3 lines
             if (User.IsInRole("Admin"))
             {
