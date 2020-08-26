@@ -29,7 +29,6 @@ using SQLitePCL;
 using Microsoft.AspNetCore.Localization;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Internal;
-using AspNetCore;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
