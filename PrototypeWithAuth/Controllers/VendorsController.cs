@@ -293,8 +293,27 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             if (ModelState.IsValid)
-            {
+            {          
                 _context.Add(createSupplierViewModel.Vendor);
+                _context.SaveChanges();
+                VendorCategoryType vendorCategoryType = new VendorCategoryType();
+                vendorCategoryType.VendorID = createSupplierViewModel.Vendor.VendorID;
+                switch (createSupplierViewModel.CategoryTypeID)
+                {
+                    case 1:
+                        vendorCategoryType.CategoryTypeID = 1;
+                        _context.Add(vendorCategoryType);
+                        break;
+                    case 2:
+                        vendorCategoryType.CategoryTypeID = 2;
+                        _context.Add(vendorCategoryType);
+                        break;
+                    case 3:
+                        vendorCategoryType.CategoryTypeID = 1;
+                        _context.Add(vendorCategoryType);
+                        _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = 2 });
+                        break;
+                }
                 _context.SaveChanges();
                 foreach (var vendorContact in vendorContacts)
                 {

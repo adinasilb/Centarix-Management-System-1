@@ -3396,7 +3396,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> OrderLateModal(int id)
         {
             var request = _context.Requests.Where(r => r.RequestID == id).Include(r=>r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
-            return View(request);
+            return PartialView(request);
         }
 
 
@@ -3404,7 +3404,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> OrderLateModal(Request request)
         {
-            request = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.ParentRequest).ThenInclude(pr => pr.ApplicationUser).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+            request = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r=>r.ApplicationUserCreator).Include(r=>r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
             //instatiate mimemessage
             var message = new MimeMessage();
 
@@ -3413,8 +3413,8 @@ namespace PrototypeWithAuth.Controllers
 
 
             string ownerEmail = request.ApplicationUserCreator.Email;
-            string ownerUsername = request.ParentRequest.ApplicationUser.FirstName + " " + request.ParentRequest.ApplicationUser.LastName;
-            string ownerPassword = request.ParentRequest.ApplicationUser.SecureAppPass;
+            string ownerUsername = request.ApplicationUserCreator.FirstName + " " + request.ApplicationUserCreator.LastName;
+            string ownerPassword = request.ApplicationUserCreator.SecureAppPass;
             string vendorEmail = request.Product.Vendor.OrdersEmail;
             string vendorName = request.Product.Vendor.VendorEnName;
 
@@ -3431,7 +3431,7 @@ namespace PrototypeWithAuth.Controllers
             builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName} , has not arrived yet.\n" +
                     $"Please update us on the matter.\n" +
                     $"Best regards,\n" +
-                    $"{request.ParentRequest.ApplicationUser.FirstName} { request.ParentRequest.ApplicationUser.FirstName}\n" +
+                    $"{request.ApplicationUserCreator.FirstName} { request.ApplicationUserCreator.FirstName}\n" +
                     $"Centarix";
 
             message.Body = builder.ToMessageBody();
