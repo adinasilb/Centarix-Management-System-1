@@ -544,6 +544,20 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.ParentQuote = null;
                             _context.Update(requestItemViewModel.Request);
                             _context.SaveChanges();
+                            RequestNotification requestNotification = new RequestNotification();
+                            requestNotification.RequestID = requestItemViewModel.Request.RequestID;
+                            requestNotification.IsRead = false;
+                            requestNotification.RequestName = requestItemViewModel.Request.Product.ProductName;
+                            requestNotification.ApplicationUserID = requestItemViewModel.Request.ApplicationUserCreatorID;
+                            requestNotification.Description = "item ordered";
+                            requestNotification.NotificationStatusID = 2;
+                            requestNotification.TimeStamp = DateTime.Now;
+                            requestNotification.Controller = "Requests";
+                            requestNotification.Action = "NotificationsView";
+                            requestNotification.OrderDate = DateTime.Now;
+                            requestNotification.Vendor = requestItemViewModel.Request.Product.Vendor.VendorEnName;
+                            _context.Update(requestNotification);
+                            _context.SaveChanges();
                         }
                         else if (OrderType.Equals("Order"))
                         {
@@ -601,9 +615,7 @@ namespace PrototypeWithAuth.Controllers
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolderFrom = Path.Combine(uploadFolder, "0");
                     string requestFolderTo = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
-                    Directory.CreateDirectory(requestFolderTo);
                     Directory.Move(requestFolderFrom, requestFolderTo);
-                    Directory.Delete(requestFolderFrom);
                     //check if there are any files to upload first
                     //save the files
                     //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -2187,7 +2199,7 @@ namespace PrototypeWithAuth.Controllers
                     client.Disconnect(true);
                     if (wasSent)
                     {
-                        foreach (var request in _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID))
+                        foreach (var request in _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID).Include(r=>r.Product).ThenInclude(p=>p.Vendor))
                         {
                             request.RequestStatusID = 2;
                             _context.Update(request);
@@ -2199,6 +2211,10 @@ namespace PrototypeWithAuth.Controllers
                             requestNotification.Description = "item ordered";
                             requestNotification.NotificationStatusID = 2;
                             requestNotification.TimeStamp = DateTime.Now;
+                            requestNotification.Controller = "Requests";
+                            requestNotification.Action = "NotificationsView";
+                            requestNotification.OrderDate = DateTime.Now;
+                            requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                             _context.Update(requestNotification);
                             _context.SaveChanges();
 
@@ -2434,7 +2450,22 @@ namespace PrototypeWithAuth.Controllers
         {
             var requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
                 .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).Include(r => r.ParentQuote).ToList();
-
+            ParentRequest parentRequest = new ParentRequest();
+            parentRequest.OrderDate = DateTime.Now;
+            int lastParentRequestOrderNum = 0;
+            if (_context.ParentRequests.Any())
+            {
+                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+            }
+            parentRequest.OrderNumber = lastParentRequestOrderNum;
+            _context.Update(parentRequest);
+            _context.SaveChanges();
+            foreach (var request in requests)
+            {
+                request.ParentRequestID = parentRequest.ParentRequestID;
+                _context.Update(request);
+                _context.SaveChanges();
+            }
             ConfirmQuoteOrderEmailViewModel confirmEmail = new ConfirmQuoteOrderEmailViewModel
             {
                 Requests = requests,
@@ -2860,7 +2891,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-                .Include(r => r.Product).FirstOrDefault();
+                .Include(r => r.Product).ThenInclude(p=>p.Vendor).FirstOrDefault();
 
             bool hasLocationInstances = false;
             if (receivedLocationViewModel.CategoryType == 1)
@@ -2963,6 +2994,9 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.NotificationStatusID = 4;
                 requestNotification.Description = "received by "+ receivedLocationViewModel.Request.ApplicationUserReceiver.FirstName;
                 requestNotification.TimeStamp = DateTime.Now;
+                requestNotification.Controller = "Requests";
+                requestNotification.Action = "NotificatonsView";
+                requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
                 _context.Update(requestNotification);
                 _context.SaveChanges();
             }
@@ -3143,7 +3177,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult ApproveReorder(int id)
         {
-            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x => x.ParentQuote).Include(r=>r.Product).FirstOrDefault();
+            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x => x.ParentQuote).Include(r=>r.Product).ThenInclude(p=>p.Vendor).FirstOrDefault();
             try
             {
                 request.RequestStatusID = 6; //approved
@@ -3159,6 +3193,9 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.Description = "item approved";
                 requestNotification.NotificationStatusID = 3;
                 requestNotification.TimeStamp = DateTime.Now;
+                requestNotification.Controller = "Requests";
+                requestNotification.Action = "NotificationsView";
+                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                 _context.Update(requestNotification);
                 _context.SaveChanges();
             }
@@ -3182,7 +3219,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory, Operation")]
         public IActionResult Approve(int id)
         {
-            var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
             try
             {
                 request.RequestStatusID = 6; //approved
@@ -3196,6 +3233,9 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.Description = "item approved";
                 requestNotification.NotificationStatusID = 3;
                 requestNotification.TimeStamp = DateTime.Now;
+                requestNotification.Controller = "Requests";
+                requestNotification.Action = "NotificationsView";
+                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                 _context.Update(requestNotification);
                 _context.SaveChanges();
             }
@@ -3303,14 +3343,19 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> NotificationsView()
+        public async Task<IActionResult> NotificationsView(int id=0)
         {
+            if (id != 0)
+            {
+                var notification = _context.RequestNotifications.Where(rn => rn.NotificationID == id).FirstOrDefault();
+                notification.IsRead = true;
+                _context.Update(notification);
+                await _context.SaveChangesAsync();
+            }
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
-            var requests = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID == 2 && r.ExpectedSupplyDays != null && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0) < DateTime.Now).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).ToList();
-            var requests2 = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User)).Where(r => r.RequestStatusID != 1).OrderByDescending(r => r.ParentRequest != null ? r.ParentRequest.OrderDate : r.CreationDate).Where(r => !requests.Contains(r)).Include(r => r.ApplicationUserReceiver).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.RequestStatus).Take(50 - requests.Count).ToList();
-            requests = requests.Concat(requests2).ToList();
-            requests = requests.OrderByDescending(r => r.ParentRequest != null ? r.ParentRequest.OrderDate : r.CreationDate).ToList();
+            ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            var requests = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id).OrderByDescending(n=>n.TimeStamp).ToList();
             return View(requests);
         }
 
@@ -3485,30 +3530,30 @@ namespace PrototypeWithAuth.Controllers
             return View(accountingPaymentsViewModel);
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid/*, List<int>? requestIds*/)
-        {
-            List<Request> requestsToPay = new List<Request>();
+        //[HttpGet]
+        //[Authorize(Roles = "Admin, Accounting")]
+        //public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid/*, List<int>? requestIds*/)
+        //{
+        //    List<Request> requestsToPay = new List<Request>();
 
-            if (vendorid != null && paymentstatusid != null)
-            {
-                requestsToPay = _context.Requests
-                .Include(r => r.Product).ThenInclude(p => p.Vendor)
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                .Where(r => r.Product.VendorID == vendorid)
-                .Where(r => r.PaymentStatusID == paymentstatusid).ToList();
-            }
+        //    if (vendorid != null && paymentstatusid != null)
+        //    {
+        //        requestsToPay = _context.Requests
+        //        .Include(r => r.Product).ThenInclude(p => p.Vendor)
+        //        .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+        //        .Where(r => r.Product.VendorID == vendorid)
+        //        .Where(r => r.PaymentStatusID == paymentstatusid).ToList();
+        //    }
 
-            PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
-            {
-                Requests = requestsToPay
-            };
+        //    PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
+        //    {
+        //        Requests = requestsToPay
+        //    };
 
-            //check if payment status type is installments to show the installments in the view model
+        //    //check if payment status type is installments to show the installments in the view model
 
-            return PartialView(paymentsPayModalViewModel);
-        }
+        //    return PartialView(paymentsPayModalViewModel);
+        //}
 
 
         /*
