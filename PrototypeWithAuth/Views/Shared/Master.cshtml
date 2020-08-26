@@ -862,14 +862,6 @@
 
         });
 
-        //$('[data-toggle="popover6"]').popover({
-        //    html: true,
-        //    placement: 'bottom',
-        //    trigger: 'manual',
-        //    content: function () {
-        //        return $('#popover-card-content').html();
-        //    }
-        //});
 
         $(document).popover({
             selector: '[data-toggle=popover]',
@@ -884,10 +876,6 @@
             content: function () {
                 var content = $(this).attr("data-popover-content");
                 return $(content).children(".popover-body").html();
-            },
-            title: function () {
-                var title = $(this).attr("data-popover-content");
-                return $(title).children(".popover-heading").html();
             }
         });
 

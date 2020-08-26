@@ -2273,7 +2273,7 @@ function SharePayment(e) {
 	console.log("in share payments fx site.js");
 };
 
-$(body).on("click", "#share-payment", function (e) {
+$("body").on("click", "#share-payment", function (e) {
 	e.preventDefault();
 	e.stopPropagation();
 	console.log("in share payments body fx site.js");
