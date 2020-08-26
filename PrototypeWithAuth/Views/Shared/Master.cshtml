@@ -17,6 +17,12 @@
         <script src="~/lib/jquery/dist/bootstrap.min.js"></script>
         <script src="~/lib/jquery/dist/mdb.min.js"></script>*@
 
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
+    @*load the jquery ui stylesheet*@
+    <link rel="stylesheet" href="~/css/jquery-ui.min.css">
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico">
+
     <!-- Bootstrap core CSS -->
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
@@ -47,11 +53,6 @@
     <link href="~/lib/bootstrap/dist/css/modules/parallax.min.css" rel="stylesheet" />
 
 
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link href="~/css/elixir-fonts/elixir-icons.css" rel="stylesheet" />
-    @*load the jquery ui stylesheet*@
-    <link rel="stylesheet" href="~/css/jquery-ui.min.css">
-    <link rel="icon" type="image/x-icon" href="~/favicon.ico">
     <!-- Font Awesome -->
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
                 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/style.css">
@@ -60,7 +61,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body style="display:none">
@@ -115,9 +116,13 @@
     <script src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown-searchable.min.js"></script>
 
-    <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"))" type="text/javascript"></script>
+    @*<script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"))" type="text/javascript"></script>
     <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"))" type="text/javascript"></script>
-    <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"))" type="text/javascript"></script>
+    <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"))" type="text/javascript"></script>*@
+<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/modules/accordion-extended.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/modules/animations-extended.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/modules/buttons.min.js"></script>
@@ -189,7 +194,7 @@
     <script src="~/lib/bootstrap/dist/src/js/vendor/free/chartjs-datalabels.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/vendor/free/enhanced-modals.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/vendor/free/jquery.easing.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/vendor/free/velocity.js"></script>
+    @*<script src="~/lib/bootstrap/dist/src/js/vendor/free/velocity.js"></script>*@
     <script src="~/lib/bootstrap/dist/src/js/vendor/free/waves.js"></script>
 
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/jarallax-video.js"></script>
@@ -232,7 +237,6 @@
     <script>
         $(document).ready(function () {
 
-            console.log("in doc ready!");
             $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
             });
@@ -871,25 +875,25 @@
         //    }
         //});
 
-        $(document).popover({
-            selector: '[data-toggle=popover]',
-            html: true,
-            content: $("#popover-body").html(),
-            //sanitize: false,
-            trigger: 'focus'
-        });
+        //$(document).popover({
+        //    selector: '[data-toggle=popover]',
+        //    html: true,
+        //    content: $("#popover-body").html(),
+        //    sanitize: false,
+        //    trigger: 'focus'
+        //});
 
-        $("[data-toggle=popover]").popover({
-            html: true,
-            content: function () {
-                var content = $(this).attr("data-popover-content");
-                return $(content).children(".popover-body").html();
-            },
-            title: function () {
-                var title = $(this).attr("data-popover-content");
-                return $(title).children(".popover-heading").html();
-            }
-        });
+        //$("[data-toggle=popover]").popover({
+        //    html: true,
+        //    content: function () {
+        //        var content = $(this).attr("data-popover-content");
+        //        return $(content).children(".popover-body").html();
+        //    },
+        //    title: function () {
+        //        var title = $(this).attr("data-popover-content");
+        //        return $(title).children(".popover-heading").html();
+        //    }
+        //});
 
         $("#profile-img").click(function () {
             $('[data-toggle="popover"]').popover('dispose');
@@ -992,14 +996,12 @@
             });
         }
         $.fn.GetNotifcationCount = function () {
-            console.log("in call getNotofication function");
             $.ajax({
                 async: true,
                 url: "Home/GetNotficationCount",
                 type: 'GET',
                 cache: true,
                 success: function (data) {
-                    console.log("count: " + data);
                     $("#alertCount").html(data);
                 }
             });
@@ -1016,7 +1018,6 @@
             });
         }
         $.fn.GetNotifications = function () {
-            console.log("in call page function");
             //delete existing modals
             $.getJSON("Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
