@@ -12,7 +12,7 @@
 
             <form action="" method="post" id="reorderForm" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 <div class="text-right mr-5 mt-4">
-                    <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent; text-transform:lowercase">x</button>
+                    <button type="button" class="close" style="font-size:2rem;" data-dismiss="modal">&times;</button>
                 </div>
 
                 @*
@@ -112,11 +112,11 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubUnitType" class="control-label"></label>
                                         @Html.DropDownListFor(
-        vm => vm.Request.SubUnitTypeID,
-        Model.UnitTypeList,
-        "",
-        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
-    )
+vm => vm.Request.SubUnitTypeID,
+Model.UnitTypeList,
+"",
+htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+)
                                         <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -203,8 +203,9 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                             <div class="form-group">
                                 <label  class="control-label">VAT</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#x20aa;</span>                                    
-                                    <input class="form-control-plaintext border-bottom vat" disabled />
+                                    <span class="input-group-text">&#x20aa;</span>   
+                                    @{ var vat = .17 * Model.Request.Cost;} 
+                                    <input class="form-control-plaintext border-bottom vat" disabled  value="@vat.ToString("N2");"/>
                                 </div>
                             </div>
                         </div>
