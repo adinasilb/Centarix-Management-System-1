@@ -17,11 +17,11 @@ namespace PrototypeWithAuth.Data.Migrations
                 table: "RequestNotifications",
                 nullable: true);
 
-            migrationBuilder.AddColumn<double>(
-                name: "Sum",
-                table: "Payments",
-                nullable: false,
-                defaultValue: 0.0);
+            //migrationBuilder.AddColumn<double>(
+            //    name: "Sum",
+            //    table: "Payments",
+            //    nullable: false,
+            //    defaultValue: 0.0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -34,9 +34,9 @@ namespace PrototypeWithAuth.Data.Migrations
                 name: "Vendor",
                 table: "RequestNotifications");
 
-            migrationBuilder.DropColumn(
-                name: "Sum",
-                table: "Payments");
+            //migrationBuilder.DropColumn(
+            //    name: "Sum",
+            //    table: "Payments");
         }
     }
 }
