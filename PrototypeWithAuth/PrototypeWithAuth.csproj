@@ -113,6 +113,10 @@
     <Compile Remove="Data\Migrations\20200825075129_MadeNotificationAbstract.Designer.cs" />
     <Compile Remove="Data\Migrations\20200825080126_MadeNotificationAbstract.cs" />
     <Compile Remove="Data\Migrations\20200825080126_MadeNotificationAbstract.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200826090341_seeded196-1.cs" />
+    <Compile Remove="Data\Migrations\20200826090341_seeded196-1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200826092415_1.cs" />
+    <Compile Remove="Data\Migrations\20200826092415_1.Designer.cs" />
   </ItemGroup>
 
 

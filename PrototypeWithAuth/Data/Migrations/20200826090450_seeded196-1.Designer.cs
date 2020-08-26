@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200826090450_seeded196-1")]
+    partial class seeded1961
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -425,31 +427,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             LocationTypeID = 100,
                             Depth = 0,
-                            LocationTypeChildID = 101,
                             LocationTypeName = "-196"
-                        },
-                        new
-                        {
-                            LocationTypeID = 101,
-                            Depth = 1,
-                            LocationTypeChildID = 102,
-                            LocationTypeName = "Rack",
-                            LocationTypeParentID = 100
-                        },
-                        new
-                        {
-                            LocationTypeID = 102,
-                            Depth = 2,
-                            LocationTypeChildID = 103,
-                            LocationTypeName = "Box",
-                            LocationTypeParentID = 101
-                        },
-                        new
-                        {
-                            LocationTypeID = 103,
-                            Depth = 3,
-                            LocationTypeName = "Box Unit",
-                            LocationTypeParentID = 102
                         });
                 });
 
