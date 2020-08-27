@@ -280,9 +280,9 @@ $(".paymentType").change(function () {
 $("#vendorList").change(function () {
 	//get the new vendor id selected
 	var vendorid = $("#vendorList").val();
-	ChangeVendorBusinessId(vendorid);
+	$.fn.ChangeVendorBusinessId(vendorid);
 });
- function ChangeVendorBusinessId  (vendorid) {
+$.fn.ChangeVendorBusinessId  = function(vendorid) {
 	var newBusinessID = "";
 
 	//will throw an error if its a null value so tests it here
