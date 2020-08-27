@@ -933,7 +933,7 @@ namespace PrototypeWithAuth.Data
                 new RequestNotificationStatus
                 {
                     NotificationStatusID = 1,
-                    Icon = "icon-centarix-icons-05",
+                    Icon = "icon-priority_high-24px",
                     Color = "--notifications-orderlate-color",
                     Description = "OrderLate"
                 },
@@ -947,14 +947,14 @@ namespace PrototypeWithAuth.Data
                 new RequestNotificationStatus
                 {
                     NotificationStatusID = 3,
-                    Icon = "icon-centarix-icons-05",
+                    Icon = "icon-done-24px",
                     Color = "--notifications-approved-color",
                     Description = "ItemApproved"
                 },
                 new RequestNotificationStatus
                 {
                     NotificationStatusID = 4,
-                    Icon = "icon-centarix-icons-05",
+                    Icon = "icon-local_mall-24px",
                     Color = "--notifications-received-color",
                     Description = "ItemReceived"
                 }

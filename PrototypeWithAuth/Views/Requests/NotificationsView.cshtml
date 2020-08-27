@@ -20,25 +20,11 @@
         <tbody>
             @foreach (var item in Model)
             {
-                string iconStyle = "";
+                string iconStyle = item.NotificationStatus.Icon;
                 string icon = item.NotificationStatus.Icon;
                 string color = "var(" + item.NotificationStatus.Color + ")";
                 string description = item.Description;
-                switch (item.NotificationStatusID)
-                {
-                    case 1:
-                        icon = "fas fa-exclamation";
-                        break;
-                    case 2:
-                        icon = "icon-centarix-icons-03 ";
-                        break;
-                    case 3:
-                        icon = "icon-done-24px";
-                        break;
-                    case 4:
-                        icon = "fas fa-shopping-bag";
-                        break;
-                }
+          
                 var fontWeight = "";
                 @if (!item.IsRead)
                 {
