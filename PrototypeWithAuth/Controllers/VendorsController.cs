@@ -103,8 +103,10 @@ namespace PrototypeWithAuth.Controllers
 
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
 
-            createSupplierViewModel.Vendor = await _context.Vendors.FindAsync(id);
+            createSupplierViewModel.Vendor = await _context.Vendors.Include(v=>v.VendorCategoryTypes).Where(v=>v.VendorID == id).FirstOrDefaultAsync();
             createSupplierViewModel.SectionType = SectionType;
+            createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+            createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
             if (createSupplierViewModel.Vendor == null)
             {
                 return NotFound();
@@ -250,6 +252,7 @@ namespace PrototypeWithAuth.Controllers
             createSupplierViewModel.VendorComments = vendorComments;
             createSupplierViewModel.SectionType = SectionType;
             createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+
             return View(createSupplierViewModel);
         }
 
@@ -297,6 +300,11 @@ namespace PrototypeWithAuth.Controllers
             {          
                 _context.Add(createSupplierViewModel.Vendor);
                 _context.SaveChanges();
+                foreach (var type in createSupplierViewModel.VendorCategoryTypes)
+                {
+                    _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
+                }
+                _context.SaveChanges();
                 foreach (var vendorContact in vendorContacts)
                 {
                     vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
@@ -333,6 +341,7 @@ namespace PrototypeWithAuth.Controllers
             createSupplierViewModel.Vendor = await _context.Vendors.Include(v=>v.VendorCategoryTypes).Where(v=>v.VendorID == id).FirstOrDefaultAsync();
             createSupplierViewModel.SectionType = SectionType;
             createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+            createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc=>vc.CategoryTypeID).ToList();
             //var count = createSupplierViewModel.Vendor.VendorCategoryTypes.Count();
             //if (count == 2)
             //{
@@ -396,6 +405,20 @@ namespace PrototypeWithAuth.Controllers
             if (ModelState.IsValid)
             {
                 _context.Update(createSupplierViewModel.Vendor);
+                _context.SaveChanges();
+                var vendor = await _context.Vendors.Where(v => v.VendorID == createSupplierViewModel.Vendor.VendorID).Include(v => v.VendorCategoryTypes).FirstOrDefaultAsync();
+                if (vendor.VendorCategoryTypes.Count() > 0)
+                {
+                    foreach (var type in createSupplierViewModel.Vendor.VendorCategoryTypes)
+                    {
+                        _context.Remove(type);
+                    }
+                }
+                _context.SaveChanges();
+                foreach (var type in createSupplierViewModel.VendorCategoryTypes)
+                {
+                    _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
+                }
                 _context.SaveChanges();
                 foreach (var vendorContact in vendorContacts)
                 {

@@ -74,7 +74,7 @@
                                         <select class="mdb-select md-form colorful-select dropdown-primary" asp-for="VendorCategoryTypes"  multiple>
                                             @foreach(var categoryType in Model.CategoryTypes)
                                             {
-                                                <option value="@categoryType.CategoryTypeDescription">
+                                                <option value="@categoryType.CategoryTypeID">
                                                         @categoryType.CategoryTypeDescription
                                                 </option>                                                
                                             }
@@ -240,35 +240,29 @@
                                 <div id="comment-info">
                                     @for (int i = 0; i < Model.VendorComments.Count(); i++)
                                     {
-                                        <div class="table comment-info border p-2 mb-3" style="display:none">
-                                            @Html.HiddenFor(x => x.VendorComments[i].IsActive, htmlAttributes: new { @class = "comment-active" })
-                                            @Html.HiddenFor(x => x.VendorComments[i].VendorComment.CommentType, htmlAttributes: new { @class = "comment-type" })
+                                    <div class="table comment-info border p-2 mb-3" style="display:none">
+                                        @Html.HiddenFor(x => x.VendorComments[i].IsActive, htmlAttributes: new { @class = "comment-active" })
+                                        @Html.HiddenFor(x => x.VendorComments[i].VendorComment.CommentType, htmlAttributes: new { @class = "comment-type" })
 
-                                            <div class="row ml-2  border-bottom-0">
-                                                <div class="ml-2 mt-auto mb-auto ">
-                                                    <img src="~/images/css/profile_circle_big.png" height="45" alt="default User image" />
-                                                </div>
-                                                <div class="col-8 mr-4 ">
-                                                    <div class=" p-3 ">
-                                                        <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
-                                                        <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
-                                                        <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
-                                                        @if (Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment))
-                                                        {
-                                                            <i class="icon-comment-24px float-right" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
-                                                        }
-                                                        else
-                                                        {
-                                                            <i class="icon-report_problem-24px-2 float-right" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
-                                                        }
-                                                        <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0" />
-                                                        <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger"></span>
-                                                    </div>
+                                        <div class="row ml-2  border-bottom-0">
+                                            <div class="col-1 mt-auto mb-auto ">
+                                                <img src="~/images/css/profile_circle_big.png" height="45" alt="default User image" />
+                                            </div>
+                                            <div class="col-9 ">
+                                                <div class=" p-3 ">
+                                                    <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
+                                                    <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
+                                                    <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
 
+                                                    <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0" />
+                                                    <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger"></span>
                                                 </div>
 
                                             </div>
+                                            <div class=" col-2 ">  <i class=" float-right m-4" style="padding-top: .55rem; font-size: 1.25rem;"></i></div>
+
                                         </div>
+                                    </div>
                                     }
                                 </div>
 

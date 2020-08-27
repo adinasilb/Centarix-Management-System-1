@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<PrototypeWithAuth.AppData.AppUtility.CommentTypeEnum> CommentTypes { get; set; }
         public AppUtility.MenuItems SectionType {get; set;}
         public List<CategoryType> CategoryTypes { get; set; }
-        public List<VendorCategoryType> VendorCategoryTypes { get; set; }
+        public List<int> VendorCategoryTypes { get; set; }
 
 
     }

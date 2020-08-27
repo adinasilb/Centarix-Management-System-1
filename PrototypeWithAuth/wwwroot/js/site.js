@@ -2119,6 +2119,16 @@ $.fn.addComment = function (type) {
 	console.log("$('#Comment').click");
 	$(".comment-info:hidden:first").find(".comment-active").val(true);
 	$(".comment-info:hidden:first").find(".comment-type").val(type);
+	console.log(type);
+	if (type === "Comment") {
+		$(".comment-info:hidden:first i").addClass("icon-comment-24px ");
+		$(".comment-info:hidden:first i").css("color", "#30BCC9");
+	} else if (type === "Warning") {
+		$(".comment-info:hidden:first i").addClass("icon-report_problem-24px-2");
+		$(".comment-info:hidden:first i").css("color", "var(--danger-color)");
+	}
+
+
 	$(".comment-info:hidden:first").show();
 }
 
