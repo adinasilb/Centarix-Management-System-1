@@ -2103,7 +2103,7 @@ namespace PrototypeWithAuth.Controllers
             doc.Close();
             TempData["ParentRequestConfirmEmail"] = null;
 
-            return View(confirm);
+            return PartialView(confirm);
         }
 
 
@@ -3395,8 +3395,12 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> OrderLateModal(int id)
         {
-            var request = _context.Requests.Where(r => r.RequestID == id).Include(r=>r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
-            return View(request);
+            var request = _context.Requests
+                .Where(r => r.RequestID == id)
+                .Include(r=>r.ApplicationUserCreator)
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+            return PartialView(request);
         }
 
 
