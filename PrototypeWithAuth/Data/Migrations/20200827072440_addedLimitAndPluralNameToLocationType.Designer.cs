@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200827072440_addedLimitAndPluralNameToLocationType")]
+    partial class addedLimitAndPluralNameToLocationType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -433,8 +435,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 0,
                             Limit = 0,
                             LocationTypeChildID = 101,
-                            LocationTypeName = "-196°C",
-                            LocationTypePluralName = "-196°C"
+                            LocationTypeName = "-196°C"
                         },
                         new
                         {
@@ -443,8 +444,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Limit = 0,
                             LocationTypeChildID = 102,
                             LocationTypeName = "Rack",
-                            LocationTypeParentID = 100,
-                            LocationTypePluralName = "Racks"
+                            LocationTypeParentID = 100
                         },
                         new
                         {
@@ -453,17 +453,15 @@ namespace PrototypeWithAuth.Data.Migrations
                             Limit = 0,
                             LocationTypeChildID = 103,
                             LocationTypeName = "Box",
-                            LocationTypeParentID = 101,
-                            LocationTypePluralName = "Boxes"
+                            LocationTypeParentID = 101
                         },
                         new
                         {
                             LocationTypeID = 103,
                             Depth = 3,
-                            Limit = 1,
+                            Limit = 0,
                             LocationTypeName = "Box Unit",
-                            LocationTypeParentID = 102,
-                            LocationTypePluralName = "Box Units"
+                            LocationTypeParentID = 102
                         },
                         new
                         {
@@ -471,8 +469,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 0,
                             Limit = 0,
                             LocationTypeChildID = 201,
-                            LocationTypeName = "-80°C",
-                            LocationTypePluralName = "-80°C"
+                            LocationTypeName = "-80°C"
                         },
                         new
                         {
@@ -481,8 +478,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Limit = 0,
                             LocationTypeChildID = 202,
                             LocationTypeName = "Shelf",
-                            LocationTypeParentID = 200,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypeParentID = 200
                         },
                         new
                         {
@@ -491,8 +487,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Limit = 0,
                             LocationTypeChildID = 203,
                             LocationTypeName = "Rack",
-                            LocationTypeParentID = 201,
-                            LocationTypePluralName = "Racks"
+                            LocationTypeParentID = 201
                         },
                         new
                         {
@@ -501,17 +496,15 @@ namespace PrototypeWithAuth.Data.Migrations
                             Limit = 0,
                             LocationTypeChildID = 204,
                             LocationTypeName = "Box",
-                            LocationTypeParentID = 202,
-                            LocationTypePluralName = "Boxes"
+                            LocationTypeParentID = 202
                         },
                         new
                         {
                             LocationTypeID = 204,
                             Depth = 4,
-                            Limit = 1,
+                            Limit = 0,
                             LocationTypeName = "Box Unit",
-                            LocationTypeParentID = 203,
-                            LocationTypePluralName = "Box Units"
+                            LocationTypeParentID = 203
                         },
                         new
                         {
@@ -519,8 +512,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 0,
                             Limit = 0,
                             LocationTypeChildID = 301,
-                            LocationTypeName = "-20°C",
-                            LocationTypePluralName = "-20°C"
+                            LocationTypeName = "-20°C"
                         },
                         new
                         {
@@ -528,8 +520,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 1,
                             Limit = 0,
                             LocationTypeName = "Shelf",
-                            LocationTypeParentID = 300,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypeParentID = 300
                         },
                         new
                         {
@@ -537,8 +528,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 0,
                             Limit = 0,
                             LocationTypeChildID = 401,
-                            LocationTypeName = "-4°C",
-                            LocationTypePluralName = "-4°C"
+                            LocationTypeName = "-4°C"
                         },
                         new
                         {
@@ -546,8 +536,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 1,
                             Limit = 0,
                             LocationTypeName = "Shelf",
-                            LocationTypeParentID = 400,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypeParentID = 400
                         },
                         new
                         {
@@ -555,8 +544,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 0,
                             Limit = 0,
                             LocationTypeChildID = 501,
-                            LocationTypeName = "25°C",
-                            LocationTypePluralName = "25°C"
+                            LocationTypeName = "25°C"
                         },
                         new
                         {
@@ -564,8 +552,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 1,
                             Limit = 0,
                             LocationTypeName = "Shelf",
-                            LocationTypeParentID = 500,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypeParentID = 500
                         });
                 });
 

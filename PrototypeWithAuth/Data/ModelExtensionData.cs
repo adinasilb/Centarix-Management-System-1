@@ -966,6 +966,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 100,
                     LocationTypeName = "-196°C",
+                    LocationTypePluralName = "-196°C",
                     LocationTypeChildID = 101,
                     Depth = 0
                 },
@@ -973,6 +974,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 101,
                     LocationTypeName = "Rack",
+                    LocationTypePluralName = "Racks",
                     LocationTypeParentID = 100,
                     LocationTypeChildID = 102,
                     Depth = 1
@@ -981,6 +983,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 102,
                     LocationTypeName = "Box",
+                    LocationTypePluralName = "Boxes",
                     LocationTypeParentID = 101,
                     LocationTypeChildID = 103,
                     Depth = 2
@@ -989,13 +992,16 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 103,
                     LocationTypeName = "Box Unit",
+                    LocationTypePluralName = "Box Units",
                     LocationTypeParentID = 102,
+                    Limit = 1,
                     Depth = 3
                 },
                 new LocationType
                 {
                     LocationTypeID = 200,
                     LocationTypeName = "-80°C",
+                    LocationTypePluralName = "-80°C",
                     LocationTypeChildID = 201,
                     Depth = 0
                 },
@@ -1003,6 +1009,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 201,
                     LocationTypeName = "Shelf",
+                    LocationTypePluralName = "Shelves",
                     LocationTypeParentID = 200,
                     LocationTypeChildID = 202,
                     Depth = 1
@@ -1011,6 +1018,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 202,
                     LocationTypeName = "Rack",
+                    LocationTypePluralName = "Racks",
                     LocationTypeParentID = 201,
                     LocationTypeChildID = 203,
                     Depth = 2
@@ -1019,6 +1027,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 203,
                     LocationTypeName = "Box",
+                    LocationTypePluralName = "Boxes",
                     LocationTypeParentID = 202,
                     LocationTypeChildID = 204,
                     Depth = 3
@@ -1027,13 +1036,16 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 204,
                     LocationTypeName = "Box Unit",
+                    LocationTypePluralName = "Box Units",
                     LocationTypeParentID = 203,
+                    Limit = 1,
                     Depth = 4
                 },
                 new LocationType
                 {
                     LocationTypeID = 300,
                     LocationTypeName = "-20°C",
+                    LocationTypePluralName = "-20°C",
                     LocationTypeChildID = 301,
                     Depth = 0
                 },
@@ -1041,6 +1053,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 301,
                     LocationTypeName = "Shelf",
+                    LocationTypePluralName = "Shelves",
                     LocationTypeParentID = 300,
                     Depth = 1
                 },
@@ -1048,6 +1061,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 400,
                     LocationTypeName = "-4°C",
+                    LocationTypePluralName = "-4°C",
                     LocationTypeChildID = 401,
                     Depth = 0
                 },
@@ -1055,6 +1069,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 401,
                     LocationTypeName = "Shelf",
+                    LocationTypePluralName = "Shelves",
                     LocationTypeParentID = 400,
                     Depth = 1
                 },
@@ -1062,6 +1077,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 500,
                     LocationTypeName = "25°C",
+                    LocationTypePluralName = "25°C",
                     LocationTypeChildID = 501,
                     Depth = 0
                 },
@@ -1069,6 +1085,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 501,
                     LocationTypeName = "Shelf",
+                    LocationTypePluralName = "Shelves",
                     LocationTypeParentID = 500,
                     Depth = 1
                 }
