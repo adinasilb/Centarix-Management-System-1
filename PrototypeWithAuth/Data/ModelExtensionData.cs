@@ -1043,6 +1043,34 @@ namespace PrototypeWithAuth.Data
                     LocationTypeName = "Shelf",
                     LocationTypeParentID = 300,
                     Depth = 1
+                },
+                new LocationType
+                {
+                    LocationTypeID = 400,
+                    LocationTypeName = "-4°C",
+                    LocationTypeChildID = 401,
+                    Depth = 0
+                },
+                new LocationType
+                {
+                    LocationTypeID = 401,
+                    LocationTypeName = "Shelf",
+                    LocationTypeParentID = 400,
+                    Depth = 1
+                },
+                new LocationType
+                {
+                    LocationTypeID = 500,
+                    LocationTypeName = "25°C",
+                    LocationTypeChildID = 501,
+                    Depth = 0
+                },
+                new LocationType
+                {
+                    LocationTypeID = 501,
+                    LocationTypeName = "Shelf",
+                    LocationTypeParentID = 500,
+                    Depth = 1
                 }
             );
 
