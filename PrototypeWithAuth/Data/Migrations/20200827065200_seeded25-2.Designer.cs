@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200827065200_seeded25-2")]
+    partial class seeded252
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -403,9 +405,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("Depth")
                         .HasColumnType("int");
 
-                    b.Property<int>("Limit")
-                        .HasColumnType("int");
-
                     b.Property<int?>("LocationTypeChildID")
                         .HasColumnType("int");
 
@@ -414,9 +413,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("LocationTypeParentID")
                         .HasColumnType("int");
-
-                    b.Property<string>("LocationTypePluralName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LocationTypeID");
 
@@ -431,141 +427,111 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             LocationTypeID = 100,
                             Depth = 0,
-                            Limit = 0,
                             LocationTypeChildID = 101,
-                            LocationTypeName = "-196°C",
-                            LocationTypePluralName = "-196°C"
+                            LocationTypeName = "-196°C"
                         },
                         new
                         {
                             LocationTypeID = 101,
                             Depth = 1,
-                            Limit = 0,
                             LocationTypeChildID = 102,
                             LocationTypeName = "Rack",
-                            LocationTypeParentID = 100,
-                            LocationTypePluralName = "Racks"
+                            LocationTypeParentID = 100
                         },
                         new
                         {
                             LocationTypeID = 102,
                             Depth = 2,
-                            Limit = 0,
                             LocationTypeChildID = 103,
                             LocationTypeName = "Box",
-                            LocationTypeParentID = 101,
-                            LocationTypePluralName = "Boxes"
+                            LocationTypeParentID = 101
                         },
                         new
                         {
                             LocationTypeID = 103,
                             Depth = 3,
-                            Limit = 1,
                             LocationTypeName = "Box Unit",
-                            LocationTypeParentID = 102,
-                            LocationTypePluralName = "Box Units"
+                            LocationTypeParentID = 102
                         },
                         new
                         {
                             LocationTypeID = 200,
                             Depth = 0,
-                            Limit = 0,
                             LocationTypeChildID = 201,
-                            LocationTypeName = "-80°C",
-                            LocationTypePluralName = "-80°C"
+                            LocationTypeName = "-80°C"
                         },
                         new
                         {
                             LocationTypeID = 201,
                             Depth = 1,
-                            Limit = 0,
                             LocationTypeChildID = 202,
                             LocationTypeName = "Shelf",
-                            LocationTypeParentID = 200,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypeParentID = 200
                         },
                         new
                         {
                             LocationTypeID = 202,
                             Depth = 2,
-                            Limit = 0,
                             LocationTypeChildID = 203,
                             LocationTypeName = "Rack",
-                            LocationTypeParentID = 201,
-                            LocationTypePluralName = "Racks"
+                            LocationTypeParentID = 201
                         },
                         new
                         {
                             LocationTypeID = 203,
                             Depth = 3,
-                            Limit = 0,
                             LocationTypeChildID = 204,
                             LocationTypeName = "Box",
-                            LocationTypeParentID = 202,
-                            LocationTypePluralName = "Boxes"
+                            LocationTypeParentID = 202
                         },
                         new
                         {
                             LocationTypeID = 204,
                             Depth = 4,
-                            Limit = 1,
                             LocationTypeName = "Box Unit",
-                            LocationTypeParentID = 203,
-                            LocationTypePluralName = "Box Units"
+                            LocationTypeParentID = 203
                         },
                         new
                         {
                             LocationTypeID = 300,
                             Depth = 0,
-                            Limit = 0,
                             LocationTypeChildID = 301,
-                            LocationTypeName = "-20°C",
-                            LocationTypePluralName = "-20°C"
+                            LocationTypeName = "-20°C"
                         },
                         new
                         {
                             LocationTypeID = 301,
                             Depth = 1,
-                            Limit = 0,
                             LocationTypeName = "Shelf",
-                            LocationTypeParentID = 300,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypeParentID = 300
                         },
                         new
                         {
                             LocationTypeID = 400,
                             Depth = 0,
-                            Limit = 0,
                             LocationTypeChildID = 401,
-                            LocationTypeName = "-4°C",
-                            LocationTypePluralName = "-4°C"
+                            LocationTypeName = "-4°C"
                         },
                         new
                         {
                             LocationTypeID = 401,
                             Depth = 1,
-                            Limit = 0,
                             LocationTypeName = "Shelf",
-                            LocationTypeParentID = 400,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypeParentID = 400
                         },
                         new
                         {
                             LocationTypeID = 500,
                             Depth = 0,
-                            Limit = 0,
                             LocationTypeChildID = 501,
-                            LocationTypeName = "25°C",
-                            LocationTypePluralName = "25°C"
+                            LocationTypeName = "25°C"
                         },
                         new
                         {
                             LocationTypeID = 501,
                             Depth = 1,
-                            Limit = 0,
                             LocationTypeName = "Shelf",
-                            LocationTypeParentID = 500,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypeParentID = 500
                         });
                 });
 
