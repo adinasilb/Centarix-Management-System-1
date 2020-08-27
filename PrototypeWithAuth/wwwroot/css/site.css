@@ -395,7 +395,8 @@ body {
 
     .locations-page .btn.load-location-index-view:hover,
     .locations-page .btn.load-location-index-view:focus,
-    .locations-page .btn.load-location-index-view:active {
+    .locations-page .btn.load-location-index-view:active,
+    .locations-page .location-type-selected{
         box-shadow: none !important;
         border-bottom: 2px solid rgba(0, 0, 0, .54);
     }
@@ -1593,4 +1594,8 @@ td .btn {
 
 .notification-bold td{
     font-weight: 500;
+}
+
+.location-type-name {
+    font-size: 1.5rem !important;
 }

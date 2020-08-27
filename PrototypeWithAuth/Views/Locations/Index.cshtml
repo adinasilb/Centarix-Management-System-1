@@ -22,9 +22,14 @@
 
         @foreach (var type in Model.LocationTypes)
         {
-            <ul class="list-inline ">
-                <li class="list-inline-item mr-3"><button class="opac87 btn load-location-index-view clicked-button " value=@type.LocationTypeID>@type.LocationTypeName</button></li>
-            </ul>
+        <ul class="list-inline ">
+            <li class="list-inline-item mr-3">
+                <button class="opac-87 clicked-button btn location-type-name load-location-index-view" value=@type.LocationTypeID>
+                    @type.LocationTypeName
+                </button>
+            </li>
+            @* opac87 btn load-location-index-view clicked-button location-type-name *@
+        </ul>
         }
 
     </div>
