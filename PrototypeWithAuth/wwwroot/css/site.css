@@ -221,7 +221,7 @@ center-horizontally {
 
 .module-button-div:hover, .main-permissions div:hover {
     border-radius: 15px;
-    background-color: rgba(0,0,0,.03);
+    background-color: rgb(232,240,254);
 }
 
 .clicked-border {
