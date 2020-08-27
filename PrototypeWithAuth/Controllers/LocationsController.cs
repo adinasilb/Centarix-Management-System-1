@@ -141,7 +141,7 @@ namespace PrototypeWithAuth.Controllers
                 //exclude the box and cell from locationsDepthOfZero
                 LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0 && li.LocationTypeID==typeID),
                 SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0 && li.LocationTypeID == typeID),
-                LocationTypeParentID = typeID
+                //LocationTypeParentID = typeID
             };
             return PartialView(locationIndexViewModel);
         }

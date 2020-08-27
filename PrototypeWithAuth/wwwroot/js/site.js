@@ -1383,7 +1383,7 @@ $(function () {
 
 	$.fn.setUpLocationIndexList = function (val) {
 		//fill up col 2 with the next one
-		$("#loading3").delay(1000).show(0);
+		$("#loading3")/*.delay(1000)*/.show(0);
 		var myDiv = $(".colOne");
 		var typeId = val;
 		$.ajax({
@@ -1395,7 +1395,7 @@ $(function () {
 				$(".VisualBoxColumn").hide();
 				$(".colTwoSublocations").hide();
 				$("#loading3").hide();
-				$("#loading3").delay(1000).hide(0);
+				$("#loading3")/*.delay(1000)*/.hide(0);
 				// the following line keeps the parent type on top underlined
 				$('button[value="' + typeId + '"]').addClass("location-type-selected");
 				myDiv.show();
@@ -1411,7 +1411,7 @@ $(function () {
 		//add or remove the background class in col 1
 		//$(".load-sublocation-view").parent().removeClass("td-selected");
 		//$(this).parent().addClass("td-selected");
-		$("#loading1").delay(1000).show(0);
+		$("#loading1")/*.delay(1000)*/.show(0);
 		//fill up col 2 with the next one
 		var myDiv = $(".colTwoSublocations");
 		var parentId = $(this).val();
@@ -1431,7 +1431,7 @@ $(function () {
 			success: function (result) {
 				myDiv.show();
 				$("#loading1").hide();
-				$("#loading1").delay(1000).hide(0);
+				$("#loading1")/*.delay(1000)*/.hide(0);
 				this.html(result);
 
 			}
@@ -1443,7 +1443,7 @@ $(function () {
 	});
 
 	$.fn.setUpVisual = function (val) {
-		$("#loading2").delay(1000).show(0);
+		$("#loading2")/*.delay(1000)*/.show(0);
 		//fill up col three with the visual
 		var visualDiv = $(".VisualBoxColumn");
 		var visualContainerId = val;
@@ -1457,7 +1457,7 @@ $(function () {
 				visualDiv.show();
 				this.html(result);
 				$("#loading2").hide();
-				$("#loading2").delay(1000).hide(0);
+				$("#loading2")/*.delay(1000)*/.hide(0);
 			}
 		});
 	};

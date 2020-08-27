@@ -6,32 +6,38 @@
 }
 <div class="locations-page">
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
-    @if ((@User.IsInRole("Admin") || @User.IsInRole("Manager")) && Model.SectionType == AppUtility.MenuItems.LabManagement)
-    {
-        <div class="row mt-4">
-            <div class="col-2 offset-1">
-                <button class="inv-button load-add-location" data-target="item" data-backdrop="static" data-keyboard="false" href="item">
+
+    @*<div class="row mt-4">
+        <div class="col-2 offset-1">
+        </div>
+
+    </div>
+    <br />*@
+    <div class="row ml-5">
+        <div class="col-10">
+            <div class="row">
+                @foreach (var type in Model.LocationTypes)
+                {
+                    <ul class="list-inline ">
+                        <li class="list-inline-item mr-3">
+                            <button class="opac-87 clicked-button btn location-type-name load-location-index-view" value=@type.LocationTypeID>
+                                @type.LocationTypeName
+                            </button>
+                        </li>
+                        @* opac87 btn load-location-index-view clicked-button location-type-name *@
+                    </ul>
+                }
+            </div>
+        </div>
+        <div class="col-2">
+            @if ((@User.IsInRole("Admin") || @User.IsInRole("Manager")) && Model.SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                <button class="inv-button load-add-location mt-3" data-target="item" data-backdrop="static" data-keyboard="false" href="item" style="vertical-align: middle;">
                     ADD LOCATION
                 </button>
-            </div>
 
+            }
         </div>
-    }
-    <br />
-    <div class="row ml-5">
-
-        @foreach (var type in Model.LocationTypes)
-        {
-        <ul class="list-inline ">
-            <li class="list-inline-item mr-3">
-                <button class="opac-87 clicked-button btn location-type-name load-location-index-view" value=@type.LocationTypeID>
-                    @type.LocationTypeName
-                </button>
-            </li>
-            @* opac87 btn load-location-index-view clicked-button location-type-name *@
-        </ul>
-        }
-
     </div>
 
 
