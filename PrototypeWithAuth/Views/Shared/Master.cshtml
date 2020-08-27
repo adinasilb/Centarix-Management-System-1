@@ -1045,7 +1045,7 @@
                cache: true,
                success: function (data) {
                    console.log("count: " + data);
-                   $("#alertCount").html(data);
+                   $("#alertCount").html('<span>'+data+'</span>');
                    if (data == "0") {
                        $("#alertCount").hide();
                    }

@@ -41,9 +41,9 @@
                             <div class="container-fluid div-tabs text-center">
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                     <li class="nav-item"><a data-toggle="tab" href="#details" id="vendor-details-tab" class="nav-link  @navLinkClass "><i class="icon-storefront-24px" style="font-size: 2rem;"></i><br />Details</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#categories" id="vendor-categories-tab" class="nav-link  @navLinkClass" disabled><i class="icon-category-24px" style="font-size: 2rem;"></i><br />Categories</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#categories" id="vendor-categories-tab" class="nav-link  @navLinkClass" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Categories</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#payment" id="vendor-payments-tab" class="nav-link @navLinkClass" disabled><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Payment</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="vendor-comment-tab" href="#comments" class="nav-link  @navLinkClass " disabled><i class="icon-comment-24px" style="font-size: 2rem;"></i><br />Comments</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="vendor-comment-tab" href="#comments" class="nav-link  @navLinkClass " disabled><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments</a></li>
                                     <li class="nav-item"><a data-toggle="tab" id="vendor-contact-tab" href="#contact" class="nav-link   @navLinkClass " disabled><i class="icon-centarix-icons-17" e.css style="font-size: 2rem;"></i><br />Contact</a></li>
                                 </ul>
                             </div>
@@ -70,14 +70,16 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-6">
-                                        <label  class="control-label">Category</label>
-                                        @Html.DropDownListFor(m => m.CategoryTypeID,
-                                       new List<SelectListItem>
-                                        {
-                                           new SelectListItem{ Text="Lab", Value = "1" },
-                                           new SelectListItem{ Text="Operational", Value = "2" },
-                                           new SelectListItem{ Text="Both", Value = "3" } },
-                                       htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary " })
+                                        <label class="control-label">Category Type</label>
+                                        <select class="mdb-select md-form colorful-select dropdown-primary" asp-for="VendorCategoryTypes"  multiple>
+                                            @foreach(var categoryType in Model.CategoryTypes)
+                                            {
+                                                <option value="@categoryType.CategoryTypeDescription">
+                                                        @categoryType.CategoryTypeDescription
+                                                </option>                                                
+                                            }
+
+                                        </select>                                       
                                     </div>
                                     <div class="col-6">
                                         <label asp-for="Vendor.VendorBuisnessID" class="control-label"></label>
@@ -215,12 +217,23 @@
                                             <li><button href="#" id="addSupplierComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" class="btn btn-circle btn-xl" style="background-color:@backgroundColor;">   +</button></li>
 
                                             <div style="display:none;" id="popover-content">
-                                                @foreach (var item in Model.CommentTypes)
-                                                {
-                                                    <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addComment('@item')">@item</button><hr class="m-0" />
-                                                }
 
-                                            </div>
+                                                @foreach (var item in Model.CommentTypes)
+                                                {<div class="row px-3">
+                                                        @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
+                                                        {
+                                                        <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                        <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                        }
+                                                        <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addComment('@item')">@item</button><hr class="m-0" />
+
+                                                    </div>
+                                                        }
+                                                    </div>
+
                                         </ul>
                                     </div>
                                 </div>
@@ -240,6 +253,14 @@
                                                         <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
                                                         <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
                                                         <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
+                                                        @if (Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment))
+                                                        {
+                                                            <i class="icon-comment-24px float-right" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="icon-report_problem-24px-2 float-right" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                        }
                                                         <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0" />
                                                         <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger"></span>
                                                     </div>

@@ -224,7 +224,7 @@
                     @*@Html.ActionLink(newButtonText, "Index", "Requests", new {@applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request}, new {@class = newActiveClass})*@
                 </li>
                 <li class="list-inline-item mr-3">
-                    <a class="@approvedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-centarix-icons-03"></i>  @approvedButtonText</a>
+                    <a class="@approvedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-approve-24px"></i>  @approvedButtonText</a>
 
                 </li>
 

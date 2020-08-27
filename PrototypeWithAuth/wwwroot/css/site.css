@@ -26,6 +26,7 @@ for details on configuring this project to bundle and minify static web assets. 
     --notifications-ordered-color: #5F79E2;
     --notifications-approved-color: #00CA72;
     --notifications-received-color: #5F79E2;
+    --danger-color: #E95252;
 }
 .order-inv-color {
     color: var(--order-inv-color);
@@ -122,13 +123,6 @@ i.fas {
     border-bottom: 2px solid white !important;
 }
 
-input[type='checkbox'],
-input[type='checkbox']:checked,
-input[type='checkbox']:not(:checked) {
-    opacity:1;
-    position: relative;
-    pointer-events:inherit;
-}
     /*iframe clickable href*/
     /*.linkwrap{
     position: relative;
@@ -1566,8 +1560,6 @@ td .btn {
 }
 
 .alerts-icon {
-    width: 30px;
-    height: 30px;
     position: relative;
 }
 
@@ -1578,15 +1570,19 @@ td .btn {
 }
 
 .alert-count {
-    background-color: red;
-    font-size: xx-small;
+    background-color: var(--danger-color);
     position: absolute;
-    padding: 2px;
-    top: 10px;
-    left: 18px;
+    top: 1.25rem;
+    left: 1.58rem;
+    color: white;
+    height: .85rem;
+    width: .85rem;
     border-radius: 50%;
-    color:white;
+    display: inline-block;
+    font-size: .60rem;
+    font-weight: 600;
 }
+
 .popover {
     max-width: 100% !important; /* Max Width of the popover (depending on the container!) */
 }
