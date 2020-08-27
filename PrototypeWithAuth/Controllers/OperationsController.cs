@@ -252,7 +252,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var parentcategories = await _context.ParentCategories.Where(pr => pr.CategoryTypeID == 2).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(pr => pr.ParentCategory.CategoryTypeID == 2).ToListAsync();
-            var vendors = await _context.Vendors.ToListAsync();
+            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 2).Count() > 0).ToListAsync();
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
 
@@ -296,7 +296,7 @@ namespace PrototypeWithAuth.Controllers
             //in case we need to return to the modal view
             requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
-            requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+            requestItemViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 2).Count() > 0).ToListAsync();
             requestItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
             //formatting the select list of the unit types
             
@@ -556,7 +556,7 @@ namespace PrototypeWithAuth.Controllers
 
             var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 2).ToListAsync();
-            var vendors = await _context.Vendors.ToListAsync();
+            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 2).Count() > 0).ToListAsync();
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
 
@@ -766,7 +766,7 @@ namespace PrototypeWithAuth.Controllers
 
             var parentcategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID==2).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 2).ToListAsync();
-            var vendors = await _context.Vendors.ToListAsync();
+            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 2).Count() > 0).ToListAsync();
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
 

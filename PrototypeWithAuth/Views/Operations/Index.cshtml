@@ -62,13 +62,13 @@
         {
             backTextBool = true;
             backText = TempData["TempVendorID"].ToString();
-            backLink = Url.ActionLink("Index", "Vendors", new { @PageType = pgt, @categoryType = AppUtility.CategoryTypeEnum.Operations}).ToString();
+            backLink = Url.ActionLink("Index", "Vendors", new { @PageType = pgt, @categoryType = 2}).ToString();
         }
         TempData["TempVendorID"] = TempData["TempVendorID"];
     }
     if (TempData["TempApplicationUserID"] != null)
     {
-        if (string.IsNullOrEmpty(TempData["TempApplicationUserID"].ToString()))
+        if (!string.IsNullOrEmpty(TempData["TempApplicationUserID"].ToString()))
         {
             backTextBool = true;
             backText = TempData["TempApplicationUserID"].ToString();

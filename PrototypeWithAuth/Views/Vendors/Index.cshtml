@@ -6,11 +6,11 @@
 
     string pageType = TempData["PageType"].ToString();
     var pagetype = TempData["PageType"];
-    if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
+    if (TempData["CategoryType"].Equals(1))
     {
         Layout = "~/Views/Shared/RequestNavView.cshtml";
     }
-    else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
+    else if (TempData["CategoryType"].Equals(2))
     {
         Layout = "~/Views/Shared/OperationsNavView.cshtml";
     }
@@ -57,13 +57,13 @@
                         @Html.DisplayFor(modelItem => item.VendorID)
                     </td>
                     <td>
-                        @if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
+                        @if (TempData["CategoryType"].Equals(1))
                         {
                             <a href="@Url.ActionLink("Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)">
                                 @Html.DisplayFor(modelItem => item.VendorEnName)
                             </a>
                         }
-                        else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
+                        else if (TempData["CategoryType"].Equals(2))
                         {
                             <a href="@Url.ActionLink("Index", "Operations", new { vendorID = @item.VendorID, @PageType = pageType }, null)">
                                 @Html.DisplayFor(modelItem => item.VendorEnName)

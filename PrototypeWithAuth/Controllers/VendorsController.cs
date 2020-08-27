@@ -38,12 +38,12 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: Vendors
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.CategoryTypeEnum categoryType = AppUtility.CategoryTypeEnum.Lab)
+        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1)
         {
             TempData["PageType"] = PageType;
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Vendor;
             TempData["CategoryType"] = categoryType;
-            return View(await _context.Vendors.ToListAsync());
+            return View(await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync());
         }
 
         // GET: Vendors
