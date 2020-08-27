@@ -2841,7 +2841,7 @@ namespace PrototypeWithAuth.Controllers
             receivedLocationViewModel.Request.ArrivalDate = DateTime.Today;
             receivedLocationViewModel.CategoryType = receivedLocationViewModel.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID;
 
-            return View(receivedLocationViewModel);
+            return PartialView(receivedLocationViewModel);
         }
 
         [HttpGet]

@@ -68,7 +68,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label class="control-label">Application User Receiver</label>
-                                        <select asp-for="Request.ApplicationUserReceiverID" class="mdb-select border-bottom">
+                                        <select asp-for="Request.ApplicationUserReceiverID" class="mdb-select md-form  colorful-select dropdown-primary ">
                                             @foreach (var user in Model.ApplicationUsers)
                                             {
                                                 <option value="@user.Id">@user.UserName</option>
