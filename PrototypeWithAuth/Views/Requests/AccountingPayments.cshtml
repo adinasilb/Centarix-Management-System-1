@@ -13,7 +13,11 @@
                         var count = 0;
                         if (Model.Requests != null)
                         {
-                            count = Model.Requests.Count;
+                            var vendorsCount = Model.Requests.Count();
+                            for (int x=0; x<vendorsCount; x++)
+                            {
+                                count += Model.Requests.ElementAt(x).Count();
+                            }
                         }
                     }
                     <strong>@Model.AccountingPaymentsEnum</strong> &nbsp; [@count]
