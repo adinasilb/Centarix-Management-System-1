@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200827051416_seeded80-5")]
+    partial class seeded805
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -488,20 +490,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 4,
                             LocationTypeName = "Box Unit",
                             LocationTypeParentID = 203
-                        },
-                        new
-                        {
-                            LocationTypeID = 300,
-                            Depth = 0,
-                            LocationTypeChildID = 301,
-                            LocationTypeName = "-20°C"
-                        },
-                        new
-                        {
-                            LocationTypeID = 301,
-                            Depth = 1,
-                            LocationTypeName = "Shelf",
-                            LocationTypeParentID = 300
                         });
                 });
 

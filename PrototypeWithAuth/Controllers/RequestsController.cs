@@ -2025,43 +2025,6 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEmailModal(int id)
         {
-            //List<Request> requests = null;
-            //if (isSingleOrder)
-            //{
-            //    requests = await _context.Requests.Where(r => r.RequestID == id)
-            //   .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
-            //}
-            //else
-            //{
-            //    if (cart)
-            //    {
-            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-            //            .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
-            //            .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-            //                 .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-            //                 .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
-            //    }
-            //    else
-            //    {
-            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && !(r is Reorder))
-            //                  .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
-            //    }
-
-            //}
-            //ParentRequest parentRequest = new ParentRequest();
-            //foreach (var request in parentRequest.Requests)
-            //{
-            //    request.ParentRequest = parentRequest;
-            //    int lastParentRequestOrderNum = 0;
-            //    request.ParentRequest.ApplicationUserID = _userManager.GetUserId(User);
-            //    if (_context.ParentRequests.Any())
-            //    {
-            //        lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-            //    }
-            //    request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-            //    request.ParentRequest.OrderDate = DateTime.Now;
-            //}
-
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
                 ParentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == id)
@@ -2111,30 +2074,6 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)
         {
-            //List<Request> requests = null;
-            //if (confirmEmail.IsSingleOrder)
-            //{
-            //    requests = await _context.Requests.Where(r => r.RequestID == confirmEmail.RequestID)
-            //   .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-            //   .Include(r => r.ApplicationUserCreator).ToListAsync();
-            //}
-            //else
-            //{
-            //    if (confirmEmail.Cart)
-            //    {
-            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-            //            .Where(r => r.Product.VendorID == confirmEmail.VendorID && r.RequestStatusID == 6 && !(r is Reorder))
-            //            .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-            //                  .Include(r => r.Product).ThenInclude(r => r.Vendor)
-            //                  .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
-            //    }
-            //    else
-            //    {
-            //        requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.Product.VendorID == confirmEmail.VendorID && r.RequestStatusID == 6 && !(r is Reorder))
-            //                  .Include(r => r.Product).ThenInclude(r => r.Vendor).ToListAsync();
-            //    }
-            //}
-
             var firstRequest = _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
@@ -2199,7 +2138,8 @@ namespace PrototypeWithAuth.Controllers
                     client.Disconnect(true);
                     if (wasSent)
                     {
-                        foreach (var request in _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID).Include(r=>r.Product).ThenInclude(p=>p.Vendor))
+                        foreach (var request in _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID)
+                            .Include(r=>r.Product).ThenInclude(p=>p.Vendor))
                         {
                             request.RequestStatusID = 2;
                             _context.Update(request);
@@ -2220,22 +2160,6 @@ namespace PrototypeWithAuth.Controllers
 
                         }
                         await _context.SaveChangesAsync();
-                        //foreach (var request in requests)
-                        //{
-                        //    ParentRequest parentRequest = new ParentRequest();
-                        //    request.ParentRequest = parentRequest;
-                        //    int lastParentRequestOrderNum = 0;
-                        //    request.ParentRequest.ApplicationUserID = currentUser.Id;
-                        //    if (_context.ParentRequests.Any())
-                        //    {
-                        //        lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-                        //    }
-                        //    request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-                        //    request.ParentRequest.OrderDate = DateTime.Now;
-                        //    requests.FirstOrDefault().RequestStatusID = 2;
-                        //    _context.Update(request);
-                        //    await _context.SaveChangesAsync();
-                        //}
                      
                     }
 
@@ -2841,7 +2765,7 @@ namespace PrototypeWithAuth.Controllers
             receivedLocationViewModel.Request.ArrivalDate = DateTime.Today;
             receivedLocationViewModel.CategoryType = receivedLocationViewModel.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID;
 
-            return View(receivedLocationViewModel);
+            return PartialView(receivedLocationViewModel);
         }
 
         [HttpGet]

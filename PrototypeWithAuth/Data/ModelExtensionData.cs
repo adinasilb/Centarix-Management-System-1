@@ -991,6 +991,58 @@ namespace PrototypeWithAuth.Data
                     LocationTypeName = "Box Unit",
                     LocationTypeParentID = 102,
                     Depth = 3
+                },
+                new LocationType
+                {
+                    LocationTypeID = 200,
+                    LocationTypeName = "-80°C",
+                    LocationTypeChildID = 201,
+                    Depth = 0
+                },
+                new LocationType
+                {
+                    LocationTypeID = 201,
+                    LocationTypeName = "Shelf",
+                    LocationTypeParentID = 200,
+                    LocationTypeChildID = 202,
+                    Depth = 1
+                },
+                new LocationType
+                {
+                    LocationTypeID = 202,
+                    LocationTypeName = "Rack",
+                    LocationTypeParentID = 201,
+                    LocationTypeChildID = 203,
+                    Depth = 2
+                },
+                new LocationType
+                {
+                    LocationTypeID = 203,
+                    LocationTypeName = "Box",
+                    LocationTypeParentID = 202,
+                    LocationTypeChildID = 204,
+                    Depth = 3
+                },
+                new LocationType
+                {
+                    LocationTypeID = 204,
+                    LocationTypeName = "Box Unit",
+                    LocationTypeParentID = 203,
+                    Depth = 4
+                },
+                new LocationType
+                {
+                    LocationTypeID = 300,
+                    LocationTypeName = "-20°C",
+                    LocationTypeChildID = 301,
+                    Depth = 0
+                },
+                new LocationType
+                {
+                    LocationTypeID = 301,
+                    LocationTypeName = "Shelf",
+                    LocationTypeParentID = 300,
+                    Depth = 1
                 }
             );
 
