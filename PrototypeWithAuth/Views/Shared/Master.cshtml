@@ -117,11 +117,11 @@
     <script src="~/lib/bootstrap/dist/js/modules/dropdown/dropdown-searchable.min.js"></script>
 
     @*<script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"))" type="text/javascript"></script>
-    <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"))" type="text/javascript"></script>
-    <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"))" type="text/javascript"></script>*@
-<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"></script>
+        <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"))" type="text/javascript"></script>
+        <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"))" type="text/javascript"></script>*@
+    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/modules/accordion-extended.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/modules/animations-extended.min.js"></script>
@@ -462,6 +462,62 @@
             $.fn.CallPageRequest($itemurl, "email");
             return false;
         });
+    $(".order-late").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#loading").show();
+        var $itemurl = "OrderLateModal/?id=" + $(this).val();
+        $.fn.CallOrderLateModal($(this).val());
+        return false;
+    });
+
+    $.fn.CallOrderLateModal = function (id) {
+        console.log("in call modal, id: " + id);
+        $('.modal').replaceWith('');
+        $(".modal-backdrop").remove();
+        $('#loading').show();
+        //var url = @Url.Action("Requests", "OrderLate");
+        //var url = "Requests/OrderLateModal/?id=" + id;
+        $.ajax({
+            async: true,
+            type: 'GET',
+            cache: false,
+            url: '@(Url.Action("OrderLateModal", "Requests"))',
+            data: id,
+            dataType: "string",
+            success: function (data) {
+                $('#loading').hide();
+                var modal = $(data);
+                $('body').append(modal);
+                $(".modal-view").modal({
+                    backdrop: true,
+                    keyboard: false,
+                });
+                $(".modal").modal('show');
+            }
+        });
+        return false;
+    };
+
+    @*$(".order-late").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#loading").show();
+        var $itemurl = "OrderLateModal/?id=" + $(this).val();
+        $.fn.CallOrderLateModal($(this).val());
+        return false;
+    });
+
+        $.fn.CallOrderLateModal = function (id) {
+            console.log("in call modal");
+            $('.modal').replaceWith('');
+            $(".modal-backdrop").remove();
+            $('#loading').show();
+            //var url =
+            return false;
+
+        };*@
+
 
         function AddTempDataMemory() {
             //console.log("about to get set the hidden fors in the modal view to remember where the user was");
@@ -539,7 +595,7 @@
                             AddTempDataMemory();
                             break;
                         case "orderlate":
-                            AddTempDataMemory();
+                            //AddTempDataMemory();
                             break;
                         case "terms":
                             AddTempDataMemory();
@@ -652,15 +708,6 @@
             $("#loading").show();
             var $itemurl = "ConfirmQuoteOrderEmailModal/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "confirmemail");
-            return false;
-        });
-
-        $(".order-late").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "OrderLateModal/?id=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "orderlate");
             return false;
         });
 

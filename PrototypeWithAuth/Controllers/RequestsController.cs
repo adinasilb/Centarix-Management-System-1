@@ -3395,7 +3395,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> OrderLateModal(int id)
         {
-            var request = _context.Requests.Where(r => r.RequestID == id).Include(r=>r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+            var request = _context.Requests
+                .Where(r => r.RequestID == id)
+                .Include(r=>r.ApplicationUserCreator)
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
             return PartialView(request);
         }
 

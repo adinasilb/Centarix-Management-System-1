@@ -960,6 +960,40 @@ namespace PrototypeWithAuth.Data
                 }
           );
 
+
+            modelBuilder.Entity<LocationType>().HasData(
+                new LocationType
+                {
+                    LocationTypeID = 100,
+                    LocationTypeName = "-196°C",
+                    LocationTypeChildID = 101,
+                    Depth = 0
+                },
+                new LocationType
+                {
+                    LocationTypeID = 101,
+                    LocationTypeName = "Rack",
+                    LocationTypeParentID = 100,
+                    LocationTypeChildID = 102,
+                    Depth = 1
+                },
+                new LocationType
+                {
+                    LocationTypeID = 102,
+                    LocationTypeName = "Box",
+                    LocationTypeParentID = 101,
+                    LocationTypeChildID = 103,
+                    Depth = 2
+                },
+                new LocationType
+                {
+                    LocationTypeID = 103,
+                    LocationTypeName = "Box Unit",
+                    LocationTypeParentID = 102,
+                    Depth = 3
+                }
+            );
+
         }
     }
 }
