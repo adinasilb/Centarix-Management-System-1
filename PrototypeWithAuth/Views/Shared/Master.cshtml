@@ -477,14 +477,14 @@
         $(".modal-backdrop").remove();
         $('#loading').show();
         //var url = @Url.Action("Requests", "OrderLate");
-        //var url = "Requests/OrderLateModal/?id=" + id;
+        var url = "OrderLateModal/?id=" + id;
         $.ajax({
             async: true,
             type: 'GET',
             cache: false,
-            url: '@(Url.Action("OrderLateModal", "Requests"))',
-            data: id,
-            dataType: "string",
+            url: url, @*'@(Url.Action("OrderLateModal", "Requests"))',*@
+            //data: id,
+            //dataType: "string",
             success: function (data) {
                 $('#loading').hide();
                 var modal = $(data);
