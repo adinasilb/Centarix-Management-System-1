@@ -15,10 +15,12 @@ namespace PrototypeWithAuth.Models
 
         [Display(Name = "Type")]
         public string LocationTypeName { get; set; }
+        public string LocationTypePluralName { get; set; }
         public int? LocationTypeParentID { get; set; }
         public int? LocationTypeChildID { get; set; }
         public LocationType LocationTypeParent { get; set; }
         public LocationType LocationTypeChild { get; set; }
         public int Depth { get; set; }
+        public int Limit { get; set; }
     }
 }
