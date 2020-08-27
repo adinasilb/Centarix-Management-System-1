@@ -5,7 +5,7 @@
 
 //global Exchange Rate variable (usd --> nis)
 
-
+$(function () {
 var VatPercentage = .17;
 
 
@@ -280,10 +280,9 @@ $(".paymentType").change(function () {
 $("#vendorList").change(function () {
 	//get the new vendor id selected
 	var vendorid = $("#vendorList").val();
-	$.fn.ChangeVendorBusinessId(vendorid);
+	ChangeVendorBusinessId(vendorid);
 });
-
-$.fn.ChangeVendorBusinessId = function (vendorid) {
+ function ChangeVendorBusinessId  (vendorid) {
 	var newBusinessID = "";
 
 	//will throw an error if its a null value so tests it here
@@ -2256,3 +2255,4 @@ $("body").on("click", "#share-payment", function (e) {
 	e.stopPropagation();
 	console.log("in share payments body fx site.js");
 });
+	});
