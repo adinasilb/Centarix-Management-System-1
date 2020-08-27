@@ -1372,7 +1372,9 @@ $(function () {
 	});
 
 
-
+	$(".open-loading").on("click", function (e) {
+		$("#loading").show();
+	});
 
 
 	$(".load-location-index-view").click(function (e) {

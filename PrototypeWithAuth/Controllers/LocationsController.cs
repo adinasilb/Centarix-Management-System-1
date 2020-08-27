@@ -425,7 +425,7 @@ namespace PrototypeWithAuth.Controllers
 
                 //for now all redirects are outside if, but realy error should be outside if and only redirect if in if-statment
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", AppUtility.MenuItems.LabManagement);
         }
 
 
