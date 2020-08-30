@@ -8,7 +8,8 @@ for details on configuring this project to bundle and minify static web assets. 
 /*Colors*/
 :root {
     --user-color: #795548;
-    --lab-man-color: #7D9BAA;
+    --lab-man-color: rgb(125,155,170); /*#7D9BAA;*/
+    --lab-man-50-color: rgba(125,155,170, .5);
     --order-inv-color: #2196F3;
     --acc-color: #A26FF0;
     --protocol-color: #009688;
@@ -45,8 +46,8 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 .lab-man-50-background-color {
-    background-color: var(--lab-man-color) !important;
-    opacity: .5;
+    background-color: var(--lab-man-50-color) !important;
+    /*opacity: .5;*/
 }
 
 .accounting-color {

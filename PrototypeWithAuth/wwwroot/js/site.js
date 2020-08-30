@@ -277,13 +277,13 @@ $(function () {
 	});
 
 
-$("#vendorList").change(function () {
-	//get the new vendor id selected
-	var vendorid = $("#vendorList").val();
-	$.fn.ChangeVendorBusinessId(vendorid);
-});
-$.fn.ChangeVendorBusinessId  = function(vendorid) {
-	var newBusinessID = "";
+	$("#vendorList").change(function () {
+		//get the new vendor id selected
+		var vendorid = $("#vendorList").val();
+		$.fn.ChangeVendorBusinessId(vendorid);
+	});
+	$.fn.ChangeVendorBusinessId = function (vendorid) {
+		var newBusinessID = "";
 
 		//will throw an error if its a null value so tests it here
 		if (vendorid > 0) {
@@ -1068,21 +1068,25 @@ $.fn.ChangeVendorBusinessId  = function(vendorid) {
 		});
 	});
 
-	$(".clicked-inside-button").click(function () {
-		$(".clicked-inside-button").parent().removeClass("td-selected-inside");
-		$(this).parent().addClass("td-selected-inside");
-		$(this).parent().addClass("lab-man-50-background-color");
-	});
+	//$(".clicked-inside-button").click(function () {
+	//	$(this).parent().removeClass("td-selected-inside");
+	//	$(this).parent().removeClass("lab-man-50-background-color");
+	//	$(this).parent().addClass("td-selected-inside");
+	//	$(this).parent().addClass("lab-man-50-background-color");
+	//});
 
-	$(".clicked-outer-button").click(function () {
-		$(".clicked-outer-button").parent().removeClass("td-selected-outer");
-		$(".clicked-outer-button").parent().parent().removeClass("td-selected-outer");
-		$(this).parent().addClass("td-selected-outer");
-		$(this).parent().parent().addClass("td-selected-outer");
-		$(this).parent().addClass("lab-man-50-background-color");
-		$(this).parent().parent().addClass("lab-man-50-background-color");
-		$(this).parent().parent().parent().addClass("lab-man-50-background-color");
-	});
+	//$(".clicked-outer-button").click(function () {
+	//	$(this).parent().removeClass("td-selected-outer");
+	//	$(this).parent().parent().removeClass("td-selected-outer");
+	//	$(this).parent().removeClass("lab-man-50-background-color");
+	//	$(this).parent().parent().removeClass("lab-man-50-background-color");
+	//	$(this).parent().parent().parent().removeClass("lab-man-50-background-color");
+	//	$(this).parent().addClass("td-selected-outer");
+	//	$(this).parent().parent().addClass("td-selected-outer");
+	//	$(this).parent().addClass("lab-man-50-background-color");
+	//	$(this).parent().parent().addClass("lab-man-50-background-color");
+	//	$(this).parent().parent().parent().addClass("lab-man-50-background-color");
+	//});
 
 
 
@@ -1418,6 +1422,13 @@ $.fn.ChangeVendorBusinessId  = function(vendorid) {
 		//$(".load-sublocation-view").parent().removeClass("td-selected");
 		//$(this).parent().addClass("td-selected");
 		$("#loading1")/*.delay(1000)*/.show(0);
+
+		//Begin CSS Styling
+		var stylingClass = "lab-man-50-background-color";
+		$("body td").removeClass(stylingClass);
+		$(this).parent().addClass(stylingClass);
+		//End CSS Styling
+
 		//fill up col 2 with the next one
 		var myDiv = $(".colTwoSublocations");
 		var parentId = $(this).val();
@@ -2125,22 +2136,22 @@ $.fn.ChangeVendorBusinessId  = function(vendorid) {
 
 
 
-$.fn.addComment = function (type) {
-	console.log("$('#Comment').click");
-	$(".comment-info:hidden:first").find(".comment-active").val(true);
-	$(".comment-info:hidden:first").find(".comment-type").val(type);
-	console.log(type);
-	if (type === "Comment") {
-		$(".comment-info:hidden:first i").addClass("icon-comment-24px ");
-		$(".comment-info:hidden:first i").css("color", "#30BCC9");
-	} else if (type === "Warning") {
-		$(".comment-info:hidden:first i").addClass("icon-report_problem-24px-2");
-		$(".comment-info:hidden:first i").css("color", "var(--danger-color)");
+	$.fn.addComment = function (type) {
+		console.log("$('#Comment').click");
+		$(".comment-info:hidden:first").find(".comment-active").val(true);
+		$(".comment-info:hidden:first").find(".comment-type").val(type);
+		console.log(type);
+		if (type === "Comment") {
+			$(".comment-info:hidden:first i").addClass("icon-comment-24px ");
+			$(".comment-info:hidden:first i").css("color", "#30BCC9");
+		} else if (type === "Warning") {
+			$(".comment-info:hidden:first i").addClass("icon-report_problem-24px-2");
+			$(".comment-info:hidden:first i").css("color", "var(--danger-color)");
+		}
+
+
+		$(".comment-info:hidden:first").show();
 	}
-
-
-	$(".comment-info:hidden:first").show();
-}
 
 	$("#user-permissions-tab").click(function () {
 		$("#createModalForm").valid();
