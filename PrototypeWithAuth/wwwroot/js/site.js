@@ -1071,6 +1071,7 @@ $(function () {
 	$(".clicked-inside-button").click(function () {
 		$(".clicked-inside-button").parent().removeClass("td-selected-inside");
 		$(this).parent().addClass("td-selected-inside");
+		$(this).parent().addClass("lab-man-background-color");
 	});
 
 	$(".clicked-outer-button").click(function () {
@@ -1078,6 +1079,9 @@ $(function () {
 		$(".clicked-outer-button").parent().parent().removeClass("td-selected-outer");
 		$(this).parent().addClass("td-selected-outer");
 		$(this).parent().parent().addClass("td-selected-outer");
+		$(this).parent().addClass("lab-man-background-color");
+		$(this).parent().parent().addClass("lab-man-background-color");
+		$(this).parent().parent().parent().addClass("lab-man-background-color");
 	});
 
 
