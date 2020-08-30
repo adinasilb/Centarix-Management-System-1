@@ -44,6 +44,10 @@ for details on configuring this project to bundle and minify static web assets. 
     background-color: var(--lab-man-color) !important;
 }
 
+.lab-man-50-background-color {
+    background-color: var(--lab-man-color) !important;
+    opacity: .5;
+}
 
 .accounting-color {
     color: var(--acc-color);
