@@ -1417,6 +1417,7 @@ $(function () {
 		//fill up col 2 with the next one
 		var myDiv = $(".colTwoSublocations");
 		var parentId = $(this).val();
+		console.log("open sublocation view, index: " + parentId);
 
 		var parentsParentId = $(this).closest('tr').attr('name');
 

@@ -14,11 +14,11 @@
         <img src="~/images/css/Loading/centarix_loading3.gif" />
     </div>
 
-    <div class="col ">
+    <div class="col px-0">
         <table class="table table-borderless">
             @foreach (var locationInstance in Model.SublocationInstances)
             {
-                <tr class="border-bottom border-left-0 border-right-0 border-top-0 border-dark" name="@locationInstance.LocationInstanceParentID">
+                <tr class="" name="@locationInstance.LocationInstanceParentID">
                     <td class="">
                         <button class="btn btn-block load-sublocation-view clicked-inside-button clicked-button" value="@locationInstance.LocationInstanceID">@locationInstance.LocationInstanceName</button>
                     </td>
