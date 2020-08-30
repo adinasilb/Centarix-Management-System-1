@@ -36,6 +36,15 @@ for details on configuring this project to bundle and minify static web assets. 
     filter: invert(50%) sepia(19%) saturate(6552%) hue-rotate(184deg) brightness(99%) contrast(92%);
 }
 
+.order-inv-background-color {
+    background-color: var(--order-inv-color) !important;
+}
+
+.lab-man-background-color {
+    background-color: var(--lab-man-color) !important;
+}
+
+
 .accounting-color {
     color: var(--acc-color);
 }
@@ -215,7 +224,7 @@ center-horizontally {
 
 .module-button-div:hover, .main-permissions div:hover {
     border-radius: 15px;
-    background-color: rgba(0,0,0,.03);
+    background-color: rgb(232,240,254);
 }
 
 .clicked-border {
@@ -389,7 +398,8 @@ body {
 
     .locations-page .btn.load-location-index-view:hover,
     .locations-page .btn.load-location-index-view:focus,
-    .locations-page .btn.load-location-index-view:active {
+    .locations-page .btn.load-location-index-view:active,
+    .locations-page .location-type-selected{
         box-shadow: none !important;
         border-bottom: 2px solid rgba(0, 0, 0, .54);
     }
@@ -488,6 +498,19 @@ input.select-dropdown {
     line-height: 1.5;
     /*text-transform: uppercase;*/
 }
+
+.lab-man-button {
+    background-color: var(--lab-man-color);
+    border: 1px solid var(--lab-man-color);
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.56rem 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    /*text-transform: uppercase;*/
+}
+
 
 .oper-button {
     background-color: var(--operations-color);
@@ -1169,12 +1192,12 @@ a.nav-link {
 /*<<<< Location selected coloring >>>>*/
 .td-selected {
     opacity: 1;
-    filter: invert(45%) sepia(99%) saturate(2048%) hue-rotate(185deg) brightness(100%) contrast(91%);
+    /*filter: invert(45%) sepia(99%) saturate(2048%) hue-rotate(185deg) brightness(100%) contrast(91%);*/
 }
 
 .td-selected-inside {
     opacity: 1;
-    filter: invert(45%) sepia(99%) saturate(2048%) hue-rotate(185deg) brightness(100%) contrast(91%);
+    /*filter: invert(45%) sepia(99%) saturate(2048%) hue-rotate(185deg) brightness(100%) contrast(91%);*/
 }
 
 .home-outer-tag {
@@ -1200,20 +1223,21 @@ a.nav-link {
 .td-selected-outer {
     border-left: .3rem solid var(--order-inv-color) !important;
     border-right: 0 !important;
-    background: #F4F7F9 0% 0% no-repeat padding-box;
+    /*background: #F4F7F9 0% 0% no-repeat padding-box;*/
 }
+
 
 table.table tr td button:focus { /*in order to remove button outine on focus. but may affect accessability, so consider returning*/
     box-shadow: 0 0 0 0 rgba(0,123,255,.25)
 }
 
-.location-index-border {
+/*.location-index-border {
     border: .063rem solid rgba(0,0,0,.38);
 }
 
     .location-index-border td {
         border-top: .063rem solid rgba(0,0,0,.38);
-    }
+    }*/
 
 
 /*removed , .VisualBoxColumn table.table tr*/
@@ -1482,6 +1506,10 @@ input.bigger-box {
 }
 
 
+.table.locations-table td{
+    border: 1px solid black!important;
+}
+
 body {
     display: block !important
 }
@@ -1589,4 +1617,8 @@ td .btn {
 
 .notification-bold td{
     font-weight: 500;
+}
+
+.location-type-name {
+    font-size: 1.5rem !important;
 }

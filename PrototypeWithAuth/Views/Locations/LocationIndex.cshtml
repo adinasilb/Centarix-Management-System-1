@@ -14,13 +14,15 @@
 
 <div class="row">
     <div class="col location-index-container">
-        <table class="table table-sm table-hover ">
+        <table class="table table-sm table-hover locations-table">
             @foreach (var item in Model.LocationsDepthOfZero)
             {
 
                 <tr class="location-index-border">
                     <td class="">
-                        <button class="btn btn-block load-sublocation-view parent-location clicked-outer-button clicked-button" value="@item.LocationInstanceID">@item.LocationInstanceName</button>
+                        <button class="btn btn-block load-sublocation-view parent-location clicked-outer-button clicked-button" value="@item.LocationInstanceID">
+                            @item.LocationInstanceName
+                        </button>
                     </td> @*Freezer names*@
                 </tr>
             }

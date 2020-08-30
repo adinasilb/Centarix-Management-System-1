@@ -9,7 +9,7 @@
  
     @foreach (var item in Model.LocationTypes)
     {
-        <div style="background-color: rgba(48, 188, 201, 0.06)">
+        <div @*style="background-color: rgba(48, 188, 201, 0.06)"*@>
             <div>
                 <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => item.LocationTypeName):</span>
             </div>
