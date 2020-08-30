@@ -93,7 +93,11 @@ html.wf-loading * {
     border-radius: 0 !important;
 }*/
 
-.hidden{
+.large-icon {
+    font-size: 1.65rem;
+}
+
+.hidden {
     display: none;
 }
 
@@ -1229,6 +1233,11 @@ a.nav-link {
     border-left: .3rem solid var(--order-inv-color) !important;
     border-right: 0 !important;
     /*background: #F4F7F9 0% 0% no-repeat padding-box;*/
+}
+
+.parent-location-selected-outer-lab-man {
+    border-left: .3rem solid var(--lab-man-color) !important;
+    border-right: 0 !important;
 }
 
 

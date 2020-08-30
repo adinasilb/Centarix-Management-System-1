@@ -1425,8 +1425,26 @@ $(function () {
 
 		//Begin CSS Styling
 		var stylingClass = "lab-man-50-background-color";
-		$("body td").removeClass(stylingClass);
+		//$("body td").removeClass(stylingClass);
 		$(this).parent().addClass(stylingClass);
+
+		var table = $(this).closest('table');
+		console.log("table " + table);
+		//$(table + " td").removeClass(stylingClass);
+		//$(table + " td").removeClass(stylingClass);
+		table.children('tr').children('td').removeClass(stylingClass);
+
+		//$("." + stylingClass).addClass(stylingClass);
+
+		var parentStylingClass = "parent-location-selected-outer-lab-man";
+		if ($(this).hasClass("parent-location")) {
+			console.log("is parent location!");
+			$("body td").removeClass(parentStylingClass);
+			$(this).parent().addClass(parentStylingClass);
+		}
+		else {
+			console.log("is not parent location");
+		}
 		//End CSS Styling
 
 		//fill up col 2 with the next one
