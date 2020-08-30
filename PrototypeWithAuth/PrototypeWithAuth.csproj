@@ -119,6 +119,14 @@
     <Compile Remove="Data\Migrations\20200826092415_1.Designer.cs" />
     <Compile Remove="Data\Migrations\20200827064535_seeded4-1.cs" />
     <Compile Remove="Data\Migrations\20200827064535_seeded4-1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200830071221_AddEmployeeModel.cs" />
+    <Compile Remove="Data\Migrations\20200830071221_AddEmployeeModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200830080503_EmployeeHoursFK.cs" />
+    <Compile Remove="Data\Migrations\20200830080503_EmployeeHoursFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200830081010_EmployeeHoursFK.cs" />
+    <Compile Remove="Data\Migrations\20200830081010_EmployeeHoursFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200830081253_EmployeeHoursFK.cs" />
+    <Compile Remove="Data\Migrations\20200830081253_EmployeeHoursFK.Designer.cs" />
   </ItemGroup>
 
 

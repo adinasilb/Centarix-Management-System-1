@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200830073119_AddedHoursPerWeek")]
+    partial class AddedHoursPerWeek
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,60 +356,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("PaymentTypeID");
 
                     b.ToTable("CompanyAccounts");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHours", b =>
-                {
-                    b.Property<int>("EmployeeHoursID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("EmployeeHoursStatusID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EmployeeID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Entry1")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Entry2")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Exit1")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Exit2")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("OffDayTypeID")
-                        .HasColumnType("int");
-
-                    b.HasKey("EmployeeHoursID");
-
-                    b.HasIndex("EmployeeHoursStatusID");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("OffDayTypeID");
-
-                    b.ToTable("EmployeeHours");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHoursStatus", b =>
-                {
-                    b.Property<int>("EmployeeHoursStatusID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EmployeeHoursStatusID");
-
-                    b.ToTable("EmployeeHoursStatuses");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -773,21 +721,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("NotificationStatuses");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("NotificationStatus");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.OffDayType", b =>
-                {
-                    b.Property<int>("OffDayTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("OffDayTypeID");
-
-                    b.ToTable("OffDayTypes");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ParentCategory", b =>
@@ -2325,17 +2258,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double?>("PensionEmployer")
                         .HasColumnType("float");
 
-                    b.Property<int>("SickDays")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartedWorking")
                         .HasColumnType("datetime2");
 
                     b.Property<double?>("Transportation")
                         .HasColumnType("float");
-
-                    b.Property<int>("VacationDays")
-                        .HasColumnType("int");
 
                     b.Property<int>("WorkScope")
                         .HasColumnType("int");
@@ -2459,24 +2386,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("PaymentTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHours", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatus")
-                        .WithMany("EmployeeHours")
-                        .HasForeignKey("EmployeeHoursStatusID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
-                        .WithMany("EmployeeHours")
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.OffDayType", "OffDayType")
-                        .WithMany("EmployeeHours")
-                        .HasForeignKey("OffDayTypeID")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>

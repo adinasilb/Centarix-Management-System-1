@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200830075545_AddedEmployeeHours")]
+    partial class AddedEmployeeHours
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -366,9 +368,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("EmployeeHoursStatusID")
                         .HasColumnType("int");
 
-                    b.Property<string>("EmployeeID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("Entry1")
                         .HasColumnType("datetime2");
 
@@ -387,8 +386,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("EmployeeHoursID");
 
                     b.HasIndex("EmployeeHoursStatusID");
-
-                    b.HasIndex("EmployeeID");
 
                     b.HasIndex("OffDayTypeID");
 
@@ -2325,17 +2322,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double?>("PensionEmployer")
                         .HasColumnType("float");
 
-                    b.Property<int>("SickDays")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartedWorking")
                         .HasColumnType("datetime2");
 
                     b.Property<double?>("Transportation")
                         .HasColumnType("float");
-
-                    b.Property<int>("VacationDays")
-                        .HasColumnType("int");
 
                     b.Property<int>("WorkScope")
                         .HasColumnType("int");
@@ -2466,11 +2457,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatus")
                         .WithMany("EmployeeHours")
                         .HasForeignKey("EmployeeHoursStatusID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
-                        .WithMany("EmployeeHours")
-                        .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.OffDayType", "OffDayType")
