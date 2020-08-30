@@ -140,7 +140,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 //exclude the box and cell from locationsDepthOfZero
                 LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0 && li.LocationTypeID==typeID),
-                SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0 && li.LocationTypeID == typeID)
+                SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0 && li.LocationTypeID == typeID),
+                //LocationTypeParentID = typeID
             };
             return PartialView(locationIndexViewModel);
         }
@@ -424,7 +425,7 @@ namespace PrototypeWithAuth.Controllers
 
                 //for now all redirects are outside if, but realy error should be outside if and only redirect if in if-statment
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", AppUtility.MenuItems.LabManagement);
         }
 
 

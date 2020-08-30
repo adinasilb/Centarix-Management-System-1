@@ -8,7 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class LocationIndexViewModel
     {
-
+        //public int LocationTypeParentID { get; set; }
         public IEnumerable<LocationInstance> LocationsDepthOfZero { get; set; }
         public IEnumerable<LocationInstance> SubLocationInstances { get; set; }
     }
