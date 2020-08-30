@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
-@inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "TimeKeeperView";
@@ -9,6 +8,7 @@
 
     var navClass = "bold-hover-effects";
     var activeNavClass = " active";
+    var activeTopNavClass = " activeTimekeeperClass ";
     var ReportClasses = navClass;
     var SummaryClasses = navClass;
     var ReportHoursClasses = navClass;
@@ -17,15 +17,19 @@
     var DaysOffClasses = navClass;
     var DocumentsClasses = navClass;
     var CompanyAbsencesClasses = navClass;
+    bool Summary = false;
+    bool Report = false;
     if (TempData["PageType"] != null)
     {
         switch (TempData["PageType"])
         {
             case AppUtility.TimeKeeperPageTypeEnum.Report:
-                ReportClasses += activeNavClass;
+                ReportClasses += activeTopNavClass;
+                Report = true;
                 break;
             case AppUtility.TimeKeeperPageTypeEnum.Summary:
-                SummaryClasses += activeNavClass;
+                Summary = true;
+                SummaryClasses += activeTopNavClass;
                 break;
         }
     }
@@ -59,10 +63,13 @@
 
             <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
 
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
+            <div class="collapse navbar-collapse ">
+                <ul class="navbar-nav mr-auto dropdown-menu-md-left ml-5" style="font-size:1.25rem; font-weight:500; ">
                     <li class="nav-item mx-4 d-table">
-                        @Html.ActionLink("Reports", "Index", "Admin", new { }, new { @class = "activeUserClass  align-text-bottom", @role = "button", @id = "inventory-link" })
+                        @Html.ActionLink("Reports", "ReportHours", "Timekeeper", new { }, new { @class = ReportClasses + " align-text-bottom", @role = "button", @id = "reports-link" })
+                    </li>
+                    <li class="nav-item mx-4 d-table">
+                        @Html.ActionLink("Summary", "Documents", "Timekeeper", new { }, new { @class = SummaryClasses + " align-text-bottom", @role = "button", @id = "Summary-link" })
                     </li>
                 </ul>
             </div>
@@ -109,15 +116,34 @@
     </header>
     <div class="container-fluid pl-0">
         <main role="main">
-            <div style="display: flex;" class="usersview">
+            <div style="display: flex;" class="timekeeperview">
                 <div style="min-width: 110px; min-height:100rem; padding:5px; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
-                    <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3 pl-lg-4 pl-md-3 pl-sm-2">
-                        <li class="nav-item my-4 ">
-                            <a href="@Url.Action("Index", "Admin")" class="@ListClasses"> <img src="~/images/css/inventory/sidebar/list.png" alt="Add User" class="mb-3" /><br /> List <br /></a>
-                        </li>
-                        <li class="nav-item my-4 ">
-                            <a href="@Url.Action("CreateUser","Admin")" class="@AddClasses"> <i style="font-size:1.5rem" class="icon-add_circle_outline-24px"></i><br /> Add <br /></a>
-                        </li>
+                    <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3 pl-2 mt-5">
+                        @if (Report)
+                        {
+                            <li class="nav-item my-4 ">
+                                <a href="@Url.Action("ReportHours", "Timekeeper")" class="@ReportHoursClasses">  <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Report Hours <br /></a>
+                            </li>
+                            <li class="nav-item my-4 ">
+                                <a href="@Url.Action("ReportDays","Timekeeper")" class="@ReportDaysClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Report Days <br /></a>
+                            </li>
+                            <li class="nav-item my-4 ">
+                                <a href="@Url.Action("Hours","Timekeeper")" class="@HoursClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Hours <br /></a>
+                            </li>
+                            <li class="nav-item my-4 ">
+                                <a href="@Url.Action("DaysOff","Timekeeper")" class="@DaysOffClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Days Off <br /></a>
+                            </li>
+                        }
+                        else if (Summary)
+                        {
+                            <li class="nav-item my-4 ">
+                                <a href="@Url.Action("Documetns", "Timekeeper")" class="@DocumentsClasses">  <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Documents <br /></a>
+                            </li>
+                            <li class="nav-item my-4 ">
+                                <a href="@Url.Action("CompanyAbsences","Timekeeper")" class="@CompanyAbsencesClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Company Absences <br /></a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
                 <div style="flex-grow: 1; position:relative; padding: 2rem;">

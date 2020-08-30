@@ -851,9 +851,9 @@ namespace PrototypeWithAuth.Data
                 {
                     menuID = 5,
                     MenuDescription = AppUtility.MenuItems.TimeKeeper.ToString(),
-                    MenuViewName = "Time Keeper",
-                    ControllerName = "",
-                    ActionName = "",
+                    MenuViewName = "Timekeeper",
+                    ControllerName = "Timekeeper",
+                    ActionName = "ReportHours",
                     MenuImageURL = "/images/css/main_menu_icons/timekeeper.png"
                 },
                 new Menu

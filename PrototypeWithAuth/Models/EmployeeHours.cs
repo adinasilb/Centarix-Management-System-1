@@ -15,9 +15,9 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("EmployeeID")]
         public Employee Employee { get; set; }
         public DateTime Entry1 { get; set; }
-        public DateTime Entry2 { get; set; }
-        public DateTime Exit1 { get; set; }
-        public DateTime Exit2 { get; set; }
+        public DateTime? Entry2 { get; set; }
+        public DateTime? Exit1 { get; set; }
+        public DateTime? Exit2 { get; set; }
         public int? OffDayTypeID { get; set; }
         public OffDayType OffDayType { get; set; }
         public int? EmployeeHoursStatusID { get; set; }

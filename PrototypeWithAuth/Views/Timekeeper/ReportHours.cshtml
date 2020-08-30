@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Cart";
+    Layout = "~/Views/Shared/TimeKeeperView.cshtml";
+
+    <div class="m-6">
+        <div class="row m-6">
+            <div class="col-2 mt-2 text-left">
+
+                @{
+                    var user = UserManager.GetUserAsync(User).Result;
+                    var src = "/UserImages/profile_circle_big.png";
+                    if (user.UserImage != null)
+                    {
+                        src = user.UserImage;
+                    }
+                    <img src="@src" class="user-image ml-0" height="225" alt="default User image" />
+                }
+            </div>
+            <div class="col-4 pl-5 mt-4 pt-5">
+                <div class="" style="font-size:3.8125rem; font-weight:500; ">Welcome!</div>
+                <div style="font-size:3.25rem;">@user.FirstName&nbsp;@user.LastName</div>
+            </div>
+            <div class="col-6 text-right">
+                <div style="font-size: 8.8125rem;">@DateTime.Now.ToShortTimeString()</div>
+                <div style="font-size:2.125rem;">@DateTime.Now.ToLongDateString()</div>
+            </div>
+
+        </div>
+        <div class="row entry-exit-background p-5 m-6">
+            <div class="col-6 pr-5  my-3 text-right">
+                <button id="entry"  class="no-box-shadow border-0 rounded-pill p-3 success-color text-white" style="width:55%; font-size:4rem;" type="button">Entry</button>
+            </div>
+            <div class="col-6 pl-5 my-3 text-left">
+                <button id="exit" class="no-box-shadow border-0 rounded-pill p-3 disabled-color text-white" style="width: 55%; font-size: 4rem;" type="button" disabled>Exit</button>
+            </div>
+
+
+        </div>
+        <div class="row mt-5 " >
+            <div class="col-6 pr-5  my-3 text-right">
+                <button  class="no-box-shadow border-0 rounded-pill py-1 px-4 timekeeper-color text-white" style="width:40%; font-size:2rem;" type="button">Work From Home</button>
+            </div>
+            <div class="col-6 pl-5 my-3 text-left">
+                <button  class="no-box-shadow border-0 rounded-pill py-1 px-4 timekeeper-color text-white"  style="width: 35%; font-size: 2rem;" type="button">Update Hours</button>
+            </div>
+
+
+        </div>
+    </div>
+   
+}

@@ -2304,4 +2304,32 @@ $(function () {
 		e.stopPropagation();
 		console.log("in share payments body fx site.js");
 	});
+
+	$("#entry").dblclick(function () {
+		$("#exit").addClass('danger-color');
+		$("#exit").attr('disabled', false);
+		$(this).removeClass('success-color');
+		$(this).addClass('disabled-color');
+		$(this).attr('disabled', true);
+		$.fn.MarkEntryExit(true);
+	});
+	$("#exit").dblclick(function () {
+		$("#entry").addClass('success-color');
+		$("#entry").attr('disabled', false);
+		$(this).removeClass('danger-color');
+		$(this).addClass('disabled-color');
+		$(this).attr('disabled', true);
+		$.fn.MarkEntryExit(false);
+	});
+	$.fn.MarkEntryExit = function (isEntry) {		
+		$.ajax({
+			async: false,
+			url: "MarkEntryExit/?isEntry="+isEntry,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				
+			},			
+		});
+	};
 });

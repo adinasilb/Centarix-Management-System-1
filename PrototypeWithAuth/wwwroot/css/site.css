@@ -23,11 +23,25 @@ for details on configuring this project to bundle and minify static web assets. 
     --acc-filter: brightness(0) saturate(100%) invert(51%) sepia(93%) saturate(1777%) hue-rotate(225deg) brightness(93%) contrast(103%);
     --users-filter: brightness(0) saturate(100%) invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
     --operations-filter: brightness(0) saturate(100%) invert(25%) sepia(82%) saturate(1564%) hue-rotate(217deg) brightness(90%) contrast(84%);
+    --timekeeper-filter: brightness(0) saturate(100%) invert(72%) sepia(32%) saturate(7497%) hue-rotate(1deg) brightness(106%) contrast(104%);
     --notifications-orderlate-color: #DB2127;
     --notifications-ordered-color: #5F79E2;
     --notifications-approved-color: #00CA72;
     --notifications-received-color: #5F79E2;
     --danger-color: #E95252;
+    --success-color: #00CA72;
+}
+.success-color {
+    background-color: var(--success-color);
+}
+.danger-color {
+    background-color: var(--danger-color);
+}
+.timekeeper-color {
+    background-color: var(--timekeeper-color);
+}
+.disabled-color {
+    background-color: #B3B3B3;
 }
 .order-inv-color {
     color: var(--order-inv-color);
@@ -978,6 +992,15 @@ a.activeNavLabMan {
     color: black;
     font-weight:500;
 }
+.ourNavBar .activeTimekeeperClass {
+    opacity: 1;
+    filter: var(--timekeeper-filter);
+    text-decoration: none;
+    -webkit-text-stroke-width: 0px;
+    -webkit-text-stroke-color: black;
+    color: black;
+    font-weight: 500;
+}
 
 ul li.acc-sidebar.active {
     filter: brightness(0) saturate(100%) var(--acc-filter);
@@ -1008,7 +1031,13 @@ ul li.lab-man-sidebar.active {
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
 }
-
+.timekeeperview .ourNavBar li.nav-item a.active {
+    opacity: 1;
+    filter: var(--timekeeper-filter);
+    text-decoration: none;
+    -webkit-text-stroke-width: 0px;
+    -webkit-text-stroke-color: black;
+}
 .users-tr:hover {
     border: 2px double var(--user-color) !important;
 }
@@ -1635,4 +1664,23 @@ td .btn {
 
 .location-type-name {
     font-size: 1.5rem !important;
+}
+.entry-exit-background {
+    background-color: #E5E5E9;
+    border-radius: 3.8rem;
+}
+.m-6{
+    margin: 4rem !important;
+}
+.mt-6 {
+    margin-top: 4rem !important;
+}
+.mb-6 {
+    margin-bottom: 4rem !important;
+}
+.mr-6 {
+    margin-right: 4rem !important;
+}
+.ml-6 {
+    margin-left: 4rem !important;
 }
