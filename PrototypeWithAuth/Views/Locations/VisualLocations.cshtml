@@ -14,16 +14,11 @@
 </div>
 @if (Model.IsSmallestChild)
 {
-    <div class="row">
-        <div class="col-md-12">
-            <button class="btn visual-locations-zoom inv-link-clr float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ParentLocationInstance.LocationInstanceID"> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
-        </div>
-    </div>
     <br />
-    <div class="row">
+    <div class="row mt-0">
         <div class="col-md-12">
             <div class="container text-center">
-                <table class="table table-sm border" style=" margin:auto;">
+                <table class="table table-sm border mt-0">
                     @{
                         int z = -1;
                     }

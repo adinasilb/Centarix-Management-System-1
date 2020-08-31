@@ -1392,6 +1392,10 @@ $(function () {
 	});
 
 	$.fn.setUpLocationIndexList = function (val) {
+//clear second div just in case
+		var subDiv = $(".colTwoSublocations");
+		subDiv.html("");
+
 		//fill up col 2 with the next one
 		$("#loading3")/*.delay(1000)*/.show(0);
 		var myDiv = $(".colOne");
@@ -1417,22 +1421,43 @@ $(function () {
 	};
 
 
-	$(".load-sublocation-view").click(function (e) {
+	$(".load-sublocation-view").off("click").on("click", function (e) {
+		//e.preventDefault();
+		//e.stopPropagation();
 		//add or remove the background class in col 1
 		//$(".load-sublocation-view").parent().removeClass("td-selected");
 		//$(this).parent().addClass("td-selected");
 		$("#loading1")/*.delay(1000)*/.show(0);
+		var myDiv = $(".colTwoSublocations");
+		var table = $(this).closest('table');
+
+		//delete all children tables
+		var div = $(this).closest('div');
+		var divid = $(this).closest('div').prop("id");
+		console.log("div: " + div);
+		console.log("divid: " + divid);
+
+		if (divid != "") {
+			var nextDiv = div.nextAll(".sublocation-index");
+			var nextDivID = nextDiv.prop("id");
+			console.log("nextdiv: " + nextDiv);
+			console.log("nextdivid: " + nextDivID);
+
+			nextDiv.html("");
+			//while (nextDiv != null) {
+			//	nextDiv = div.next(".sublocation-index");
+			//	//nextDiv.html("");
+			//}
+		}
 
 		//Begin CSS Styling
 		var stylingClass = "lab-man-50-background-color";
 		//$("body td").removeClass(stylingClass);
-		$(this).parent().addClass(stylingClass);
 
-		var table = $(this).closest('table');
-		console.log("table " + table);
 		//$(table + " td").removeClass(stylingClass);
 		//$(table + " td").removeClass(stylingClass);
-		table.children('tr').children('td').removeClass(stylingClass);
+		table.children('tbody').children('tr').children('td').removeClass(stylingClass);
+		$(this).parent().addClass(stylingClass);
 
 		//$("." + stylingClass).addClass(stylingClass);
 
@@ -1441,6 +1466,7 @@ $(function () {
 			console.log("is parent location!");
 			$("body td").removeClass(parentStylingClass);
 			$(this).parent().addClass(parentStylingClass);
+
 		}
 		else {
 			console.log("is not parent location");
@@ -1448,7 +1474,6 @@ $(function () {
 		//End CSS Styling
 
 		//fill up col 2 with the next one
-		var myDiv = $(".colTwoSublocations");
 		var parentId = $(this).val();
 		console.log("open sublocation view, index: " + parentId);
 

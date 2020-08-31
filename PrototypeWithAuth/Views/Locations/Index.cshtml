@@ -8,11 +8,11 @@
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 
     @*<div class="row mt-4">
-        <div class="col-2 offset-1">
-        </div>
+            <div class="col-2 offset-1">
+            </div>
 
-    </div>
-    <br />*@
+        </div>
+        <br />*@
     <div class="row ml-5">
         <div class="col-9">
             <div class="row">
@@ -30,6 +30,8 @@
             </div>
         </div>
         <div class="col-3">
+            <button class="btn visual-locations-zoom inv-link-clr float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value=""> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
+
             @if ((@User.IsInRole("Admin") || @User.IsInRole("Manager")) && Model.SectionType == AppUtility.MenuItems.LabManagement)
             {
                 <button class="lab-man-button lab-man-background-color load-add-location px-5 mt-3 float-right" data-target="item" data-backdrop="static" data-keyboard="false" href="item" style="vertical-align: middle;">

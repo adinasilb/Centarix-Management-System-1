@@ -8,6 +8,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -30,7 +31,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize (Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> IndexForInventory()
         {
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Inventory;
@@ -60,13 +61,13 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
             }
-          
+
             LocationTypeViewModel locationTypeViewModel = new LocationTypeViewModel()
             {
                 LocationTypes = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 SectionType = SectionType
             };
-            
+
             return View(locationTypeViewModel);
         }
 
@@ -76,7 +77,8 @@ namespace PrototypeWithAuth.Controllers
         {
             SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
             {
-                SublocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentId).Include(li => li.LocationInstanceParent)
+                SublocationInstances = _context.LocationInstances
+                .Where(li => li.LocationInstanceParentID == parentId).Include(li => li.LocationInstanceParent)
             };
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
             LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentId).Include(li => li.LocationInstanceParent).FirstOrDefault();
@@ -91,7 +93,7 @@ namespace PrototypeWithAuth.Controllers
                 sublocationIndexViewModel.PrevLocationInstance = parentLocationInstance;
                 sublocationIndexViewModel.IsSmallestChild = false;
             }
-         
+
             //get the max depth this location instance can go
             var locationType = _context.LocationTypes.Where(lt => lt.LocationTypeID == sublocationIndexViewModel.SublocationInstances.FirstOrDefault().LocationTypeID).FirstOrDefault();
             if (locationType.LocationTypeChildID != null)
@@ -134,12 +136,12 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public IActionResult LocationIndex (int typeID )
+        public IActionResult LocationIndex(int typeID)
         {
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
             {
                 //exclude the box and cell from locationsDepthOfZero
-                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0 && li.LocationTypeID==typeID),
+                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0 && li.LocationTypeID == typeID),
                 SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0 && li.LocationTypeID == typeID),
                 //LocationTypeParentID = typeID
             };
@@ -180,6 +182,17 @@ namespace PrototypeWithAuth.Controllers
         {
             SubLocationViewModel subLocationViewModel = new SubLocationViewModel(); bool go = true;
             List<LocationType> listOfChildrenTypes = new List<LocationType>();
+            switch (ParentLocationTypeID)
+            {
+                case 100:
+                    List<SelectListItem> listItems = new List<SelectListItem>()
+                    {
+                        new SelectListItem() { Value="12x12", Text="12 x 12"},
+                        new SelectListItem() { Value="9x9", Text="9 x 9"}
+                    };
+                    subLocationViewModel.BoxTypes196 = listItems;
+                    break;
+            }
             while (go)
             {
                 var currentRecord = _context.LocationTypes.Where(lt => lt.LocationTypeParentID == ParentLocationTypeID).FirstOrDefault();
@@ -193,6 +206,8 @@ namespace PrototypeWithAuth.Controllers
                     go = false;
                 }
             }
+
+
             subLocationViewModel.LocationTypes = listOfChildrenTypes;
             subLocationViewModel.LocationInstances = new List<LocationInstance>();
             foreach (var item in subLocationViewModel.LocationTypes)
