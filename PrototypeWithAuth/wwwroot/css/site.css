@@ -40,6 +40,9 @@ for details on configuring this project to bundle and minify static web assets. 
 .timekeeper-color {
     background-color: var(--timekeeper-color);
 }
+.timekeeper-font-color {
+    color: var(--timekeeper-color);
+}
 .disabled-color {
     background-color: #B3B3B3;
 }
@@ -1683,4 +1686,25 @@ td .btn {
 }
 .ml-6 {
     margin-left: 4rem !important;
+}
+.timekeeper.select-wrapper input.select-dropdown {
+    border: 1px solid #808080;
+    text-align: center;
+}
+.timekeeper.select-wrapper input.select-dropdown:active {
+    border: 1px solid var(--timekeeper-color);
+}
+.timekeeper.select-wrapper input.select-dropdown:focus {
+    border: 1px solid var(--timekeeper-color);
+}
+.timekeeper .caret{
+    display: none;
+}
+
+.timekeeper .dropdown-content {
+    margin-top: 2.5rem;
+    width:inherit;
+}
+.timekeeper .dropdown-content li > span {
+    color: black;
 }

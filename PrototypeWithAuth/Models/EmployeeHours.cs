@@ -22,7 +22,7 @@ namespace PrototypeWithAuth.Models
         public int? OffDayTypeID { get; set; }
         public OffDayType OffDayType { get; set; }
         public int? EmployeeHoursStatusID { get; set; }
-        public TimeSpan TotalHours => (Exit1 - Entry1) ?? TimeSpan.Zero + (Exit2 - Entry2)??TimeSpan.Zero;           
+        public TimeSpan TotalHours => ((Exit1 - Entry1) ?? TimeSpan.Zero) + ((Exit2 - Entry2)??TimeSpan.Zero);           
         public EmployeeHoursStatus EmployeeHoursStatus { get; set; } 
         
     }

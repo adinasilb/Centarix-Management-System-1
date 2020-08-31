@@ -2319,4 +2319,21 @@ $(function () {
 	$("#exit").click(function (e) {
 		e.preventDefault();
 	});
+	$('.monthsHours .select-dropdown').change(function (e) {
+		console.log(".monthsHours chnage")
+		if ($(this).val() != '') {
+			$.fn.SortByMonth($(this).val())
+		}
+	});
+	$.fn.SortByMonth = function (month) {
+		$.ajax({
+			async: false,
+			url: 'Hours?month=' + month,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+
+			}});
+	};
+
 });
