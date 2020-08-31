@@ -27,71 +27,77 @@ namespace PrototypeWithAuth.Controllers
         {
             return View();
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
         public IActionResult ReportHours()
         {
             TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.ReportHours;
-            return View();
-
-        }
-
-        [HttpGet]
-        //[ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, TimeKeeper")]
-        public bool MarkEntryExit(bool isEntry)
-        {
             var userid = _userManager.GetUserId(User);
-            var todaysEntry = _context.EmployeeHours.Where(eh => eh.Entry1 == DateTime.Today && eh.EmployeeID == userid).FirstOrDefault();
+            var todaysEntry = _context.EmployeeHours.Where(eh => eh.Entry1.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
             if(todaysEntry == null)
             {
-                if (isEntry)
-                {
-                    EmployeeHours todaysHours = new EmployeeHours { EmployeeID = userid, Entry1 = DateTime.Now };
-                    _context.EmployeeHours.Add(todaysHours);
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    return false; //not a valid entry
-                }
-              
+                return View(AppUtility.EntryExitEnum.Entry);
+            }
+            else if (todaysEntry.Exit1 == null)
+            {
+                return View(AppUtility.EntryExitEnum.Exit);
+            }
+            else if(todaysEntry.Entry2 == null){
+
+                return View(AppUtility.EntryExitEnum.Entry);
+            }
+            else if (todaysEntry.Exit2 == null)
+            {
+                return View(AppUtility.EntryExitEnum.Exit);
             }
             else
             {
-                if (isEntry)
-                {
-                    if (todaysEntry.Entry2 == null)
-                    {
-                        todaysEntry.Entry2 = DateTime.Now;
-                    }
-                    else
-                    {
-                        return false;//no more entries
-                    }
-                    
-                }
-                else
-                {
-                    if (todaysEntry.Exit1 == null)
-                    {
-                        todaysEntry.Exit1 = DateTime.Now;
-                    }
-                    else if (todaysEntry.Exit2==null)
-                    {
-                        todaysEntry.Exit2 = DateTime.Now;
-                    }
-                    else
-                    {
-                        return false;//not more entries left - really not a valid entry
-                    }
-                }
+                return View(AppUtility.EntryExitEnum.None);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public IActionResult ReportHours(AppUtility.EntryExitEnum entryExitEnum)
+        {
+            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.ReportHours;
+            var userid = _userManager.GetUserId(User);
+            var todaysEntry = _context.EmployeeHours.Where(eh => eh.Entry1.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
+            if (todaysEntry == null)
+            {
+                EmployeeHours todaysHours = new EmployeeHours { EmployeeID = userid, Entry1 = DateTime.Now };
+                _context.EmployeeHours.Add(todaysHours);
+                _context.SaveChanges();
+                return View(AppUtility.EntryExitEnum.Exit);
+            }
+            else if (todaysEntry.Exit1 == null)
+            {
+                todaysEntry.Exit1 = DateTime.Now;
                 _context.EmployeeHours.Update(todaysEntry);
                 _context.SaveChanges();
-
+                return View(AppUtility.EntryExitEnum.Entry);
             }
-
-            return true;
+            else if (todaysEntry.Entry2 == null)
+            {
+                todaysEntry.Entry2 = DateTime.Now;
+                _context.EmployeeHours.Update(todaysEntry);
+                _context.SaveChanges();
+                return View(AppUtility.EntryExitEnum.Exit);
+               
+            }
+            else if (todaysEntry.Exit2 == null)
+            {
+                todaysEntry.Exit2 = DateTime.Now;
+                _context.EmployeeHours.Update(todaysEntry);
+                _context.SaveChanges();
+                return View(AppUtility.EntryExitEnum.None);
+            }
+            else
+            {
+                return View(AppUtility.EntryExitEnum.None);
+            }
         }
 
     }

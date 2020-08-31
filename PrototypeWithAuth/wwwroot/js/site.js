@@ -2306,30 +2306,17 @@ $(function () {
 	});
 
 	$("#entry").dblclick(function () {
-		$("#exit").addClass('danger-color');
-		$("#exit").attr('disabled', false);
-		$(this).removeClass('success-color');
-		$(this).addClass('disabled-color');
-		$(this).attr('disabled', true);
-		$.fn.MarkEntryExit(true);
+		console.log("in entry")
+		$('#myForm').trigger('submit');
 	});
 	$("#exit").dblclick(function () {
-		$("#entry").addClass('success-color');
-		$("#entry").attr('disabled', false);
-		$(this).removeClass('danger-color');
-		$(this).addClass('disabled-color');
-		$(this).attr('disabled', true);
-		$.fn.MarkEntryExit(false);
+		console.log("in exit")
+		$('#myForm').trigger('submit');
 	});
-	$.fn.MarkEntryExit = function (isEntry) {		
-		$.ajax({
-			async: false,
-			url: "MarkEntryExit/?isEntry="+isEntry,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				
-			},			
-		});
-	};
+	$("#entry").click(function (e) {
+		e.preventDefault();
+	});
+	$("#exit").click(function (e) {
+		e.preventDefault();
+	});
 });
