@@ -127,6 +127,8 @@
     <Compile Remove="Data\Migrations\20200830081010_EmployeeHoursFK.Designer.cs" />
     <Compile Remove="Data\Migrations\20200830081253_EmployeeHoursFK.cs" />
     <Compile Remove="Data\Migrations\20200830081253_EmployeeHoursFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200831094654_AddtotalHOursCalculatedField2.cs" />
+    <Compile Remove="Data\Migrations\20200831094654_AddtotalHOursCalculatedField2.Designer.cs" />
   </ItemGroup>
 
 

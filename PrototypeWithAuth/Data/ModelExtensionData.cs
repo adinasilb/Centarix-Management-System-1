@@ -1090,7 +1090,18 @@ namespace PrototypeWithAuth.Data
                     Depth = 1
                 }
             );
-
+            modelBuilder.Entity<OffDayType>().HasData(
+                           new OffDayType
+                           {
+                               OffDayTypeID = 1,
+                               Description = "SickDay"
+                           },
+                            new OffDayType
+                            {
+                                OffDayTypeID = 2,
+                                Description = " VacationDay"
+                            }
+                     );
         }
     }
 }

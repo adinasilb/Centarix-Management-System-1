@@ -12,7 +12,7 @@
     var ReportClasses = navClass;
     var SummaryClasses = navClass;
     var ReportHoursClasses = navClass;
-    var ReportDaysClasses = navClass;
+    var DaysClasses = navClass;
     var HoursClasses = navClass;
     var DaysOffClasses = navClass;
     var DocumentsClasses = navClass;
@@ -40,8 +40,8 @@
             case AppUtility.TimeKeeperSidebarEnum.ReportHours:
                 ReportHoursClasses += activeNavClass;
                 break;
-            case AppUtility.TimeKeeperSidebarEnum.ReportDays:
-                ReportDaysClasses += activeNavClass;
+            case AppUtility.TimeKeeperSidebarEnum.Days:
+                DaysClasses += activeNavClass;
                 break;
             case AppUtility.TimeKeeperSidebarEnum.Hours:
                 HoursClasses += activeNavClass;
@@ -125,7 +125,7 @@
                                 <a href="@Url.Action("ReportHours", "Timekeeper")" class="@ReportHoursClasses">  <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Report Hours <br /></a>
                             </li>
                             <li class="nav-item my-4 ">
-                                <a href="@Url.Action("ReportDays","Timekeeper")" class="@ReportDaysClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Report Days <br /></a>
+                                <a href="@Url.Action("Days","Timekeeper")" class="@DaysClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Days <br /></a>
                             </li>
                             <li class="nav-item my-4 ">
                                 <a href="@Url.Action("Hours","Timekeeper")" class="@HoursClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Hours <br /></a>

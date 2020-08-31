@@ -4,7 +4,7 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "Cart";
+    ViewData["Title"] = "Report Hours";
     Layout = "~/Views/Shared/TimeKeeperView.cshtml";
 
     <div class="m-6">
@@ -26,7 +26,7 @@
                 <div style="font-size:3.25rem;">@user.FirstName&nbsp;@user.LastName</div>
             </div>
             <div class="col-6 text-right">
-                <div style="font-size: 8.8125rem;">@DateTime.Now.ToShortTimeString()</div>
+                <div id="time" style="font-size: 8.8125rem;">@DateTime.Now.ToShortTimeString()</div>
                 <div style="font-size:2.125rem;">@DateTime.Now.ToLongDateString()</div>
             </div>
 
@@ -82,3 +82,23 @@
     </div>
 
 }
+<script>
+    window.onload = function (e) {
+        this.startTime();
+    }
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('time').innerHTML =
+  h + ":" + m + ":" + s;
+  var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+</script>

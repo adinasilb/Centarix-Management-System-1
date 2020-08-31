@@ -20,7 +20,6 @@ namespace PrototypeWithAuth.Models
         public double IncomeTax { get; set; }
         public double HoursPerWeek { get; set; }
         public int VacationDays { get; set; }
-        public int SickDays { get; set; }
         public IEnumerable<EmployeeHours> EmployeeHours {get; set;}
     }
 }

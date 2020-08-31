@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.CryptoPro;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -64,10 +66,10 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
-            var todaysEntry = _context.EmployeeHours.Where(eh => eh.Entry1.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
+            var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
             if (todaysEntry == null)
             {
-                EmployeeHours todaysHours = new EmployeeHours { EmployeeID = userid, Entry1 = DateTime.Now };
+                EmployeeHours todaysHours = new EmployeeHours { EmployeeID = userid, Entry1 = DateTime.Now, Date = DateTime.Now };
                 _context.EmployeeHours.Add(todaysHours);
                 _context.SaveChanges();
                 return View(AppUtility.EntryExitEnum.Exit);
@@ -99,6 +101,35 @@ namespace PrototypeWithAuth.Controllers
                 return View(AppUtility.EntryExitEnum.None);
             }
         }
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> Days()
+        {
+            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Days;
+            var userid = _userManager.GetUserId(User);
+            var user = _context.Users.OfType<Employee>().Where(u=>u.Id==userid).FirstOrDefault();
+            ReportDaysViewModel reportDaysViewModel = new ReportDaysViewModel
+            {
+                VacationDays = user.VacationDays,
+                VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2),
+                SickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1)
+            };
+            return View(reportDaysViewModel);
+           
+        }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> Hours()
+        {
+            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Days;
+            var userid = _userManager.GetUserId(User);
+            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
+            var hours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == DateTime.Today.Month).ToList();
+            return View(hours);
+
+        }
     }
 }

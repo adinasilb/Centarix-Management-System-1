@@ -156,7 +156,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ParentQuote>()
            .HasQueryFilter(item => !item.IsDeleted);
 
-
+            modelBuilder.Entity<EmployeeHours>().Ignore(x => x.TotalHours);
 
 
 

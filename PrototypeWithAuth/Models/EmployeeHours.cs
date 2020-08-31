@@ -18,9 +18,12 @@ namespace PrototypeWithAuth.Models
         public DateTime? Entry2 { get; set; }
         public DateTime? Exit1 { get; set; }
         public DateTime? Exit2 { get; set; }
+        public DateTime Date { get; set; }
         public int? OffDayTypeID { get; set; }
         public OffDayType OffDayType { get; set; }
         public int? EmployeeHoursStatusID { get; set; }
+        public TimeSpan TotalHours => (Exit1 - Entry1) ?? TimeSpan.Zero + (Exit2 - Entry2)??TimeSpan.Zero;           
         public EmployeeHoursStatus EmployeeHoursStatus { get; set; } 
+        
     }
 }

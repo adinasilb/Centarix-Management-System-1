@@ -1,0 +1,86 @@
+﻿@model PrototypeWithAuth.ViewModels.ReportDaysViewModel
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Days";
+    Layout = "~/Views/Shared/TimeKeeperView.cshtml";
+}
+    <div class="ml-6 mt-4">
+
+        <div class="row mb-6">
+            <div class="col-6"><h3><strong>Days Off</strong></h3></div>
+            <div class="col-6">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+
+                <div class="row">
+                    <table class=" col-5 text-center ">
+                        <thead>
+                            <tr class="text-left ">
+                                <th class="p-4  pl-5"><h5><strong>Vacations</strong></h5></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var vactionDay in Model.VacationDaysTaken)
+                            {
+                                <tr class="border">
+                                    <td class="p-4">@vactionDay.Date.ToLongDateString()</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                    <table class="col-5 offset-2 text-center">
+                        <thead>
+                            <tr class="text-left">
+                                <th class="p-4 pl-5"><h5><strong>Sick Days</strong></h5></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var vactionDay in Model.SickDaysTaken)
+                            {
+                                <tr class="border">
+                                    <td class="p-4">@vactionDay.Date.ToLongDateString()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row mt-6 py-4 pl-3 text-left">
+                    <div class="col-3">
+                        Total Vacation Days
+                    </div>
+                    <div class="col-3">
+                        Vacation Days Taken
+                    </div>
+                    <div class="col-3">
+                        Vacation Days Left
+                    </div>
+                    <div class="col-3">
+                        Sick Days Taken
+                    </div>
+                </div>
+                <div class="row mt-2 p-4  border  text-center" style="border-color: var(--timekeeper-color) !important;">
+                    <div class="col-3">
+                        @Model.VacationDays
+                    </div>
+                    <div class="col-3">
+                        @Model.VacationDaysTaken.Count()
+                    </div>
+                    <div class="col-3">
+                        @{var vactionDaysLeft = Model.VacationDays - Model.VacationDaysTaken.Count();}
+                        @vactionDaysLeft
+                    </div>
+                    <div class="col-3">
+                        @Model.SickDaysTaken.Count()
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
