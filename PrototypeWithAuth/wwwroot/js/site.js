@@ -2332,7 +2332,7 @@ $(function () {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-
+				$("body").html(data);
 			}});
 	};
 

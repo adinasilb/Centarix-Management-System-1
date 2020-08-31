@@ -132,11 +132,11 @@ namespace PrototypeWithAuth.Controllers
             }
              
             TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
-            TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Days;
+            TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Hours;
             var userid = _userManager.GetUserId(User);
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
             var hours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month).ToList();
-            return View(hours);
+            return PartialView(hours);
 
         }
     }
