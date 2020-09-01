@@ -1029,6 +1029,8 @@ $(function () {
 			context: myDiv,
 			success: function (result) {
 				this.html(result);
+				$('.mdb-select').materialSelect();
+				$(".mdb-select-empty").materialSelect();
 			}
 		});
 		//$(document).ajaxStart(function () {
@@ -1039,6 +1041,7 @@ $(function () {
 		//	$("#loading").hide();
 		//});
 	});
+
 
 	$(".visual-locations-zoom").on("click", function (e) {
 		console.log("called visual locations zoom with an id of: " + $(this).val());

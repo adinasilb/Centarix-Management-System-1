@@ -14,5 +14,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<LocationInstance> LocationInstances { get; set; }
 
         public List<SelectListItem> BoxTypes196 { get; set; }
+        public List<int> EmptyShelves80 { get; set; }
+        public List<SelectListItem> EmptySelectList { get; set; }
     }
 }

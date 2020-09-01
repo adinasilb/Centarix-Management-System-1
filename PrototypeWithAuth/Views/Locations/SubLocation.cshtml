@@ -1,37 +1,58 @@
 ﻿@model PrototypeWithAuth.ViewModels.SubLocationViewModel
-
+    <script src="~/js/Sublocation.js"></script>
 @{
     var i = 0;
     var parentType = Model.LocationTypes.FirstOrDefault().LocationTypeParentID;
+
     switch (parentType)
     {
-        case 100: //-196
-            <input style="display: none;" asp-for="LocationTypeParentID" value="@parentType" />
+        case 100: //-196 <input style="display: none;" asp-for="LocationTypeParentID" value="@parentType" />
             <div class="row mx-0 px-0">
                 <div class="col-4 pl-0 pr-2">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[0].LocationTypeName):</span>
+                    <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[0].LocationTypePluralName):</span>
                     <input asp-for="LocationInstances[0].Height" min="0" class="form-control-plaintext border-bottom" />
                     <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" type="hidden" />
                 </div>
                 <div class="col-4 px-2">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[1].LocationTypeName):</span>
+                    <span style="line-height:2.5rem; font-size:1.2rem;">
+                        @Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[1].LocationTypePluralName):
+                    </span>
                     <input asp-for="LocationInstances[1].Height" min="0" class="form-control-plaintext border-bottom" />
                     <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" type="hidden" />
                 </div>
                 <div class="col-4 pl-2 pr-0">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[2].LocationTypeName):</span>
+                    <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[2].LocationTypePluralName):</span>
                     @Html.DropDownListFor(
                         m => m.LocationInstances[2].Height,
                         Model.BoxTypes196,
                         "",
-                        new { @class = "form-control-plaintext border-bottom" }
+                        new { @class = "mdb-select form-control-plaintext" }
                     )
                     <input asp-for="LocationInstances[2].LocationTypeID" value="@Model.LocationTypes.ToList()[2].LocationTypeID" type="hidden" />
                 </div>
             </div>
             break;
         case 200: //-80
-            <div class="container" style="display:flex; justify-content:space-around;">
+            <input style="display: none;" asp-for="LocationTypeParentID" value="@parentType" />
+            <div class="row">
+                <div class="col-6">
+                    <span style="line-height:2.5rem; font-size:1.2rem;">
+                        @Model.LocationTypes.ToList()[0].LocationTypePluralName
+                        <input asp-for="LocationInstances[0].Height" min="0" class="form-control-plaintext border-bottom" />
+                        <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" type="hidden" />
+                    </span>
+                </div>
+                <div class="col-6">
+                    <span style="line-height:2.5rem; font-size:1.2rem;">
+                        Empty @Model.LocationTypes.ToList()[0].LocationTypePluralName
+                    </span>
+                    <select asp-for="EmptyShelves80" class="mdb-select-empty form-control-plaintext" multiple>
+                        @*<option value="1">Shelf1</option>*@
+                    </select>
+                    @*@Html.DropDownListFor(m => m.EmptyShelves80, Enumerable.Empty<SelectListItem>(), "",
+                   new { @class = "" }
+                    )*@
+                </div>
             </div>
             break;
         case 300: //-20
@@ -72,7 +93,5 @@
             </div>
             break;
     }
+
 }
-
-
-

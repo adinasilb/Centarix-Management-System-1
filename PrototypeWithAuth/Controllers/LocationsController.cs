@@ -193,6 +193,9 @@ namespace PrototypeWithAuth.Controllers
                     };
                     subLocationViewModel.BoxTypes196 = listItems;
                     break;
+                case 200:
+                    subLocationViewModel.EmptySelectList = Enumerable.Empty<SelectListItem>().ToList();
+                    break;
             }
             while (go)
             {
