@@ -196,5 +196,12 @@ namespace PrototypeWithAuth.Controllers
             EmployeeHours employeeHour = new EmployeeHours { EmployeeID = _userManager.GetUserId(User), Date = DateTime.Now };
             return PartialView(employeeHour);
         }
+
+        public JsonResult GetEmployeeHour(DateTime date)
+        {
+            var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == _userManager.GetUserId(User) && eh.Date.Date == date).FirstOrDefault();
+            return Json(employeeHour);
+
+        }
     }
 }

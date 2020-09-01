@@ -2394,8 +2394,19 @@ $(function () {
 		return dayOfWeek
 	}
 
-	$("body").on("change", "#Date.update-hour-date", function (e) {
-		
-
+	$("body").on("change", "#Date.update-hour-date", function (e) {		
+		$.fn.GetEmployeeHour($(this).val());
 	});
+
+	$.fn.GetEmployeeHour = function (date) {
+		console.log(date);
+		$.getJSON('GetEmployeeHour', new Date(date.toJSON()), function (data) {
+			$('#Entry1').val(data.entry1);
+			$('#Exit1').val(data.exit1);
+			$('#Entry2').val(data.entry1);
+			$('#Exit2').val(data.exit2);
+			$('#TotalHours').val(data.totalHours);
+			return false;
+		});
+	};
 });
