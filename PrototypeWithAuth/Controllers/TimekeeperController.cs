@@ -6,6 +6,7 @@ using Abp.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.CryptoPro;
 using Org.BouncyCastle.Utilities;
 using PrototypeWithAuth.AppData;
@@ -135,7 +136,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Hours;
             var userid = _userManager.GetUserId(User);
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
-            var hours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month).ToList();
+            var hours = _context.EmployeeHours.Include(eh=>eh.Employee).Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month).ToList();
             return View(hours);
 
         }
