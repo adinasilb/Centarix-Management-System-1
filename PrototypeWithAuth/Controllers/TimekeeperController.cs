@@ -111,26 +111,19 @@ namespace PrototypeWithAuth.Controllers
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Days;
             var userid = _userManager.GetUserId(User);
             var user = _context.Users.OfType<Employee>().Where(u=>u.Id==userid).FirstOrDefault();
+            var daysWorking = (DateTime.Today - user.StartedWorking).TotalDays;
+            int totalYears = (int)(daysWorking / 365);
+            var startOfThisYear = user.StartedWorking.AddYears(totalYears);
             ReportDaysViewModel reportDaysViewModel = new ReportDaysViewModel
             {
                 VacationDays = user.VacationDays,
-                VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2),
-                SickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1)
+                VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date >= startOfThisYear).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2),
+                SickDaysTaken = _context.EmployeeHours.Where(eh=>eh.Date>=startOfThisYear).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1)
             };
             return View(reportDaysViewModel);
            
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> Hours(int month = 0)
-        {
-            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
-            TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Hours;
-            var hours = GetHours(DateTime.Today); 
-            return View(hours);
-
-        }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> HoursPage(int month = 0)
@@ -140,6 +133,15 @@ namespace PrototypeWithAuth.Controllers
             var hours =GetHours( new DateTime(DateTime.Now.Year, month, DateTime.Now.Day));
             return PartialView(hours);
         }
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> Hours()
+        {
+            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Hours;
+            var hours = GetHours(DateTime.Now);
+            return PartialView(hours);
+        }
 
         private List<EmployeeHours> GetHours(DateTime monthDate)
         {
@@ -147,6 +149,33 @@ namespace PrototypeWithAuth.Controllers
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
             var hours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month).ToList();
             return hours;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> DaysOff(int month = 0)
+        {
+            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.DaysOff;
+            return View();
+
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> ReportHoursFromHomeModal(string userID)
+        {
+            EmployeeHours employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now, Entry1 = DateTime.Now};
+            return PartialView(employeeHour);
+
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> UpdateHours(string userID)
+        {
+            EmployeeHours employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now, Entry1 = DateTime.Now };
+            return PartialView(employeeHour);
         }
     }
 }

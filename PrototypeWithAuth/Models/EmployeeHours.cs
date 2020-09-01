@@ -14,10 +14,15 @@ namespace PrototypeWithAuth.Models
         public string EmployeeID { get; set; }
         [ForeignKey("EmployeeID")]
         public Employee Employee { get; set; }
+        [DataType(DataType.Time)]
         public DateTime Entry1 { get; set; }
+        [DataType(DataType.Time)]
         public DateTime? Entry2 { get; set; }
+        [DataType(DataType.Time)]
         public DateTime? Exit1 { get; set; }
+        [DataType(DataType.Time)]
         public DateTime? Exit2 { get; set; }
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         public int? OffDayTypeID { get; set; }
         public OffDayType OffDayType { get; set; }

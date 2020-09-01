@@ -1,0 +1,80 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Hours";
+    Layout = "~/Views/Shared/TimeKeeperView.cshtml";
+}
+    <div class="ml-6 mt-4">
+
+        <div class="row mb-5">
+            <div class="col-7">
+
+                <div class="row">
+                    <h3 class="col-4"><strong>Summary Of Days Off</strong></h3>
+                    <div class="col-3 mt-4 ">
+                        <h5 class="font-weight-bolder"> Vacation Days Left:</h5>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-9">
+                <div class="row p-3 text-center">
+                    <div class="col-2 pl-5 text-center">
+                        Year
+                    </div>
+                    <div class="col-2">
+                        Total Vacation Days
+                    </div>
+                    <div class="col-2">
+                        Vacation Days Taken
+                    </div>
+                    <div class="col-5 text-right">
+                        Sick Days Taken
+                    </div>
+                </div>
+
+                <div class="row border p-3 text-center">
+
+                    <div class="col-4 pl-5 text-left">
+
+                    </div>
+                    <div class="col-3">
+
+                        <br />
+
+                    </div>
+                    <div class="col-3">
+
+                    </div>
+                    <div class="col-2  timekeeper-font-color font-weight-bold">
+
+                    </div>
+
+                </div>
+
+                <div class="row mt-6 ">
+                    <div class="col-2  my-3 ml-5 text-center pt-3">
+                        <h5 class="font-weight-bolder"> Vacation Days</h5>
+                    </div>
+
+                    <div class="col-3  my-3 text-center">
+                        <button class="no-box-shadow border-0 rounded-pill py-1 px-2 timekeeper-color text-white" style="width:50%; font-size:1.5625rem;" type="button">Vacaton</button>
+                    </div>
+                    <div class="col-2 my-3 text-center pt-3">
+                        <h5 class="font-weight-bolder"> Sick Days</h5>
+                    </div>
+                    <div class="col-3 my-3 text-center">
+                        <button class="no-box-shadow border-0 rounded-pill py-1 px-2 timekeeper-color text-white" style="width: 55%; font-size: 1.5625rem;" type="button">Sick Leave</button>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    
+    </div>

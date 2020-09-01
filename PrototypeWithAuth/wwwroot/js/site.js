@@ -2335,5 +2335,18 @@ $(function () {
 				$("#hoursTable").html(data);
 			}});
 	};
+	$(".open-work-from-home-modal").click(function (e) {
+		var userid = $('#userid').val();
+		var itemurl = "ReportHoursFromHomeModal/?userId=" + userid;
+		$("#loading").show();
+		$.fn.CallModal(itemurl);
+	});
+	$(".open-update-hours-modal").click(function (e) {
+		var userid = $('#userid').val();
+		var itemurl = "UpdateHours/?userId=" + userid;
+		$("#loading").show();
+		$.fn.CallModal(itemurl);
+	});
+
 
 });
