@@ -6,6 +6,7 @@ using Abp.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.CryptoPro;
 using Org.BouncyCastle.Utilities;
 using PrototypeWithAuth.AppData;

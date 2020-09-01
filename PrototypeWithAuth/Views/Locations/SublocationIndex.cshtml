@@ -14,14 +14,13 @@
         <img src="~/images/css/Loading/centarix_loading3.gif" />
     </div>
 
-    <div class="col px-0">
+    var thisid = "table";
+    if (Model.SublocationInstances != null)
+    {
+        thisid = "table" + Model.SublocationInstances.FirstOrDefault().LocationInstanceParentID;
+    }
+    <div class="col px-0 sublocation-index" id="@thisid">
         <table class="table table-sm">
-            @{
-                if (Model.PrevLocationInstance != null)
-                {
-
-                }
-            }
             @foreach (var locationInstance in Model.SublocationInstances)
             {
                 <tr class="" name="@locationInstance.LocationInstanceParentID">
