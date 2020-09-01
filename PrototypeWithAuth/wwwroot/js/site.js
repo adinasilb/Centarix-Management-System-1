@@ -2376,5 +2376,26 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
+	$(".report-vacation-days").click(function (e) {
+		var itemurl = "Vacation"
+		$("#loading").show();
+		$.fn.CallModal(itemurl);
+	});
 
+	$("body").on("change", "#Date", function (e) {			
+		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
+	});
+
+	$.fn.GetDayOfWeek = function (date) {
+		var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+		var dayNum = new Date(date).getDay();
+		console.log("daynum" + dayNum)
+		var dayOfWeek = days[dayNum];
+		return dayOfWeek
+	}
+
+	$("body").on("change", "#Date.update-hour-date", function (e) {
+		
+
+	});
 });

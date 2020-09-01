@@ -59,7 +59,7 @@
                         @eh.Date.ToLongDateString()
                     </div>
                     <div class="col-3">
-                        @eh.Entry1.ToShortTimeString()
+                        @eh.Entry1?.ToShortTimeString()
                         <br/>
                         @eh.Entry2?.ToShortTimeString()
                     </div>
@@ -69,7 +69,7 @@
                         @eh.Exit2?.ToShortTimeString()
                     </div>
                     <div class="col-2  timekeeper-font-color font-weight-bold">
-                       @{var hours = eh.TotalHours == TimeSpan.Zero ? "" : eh.TotalHours.ToString(@"h\:mm");   }
+                       @{var hours = eh.TotalHours == TimeSpan.Zero ? "" : eh.TotalHours?.ToString(@"h\:mm");   }
                         @hours
                     </div>
 
@@ -101,7 +101,7 @@
                     @Model.Where(eh => eh.OffDayTypeID == 2).Count()
                 </div>
                 <div class="col-6 text-right pr-5 timekeeper-font-color font-weight-bold">
-                    @Model.Select(eh => eh.TotalHours).Aggregate(TimeSpan.Zero, (t1, t2) => t1 + t2).ToString(@"hh\:mm")
+                    @Model.Select(eh => eh.TotalHours).Aggregate(TimeSpan.Zero, (t1, t2) => (t2 ?? TimeSpan.Zero) + (t2??TimeSpan.Zero)).ToString(@"hh\:mm")
 
                 </div>
             </div>

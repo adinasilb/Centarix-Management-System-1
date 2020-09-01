@@ -39,7 +39,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
-            var todaysEntry = _context.EmployeeHours.Where(eh => eh.Entry1.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
+            var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
             if(todaysEntry == null)
             {
                 return View(AppUtility.EntryExitEnum.Entry);
@@ -166,16 +166,34 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> ReportHoursFromHomeModal(string userID)
         {
-            EmployeeHours employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now, Entry1 = DateTime.Now};
+            EmployeeHoursAwaitingApproval employeeHour = new EmployeeHoursAwaitingApproval { EmployeeID = userID, Date = DateTime.Now};
             return PartialView(employeeHour);
 
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> ReportHoursFromHomeModal(EmployeeHoursAwaitingApproval employeeHours)
+        {
+            employeeHours.EmployeeHoursStatusID = 1;
+            _context.Add(employeeHours);
+            _context.SaveChanges();
+            return Redirect("ReportHours");
+
+        }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> UpdateHours(string userID)
         {
-            EmployeeHours employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now, Entry1 = DateTime.Now };
+            EmployeeHours employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now };
+            return PartialView(employeeHour);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> Vacation(string userID)
+        {
+            EmployeeHours employeeHour = new EmployeeHours { EmployeeID = _userManager.GetUserId(User), Date = DateTime.Now };
             return PartialView(employeeHour);
         }
     }
