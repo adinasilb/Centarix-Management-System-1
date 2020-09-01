@@ -2328,11 +2328,11 @@ $(function () {
 	$.fn.SortByMonth = function (month) {
 		$.ajax({
 			async: false,
-			url: 'Hours?month=' + month,
+			url: 'HoursPage?month=' + month,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				$("body").html(data);
+				$("#hoursTable").html(data);
 			}});
 	};
 
