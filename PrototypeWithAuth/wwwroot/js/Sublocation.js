@@ -11,8 +11,9 @@ $("#LocationInstances_0__Height").on("change", function (e) {
 		var difference = parseInt($(this).val()) - parseInt(numOptions);
 		console.log("difference: " + difference);
 		var x = numOptions + 1;
-		if (difference > 1) {
+		if (difference > 0) {
 			for (m = 0; m < difference; m++) {
+				//$('.mdb-select').material_select('destroy');
 				var newOption = "<li class role='option' aria-selected='false' aria-disabled='false'>";
 				newOption += "<span class='filtrable'>";
 				newOption += "<input type='checkbox' class='form-check-input'>";
@@ -20,12 +21,11 @@ $("#LocationInstances_0__Height").on("change", function (e) {
 				newOption += " Shelf " + x;
 				newOption += "</span> </li>";
 				select.append(newOption);
-				$('.mdb-select-empty').material_select('destroy');
-				('.mdb-select-empty').material_select();
+				('.mdb-select').material
 				x++;
 			}
 		}
-		else if (difference < 1) {
+		else if (difference < 0) {
 			for (n = 0; n < difference; n++) {
 				console.log("subtract one");
 			}

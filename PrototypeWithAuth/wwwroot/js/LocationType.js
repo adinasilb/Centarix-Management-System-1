@@ -9,6 +9,13 @@
     $.fn.CallPageRequest($itemurl, "addlocation");
 });
 
+//$(".locationinstance-locationtypeid").on("click", function (e) {
+//	e.preventDefault();
+//	e.stopPropagation();
+//	console.log("value of locationinstance: " + $(this).val());
+//	$("#LocationInstance_LocationTypeID").val($(this).val());
+//});
+
 //$(".btnAddSublocation").click(e){
 //    console.log("Location manage location view js");
 //    e.preventDefault();
@@ -56,3 +63,25 @@ $.fn.AddSublocation = function () {
 	$(".addSublocation").show();
 	$sublocationCounter++;
 }
+
+
+//AJAX partial view submit for addLocations --> Sublocations
+$(function () {
+	$("li").on("click", function () {
+		console.log("clicked li-li : " + $(this).id);
+	});
+});
+
+
+
+$(".locationinstance li").click(function () {
+	//$("#LocationInstance_LocationTypeID").change(function () {
+	
+	//$(document).ajaxStart(function () {
+	//	$("#loading").show();
+	//});
+
+	//$(document).ajaxComplete(function () {
+	//	$("#loading").hide();
+	//});
+});

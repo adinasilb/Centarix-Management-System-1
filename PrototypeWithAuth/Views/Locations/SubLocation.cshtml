@@ -1,8 +1,12 @@
 ﻿@model PrototypeWithAuth.ViewModels.SubLocationViewModel
-    <script src="~/js/Sublocation.js"></script>
+<script src="~/js/Sublocation.js"></script>
+<script src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
+@*<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"></script>*@
 @{
     var i = 0;
-    var parentType = Model.LocationTypes.FirstOrDefault().LocationTypeParentID;
+    var parentType = Model.LocationTypes?.FirstOrDefault().LocationTypeParentID;
 
     switch (parentType)
     {
@@ -46,12 +50,12 @@
                     <span style="line-height:2.5rem; font-size:1.2rem;">
                         Empty @Model.LocationTypes.ToList()[0].LocationTypePluralName
                     </span>
-                    <select asp-for="EmptyShelves80" class="mdb-select-empty form-control-plaintext" multiple>
+                    <select asp-for="EmptyShelves80" class="mdb-select mdb-select-empty form-control-plaintext" multiple>
                         @*<option value="1">Shelf1</option>*@
                     </select>
                     @*@Html.DropDownListFor(m => m.EmptyShelves80, Enumerable.Empty<SelectListItem>(), "",
-                   new { @class = "" }
-                    )*@
+                        new { @class = "" }
+                         )*@
                 </div>
             </div>
             break;

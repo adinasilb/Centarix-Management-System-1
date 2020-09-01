@@ -211,7 +211,6 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-
             subLocationViewModel.LocationTypes = listOfChildrenTypes;
             subLocationViewModel.LocationInstances = new List<LocationInstance>();
             foreach (var item in subLocationViewModel.LocationTypes)
