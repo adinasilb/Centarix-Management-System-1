@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200901112338_AddedTotalHoursToContext")]
+    partial class AddedTotalHoursToContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -372,7 +374,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("EmployeeID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("Entry1")
+                    b.Property<DateTime>("Entry1")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Entry2")
@@ -401,51 +403,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("EmployeeHours");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", b =>
-                {
-                    b.Property<int>("EmployeeHoursID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("EmployeeHoursStatusID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EmployeeID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("Entry1")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Entry2")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Exit1")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Exit2")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("OffDayTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan?>("TotalHours")
-                        .HasColumnType("time");
-
-                    b.HasKey("EmployeeHoursID");
-
-                    b.HasIndex("EmployeeHoursStatusID");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("OffDayTypeID");
-
-                    b.ToTable("EmployeeHoursAwaitingApprovals");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHoursStatus", b =>
                 {
                     b.Property<int>("EmployeeHoursStatusID")
@@ -459,23 +416,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("EmployeeHoursStatusID");
 
                     b.ToTable("EmployeeHoursStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            EmployeeHoursStatusID = 1,
-                            Description = "Work from home"
-                        },
-                        new
-                        {
-                            EmployeeHoursStatusID = 2,
-                            Description = "Edit existing hours"
-                        },
-                        new
-                        {
-                            EmployeeHoursStatusID = 3,
-                            Description = "Forgot to report"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -2552,24 +2492,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasOne("PrototypeWithAuth.Models.OffDayType", "OffDayType")
                         .WithMany("EmployeeHours")
-                        .HasForeignKey("OffDayTypeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatus")
-                        .WithMany()
-                        .HasForeignKey("EmployeeHoursStatusID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.OffDayType", "OffDayType")
-                        .WithMany()
                         .HasForeignKey("OffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
