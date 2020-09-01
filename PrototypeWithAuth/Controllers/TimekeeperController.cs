@@ -136,7 +136,7 @@ namespace PrototypeWithAuth.Controllers
             var userid = _userManager.GetUserId(User);
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
             var hours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month).ToList();
-            return PartialView(hours);
+            return View(hours);
 
         }
     }
