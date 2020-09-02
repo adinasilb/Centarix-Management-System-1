@@ -284,6 +284,10 @@ i.fas {
     border-bottom: 2px solid black !important;
 }
 
+.white-background::before {
+    background-color: white !important;
+}
+
     /*iframe clickable href*/
     /*.linkwrap{
     position: relative;

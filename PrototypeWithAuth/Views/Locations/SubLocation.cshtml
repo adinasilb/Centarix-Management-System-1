@@ -50,14 +50,14 @@
                         Empty @Model.LocationTypes.ToList()[0].LocationTypePluralName
                     </span>
 
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" asp-for="ESTest" />
-                        <label class="form-check-label" asp-for="ESTest">ESTest</label>
-                    </div>
-                    <div class="form-check">
+                    @*<div class="form-check locations">
+                        <input type="checkbox" class="form-check-input" asp-for="EmptyShelves80[0]" />
+                        <label class="form-check-label" asp-for="EmptyShelves80[0]">Shelf 1</label>
+                    </div>*@
+                    @*<div class="form-check">
                         <input type="checkbox" class="form-check-input" id="materialUnchecked">
                         <label class="form-check-label" for="materialUnchecked">Material unchecked</label>
-                    </div>
+                    </div>*@
 
                     <div class=" form-control-plaintext border-bottom p-0">
                         <span class="choose"></span>
@@ -66,7 +66,7 @@
                                 <span></span>
                                 <i class="fa fa-chevron-left"></i>
                             </div>
-                            <div class="locationinstance dropdown-menu">
+                            <div class="locationinstance dropdown-menu dropdown-menu-multiple">
                             </div>
                         </div>
                     </div>

@@ -1110,6 +1110,31 @@
             $.fn.UpdateNotificationLastRead();
             $.fn.GetNotifcationCount();
         });
+
+
+        //RECEIVEDMODAL:
+        function changePartialDelivery() {
+            if ($('#Clarify').is(":checked")) {
+                $('#PartialDelivery').attr("disabled", true);
+                $("label[for='PartialDelivery']").addClass("white-background");
+            }
+            else {
+                $('#PartialDelivery').attr("disabled", false);
+                $("label[for='PartialDelivery']").removeClass("white-background");
+            }
+        };
+
+        function changeClarify() {
+            if ($('#PartialDelivery').is(":checked")) {
+                $('#Clarify').attr("disabled", true);
+                $("label[for='Clarify']").addClass("white-background");
+            }
+            else {
+                $('#Clarify').attr("disabled", false);
+                $("label[for='Clarify']").removeClass("white-background");
+            }
+        };
+
     </script>
 </body>
 </html>

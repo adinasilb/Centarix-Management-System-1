@@ -2385,49 +2385,75 @@ $(function () {
 			return false;
 		});
 	};
+
+
+	//RECEIVEDMODAL:
+	function changePartialDelivery() {
+		console.log("in partial delivery, checkbox val: " + $(this).val());
+	};
+
+	function changeClarify() {
+		console.log("in clarify, checkbox val: " + $(this).val());
+	};
+
 });
 
 //DROPDOWN
 /*Dropdown Menu*/
-$('.dropdown').click(function () {
+$('.dropdown-main').off("click").on("click", function () {
+	console.log("DRD 1");
 	$(this).attr('tabindex', 1).focus();
 	//$(this).toggleClass('active');
 	$(this).find('.dropdown-menu').slideToggle(300);
 });
-$('.dropdown').focusout(function () {
+$('.dropdown-main').focusout(function () {
+	console.log("DRD 2");
 	$(this).removeClass('active');
 	$(this).find('.dropdown-menu').slideUp(300);
 });
-$('.dropdown .dropdown-menu li').click(function () {
-	$(this).parents('.dropdown').find('span').text($(this).text());
-	$(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
+$('.dropdown-main .dropdown-menu li').click(function () {
+	console.log("DRD 3");
+	$(this).parents('.dropdown-main').find('span').text($(this).text());
+	$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
 });
 /*End Dropdown Menu*/
 
 
 $('.dropdown-menu li').click(function () {
+	console.log("DRD 4");
 	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
 		msg = '<span class="msg">Hidden input value: ';
 	$('.msg').html(msg + input + '</span>');
-}); 
+});
 
 
 
 
 $('.dropdown-multiple').click(function () {
+	console.log("DRD 5");
 	$(this).attr('tabindex', 1).focus();
 	$(this).addClass('active');
-	$(this).find('.dropdown-menu').slideToggle(300);
+	$(this).find('.dropdown-menu-multiple').slideToggle(300);
 });
 $('.dropdown-multiple').focusout(function () {
+	console.log("DRD 6");
 	$(this).removeClass('active');
-	$(this).find('.dropdown-menu').slideUp(300);
+	$(this).find('.dropdown-menu-multiple').slideUp(300);
 });
 $('.dropdown-multiple .dropdown-menu li').click(function () {
+	console.log("DRD 7");
 	//$(this).parents('.dropdown').find('span').text($(this).text());
 	$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
 	$(this).parents('.dropdown-multiple').addClass('active');
 });
+/*End Dropdown Menu*/
+
+
+//$('.dropdown-menu li').click(function () {
+//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+//		msg = '<span class="msg">Hidden input value: ';
+//	$('.msg').html(msg + input + '</span>');
+//}); 
 /*End Dropdown Menu*/
 
 

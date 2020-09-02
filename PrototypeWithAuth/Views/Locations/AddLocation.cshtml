@@ -35,7 +35,7 @@
                                 @*<label asp-for="LocationTypesDepthOfZero" class="control-label">Type of storage</label>*@
                                 <div class=" form-control-plaintext border-bottom p-0">
                                     <span class="choose"></span>
-                                    <div class="dropdown">
+                                    <div class="dropdown dropdown-main">
                                         <div class="select">
                                             <span>Select Type:</span>
                                             <i class="fa fa-chevron-left"></i>
@@ -95,6 +95,7 @@
             success: function (result) {
                 this.html(result);
                 $('.mdb-select').materialSelect();
+                $("input[type='hidden']").remove();
                 //$(".mdb-select-empty").materialSelect();
             }
         });
