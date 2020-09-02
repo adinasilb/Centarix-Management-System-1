@@ -183,9 +183,19 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> UpdateHours(string userID)
+        public async Task<IActionResult> UpdateHours(DateTime chosenDate)
         {
-            EmployeeHours employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now };
+            if(chosenDate == new DateTime())
+            {
+                chosenDate = DateTime.Today;
+            }
+            var userID = _userManager.GetUserId(User);
+            var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).FirstOrDefault();
+            if (employeeHour == null)
+            {
+                employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now };
+            }
+
             return PartialView(employeeHour);
         }
 
@@ -197,11 +207,5 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(employeeHour);
         }
 
-        public JsonResult GetEmployeeHour(DateTime date)
-        {
-            var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == _userManager.GetUserId(User) && eh.Date.Date == date).FirstOrDefault();
-            return Json(employeeHour);
-
-        }
     }
 }

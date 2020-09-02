@@ -1145,6 +1145,28 @@ $(function () {
 	});
 
 	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
+		console.log("in open doc modal");
+		$("#documentsModal").replaceWith('');
+		var urltogo = $("#documentSubmit").attr("url");
+		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
+		console.log("urltogo: " + urltogo);
+		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable
+		//$(".modal-backdrop").first().removeClass();
+		$.ajax({
+			async: true,
+			url: urltogo,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				var modal = $(data);
+				$('body').append(modal);
+				$("#documentsModal").modal({
+					backdrop: false,
+					keyboard: true,
+				});
+				$(".modal").modal('show');
+			}
+		});
 	};
 
 	$(".file-select").on("change", function (e) {
@@ -2376,16 +2398,10 @@ $(function () {
 
 	$.fn.GetEmployeeHour = function (date) {
 		console.log(date);
-		$.getJSON('GetEmployeeHour', new Date(date.toJSON()), function (data) {
-			$('#Entry1').val(data.entry1);
-			$('#Exit1').val(data.exit1);
-			$('#Entry2').val(data.entry1);
-			$('#Exit2').val(data.exit2);
-			$('#TotalHours').val(data.totalHours);
-			return false;
-		});
+		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString())
 	};
 });
+
 
 //DROPDOWN
 /*Dropdown Menu*/
