@@ -2444,7 +2444,6 @@ $('.dropdown-menu li').click(function () {
 
 
 
-
 $('.dropdown-multiple').click(function () {
 	console.log("DRD 5");
 	$(this).attr('tabindex', 1).focus();
@@ -2456,7 +2455,7 @@ $('.dropdown-multiple').focusout(function () {
 	$(this).removeClass('active');
 	$(this).find('.dropdown-menu-multiple').slideUp(300);
 });
-$('.dropdown-multiple .dropdown-menu li').click(function () {
+$('.dropdown-multiple .dropdown-menu div label').click(function () {
 	console.log("DRD 7");
 	//$(this).parents('.dropdown').find('span').text($(this).text());
 	$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
