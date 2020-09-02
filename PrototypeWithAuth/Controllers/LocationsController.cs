@@ -195,6 +195,8 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case 200:
                     subLocationViewModel.EmptySelectList = Enumerable.Empty<SelectListItem>().ToList();
+                    subLocationViewModel.EmptyShelves80 = new List<bool>();
+                    subLocationViewModel.ESTest = false;
                     break;
             }
             while (go)

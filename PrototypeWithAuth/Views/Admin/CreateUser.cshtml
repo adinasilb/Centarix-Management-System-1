@@ -204,7 +204,7 @@
                                             @Html.HiddenFor(model => model.OrderRoles[i].MenuItemsID)
                                             @Html.HiddenFor(model => model.OrderRoles[i].Name)
                                             <div class="form-check">
-                                                <input type="checkbox" class="form-check-input filled-in" asp-for="OrderRoles[i].Selected" />
+                                                <input type="checkbox" class="form-check-input" asp-for="OrderRoles[i].Selected" />
                                                 <label class="form-check-label" asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
                                             </div>
                                         }

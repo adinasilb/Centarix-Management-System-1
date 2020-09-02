@@ -133,7 +133,7 @@ span.choose {
 }*/
 
 /*Styling Selectbox*/
-.dropdown {
+.dropdown, .dropdown-multiple {
     width: 100%;
     display: inline-block;
     background-color: #fff;
@@ -148,6 +148,7 @@ span.choose {
     text-align: left
 }
 
+    .dropdown-multiple .select,
     .dropdown .select {
         cursor: pointer;
         display: block;
@@ -155,6 +156,7 @@ span.choose {
         font-size: 1rem;
     }
 
+        .dropdown-multiple .select > i,
         .dropdown .select > i {
             font-size: 13px;
             color: #888;
@@ -164,14 +166,18 @@ span.choose {
             line-height: 20px
         }
 
+    .dropdown-multiple:hover,
     .dropdown:hover {
         /*box-shadow: 0 0 4px rgb(204, 204, 204)*/
     }
 
+    .dropdown-multiple:active,
     .dropdown:active {
         background-color: #f8f8f8
     }
 
+    .dropdown-multiple.active:hover,
+    .dropdown-multiple.active,
     .dropdown.active:hover,
     .dropdown.active {
         /*box-shadow: 0 0 4px rgb(204, 204, 204);*/
@@ -179,10 +185,12 @@ span.choose {
         background-color: #f8f8f8*/
     }
 
+        .dropdown-multiple.active .select > i,
         .dropdown.active .select > i {
             transform: rotate(-90deg)
         }
 
+    .dropdown-multiple .dropdown-menu,
     .dropdown .dropdown-menu {
         position: absolute;
         background-color: #fff;
@@ -200,23 +208,27 @@ span.choose {
         padding: 0px;
     }
 
-        .dropdown .dropdown-menu li {
-            padding: 10px;
-            transition: all .2s ease-in-out;
-            cursor: pointer;
-            margin: 0px;
-        }
+    .dropdown-multiple .dropdown-menu li,
+    .dropdown .dropdown-menu li {
+        padding: 10px;
+        transition: all .2s ease-in-out;
+        cursor: pointer;
+        margin: 0px;
+    }
 
+    .dropdown-multiple .dropdown-menu,
     .dropdown .dropdown-menu {
         padding: 0;
         list-style: none
     }
 
+        .dropdown-multiple .dropdown-menu li:hover
         .dropdown .dropdown-menu li:hover {
             background-color: #f2f2f2;
             z-index: 1000;
         }
 
+        .dropdown-multiple .dropdown-menu li:active,
         .dropdown .dropdown-menu li:active {
             background-color: #e2e2e2
         }
@@ -268,8 +280,8 @@ i.fas {
 
 
 [type=checkbox]:checked + label:before {
-    border-right: 2px solid white !important;
-    border-bottom: 2px solid white !important;
+    border-right: 2px solid black !important;
+    border-bottom: 2px solid black !important;
 }
 
     /*iframe clickable href*/

@@ -1,9 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.SubLocationViewModel
 <script src="~/js/Sublocation.js"></script>
+<script src="~/js/site.js"></script>
 <script src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
-@*<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"></script>*@
+<link href="~/lib/bootstrap/dist/css/mdb.css" rel="stylesheet" />
 @{
     var i = 0;
     var parentType = Model.LocationTypes?.FirstOrDefault().LocationTypeParentID;
@@ -50,12 +49,27 @@
                     <span style="line-height:2.5rem; font-size:1.2rem;">
                         Empty @Model.LocationTypes.ToList()[0].LocationTypePluralName
                     </span>
-                    <select asp-for="EmptyShelves80" class="mdb-select mdb-select-empty form-control-plaintext" multiple>
-                        @*<option value="1">Shelf1</option>*@
-                    </select>
-                    @*@Html.DropDownListFor(m => m.EmptyShelves80, Enumerable.Empty<SelectListItem>(), "",
-                        new { @class = "" }
-                         )*@
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" asp-for="ESTest" />
+                        <label class="form-check-label" asp-for="ESTest">ESTest</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="materialUnchecked">
+                        <label class="form-check-label" for="materialUnchecked">Material unchecked</label>
+                    </div>
+
+                    <div class=" form-control-plaintext border-bottom p-0">
+                        <span class="choose"></span>
+                        <div class="dropdown-multiple">
+                            <div class="select">
+                                <span></span>
+                                <i class="fa fa-chevron-left"></i>
+                            </div>
+                            <div class="locationinstance dropdown-menu">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             break;
