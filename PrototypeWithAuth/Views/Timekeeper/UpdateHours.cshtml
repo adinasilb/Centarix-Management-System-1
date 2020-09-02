@@ -8,6 +8,8 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5">
                 @Html.HiddenFor(r => r.EmployeeHoursID)
+                @Html.HiddenFor(r => r.EmployeeHoursStatusID)
+                @Html.HiddenFor(r => r.OffDayTypeID)
                 <div class="modal-header border-0 border-bottom">
                     <div class="container">
                         <div class="">
@@ -44,19 +46,15 @@
                             <span asp-validation-for="Exit1" class="text-danger"></span>
                         </div>
                         <div class="col-4">
-                            @if(Model.TotalHours == null)
-                            {
-                                Model.TotalHours = new TimeSpan(0, 0, 0);
-                            }
                             <label asp-for="TotalHours" class="control-label"></label>
-                            <input asp-for="TotalHours" class="form-control-plaintext border-bottom " step="60" />
+                            <input asp-for="TotalHours" class="form-control-plaintext border-bottom " step="60" placeholder="00:00" />
                             <span asp-validation-for="TotalHours" class="text-danger"></span>
                         </div>
                     </div>
                     @if (Model.Entry2 != null)
                     {
 
-                        <div class="row entry2Div" >
+                        <div class="row entry2Div">
                             <div class="col-4 ">
                                 <input asp-for="Entry2" class="form-control-plaintext border-bottom " />
                                 <span asp-validation-for="Entry2" class="text-danger"></span>

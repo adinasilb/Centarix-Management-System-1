@@ -193,10 +193,30 @@ namespace PrototypeWithAuth.Controllers
             var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).FirstOrDefault();
             if (employeeHour == null)
             {
-                employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now };
+                employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now, EmployeeHoursStatusID=3 };
             }
 
             return PartialView(employeeHour);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> UpdateHours(EmployeeHours employeeHours)
+        {
+            EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval = new EmployeeHoursAwaitingApproval
+            {
+                EmployeeID = employeeHours.EmployeeID,
+                EmployeeHoursID = employeeHours.EmployeeHoursID,
+                EmployeeHoursStatusID = employeeHours.EmployeeHoursStatusID ?? 2,
+                Entry1 = employeeHours.Entry1,
+                Entry2 = employeeHours.Entry2,
+                Exit1 = employeeHours.Exit1,
+                Exit2 = employeeHours.Exit2,
+                OffDayTypeID = employeeHours.OffDayTypeID
+            };
+            _context.Update(employeeHoursAwaitingApproval);
+            await _context.SaveChangesAsync();
+            return Redirect("ReportHours");
         }
 
         [HttpGet]
