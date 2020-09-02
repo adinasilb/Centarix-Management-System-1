@@ -62,6 +62,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 
 <body style="display:none">
@@ -222,19 +223,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
+    <script>
         $(document).ready(function () {
             $("#alertCount").hide();
             console.log("in doc ready!");
@@ -1083,7 +1072,7 @@
                     var newitem1 = '<a class="opac87  '+bold+' " href="'+ link+'"><div id="notification-info" class="px-3 pb-2 mb-3 ">' +
                         '<div class="col-12 border-right-0 border-left-0 border-top-0 border-bottom  pb-2 mb-3 " >' +
                         '<div class="row ">' +
-                        '<div class=" float-left " >' +                      
+                        '<div class=" float-left " >' +
                         '<i class="' + notification.icon + ' rounded-circle p-1" style="font-size: 1.75rem; color:var(' + notification.color + '); border: .125rem solid var(' + notification.color + ');"></i>' +
                         '</div>' +
                         '<div class=" col-10">' +
@@ -1121,6 +1110,6 @@
             $.fn.UpdateNotificationLastRead();
             $.fn.GetNotifcationCount();
         });
-</script>
+    </script>
 </body>
 </html>

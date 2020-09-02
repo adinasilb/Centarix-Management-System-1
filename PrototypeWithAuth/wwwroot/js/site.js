@@ -2332,14 +2332,59 @@ $(function () {
 	$.fn.SortByMonth = function (month) {
 		$.ajax({
 			async: false,
-			url: 'Hours?month=' + month,
+			url: 'HoursPage?month=' + month,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				$("body").html(data);
+				$("#hoursTable").html(data);
 			}});
 	};
+	$(".open-work-from-home-modal").click(function (e) {
+		var userid = $('#userid').val();
+		var itemurl = "ReportHoursFromHomeModal/?userId=" + userid;
+		$("#loading").show();
+		$.fn.CallModal(itemurl);
+	});
+	$(".open-update-hours-modal").click(function (e) {
+		var userid = $('#userid').val();
+		var itemurl = "UpdateHours/?userId=" + userid;
+		$("#loading").show();
+		$.fn.CallModal(itemurl);
+	});
 
+	$(".report-vacation-days").click(function (e) {
+		var itemurl = "Vacation"
+		$("#loading").show();
+		$.fn.CallModal(itemurl);
+	});
+
+	$("body").on("change", "#Date", function (e) {			
+		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
+	});
+
+	$.fn.GetDayOfWeek = function (date) {
+		var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+		var dayNum = new Date(date).getDay();
+		console.log("daynum" + dayNum)
+		var dayOfWeek = days[dayNum];
+		return dayOfWeek
+	}
+
+	$("body").on("change", "#Date.update-hour-date", function (e) {		
+		$.fn.GetEmployeeHour($(this).val());
+	});
+
+	$.fn.GetEmployeeHour = function (date) {
+		console.log(date);
+		$.getJSON('GetEmployeeHour', new Date(date.toJSON()), function (data) {
+			$('#Entry1').val(data.entry1);
+			$('#Exit1').val(data.exit1);
+			$('#Entry2').val(data.entry1);
+			$('#Exit2').val(data.exit2);
+			$('#TotalHours').val(data.totalHours);
+			return false;
+		});
+	};
 });
 
 //DROPDOWN

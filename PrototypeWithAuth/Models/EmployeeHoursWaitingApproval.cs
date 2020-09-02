@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class EmployeeHours
+    public class EmployeeHoursAwaitingApproval
     {
         [Key]
         public int EmployeeHoursID { get; set; }
@@ -27,17 +27,21 @@ namespace PrototypeWithAuth.Models
         public int? OffDayTypeID { get; set; }
         public OffDayType OffDayType { get; set; }
         public int? EmployeeHoursStatusID { get; set; }
+
         private TimeSpan? _TotalHours;
-        public TimeSpan? TotalHours { 
-            get { 
-                if(_TotalHours==TimeSpan.Zero)
+        [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
+        public TimeSpan? TotalHours
+        {
+            get
+            {
+                if (_TotalHours == null)
                     return ((Exit1 - Entry1) ?? TimeSpan.Zero) + ((Exit2 - Entry2) ?? TimeSpan.Zero);
                 else return _TotalHours;
-                }
+            }
             set { _TotalHours = value; }
         }
-             
-        public EmployeeHoursStatus EmployeeHoursStatus { get; set; } 
-        
+
+        public EmployeeHoursStatus EmployeeHoursStatus { get; set; }
+
     }
 }

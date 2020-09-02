@@ -1,0 +1,21 @@
+﻿@model PrototypeWithAuth.Models.EmployeeHours;
+<div class="modal modal-document fader" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
+    <div class="modal-dialog modal-sm  work-from-home-modal">
+        <div class="modal-content d-inline-block" style="border-radius:2rem;">
+            <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close" style="font-size:2.5rem; font-weight:400;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5">
+                @Html.HiddenFor(r => r.EmployeeHoursID)
+
+                <div id='calendar'></div>
+                <div class="modal-footer mt-4 border-0 p-4" style="justify-content:center;">
+                    <input type="submit" class="timekeeper-button mr-4" asp-action="UpdateHours" value="Save" style="width:40%;" />
+                    <button class="cancel-button cancel-email" data-dismiss="modal" style="width:40%;">Cancel</button>@*FAIGE: should this delete the request?*@
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

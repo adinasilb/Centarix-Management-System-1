@@ -1091,17 +1091,34 @@ namespace PrototypeWithAuth.Data
                 }
             );
             modelBuilder.Entity<OffDayType>().HasData(
-                           new OffDayType
-                           {
-                               OffDayTypeID = 1,
-                               Description = "SickDay"
-                           },
-                            new OffDayType
-                            {
-                                OffDayTypeID = 2,
-                                Description = " VacationDay"
-                            }
-                     );
+                        new OffDayType
+                        {
+                            OffDayTypeID = 1,
+                            Description = "SickDay"
+                        },
+                         new OffDayType
+                         {
+                             OffDayTypeID = 2,
+                             Description = " VacationDay"
+                         }
+                  );
+            modelBuilder.Entity<EmployeeHoursStatus>().HasData(
+                new EmployeeHoursStatus
+                {
+                    EmployeeHoursStatusID = 1,
+                    Description = "Work from home"
+                },
+                new EmployeeHoursStatus
+                {
+                    EmployeeHoursStatusID = 2,
+                    Description = "Edit existing hours"
+                },
+                new EmployeeHoursStatus
+                {
+                    EmployeeHoursStatusID = 3,
+                    Description = "Forgot to report"
+                }
+            );
         }
     }
 }
