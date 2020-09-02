@@ -1112,6 +1112,16 @@
             $.fn.GetNotifcationCount();
         });
 
+        $.fn.GetHoursString = function (date) {
+            var date = new Date(date);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+
+            var hoursString = hours.toString().padStart(2, '0')
+                + ':' + minutes.toString().padStart(2, '0');
+            return hoursString;
+        };
+
 
         //RECEIVEDMODAL:
         function changePartialDelivery() {

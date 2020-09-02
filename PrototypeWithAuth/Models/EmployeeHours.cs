@@ -14,12 +14,16 @@ namespace PrototypeWithAuth.Models
         public string EmployeeID { get; set; }
         [ForeignKey("EmployeeID")]
         public Employee Employee { get; set; }
+        [DisplayFormat(DataFormatString = "{0:hh:mm}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Time)]
         public DateTime? Entry1 { get; set; }
+        [DisplayFormat(DataFormatString = "{0:hh:mm}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Time)]
         public DateTime? Entry2 { get; set; }
+        [DisplayFormat(DataFormatString = "{0:hh:mm}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Time)]
         public DateTime? Exit1 { get; set; }
+        [DisplayFormat(DataFormatString = "{0:hh:mm}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Time)]
         public DateTime? Exit2 { get; set; }
         [DataType(DataType.Date)]
@@ -27,6 +31,7 @@ namespace PrototypeWithAuth.Models
         public int? OffDayTypeID { get; set; }
         public OffDayType OffDayType { get; set; }
         public int? EmployeeHoursStatusID { get; set; }
+        [DisplayFormat(DataFormatString = "{0:hh:mm}", ApplyFormatInEditMode = true)]
         private TimeSpan? _TotalHours;
         public TimeSpan? TotalHours { 
             get { 

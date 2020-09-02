@@ -27,36 +27,47 @@
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Date" class="control-label"></label>
-                            <input asp-for="Date" class="form-control-plaintext  border-bottom update-hour-date "  />
+                            <input asp-for="Date" class="form-control-plaintext  border-bottom update-hour-date " />
                             <span asp-validation-for="Date" class="text-danger " />
                         </div>
                     </div>
                     <br />
                     <div class="row">
                         <div class="col-4 ">
-                            <label asp-for="Entry1" class="control-label"></label>
+                            <label asp-for="Entry1" class="control-label">Entry</label>
                             <input asp-for="Entry1" class="form-control-plaintext border-bottom " />
                             <span asp-validation-for="Entry1" class="text-danger"></span>
                         </div>
                         <div class="col-4 ">
-                            <label asp-for="Exit1" class="control-label"></label>
+                            <label asp-for="Exit1" class="control-label">Exit</label>
                             <input asp-for="Exit1" class="form-control-plaintext border-bottom " />
                             <span asp-validation-for="Exit1" class="text-danger"></span>
                         </div>
-                        <div class="col-4 ">
-                            <input asp-for="Entry2" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="Entry2" class="text-danger"></span>
-                        </div>
-                        <div class="col-4 ">
-                            <input asp-for="Exit2" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="Exit2" class="text-danger"></span>
-                        </div>
                         <div class="col-4">
+                            @if(Model.TotalHours == null)
+                            {
+                                Model.TotalHours = new TimeSpan(0, 0, 0);
+                            }
                             <label asp-for="TotalHours" class="control-label"></label>
-                            <input asp-for="TotalHours" class="form-control-plaintext border-bottom " />
+                            <input asp-for="TotalHours" class="form-control-plaintext border-bottom " step="60" />
                             <span asp-validation-for="TotalHours" class="text-danger"></span>
                         </div>
                     </div>
+                    @if (Model.Entry2 != null)
+                    {
+
+                        <div class="row entry2Div" >
+                            <div class="col-4 ">
+                                <input asp-for="Entry2" class="form-control-plaintext border-bottom " />
+                                <span asp-validation-for="Entry2" class="text-danger"></span>
+                            </div>
+                            <div class="col-4 ">
+                                <input asp-for="Exit2" class="form-control-plaintext border-bottom " />
+                                <span asp-validation-for="Exit2" class="text-danger"></span>
+                            </div>
+                        </div>
+                    }
+
                 </div>
                 <div class="modal-footer mt-4 border-0 p-4" style="justify-content:center;">
                     <input type="submit" class="timekeeper-button mr-4" asp-action="UpdateHours" value="Save" style="width:40%;" />
