@@ -573,6 +573,7 @@
                             AddTempDataMemory();
                             break;
                         case "received":
+                            $('.mdb-select').materialSelect();
                             AddTempDataMemory();
                             break;
                         case "confirmemail":
@@ -1110,6 +1111,27 @@
             $.fn.UpdateNotificationLastRead();
             $.fn.GetNotifcationCount();
         });
+
+
+        //RECEIVEDMODAL:
+        function changePartialDelivery() {
+            if ($('#Clarify').is(":checked")) {
+                $('#PartialDelivery').attr("disabled", true);
+            }
+            else {
+                $('#PartialDelivery').attr("disabled", false);
+            }
+        };
+
+        function changeClarify() {
+            if ($('#PartialDelivery').is(":checked")) {
+                $('#Clarify').attr("disabled", true);
+            }
+            else {
+                $('#Clarify').attr("disabled", false);
+            }
+        };
+
     </script>
 </body>
 </html>
