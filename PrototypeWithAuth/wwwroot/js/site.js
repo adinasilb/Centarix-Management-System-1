@@ -2100,6 +2100,10 @@ $(function () {
 		if (valid == "true") {
 			return;
 		}
+		valid = $("#VendorCategoryTypes").attr('aria-invalid');
+		if (valid == "true" || $("#VendorCategoryTypes").val() == "") {
+			return;
+		}
 		console.log("valid1: " + valid);
 		valid = $("#Vendor_OrdersEmail").attr('aria-invalid');
 		if (valid == "true" || $("#Vendor_OrdersEmail").val() == "") {
