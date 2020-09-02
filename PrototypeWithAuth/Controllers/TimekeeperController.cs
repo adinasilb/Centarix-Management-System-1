@@ -203,19 +203,43 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> UpdateHours(EmployeeHours employeeHours)
         {
-            EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval = new EmployeeHoursAwaitingApproval
+            var awaitingApproval = _context.EmployeeHoursAwaitingApprovals.Where(ea => ea.EmployeeHoursID == employeeHours.EmployeeHoursID).FirstOrDefault();
+            int? employeeHoursID = null;
+            if(employeeHours.EmployeeHoursID!=0)
             {
-                EmployeeID = employeeHours.EmployeeID,
-                EmployeeHoursID = employeeHours.EmployeeHoursID,
-                EmployeeHoursStatusID = employeeHours.EmployeeHoursStatusID ?? 2,
-                Entry1 = employeeHours.Entry1,
-                Entry2 = employeeHours.Entry2,
-                Exit1 = employeeHours.Exit1,
-                Exit2 = employeeHours.Exit2,
-                OffDayTypeID = employeeHours.OffDayTypeID
-            };
+                employeeHoursID = employeeHours.EmployeeHoursID;
+            }
+            EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval = new EmployeeHoursAwaitingApproval();
+            if (awaitingApproval == null)
+            {
+
+                employeeHoursAwaitingApproval.EmployeeID = employeeHours.EmployeeID;
+                employeeHoursAwaitingApproval.EmployeeHoursID = employeeHoursID;
+                employeeHoursAwaitingApproval.EmployeeHoursStatusID = employeeHours.EmployeeHoursStatusID ?? 2;
+                employeeHoursAwaitingApproval.Entry1 = employeeHours.Entry1;
+                employeeHoursAwaitingApproval.Entry2 = employeeHours.Entry2;
+                employeeHoursAwaitingApproval.Exit1 = employeeHours.Exit1;
+                employeeHoursAwaitingApproval.Exit2 = employeeHours.Exit2;
+                employeeHoursAwaitingApproval.TotalHours = employeeHours.TotalHours;
+                employeeHoursAwaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
+
+            }
+            else
+            {
+                awaitingApproval.EmployeeID = employeeHours.EmployeeID;
+                awaitingApproval.EmployeeHoursID = employeeHoursID;
+                awaitingApproval.EmployeeHoursStatusID = employeeHours.EmployeeHoursStatusID ?? 2;
+                awaitingApproval.Entry1 = employeeHours.Entry1;
+                awaitingApproval.Exit1 = employeeHours.Entry2;
+                awaitingApproval.Entry2 = employeeHours.Exit1;
+                awaitingApproval.Exit2 = employeeHours.Exit2;
+                awaitingApproval.TotalHours = employeeHours.TotalHours;
+                awaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
+                employeeHoursAwaitingApproval = awaitingApproval;
+            }
+           
             _context.Update(employeeHoursAwaitingApproval);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return Redirect("ReportHours");
         }
 
