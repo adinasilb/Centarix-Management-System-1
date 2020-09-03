@@ -1421,6 +1421,10 @@ $(function () {
 
 	};
 
+	$(".load-visual-sublocation-view").off("click").on("click", function (e) {
+		$.fn.setUpVisual($(this).val());
+	});
+
 
 	$(".load-sublocation-view").off("click").on("click", function (e) {
 		//e.preventDefault();
