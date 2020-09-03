@@ -2417,18 +2417,15 @@ $(function () {
 //DROPDOWN
 /*Dropdown Menu*/
 $('.dropdown-main').off("click").on("click", function () {
-	console.log("DRD 1");
 	$(this).attr('tabindex', 1).focus();
 	//$(this).toggleClass('active');
 	$(this).find('.dropdown-menu').slideToggle(300);
 });
 $('.dropdown-main').focusout(function () {
-	console.log("DRD 2");
 	$(this).removeClass('active');
 	$(this).find('.dropdown-menu').slideUp(300);
 });
 $('.dropdown-main .dropdown-menu li').click(function () {
-	console.log("DRD 3");
 	$(this).parents('.dropdown-main').find('span').text($(this).text());
 	$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
 });
@@ -2436,7 +2433,6 @@ $('.dropdown-main .dropdown-menu li').click(function () {
 
 
 $('.dropdown-menu li').click(function () {
-	console.log("DRD 4");
 	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
 		msg = '<span class="msg">Hidden input value: ';
 	$('.msg').html(msg + input + '</span>');
@@ -2445,18 +2441,15 @@ $('.dropdown-menu li').click(function () {
 
 
 $('.dropdown-multiple').click(function () {
-	console.log("DRD 5");
 	$(this).attr('tabindex', 1).focus();
 	$(this).addClass('active');
 	$(this).find('.dropdown-menu-multiple').slideToggle(300);
 });
 $('.dropdown-multiple').focusout(function () {
-	console.log("DRD 6");
 	$(this).removeClass('active');
 	$(this).find('.dropdown-menu-multiple').slideUp(300);
 });
 $('.dropdown-multiple .dropdown-menu div label').click(function () {
-	console.log("DRD 7");
 	//$(this).parents('.dropdown').find('span').text($(this).text());
 	$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
 	$(this).parents('.dropdown-multiple').addClass('active');

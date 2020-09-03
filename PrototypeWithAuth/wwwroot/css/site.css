@@ -204,7 +204,7 @@ span.choose {
         display: none;
         max-height: 144px;
         overflow-y: auto;
-        z-index: 9;
+        /*z-index: 9;*/
         padding: 0px;
     }
 
