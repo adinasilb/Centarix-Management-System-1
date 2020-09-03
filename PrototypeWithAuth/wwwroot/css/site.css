@@ -29,7 +29,7 @@ for details on configuring this project to bundle and minify static web assets. 
     --notifications-approved-color: #00CA72;
     --notifications-received-color: #5F79E2;
     --danger-color: #E95252;
-    --success-color: #00CA72;
+    --success-color: #00ca72;
 }
 .success-color {
     background-color: var(--success-color);

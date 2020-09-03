@@ -8,26 +8,28 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5">
                 @Html.HiddenFor(r => r.EmployeeHoursID)
+                @Html.HiddenFor(r => r.EmployeeID)
+                @Html.HiddenFor(r => r.EmployeeHoursAwaitingApprovalID)
                 <div class="modal-header border-0 border-bottom">
                     <div class="container">
                         <div class="">
                             <h3><strong>Report Hours From Home</strong></h3>
                         </div>
                         <div class="mt-5 mb-3">
-                            <hr/>
+                            <hr />
                         </div>
                     </div>
                 </div>
                 <div class="modal-body border-0 rounded mx-4">
                     <div class="row">
                         <div class="col-md-6 pr-4">
-                            <label  class="control-label">Day</label>
+                            <label class="control-label">Day</label>
                             <input asp-for="Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week" disabled />
                             <span asp-validation-for="Date.DayOfWeek" class="text-danger " />
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Date" class="control-label"></label>
-                            <input asp-for="Date" class="form-control-plaintext  border-bottom "/>
+                            <input asp-for="Date" class="form-control-plaintext  border-bottom  update-work-from-home" />
                             <span asp-validation-for="Date" class="text-danger quote-date" />
                         </div>
                     </div>
@@ -45,7 +47,7 @@
                         </div>
                         <div class="col-4">
                             <label asp-for="TotalHours" class="control-label"></label>
-                            <input asp-for="TotalHours" class="form-control-plaintext border-bottom " step="60"/>
+                            <input asp-for="TotalHours" class="form-control-plaintext border-bottom " />
                             <span asp-validation-for="TotalHours" class="text-danger"></span>
                         </div>
                     </div>
