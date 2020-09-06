@@ -1,9 +1,9 @@
 ﻿@model PrototypeWithAuth.ViewModels.PaymentsPayModalViewModel
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-
-<div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog reorder-modal  modal-lg " style="min-width:1300PX !important" role="document">
+<link href="~/css/site.css" rel="stylesheet" />
+<div class="modal modal-view fader" id="myModal" data-backdrop="false">
+    <div class="modal-dialog" style="min-width:1000PX !important; top: 20%; bottom: 0; margin-top: auto; margin-bottom:auto;">
         <div class="modal-content d-inline-block" style="border-radius:1rem;">
             <form action="" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
@@ -19,20 +19,71 @@
                             </div>
                         </div>
                         <hr />
+                        @{ 
+                            var CostShekel = Model.Requests.Sum(r => r.Cost);
+                            var VAT = Model.Requests.Sum(r => r.VAT);
+                            var TotalShekel = CostShekel + VAT;
+                        }
                         <div class="row">
                             <div class="col-4">
                                 <div class="row">
                                     Sum
                                 </div>
                                 <div class="row">
-                                    <div class="col-6">
-                                        @Model.Requests.Sum(r => r.Cost);
+                                    <div class="col-6 pl-0">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input value="@CostShekel" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
                                     </div>
-                                    <div class="col-6">
-                                        @Model.Requests.Sum(r => r.Cost);
+                                    <div class="col-6 pl-0">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input value="" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-4 px-3">
+                                <div class="row">
+                                    VAT
+                                </div>
+                                <div class="row">
+                                    <div class="input-group">
+                                        <span class="input-group-text">&#x20aa;</span>
+                                        <input value="@VAT" class="form-control-plaintext border-bottom" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row">
+                                    Sum
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 pl-0">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input value="@TotalShekel" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-6 pl-0">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input value="" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-6">
+                            @*<button class="btn inv-payments-button float-right">Paid</button>*@
+                            <input type="submit" class="btn inv-payments-button float-right" value="Paid" />
+                        </div>
+                        <div class="col-6">
+                            <button class="btn inv-clear-button float-left">Cancel</button>
                         </div>
                     </div>
                 </div>

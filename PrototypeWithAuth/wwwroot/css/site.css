@@ -806,6 +806,17 @@ input.select-dropdown {
     line-height: 1;
 }
 
+.inv-clear-button {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 3rem;
+    color: black;
+    font-weight: 500;
+    padding: 0.56rem 3.25rem;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
 #createModalForm .mdb-select li:nth-child(2) {
     z-index: 1;
 }
