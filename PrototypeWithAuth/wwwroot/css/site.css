@@ -383,6 +383,13 @@ center-horizontally {
     background-color: rgb(232,240,254);
 }
 
+.vlz-bgcolor {
+    background-color: rgba(0,0,0,.0001) !important;
+}
+.vlz-filled {
+    padding: 0 !important;
+}
+
 .clicked-border {
     /*border-color: #A56FF1 !important;*/ /*invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);*/
     border: 2px double #A56FF1 !important;
@@ -1456,18 +1463,17 @@ table.table.visualzoom {
     height: auto;
 }
 
-table.table.visualzoom {
-    width: auto;
-    height: auto;
+.thick-border {
+    border: 2px solid black !important;
 }
 
-    table.table.visualzoom tr td {
-        height: 80px;
-        width: 160px;
-        vertical-align: bottom;
-        text-align: left;
-        overflow: hidden;
-    }
+table.table.visualzoom tr td {
+    height: 80px;
+    width: 160px;
+    vertical-align: bottom;
+    text-align: left;
+    overflow: hidden;
+}
 
         table.table.visualzoom tr td a {
             text-align: left;

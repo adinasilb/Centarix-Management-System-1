@@ -1015,36 +1015,65 @@ $(function () {
 	//	});
 	//};
 
+	$(".modal").on('hide.bs.modal', function () {
+		$('.modal-backdrop').remove()
+	});
 
 
 
-
-	$(".visual-locations-zoom").on("click", function (e) {
+	$(".visual-locations-zoom").off("click").on("click", function (e) {
 		console.log("called visual locations zoom with an id of: " + $(this).val());
 		var myDiv = $(".location-modal-view");
 		console.log("myDiv: " + myDiv);
 		var parentId = $(this).val();
+		$("#visualZoomModal").replaceWith('');
+		$(".modal").replaceWith('');
 		//console.log("about to call ajax with a parentid of: " + parentId);
 		$.ajax({
-			//IMPORTANT: ADD IN THE ID
+			async: true,
 			url: "/Locations/VisualLocationsZoom/?VisualContainerId=" + parentId,
 			type: 'GET',
 			cache: false,
-			context: myDiv,
-			success: function (result) {
-				this.html(result);
-				//turn off data dismiss by clicking out of the box and by pressing esc
-				myDiv.modal({
-					backdrop: 'static',
-					keyboard: false
+			success: function (data) {
+				var modal = $(data);
+				$('body').append(modal);
+				$("#visualZoomModal").modal({
+					backdrop: true,
+					keyboard: true,
 				});
-				//shows the modal
-				myDiv.modal('show');
-				//bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-				$(".modal-backdrop").remove();
-
+				$(".modal").modal('show');
+				//$('.modal-backdrop').remove()
+				var firstTDFilled = $("td.lab-man-50-background-color");
+				var height = firstTDFilled.height();
+				var width = firstTDFilled.width();
+				console.log("h: " + height + "------ w: " + width);
+				//$("td").height(height);
+				//$("td").width(width);
+				$(".visualzoom td").css('height', height);
+				$(".visualzoom td").css('width', width);
+				//$("td").addClass("danger-color");
 			}
 		});
+		//$.ajax({
+		//	//IMPORTANT: ADD IN THE ID
+		//	url: "/Locations/VisualLocationsZoom/?VisualContainerId=" + parentId,
+		//	type: 'GET',
+		//	cache: false,
+		//	context: myDiv,
+		//	success: function (result) {
+		//		this.html(result);
+		//		//turn off data dismiss by clicking out of the box and by pressing esc
+		//		myDiv.modal({
+		//			backdrop: 'static',
+		//			keyboard: false
+		//		});
+		//		//shows the modal
+		//		myDiv.modal('show');
+		//		//bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
+		//		$(".modal-backdrop").remove();
+
+		//	}
+		//});
 	});
 
 	//$(".clicked-inside-button").click(function () {
@@ -2550,7 +2579,7 @@ $("body").on("change", "#Exit2", function (e) {
 $("body").on("change", "#Entry2", function (e) {
 	$('#TotalHours').val('');
 });
-//}); 
+//});
 /*End Dropdown Menu*/
 
 

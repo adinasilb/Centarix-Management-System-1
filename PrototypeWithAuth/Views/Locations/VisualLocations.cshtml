@@ -17,7 +17,7 @@
 <div class="container float-right">
     <div class="row">
         <div class="col-12">
-            <button class="btn visual-locations-zoom inv-link-clr float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value=""> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
+            <button class="btn visual-locations-zoom inv-link-clr float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ParentLocationInstance.LocationInstanceID"> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
         </div>
     </div>
     <br />
@@ -36,7 +36,7 @@
                                 z++;
                                 var backgroundClass = "";
                                 var innerHtml = Model.ParentLocationInstance.Place;
-                                var AddedBGClass = " bg-info text-light";
+                                var AddedBGClass = " lab-man-50-background-color text-light";
                                 @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                                 {
                                     if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())

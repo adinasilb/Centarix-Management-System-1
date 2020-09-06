@@ -2931,7 +2931,8 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.ApplicationUserID = receivedLocationViewModel.Request.ApplicationUserCreatorID;
                 requestNotification.RequestName = receivedLocationViewModel.Request.Product.ProductName;
                 requestNotification.NotificationStatusID = 4;
-                requestNotification.Description = "received by "+ receivedLocationViewModel.Request.ApplicationUserReceiver.FirstName;
+                var FName = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault().FirstName;
+                requestNotification.Description = "received by "+ FName;
                 requestNotification.TimeStamp = DateTime.Now;
                 requestNotification.Controller = "Requests";
                 requestNotification.Action = "NotificatonsView";
