@@ -121,25 +121,36 @@ namespace PrototypeWithAuth.Controllers
             {
                 ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault()
             };
-            visualLocationsViewModel.ChildrenLocationInstances =
-                _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
-                .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
-
-            LocationType locationType = new LocationType();
-            if (visualLocationsViewModel.ChildrenLocationInstances != null && visualLocationsViewModel.ChildrenLocationInstances.Any()) //TODO: in the future handle this better
+            if (!visualLocationsViewModel.ParentLocationInstance.IsEmpty)
             {
-                locationType = _context.LocationTypes.Where(lt => lt.LocationTypeID == visualLocationsViewModel.ChildrenLocationInstances.FirstOrDefault().LocationTypeID).FirstOrDefault();
+                visualLocationsViewModel.ChildrenLocationInstances =
+                    _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
+                    .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
 
-            }
-            if (locationType.LocationTypeChildID != null)
-            {
-                //is this enough or should we actually check for children
-                visualLocationsViewModel.IsSmallestChild = false;
+                LocationType locationType = new LocationType();
+                if (visualLocationsViewModel.ChildrenLocationInstances != null && visualLocationsViewModel.ChildrenLocationInstances.Any()) //TODO: in the future handle this better
+                {
+                    locationType = _context.LocationTypes.Where(lt => lt.LocationTypeID == visualLocationsViewModel.ChildrenLocationInstances.FirstOrDefault().LocationTypeID).FirstOrDefault();
+
+                }
+                if (locationType.LocationTypeChildID != null)
+                {
+                    //is this enough or should we actually check for children
+                    visualLocationsViewModel.IsSmallestChild = false;
+                }
+                else
+                {
+                    visualLocationsViewModel.IsSmallestChild = true;
+                }
+                visualLocationsViewModel.CurrentEmptyChild = new LocationInstance(); // so you don't run into null problems when checking on the view
             }
             else
             {
-                visualLocationsViewModel.IsSmallestChild = true;
-
+                var ParentID = visualLocationsViewModel.ParentLocationInstance.LocationInstanceParentID;
+                visualLocationsViewModel.CurrentEmptyChild = visualLocationsViewModel.ParentLocationInstance;
+                visualLocationsViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == ParentID).FirstOrDefault();
+                visualLocationsViewModel.ChildrenLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceParentID == ParentID)
+                    .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
             }
 
             return PartialView(visualLocationsViewModel);
