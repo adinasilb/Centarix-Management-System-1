@@ -4,21 +4,60 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    ViewData["Title"] = "UsersView";
+    ViewData["Title"] = "Users View";
     Layout = "~/Views/Shared/Master.cshtml";
 
     var navClass = "bold-hover-effects";
     var activeNavClass = " active";
+    var activeTopNavClass = " activeUserClass  ";
+    var UsersClasses = navClass;
+    var WorkersClasses = navClass;
+    var DetailsClasses = navClass;
+    var HoursClasses = navClass;
+    var SalaryClasses = navClass;
+    var AwaitingApprovalClasses = navClass;
+    var AddWorkerClasses = navClass;
     var ListClasses = navClass;
-    var AddClasses = navClass; // + " create-user-modal";
+    var AddClasses = navClass;
+    bool Users = false;
+    bool Workers = false;
     if (TempData["PageType"] != null)
     {
         switch (TempData["PageType"])
         {
-            case AppUtility.UserPageTypeEnum.Index:
+            case AppUtility.UserPageTypeEnum.User:
+                UsersClasses += activeTopNavClass;
+                Users = true;
+                break;
+            case AppUtility.UserPageTypeEnum.Workers:
+                Workers = true;
+                WorkersClasses += activeTopNavClass;
+                break;
+        }
+    }
+    if (TempData["SideBar"] != null)
+    {
+        switch (TempData["SideBar"])
+        {
+            case AppUtility.UserSideBarEnum.Details:
+                DetailsClasses += activeNavClass;
+                break;
+            case AppUtility.UserSideBarEnum.Hours:
+                HoursClasses += activeNavClass;
+                break;
+            case AppUtility.UserSideBarEnum.Salary:
+                SalaryClasses += activeNavClass;
+                break;
+            case AppUtility.UserSideBarEnum.AwaitingApproval:
+                AwaitingApprovalClasses += activeNavClass;
+                break;
+            case AppUtility.UserSideBarEnum.AddWorker:
+                AddWorkerClasses += activeNavClass;
+                break;
+            case AppUtility.UserSideBarEnum.Index:
                 ListClasses += activeNavClass;
                 break;
-            case AppUtility.UserPageTypeEnum.Add:
+            case AppUtility.UserSideBarEnum.Add:
                 AddClasses += activeNavClass;
                 break;
         }
@@ -32,7 +71,10 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
                     <li class="nav-item mx-4 d-table">
-                        @Html.ActionLink("Users", "Index", "Admin", new { }, new { @class = "activeUserClass  align-text-bottom", @role = "button", @id = "inventory-link" })
+                        @Html.ActionLink("Users", "Index", "Admin", new { }, new { @class = UsersClasses + " align-text-bottom", @role = "button", @id = "inventory-link" })
+                    </li>
+                    <li class="nav-item mx-4 d-table">
+                        @Html.ActionLink("Workers", "Index", "Admin", new { }, new { @class = WorkersClasses + "  align-text-bottom", @role = "button", @id = "inventory-link" })
                     </li>
                 </ul>
             </div>
@@ -80,14 +122,36 @@
     <div class="container-fluid pl-0">
         <main role="main">
             <div style="display: flex;" class="usersview">
-                <div style="min-width: 110px; min-height:100rem; padding:5px; font-size:small;" class="p-2 border-right sidebar-shadow text-center ourNavBar">
-                    <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3 pl-lg-4 pl-md-3 pl-sm-2">
-                        <li class="nav-item my-4 ">
-                            <a href="@Url.Action("Index", "Admin")" class="@ListClasses"> <img src="~/images/css/inventory/sidebar/list.png" alt="Add User" class="mb-3" /><br /> List <br /></a>
-                        </li>
-                        <li class="nav-item my-4 ">
-                            <a href="@Url.Action("CreateUser","Admin")" class="@AddClasses"> <i style="font-size:1.5rem" class="icon-add_circle_outline-24px"></i><br /> Add <br /></a>
-                        </li>
+                <div style="min-width: 119px; min-height:100rem; padding:5px; font-size:small;" class="p-0 border-right sidebar-shadow text-center ourNavBar">
+                    <ul class="nav flex-column nav-pills nav-stacked mb-lg-3 p-0 mt-5">
+                        @if (Users)
+                        {
+                            <li class="nav-item my-4 px-2" style="max-width:119px">
+                                <p style="font-size:1rem;"><a href="@Url.Action("Index", "Admin")" class="@ListClasses">  <i class="icon-format_list_bulleted-24px-01" style="font-size:1.6rem;"></i><br /> List <br /></a></p>
+                            </li>
+                            <li class="nav-item my-4 px-2 " style="max-width:119px">
+                                <p style="font-size:1rem;"><a href="@Url.Action("CreateUser","Admin")" class="@AddClasses"> <i class="icon-add_circle_outline-24px" style="font-size:1.6rem;"></i><br />Add<br /></a></p>
+                            </li>
+
+                        }
+                        else if (Workers)
+                        {
+                            <li class="nav-item my-4 px-2" style="max-width:119px">
+                                <p style="font-size:1rem;"><a href="@Url.Action("Details", "")" class="@DetailsClasses">  <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Documents <br /></a></p>
+                            </li>
+                            <li class="nav-item my-4 px-2" style="max-width:119px">
+                                <p style="font-size:1rem;"><a href="@Url.Action("Hours","")" class="@HoursClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Company Absences <br /></a></p>
+                            </li>
+                            <li class="nav-item my-4 px-2 " style="max-width:119px">
+                                <p style="font-size:1rem;"><a href="@Url.Action("Salary","")" class="@SalaryClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Summary Hours <br /></a></p>
+                            </li>
+                            <li class="nav-item my-4 px-2" style="max-width:119px">
+                                <p style="font-size:1rem;"><a href="@Url.Action("AwaitingApproval","")" class="@AwaitingApprovalClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Report Days Off <br /></a></p>
+                            </li>
+                            <li class="nav-item my-4 px-2" style="max-width:119px">
+                                <p style="font-size:1rem;"><a href="@Url.Action("AddWorker","")" class="@AddWorkerClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Report Days Off <br /></a></p>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <div style="flex-grow: 1; position:relative; padding: 2rem;">

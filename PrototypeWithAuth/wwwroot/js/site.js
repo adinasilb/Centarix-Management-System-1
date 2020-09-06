@@ -2471,8 +2471,7 @@ $(function () {
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
-
-	$("body").on("change", "#Date", function (e) {			
+		
 	$("body").on("change", "#Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
 	});

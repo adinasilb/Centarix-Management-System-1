@@ -1,4 +1,4 @@
-﻿
+﻿@model List<PrototypeWithAuth.ViewModels.SummaryOfDaysOffViewModel>
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @inject UserManager<ApplicationUser> UserManager
@@ -15,7 +15,7 @@
             <div class="row">
                 <h3 class="col-4"><strong>Summary Of Days Off</strong></h3>
                 <div class="col-3 mt-4 ">
-                    <h5 class="font-weight-bolder"> Vacation Days Left:</h5>
+                    <h5 class="font-weight-bolder"> Vacation Days Left: @Model.Select(d=>d.VacationDaysLeft).Sum(vd=>vd)</h5>
                 </div>
 
             </div>
@@ -37,25 +37,26 @@
                     Sick Days Taken
                 </div>
             </div>
+            @foreach (var year in Model)
+            {
+                <div class="row border p-3 text-center">
 
-            <div class="row border p-3 text-center">
-
-                <div class="col-4 pl-5 text-left">
+                    <div class="col-2 pl-5 text-left">
+                        @year.Year
+                    </div>
+                    <div class="col-2">
+                        @year.TotalVacationDays
+                    </div>
+                    <div class="col-2">
+                        @year.VacationDaysTaken
+                    </div>
+                    <div class="col-4  text-right">
+                        @year.SickDaysTaken
+                    </div>
 
                 </div>
-                <div class="col-3">
+            }
 
-                    <br />
-
-                </div>
-                <div class="col-3">
-
-                </div>
-                <div class="col-2  timekeeper-font-color font-weight-bold">
-
-                </div>
-
-            </div>
 
             <div class="row mt-6 ">
                 <div class="col-2  my-3 ml-5 text-center pt-3">

@@ -20,7 +20,8 @@ namespace PrototypeWithAuth.AppData
         public enum LabManagementSidebarEnum { None, Orders, Quotes }
         public enum RequestSidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits} //Listed in the site.js (if you change here must change there)
-        public enum UserPageTypeEnum { None, Index, Add }
+        public enum UserPageTypeEnum { None, User, Workers}
+        public enum UserSideBarEnum { None, Index, Add, Details, AddWorker, AwaitingApproval, Salary, Hours }
         public enum TimeKeeperPageTypeEnum { None, Report, Summary }
         public enum TimeKeeperSidebarEnum { None, ReportHours, Days, Hours, DaysOff, Documents, CompanyAbsences }
         public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }

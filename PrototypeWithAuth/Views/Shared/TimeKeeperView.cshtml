@@ -121,17 +121,17 @@
                     <ul style="position:fixed" class="nav flex-column nav-pills nav-stacked mb-lg-3 p-0 mt-5">
                         @if (Report)
                         {
-                        <li class="nav-item my-4 px-2" style="max-width:119px">
-                            <p style="font-size:1rem;"><a href="@Url.Action("ReportHours", "Timekeeper")" class="@ReportHoursClasses">  <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Report Hours <br /></a></p>
-                        </li>
-                            <li class="nav-item my-4 px-2 " style="max-width:119px">
-                                <p style="font-size:1rem;"><a href="@Url.Action("SummaryDaysOff","Timekeeper")" class="@DaysClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Summary Days Off<br /></a></p>
+                            <li class="nav-item my-4 px-2" style="max-width:119px">
+                                <p style="font-size:1rem;"><a href="@Url.Action("ReportHours", "Timekeeper")" class="@ReportHoursClasses">  <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Report Hours <br /></a></p>
                             </li>
                             <li class="nav-item my-4 px-2 " style="max-width:119px">
                                 <p style="font-size:1rem;"><a href="@Url.Action("SummaryHours","Timekeeper")" class="@HoursClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Summary Hours <br /></a></p>
                             </li>
                             <li class="nav-item my-4 px-2" style="max-width:119px">
                                 <p style="font-size:1rem;"><a href="@Url.Action("ReportDaysOff","Timekeeper")" class="@DaysOffClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Report Days Off <br /></a></p>
+                            </li>
+                            <li class="nav-item my-4 px-2 " style="max-width:119px">
+                                <p style="font-size:1rem;"><a href="@Url.Action("SummaryDaysOff","Timekeeper")" class="@DaysClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Summary Days Off<br /></a></p>
                             </li>
                         }
                         else if (Summary)

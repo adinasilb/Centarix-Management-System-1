@@ -165,7 +165,42 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.DaysOff;
-            return View();
+            var userid = _userManager.GetUserId(User);
+            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
+
+            List<SummaryOfDaysOffViewModel> daysOffByYear = new List<SummaryOfDaysOffViewModel>();
+            int year = DateTime.Now.Year;
+            while(year >= user.StartedWorking.Year)
+            {
+                int vacationDays = 0;
+                double vacationDaysPerMonth = 1.33333;
+                if (year == DateTime.Now.Year )
+                {
+                    int month = DateTime.Now.Month;    
+                    double vacationDaysBeforeRound = vacationDaysPerMonth * month;
+                    vacationDays = (int)Math.Ceiling(vacationDaysBeforeRound);
+                }
+                else if(year == user.StartedWorking.Year)
+                {
+                    int month = 12 - user.StartedWorking.Month+1;
+                    double vacationDaysBeforeRound = vacationDaysPerMonth * month;
+                    vacationDays = (int)Math.Ceiling(vacationDaysBeforeRound);
+                }
+                else
+                {
+                    vacationDays = 16;
+                }
+                SummaryOfDaysOffViewModel summaryOfDaysOff = new SummaryOfDaysOffViewModel
+                {
+                    Year = year,
+                    TotalVacationDays = vacationDays,
+                    VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count(),
+                    SickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count()
+                };
+                daysOffByYear.Add(summaryOfDaysOff);
+                year = year - 1;
+            }
+            return View(daysOffByYear);
 
         }
 
