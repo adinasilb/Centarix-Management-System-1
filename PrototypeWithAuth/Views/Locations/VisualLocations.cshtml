@@ -12,7 +12,7 @@
 <div class="center" role="status" id="loading2" style="display:none;">
     <img src="~/images/css/Loading/centarix_loading3.gif" />
 </div>
-@if (Model.IsSmallestChild)
+@if (Model.IsSmallestChild || Model.CurrentEmptyChild.LocationInstanceID > 0)
 {
 <div class="container float-right">
     <div class="row">
@@ -36,11 +36,12 @@
                                 z++;
                                 var backgroundClass = "";
                                 var innerHtml = Model.ParentLocationInstance.Place;
+                                var AddedBGClass = " bg-info text-light";
                                 @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                                 {
                                     if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
                                     {
-                                        backgroundClass += " bg-info text-light";
+                                        backgroundClass += AddedBGClass;
 
                                         innerHtml = Model.ChildrenLocationInstances[z].Place;
                                     }

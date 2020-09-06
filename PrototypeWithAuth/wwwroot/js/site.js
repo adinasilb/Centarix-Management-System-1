@@ -1393,7 +1393,7 @@ $(function () {
 	});
 
 	$.fn.setUpLocationIndexList = function (val) {
-//clear second div just in case
+		//clear second div just in case
 		var subDiv = $(".colTwoSublocations");
 		subDiv.html("");
 
@@ -1421,6 +1421,40 @@ $(function () {
 
 	};
 
+	$(".load-visual-sublocation-view").off("click").on("click", function (e) {
+		console.log("load visual sublocation view");//delete all prev tables:
+		var tableVal = $(this).val();
+		$('div[id^="table"]').each(function () {
+			var tableID = $(this).attr("id");
+			var tableNum = tableID.substr(5, tableID.length);
+			if (parseInt(tableVal) < parseInt(tableNum)) {
+				console.log(tableVal + " < " + tableNum);
+				$(this).hide();
+			}
+			else {
+				console.log(tableVal + " > " + tableNum);
+			}
+		});
+
+		var myDiv = $(".colTwoSublocations");
+		var table = $(this).closest('table');
+
+		//Begin CSS Styling
+		var stylingClass = "lab-man-50-background-color";
+
+		table.children('tbody').children('tr').children('td').removeClass(stylingClass);
+		$(this).parent().addClass(stylingClass);
+
+		var parentStylingClass = "parent-location-selected-outer-lab-man";
+		if ($(this).hasClass("parent-location")) {
+			$("body td").removeClass(parentStylingClass);
+			$(this).parent().addClass(parentStylingClass);
+
+		}
+		//End CSS Styling
+		$.fn.setUpVisual($(this).val());
+	});
+
 
 	$(".load-sublocation-view").off("click").on("click", function (e) {
 		//e.preventDefault();
@@ -1429,27 +1463,46 @@ $(function () {
 		//$(".load-sublocation-view").parent().removeClass("td-selected");
 		//$(this).parent().addClass("td-selected");
 		$("#loading1")/*.delay(1000)*/.show(0);
+
+		//delete all prev tables:
+		var tableVal = $(this).val();
+		console.log("-------------------------------------------------------------");
+		console.log("table val: " + tableVal);
+		$('div[id^="table"]').each(function () {
+			var tableID = $(this).attr("id");
+			var tableNum = tableID.substr(5, tableID.length);
+			console.log("tableID: " + tableID);
+			console.log("tableNum: " + tableNum);
+			if (parseInt(tableVal) < parseInt(tableNum)) {
+				console.log(tableVal + " < " + tableNum);
+				$(this).hide();
+			}
+			else {
+				console.log(tableVal + " > " + tableNum);
+			}
+		});
+
 		var myDiv = $(".colTwoSublocations");
 		var table = $(this).closest('table');
 
-		//delete all children tables
-		var div = $(this).closest('div');
-		var divid = $(this).closest('div').prop("id");
-		console.log("div: " + div);
-		console.log("divid: " + divid);
+		////delete all children tables
+		//var div = $(this).closest('div');
+		//var divid = $(this).closest('div').prop("id");
+		//console.log("div: " + div);
+		//console.log("divid: " + divid);
 
-		if (divid != "") {
-			var nextDiv = div.nextAll(".sublocation-index");
-			var nextDivID = nextDiv.prop("id");
-			console.log("nextdiv: " + nextDiv);
-			console.log("nextdivid: " + nextDivID);
+		//if (divid != "") {
+		//	var nextDiv = div.nextAll(".sublocation-index");
+		//	var nextDivID = nextDiv.prop("id");
+		//	console.log("nextdiv: " + nextDiv);
+		//	console.log("nextdivid: " + nextDivID);
 
-			nextDiv.html("");
-			//while (nextDiv != null) {
-			//	nextDiv = div.next(".sublocation-index");
-			//	//nextDiv.html("");
-			//}
-		}
+		//	nextDiv.html("");
+		//	//while (nextDiv != null) {
+		//	//	nextDiv = div.next(".sublocation-index");
+		//	//	//nextDiv.html("");
+		//	//}
+		//}
 
 		//Begin CSS Styling
 		var stylingClass = "lab-man-50-background-color";
@@ -1464,13 +1517,13 @@ $(function () {
 
 		var parentStylingClass = "parent-location-selected-outer-lab-man";
 		if ($(this).hasClass("parent-location")) {
-			console.log("is parent location!");
+			//console.log("is parent location!");
 			$("body td").removeClass(parentStylingClass);
 			$(this).parent().addClass(parentStylingClass);
 
 		}
 		else {
-			console.log("is not parent location");
+			//console.log("is not parent location");
 		}
 		//End CSS Styling
 
@@ -1506,6 +1559,7 @@ $(function () {
 
 	$.fn.setUpVisual = function (val) {
 		$("#loading2")/*.delay(1000)*/.show(0);
+		console.log("in set up visual");
 		//fill up col three with the visual
 		var visualDiv = $(".VisualBoxColumn");
 		var visualContainerId = val;
@@ -1513,7 +1567,7 @@ $(function () {
 		$.ajax({
 			url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
 			type: 'GET',
-			cache: false,
+			cache: true,
 			context: visualDiv,
 			success: function (result) {
 				visualDiv.show();
@@ -2363,7 +2417,8 @@ $(function () {
 			cache: false,
 			success: function (data) {
 				$("#hoursTable").html(data);
-			}});
+			}
+		});
 	};
 	$(".open-work-from-home-modal").click(function (e) {
 		var itemurl = "ReportHoursFromHomeModal";
@@ -2389,6 +2444,7 @@ $(function () {
 	});
 
 	$("body").on("change", "#Date", function (e) {			
+	$("body").on("change", "#Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
 	});
 
@@ -2400,7 +2456,7 @@ $(function () {
 		return dayOfWeek
 	}
 
-	$("body").on("change", "#Date.update-hour-date", function (e) {		
+	$("body").on("change", "#Date.update-hour-date", function (e) {
 		$.fn.GetEmployeeHour($(this).val());
 	});
 	$("body").on("change", "#Date.update-work-from-home", function (e) {
@@ -2435,18 +2491,15 @@ $(function () {
 //DROPDOWN
 /*Dropdown Menu*/
 $('.dropdown-main').off("click").on("click", function () {
-	console.log("DRD 1");
 	$(this).attr('tabindex', 1).focus();
 	//$(this).toggleClass('active');
 	$(this).find('.dropdown-menu').slideToggle(300);
 });
 $('.dropdown-main').focusout(function () {
-	console.log("DRD 2");
 	$(this).removeClass('active');
 	$(this).find('.dropdown-menu').slideUp(300);
 });
 $('.dropdown-main .dropdown-menu li').click(function () {
-	console.log("DRD 3");
 	$(this).parents('.dropdown-main').find('span').text($(this).text());
 	$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
 });
@@ -2454,7 +2507,6 @@ $('.dropdown-main .dropdown-menu li').click(function () {
 
 
 $('.dropdown-menu li').click(function () {
-	console.log("DRD 4");
 	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
 		msg = '<span class="msg">Hidden input value: ';
 	$('.msg').html(msg + input + '</span>');
@@ -2463,18 +2515,15 @@ $('.dropdown-menu li').click(function () {
 
 
 $('.dropdown-multiple').click(function () {
-	console.log("DRD 5");
 	$(this).attr('tabindex', 1).focus();
 	$(this).addClass('active');
 	$(this).find('.dropdown-menu-multiple').slideToggle(300);
 });
 $('.dropdown-multiple').focusout(function () {
-	console.log("DRD 6");
 	$(this).removeClass('active');
 	$(this).find('.dropdown-menu-multiple').slideUp(300);
 });
 $('.dropdown-multiple .dropdown-menu div label').click(function () {
-	console.log("DRD 7");
 	//$(this).parents('.dropdown').find('span').text($(this).text());
 	$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
 	$(this).parents('.dropdown-multiple').addClass('active');
