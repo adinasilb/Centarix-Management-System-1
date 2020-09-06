@@ -7,8 +7,8 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5">
                 @Html.HiddenFor(r => r.EmployeeHoursID)
-
-                <div id='calendar'></div>
+                <div class="datepicker-here" data-range="true" 
+                     data-multiple-dates-separator=" - " data-language='en'></div>
                 <div class="modal-footer mt-4 border-0 p-4" style="justify-content:center;">
                     <input type="submit" class="timekeeper-button mr-4" asp-action="UpdateHours" value="Save" style="width:40%;" />
                     <button class="cancel-button cancel-email" data-dismiss="modal" style="width:40%;">Cancel</button>@*FAIGE: should this delete the request?*@
@@ -18,4 +18,6 @@
     </div>
 </div>
 
-
+<script src="~/js/datepicker.min.js"></script>
+<!-- Include English language -->
+<script src="~/js/datepicker.en.js"></script>
