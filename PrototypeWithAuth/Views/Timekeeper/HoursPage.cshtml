@@ -19,27 +19,40 @@
     </div>
     @foreach (var eh in Model)
     {
-        <div class="row border p-3 text-center">
+<div class="row border p-3 text-center">
 
-            <div class="col-4 pl-5 text-left">
-                @eh.Date.ToLongDateString()
-            </div>
-            <div class="col-3">
-                @eh.Entry1?.ToShortTimeString()
-                <br />
-                @eh.Entry2?.ToShortTimeString()
-            </div>
-            <div class="col-3">
-                @eh.Exit1?.ToShortTimeString()
-                <br />
-                @eh.Exit2?.ToShortTimeString()
-            </div>
-            <div class="col-2  timekeeper-font-color font-weight-bold">
-                @{var hours = eh.TotalHours == TimeSpan.Zero ? "" : eh.TotalHours?.ToString(@"h\:mm"); }
-                @hours
-            </div>
+    <div class="col-4 pl-5 text-left">
+        @eh.Date.ToLongDateString()
+    </div>
+    @if (eh.OffDayType == null)
+    {
+        <div class="col-3">
+            @eh.Entry1?.ToShortTimeString()
+            <br />
+            @eh.Entry2?.ToShortTimeString()
+        </div>
+        <div class="col-3">
+            @eh.Exit1?.ToShortTimeString()
+            <br />
+            @eh.Exit2?.ToShortTimeString()
+        </div>
+    }
+    else
+    {
+        <div class="col-3">
+            @eh.OffDayType.Description
+        </div>
+        <div class="col-3">
 
         </div>
+    }
+
+    <div class="col-2  timekeeper-font-color font-weight-bold">
+        @{var hours = eh.TotalHours == TimeSpan.Zero ? "" : eh.TotalHours?.ToString(@"h\:mm"); }
+        @hours
+    </div>
+
+</div>
 
     }
     <div class="row mt-6 py-4 pl-3 text-center">

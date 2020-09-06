@@ -112,7 +112,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> Days()
+        public async Task<IActionResult> SummaryDaysOff()
         {
             TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Days;
@@ -124,8 +124,8 @@ namespace PrototypeWithAuth.Controllers
             ReportDaysViewModel reportDaysViewModel = new ReportDaysViewModel
             {
                 VacationDays = user.VacationDays,
-                VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date >= startOfThisYear).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2),
-                SickDaysTaken = _context.EmployeeHours.Where(eh=>eh.Date>=startOfThisYear).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1)
+                VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date >= startOfThisYear).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2).OrderByDescending(eh=>eh.Date),
+                SickDaysTaken = _context.EmployeeHours.Where(eh=>eh.Date>=startOfThisYear).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1).OrderByDescending(eh => eh.Date)
             };
             return View(reportDaysViewModel);
            
@@ -142,7 +142,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> Hours()
+        public async Task<IActionResult> SummaryHours()
         {
             TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Hours;
@@ -154,13 +154,14 @@ namespace PrototypeWithAuth.Controllers
         {
             var userid = _userManager.GetUserId(User);
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
-            var hours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month).ToList();
+            var hours = _context.EmployeeHours.Include(eh=>eh.OffDayType).Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month && eh.Date.Date<=DateTime.Now.Date)
+                .OrderByDescending(eh=>eh.Date).ToList();
             return hours;
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> DaysOff(int month = 0)
+        public async Task<IActionResult> ReportDaysOff()
         {
             TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.DaysOff;
@@ -286,12 +287,16 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> Vacation(string userID)
+        public async Task<IActionResult> Vacation()
         {
-            EmployeeHours employeeHour = new EmployeeHours { EmployeeID = _userManager.GetUserId(User), Date = DateTime.Now };
-            return PartialView(employeeHour);
+            return PartialView();
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> SickDay()
+        {
+            return PartialView();
+        }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> ExitModal()
@@ -313,6 +318,75 @@ namespace PrototypeWithAuth.Controllers
             }
             return PartialView(todaysEntry);
         }
+        [HttpPost]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public bool SaveVacation(DateTime dateFrom, DateTime dateTo)
+        {
+            return SaveOffDay(dateFrom, dateTo, 2);
+        }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public bool SaveSick(DateTime dateFrom, DateTime dateTo)
+        {
+            return SaveOffDay(dateFrom, dateTo, 1);
+        }
+
+        private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, int offDayTypeID)
+        {
+            var userID = _userManager.GetUserId(User);
+            EmployeeHours employeeHour = null;
+            if (dateTo == new DateTime())
+            {
+                employeeHour = _context.EmployeeHours.Where(eh => eh.Date.Date == dateFrom.Date && eh.EmployeeID == userID).FirstOrDefault();
+                if (employeeHour == null)
+                {
+                    employeeHour = new EmployeeHours
+                    {
+                        EmployeeID = userID,
+                        Date = dateFrom
+                    };
+                }
+                employeeHour.OffDayTypeID = offDayTypeID;
+                _context.Update(employeeHour);
+                _context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                var employeeHours = _context.EmployeeHours.Where(eh => (eh.Date.Date >= dateFrom && eh.Date.Date <= dateTo) && eh.EmployeeID == userID);
+
+                while (dateFrom <= dateTo)
+                {
+
+                    if (employeeHours.Count() > 0)
+                    {
+                        employeeHour = employeeHours.Where(eh => eh.Date == dateFrom).FirstOrDefault();
+                        if (employeeHour == null)
+                        {
+                            employeeHour = new EmployeeHours
+                            {
+                                EmployeeID = userID,
+                                Date = dateFrom
+                            };
+                        }
+                        employeeHour.OffDayTypeID = offDayTypeID;
+                    }
+                    else
+                    {
+                        employeeHour = new EmployeeHours
+                        {
+                            EmployeeID = userID,
+                            OffDayTypeID = offDayTypeID,
+                            Date = dateFrom
+                        };
+                    }
+                    _context.Update(employeeHour);
+                    dateFrom = dateFrom.AddDays(1);
+                }
+                _context.SaveChanges();
+                return true;
+            }
+        }
     }
 }

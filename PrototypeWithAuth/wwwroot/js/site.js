@@ -1646,8 +1646,7 @@ $(function () {
 	$("#Request_ParentRequest_InvoiceDate").change(function () {
 
 	});
-	$('#myModal').change(
-		function () {
+	$('#myModal').change(		function () {
 			$.validator.unobtrusive.parse("#myForm");
 		});
 
@@ -2383,6 +2382,12 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
+	$(".report-sick-days").click(function (e) {
+		var itemurl = "SickDay"
+		$("#loading").show();
+		$.fn.CallModal(itemurl);
+	});
+
 	$("body").on("change", "#Date", function (e) {			
 		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
 	});
@@ -2424,7 +2429,7 @@ $(function () {
 	$.fn.GetEmployeeHourFromToday = function () {
 		$.fn.CallModal('ExitModal');
 	};
-});
+
 
 
 //DROPDOWN
@@ -2511,3 +2516,43 @@ $("body").on("change", "#Entry2", function (e) {
 //		msg = '<span class="msg">Hidden input value: ';
 //	$('.msg').html(msg + input + '</span>');
 //}); 
+$.fn.SaveOffDays = function (url) {
+	var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
+	var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
+	var dateRangeFromDay = rangeFrom.attr('data-date');
+	var dateRangeFromMonth = rangeFrom.attr('data-month');
+	var dateRangeFromYear = rangeFrom.attr('data-year');
+	var dateRangeToDay = rangeTo.attr('data-date');
+	var dateRangeToMonth = rangeTo.attr('data-month');
+	var dateRangeToYear = rangeTo.attr('data-year');
+	var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toISOString();
+	var dateTo = '';
+	if (dateRangeToDay == undefined) {
+		dateTo = null;
+	}
+	else {
+		dateTo = new Date(dateRangeToYear, dateRangeToMonth, dateRangeToDay, 0, 0, 0).toISOString();
+	}
+
+	console.log(dateFrom + "-" + dateTo);
+	$.ajax({
+		async: false,
+		url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo,
+		type: 'POST',
+		cache: false,
+		success: function (data) {
+			$(".modal").modal('hide');
+		}
+	});
+}
+
+$("body").on("click", "#saveVacation", function (e) {
+	e.preventDefault();
+	$.fn.SaveOffDays("SaveVacation");
+});
+$("body").on("click", "#saveSick", function (e) {
+	e.preventDefault();
+	$.fn.SaveOffDays("SaveSick");
+});
+
+});
