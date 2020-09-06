@@ -40,69 +40,75 @@ namespace PrototypeWithAuth.Controllers
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
-            if(todaysEntry == null)
+            EntryExitViewModel entryExitViewModel = new EntryExitViewModel();
+            if (todaysEntry == null)
             {
-                return View(AppUtility.EntryExitEnum.Entry);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry1;
             }
             else if (todaysEntry.Exit1 == null)
             {
-                return View(AppUtility.EntryExitEnum.Exit);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
+                entryExitViewModel.Entry = todaysEntry.Entry1;
             }
             else if(todaysEntry.Entry2 == null){
-
-                return View(AppUtility.EntryExitEnum.Entry);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
             }
             else if (todaysEntry.Exit2 == null)
             {
-                return View(AppUtility.EntryExitEnum.Exit);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
+                entryExitViewModel.Entry = todaysEntry.Entry2;
             }
             else
             {
-                return View(AppUtility.EntryExitEnum.None);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
+            return View(entryExitViewModel);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public IActionResult ReportHours(AppUtility.EntryExitEnum entryExitEnum)
+        public IActionResult ReportHours(EntryExitViewModel entryExitViewModel)
         {
             TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
-            if (todaysEntry == null)
+            if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry1)
             {
                 EmployeeHours todaysHours = new EmployeeHours { EmployeeID = userid, Entry1 = DateTime.Now, Date = DateTime.Now };
                 _context.EmployeeHours.Add(todaysHours);
                 _context.SaveChanges();
-                return View(AppUtility.EntryExitEnum.Exit);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
+                entryExitViewModel.Entry = todaysHours.Entry1;
             }
-            else if (todaysEntry.Exit1 == null)
+            else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit1)
             {
                 todaysEntry.Exit1 = DateTime.Now;
                 _context.EmployeeHours.Update(todaysEntry);
                 _context.SaveChanges();
-                return View(AppUtility.EntryExitEnum.Entry);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
             }
-            else if (todaysEntry.Entry2 == null)
+            else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry2)
             {
                 todaysEntry.Entry2 = DateTime.Now;
                 _context.EmployeeHours.Update(todaysEntry);
                 _context.SaveChanges();
-                return View(AppUtility.EntryExitEnum.Exit);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
+                entryExitViewModel.Entry = todaysEntry.Entry2;
                
             }
-            else if (todaysEntry.Exit2 == null)
+            else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit2)
             {
                 todaysEntry.Exit2 = DateTime.Now;
                 _context.EmployeeHours.Update(todaysEntry);
                 _context.SaveChanges();
-                return View(AppUtility.EntryExitEnum.None);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
             else
             {
-                return View(AppUtility.EntryExitEnum.None);
+                entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
+            return View(entryExitViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
@@ -164,19 +170,54 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> ReportHoursFromHomeModal(string userID)
+        public async Task<IActionResult> ReportHoursFromHomeModal(DateTime chosenDate)
         {
-            EmployeeHoursAwaitingApproval employeeHour = new EmployeeHoursAwaitingApproval { EmployeeID = userID, Date = DateTime.Now};
-            return PartialView(employeeHour);
+            if (chosenDate == new DateTime())
+            {
+                chosenDate = DateTime.Today;
+            }
+            var userID = _userManager.GetUserId(User);
+            EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval = new EmployeeHoursAwaitingApproval();
+            var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).FirstOrDefault();
+            if (employeeHours == null)
+            {
+                employeeHoursAwaitingApproval.EmployeeID = userID;
+                employeeHoursAwaitingApproval.Date = chosenDate;
+            }
+            else
+            {
+                employeeHoursAwaitingApproval.EmployeeID = userID;
+                employeeHoursAwaitingApproval.Date = chosenDate;
+                employeeHoursAwaitingApproval.Entry1 = employeeHours.Entry1;
+                employeeHoursAwaitingApproval.Exit1 = employeeHours.Entry2;
+                employeeHoursAwaitingApproval.Entry2 = employeeHours.Exit1;
+                employeeHoursAwaitingApproval.Exit2 = employeeHours.Exit2;
+                employeeHoursAwaitingApproval.TotalHours = employeeHours.TotalHours;
+            }
+
+            return PartialView(employeeHoursAwaitingApproval);
+           
 
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> ReportHoursFromHomeModal(EmployeeHoursAwaitingApproval employeeHours)
+        public IActionResult ReportHoursFromHomeModal(EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval)
         {
-            employeeHours.EmployeeHoursStatusID = 1;
-            _context.Add(employeeHours);
+            var userID = _userManager.GetUserId(User);
+            var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == employeeHoursAwaitingApproval.Date.Date).FirstOrDefault();
+            if (employeeHours != null)
+            {
+                employeeHoursAwaitingApproval.EmployeeHoursID = employeeHours.EmployeeHoursID;
+                employeeHoursAwaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
+            }
+            var awaitingApprovalID = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == employeeHoursAwaitingApproval.Date.Date).Select(e => e.EmployeeHoursAwaitingApprovalID).FirstOrDefault();
+            if(awaitingApprovalID != null)
+            {
+                employeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID = awaitingApprovalID;
+            }
+            employeeHoursAwaitingApproval.EmployeeHoursStatusID = 1;
+            _context.Update(employeeHoursAwaitingApproval);
             _context.SaveChanges();
             return Redirect("ReportHours");
 
@@ -193,10 +234,54 @@ namespace PrototypeWithAuth.Controllers
             var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).FirstOrDefault();
             if (employeeHour == null)
             {
-                employeeHour = new EmployeeHours { EmployeeID = userID, Date = DateTime.Now };
+                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, EmployeeHoursStatusID=3 };
+            }
+            else
+            {
+                employeeHour.EmployeeHoursStatusID = 2;
             }
 
             return PartialView(employeeHour);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> UpdateHours(EmployeeHours employeeHours)
+        {
+            var awaitingApproval = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == employeeHours.EmployeeID && eh.Date.Date == employeeHours.Date.Date).FirstOrDefault();
+            int? employeeHoursID = null;
+            if(employeeHours.EmployeeHoursID!=0)
+            {
+                employeeHoursID = employeeHours.EmployeeHoursID;
+            }
+            EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval = new EmployeeHoursAwaitingApproval();
+            if (awaitingApproval == null)
+            {
+
+                employeeHoursAwaitingApproval.EmployeeID = employeeHours.EmployeeID;
+                employeeHoursAwaitingApproval.EmployeeHoursID = employeeHoursID;
+                employeeHoursAwaitingApproval.Entry1 = employeeHours.Entry1;
+                employeeHoursAwaitingApproval.Entry2 = employeeHours.Entry2;
+                employeeHoursAwaitingApproval.Exit1 = employeeHours.Exit1;
+                employeeHoursAwaitingApproval.Exit2 = employeeHours.Exit2;
+                employeeHoursAwaitingApproval.TotalHours = employeeHours.TotalHours;
+                employeeHoursAwaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
+                employeeHoursAwaitingApproval.Date = employeeHours.Date;
+            }
+            else
+            {
+                awaitingApproval.Entry1 = employeeHours.Entry1;
+                awaitingApproval.Exit1 = employeeHours.Entry2;
+                awaitingApproval.Entry2 = employeeHours.Exit1;
+                awaitingApproval.Exit2 = employeeHours.Exit2;
+                awaitingApproval.TotalHours = employeeHours.TotalHours;
+                awaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
+                employeeHoursAwaitingApproval = awaitingApproval;
+            }
+           
+            _context.Update(employeeHoursAwaitingApproval);
+            _context.SaveChanges();
+            return Redirect("ReportHours");
         }
 
         [HttpGet]
@@ -205,6 +290,28 @@ namespace PrototypeWithAuth.Controllers
         {
             EmployeeHours employeeHour = new EmployeeHours { EmployeeID = _userManager.GetUserId(User), Date = DateTime.Now };
             return PartialView(employeeHour);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> ExitModal()
+        {
+            var userID = _userManager.GetUserId(User);
+            var todaysEntry = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == DateTime.Now.Date).FirstOrDefault();
+            if (todaysEntry.Exit1 == null)
+            {
+                todaysEntry.Exit1 = DateTime.Now;
+                _context.EmployeeHours.Update(todaysEntry);
+                _context.SaveChanges();
+            }
+       
+            else if (todaysEntry.Exit2 == null)
+            {
+                todaysEntry.Exit2 = DateTime.Now;
+                _context.EmployeeHours.Update(todaysEntry);
+                _context.SaveChanges();
+            }
+            return PartialView(todaysEntry);
         }
 
     }

@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.AppData.AppUtility.EntryExitEnum
+﻿@model PrototypeWithAuth.ViewModels.EntryExitViewModel;
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @inject UserManager<ApplicationUser> UserManager
@@ -8,7 +8,7 @@
     Layout = "~/Views/Shared/TimeKeeperView.cshtml";
 
     <div class="m-6">
-        <div class="row m-6">
+        <div class="row m-6 mb-4">
             <div class="col-2 mt-2 text-left">
 
                 @{
@@ -32,25 +32,57 @@
             </div>
 
         </div>
+        @if (Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit1) ||
+        Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit2))
+        {
+            <div class=" text-center timekeeper-font-color font-weight-bolder" >
+                <label style="font-size:2.0625rem;">Entered @Model.Entry?.ToString("HH:mm"), Working @((DateTime.Now - Model.Entry)?.ToString(@"hh\:mm\:ss"))</label>                
+            </div>
+        }
+
+
         @{
             var entryClasses = "";
             var exitClasses = "";
             var isExitDisabled = "";
             var isEntryDisabled = "";
-            switch (Model)
+            var entryDescription = "Entry";
+            var exitDescription = "Exit";
+            switch (Model.EntryExitEnum)
             {
-                case PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Entry:
+                case PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Entry1:
                     entryClasses = "success-color";
                     exitClasses = "disabled-color";
                     isExitDisabled = "disabled";
                     isEntryDisabled = "";
+                    entryDescription = "Entry 1";
+                    exitDescription = "Exit 1";
                     break;
-                case PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit:
+                case PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit1:
                     entryClasses = "disabled-color";
                     exitClasses = "danger-color";
                     isExitDisabled = "";
                     isEntryDisabled = "disabled";
+                    entryDescription = "Entry 1";
+                    exitDescription = "Exit 1";
                     break;
+                case PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Entry2:
+                    entryClasses = "success-color";
+                    exitClasses = "disabled-color";
+                    isExitDisabled = "disabled";
+                    isEntryDisabled = "";
+                    exitDescription = "Exit 2";
+                    entryDescription = "Entry 2";
+                    break;
+                case PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit2:
+                    entryClasses = "disabled-color";
+                    exitClasses = "danger-color";
+                    isExitDisabled = "";
+                    isEntryDisabled = "disabled";
+                    exitDescription = "Exit 2";
+                    entryDescription = "Entry 2";
+                    break;
+
                 case PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.None:
                     entryClasses = "disabled-color";
                     exitClasses = "disabled-color";
@@ -59,14 +91,15 @@
                     break;
             }
         }
-        <form action="" id="myForm" method="post" enctype="multipart/form-data" >
 
-            <div class="row entry-exit-background p-5 m-6">
+        <form action="" id="myForm" method="post" enctype="multipart/form-data">
+            @Html.HiddenFor(e => e.EntryExitEnum);
+            <div class="row entry-exit-background p-5 m-6 mt-5">
                 <div class="col-6 pr-5  my-3 text-right">
-                    <button id="entry" class="no-box-shadow border-0 rounded-pill p-3 @entryClasses text-white" style="width:55%; font-size:4rem;" @isEntryDisabled type="submit"  asp-action="ReportHours" >Entry</button>
+                    <button id="entry" class="no-box-shadow border-0 rounded-pill p-3 @entryClasses text-white" style="width:55%; font-size:4rem;" @isEntryDisabled type="submit" asp-action="ReportHours">@entryDescription</button>
                 </div>
                 <div class="col-6 pl-5 my-3 text-left">
-                    <button id="exit" class="no-box-shadow border-0 rounded-pill p-3 @exitClasses text-white" style="width: 55%; font-size: 4rem;" @isExitDisabled type="submit"  asp-action="ReportHours" >Exit</button>
+                    <button id="exit" class="no-box-shadow border-0 rounded-pill p-3 @exitClasses text-white" style="width: 55%; font-size: 4rem;" @isExitDisabled type="submit" asp-action="ReportHours">@exitDescription</button>
                 </div>
             </div>
         </form>
@@ -101,5 +134,6 @@ function startTime() {
 function checkTime(i) {
   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
   return i;
-}
+    }
+
 </script>

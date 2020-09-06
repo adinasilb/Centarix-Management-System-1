@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200902123026_AddedEmployeHoursForeignKey")]
+    partial class AddedEmployeHoursForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -411,9 +413,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeHoursID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("EmployeeHoursStatusID")
                         .HasColumnType("int");
 
@@ -439,8 +438,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("time");
 
                     b.HasKey("EmployeeHoursAwaitingApprovalID");
-
-                    b.HasIndex("EmployeeHoursID");
 
                     b.HasIndex("EmployeeHoursStatusID");
 
@@ -2563,11 +2560,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeHours", "EmployeeHours")
-                        .WithMany()
-                        .HasForeignKey("EmployeeHoursID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatus")
                         .WithMany()
                         .HasForeignKey("EmployeeHoursStatusID")

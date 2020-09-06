@@ -2100,6 +2100,10 @@ $(function () {
 		if (valid == "true") {
 			return;
 		}
+		valid = $("#VendorCategoryTypes").attr('aria-invalid');
+		if (valid == "true" || $("#VendorCategoryTypes").val() == "") {
+			return;
+		}
 		console.log("valid1: " + valid);
 		valid = $("#Vendor_OrdersEmail").attr('aria-invalid');
 		if (valid == "true" || $("#Vendor_OrdersEmail").val() == "") {
@@ -2337,7 +2341,8 @@ $(function () {
 	});
 	$("#exit").dblclick(function () {
 		console.log("in exit")
-		$('#myForm').trigger('submit');
+		$.fn.GetEmployeeHourFromToday();
+		return false;
 	});
 	$("#entry").click(function (e) {
 		e.preventDefault();
@@ -2362,14 +2367,12 @@ $(function () {
 			}});
 	};
 	$(".open-work-from-home-modal").click(function (e) {
-		var userid = $('#userid').val();
-		var itemurl = "ReportHoursFromHomeModal/?userId=" + userid;
+		var itemurl = "ReportHoursFromHomeModal";
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
 	$(".open-update-hours-modal").click(function (e) {
-		var userid = $('#userid').val();
-		var itemurl = "UpdateHours/?userId=" + userid;
+		var itemurl = "UpdateHours";
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -2395,6 +2398,9 @@ $(function () {
 	$("body").on("change", "#Date.update-hour-date", function (e) {		
 		$.fn.GetEmployeeHour($(this).val());
 	});
+	$("body").on("change", "#Date.update-work-from-home", function (e) {
+		$.fn.GetEmployeeHourFromHome($(this).val());
+	});
 
 	$.fn.GetEmployeeHour = function (date) {
 		console.log(date);
@@ -2411,6 +2417,13 @@ $(function () {
 		console.log("in clarify, checkbox val: " + $(this).val());
 	};
 
+	$.fn.GetEmployeeHourFromHome = function (date) {
+		console.log(date);
+		$.fn.CallModal('ReportHoursFromHomeModal?chosenDate=' + new Date(date).toISOString())
+	};
+	$.fn.GetEmployeeHourFromToday = function () {
+		$.fn.CallModal('ExitModal');
+	};
 });
 
 
@@ -2468,6 +2481,27 @@ $('.dropdown-multiple .dropdown-menu div label').click(function () {
 //	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
 //		msg = '<span class="msg">Hidden input value: ';
 //	$('.msg').html(msg + input + '</span>');
+//}); 
+
+$("body").on("change", "#TotalHours", function (e) {
+	$('#Exit1').val('');
+	$('#Entry1').val('');
+	$('#Exit2').val('');
+	$('#Entry2').val('');
+});
+
+$("body").on("change", "#Exit1", function (e) {
+	$('#TotalHours').val('');
+});
+$("body").on("change", "#Entry1", function (e) {
+	$('#TotalHours').val('');
+});
+$("body").on("change", "#Exit2", function (e) {
+	$('#TotalHours').val('');
+});
+$("body").on("change", "#Entry2", function (e) {
+	$('#TotalHours').val('');
+});
 //}); 
 /*End Dropdown Menu*/
 

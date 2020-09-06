@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200902123303_AddedEmployeHoursForeignKey2")]
+    partial class AddedEmployeHoursForeignKey2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -411,7 +413,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeHoursID")
+                    b.Property<int>("EmployeeHoursID")
                         .HasColumnType("int");
 
                     b.Property<int?>("EmployeeHoursStatusID")
@@ -2566,7 +2568,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHours", "EmployeeHours")
                         .WithMany()
                         .HasForeignKey("EmployeeHoursID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatus")
                         .WithMany()
