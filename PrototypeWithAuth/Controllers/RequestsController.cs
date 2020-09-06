@@ -616,95 +616,7 @@ namespace PrototypeWithAuth.Controllers
                     string requestFolderFrom = Path.Combine(uploadFolder, "0");
                     string requestFolderTo = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
                     Directory.Move(requestFolderFrom, requestFolderTo);
-                    //check if there are any files to upload first
-                    //save the files
-                    //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    //string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
-                    //Directory.CreateDirectory(requestFolder);
-                    //if (requestItemViewModel.OrderFiles != null) //test for more than one???
-                    //{
-                    //    var x = 1;
-                    //    foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
-                    //    {
-                    //        //create file
-                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-                    //        Directory.CreateDirectory(folderPath);
-                    //        string uniqueFileName = x + orderfile.FileName;
-                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
-                    //        orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
-                    //        x++;
-                    //    }
-                    //}
-                    //if (requestItemViewModel.InvoiceFiles != null) //test for more than one???
-                    //{
-                    //    var x = 1;
-                    //    foreach (IFormFile invoiceFile in requestItemViewModel.InvoiceFiles)
-                    //    {
-                    //        //create file
-                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
-                    //        Directory.CreateDirectory(folderPath);
-                    //        string uniqueFileName = x + invoiceFile.FileName;
-                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
-                    //        invoiceFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                    //        x++;
-                    //    }
-                    //}
-                    //if (requestItemViewModel.ShipmentFiles != null) //test for more than one???
-                    //{
-                    //    var x = 1;
-                    //    foreach (IFormFile shipmentFile in requestItemViewModel.ShipmentFiles)
-                    //    {
-                    //        //create file
-                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
-                    //        Directory.CreateDirectory(folderPath);
-                    //        string uniqueFileName = x + shipmentFile.FileName;
-                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
-                    //        shipmentFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                    //        x++;
-                    //    }
-                    //}
-                    //if (requestItemViewModel.QuoteFiles != null) //test for more than one???
-                    //{
-                    //    var x = 1;
-                    //    foreach (IFormFile quoteFile in requestItemViewModel.QuoteFiles)
-                    //    {
-                    //        //create file
-                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                    //        Directory.CreateDirectory(folderPath);
-                    //        string uniqueFileName = x + quoteFile.FileName;
-                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
-                    //        quoteFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                    //        x++;
-                    //    }
-                    //}
-                    //if (requestItemViewModel.InfoFiles != null) //test for more than one???
-                    //{
-                    //    var x = 1;
-                    //    foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
-                    //    {
-                    //        //create file
-                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Info.ToString());
-                    //        Directory.CreateDirectory(folderPath);
-                    //        string uniqueFileName = x + infoFile.FileName;
-                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
-                    //        infoFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                    //        x++;
-                    //    }
-                    //}
-                    //if (requestItemViewModel.PictureFiles != null) //test for more than one???
-                    //{
-                    //    var x = 1;
-                    //    foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
-                    //    {
-                    //        //create file
-                    //        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
-                    //        Directory.CreateDirectory(folderPath);
-                    //        string uniqueFileName = x + pictureFile.FileName;
-                    //        string filePath = Path.Combine(folderPath, uniqueFileName);
-                    //        pictureFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                    //        x++;
-                    //    }
-                    //}
+                    
 
                     return RedirectToAction("Index", new
                     {
@@ -2931,7 +2843,8 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.ApplicationUserID = receivedLocationViewModel.Request.ApplicationUserCreatorID;
                 requestNotification.RequestName = receivedLocationViewModel.Request.Product.ProductName;
                 requestNotification.NotificationStatusID = 4;
-                requestNotification.Description = "received by "+ receivedLocationViewModel.Request.ApplicationUserReceiver.FirstName;
+                var FName = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault().FirstName;
+                requestNotification.Description = "received by "+ FName;
                 requestNotification.TimeStamp = DateTime.Now;
                 requestNotification.Controller = "Requests";
                 requestNotification.Action = "NotificatonsView";
@@ -3473,30 +3386,68 @@ namespace PrototypeWithAuth.Controllers
             return View(accountingPaymentsViewModel);
         }
 
-        //[HttpGet]
-        //[Authorize(Roles = "Admin, Accounting")]
-        //public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid/*, List<int>? requestIds*/)
-        //{
-        //    List<Request> requestsToPay = new List<Request>();
+        [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
+        public async Task<IActionResult> AccountingNotifications(AppUtility.AccountingNotificationsEnum accountingNotificationsEnum = AppUtility.AccountingNotificationsEnum.NoInvoice)
+        {
+            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
+            TempData["Action"] = accountingNotificationsEnum;
+            var requestsList = _context.Requests
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
+                .Where(r => r.ParentRequest.WithoutOrder == false)
+                .Where(r => r.IsDeleted == false).AsQueryable();
+            switch (accountingNotificationsEnum)
+            {
+                case AppUtility.AccountingNotificationsEnum.NoInvoice:
+                    requestsList = requestsList.Where(r => r.PaymentStatusID == 1);
+                    break;
+                case AppUtility.AccountingNotificationsEnum.DidntArrive:
+                    requestsList = requestsList.Where(r => r.RequestStatusID == 2)
+                        .Where(r => DateTime.Compare(r.ParentRequest.OrderDate.AddDays(Convert.ToInt32(r.ExpectedSupplyDays)).Date, DateTime.Today.Date) < 0);
+                        //.Where(r => r.ParentRequest.OrderDate.AddDays(Convert.ToDouble(r.ExpectedSupplyDays)) <= DateTime.Today);
+                    break;
+                case AppUtility.AccountingNotificationsEnum.PartialDelivery:
+                    requestsList = requestsList.Where(r => r.RequestStatusID == 4);
+                    break;
+                case AppUtility.AccountingNotificationsEnum.ForClarification:
+                    requestsList = requestsList.Where(r => r.RequestStatusID == 5);
+                    break;
+            }
+            AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
+            {
+                AccountingNotificationsEnum = accountingNotificationsEnum,
+                Requests = requestsList.ToList().ToLookup(r => r.Product.Vendor)
+            };
+            return View(accountingPaymentsViewModel);
+        }
 
-        //    if (vendorid != null && paymentstatusid != null)
-        //    {
-        //        requestsToPay = _context.Requests
-        //        .Include(r => r.Product).ThenInclude(p => p.Vendor)
-        //        .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-        //        .Where(r => r.Product.VendorID == vendorid)
-        //        .Where(r => r.PaymentStatusID == paymentstatusid).ToList();
-        //    }
+        [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
+        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid/*, List<int>? requestIds*/)
+        {
+            List<Request> requestsToPay = new List<Request>();
 
-        //    PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
-        //    {
-        //        Requests = requestsToPay
-        //    };
+            if (vendorid != null && paymentstatusid != null)
+            {
+                requestsToPay = _context.Requests
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.Product.VendorID == vendorid)
+                .Where(r => r.PaymentStatusID == paymentstatusid).ToList();
+            }
 
-        //    //check if payment status type is installments to show the installments in the view model
+            PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
+            {
+                Requests = requestsToPay
+            };
 
-        //    return PartialView(paymentsPayModalViewModel);
-        //}
+            //check if payment status type is installments to show the installments in the view model
+
+            return PartialView(paymentsPayModalViewModel);
+        }
 
 
         /*

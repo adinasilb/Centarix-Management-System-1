@@ -437,101 +437,101 @@ namespace PrototypeWithAuth.Controllers
             return View(notificationsListViewModel);
 
         }
-        [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> Notifications(AppUtility.NotificationsEnum id)
-        {
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
-            NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel();
-            Dictionary<Vendor, List<ParentRequestListViewModel>> ParentRequestsFiltered;
-            switch (id)
-            {            
-                case AppUtility.NotificationsEnum.NoInvoice:
-                    TempData["Action"] = "NoInvoice";
-                    ParentRequestsFiltered =  _context.ParentRequests
-                        .Where(pr => pr.InvoiceNumber == null)
-                        .Select(pr => new ParentRequestListViewModel
-                        {
-                            ParentRequest = pr,
-                            Request = pr.Requests.FirstOrDefault(),
-                            Product = pr.Requests.FirstOrDefault().Product,
-                            ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                            Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                            ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                            UnitType = pr.Requests.FirstOrDefault().UnitType,
-                            SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                            SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-                        }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
-                               pr => pr.Select(r => r).ToList()
-                            );
-                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
-                    break;
+        //[HttpGet]
+        //[Authorize(Roles = "Admin, Accounting")]
+        //public async Task<IActionResult> Notifications(AppUtility.NotificationsEnum id)
+        //{
+        //    //TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
+        //    //NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel();
+        //    //Dictionary<Vendor, List<ParentRequestListViewModel>> ParentRequestsFiltered;
+        //    //switch (id)
+        //    //{            
+        //    //    case AppUtility.NotificationsEnum.NoInvoice:
+        //    //        TempData["Action"] = "NoInvoice";
+        //    //        ParentRequestsFiltered =  _context.ParentRequests
+        //    //            .Where(pr => pr.InvoiceNumber == null)
+        //    //            .Select(pr => new ParentRequestListViewModel
+        //    //            {
+        //    //                ParentRequest = pr,
+        //    //                Request = pr.Requests.FirstOrDefault(),
+        //    //                Product = pr.Requests.FirstOrDefault().Product,
+        //    //                ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+        //    //                Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+        //    //                ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+        //    //                UnitType = pr.Requests.FirstOrDefault().UnitType,
+        //    //                SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+        //    //                SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+        //    //            }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+        //    //                   pr => pr.Select(r => r).ToList()
+        //    //                );
+        //    //        notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+        //    //        break;
 
-                case AppUtility.NotificationsEnum.DidntArrive:
-                    TempData["Action"] = "DidntArrive";
-                    ParentRequestsFiltered = _context.ParentRequests
-                       .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 2)
-                       .Select(pr => new ParentRequestListViewModel
-                       {
-                           ParentRequest = pr,
-                           Request = pr.Requests.FirstOrDefault(),
-                           Product = pr.Requests.FirstOrDefault().Product,
-                           ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                           Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                           ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                           UnitType = pr.Requests.FirstOrDefault().UnitType,
-                           SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                           SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-                       }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
-                               pr => pr.Select(r => r).ToList()
-                            );
-                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
-                    break;
+        //    //    case AppUtility.NotificationsEnum.DidntArrive:
+        //    //        TempData["Action"] = "DidntArrive";
+        //    //        ParentRequestsFiltered = _context.ParentRequests
+        //    //           .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 2)
+        //    //           .Select(pr => new ParentRequestListViewModel
+        //    //           {
+        //    //               ParentRequest = pr,
+        //    //               Request = pr.Requests.FirstOrDefault(),
+        //    //               Product = pr.Requests.FirstOrDefault().Product,
+        //    //               ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+        //    //               Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+        //    //               ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+        //    //               UnitType = pr.Requests.FirstOrDefault().UnitType,
+        //    //               SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+        //    //               SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+        //    //           }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+        //    //                   pr => pr.Select(r => r).ToList()
+        //    //                );
+        //    //        notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+        //    //        break;
                
-                case AppUtility.NotificationsEnum.PartialDelivery:
-                    TempData["Action"] = "PartialDelivery";
-                    ParentRequestsFiltered = _context.ParentRequests
-                       .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 4)
-                       .Select(pr => new ParentRequestListViewModel
-                       {
-                           ParentRequest = pr,
-                           Request = pr.Requests.FirstOrDefault(),
-                           Product = pr.Requests.FirstOrDefault().Product,
-                           ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                           Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                           ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                           UnitType = pr.Requests.FirstOrDefault().UnitType,
-                           SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                           SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-                       }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
-                               pr => pr.Select(r => r).ToList()
-                            );
-                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
-                    break;
-                case AppUtility.NotificationsEnum.ForClarification:
-                    TempData["Action"] = "ForClarification";
-                    ParentRequestsFiltered = _context.ParentRequests
-                       .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 5)
-                       .Select(pr => new ParentRequestListViewModel
-                       {
-                           ParentRequest = pr,
-                           Request = pr.Requests.FirstOrDefault(),
-                           Product = pr.Requests.FirstOrDefault().Product,
-                           ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
-                           Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
-                           ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
-                           UnitType = pr.Requests.FirstOrDefault().UnitType,
-                           SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
-                           SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
-                       }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
-                               pr => pr.Select(r => r).ToList()
-                            );
-                    notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
-                    break;
-            }
-            return View(notificationsListViewModel);
+        //    //    case AppUtility.NotificationsEnum.PartialDelivery:
+        //    //        TempData["Action"] = "PartialDelivery";
+        //    //        ParentRequestsFiltered = _context.ParentRequests
+        //    //           .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 4)
+        //    //           .Select(pr => new ParentRequestListViewModel
+        //    //           {
+        //    //               ParentRequest = pr,
+        //    //               Request = pr.Requests.FirstOrDefault(),
+        //    //               Product = pr.Requests.FirstOrDefault().Product,
+        //    //               ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+        //    //               Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+        //    //               ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+        //    //               UnitType = pr.Requests.FirstOrDefault().UnitType,
+        //    //               SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+        //    //               SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+        //    //           }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+        //    //                   pr => pr.Select(r => r).ToList()
+        //    //                );
+        //    //        notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+        //    //        break;
+        //    //    case AppUtility.NotificationsEnum.ForClarification:
+        //    //        TempData["Action"] = "ForClarification";
+        //    //        ParentRequestsFiltered = _context.ParentRequests
+        //    //           .Where(pr => pr.Requests.FirstOrDefault().RequestStatusID == 5)
+        //    //           .Select(pr => new ParentRequestListViewModel
+        //    //           {
+        //    //               ParentRequest = pr,
+        //    //               Request = pr.Requests.FirstOrDefault(),
+        //    //               Product = pr.Requests.FirstOrDefault().Product,
+        //    //               ProductSubcategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory,
+        //    //               Vendor = pr.Requests.FirstOrDefault().Product.Vendor,
+        //    //               ParentCategory = pr.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory,
+        //    //               UnitType = pr.Requests.FirstOrDefault().UnitType,
+        //    //               SubUnitType = pr.Requests.FirstOrDefault().SubUnitType,
+        //    //               SubSubUnitType = pr.Requests.FirstOrDefault().SubSubUnitType
+        //    //           }).ToList().GroupBy(pr => pr.Vendor).ToDictionary(pr => pr.Key,
+        //    //                   pr => pr.Select(r => r).ToList()
+        //    //                );
+        //    //        notificationsListViewModel.ParentRequestList = ParentRequestsFiltered;
+        //    //        break;
+        //    //}
+        //    return View(notificationsListViewModel);
 
-        }
+        //}
 
 
   
