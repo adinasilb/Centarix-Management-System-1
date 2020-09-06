@@ -6,8 +6,35 @@
     <div class="modal-dialog reorder-modal  modal-lg " style="min-width:1300PX !important" role="document">
         <div class="modal-content d-inline-block" style="border-radius:1rem;">
             <form action="" method="post" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h4>Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</h4>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent; font-size:1.5rem; font-weight:bold;" class="float-right mb-2">&times;</button>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <h4 style="font-weight: bolder;">Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</h4>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="row">
+                                    Sum
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        @Model.Requests.Sum(r => r.Cost);
+                                    </div>
+                                    <div class="col-6">
+                                        @Model.Requests.Sum(r => r.Cost);
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

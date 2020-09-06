@@ -2352,7 +2352,7 @@ $(function () {
 
 
 	/*--------------------------------Accounting Payment Notifications--------------------------------*/
-	$(".payments-pay-now").on("click", function (e) {
+	$(".payments-pay-now").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		var vendorid = $(this).attr("vendor");
@@ -2374,7 +2374,7 @@ $(function () {
 			async: false,
 			url: url,
 			type: 'GET',
-			cache: false,
+			cache: true,
 			success: function (data) {
 				$("#loading").hide();
 				var modal = $(data);

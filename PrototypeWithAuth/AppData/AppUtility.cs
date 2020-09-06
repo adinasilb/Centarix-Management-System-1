@@ -24,7 +24,7 @@ namespace PrototypeWithAuth.AppData
         public enum TimeKeeperPageTypeEnum { None, Report, Summary }
         public enum TimeKeeperSidebarEnum { None, ReportHours, Days, Hours, DaysOff, Documents, CompanyAbsences }
         public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }
-        public enum NotificationsEnum {  NoInvoice, DidntArrive, PartialDelivery, ForClarification }
+        public enum AccountingNotificationsEnum {  NoInvoice, DidntArrive, PartialDelivery, ForClarification }
         public enum AccountingPaymentsEnum { MonthlyPayment, PayNow, PayLater, Installments, StandingOrders }
         public enum PaymentsEnum { ToPay, PayNow}
         public enum SuppliersEnum { All, NewSupplier, Search }
