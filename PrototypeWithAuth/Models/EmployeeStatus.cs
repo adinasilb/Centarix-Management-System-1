@@ -11,7 +11,6 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int EmployeeStatusID { get; set; }
         public string Description { get; set; }
-        public IEnumerable<SalariedEmployee> SalariedEmployees {get; set;}
-        public IEnumerable<Freelancer> Freelancers { get; set; }
+        public IEnumerable<Employee> Employees {get; set;}
     }
 }

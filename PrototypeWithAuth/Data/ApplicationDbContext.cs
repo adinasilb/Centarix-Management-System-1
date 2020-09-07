@@ -160,8 +160,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ParentQuote>()
            .HasQueryFilter(item => !item.IsDeleted);
 
-
-
+            modelBuilder.Entity<Employee>().Ignore(e => e.WorkScope);
+            modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
+            modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
 
             modelBuilder.Seed();
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200907100520_RedoEmployeeStatusfk")]
+    partial class RedoEmployeeStatusfk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -505,12 +507,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EmployeeId")
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmployeeId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("FreelancerID");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeId1");
 
                     b.ToTable("Freelancers");
                 });
@@ -2056,12 +2061,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EmployeeId")
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmployeeId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("SalariedEmployeeID");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeId1");
 
                     b.ToTable("SalariedEmployees");
                 });
@@ -2461,28 +2469,40 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasBaseType("PrototypeWithAuth.Data.ApplicationUser");
 
+                    b.Property<double?>("BituachLeumiEmployer")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("EducationFundEmployer")
+                        .HasColumnType("float");
+
                     b.Property<int>("EmployeeStatusID")
                         .HasColumnType("int");
 
-                    b.Property<double>("EmployerTax")
+                    b.Property<double?>("Food")
                         .HasColumnType("float");
 
                     b.Property<double>("GrossSalary")
                         .HasColumnType("float");
 
-                    b.Property<double>("HoursPerDay")
+                    b.Property<double>("HoursPerWeek")
                         .HasColumnType("float");
 
                     b.Property<double>("IncomeTax")
                         .HasColumnType("float");
 
-                    b.Property<string>("JobTitle")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double?>("PensionEmployer")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("StartedWorking")
                         .HasColumnType("datetime2");
 
+                    b.Property<double?>("Transportation")
+                        .HasColumnType("float");
+
                     b.Property<int>("VacationDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkScope")
                         .HasColumnType("int");
 
                     b.HasIndex("EmployeeStatusID");
@@ -2653,7 +2673,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId")
+                        .HasForeignKey("EmployeeId1")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -2857,7 +2877,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId")
+                        .HasForeignKey("EmployeeId1")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

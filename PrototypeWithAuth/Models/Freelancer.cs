@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int FreelancerID { get; set; }
-        public int EmployeeStatusID { get; set; }
-        public EmployeeStatus EmployeeStatus { get; set; }
+        public string EmployeeId { get; set; }
+        public Employee Employee { get; set; }
     }
 }
