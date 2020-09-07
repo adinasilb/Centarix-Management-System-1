@@ -31,21 +31,27 @@ for details on configuring this project to bundle and minify static web assets. 
     --danger-color: #E95252;
     --success-color: #00ca72;
 }
+
 .success-color {
     background-color: var(--success-color);
 }
+
 .danger-color {
     background-color: var(--danger-color);
 }
+
 .timekeeper-color {
     background-color: var(--timekeeper-color);
 }
+
 .timekeeper-font-color {
     color: var(--timekeeper-color);
 }
+
 .disabled-color {
     background-color: #B3B3B3;
 }
+
 .order-inv-color {
     color: var(--order-inv-color);
 }
@@ -83,11 +89,15 @@ for details on configuring this project to bundle and minify static web assets. 
     border-radius: 1.125em;
 }
 
-table td{
+table td {
     font-size: 1rem !important;
     font-weight: 400 !important;
 }
 
+.outer-page-margins {
+    margin-top: 5rem;
+    margin-left: 5.625rem;
+}
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 html.wf-loading * {
     opacity: 0;
@@ -214,13 +224,13 @@ span.choose {
         padding: 0px;
     }
 
-    .dropdown-multiple .dropdown-menu li,
-    .dropdown .dropdown-menu li {
-        padding: 10px;
-        transition: all .2s ease-in-out;
-        cursor: pointer;
-        margin: 0px;
-    }
+        .dropdown-multiple .dropdown-menu li,
+        .dropdown .dropdown-menu li {
+            padding: 10px;
+            transition: all .2s ease-in-out;
+            cursor: pointer;
+            margin: 0px;
+        }
 
     .dropdown-multiple .dropdown-menu,
     .dropdown .dropdown-menu {
@@ -239,7 +249,7 @@ span.choose {
             background-color: #e2e2e2
         }
 
-        /*END DROPDOWN*/
+/*END DROPDOWN*/
 
 
 .large-icon {
@@ -294,8 +304,8 @@ i.fas {
     background-color: white !important;
 }
 
-    /*iframe clickable href*/
-    /*.linkwrap{
+/*iframe clickable href*/
+/*.linkwrap{
     position: relative;
     display: inline-block;
 }
@@ -309,7 +319,7 @@ i.fas {
 .linkwrap iframe{
     z-index: 2;
 }*/
-    .responsive-iframe-container {
+.responsive-iframe-container {
     position: relative;
     overflow: hidden;
     width: 100%;
@@ -334,14 +344,14 @@ i.fas {
     height: 100%;
 }
 
-    /*
+/*
 [type=checkbox]:checked{
     color: black;
 }*/
-    .form-check [type="checkbox"][class*='filled-in']:checked + label:after {
-        border-color: white;
-        background-color: white;
-    }
+.form-check [type="checkbox"][class*='filled-in']:checked + label:after {
+    border-color: white;
+    background-color: white;
+}
 
 body {
     min-height: 100% !important;
@@ -392,6 +402,7 @@ center-horizontally {
 .vlz-bgcolor {
     background-color: rgba(0,0,0,.0001) !important;
 }
+
 .vlz-filled {
     padding: 0 !important;
 }
@@ -568,7 +579,7 @@ body {
     .locations-page .btn.load-location-index-view:hover,
     .locations-page .btn.load-location-index-view:focus,
     .locations-page .btn.load-location-index-view:active,
-    .locations-page .location-type-selected{
+    .locations-page .location-type-selected {
         box-shadow: none !important;
         border-bottom: 2px solid rgba(0, 0, 0, .54);
     }
@@ -695,11 +706,11 @@ input.select-dropdown {
 .oper-button {
     background-color: var(--operations-color);
     border: 1px solid var(--operations-color);
-   
 }
-    .inv-button:hover, inv-user-button:hover {
-        opacity: 0.67;
-    }
+
+.inv-button:hover, inv-user-button:hover {
+    opacity: 0.67;
+}
 
 .form-control-file::-webkit-file-upload-button {
     background-color: var(--user-color);
@@ -729,6 +740,7 @@ input.select-dropdown {
     font-weight: 550;
     /*text-transform: uppercase;*/
 }
+
 .form-control-file-lab::-webkit-file-upload-button {
     background-color: var(--lab-man-color);
     border: 1px solid var(--lab-man-color);
@@ -740,6 +752,7 @@ input.select-dropdown {
     line-height: 2;
     /*text-transform: uppercase;*/
 }
+
 .inv-lab-button {
     background-color: var(--lab-man-color);
     border: 1px solid var(--lab-man-color);
@@ -751,6 +764,7 @@ input.select-dropdown {
     line-height: 1.5;
     /*text-transform: uppercase;*/
 }
+
 .inv-lab-button-submit {
     background-color: var(--lab-man-color);
     border: 1px solid var(--lab-man-color);
@@ -774,6 +788,7 @@ input.select-dropdown {
     line-height: 1.5;
     text-transform: uppercase;
 }
+
 .inv-user-button {
     background-color: var(--user-color);
     border: 1px solid var(--user-color);
@@ -1015,9 +1030,10 @@ select option[value="US"] {
         color: var(--order-inv-color);
         text-decoration: none;
     }
-    .oper-link-clr:hover {
-        color: var(--operations-color);
-    }
+
+.oper-link-clr:hover {
+    color: var(--operations-color);
+}
 
 .lab-man-link-clr {
     color: black;
@@ -1031,6 +1047,7 @@ select option[value="US"] {
         filter: brightness(0) saturate(100%) var(--lab-man-filter);
         text-decoration: none;
     }
+
 table td {
     font-size: 1rem;
     font-weight: 300;
@@ -1121,7 +1138,7 @@ a.bold-hover-effects {
 .ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     opacity: 1;
     filter: var(--order-inv-filter);
-    font-weight:500;
+    font-weight: 500;
 }
 
 .ourNavBar li.activeNavOperLink a, .ourNavBar a.activeNavOperLink, .ourNavBar li button.activeNavOperLink, .container li a.activeNavOperLink {
@@ -1146,11 +1163,13 @@ a.bold-hover-effects {
     color: black;
     font-weight: 500;
 }
+
 a.activeNavLabMan {
     filter: var(--lab-man-filter);
-    color:black;
-        font-weight:500;
+    color: black;
+    font-weight: 500;
 }
+
 .ourNavBar .activeUserClass {
     opacity: 1;
     filter: var(--users-filter);
@@ -1158,8 +1177,9 @@ a.activeNavLabMan {
     -webkit-text-stroke-width: 0px;
     -webkit-text-stroke-color: black;
     color: black;
-    font-weight:500;
+    font-weight: 500;
 }
+
 .ourNavBar .activeTimekeeperClass {
     opacity: 1;
     filter: var(--timekeeper-filter);
@@ -1199,6 +1219,7 @@ ul li.lab-man-sidebar.active {
     -webkit-text-stroke-width: 0px;
     -webkit-text-stroke-color: black;
 }
+
 .timekeeperview .ourNavBar li.nav-item a.active {
     opacity: 1;
     filter: var(--timekeeper-filter);
@@ -1206,6 +1227,7 @@ ul li.lab-man-sidebar.active {
     -webkit-text-stroke-width: 0px;
     -webkit-text-stroke-color: black;
 }
+
 .users-tr:hover {
     border: 2px double var(--user-color) !important;
 }
@@ -1280,12 +1302,14 @@ a.nav-link {
     border-bottom: 4px solid var(--order-inv-color);
     color: var(--order-inv-color);
 }
+
 .container-fluid ul li a.oper-link.active {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--operations-color);
     color: var(--operations-color);
 }
+
 .container-fluid ul li a.user-nav-link.active {
     background-color: transparent;
     border-width: 0px;
@@ -1299,6 +1323,7 @@ a.nav-link {
     border-bottom: 4px solid var(--acc-color);
     color: var(--acc-color);
 }
+
 .container-fluid ul li a.lab-man-nav-link.active {
     background-color: transparent;
     border-width: 0px;
@@ -1348,7 +1373,7 @@ a.nav-link {
 .new-button {
     /*padding: 5px 18px;*/
     padding-bottom: .1em;
-    margin: 0 1.5em 0 0 ;
+    margin: 0 1.5em 0 0;
     background-color: #fff;
     color: #000;
     opacity: 0.87;
@@ -1371,10 +1396,9 @@ a.nav-link {
     }
 
 
-    .new-oper-button:hover {
-        color: var(--operations-color);
-     
-    }
+.new-oper-button:hover {
+    color: var(--operations-color);
+}
 
 .new-oper-button.active {
     color: var(--operations-color);
@@ -1498,15 +1522,15 @@ table.table.visualzoom tr td {
     overflow: hidden;
 }
 
-        table.table.visualzoom tr td a {
-            text-align: left;
-            vertical-align: top;
-            overflow: hidden;
-            max-width: 8rem;
-            max-height: 50px;
-            font-size: small;
-            padding: 0;
-        }
+    table.table.visualzoom tr td a {
+        text-align: left;
+        vertical-align: top;
+        overflow: hidden;
+        max-width: 8rem;
+        max-height: 50px;
+        font-size: small;
+        padding: 0;
+    }
 
 /*<<<< tooltip CSS >>>>*/
 [data-title]:hover:after {
@@ -1722,8 +1746,8 @@ input.bigger-box {
 }
 
 
-.table.locations-table td{
-    border: 1px solid black!important;
+.table.locations-table td {
+    border: 1px solid black !important;
 }
 
 body {
@@ -1779,12 +1803,14 @@ td .btn {
     min-width: 36%;
     top: 15%;
 }
+
 .work-from-home-modal {
     position: absolute;
     max-height: 100%;
     min-width: 30%;
     top: 15%;
 }
+
 .no-arrow-input::-webkit-inner-spin-button,
 .no-arrow-input::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -1798,15 +1824,17 @@ td .btn {
     overflow: hidden;
     display: inline-block;
 }
-.upload-btn-wrapper input[type=file] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-}
-.navbar-nav li a{
-    font-weight:300;
+
+    .upload-btn-wrapper input[type=file] {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+.navbar-nav li a {
+    font-weight: 300;
 }
 
 .alerts-icon {
@@ -1837,50 +1865,61 @@ td .btn {
     max-width: 100% !important; /* Max Width of the popover (depending on the container!) */
 }
 
-.notification-bold td{
+.notification-bold td {
     font-weight: 500;
 }
 
 .location-type-name {
     font-size: 1.5rem !important;
 }
+
 .entry-exit-background {
     background-color: #E5E5E9;
     border-radius: 3.8rem;
 }
-.m-6{
+
+.m-6 {
     margin: 4rem !important;
 }
+
 .mt-6 {
     margin-top: 4rem !important;
 }
+
 .mb-6 {
     margin-bottom: 4rem !important;
 }
+
 .mr-6 {
     margin-right: 4rem !important;
 }
+
 .ml-6 {
     margin-left: 4rem !important;
 }
+
 .timekeeper.select-wrapper input.select-dropdown {
     border: 1px solid #808080;
     text-align: center;
 }
-.timekeeper.select-wrapper input.select-dropdown:active {
-    border: 1px solid var(--timekeeper-color);
-}
-.timekeeper.select-wrapper input.select-dropdown:focus {
-    border: 1px solid var(--timekeeper-color);
-}
-.timekeeper .caret{
+
+    .timekeeper.select-wrapper input.select-dropdown:active {
+        border: 1px solid var(--timekeeper-color);
+    }
+
+    .timekeeper.select-wrapper input.select-dropdown:focus {
+        border: 1px solid var(--timekeeper-color);
+    }
+
+.timekeeper .caret {
     display: none;
 }
 
 .timekeeper .dropdown-content {
     margin-top: 2.5rem;
-    width:inherit;
+    width: inherit;
 }
-.timekeeper .dropdown-content li > span {
-    color: black;
-}
+
+    .timekeeper .dropdown-content li > span {
+        color: black;
+    }

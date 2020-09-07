@@ -13,14 +13,14 @@
 
         </div>
         <br />*@
-    <div class="row ml-5">
+    <div class="row">
         <div class="col-9">
             <div class="row">
                 @foreach (var type in Model.LocationTypes)
                 {
-                    <ul class="list-inline ">
-                        <li class="list-inline-item mr-3">
-                            <button class="opac-87 clicked-button btn location-type-name load-location-index-view" value=@type.LocationTypeID>
+                    <ul class="pl-0">
+                        <li class="list-inline-item">
+                            <button class="opac-87 clicked-button btn location-type-name load-location-index-view mr-3 pt-0 mt-0 ml-0 pl-0" value=@type.LocationTypeID>
                                 @type.LocationTypeName
                             </button>
                         </li>
