@@ -3456,7 +3456,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddInvoiceModal (int? vendorid)
         {
             var Requests = _context.Requests //NOTE THIS QUERY MUST MATCH ABOVE QUERY
-                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
                 .Where(r => r.InvoiceID == null)

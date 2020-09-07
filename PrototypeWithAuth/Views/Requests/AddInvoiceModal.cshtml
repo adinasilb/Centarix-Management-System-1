@@ -54,7 +54,7 @@
                             </thead>
 
                             <tbody>
-                                var x = 0;
+                                @{var x = 0; }
                                 @foreach (var Request in Model.Requests)
                                 {
                                     <input style="display: none;" asp-for="Requests[x].RequestID" />
