@@ -1,0 +1,94 @@
+﻿@model AddInvoiceViewModel
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+<link href="~/css/site.css" rel="stylesheet" />
+<div class="modal modal-view fader" id="myModal" data-backdrop="false">
+    <div class="modal-dialog" style="min-width:1200PX !important; top: 20%; bottom: 0; margin-top: auto; margin-bottom:auto;">
+        <div class="modal-content d-inline-block" style="border-radius:1rem;">
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent; font-size:1.5rem; font-weight:bold;" class="float-right mb-2">&times;</button>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <h4><strong>Add Invoice</strong> &nbsp; @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</h4>
+                            </div>
+                            <div class="col-2 pr-0">
+                                <span class="float-right">Invoice Number: </span>
+                            </div>
+                            <div class="col-2">
+                                <input asp-for="Invoice.InvoiceNumber" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="Invoice.InvoiceNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-2 pr-0">
+                                <span class="float-right">Invoice Date: </span>
+                            </div>
+                            <div class="col-2">
+                                <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="Invoice.InvoiceDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <hr />
+
+                        <table class="table table-headerspaced table-borderless table-hover">
+                            <thead>
+                                <tr class="text-center">
+                                    <td style="width:15%;">
+                                    </td>
+                                    <td style="width:30%;">
+                                        Name
+                                    </td>
+                                    <td style="width:15%;">
+                                        Units
+                                    </td>
+                                    <td style="width:15%;">
+                                        Total Price
+                                    </td>
+                                    <td style="width:25%;">
+                                    </td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                var x = 0;
+                                @foreach (var Request in Model.Requests)
+                                {
+                                    <input style="display: none;" asp-for="Requests[x].RequestID" />
+                                    <tr class="text-center">
+                                        <td style="width:15%;">
+                                            @if (Request.Product.ProductSubcategory.ImageURL != null)
+                                            {
+                                                var imageurl = Request.Product.ProductSubcategory.ImageURL;
+                                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                            }
+                                        </td>
+                                        <td style="width:30%;">
+                                            @Request.Product.ProductName
+                                        </td>
+                                        <td style="width:15%;">
+                                            @Request.Unit @if (Request.UnitType != null)
+                                            {@Request.UnitType.UnitTypeDescription<br />}
+                                            @Request.SubUnit @if (Request.SubUnitType != null)
+                                            {@Request.SubUnitType.UnitTypeDescription<br />}
+                                            @Request.SubSubUnit @if (Request.SubSubUnitType != null)
+                                            {@Request.SubSubUnitType.UnitTypeDescription<br />}
+                                        </td>
+                                        <td style="width:15%;">
+                                            @Request.Cost
+                                        </td>
+                                        <td style="width:25%;">
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

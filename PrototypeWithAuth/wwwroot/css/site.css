@@ -82,6 +82,12 @@ for details on configuring this project to bundle and minify static web assets. 
 .rounded-large {
     border-radius: 1.125em;
 }
+
+table td{
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+}
+
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 html.wf-loading * {
     opacity: 0;

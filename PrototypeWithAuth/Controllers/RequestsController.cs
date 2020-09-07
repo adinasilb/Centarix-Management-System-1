@@ -3349,6 +3349,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
+                .Where(r => r.InvoiceID != null)
                 .Where(r => r.ParentRequest.WithoutOrder == false)
                 .Where(r => r.IsDeleted == false);
             switch (accountingPaymentsEnum)
@@ -3397,11 +3398,12 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r => r.ParentRequest.WithoutOrder == false)
+                .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
+                .Where(r => r.InvoiceID == null)
                 .Where(r => r.IsDeleted == false).AsQueryable();
             switch (accountingNotificationsEnum)
             {
-                case AppUtility.AccountingNotificationsEnum.NoInvoice:
+                case AppUtility.AccountingNotificationsEnum.NoInvoice: //NOTE EXACT SAME QUERY IN ADDINVOICE MODAL
                     requestsList = requestsList.Where(r => r.PaymentStatusID == 1);
                     break;
                 case AppUtility.AccountingNotificationsEnum.DidntArrive:
@@ -3449,6 +3451,27 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(paymentsPayModalViewModel);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
+        public async Task<IActionResult> AddInvoiceModal (int? vendorid)
+        {
+            var Requests = _context.Requests //NOTE THIS QUERY MUST MATCH ABOVE QUERY
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
+                .Where(r => r.InvoiceID == null)
+                .Where(r => r.Product.VendorID == vendorid)
+                .Where(r => r.IsDeleted == false).ToList();
+            AddInvoiceViewModel addInvoiceViewModel = new AddInvoiceViewModel()
+            {
+                Requests = Requests,
+                Invoice = new Invoice()
+                {
+                    InvoiceDate = DateTime.Today
+                }
+            };
+            return View(addInvoiceViewModel);
+        }
 
         /*
          * 

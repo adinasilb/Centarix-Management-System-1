@@ -107,24 +107,12 @@ namespace PrototypeWithAuth.Models
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]
         public PaymentStatus PaymentStatus { get; set; }
-        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        //public DateTime DateToBePaid //note until this is changed from negative one 
-        //{
-        //    get
-        //    {
-        //        DateTime dt = new DateTime();
-        //        if (this.Terms == -1 && ParentRequest != null)
-        //        {
-        //            dt = this.ParentRequest.OrderDate;
-        //        }
-        //        else if (this.ParentRequest != null && this.ParentRequest.OrderDate != null && this.Terms != null)
-        //        {
-        //            dt = this.ParentRequest.OrderDate.AddDays((double)this.Terms);
-        //        }
-        //        return dt;
-        //    }
-        //    private set { }
-        //}
+
+        public int? InvoiceID { get; set; }
+        [ForeignKey("InvoiceID")]
+        public Invoice Invoice { get; set; }
+
+
 
 
     }

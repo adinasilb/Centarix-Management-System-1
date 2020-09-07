@@ -21,7 +21,7 @@
                             }
                         }
                     }
-                    <strong>@Model.AccountingPaymentsEnum</strong> &nbsp; [@count]
+                    <strong>@Model.AccountingNotificationsEnum</strong> &nbsp; [@count]
                     @{
                         var totalCost = 0;
                         var decCost = (decimal)totalCost;
@@ -61,13 +61,16 @@
 </table>
 @foreach (var Vendor in Model.Requests)
 {
-    <div class="mt-5 mr-5">
+    <div class="mt-1 mb-5 mr-5">
         <div class=" row text-dark ">
-            <div class="col-2"><h5>@Vendor.Key.VendorEnName</h5></div>
+            <div class="col-2"><h5><strong>@Vendor.Key.VendorEnName</strong></h5></div>
             <div class="col-10"><hr /></div>
         </div>
         <table class="table table-headerspaced table-borderless table-hover mt-3 ">
             <tbody>
+                @{
+                    double VendorTotal = 0;
+                }
                 @foreach (var Request in Vendor)
                 {
                     <tr class="text-center">
@@ -112,7 +115,7 @@
                             @Request.Product.ProductSubcategory.ProductSubcategoryDescription
                         </td>
                         <td style="width:11.1%">
-                            @Request.CreationDate
+                            @String.Format("{0:d}", @Request.CreationDate.Date)
                         </td>
                         <td style="width:11.1%">
                             <a href="">
@@ -149,6 +152,7 @@
 
                         </td>
                     </tr>
+                    VendorTotal += Request.Cost;
                 }
             </tbody>
         </table>
@@ -158,9 +162,9 @@
                 <div class="font-weight-bold">
                     Items: @Vendor.Count()
 
-                    <span>&emsp; Total: </span><span>@(((decimal)(00000)).ToString("C02"))</span>
+                    <span>&emsp; Total: </span><span>@(((decimal)(VendorTotal)).ToString("C02"))</span>
 
-                    <button class="inv-payments-button ml-5 float-right payments-pay-now" vendor="@Vendor.Key.VendorID" paymentstatus="@Vendor.AsEnumerable().FirstOrDefault().PaymentStatusID">Pay Now</button>
+                    <button class="inv-payments-button ml-5 float-right invoice-add-all" vendor="@Vendor.Key.VendorID" >Add to All</button>
                 </div>
             </div>
         </div>

@@ -2364,6 +2364,15 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
+	$(".invoice-add-all").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation;
+		var vendorid = $(this).attr("vendor");
+		var itemUrl = "AddInvoiceModal/?vendorid=" + vendorid;
+		$("#loading").show();
+		$.fn.CallModal(itemUrl);
+	});
+
 
 	$.fn.CallModal = function (url) {
 		console.log("in call modal, url: " + url);
@@ -2472,7 +2481,7 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
-	$("body").on("change", "#Date", function (e) {			
+		
 	$("body").on("change", "#Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
 	});

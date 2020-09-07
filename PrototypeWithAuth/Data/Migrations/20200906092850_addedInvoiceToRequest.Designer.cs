@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200906092850_addedInvoiceToRequest")]
+    partial class addedInvoiceToRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -481,24 +483,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             EmployeeHoursStatusID = 3,
                             Description = "Forgot to report"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Invoice", b =>
-                {
-                    b.Property<int>("InvoiceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("InvoiceDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("InvoiceNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("InvoiceID");
-
-                    b.ToTable("Invoice");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -1795,8 +1779,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<long?>("Installments")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("InvoiceID")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvoiceNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
@@ -1872,8 +1859,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ApplicationUserCreatorID");
 
                     b.HasIndex("ApplicationUserReceiverID");
-
-                    b.HasIndex("InvoiceID");
 
                     b.HasIndex("ParentQuoteID");
 
@@ -2714,11 +2699,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserReceiver")
                         .WithMany("RequestsReceived")
                         .HasForeignKey("ApplicationUserReceiverID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Invoice", "Invoice")
-                        .WithMany("Requests")
-                        .HasForeignKey("InvoiceID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.ParentQuote", "ParentQuote")
