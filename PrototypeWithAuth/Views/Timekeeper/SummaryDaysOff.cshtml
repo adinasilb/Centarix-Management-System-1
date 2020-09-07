@@ -73,8 +73,7 @@
                         @Model.VacationDaysTaken.Count()
                     </div>
                     <div class="col-3">
-                        @{var vactionDaysLeft = Model.VacationDays - Model.VacationDaysTaken.Count();}
-                        @vactionDaysLeft
+                        @Model.VacationDaysLeft
                     </div>
                     <div class="col-3">
                         @Model.SickDaysTaken.Count()

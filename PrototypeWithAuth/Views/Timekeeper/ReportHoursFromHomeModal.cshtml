@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Date" class="control-label"></label>
-                            <input asp-for="Date" class="form-control-plaintext  border-bottom  update-work-from-home" />
+                            <input asp-for="Date" class="form-control-plaintext  border-bottom  update-work-from-home" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")"  />
                             <span asp-validation-for="Date" class="text-danger quote-date" />
                         </div>
                     </div>

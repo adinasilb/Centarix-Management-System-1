@@ -1,6 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.EntryExitViewModel;
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
+@using System.Globalization;
+@using System.Threading;
 @inject UserManager<ApplicationUser> UserManager
 
 @{
@@ -29,14 +31,18 @@
             <div class="col-6 text-right">
                 <div id="time" style="font-size: 8.8125rem;">@DateTime.Now.ToShortTimeString()</div>
                 <div style="font-size:2.125rem;">@DateTime.Now.ToLongDateString()</div>
+                @{  var ci = CultureInfo.CreateSpecificCulture("he-IL");
+                    ci.DateTimeFormat.Calendar = new HebrewCalendar();
+                    var hebrewDate = DateTime.Now.Date.ToString("dd MMM yyyy", ci); }
+            <div style="font-size:2.125rem;">@hebrewDate</div>
             </div>
 
         </div>
         @if (Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit1) ||
-        Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit2))
+       Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit2))
         {
-            <div class=" text-center timekeeper-font-color font-weight-bolder" >
-                <label style="font-size:2.0625rem;">Entered @Model.Entry?.ToString("HH:mm"), Working @((DateTime.Now - Model.Entry)?.ToString(@"hh\:mm\:ss"))</label>                
+            <div class=" text-center timekeeper-font-color font-weight-bolder">
+                <label style="font-size:2.0625rem;">Entered @Model.Entry?.ToString("HH:mm"), Working @((DateTime.Now - Model.Entry)?.ToString(@"hh\:mm\:ss"))</label>
             </div>
         }
 
@@ -120,20 +126,20 @@
     window.onload = function (e) {
         this.startTime();
     }
-function startTime() {
-  var today = new Date();
-  var h = today.getHours();
-  var m = today.getMinutes();
-  var s = today.getSeconds();
-  m = checkTime(m);
-  s = checkTime(s);
-  document.getElementById('time').innerHTML =
-  h + ":" + m + ":" + s;
-  var t = setTimeout(startTime, 500);
-}
-function checkTime(i) {
-  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-  return i;
+    function startTime() {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('time').innerHTML =
+            h + ":" + m + ":" + s;
+        var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i) {
+        if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+        return i;
     }
 
 </script>
