@@ -135,6 +135,8 @@
     <Compile Remove="Data\Migrations\20200907083602_AddedEmployeeStatus.Designer.cs" />
     <Compile Remove="Data\Migrations\20200907084912_AddedEmployeeStatusFK.cs" />
     <Compile Remove="Data\Migrations\20200907084912_AddedEmployeeStatusFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200907094621_RedoEmployeeStatusfk.cs" />
+    <Compile Remove="Data\Migrations\20200907094621_RedoEmployeeStatusfk.Designer.cs" />
   </ItemGroup>
 
 
