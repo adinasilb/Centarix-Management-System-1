@@ -41,7 +41,7 @@ namespace PrototypeWithAuth.Controllers
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
             EntryExitViewModel entryExitViewModel = new EntryExitViewModel();
-            if (todaysEntry == null)
+            if (todaysEntry.Entry1 == null)
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry1;
             }
@@ -293,7 +293,6 @@ namespace PrototypeWithAuth.Controllers
             EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval = new EmployeeHoursAwaitingApproval();
             if (awaitingApproval == null)
             {
-
                 employeeHoursAwaitingApproval.EmployeeID = employeeHours.EmployeeID;
                 employeeHoursAwaitingApproval.EmployeeHoursID = employeeHoursID;
                 employeeHoursAwaitingApproval.Entry1 = employeeHours.Entry1;
