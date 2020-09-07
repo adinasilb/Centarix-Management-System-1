@@ -388,7 +388,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
-            var vendors = await _context.Vendors.Where(v=>v.VendorCategoryTypes.Where(vc=>vc.CategoryTypeID==1).Count()>0).ToListAsync();
+            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();
 
@@ -616,7 +616,7 @@ namespace PrototypeWithAuth.Controllers
                     string requestFolderFrom = Path.Combine(uploadFolder, "0");
                     string requestFolderTo = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
                     Directory.Move(requestFolderFrom, requestFolderTo);
-                    
+
 
                     return RedirectToAction("Index", new
                     {
@@ -2051,7 +2051,7 @@ namespace PrototypeWithAuth.Controllers
                     if (wasSent)
                     {
                         foreach (var request in _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID)
-                            .Include(r=>r.Product).ThenInclude(p=>p.Vendor))
+                            .Include(r => r.Product).ThenInclude(p => p.Vendor))
                         {
                             request.RequestStatusID = 2;
                             _context.Update(request);
@@ -2072,7 +2072,7 @@ namespace PrototypeWithAuth.Controllers
 
                         }
                         await _context.SaveChangesAsync();
-                     
+
                     }
 
                 }
@@ -2742,7 +2742,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-                .Include(r => r.Product).ThenInclude(p=>p.Vendor).FirstOrDefault();
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
 
             bool hasLocationInstances = false;
             if (receivedLocationViewModel.CategoryType == 1)
@@ -2844,7 +2844,7 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.RequestName = receivedLocationViewModel.Request.Product.ProductName;
                 requestNotification.NotificationStatusID = 4;
                 var FName = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault().FirstName;
-                requestNotification.Description = "received by "+ FName;
+                requestNotification.Description = "received by " + FName;
                 requestNotification.TimeStamp = DateTime.Now;
                 requestNotification.Controller = "Requests";
                 requestNotification.Action = "NotificatonsView";
@@ -3029,7 +3029,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult ApproveReorder(int id)
         {
-            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x => x.ParentQuote).Include(r=>r.Product).ThenInclude(p=>p.Vendor).FirstOrDefault();
+            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x => x.ParentQuote).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
             try
             {
                 request.RequestStatusID = 6; //approved
@@ -3207,7 +3207,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-            var requests = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id).OrderByDescending(n=>n.TimeStamp).ToList();
+            var requests = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id).OrderByDescending(n => n.TimeStamp).ToList();
             return View(requests);
         }
 
@@ -3234,7 +3234,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var request = _context.Requests
                 .Where(r => r.RequestID == id)
-                .Include(r=>r.ApplicationUserCreator)
+                .Include(r => r.ApplicationUserCreator)
                 .Include(r => r.ParentRequest)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
             return PartialView(request);
@@ -3245,7 +3245,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> OrderLateModal(Request request)
         {
-            request = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r=>r.ApplicationUserCreator).Include(r=>r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+            request = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
             //instatiate mimemessage
             var message = new MimeMessage();
 
@@ -3399,17 +3399,16 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
                 .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
-                .Where(r => r.InvoiceID == null)
                 .Where(r => r.IsDeleted == false).AsQueryable();
             switch (accountingNotificationsEnum)
             {
                 case AppUtility.AccountingNotificationsEnum.NoInvoice: //NOTE EXACT SAME QUERY IN ADDINVOICE MODAL
-                    requestsList = requestsList.Where(r => r.PaymentStatusID == 1);
+                    requestsList = requestsList.Where(r => r.InvoiceID == null);
                     break;
                 case AppUtility.AccountingNotificationsEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2)
                         .Where(r => DateTime.Compare(r.ParentRequest.OrderDate.AddDays(Convert.ToInt32(r.ExpectedSupplyDays)).Date, DateTime.Today.Date) < 0);
-                        //.Where(r => r.ParentRequest.OrderDate.AddDays(Convert.ToDouble(r.ExpectedSupplyDays)) <= DateTime.Today);
+                    //.Where(r => r.ParentRequest.OrderDate.AddDays(Convert.ToDouble(r.ExpectedSupplyDays)) <= DateTime.Today);
                     break;
                 case AppUtility.AccountingNotificationsEnum.PartialDelivery:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 4);
@@ -3453,15 +3452,25 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> AddInvoiceModal (int? vendorid)
+        public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid)
         {
-            var Requests = _context.Requests //NOTE THIS QUERY MUST MATCH ABOVE QUERY
-                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
-                .Where(r => r.InvoiceID == null)
-                .Where(r => r.Product.VendorID == vendorid)
-                .Where(r => r.IsDeleted == false).ToList();
+            List<Request> Requests = new List<Request>();
+            var queryableRequests = _context.Requests
+                .Include(r => r.ParentRequest)
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                    .Where(r => r.IsDeleted == false);
+            if (vendorid != null)
+            {
+                Requests = queryableRequests //NOTE THIS QUERY MUST MATCH ABOVE QUERY
+                    .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
+                    .Where(r => r.InvoiceID == null)
+                    .Where(r => r.Product.VendorID == vendorid).ToList();
+            }
+            else if (requestid != null)
+            {
+                Requests = queryableRequests.Where(r => r.RequestID == requestid).ToList();
+            }
             AddInvoiceViewModel addInvoiceViewModel = new AddInvoiceViewModel()
             {
                 Requests = Requests,
@@ -3471,6 +3480,25 @@ namespace PrototypeWithAuth.Controllers
                 }
             };
             return View(addInvoiceViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, Accounting")]
+        public async Task<IActionResult> AddInvoiceModal(AddInvoiceViewModel addInvoiceViewModel)
+        {
+            _context.Add(addInvoiceViewModel.Invoice); //TODO Return To Modal if Not filled in
+            await _context.SaveChangesAsync();
+
+            foreach(var request in addInvoiceViewModel.Requests)
+            {
+                var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
+                RequestToSave.Cost = request.Cost;
+                RequestToSave.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
+                _context.Update(RequestToSave);
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("AccountingNotifications");
         }
 
         /*

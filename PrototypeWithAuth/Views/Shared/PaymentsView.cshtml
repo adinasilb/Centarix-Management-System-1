@@ -44,32 +44,32 @@
                 <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.MonthlyPayment })" class="bold-hover-effects">
                     <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i>
                     <br />Monthly Payment
-                    <br />[#]
+                    @*<br />[#]*@
                 </a>
             </li>
 
             <li class="@pnClass">
                 <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.PayNow })" class="bold-hover-effects">
                     <i class="icon-payment-24px" style="font-size:1.6rem;"></i>
-                    <br /> Pay Now <br />[#]
+                    <br /> Pay Now @*<br />[#]*@
                 </a>
             </li>
             <li class="@plClass">
                 <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.PayLater })" class="bold-hover-effects">
                     <i class="icon-centarix-icons-19" style="font-size:1.6rem;"></i>
-                    <br /> Pay Later <br />[#]
+                    <br /> Pay Later @*<br />[#]*@
                 </a>
             </li>
             <li class="@inClass">
                 <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.Installments })" class="bold-hover-effects">
                     <i class="icon-centarix-icons-20" style="font-size:1.6rem;"></i>
-                    <br /> Installments <br />[#]
+                    <br /> Installments @*<br />[#]*@
                 </a>
             </li>
             <li class="@soClass">
                 <a href="@Url.Action("AccountingPayments", "Requests" , new { accountingPaymentsEnum = PrototypeWithAuth.AppData.AppUtility.AccountingPaymentsEnum.StandingOrders })" class="bold-hover-effects">
                     <i class="icon-standing_orders-24px" style="font-size:1.6rem;"></i>
-                    <br /> Standing Orders <br />[#]
+                    <br /> Standing Orders @*<br />[#]*@
                 </a>
             </li>
         </ul>

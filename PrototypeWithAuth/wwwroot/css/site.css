@@ -339,8 +339,8 @@ i.fas {
     color: black;
 }*/
     .form-check [type="checkbox"][class*='filled-in']:checked + label:after {
-        border-color: black;
-        background-color: black;
+        border-color: white;
+        background-color: white;
     }
 
 body {
@@ -1209,6 +1209,12 @@ ul li.lab-man-sidebar.active {
 .users-tr:hover {
     border: 2px double var(--user-color) !important;
 }
+
+.table-hover tbody tr:hover > td div span.input-group-text {
+    color: #212529;
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
 
 
 /*table CSS*/

@@ -1726,6 +1726,7 @@ $(function () {
 		return valid;
 	}
 
+
 	$("#Request_ParentRequest_InvoiceDate").change(function () {
 
 	});
@@ -2338,6 +2339,17 @@ $(function () {
 	}
 
 
+	$("#SaveInvoiceModal").on("click", function (e) {
+		var valid = $("#Invoice_InvoiceNumber").attr("aria-invalid");
+		console.log("invoice number validation + " + valid);
+		if (valid == false || valid == undefined) {
+			e.preventDefault();
+			e.stopPropagation();
+			$("#invoice-number-validation").html("Please enter a valid Number");
+		}
+	})
+
+
 	$("#reorderRequest").click(function () {
 		console.log($("#reorderForm").valid());
 		if (!$("#reorderForm").valid()) {
@@ -2366,13 +2378,21 @@ $(function () {
 
 	$(".invoice-add-all").off("click").on("click", function (e) {
 		e.preventDefault();
-		e.stopPropagation;
+		e.stopPropagation();
 		var vendorid = $(this).attr("vendor");
 		var itemUrl = "AddInvoiceModal/?vendorid=" + vendorid;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl);
 	});
 
+	$(".invoice-add-one").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var requestid = $(this).attr("request");
+		var itemUrl = "AddInvoiceModal/?requestid=" + requestid;
+		$("#loading").show();
+		$.fn.CallModal(itemUrl);
+	});
 
 	$.fn.CallModal = function (url) {
 		console.log("in call modal, url: " + url);
@@ -2405,7 +2425,16 @@ $(function () {
 			//	console.log("error : " + data.readAsDataURL);
 			//}
 		});
+		$("#loading").hide();
 	};
+
+
+
+	$(".remove-invoice-item").off("click").on("click", function (e) {
+		e.stopPropagation();
+		e.preventDefault();
+	});
+
 
 
 	$("#share-payment").on("click", function (e) {
