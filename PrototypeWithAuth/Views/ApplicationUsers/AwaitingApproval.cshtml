@@ -1,0 +1,76 @@
+﻿@model List<PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval>
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Awaiting Approval";
+    Layout = "~/Views/Shared/UsersView.cshtml";
+}
+    <table class="table table-headerspaced mx-5 col-11">
+        <tbody>
+            <tr class="text-center " style="border-color:transparent; border-bottom: 2px solid lightgrey;">
+                <td width="12%"></td>
+                <td class="text-left" width="10%">
+                    Name
+                </td>
+                <td width="20%">
+                    Type
+                </td>
+                <td width="16%">
+                    Date
+                </td>
+                <td width="8%">
+                    Entry Time
+                </td>
+                <td width="8%">
+                    Exit Time
+                </td>
+                <td width="8%">
+                    Total
+                </td>
+                <td width="15%">
+
+                </td>
+            </tr>
+            @foreach (var hours in Model)
+            {
+        <tr class="text-center users-tr ">
+            <td width="12%">
+                @{
+                    var src = "/UserImages/profile_circle_big.png";
+                    if (hours.Employee.UserImage != null)
+                    {
+                        src = UserManager.GetUserAsync(User).Result.UserImage;
+                    }
+                }
+                <img src="@src" class="user-image ml-0" height="75" alt="default User image" />
+            </td>
+            <td class="text-left" width="10%">
+                @hours.Employee.FirstName  @hours.Employee.LastName
+            </td>
+            <td width="20%">
+                @hours.EmployeeHoursStatus.Description
+            </td>
+            <td width="16%">
+                @hours.Date.ToLongDateString()
+            </td>
+            <td width="8%">
+                @hours.Entry1?.ToShortTimeString() <br />
+                @hours.Entry2?.ToShortTimeString()
+            </td>
+            <td width="8%">
+                @hours.Exit1?.ToShortTimeString() <br />
+                @hours.Exit2?.ToShortTimeString()
+            </td>
+            <td width="8%">
+                @hours.TotalHours?.ToString(@"h\:mm")
+            </td>
+            <td width="15%">
+                <button type="button" class="rounded-pill px-4 py-1 text-white no-box-shadow border-0" style="background-color:var(--user-color)">Approve</button>
+            </td>
+
+        </tr>
+            }
+        </tbody>
+    </table>
