@@ -1,10 +1,7 @@
 @font-face {
     font-family: 'elixir-icons';
-  src:  url('fonts/elixir-icons.eot?ruvnuf');
-  src:  url('fonts/elixir-icons.eot?ruvnuf#iefix') format('embedded-opentype'),
-    url('fonts/elixir-icons.ttf?ruvnuf') format('truetype'),
-    url('fonts/elixir-icons.woff?ruvnuf') format('woff'),
-    url('fonts/elixir-icons.svg?ruvnuf#elixir-icons') format('svg');
+    src: url('fonts/elixir-icons.eot?f6qb0w');
+    src: url('fonts/elixir-icons.eot?f6qb0w#iefix') format('embedded-opentype'), url('fonts/elixir-icons.ttf?f6qb0w') format('truetype'), url('fonts/elixir-icons.woff?f6qb0w') format('woff'), url('fonts/elixir-icons.svg?f6qb0w#elixir-icons') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -13,7 +10,7 @@
 [class^="icon-"], [class*=" icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'elixir-icons' !important;
-    speak: none;
+    speak: never;
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -22,6 +19,50 @@
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow_back_ios-24px-1:before {
+    content: "\e962";
+}
+
+.icon-arrow_forward_ios-24px:before {
+    content: "\e963";
+}
+
+.icon-insert_drive_file-24px-1:before {
+    content: "\e964";
+}
+
+.icon-luggage-24px-1:before {
+    content: "\e965";
+}
+
+.icon-sick-24px-1:before {
+    content: "\e966";
+}
+
+.icon-info-24px-2:before {
+    content: "\e967";
+}
+
+.icon-description-24px-2:before {
+    content: "\e968";
+}
+
+.icon-highlight_off-24px:before {
+    content: "\e969";
+}
+
+.icon-event-24px:before {
+    content: "\e96a";
+}
+
+.icon-exit-24px:before {
+    content: "\e96b";
+}
+
+.icon-entry-24px:before {
+    content: "\e96c";
 }
 
 .icon-notification_approve-24px:before {
@@ -418,4 +459,3 @@
 .icon-update-24px:before {
     content: "\e951";
 }
-
