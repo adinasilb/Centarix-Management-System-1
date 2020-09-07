@@ -1,7 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestsSearchViewModel
 @{
     ViewData["Title"] = "Search";
-    Layout = "~/Views/Shared/ManageSharedView.cshtml";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    //Layout = "~/Views/Shared/ManageSharedView.cshtml";
     var buttonSubmitClass = Model.SectionType == PrototypeWithAuth.AppData.AppUtility.MenuItems.LabManagement ?
         "inv-lab-button" : Model.SectionType == PrototypeWithAuth.AppData.AppUtility.MenuItems.OrdersAndInventory ? "inv-button" : "oper-button";
 }
