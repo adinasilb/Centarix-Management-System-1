@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200907083718_AddedEmployeeStatus")]
+    partial class AddedEmployeeStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -505,12 +507,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EmployeeStatusID")
+                    b.Property<int>("EmployeeStatus")
                         .HasColumnType("int");
 
                     b.HasKey("FreelancerID");
-
-                    b.HasIndex("EmployeeStatusID");
 
                     b.ToTable("Freelancers");
                 });
@@ -2056,12 +2056,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EmployeeStatusID")
+                    b.Property<int>("EmployeeStatus")
                         .HasColumnType("int");
 
                     b.HasKey("SalariedEmployeeID");
-
-                    b.HasIndex("EmployeeStatusID");
 
                     b.ToTable("SalariedEmployees");
                 });
@@ -2656,15 +2654,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Freelancer", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeStatus", "EmployeeStatus")
-                        .WithMany("Freelancers")
-                        .HasForeignKey("EmployeeStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.LocationInstance", "LocationInstanceParent")
@@ -2857,15 +2846,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.RequestNotificationStatus", "NotificationStatus")
                         .WithMany("RequestNotifications")
                         .HasForeignKey("NotificationStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeStatus", "EmployeeStatus")
-                        .WithMany("SalariedEmployees")
-                        .HasForeignKey("EmployeeStatusID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
