@@ -36,5 +36,53 @@ namespace PrototypeWithAuth.Controllers
             TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Owner;
             return View(await _context.Users.Where(u=>!u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync());
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> Details()
+        {
+            TempData["PageType"] = AppUtility.UserPageTypeEnum.Workers;
+            TempData["Sidebar"] = AppUtility.UserSideBarEnum.Details;
+            return View();
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> Hours()
+        {
+            TempData["PageType"] = AppUtility.UserPageTypeEnum.Workers;
+            TempData["Sidebar"] = AppUtility.UserSideBarEnum.Hours;
+            return View();
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> Salary()
+        {
+            TempData["PageType"] = AppUtility.UserPageTypeEnum.Workers;
+            TempData["Sidebar"] = AppUtility.UserSideBarEnum.Salary;
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> AwaitingApproval()
+        {
+            TempData["PageType"] = AppUtility.UserPageTypeEnum.Workers;
+            TempData["Sidebar"] = AppUtility.UserSideBarEnum.AwaitingApproval;
+            var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa=>ehwa.Employee).Include(ehwa=>ehwa.EmployeeHoursStatus).ToList();
+            return View(employeeHoursAwaitingApproval);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> AddWorker()
+        {
+            TempData["PageType"] = AppUtility.UserPageTypeEnum.Workers;
+            TempData["SideBar"] = AppUtility.UserSideBarEnum.AddWorker;
+            return View();
+        }
     }
 }

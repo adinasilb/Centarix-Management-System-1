@@ -316,7 +316,7 @@ namespace PrototypeWithAuth.Controllers
             var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).FirstOrDefault();
             if (employeeHour == null)
             {
-                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, EmployeeHoursStatusID=3 };
+                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, EmployeeHoursStatusID = 3 };
             }
             else
             {
@@ -348,6 +348,7 @@ namespace PrototypeWithAuth.Controllers
                 employeeHoursAwaitingApproval.TotalHours = employeeHours.TotalHours;
                 employeeHoursAwaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
                 employeeHoursAwaitingApproval.Date = employeeHours.Date;
+                employeeHoursAwaitingApproval.EmployeeHoursStatusID = employeeHours.EmployeeHoursStatusID;
             }
             else
             {
