@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200908075556_MovedFieldsFromEmployeeToSalaried")]
+    partial class MovedFieldsFromEmployeeToSalaried
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -501,7 +503,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             EmployeeStatusID = 1,
-                            Description = "Salaried Employee"
+                            Description = "SalariedEmployee"
                         },
                         new
                         {
@@ -550,68 +552,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("InvoiceID");
 
                     b.ToTable("Invoice");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.JobCategoryType", b =>
-                {
-                    b.Property<int>("JobCategoryTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("JobCategoryTypeID");
-
-                    b.ToTable("JobCategoryType");
-
-                    b.HasData(
-                        new
-                        {
-                            JobCategoryTypeID = 1,
-                            Description = "Executive"
-                        },
-                        new
-                        {
-                            JobCategoryTypeID = 2,
-                            Description = "Senior Manager"
-                        },
-                        new
-                        {
-                            JobCategoryTypeID = 3,
-                            Description = "Manager"
-                        },
-                        new
-                        {
-                            JobCategoryTypeID = 4,
-                            Description = "Senior Bioinformatician"
-                        },
-                        new
-                        {
-                            JobCategoryTypeID = 5,
-                            Description = "Bioinformatician"
-                        },
-                        new
-                        {
-                            JobCategoryTypeID = 6,
-                            Description = "Senior Scientist"
-                        },
-                        new
-                        {
-                            JobCategoryTypeID = 7,
-                            Description = "Lab Technician"
-                        },
-                        new
-                        {
-                            JobCategoryTypeID = 8,
-                            Description = "Research Associate"
-                        },
-                        new
-                        {
-                            JobCategoryTypeID = 9,
-                            Description = "Software Developer"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -2559,9 +2499,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("IncomeTax")
                         .HasColumnType("float");
 
-                    b.Property<int>("JobCategoryTypeID")
-                        .HasColumnType("int");
-
                     b.Property<string>("JobTitle")
                         .HasColumnType("nvarchar(max)");
 
@@ -2572,8 +2509,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasIndex("EmployeeStatusID");
-
-                    b.HasIndex("JobCategoryTypeID");
 
                     b.HasDiscriminator().HasValue("Employee");
                 });
@@ -3010,12 +2945,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.EmployeeStatus", "EmployeeStatus")
                         .WithMany("Employees")
                         .HasForeignKey("EmployeeStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.JobCategoryType", "JobCategoryType")
-                        .WithMany("Employees")
-                        .HasForeignKey("JobCategoryTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

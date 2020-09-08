@@ -12,5 +12,7 @@ namespace PrototypeWithAuth.Models
         public int SalariedEmployeeID { get; set; }
         public string EmployeeId { get; set; }
         public Employee Employee { get; set; }
+        public double WorkScope { get { return 100*(HoursPerDay/8.5); } private set {; } }
+        public double HoursPerDay { get; set; }
     }
 }

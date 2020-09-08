@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200908084121_AddedJobCategoryData")]
+    partial class AddedJobCategoryData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -552,7 +554,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Invoice");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.JobCategoryType", b =>
+            modelBuilder.Entity("PrototypeWithAuth.Models.JobCategoryTypes", b =>
                 {
                     b.Property<int>("JobCategoryTypeID")
                         .ValueGeneratedOnAdd()
@@ -564,7 +566,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("JobCategoryTypeID");
 
-                    b.ToTable("JobCategoryType");
+                    b.ToTable("JobCategoryTypes");
 
                     b.HasData(
                         new
@@ -2559,7 +2561,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("IncomeTax")
                         .HasColumnType("float");
 
-                    b.Property<int>("JobCategoryTypeID")
+                    b.Property<int>("JobCategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("JobCategoryTypesJobCategoryTypeID")
                         .HasColumnType("int");
 
                     b.Property<string>("JobTitle")
@@ -2573,7 +2578,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("EmployeeStatusID");
 
-                    b.HasIndex("JobCategoryTypeID");
+                    b.HasIndex("JobCategoryTypesJobCategoryTypeID");
 
                     b.HasDiscriminator().HasValue("Employee");
                 });
@@ -3013,11 +3018,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.JobCategoryType", "JobCategoryType")
+                    b.HasOne("PrototypeWithAuth.Models.JobCategoryTypes", "JobCategoryTypes")
                         .WithMany("Employees")
-                        .HasForeignKey("JobCategoryTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("JobCategoryTypesJobCategoryTypeID")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }
