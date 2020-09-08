@@ -216,6 +216,12 @@ namespace PrototypeWithAuth.AppData
         //    }
         //}
 
+        public static DateTime ZeroSeconds(this DateTime value)
+        {
+            return new DateTime(value.Year, value.Month, value.Day,
+              value.Hour, value.Minute, 0);
+        }
+
     }
 
 }
