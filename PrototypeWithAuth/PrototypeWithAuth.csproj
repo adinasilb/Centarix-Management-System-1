@@ -131,6 +131,14 @@
     <Compile Remove="Data\Migrations\20200831094654_AddtotalHOursCalculatedField2.Designer.cs" />
     <Compile Remove="Data\Migrations\20200902122108_AddedEmployeHoursForeignKey.cs" />
     <Compile Remove="Data\Migrations\20200902122108_AddedEmployeHoursForeignKey.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200907083602_AddedEmployeeStatus.cs" />
+    <Compile Remove="Data\Migrations\20200907083602_AddedEmployeeStatus.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200907084912_AddedEmployeeStatusFK.cs" />
+    <Compile Remove="Data\Migrations\20200907084912_AddedEmployeeStatusFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200907094621_RedoEmployeeStatusfk.cs" />
+    <Compile Remove="Data\Migrations\20200907094621_RedoEmployeeStatusfk.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200908084940_JobCategoryTypefk.cs" />
+    <Compile Remove="Data\Migrations\20200908084940_JobCategoryTypefk.Designer.cs" />
   </ItemGroup>
 
 

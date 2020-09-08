@@ -74,7 +74,7 @@
                         @Html.ActionLink("Users", "Index", "Admin", new { }, new { @class = UsersClasses + " align-text-bottom", @role = "button", @id = "inventory-link" })
                     </li>
                     <li class="nav-item mx-4 d-table">
-                        @Html.ActionLink("Workers", "Index", "Admin", new { }, new { @class = WorkersClasses + "  align-text-bottom", @role = "button", @id = "inventory-link" })
+                        @Html.ActionLink("Workers", "Details", "ApplicationUsers", new { }, new { @class = WorkersClasses + "  align-text-bottom", @role = "button", @id = "inventory-link" })
                     </li>
                 </ul>
             </div>
@@ -137,19 +137,19 @@
                         else if (Workers)
                         {
                             <li class="nav-item my-4 px-2" style="max-width:119px">
-                                <p style="font-size:1rem;"><a href="@Url.Action("Details", "")" class="@DetailsClasses">  <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Documents <br /></a></p>
+                                <p style="font-size:1rem;"><a href="@Url.Action("Details", "ApplicationUsers")" class="@DetailsClasses">  <i class="icon-perm_contact_calendar-24px" style="font-size:1.6rem;"></i><br /> Details <br /></a></p>
                             </li>
                             <li class="nav-item my-4 px-2" style="max-width:119px">
-                                <p style="font-size:1rem;"><a href="@Url.Action("Hours","")" class="@HoursClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br /> Company Absences <br /></a></p>
+                                <p style="font-size:1rem;"><a href="@Url.Action("Hours","ApplicationUsers")" class="@HoursClasses"> <i class="icon-access_time-24px" style="font-size:1.6rem;"></i><br /> Hours <br /></a></p>
                             </li>
                             <li class="nav-item my-4 px-2 " style="max-width:119px">
-                                <p style="font-size:1rem;"><a href="@Url.Action("Salary","")" class="@SalaryClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Summary Hours <br /></a></p>
+                                <p style="font-size:1rem;"><a href="@Url.Action("Salary","ApplicationUsers")" class="@SalaryClasses"> <i class="icon-monetization_on-24px" style="font-size:1.6rem;"></i><br />Salary <br /></a></p>
                             </li>
                             <li class="nav-item my-4 px-2" style="max-width:119px">
-                                <p style="font-size:1rem;"><a href="@Url.Action("AwaitingApproval","")" class="@AwaitingApprovalClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Report Days Off <br /></a></p>
+                                <p style="font-size:1rem;"><a href="@Url.Action("AwaitingApproval","ApplicationUsers")" class="@AwaitingApprovalClasses"> <i class="icon-notifications_border-24px" style="font-size:1.6rem;"></i><br />Awaiting Approval <br /></a></p>
                             </li>
                             <li class="nav-item my-4 px-2" style="max-width:119px">
-                                <p style="font-size:1rem;"><a href="@Url.Action("AddWorker","")" class="@AddWorkerClasses"> <i class="icon-assignment-24px" style="font-size:1.6rem;"></i><br />Report Days Off <br /></a></p>
+                                <p style="font-size:1rem;"><a href="@Url.Action("AddWorker","ApplicationUsers")" class="@AddWorkerClasses"> <i class="icon-add_circle_outline-24px" style="font-size:1.6rem;"></i><br />Add Worker <br /></a></p>
                             </li>
                         }
                     </ul>

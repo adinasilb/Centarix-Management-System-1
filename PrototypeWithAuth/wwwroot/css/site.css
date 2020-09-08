@@ -43,6 +43,13 @@ for details on configuring this project to bundle and minify static web assets. 
 .timekeeper-font-color {
     color: var(--timekeeper-color);
 }
+.users-color {
+    background-color: var(--user-color);
+}
+
+.users-font-color {
+    color: var(--user-color);
+}
 .disabled-color {
     background-color: #B3B3B3;
 }

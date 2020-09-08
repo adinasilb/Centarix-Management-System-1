@@ -1,0 +1,87 @@
+﻿@model PrototypeWithAuth.ViewModels.EmployeeDetailsViewModel
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/UsersView.cshtml";
+}
+
+
+<div class="row"><h3><strong>Workers &nbsp;</strong></h3><h4 class="mt-1">@Model.SalariedEmployeeCount Employees, @Model.FreelancerCount Freelancers, @Model.AdvisorCount Advisors </h4></div>
+<div class="row ">
+    <table class="table table-headerspaced  col-12 ">
+        <tbody>
+            <tr class="text-center " style="border-color:transparent; border-bottom: 2px solid lightgrey;">
+                <td width="9%"></td>
+                <td width="9%">Employee Number</td>
+                <td width="12%">
+                    Name
+                </td>
+                <td width="11%">
+                    Job Title
+                </td>
+                <td width="9%">
+                    Job Category
+                </td>
+                <td width="9%">
+                    Job Type
+                </td>
+                <td width="12%">
+                    Email Address
+                </td>
+                <td width="10%">
+                    Phone Number
+                </td>
+                <td width="10%">
+                    Started Working
+                </td>
+                <td width="9%">
+                    Job Scope
+                </td>
+            </tr>
+                @foreach (var employee in Model.Employees)
+                {
+                        <tr class="text-center users-tr ">
+                            <td width="9%">
+                                @{
+                                    var src = "/UserImages/profile_circle_big.png";
+                                    if (employee.UserImage != null)
+                                    {
+                                        src = UserManager.GetUserAsync(User).Result.UserImage;
+                                    }
+                                }
+                                <img src="@src" class="user-image ml-0" height="65" alt="default User image" />
+                            </td>
+                            <td width="9%">@employee.CentarixID</td>
+                            <td width="12%">
+                                @employee.FirstName  @employee.LastName
+                            </td>
+                            <td width="11%">
+                                @employee.JobTitle
+                            </td>
+                            <td width="9%">
+                                @employee.JobCategoryType?.Description
+                            </td>
+                            <td width="9%">
+                                @employee.EmployeeStatus.Description
+                            </td>
+                            <td width="12%">
+                                @employee.Email
+                            </td>
+                            <td width="10%">
+                                @employee.PhoneNumber
+                            </td>
+                            <td width="10%">
+                                @employee.StartedWorking.ToShortDateString()
+                            </td>
+                            <td width="9%">
+                               @{ var scope = Math.Round(employee.SalariedEmployee?.WorkScope ?? 0) == 0 ? "" : Math.Round(employee.SalariedEmployee?.WorkScope ?? 0) + "%";}
+                                @scope
+                            </td>
+                        </tr>
+                }
+        </tbody>
+    </table>
+</div>
