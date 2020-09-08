@@ -64,22 +64,22 @@
                         @eh.OffDayType?.Description
                     </div>
                     <div class="col-2 p-0">
-                        @if (eh.Entry1 == null && eh.OffDayType == null)
+                        @if (eh.Entry1 == null && eh.OffDayType == null && (eh.TotalHours==null || eh.TotalHours == TimeSpan.Zero))
                         {
-                            <button type="button" class="rounded-pill timekeeper-font-color no-box-shadow py-2 px-3 report-sick-days" style="background: transparent; border: .125rem solid var(--timekeeper-color);">Report Sick</button>
+                            <button type="button" class="rounded-pill timekeeper-font-color no-box-shadow py-2 px-3 report-sick-days" style="background: transparent; border: .125rem solid var(--timekeeper-color);" value="@eh.Date.ToString("yyyy-MM-dd")">Report Sick</button>
                         }
                         @eh.Entry1?.ToShortTimeString()
                         <br />
                         @eh.Entry2?.ToShortTimeString()
                     </div>
                     <div class="col-2 p-0">
-                        @if (eh.OffDayType == null && eh.Exit1 == null || (eh.Entry2 != null && eh.Exit2 == null))
+                        @if ((eh.OffDayType == null && eh.Exit1 == null || (eh.Entry2 != null && eh.Exit2 == null)) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
                         {
-                            <button type="button" class="rounded-pill timekeeper-color text-white no-box-shadow border-0 py-2 px-3 mt-1 open-update-hours-modal">Update Hours</button>
+                            <button type="button" class="rounded-pill timekeeper-color text-white no-box-shadow border-0 py-2 px-3 mt-1 open-update-hours-modal" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
                         }
-                        else if (eh.OffDayType != null && ((eh.Entry1 != null && eh.Exit1 == null) || (eh.Entry2 != null && eh.Exit2 == null)))
+                        else if ((eh.OffDayType != null && ((eh.Entry1 != null && eh.Exit1 == null) || (eh.Entry2 != null && eh.Exit2 == null))) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
                         {
-                            <button type="button" class="rounded-pill timekeeper-color text-white no-box-shadow border-0 py-2 px-3 mt-1 open-update-hours-modal">Update Hours</button>
+                            <button type="button" class="rounded-pill timekeeper-color text-white no-box-shadow border-0 py-2 px-3 mt-1 open-update-hours-modal" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
                         }
                         @eh.Exit1?.ToShortTimeString()
                         <br />

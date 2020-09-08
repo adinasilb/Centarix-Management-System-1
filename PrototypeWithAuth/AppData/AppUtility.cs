@@ -12,6 +12,7 @@ namespace PrototypeWithAuth.AppData
 {
     public static class AppUtility
     {
+        public enum YearlyMonthlyEnum{ Yearly, Monthly}
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment}
         public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location, Summary }

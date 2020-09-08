@@ -2493,7 +2493,12 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 	$(".open-update-hours-modal").click(function (e) {
-		var itemurl = "UpdateHours";
+		var val = $(this).val();
+		if (val != '') {
+			var date = new Date(val).toISOString();
+			console.log(date)
+		}
+		var itemurl = "UpdateHours?chosenDate=" +date;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -2662,13 +2667,24 @@ $.fn.SaveOffDays = function (url) {
 	});
 }
 
-$("body").on("click", "#saveVacation", function (e) {
-	e.preventDefault();
-	$.fn.SaveOffDays("SaveVacation");
-});
-$("body").on("click", "#saveSick", function (e) {
-	e.preventDefault();
-	$.fn.SaveOffDays("SaveSick");
-});
+	$("body").on("click", "#saveVacation", function (e) {
+		e.preventDefault();
+		$.fn.SaveOffDays("SaveVacation");
+	});
+	$("body").on("click", "#saveSick", function (e) {
+		e.preventDefault();
+		$.fn.SaveOffDays("SaveSick");
+	});
 
+	$(".approve-hours").click(function (e) {
+		$.ajax({
+			async: false,
+			url: "ApproveHours" + '?id=' +$(this).val(),
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("body").html(data);
+			}
+		});
+	});
 });
