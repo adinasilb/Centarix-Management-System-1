@@ -26,7 +26,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType=1)
         {
             TempData["PageType"] = PageType;
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Type;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Type;
+            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
                 .Where(ps => ps.ParentCategory.CategoryTypeID == categoryType);
             return View(await applicationDbContext.ToListAsync());

@@ -33,7 +33,8 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["PageType"] = PageType;
             TempData["CategoryType"] = categoryType;
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Owner;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Owner;
+            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
             return View(await _context.Users.Where(u=>!u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync());
         }
     }

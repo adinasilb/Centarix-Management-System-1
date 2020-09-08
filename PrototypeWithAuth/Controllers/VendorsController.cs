@@ -41,7 +41,15 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1)
         {
             TempData["PageType"] = PageType;
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Vendor;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
+            if (categoryType == 1)
+            {
+                TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
+            }
+            else
+            {
+                TempData["MenuType"] = AppUtility.MenuItems.Operation;
+            }
             TempData["CategoryType"] = categoryType;
             return View(await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync());
         }

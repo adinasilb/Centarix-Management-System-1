@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
+@using Microsoft.AspNetCore.Routing
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
@@ -10,15 +12,24 @@
     var pageType = AppUtility.RequestPageTypeEnum.None;
     var categoryType = AppUtility.CategoryTypeEnum.Lab;
 
+    var MenuType = TempData["MenuType"].ToString();
+    List<MenuItems> MainMenuItems = new List<MenuItems>();
+
     //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
     if (TempData["PageType"] != null)
     {
         pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
     }
 
-    //passing the
     string initalClasses = "opac87 align-text-bottom  py-3";
     string currentClasses = " activeNavLink  ";
+
+    if (MenuType == AppUtility.MenuItems.OrdersAndInventory.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateOrdersAndInventoryMainMenu(pageType.ToString(), initalClasses, currentClasses);
+    }
+
+    //passing the
     string inventoryClass = initalClasses;
     string summaryClass = initalClasses;
     string requestClass = initalClasses;
@@ -32,74 +43,53 @@
     bool Inventory = false;
     bool Summary = false;
 
+
+    string originalNavClasses = " ";
+    string activeClass = " font-weight-bold activeNavLink  ";
+
+    List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+    string sidebarTitle = "";
+    if (TempData["SidebarTitle"] != null)
+    {
+        sidebarTitle = TempData["SidebarTitle"].ToString();
+    }
+
+    var menuClass = originalNavClasses;
     switch (pageType)
     {
         case AppUtility.RequestPageTypeEnum.Inventory:
             inventoryClass = initalClasses + currentClasses;
+            SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
             Inventory = true;
             break;
         case AppUtility.RequestPageTypeEnum.Summary:
             summaryClass = initalClasses + currentClasses;
+            SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
+
             Summary = true;
             break;
         case AppUtility.RequestPageTypeEnum.Request:
             Requests = true;
             requestClass = initalClasses + currentClasses;
+            SidebarMenuItems = CreateMenus.GetOrdersAndInventoryRequestsSidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
             break;
         case AppUtility.RequestPageTypeEnum.Cart:
             cartClass = initalClasses + currentClasses;
+            SidebarMenuItems = CreateMenus.GetOrdersAndInventoryCartSidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
             Cart = true;
             break;
         case AppUtility.RequestPageTypeEnum.Search:
             searchClass = initalClasses + currentClasses + " search-link";
+            SidebarMenuItems = CreateMenus.GetOrdersAndInventorySearchSidebarMenuItems(originalNavClasses, activeClass, pageType, categoryType);
             break;
         case AppUtility.RequestPageTypeEnum.Location:
             locationClass = initalClasses + currentClasses;
+            SidebarMenuItems = CreateMenus.GetOrdersAndInventoryLocationSidebarMenuItems(originalNavClasses, activeClass, pageType, categoryType);
             break;
     }
 
 
-    string originalNavClasses = " ";
-    string activeClass = " font-weight-bold activeNavLink  ";
-    string lastItem = originalNavClasses;
-    string type = originalNavClasses;
-    string vendor = originalNavClasses;
-    string owner = originalNavClasses;
-    string location = originalNavClasses;
-    string cart = originalNavClasses;
-    string addItem = originalNavClasses;
-    string notifications = originalNavClasses;
-
-    var SidebarType = TempData["SidebarTitle"];
-    switch (SidebarType)
-    {
-        case AppUtility.RequestSidebarEnum.LastItem:
-            lastItem += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Type:
-            type += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Vendor:
-            vendor += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Owner:
-            owner += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Location:
-            location += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Cart:
-            cart += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.AddItem:
-            addItem += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Notifications:
-            notifications += activeClass;
-            break;
-    }
-
-    //not using this right now --> see with Faige if we should put it back in
+    //not using this right now --> see if we should put it back in
     var SendEmail = "0";
     if (TempData["SendEmail"] != null)
     {
@@ -134,158 +124,118 @@
 
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; ">
-                <li class="nav-item mx-5 ">
-                    @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link " })
-                </li>
-                <li class="nav-item mx-5">
-                    @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Summary }, new { @class = summaryClass, @id = "summary-link" })
-                </li>
+                @foreach (var MenuItem in MainMenuItems)
+                {
+                    <li class="nav-item mx-5">
+                        @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes, @id = MenuItem.ID })
+                    </li>
+                }
+                    @*<li class="nav-item mx-5 ">
+                            @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link " })
+                        </li>
+                        <li class="nav-item mx-5">
+                            @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Summary }, new { @class = summaryClass, @id = "summary-link" })
+                        </li>
 
-                <li class="nav-item mx-5  ">
-                    @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = searchClass, @id = "search-link " /*why is the role and id here?*/ })
-                </li>
-                <li class="nav-item mx-5">
-                    @*Redo the location class in the controller*@
-                    @Html.ActionLink("Location", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = locationClass, @id = "location-link" })
-                </li>
-                <li class="nav-item mx-5 ">
-                    @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "cart-link " /*why is the role and id here?*/ })
-                </li>
-                <li class="nav-item mx-4 d-table ">
-                    @Html.ActionLink("Full Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
-                </li>
-            </ul>
-        </div>
-        <div class="  container col-1  pl-5">
-            <ul class="list-unstyled m-0">
-                <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow "><div class="alerts-icon"><i style='font-size: 2.5rem;   color: #808080;' class='icon-notifications-24px '></i> <span id="alertCount" class="alert-count"></span></div>  </button> </li>
-                <div style="display:none;" id="notifications-popover">
-                    <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
-                    <div style="width:410px" class="p-4">
-                        <h5><strong>Notifications</strong></h5>
-                    </div>
-                </div>
-            </ul>
-        </div>
-        <div class="  ">
-            <ul class="list-unstyled mb-0 ">
-                <li>
-                    <div class="form-inline pr-3">
-                        <div class="md-form my-0 p-2">
-                            <a href="#" class="text-dark">
-                                @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
-                            </a>
-                            <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0">
-                                @{
-                                    var src = "/UserImages/profile_circle_big.png";
-                                    if (UserManager.GetUserAsync(User).Result.UserImage != null)
-                                    {
-                                        src = UserManager.GetUserAsync(User).Result.UserImage;
-                                    }
-                                }
-                                <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
-                            </button>
+                        <li class="nav-item mx-5  ">
+                            @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = searchClass, @id = "search-link " /*why is the role and id here?*/ })
+                        </li>
+                        <li class="nav-item mx-5">
+                            Redo the location class in the controller
+                            @Html.ActionLink("Location", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = locationClass, @id = "location-link" })
+                        </li>
+                        <li class="nav-item mx-5 ">
+                            @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "cart-link " /*why is the role and id here?*/ })
+                        </li>
+                        <li class="nav-item mx-4 d-table ">
+                            @Html.ActionLink("Full Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
+                        </li>*@
+                </ul>
+            </div>
+            <div class="  container col-1  pl-5">
+                <ul class="list-unstyled m-0">
+                    <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow "><div class="alerts-icon"><i style='font-size: 2.5rem;   color: #808080;' class='icon-notifications-24px '></i> <span id="alertCount" class="alert-count"></span></div>  </button> </li>
+                    <div style="display:none;" id="notifications-popover">
+                        <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
+                        <div style="width:410px" class="p-4">
+                            <h5><strong>Notifications</strong></h5>
                         </div>
                     </div>
-                </li>
-                <div style="display:none;" id="logout-popover">
-                    <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button type="submit" id="logout-form" class="nav-link  border-0 no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
-                    </form>
-                </div>
-            </ul>
-        </div>
-
-
-    </nav>
-
-</header>
-<div class="container-fluid pl-0">
-    <main role="main">
-        @*<div class="spinner-border center" role="status" id="loading" style="display:none;">
-                <span class="sr-only">Loading...</span>
-            </div>*@
-
-        <div class="center" role="status" id="loading" style="display:none;">
-            <img src="~/images/css/Loading/centarix_loading3.gif" />
-        </div>
-        <div style="display: flex">
-            <div style="min-width: 100px; min-height:100rem; padding: 5px;" class=" d-md-block sidebar-shadow   navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
-                @*<nav class="navbar navbar-expand-lg">*@
-                <ul class="nav flex-column nav-pills nav-stacked mt-4">
-
-                    @if (Requests || Inventory || Summary)
-                    {
-
-                        <li class="nav-item mb-1 @lastItem">
-                            <a href="@Url.ActionLink("Index", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1 add-item">
-                                <img src="~/images/css/inventory/sidebar/list.png" alt="Last item" />
-                                <br />Last Item
-                            </a>
-                        </li>
-                    }
-
-                    @if (Requests || Inventory || Summary)
-                    {
-                        <li class="nav-item my-1 @addItem">
-                            <a href="@Url.ActionLink("CreateModalView", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1">  <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item</a>
-                        </li>
-                    }
-                    @if (Requests || Inventory || Summary)
-                    {
-                        <li class="nav-item bold-hover-effects my-1 @type">
-                            <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType, @categoryType=1 })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
-                        </li>
-
-                    }
-                    @if (Requests || Inventory || Summary)
-                    {
-
-                        <li class="nav-item my-1 @vendor">
-                            <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType,  @categoryType= 1 })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
-                        </li>
-                    }
-                    @if (Requests || Inventory)
-                    {
-                        @*have to create contorller for application user?*@
-
-                        <li class="nav-item my-1 @owner">
-                            <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType ,  @categoryType=categoryType})" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
-                        </li>
-                    }
-                    @if (Inventory || Summary)
-                    {
-
-                        @*Redo the location class in the controller*@
-                        <li class="nav-item my-1 @location">
-                            <a href="@Url.ActionLink("IndexForInventory", "Locations", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Location</a>
-                        </li>
-                    }
-                    @if (Cart)
-                    {
-                        <li class="nav-item  mt-4 mb-4 bold-hover-effects">
-                            <a href="@Url.ActionLink("Cart", "Requests", new { @PageType = pageType })" class="@cart bold-hover-effects opac87 p-1">
-                                <i class=" icon-shopping_cart-24px" style="font-size:1.5rem;"></i>
-                                <br /><span class="sidebar-text" style="font-size: 1rem;">Cart</span>
-                            </a>
-                        </li>
-                        <li class="nav-item mb-3 bold-hover-effects">
-                            <a href="@Url.ActionLink("NotificationsView", "Requests")" class="@notifications bold-hover-effects opac87 p-1">  <i class=" icon-notifications-24px" style=" font-size: 1.75rem;  "></i><br />Notifications</a>
-                        </li>
-                    }
-
                 </ul>
-                @*</nav>*@
             </div>
-            <div style="flex-grow: 1" class="outer-page-margins">
-                <!--class="col-md-10 border-left"-->
-                @RenderBody()
+            <div class="  ">
+                <ul class="list-unstyled mb-0 ">
+                    <li>
+                        <div class="form-inline pr-3">
+                            <div class="md-form my-0 p-2">
+                                <a href="#" class="text-dark">
+                                    @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
+                                </a>
+                                <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0">
+                                    @{
+                                        var src = "/UserImages/profile_circle_big.png";
+                                        if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                                        {
+                                            src = UserManager.GetUserAsync(User).Result.UserImage;
+                                        }
+                                    }
+                                    <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                    <div style="display:none;" id="logout-popover">
+                        <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" id="logout-form" class="nav-link  border-0 no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
+                        </form>
+                    </div>
+                </ul>
             </div>
-        </div>
-    </main>
-</div>
 
 
-<!-- Confirm Email Modal -->
-<div class="modal confirm-email-modal" id="myModal">
-</div>
+        </nav>
+
+    </header>
+    <div class="container-fluid pl-0">
+        <main role="main">
+            @*<div class="spinner-border center" role="status" id="loading" style="display:none;">
+                    <span class="sr-only">Loading...</span>
+                </div>*@
+
+            <div class="center" role="status" id="loading" style="display:none;">
+                <img src="~/images/css/Loading/centarix_loading3.gif" />
+            </div>
+            <div style="display: flex">
+                <div style="min-width: 110px; max-width:110px; min-height:100rem; padding: 5px;" class=" d-md-block sidebar-shadow   navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
+                    @*<nav class="navbar navbar-expand-lg">*@
+                    <ul class="nav flex-column nav-pills nav-stacked mt-4">
+                        @{
+                            var liMargins = "mb-1";
+                        }
+                        @foreach (var sidebarNavItem in SidebarMenuItems)
+                        {
+                            <li class="nav-item @liMargins @sidebarNavItem.Classes">
+                                <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="bold-hover-effects p-1">
+                                    <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
+                                    <br />@sidebarNavItem.Description
+                                </a>
+                            </li>
+                            liMargins = "my-1";
+                        }
+
+
+                    </ul>
+                    @*</nav>*@
+                </div>
+                <div style="flex-grow: 1" class="outer-page-margins">
+                    <!--class="col-md-10 border-left"-->
+                    @RenderBody()
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <!-- Confirm Email Modal -->
+    <div class="modal confirm-email-modal" id="myModal">
+    </div>

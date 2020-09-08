@@ -126,6 +126,7 @@ namespace PrototypeWithAuth.Controllers
 
             //tempdata page type for active tab link
             TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
+            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
 
 
             return View(paymentNotificationsViewModel);

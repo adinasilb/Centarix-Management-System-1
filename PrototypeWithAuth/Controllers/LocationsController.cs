@@ -32,9 +32,11 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> IndexForInventory()
+        public async Task<IActionResult> IndexForInventory(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Summary)
         {
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Inventory;
+            TempData["PageType"] = PageType;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Location;
+            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
 
             var locations = _context.LocationInstances
                 .Include(li => li.AllRequestLocationInstances).Where(li => li.LocationInstanceParentID == null).Include(li => li.LocationType);
@@ -52,6 +54,7 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult Index(AppUtility.MenuItems SectionType)
         {
             TempData["SectionType"] = SectionType;
+            TempData["MenuType"] = SectionType;
             // Added by Dani because to make CSS work better
             if (SectionType.Equals(AppUtility.MenuItems.LabManagement))
             {

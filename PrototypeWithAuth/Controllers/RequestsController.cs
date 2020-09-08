@@ -74,7 +74,9 @@ namespace PrototypeWithAuth.Controllers
         //ALSO when changing defaults -> change the defaults on the index page for paged list 
 
 
-        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, 
+            AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.OrdersAndInventory,
+            RequestsSearchViewModel? requestsSearchViewModel = null)
         {
 
             //instantiate your list of requests to pass into the index
@@ -85,7 +87,7 @@ namespace PrototypeWithAuth.Controllers
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
             TempData["RequestStatusID"] = RequestStatusID;
-            var SidebarTitle = AppUtility.RequestSidebarEnum.None;
+            var SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.None;
 
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
@@ -178,7 +180,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.VendorID == vendorID);
                 //pass the vendorID into the temp data to use if you'd like to sort from there
-                SidebarTitle = AppUtility.RequestSidebarEnum.Vendor;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
                 TempData["VendorID"] = vendorID;
             }
             else if (subcategoryID > 0 && requestsSearchViewModel != null)
@@ -187,7 +189,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
-                SidebarTitle = AppUtility.RequestSidebarEnum.Type;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Type;
                 TempData["SubcategoryID"] = subcategoryID;
             }
             else if (applicationUserID != null && requestsSearchViewModel != null)
@@ -196,7 +198,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.ApplicationUserCreatorID == applicationUserID);
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
-                SidebarTitle = AppUtility.RequestSidebarEnum.Owner;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Owner;
                 TempData["ApplicationUserID"] = applicationUserID;
             }
             else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
@@ -209,7 +211,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                SidebarTitle = AppUtility.RequestSidebarEnum.LastItem;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
             }
 
 
@@ -258,6 +260,8 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
+
+            TempData["MenuType"] = SectionType;
 
             return View(onePageOfProducts);
         }
@@ -384,8 +388,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> CreateModalView()
+        public async Task<IActionResult> CreateModalView(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
+            TempData["PageType"] = PageType;
             var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
@@ -426,8 +431,9 @@ namespace PrototypeWithAuth.Controllers
             }
             Directory.CreateDirectory(requestFolder);
 
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.AddItem;
+            //TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.AddItem;
+            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 return PartialView(requestItemViewModel);
@@ -2080,7 +2086,7 @@ namespace PrototypeWithAuth.Controllers
                 AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)confirmEmail.PageType;
                 if (firstRequest.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 {
-                    TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
+                    TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
                     //return RedirectToAction("Index", new
                     //{
                     //    page = confirmEmail.Page,
@@ -2091,7 +2097,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
+                    TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
                     //return RedirectToAction("Index", "Operations", new
                     //{
                     //    page = confirmEmail.Page,
@@ -2492,6 +2498,7 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Search;
             TempData["SectionType"] = SectionType;
+            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
                 ParentCategories = await _context.ParentCategories.ToListAsync(),
@@ -2602,6 +2609,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
             }
+            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
 
             //ViewData["ReturnRequests"] = requestsSearched;
 
@@ -3204,8 +3212,9 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(notification);
                 await _context.SaveChangesAsync();
             }
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Notifications;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
+            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             var requests = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id).OrderByDescending(n => n.TimeStamp).ToList();
             return View(requests);
@@ -3215,8 +3224,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Cart()
         {
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Cart;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Cart;
             TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
+            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
             CartViewModel cartViewModel = new CartViewModel();
             cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
                 .Where(r => r.RequestStatusID == 6 && !(r is Reorder))
