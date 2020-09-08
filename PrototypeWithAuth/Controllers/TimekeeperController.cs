@@ -353,8 +353,8 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 awaitingApproval.Entry1 = employeeHours.Entry1;
-                awaitingApproval.Exit1 = employeeHours.Entry2;
-                awaitingApproval.Entry2 = employeeHours.Exit1;
+                awaitingApproval.Exit1 = employeeHours.Exit1;
+                awaitingApproval.Entry2 = employeeHours.Entry2;
                 awaitingApproval.Exit2 = employeeHours.Exit2;
                 awaitingApproval.TotalHours = employeeHours.TotalHours;
                 awaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
