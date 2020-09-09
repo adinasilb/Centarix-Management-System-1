@@ -370,6 +370,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> Vacation()
         {
+
             return PartialView();
         }
         [HttpGet]

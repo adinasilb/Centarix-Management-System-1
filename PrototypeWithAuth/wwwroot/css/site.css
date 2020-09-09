@@ -82,7 +82,10 @@ for details on configuring this project to bundle and minify static web assets. 
     background-color: var(--lab-man-50-color) !important;
     /*opacity: .5;*/
 }
-
+a.yearly-monthly {
+    border: .125rem solid var(--user-color) !important;
+    color: var(--user-color) !important;
+}
 .accounting-color {
     color: var(--acc-color);
 }
