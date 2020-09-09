@@ -27,7 +27,11 @@
 
     if (MenuType == AppUtility.MenuItems.OrdersAndInventory.ToString())
     {
-        MainMenuItems = CreateMenus.CreateOrdersAndInventoryMainMenu(pageType, initalClasses, currentClasses);
+        MainMenuItems = CreateMenus.CreateOrdersAndInventoryMainMenu(pageType, initalClasses, " activeNavLink");
+    }
+    if (MenuType == AppUtility.MenuItems.LabManagement.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateLabManagementMainMenu(pageType, initalClasses, " text-dark lab-man-filter");
     }
 
     //passing the
@@ -49,46 +53,55 @@
     string activeClass = " font-weight-bold activeNavLink  ";
 
     List<MenuItems> SidebarMenuItems = new List<MenuItems>();
-    string sidebarTitle = "";
+    string sidebarTitle = ""; //TODO: cchange this to SideabrType!!!!!;
     if (TempData["SidebarTitle"] != null)
     {
         sidebarTitle = TempData["SidebarTitle"].ToString();
+    }
+    string sidebarType = "";
+    if (TempData[AppUtility.TempDataTypes.SidebarType.ToString()] != null)
+    {
+        sidebarType = TempData[AppUtility.TempDataTypes.SidebarType.ToString()].ToString();
     }
 
     var menuClass = originalNavClasses;
     if (pageType == AppUtility.RequestPageTypeEnum.Inventory.ToString())
     {
-        inventoryClass = initalClasses + currentClasses;
+        //inventoryClass = initalClasses + currentClasses;
         SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
         Inventory = true;
     }
     else if (pageType == AppUtility.RequestPageTypeEnum.Summary.ToString())
     {
-        summaryClass = initalClasses + currentClasses;
+        //summaryClass = initalClasses + currentClasses;
         SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
         Summary = true;
     }
     else if (pageType == AppUtility.RequestPageTypeEnum.Request.ToString())
     {
         Requests = true;
-        requestClass = initalClasses + currentClasses;
+        //requestClass = initalClasses + currentClasses;
         SidebarMenuItems = CreateMenus.GetOrdersAndInventoryRequestsSidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
     }
     else if (pageType == AppUtility.RequestPageTypeEnum.Cart.ToString())
     {
-        cartClass = initalClasses + currentClasses;
+        //cartClass = initalClasses + currentClasses;
         SidebarMenuItems = CreateMenus.GetOrdersAndInventoryCartSidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
         Cart = true;
     }
     else if (pageType == AppUtility.RequestPageTypeEnum.Search.ToString())
     {
-        searchClass = initalClasses + currentClasses + " search-link";
+        //searchClass = initalClasses + currentClasses + " search-link";
         SidebarMenuItems = CreateMenus.GetOrdersAndInventorySearchSidebarMenuItems(originalNavClasses, activeClass, pageType, categoryType);
     }
     else if (pageType == AppUtility.RequestPageTypeEnum.Location.ToString())
     {
-        locationClass = initalClasses + currentClasses;
+        //locationClass = initalClasses + currentClasses;
         SidebarMenuItems = CreateMenus.GetOrdersAndInventoryLocationSidebarMenuItems(originalNavClasses, activeClass, pageType, categoryType);
+    }
+    else if (pageType == AppUtility.LabManagementPageTypeEnum.Suppliers.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateLabManageSuppliersSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
 
 
@@ -133,26 +146,6 @@
                         @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes, @id = MenuItem.ID })
                     </li>
                 }
-                @*<li class="nav-item mx-5 ">
-                        @Html.ActionLink("Requests", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = requestClass, @id = "request-link " })
-                    </li>
-                    <li class="nav-item mx-5">
-                        @Html.ActionLink("Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Summary }, new { @class = summaryClass, @id = "summary-link" })
-                    </li>
-
-                    <li class="nav-item mx-5  ">
-                        @Html.ActionLink("Search", "Search", "Requests", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = searchClass, @id = "search-link " /*why is the role and id here?*/ })
-                    </li>
-                    <li class="nav-item mx-5">
-                        Redo the location class in the controller
-                        @Html.ActionLink("Location", "Index", "Locations", new { @SectionType = AppUtility.MenuItems.OrdersAndInventory }, new { @class = locationClass, @id = "location-link" })
-                    </li>
-                    <li class="nav-item mx-5 ">
-                        @Html.ActionLink("Personal", "Cart", "Requests", new { }, new { @class = cartClass, @id = "cart-link " /*why is the role and id here?*/ })
-                    </li>
-                    <li class="nav-item mx-4 d-table ">
-                        @Html.ActionLink("Full Inventory", "Index", "Requests", new { @PageType = AppUtility.RequestPageTypeEnum.Inventory }, new { @class = inventoryClass, @id = "inventory-link" })
-                    </li>*@
             </ul>
         </div>
         <div class="  container col-1  pl-5">

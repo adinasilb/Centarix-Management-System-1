@@ -83,6 +83,73 @@ namespace PrototypeWithAuth.AppData
 
             return MainMenuItems;
         }
+
+        public static List<MenuItems> CreateLabManagementMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
+        {
+            var MainMenuItems = new List<MenuItems>();
+
+            var AllClasses = OrigClasses;
+            if (MainMenu == AppUtility.LabManagementPageTypeEnum.Suppliers.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Suppliers",
+                Controller = "Vendors",
+                Action = "IndexForPayment",
+                RouteValues = new RouteValueDictionary()
+                    {
+                        {"PageType", AppUtility.LabManagementPageTypeEnum.Suppliers },
+                        {"SectionType", AppUtility.MenuItems.LabManagement }
+                    },
+                Classes = AllClasses
+            });
+            if (MainMenu == AppUtility.LabManagementPageTypeEnum.Locations.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Locations",
+                Controller = "Locations",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                    {
+                        {"SectionType", AppUtility.MenuItems.LabManagement }
+                    },
+                Classes = AllClasses
+            });
+            if (MainMenu == AppUtility.LabManagementPageTypeEnum.Equipment.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            { //TODO : MUST BE CHANGED!!!!!!!!!!
+                Description = "Equipment",
+                Controller = "Locations",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                    {
+                        {"SectionType", AppUtility.MenuItems.LabManagement }
+                    },
+                Classes = AllClasses
+            });
+            if (MainMenu == AppUtility.LabManagementPageTypeEnum.Quotes.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Orders",
+                Controller = "Requests",
+                Action = "LabManageQuotes",
+                RouteValues = new RouteValueDictionary(),
+                Classes = AllClasses
+            });
+            if (MainMenu == AppUtility.LabManagementPageTypeEnum.Quotes.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Requests",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                Classes = AllClasses
+            });
+
+            return MainMenuItems;
+        }
         public static List<MenuItems> GetOrdersAndInventoryRequestsSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
             var SidebarMenuItems = new List<MenuItems>();
@@ -161,7 +228,6 @@ namespace PrototypeWithAuth.AppData
 
             return SidebarMenuItems;
         }
-
         public static List<MenuItems> GetOrdersAndInventorySummarySidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
             var SidebarMenuItems = new List<MenuItems>();
@@ -253,7 +319,6 @@ namespace PrototypeWithAuth.AppData
             });
             return SidebarMenuItems;
         }
-
         public static List<MenuItems> GetOrdersAndInventorySearchSidebarMenuItems(string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
@@ -276,8 +341,6 @@ namespace PrototypeWithAuth.AppData
 
             return SidebarMenuItems;
         }
-
-
         public static List<MenuItems> GetOrdersAndInventoryCartSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
@@ -307,8 +370,6 @@ namespace PrototypeWithAuth.AppData
 
             return SidebarMenuItems;
         }
-
-
         public static List<MenuItems> GetOrdersAndInventoryLocationSidebarMenuItems(string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
@@ -327,6 +388,54 @@ namespace PrototypeWithAuth.AppData
                 },
                 Classes = menuClass + ActiveClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateLabManageSuppliersSidebar (string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.AllSuppliers.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "All",
+                Controller = "Vendors",
+                Action = "IndexForPayment",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                IconName = "icon-storefront-24px1",
+                Classes = Classes
+            });
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.NewSupplier.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "New Supplier",
+                Controller = "Vendors",
+                Action = "Create",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                IconName = "icon-add_circle_outline-24px",
+                Classes = Classes
+            });
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.SearchSupplier.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Vendors",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                IconName = "icon-zoom_in-24px-01",
+                Classes = Classes
             });
 
             return SidebarMenuItems;

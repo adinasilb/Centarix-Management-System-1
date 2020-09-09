@@ -64,6 +64,10 @@ for details on configuring this project to bundle and minify static web assets. 
     background-color: var(--order-inv-color) !important;
 }
 
+.lab-man-filter {
+    filter: var(--lab-man-filter) !important;
+}
+
 .lab-man-background-color {
     background-color: var(--lab-man-color) !important;
 }
@@ -1834,7 +1838,7 @@ td .btn {
     }
 
 .navbar-nav li a {
-    font-weight: 300;
+    font-weight: normal;
 }
 
 .alerts-icon {
