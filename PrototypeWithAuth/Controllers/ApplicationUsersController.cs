@@ -32,9 +32,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.CategoryTypeEnum categoryType =AppUtility.CategoryTypeEnum.Lab)
         {
-            TempData["PageType"] = PageType;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData["CategoryType"] = categoryType;
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Owner;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Owner;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
             return View(await _context.Users.Where(u=>!u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync());
         }
 

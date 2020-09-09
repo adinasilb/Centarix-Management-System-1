@@ -46,7 +46,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public IActionResult Index()
         {
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
             TempData["SideBar"] = AppUtility.UserSideBarEnum.Index;
             List<ApplicationUser> users = new List<ApplicationUser>();
             users = _context.Users
@@ -64,7 +64,7 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult RegisterUser()
 
         {
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
             TempData["SideBar"] = AppUtility.UserSideBarEnum.Add;
             var roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
@@ -121,7 +121,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public IActionResult CreateUser()
         {
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
             TempData["SideBar"] = AppUtility.UserSideBarEnum.Add;
 
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();

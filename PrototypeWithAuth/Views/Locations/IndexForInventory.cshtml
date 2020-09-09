@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "IndexForInventory";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-    var pagetype = TempData["PageType"];
+    var pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()];
 }
 
 

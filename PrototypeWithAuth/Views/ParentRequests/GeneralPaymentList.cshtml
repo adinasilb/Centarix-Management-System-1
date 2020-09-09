@@ -23,7 +23,7 @@
 
     </div>
     @*<<<< content >>>>>*@
-    <div style="flex-grow:1;" class="ml-4 mt-5">
+    <div style="flex-grow:1;" class="outer-page-margins">
 
         @foreach (var group in Model.GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month }))
         {

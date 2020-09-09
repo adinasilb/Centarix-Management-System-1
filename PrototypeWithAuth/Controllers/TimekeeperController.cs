@@ -33,7 +33,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public IActionResult ReportHours()
         {
-            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
@@ -66,7 +66,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public IActionResult ReportHours(EntryExitViewModel entryExitViewModel)
         {
-            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.ReportHours;
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
@@ -120,7 +120,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> SummaryDaysOff()
         {
-            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Days;
             var userid = _userManager.GetUserId(User);
             var user = _context.Users.OfType<Employee>().Where(u=>u.Id==userid).FirstOrDefault();
@@ -181,7 +181,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> HoursPage(int month = 0)
         {
-            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Hours;
             var hours =GetHours( new DateTime(DateTime.Now.Year, month, DateTime.Now.Day));
             return PartialView(hours);
@@ -190,7 +190,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> SummaryHours()
         {
-            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.Hours;
             var hours = GetHours(DateTime.Now);
             return PartialView(hours);
@@ -209,7 +209,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> ReportDaysOff()
         {
-            TempData["PageType"] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData["SideBar"] = AppUtility.TimeKeeperSidebarEnum.DaysOff;
             var userid = _userManager.GetUserId(User);
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();

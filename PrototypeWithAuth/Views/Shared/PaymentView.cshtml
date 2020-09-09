@@ -15,9 +15,9 @@
     var pageType = AppUtility.PaymentPageTypeEnum.None;
 
     //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
-    if (TempData["PageType"] != null)
+    if (TempData[AppUtility.TempDataTypes.PageType.ToString()] != null)
     {
-        pageType = (AppUtility.PaymentPageTypeEnum)Enum.Parse(typeof(AppUtility.PaymentPageTypeEnum), TempData["PageType"].ToString());
+        pageType = (AppUtility.PaymentPageTypeEnum)Enum.Parse(typeof(AppUtility.PaymentPageTypeEnum), TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString());
     }
 
     //passing the
