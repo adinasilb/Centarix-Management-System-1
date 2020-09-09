@@ -2697,7 +2697,7 @@ $.fn.SaveOffDays = function (url) {
 
 		$.ajax({
 			async: false,
-			url: "AddWorker" + '?chosenID=' + $(this).val(),
+			url: "/ApplicationUsers/AddWorker" + '?chosenID=' + $(this).val(),
 			type: 'GET',
 			cache: false,
 			success: function (data) {
