@@ -18,7 +18,7 @@ namespace PrototypeWithAuth.AppData
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location, Summary }
         public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers, Payments } //these are all going to the ParentRequestIndex
-        public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, Search }
+        public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, SearchLM }
         public enum LabManagementSidebarEnum { None, Orders, Quotes, AllSuppliers, NewSupplier, SearchSupplier, LocationsList, SearchRequests }
         public enum OrdersAndInventorySidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits } //Listed in the site.js (if you change here must change there)

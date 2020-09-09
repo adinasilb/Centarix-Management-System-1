@@ -2509,7 +2509,7 @@ namespace PrototypeWithAuth.Controllers
             else if (SectionType == AppUtility.MenuItems.LabManagement)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Search;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.SearchLM;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.SearchRequests;
             }
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel

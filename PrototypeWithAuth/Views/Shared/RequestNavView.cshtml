@@ -103,6 +103,18 @@
     {
         SidebarMenuItems = CreateMenus.CreateLabManageSuppliersSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
+    else if (pageType == AppUtility.LabManagementPageTypeEnum.Locations.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateLabManageLocationsSidebar(sidebarType, originalNavClasses, "lab-man-filter");
+    }
+    else if (pageType == AppUtility.LabManagementPageTypeEnum.Quotes.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateLabManageOrdersSidebar(sidebarType, originalNavClasses, "lab-man-filter");
+    }
+    else if (pageType == AppUtility.LabManagementPageTypeEnum.SearchLM.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateLabManageSearchSidebar(sidebarType, originalNavClasses, "lab-man-filter");
+    }
 
 
     //not using this right now --> see if we should put it back in

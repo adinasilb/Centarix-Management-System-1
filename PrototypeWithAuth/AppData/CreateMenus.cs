@@ -135,7 +135,7 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary(),
                 Classes = AllClasses
             });
-            if (MainMenu == AppUtility.LabManagementPageTypeEnum.Quotes.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+            if (MainMenu == AppUtility.LabManagementPageTypeEnum.SearchLM.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
                 Description = "Search",
@@ -436,6 +436,79 @@ namespace PrototypeWithAuth.AppData
                 },
                 IconName = "icon-zoom_in-24px-01",
                 Classes = Classes
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateLabManageLocationsSidebar (string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.LocationsList.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "List",
+                Controller = "Locations",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                Classes = Classes,
+                IconName = "icon-zoom_in-24px-01"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateLabManageOrdersSidebar (string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.Quotes.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Quotes",
+                Controller = "Requests",
+                Action = "LabManageQuotes",
+                RouteValues = new RouteValueDictionary(),
+                Classes = Classes,
+                IconName = "icon-book-24px"
+            });
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.Orders.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Orders",
+                Controller = "Requests",
+                Action = "LabManageOrders",
+                RouteValues = new RouteValueDictionary(),
+                Classes = Classes,
+                IconName = "icon-shopping_cart-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateLabManageSearchSidebar (string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.SearchRequests.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Requests",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                Classes = Classes,
+                IconName = "icon-zoom_in-24px-01"
             });
 
             return SidebarMenuItems;

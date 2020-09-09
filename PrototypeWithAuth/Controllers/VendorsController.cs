@@ -78,11 +78,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, LabManagement")]
         public async Task<IActionResult> IndexForLabManage()
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Suppliers;
-            TempData["Action"] = AppUtility.SuppliersEnum.All;
-            TempData["Action"] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
-            return View(await _context.Vendors.ToListAsync());
-
+            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Suppliers;
+            //TempData["Action"] = AppUtility.SuppliersEnum.All;
+            //TempData["Action"] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
+            //return View(await _context.Vendors.ToListAsync());
+            return RedirectToAction("IndexForPayment", new { SectionType = AppUtility.MenuItems.LabManagement });
         }
 
         // GET: Vendors/Details/5
