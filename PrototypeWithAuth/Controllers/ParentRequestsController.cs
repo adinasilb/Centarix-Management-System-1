@@ -125,8 +125,8 @@ namespace PrototypeWithAuth.Controllers
             };
 
             //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
-            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Notifications;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
 
 
             return View(paymentNotificationsViewModel);
@@ -150,7 +150,7 @@ namespace PrototypeWithAuth.Controllers
 
 
             //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.General;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.General;
 
             return View(await fullParentRequestsListByDate.ToListAsync());
         }
@@ -193,7 +193,7 @@ namespace PrototypeWithAuth.Controllers
                 monthlyTotals = monthlyTotals
             };
             //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Expenses;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Expenses;
 
 
             return View(expensesListViewModel);
@@ -353,7 +353,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Payments(AppUtility.PaymentsEnum id)
         {
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Payments;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Payments;
             NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel();
             Dictionary<Vendor, List<ParentRequestListViewModel>> ParentRequestsFiltered;
             switch (id)
@@ -442,7 +442,7 @@ namespace PrototypeWithAuth.Controllers
         //[Authorize(Roles = "Admin, Accounting")]
         //public async Task<IActionResult> Notifications(AppUtility.NotificationsEnum id)
         //{
-        //    //TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
+        //    //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Notifications;
         //    //NotificationsListViewModel notificationsListViewModel = new NotificationsListViewModel();
         //    //Dictionary<Vendor, List<ParentRequestListViewModel>> ParentRequestsFiltered;
         //    //switch (id)

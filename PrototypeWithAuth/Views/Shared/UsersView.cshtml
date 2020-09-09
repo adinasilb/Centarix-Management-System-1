@@ -21,9 +21,9 @@
     var AddClasses = navClass;
     bool Users = false;
     bool Workers = false;
-    if (TempData["PageType"] != null)
+    if (TempData[AppUtility.TempDataTypes.PageType.ToString()] != null)
     {
-        switch (TempData["PageType"])
+        switch (TempData[AppUtility.TempDataTypes.PageType.ToString()])
         {
             case AppUtility.UserPageTypeEnum.User:
                 UsersClasses += activeTopNavClass;

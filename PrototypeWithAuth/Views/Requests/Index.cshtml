@@ -110,7 +110,7 @@
         applicationUserID = TempData["ApplicationUserID"].ToString();
     }
 
-    var PageType = TempData["PageType"];
+    var PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()];
 
     //saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
     bool Request = false;

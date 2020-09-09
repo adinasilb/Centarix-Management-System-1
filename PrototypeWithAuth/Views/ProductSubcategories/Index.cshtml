@@ -4,7 +4,7 @@
 @{
 
     ViewData["Title"] = "Index";
-    var pagetype = TempData["PageType"];
+    var pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()];
     if (Model.FirstOrDefault().ParentCategory.CategoryTypeID == 1)
     {
         Layout = "~/Views/Shared/RequestNavView.cshtml";

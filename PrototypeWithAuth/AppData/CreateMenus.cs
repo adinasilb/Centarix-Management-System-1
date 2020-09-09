@@ -83,7 +83,7 @@ namespace PrototypeWithAuth.AppData
 
             return MainMenuItems;
         }
-        public static List<MenuItems> GetOrdersAndInventoryRequestsSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, AppUtility.RequestPageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
+        public static List<MenuItems> GetOrdersAndInventoryRequestsSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
             var SidebarMenuItems = new List<MenuItems>();
 
@@ -162,7 +162,7 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
 
-        public static List<MenuItems> GetOrdersAndInventorySummarySidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, AppUtility.RequestPageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
+        public static List<MenuItems> GetOrdersAndInventorySummarySidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
             var SidebarMenuItems = new List<MenuItems>();
 
@@ -254,7 +254,7 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
 
-        public static List<MenuItems> GetOrdersAndInventorySearchSidebarMenuItems(string OrigClasses, string ActiveClasses, AppUtility.RequestPageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
+        public static List<MenuItems> GetOrdersAndInventorySearchSidebarMenuItems(string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
             var SidebarMenuItems = new List<MenuItems>();
@@ -278,7 +278,7 @@ namespace PrototypeWithAuth.AppData
         }
 
 
-        public static List<MenuItems> GetOrdersAndInventoryCartSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, AppUtility.RequestPageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
+        public static List<MenuItems> GetOrdersAndInventoryCartSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
             var SidebarMenuItems = new List<MenuItems>();
@@ -309,7 +309,7 @@ namespace PrototypeWithAuth.AppData
         }
 
 
-        public static List<MenuItems> GetOrdersAndInventoryLocationSidebarMenuItems(string OrigClasses, string ActiveClasses, AppUtility.RequestPageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
+        public static List<MenuItems> GetOrdersAndInventoryLocationSidebarMenuItems(string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
             var SidebarMenuItems = new List<MenuItems>();

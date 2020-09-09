@@ -34,9 +34,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> IndexForInventory(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Summary)
         {
-            TempData["PageType"] = PageType;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Location;
-            TempData["MenuType"] = AppUtility.MenuItems.OrdersAndInventory;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
 
             var locations = _context.LocationInstances
                 .Include(li => li.AllRequestLocationInstances).Where(li => li.LocationInstanceParentID == null).Include(li => li.LocationType);
@@ -50,19 +50,20 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, OrdersAndInventory, LabManagement")]
         public IActionResult Index(AppUtility.MenuItems SectionType)
         {
             TempData["SectionType"] = SectionType;
-            TempData["MenuType"] = SectionType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             // Added by Dani because to make CSS work better
             if (SectionType.Equals(AppUtility.MenuItems.LabManagement))
             {
-                TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Locations;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Locations;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.LocationsList;
             }
             else
             {
-                TempData["PageType"] = AppUtility.RequestPageTypeEnum.Location;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Location;
             }
 
             LocationTypeViewModel locationTypeViewModel = new LocationTypeViewModel()

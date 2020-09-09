@@ -2,8 +2,15 @@
 @using PrototypeWithAuth.AppData;
 @{
     ViewData["Title"] = "Index";
-    //Layout = "~/Views/Shared/ManageLocationView.cshtml";
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    switch (TempData[AppUtility.TempDataTypes.MenuType.ToString()])
+    {
+        case AppUtility.MenuItems.OrdersAndInventory:
+            Layout = "~/Views/Shared/RequestNavView.cshtml";
+            break;
+        case AppUtility.MenuItems.LabManagement:
+            Layout = "~/Views/Shared/ManageLocationView.cshtml";
+            break;
+    }
 }
 <div class="locations-page">
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@

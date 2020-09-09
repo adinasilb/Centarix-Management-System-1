@@ -13,23 +13,24 @@ namespace PrototypeWithAuth.AppData
     public static class AppUtility
     {
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
-        public enum CommentTypeEnum { Warning, Comment}
+        public enum CommentTypeEnum { Warning, Comment }
+        public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location, Summary }
         public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers, Payments } //these are all going to the ParentRequestIndex
         public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, Search }
-        public enum LabManagementSidebarEnum { None, Orders, Quotes }
+        public enum LabManagementSidebarEnum { None, Orders, Quotes, AllSuppliers, NewSupplier, SearchSupplier, LocationsList, SearchRequests }
         public enum OrdersAndInventorySidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
-        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits} //Listed in the site.js (if you change here must change there)
-        public enum UserPageTypeEnum { None, User, Workers}
+        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits } //Listed in the site.js (if you change here must change there)
+        public enum UserPageTypeEnum { None, User, Workers }
         public enum UserSideBarEnum { None, Index, Add, Details, AddWorker, AwaitingApproval, Salary, Hours }
         public enum TimeKeeperPageTypeEnum { None, Report, Summary }
         public enum TimeKeeperSidebarEnum { None, ReportHours, Days, Hours, DaysOff, Documents, CompanyAbsences }
         public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }
-        public enum AccountingNotificationsEnum {  NoInvoice, DidntArrive, PartialDelivery, ForClarification }
+        public enum AccountingNotificationsEnum { NoInvoice, DidntArrive, PartialDelivery, ForClarification }
         public enum AccountingPaymentsEnum { MonthlyPayment, PayNow, PayLater, Installments, StandingOrders }
-        public enum PaymentsEnum { ToPay, PayNow}
+        public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
-        public enum CategoryTypeEnum { Operations, Lab}
+        public enum CategoryTypeEnum { Operations, Lab }
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
         {
             int ReturnList = 0;
@@ -179,7 +180,7 @@ namespace PrototypeWithAuth.AppData
             string newFileName = longFileName.Substring(place + 2, longFileName.Length - place - 2);
             return newFileName;
         }
-        
+
 
     }
 
