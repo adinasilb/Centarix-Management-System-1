@@ -2678,7 +2678,7 @@ $.fn.SaveOffDays = function (url) {
 
 	$(".approve-hours").click(function (e) {
 		$.ajax({
-			async: false,
+			async: true,
 			url: "ApproveHours" + '?id=' +$(this).val(),
 			type: 'GET',
 			cache: false,
@@ -2687,4 +2687,22 @@ $.fn.SaveOffDays = function (url) {
 			}
 		});
 	});
+	//$('.employee-type').change(function () {
+	//	console.log($(this).val());
+	//	$('#NewEmployee_EmployeeStatusID').val($(this).val())
+	//})
+	$('#NewEmployee_Id').change(function (e) {
+		console.log("on change user")
+		e.stopPropagation();
+
+		$.ajax({
+			async: false,
+			url: "AddWorker" + '?chosenID=' + $(this).val(),
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("body").html(data);
+			}
+		});
+	})
 });

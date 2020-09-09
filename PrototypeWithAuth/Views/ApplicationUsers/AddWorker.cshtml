@@ -1,8 +1,185 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using PrototypeWithAuth.Data
-@inject UserManager<ApplicationUser> UserManager
+﻿@model PrototypeWithAuth.ViewModels.AddWorkerViewModel;
+@using PrototypeWithAuth.AppData;
+
 
 @{
     ViewData["Title"] = "Add Worker";
     Layout = "~/Views/Shared/UsersView.cshtml";
 }
+<div class="card col-12 create-user mt-4 mx-auto p-0" style="        width: 100%;
+        box-shadow: 0px 2px 6px #5656567A;
+        max-height: 100%;
+        width: 55%;
+        /*max-width: 1*/
+">
+    <div class="card-body no-box-shadow p-0">
+        <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow-y: auto; overflow-x:hidden" >
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="new-modal-header border-bottom container-fluid pb-0" style="padding:.5rem 5rem" >
+                <div class="row mt-3 mb-5">
+                    <div class="col-3">
+                        @if (Model.NewEmployee.UserImage != null)
+                        {
+                        <div class="img-box"><img src="@Model.NewEmployee.UserImage" class="user-image ml-0 user-image" height="92" width="92" alt="default User image" /></div>
+                        }
+                    </div>
+                    <div class="col-5">
+                        <div class="form-group">
+                            @Html.DropDownListFor(
+                                               vm => vm.NewEmployee.Id,
+                                               new SelectList(
+                                               Model.ApplicationUsers,
+                                               dataValueField: "Value",
+                                               dataTextField: "Text"),
+                                               htmlAttributes: new { @class = "mb-0 mdb-select md-form  colorful-select dropdown-primary align-bottom worker-header",  }
+                                               )
+                            <span asp-validation-for="NewEmployee.Id" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="col-3 offset-1">
+                        <input type="submit" id="addWorker" value="Save" asp-action="AddWorker" class="inv-user-button mt-1 btn-block py-2 disabled-submit" style="float: right; font-size:1.625rem" />
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 px-0">
+                            <div class="container-fluid div-tabs text-center p-0">
+                                <ul id="create-modal-tabs" class="nav nav-tabs text-center container-fluid p-0 border-bottom-0" style="display:inline-flex;  color:#666666;">
+                                    <li class="nav-item pr-5"><a data-toggle="tab" href="#personal"  class="nav-link user-nav-link"><i class="icon-face-24px" style="font-size: 2rem;"></i><br />Personal</a></li>
+                                    <li class="nav-item pr-5"><a data-toggle="tab" href="#salary" class="nav-link user-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Salary</a></li>
+                                    <li class="nav-item pr-5"><a data-toggle="tab" href="#documents" class="nav-link user-nav-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            <div class="new-modal-body pb-4">
+                <div class="div-tabs" style="background: #FFF;" @*border: 2px solid #EAEAEB;"*@>
+                    <div class="tab-content p-0">
+                        <div id="personal" class="tab-pane fade">
+                            <div class="container p-0 border">
+                                <div class="row " style="padding:2rem 5rem">  
+                                    <input type="hidden" asp-for="NewEmployee.EmployeeStatusID"/>
+                                    @foreach (var status in Model.EmployeeStatuses)
+                                    {
+                                        var id = "EmployeeStatusID" + status.EmployeeStatusID;
+                                        <div class="custom-control custom-radio mr-5 ml-2 employee-type">
+                                                @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID,  htmlAttributes: new { @class = "custom-control-input", @id = id}) 
+                                        <label class="custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
+                                         </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="container-fluid " style="padding:2rem 5rem">
+                                <div class="row pt-4">
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.IDNumber" class="control-label"></label>
+                                        <input asp-for="NewEmployee.IDNumber" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.IDNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-4 ">
+                                        <label asp-for="NewEmployee.CentarixID" class="control-label">Employee Number</label>
+                                        <input asp-for="NewEmployee.CentarixID" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.CentarixID" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-4 ">
+                                        <label asp-for="NewEmployee.JobTitle" class="control-label"></label>
+                                        <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.JobTitle" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row pt-4">
+                                    <div class="col-4">
+                                        <label class="control-label">Job Category</label>
+                                        @Html.DropDownListFor(
+                                            vm => vm.NewEmployee.JobCategoryTypeID,
+                                            new SelectList(
+                                            Model.JobCategoryTypes,
+                                            dataValueField: "JobCategoryTypeID",
+                                            dataTextField: "Description"),
+                                            optionLabel: "Select A Category",
+                                            htmlAttributes: new { @class = "mt-0 mdb-select md-form  colorful-select dropdown-primary " }
+                                            )
+                                        <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-4 ">
+                                        <label asp-for="NewEmployee.Email" class="control-label"></label>
+                                        <input asp-for="NewEmployee.Email" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.PhoneNumber" class="control-label"></label>
+                                        <input asp-for="NewEmployee.PhoneNumber" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row pt-4">
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.PhoneNumber" class="control-label"></label>
+                                        <input asp-for="NewEmployee.PhoneNumber" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.Degree" class="control-label"></label>
+                                        <input asp-for="NewEmployee.Degree" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.Degree" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.StartedWorking" class="control-label"></label>
+                                        <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row pt-4">
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.RelationshipStatus" class="control-label"></label>
+                                        <input asp-for="NewEmployee.RelationshipStatus" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.RelationshipStatus" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.Citizenship" class="control-label"></label>
+                                        <input asp-for="NewEmployee.Citizenship" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.Citizenship" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="salary" class="tab-pane fade">
+                            <div class="container-fluid " style="padding:4rem 5rem">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.SalariedEmployee.WorkScope" class="control-label"></label>
+                                        <input asp-for="NewEmployee.SalariedEmployee.WorkScope" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.SalariedEmployee.WorkScope" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.SalariedEmployee.HoursPerDay" class="control-label"></label>
+                                        <input asp-for="NewEmployee.SalariedEmployee.HoursPerDay" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="NewEmployee.VacationDays" class="control-label"></label>
+                                        <input asp-for="NewEmployee.VacationDays" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.VacationDays" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="documents" class="tab-pane fade">
+                         
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $('.mdb-select').materialSelect();
+</script>

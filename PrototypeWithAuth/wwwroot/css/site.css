@@ -1894,3 +1894,40 @@ td .btn {
 .timekeeper .dropdown-content li > span {
     color: black;
 }
+
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: black !important;
+    border: .125rem solid black !important;
+    background-color: white !important;
+    box-shadow:none;
+}
+.custom-control-label::after {
+    top: .37rem !important;
+    left: -1.45rem !important;
+    background: no-repeat 85%/85% 85% !important;
+}
+.custom-control-label::before {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+}
+    .custom-radio .custom-control-input:checked ~ .custom-control-label::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23000'/%3e%3c/svg%3e") !important;
+    background-size:cover
+}
+.select-wrapper.worker-header input.select-dropdown {
+    font-size: 1.875rem;
+}
+.user-image {
+    max-width: 100%;
+    max-height: 100%;
+    display: block; /* remove extra space below image */
+}
+
+.img-lg-box {
+    width: 1rem;
+    border: 5px solid black;
+}
+.img-small-box {
+    width: .7065rem;
+    border: 5px solid black;
+} 
