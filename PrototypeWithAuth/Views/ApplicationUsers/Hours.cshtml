@@ -85,7 +85,9 @@
                         @employee.Employee.EmployeeStatus.Description
                     </td>
                     <td width="10%">
-                        @employee.Hours
+                        @{var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
+                        }
+                        @totalHours:@employee.Hours.ToString("mm")
                     </td>
                     <td width="8%">
                         @employee.WorkingDays

@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.ViewModels
     public class WorkerHourViewModel
     {
         public Employee Employee { get; set; }
-        public double Hours { get; set; }
+        public TimeSpan Hours { get; set; }
         public int WorkingDays { get; set; }
         public int VacationDays { get; set; }
         public int SickDays { get; set; }
