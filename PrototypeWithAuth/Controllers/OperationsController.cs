@@ -83,7 +83,7 @@ namespace PrototypeWithAuth.Controllers
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
             TempData["RequestStatusID"] = RequestStatusID;
-            var SidebarTitle = AppUtility.RequestSidebarEnum.None;
+            var SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.None;
 
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
@@ -96,7 +96,7 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             //use an enum to determine which page type you are using and fill the data accordingly, 
             //also pass the data through tempdata to the page so you can 
-            TempData["PageType"] = PageType;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
 
@@ -171,7 +171,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.VendorID == vendorID);
                 //pass the vendorID into the temp data to use if you'd like to sort from there
-                SidebarTitle = AppUtility.RequestSidebarEnum.Vendor;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
                 TempData["VendorID"] = vendorID;
             }
             else if (subcategoryID > 0 && requestsSearchViewModel != null)
@@ -180,7 +180,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
-                SidebarTitle = AppUtility.RequestSidebarEnum.Type;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Type;
                 TempData["SubcategoryID"] = subcategoryID;
             }
             else if (applicationUserID != null && requestsSearchViewModel != null)
@@ -189,12 +189,12 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.ApplicationUserCreatorID == applicationUserID);
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
-                SidebarTitle = AppUtility.RequestSidebarEnum.Owner;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Owner;
                 TempData["ApplicationUserID"] = applicationUserID;
             }
             else
             {
-                SidebarTitle = AppUtility.RequestSidebarEnum.LastItem;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
             }
 
 
@@ -272,8 +272,8 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.AddItem;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.AddItem;
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 return PartialView(requestItemViewModel);

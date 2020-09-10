@@ -4,8 +4,8 @@
 @{
     ViewData["Title"] = "Index";
 
-    string pageType = TempData["PageType"].ToString();
-    var pagetype = TempData["PageType"];
+    string pageType = TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString();
+    var pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()];
     if (TempData["CategoryType"].Equals(1))
     {
         Layout = "~/Views/Shared/RequestNavView.cshtml";
@@ -20,7 +20,7 @@
     <a asp-action="Create"><img src="~/images/css/inventory/icons/add_circle_outline_colored.png" alt="Create New" /></a><small>(not supposed to be here)</small>
 </p>*@
 
-<div class="m-5">
+<div class="">
 
     <table class="table table-headerspaced table-noheaderlines table-hover text-center">
         <thead>

@@ -2,7 +2,7 @@
 @using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "Index";
-    var pagetype = TempData["PageType"];
+    var pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()];
     Layout = "~/Views/Shared/RequestNavView.cshtml";
     if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
     {

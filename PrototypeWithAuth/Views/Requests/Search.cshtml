@@ -1,9 +1,18 @@
-﻿@model PrototypeWithAuth.ViewModels.RequestsSearchViewModel
+﻿@using PrototypeWithAuth.AppData
+@model PrototypeWithAuth.ViewModels.RequestsSearchViewModel
 @{
     ViewData["Title"] = "Search";
-    Layout = "~/Views/Shared/ManageSharedView.cshtml";
-    var buttonSubmitClass = Model.SectionType == PrototypeWithAuth.AppData.AppUtility.MenuItems.LabManagement ?
-        "inv-lab-button" : Model.SectionType == PrototypeWithAuth.AppData.AppUtility.MenuItems.OrdersAndInventory ? "inv-button" : "oper-button";
+    if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+        Layout = "~/Views/Shared/ManageSharedView.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
+    //
+    var buttonSubmitClass = Model.SectionType == AppUtility.MenuItems.LabManagement ?
+        "inv-lab-button" : Model.SectionType == AppUtility.MenuItems.OrdersAndInventory ? "inv-button" : "oper-button";
 }
 @*<div class="modal modal-view  right fader " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">*@
 

@@ -4,9 +4,9 @@
     Layout = "~/Views/Shared/OperationsView.cshtml";
 
     AppUtility.RequestPageTypeEnum pageType = AppUtility.RequestPageTypeEnum.None;
-    if (TempData["PageType"] != null)
+    if (TempData[AppUtility.TempDataTypes.PageType.ToString()] != null)
     {
-        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString());
     }
     var categoryType = AppUtility.CategoryTypeEnum.Operations;
 
@@ -33,19 +33,19 @@
     var SidebarType = TempData["SidebarTitle"];
     switch (SidebarType)
     {
-        case AppUtility.RequestSidebarEnum.LastItem:
+        case AppUtility.OrdersAndInventorySidebarEnum.LastItem:
             lastItem += activeClass;
             break;
-        case AppUtility.RequestSidebarEnum.Type:
+        case AppUtility.OrdersAndInventorySidebarEnum.Type:
             type += activeClass;
             break;
-        case AppUtility.RequestSidebarEnum.Vendor:
+        case AppUtility.OrdersAndInventorySidebarEnum.Vendor:
             vendor += activeClass;
             break;
-        case AppUtility.RequestSidebarEnum.Owner:
+        case AppUtility.OrdersAndInventorySidebarEnum.Owner:
             owner += activeClass;
             break;
-        case AppUtility.RequestSidebarEnum.AddItem:
+        case AppUtility.OrdersAndInventorySidebarEnum.AddItem:
             addItem += activeClass;
             break;
     }
@@ -93,7 +93,7 @@
         </ul>
         @*</nav>*@
     </div>
-    <div style="flex-grow: 1" class="mt-5 ml-5">
+    <div style="flex-grow: 1" class="outer-page-margins">
         <!--class="col-md-10 border-left"-->
         @RenderBody()
     </div>

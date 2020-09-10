@@ -74,7 +74,9 @@ namespace PrototypeWithAuth.Controllers
         //ALSO when changing defaults -> change the defaults on the index page for paged list 
 
 
-        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, 
+            AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.OrdersAndInventory,
+            RequestsSearchViewModel? requestsSearchViewModel = null)
         {
 
             //instantiate your list of requests to pass into the index
@@ -85,7 +87,7 @@ namespace PrototypeWithAuth.Controllers
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
             TempData["RequestStatusID"] = RequestStatusID;
-            var SidebarTitle = AppUtility.RequestSidebarEnum.None;
+            var SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.None;
 
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, vendorID, subcategoryID, applicationUserID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, vendorID, subcategoryID, applicationUserID);
@@ -98,7 +100,7 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             //use an enum to determine which page type you are using and fill the data accordingly, 
             //also pass the data through tempdata to the page so you can 
-            TempData["PageType"] = PageType;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
 
@@ -178,7 +180,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.VendorID == vendorID);
                 //pass the vendorID into the temp data to use if you'd like to sort from there
-                SidebarTitle = AppUtility.RequestSidebarEnum.Vendor;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
                 TempData["VendorID"] = vendorID;
             }
             else if (subcategoryID > 0 && requestsSearchViewModel != null)
@@ -187,7 +189,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
-                SidebarTitle = AppUtility.RequestSidebarEnum.Type;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Type;
                 TempData["SubcategoryID"] = subcategoryID;
             }
             else if (applicationUserID != null && requestsSearchViewModel != null)
@@ -196,7 +198,7 @@ namespace PrototypeWithAuth.Controllers
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.ApplicationUserCreatorID == applicationUserID);
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
-                SidebarTitle = AppUtility.RequestSidebarEnum.Owner;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Owner;
                 TempData["ApplicationUserID"] = applicationUserID;
             }
             else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
@@ -209,7 +211,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                SidebarTitle = AppUtility.RequestSidebarEnum.LastItem;
+                SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
             }
 
 
@@ -258,6 +260,8 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
+
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
 
             return View(onePageOfProducts);
         }
@@ -384,8 +388,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> CreateModalView()
+        public async Task<IActionResult> CreateModalView(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
@@ -426,8 +431,9 @@ namespace PrototypeWithAuth.Controllers
             }
             Directory.CreateDirectory(requestFolder);
 
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.AddItem;
+            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.AddItem;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 return PartialView(requestItemViewModel);
@@ -2080,7 +2086,7 @@ namespace PrototypeWithAuth.Controllers
                 AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)confirmEmail.PageType;
                 if (firstRequest.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 {
-                    TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
+                    TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
                     //return RedirectToAction("Index", new
                     //{
                     //    page = confirmEmail.Page,
@@ -2091,7 +2097,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.LastItem;
+                    TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
                     //return RedirectToAction("Index", "Operations", new
                     //{
                     //    page = confirmEmail.Page,
@@ -2464,8 +2470,10 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator)
                 .ToLookup(r => r.Product.Vendor);
-            TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
-            TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Quotes;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Quotes;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.Quotes;
+            //TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Quotes;
             return View(labManageQuotesViewModel);
         }
 
@@ -2478,8 +2486,10 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator)
                 .ToLookup(r => r.Product.Vendor);
-            TempData["PageType"] = AppUtility.LabManagementPageTypeEnum.Quotes;
-            TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Orders;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Quotes;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.Orders;
+            //TempData["SideBarPageType"] = AppUtility.LabManagementSidebarEnum.Orders;
             return View(labManageQuotesViewModel);
         }
 
@@ -2487,11 +2497,21 @@ namespace PrototypeWithAuth.Controllers
          * BEGIN SEARCH
          */
         [HttpGet]
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, OrdersAndInventory, LabManagement")]
         public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
         {
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Search;
-            TempData["SectionType"] = SectionType;
+            if (SectionType == AppUtility.MenuItems.OrdersAndInventory)
+            {
+                TempData["SectionType"] = SectionType;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Search;
+            }
+            else if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Search;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.SearchRequests;
+            }
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
                 ParentCategories = await _context.ParentCategories.ToListAsync(),
@@ -2592,16 +2612,17 @@ namespace PrototypeWithAuth.Controllers
             var PageType = AppUtility.RequestPageTypeEnum.None;
             if (IsRequest)
             {
-                TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
             }
             else if (IsInventory)
             {
-                TempData["PageType"] = AppUtility.RequestPageTypeEnum.Inventory;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Inventory;
             }
             else if (IsAll)
             {
-                TempData["PageType"] = AppUtility.RequestPageTypeEnum.Request;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
             }
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
 
             //ViewData["ReturnRequests"] = requestsSearched;
 
@@ -3204,8 +3225,9 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(notification);
                 await _context.SaveChangesAsync();
             }
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Notifications;
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Notifications;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Cart;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             var requests = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id).OrderByDescending(n => n.TimeStamp).ToList();
             return View(requests);
@@ -3215,8 +3237,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> Cart()
         {
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Cart;
-            TempData["PageType"] = AppUtility.RequestPageTypeEnum.Cart;
+            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Cart;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Cart;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
             CartViewModel cartViewModel = new CartViewModel();
             cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
                 .Where(r => r.RequestStatusID == 6 && !(r is Reorder))
@@ -3343,7 +3366,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AccountingPayments(AppUtility.AccountingPaymentsEnum accountingPaymentsEnum)
         {
             TempData["Action"] = accountingPaymentsEnum;
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Payments;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Payments;
             var requestsList = _context.Requests
                 .Include(r => r.ParentRequest)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
@@ -3391,7 +3414,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> AccountingNotifications(AppUtility.AccountingNotificationsEnum accountingNotificationsEnum = AppUtility.AccountingNotificationsEnum.NoInvoice)
         {
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Notifications;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Notifications;
             TempData["Action"] = accountingNotificationsEnum;
             var requestsList = _context.Requests
                 .Include(r => r.ParentRequest)

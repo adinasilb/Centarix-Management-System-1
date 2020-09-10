@@ -110,7 +110,7 @@
         applicationUserID = TempData["ApplicationUserID"].ToString();
     }
 
-    var PageType = TempData["PageType"];
+    var PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()];
 
     //saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
     bool Request = false;
@@ -191,7 +191,7 @@
 
 @if(backTextBool)
 {
-    <div class="row ml-5 mt-5">
+    <div class="row">
         <a href="@backLink">
             <i class="fas fa-long-arrow-alt-left"></i> @backText
         </a>
@@ -200,9 +200,9 @@
 
 @if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
 {
-    <div class="row ml-5 mt-5 mb-4">
+    <div class="row">
         <div class="">
-            <ul class="list-inline">
+            <ul class="">
                 <li class="list-inline-item active mr-3">
                     <a class="@newActiveClass" href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i style="font-size:1.4rem;" class="icon-centarix-icons-04"></i>   @newButtonText </a>
                     @*<img src="~/images/css/inventory/icons/new_tab.png" alt="New" />*@
@@ -230,7 +230,7 @@
     </div>
 }
 
-<div class="mx-5 mt-3 pt-4">
+<div class="">
     <table class="table table-headerspaced table-noheaderlines table-hover">
         <thead>
             <tr class="text-center">
