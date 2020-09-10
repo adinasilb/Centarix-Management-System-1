@@ -120,10 +120,6 @@ table td {
     font-weight: 400 !important;
 }
 
-.outer-page-margins {
-    margin-top: 5rem;
-    margin-left: 5.625rem;
-}
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 html.wf-loading * {
     opacity: 0;

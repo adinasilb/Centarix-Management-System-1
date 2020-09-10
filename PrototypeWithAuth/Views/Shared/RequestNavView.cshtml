@@ -218,7 +218,7 @@
                 @foreach (var MenuItem in MainMenuItems)
                 {
                     <li class="nav-item" style="margin-right: 4.375rem;">
-                        @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes, @id = MenuItem.ID })
+                        @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes + " top-menu", @id = MenuItem.ID })
                     </li>
                 }
             </ul>
@@ -287,7 +287,7 @@
                     @foreach (var sidebarNavItem in SidebarMenuItems)
                     {
                         <li class="nav-item @liMargins @sidebarNavItem.Classes">
-                            <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="bold-hover-effects p-1">
+                            <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="bold-hover-effects p-1 side-menu">
                                 <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
                                 <br />@sidebarNavItem.Description
                             </a>
