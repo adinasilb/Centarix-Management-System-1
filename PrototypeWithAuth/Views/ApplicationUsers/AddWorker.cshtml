@@ -83,13 +83,13 @@
                                     </div>
                                     <div class="col-4 ">
                                         <label asp-for="NewEmployee.CentarixID" class="control-label">Employee Number</label>
-                                        <input asp-for="NewEmployee.CentarixID" class="form-control-plaintext border-bottom" />
+                                        <input asp-for="NewEmployee.CentarixID" class="form-control-plaintext border-bottom" required/>
                                         <span asp-validation-for="NewEmployee.CentarixID" class="text-danger"></span>
                                     </div>
                                     <div class="col-4 ">
                                         <label asp-for="NewEmployee.JobTitle" class="control-label"></label>
-                                        <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="NewEmployee.JobTitle" class="text-danger"></span>
+                                        <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" required />
+                                        <span asp-validation-for="NewEmployee.JobTitle" class="text-danger" ></span>
                                     </div>
                                 </div>
                                 <div class="row pt-4">
@@ -102,35 +102,35 @@
                                             dataValueField: "JobCategoryTypeID",
                                             dataTextField: "Description"),
                                             optionLabel: "Select A Category",
-                                            htmlAttributes: new { @class = "mt-0 mdb-select md-form  colorful-select dropdown-primary " }
+                                            htmlAttributes: new { @class = "mt-0 mdb-select md-form  colorful-select dropdown-primary ", @required="true" }
                                             )
                                         <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger"></span>
                                     </div>
                                     <div class="col-4 ">
                                         <label asp-for="NewEmployee.Email" class="control-label"></label>
-                                        <input asp-for="NewEmployee.Email" class="form-control-plaintext border-bottom" />
+                                        <input asp-for="NewEmployee.Email" class="form-control-plaintext border-bottom" required />
                                         <span asp-validation-for="NewEmployee.Email" class="text-danger"></span>
                                     </div>
                                     <div class="col-4">
-                                        <label asp-for="NewEmployee.PhoneNumber" class="control-label"></label>
-                                        <input asp-for="NewEmployee.PhoneNumber" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="NewEmployee.PhoneNumber" class="control-label">Phone Number 1</label>
+                                        <input asp-for="NewEmployee.PhoneNumber" class="form-control-plaintext border-bottom" required />
                                         <span asp-validation-for="NewEmployee.PhoneNumber" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row pt-4">
                                     <div class="col-4">
-                                        <label asp-for="NewEmployee.PhoneNumber" class="control-label"></label>
+                                        <label asp-for="NewEmployee.PhoneNumber" class="control-label">Phone Number 2</label>
                                         <input asp-for="NewEmployee.PhoneNumber" class="form-control-plaintext border-bottom" />
                                         <span asp-validation-for="NewEmployee.PhoneNumber" class="text-danger"></span>
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.Degree" class="control-label"></label>
-                                        <input asp-for="NewEmployee.Degree" class="form-control-plaintext border-bottom" />
+                                        <input asp-for="NewEmployee.Degree" class="form-control-plaintext border-bottom"/>
                                         <span asp-validation-for="NewEmployee.Degree" class="text-danger"></span>
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.StartedWorking" class="control-label"></label>
-                                        <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom" />
+                                        <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom"  />
                                         <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger"></span>
                                     </div>
                                 </div>

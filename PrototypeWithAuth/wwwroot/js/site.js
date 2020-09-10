@@ -1652,61 +1652,48 @@ $(function () {
 			return;
 		}
 		valid = $("#Request_Product_ProductName").attr('aria-invalid');
-		console.log("valid: " + valid);
 		if (valid == "true" || $("#Request_Product_ProductName").val() == "") {
 			console.log("valid: " + valid);
 			return;
 		}
-		console.log("valid1: " + valid);
 		valid = $("#sublist").attr('aria-invalid');
 		if (valid == "true" || $("#sublist").val() == "") {
 			return;
 		}
-		console.log("valid2: " + valid);
 		valid = $("#Request_SubProjectID").attr('aria-invalid');
 		if (valid == "true" || $("#Request_SubProjectID").val() == "") {
 			return;
 		}
-		console.log("valid3: " + valid);
 		valid = $("#Request_SubProject_ProjectID").attr('aria-invalid');
 		if (valid == "true" || $("#Request_SubProject_ProjectID").val() == "") {
 			return;
 		}
-		console.log("valid4: " + valid);
 		valid = $("#vendorList").attr('aria-invalid');
 		if (valid == "true" || $("#vendorList").val() == "") {
 			return;
 		}
-		console.log("valid5: " + valid);
 		valid = $("#Request_ParentRequest_InvoiceNumber").attr('aria-invalid');
 		if (valid == "true" || $("#Request_ParentRequest_InvoiceNumber").val() == "") {
 			return;
 		}
-		console.log("valid5: " + valid);
 		valid = $("#Request_Warranty").attr('aria-invalid');
 		if (valid == "true") {
 			return;
 		}
-		console.log("valid6: " + valid);
 		valid = $("#Request_ParentQuote_QuoteDate").attr('aria-invalid');
 		if (valid == "true") {
 			return;
 		}
 		var validDate = true;
 		var dateVal = $(".create-modal-quote-date").val();
-		console.log("date val: " + dateVal)
 		if (dateVal != undefined) {
 
 			validDate = $.fn.validateDateisGreaterThanOrEqualToToday(dateVal)
 		}
 		valid = "" + !validDate;
-		console.log("valid date: " + valid);
 		if (valid == "true" || $("#Request_ParentRequest_QuoteDate").val() == "") {
 			return;
 		}
-
-
-		console.log("valid7: " + valid);
 		valid = $("#Request_ExpectedSupplyDays").attr('aria-invalid');
 		if (valid == "true" || $("#Request_ExpectedSupplyDays").val() == "") {
 			return;
@@ -1715,7 +1702,6 @@ $(function () {
 		if (valid == "true" || $("#Request_CatalogNumber").val() == "") {
 			return;
 		}
-		console.log("valid8: " + valid);
 		if (valid == "false" || valid == undefined) {
 			$("#price-tab").prop("disabled", false);
 			$("#location-tab").prop("disabled", false);
@@ -2694,18 +2680,8 @@ $.fn.SaveOffDays = function (url) {
 	//	console.log($(this).val());
 	//	$('#NewEmployee_EmployeeStatusID').val($(this).val())
 	//})
-	$('#NewEmployee_Id').change(function (e) {
-		console.log("on change user")
-		e.stopPropagation();
 
-		$.ajax({
-			async: false,
-			url: "/ApplicationUsers/AddWorker" + '?chosenID=' + $(this).val(),
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				$(document).html(data);
-			}
-		});
-	})
+	$('#salary').click(function (e) {
+		
+	});
 });
