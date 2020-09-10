@@ -24,7 +24,7 @@ namespace PrototypeWithAuth.AppData
         public enum OrdersAndInventorySidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits } //Listed in the site.js (if you change here must change there)
         public enum UserPageTypeEnum { None, User, Workers }
-        public enum UserSideBarEnum { None, Index, Add, Details, AddWorker, AwaitingApproval, Salary, Hours }
+        public enum UserSideBarEnum { UsersList, UsersAdd, WorkersDetails, WorkersHours, WorkersSalary, WorkersAwaitingApproval, AddWorker }
         public enum OperationsPageTypeEnum { RequestOperations, InventoryOperations, SearchOperations }
         public enum OperationsSidebarEnum { LastItem, AddItem, Type, Vendors, Owner, Search }
         public enum TimeKeeperPageTypeEnum { None, Report, Summary }
