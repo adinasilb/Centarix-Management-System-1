@@ -113,8 +113,10 @@ namespace PrototypeWithAuth.Controllers
                 Year = year,
                 Month= month,
                 YearlyMonthlyEnum = yearlyMonthlyEnum,
-                Employees =workerHoursViewModel
-            };
+                Employees =workerHoursViewModel,
+                Months = Enumerable.Range(1, 12).ToList(),
+                Years = Enumerable.Range(2000, 2500).ToList()
+        };
             return View(viewModel);
         }
 

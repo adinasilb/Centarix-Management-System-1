@@ -15,21 +15,20 @@
             <div class="row">
                 <h3 class="col-9"><strong>Monthly Summary</strong></h3>
                 <div class="col-2 offset-1 monthsHours">
-                    <select class="mdb-select  timekeeper select-dropdown" name="DOBMonth"  >
-                        <option>Month</option>
-                        <option value="1">January</option>
-                        <option value="2">Febuary</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
+
+                    @{
+                        int[] months = Enumerable.Range(1, 12).ToArray();
+                        int curMonth = DateTime.Today.Month;
+                    }
+
+                    @Html.DropDownList("months", months.Select(x =>
+                        new SelectListItem
+                        {
+                            Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
+                            Value = x.ToString(),
+                            Selected = (x == curMonth)
+                        }
+                    ), htmlAttributes: new { @class = "mdb-select custom timekeeper select-dropdown", @name = "DOBMonth" })                 
                 </div>
       
             </div>

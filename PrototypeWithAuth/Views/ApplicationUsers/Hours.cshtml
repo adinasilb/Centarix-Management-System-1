@@ -11,95 +11,135 @@
     var date = new DateTime(Model.Year, Model.Month, 1);
     var monthStyle = "";
     var yearStyle = " ";
+    var header = "";
     switch (Model.YearlyMonthlyEnum)
     {
         case AppUtility.YearlyMonthlyEnum.Monthly:
             monthStyle = "yearly-monthly ";
+            header = date.ToString("MMMM") + " ";
             break;
         case AppUtility.YearlyMonthlyEnum.Yearly:
             yearStyle = "yearly-monthly ";
             break;
     }
+
  }
 
 
-<div class="row">
-    <div class="col-2"><h3 ><strong>@date.ToString("MMMM") @date.Year</strong></h3></div>
-    <div class="col-1 mr-6"><a class="black-text py-2  rounded-pill @monthStyle text-center  px-5 font-weight-bolder border border-dark black-text" asp-action="Hours" asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Monthly" style="font-size:1.4375rem; min-width:75%" asp-route-month="@Model.Month" asp-route-year="@Model.Year">Monthly</a></div>
-    <div class="col-1 ml-4">
-        <a class="@yearStyle  px-5  py-2 rounded-pill text-center  font-weight-bolder border border-dark black-text" asp-action="Hours"
-           asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Yearly" style="font-size:1.4375rem " asp-route-month="@Model.Month" asp-route-year="@Model.Year">Yearly</a>
-    </div>
-</div>
-<div class="row ">
-    <table class="table table-headerspaced  col-12 ">
-        <tbody>
-            <tr class="text-center " style="border-color:transparent; border-bottom: 2px solid lightgrey;">
-                <td width="11%"></td>
-                <td width="11%">Name</td>
-                <td width="11%">
-                    Job Title
-                </td>
-                <td width="11%">
-                    Job Category
-                </td>
-                <td width="11%">
-                    Job Type
-                </td>
-                <td width="10%">
-                    Hours
-                </td>
-                <td width="8%">
-                    Working Days
-                </td>
-                <td width="8%">
-                    Vacation Days
-                </td>
-                <td width="8%">
-                    Sick Days
-                </td>
-            </tr>
-            @foreach (var employee in Model.Employees)
+    <div class="container-fluid m-0">
+        <div class="row">
+            <div class="col-2 ">
+                <h3><strong>@header@date.Year</strong></h3>
+            </div>
+            <div class="col-1 mr-6 ">
+                <a class="black-text py-2  rounded-pill @monthStyle text-center  px-5 font-weight-bolder border border-dark black-text" asp-action="Hours" asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Monthly" style="font-size:1.4375rem; " asp-route-month="@Model.Month" asp-route-year="@Model.Year">Monthly</a>
+            </div>
+            <div class="col-1 ">
+                <a class="@yearStyle  px-5  py-2 rounded-pill text-center  font-weight-bolder border border-dark black-text" asp-action="Hours"
+                   asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Yearly" style="font-size:1.4375rem " asp-route-month="@Model.Month" asp-route-year="@Model.Year">Yearly</a>
+            </div>
+            @{ var yearDropDown = "offset-6"; }
+            @if (Model.YearlyMonthlyEnum == AppUtility.YearlyMonthlyEnum.Monthly)
             {
-                <tr class="text-center users-tr ">
-                    <td width="11%">
-                        @{
-                            var src = "/UserImages/profile_circle_big.png";
-                            if (employee.Employee.UserImage != null)
+                <div class="col-1 text-right offset-5">
+                    <div>
+                        @Html.DropDownList("months", Model.Months.Select(x =>
+                            new SelectListItem
                             {
-                                src = UserManager.GetUserAsync(User).Result.UserImage;
+                                Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
+                                Value =  Url.Action("Hours", new { @month=x, @year=Model.Year, @yearlyMonthlyEnum = Model.YearlyMonthlyEnum }),
+                                Selected = (x == Model.Month)
                             }
-    }
-                        <img src="@src" class="user-image ml-0" height="65" alt="default User image" />
-                    </td>
-                    <td width="11%">
-                        @employee.Employee.FirstName  @employee.Employee.LastName
-                    </td>
-                    <td width="11%">
-                        @employee.Employee.JobTitle
-                    </td>
-                    <td width="11%">
-                        @employee.Employee.JobCategoryType?.Description
-                    </td>
-                    <td width="11%">
-                        @employee.Employee.EmployeeStatus.Description
-                    </td>
-                    <td width="10%">
-                        @{var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
+                        ), htmlAttributes: new { @class = "mdb-select  custom users select-dropdown workersHours", @name = "DOBMonth" })
+                    </div>
+                </div>
+                                yearDropDown = "";
+                            }
+
+            <div class="col-1 @yearDropDown">
+                <div>
+                    @Html.DropDownList("years", Model.Years.Select(x =>
+                        new SelectListItem
+                        {
+                            Text = x.ToString(),
+                            Value = Url.Action("Hours", new { @year = x, @month = Model.Month, @yearlyMonthlyEnum = Model.YearlyMonthlyEnum }),
+                            Selected = (x == Model.Year)
                         }
-                        @totalHours:@employee.Hours.ToString("mm")
-                    </td>
-                    <td width="8%">
-                        @employee.WorkingDays
-                    </td>
-                    <td width="8%">
-                        @employee.VacationDays
-                    </td>
-                    <td width="8%">
-                        @employee.SickDays
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                    ), htmlAttributes: new { @class = "mdb-select  custom users select-dropdown workersHours", @name = "DOBYear" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row ">
+            <table class="table table-headerspaced  col-12 ">
+                <tbody>
+                    <tr class="text-center " style="border-color:transparent; border-bottom: 2px solid lightgrey;">
+                        <td width="11%"></td>
+                        <td width="11%">Name</td>
+                        <td width="11%">
+                            Job Title
+                        </td>
+                        <td width="11%">
+                            Job Category
+                        </td>
+                        <td width="11%">
+                            Job Type
+                        </td>
+                        <td width="10%">
+                            Hours
+                        </td>
+                        <td width="8%">
+                            Working Days
+                        </td>
+                        <td width="8%">
+                            Vacation Days
+                        </td>
+                        <td width="8%">
+                            Sick Days
+                        </td>
+                    </tr>
+                    @foreach (var employee in Model.Employees)
+                    {
+                        <tr class="text-center users-tr ">
+                            <td width="11%">
+                                @{
+                                    var src = "/UserImages/profile_circle_big.png";
+                                    if (employee.Employee.UserImage != null)
+                                    {
+                                        src = UserManager.GetUserAsync(User).Result.UserImage;
+                                    }
+                                }
+                                <img src="@src" class="user-image ml-0" height="65" alt="default User image" />
+                            </td>
+                            <td width="11%">
+                                @employee.Employee.FirstName  @employee.Employee.LastName
+                            </td>
+                            <td width="11%">
+                                @employee.Employee.JobTitle
+                            </td>
+                            <td width="11%">
+                                @employee.Employee.JobCategoryType?.Description
+                            </td>
+                            <td width="11%">
+                                @employee.Employee.EmployeeStatus.Description
+                            </td>
+                            <td width="10%">
+                                @{var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
+                                }
+                                @totalHours:@employee.Hours.ToString("mm")
+                            </td>
+                            <td width="8%">
+                                @employee.WorkingDays
+                            </td>
+                            <td width="8%">
+                                @employee.VacationDays
+                            </td>
+                            <td width="8%">
+                                @employee.SickDays
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>

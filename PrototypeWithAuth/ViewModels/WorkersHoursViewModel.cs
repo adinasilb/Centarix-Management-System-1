@@ -11,6 +11,8 @@ namespace PrototypeWithAuth.ViewModels
         public YearlyMonthlyEnum YearlyMonthlyEnum { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
+        public List<int> Years { get; set; }
+        public List<int> Months { get; set; }
         public List<WorkerHourViewModel> Employees { get; set; }
     }
 }

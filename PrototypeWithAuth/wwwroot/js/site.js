@@ -2681,7 +2681,65 @@ $.fn.SaveOffDays = function (url) {
 	//	$('#NewEmployee_EmployeeStatusID').val($(this).val())
 	//})
 
-	$('#salary').click(function (e) {
-		
+	$('.salary-tab').click(function (e) {
+		$("#createModalForm").valid();
+		$.fn.validatePersonalTab();
+	});
+	$.fn.validatePersonalTab = function () {
+		$(".salary-tab").prop("disabled", true);
+		$(".documents-tab").prop("disabled", true);
+
+		console.log("in $.fn.validateItemTab");
+		valid = $("#NewEmployee_IDNumber").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_IDNumber").val() == "") {
+			console.log("valid: " + valid);
+			return;
+		}
+		valid = $("#NewEmployee_CentarixID").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_CentarixID").val() == "") {
+			console.log("valid: " + valid);
+			return;
+		}
+		valid = $("#NewEmployee_JobTitle").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_JobTitle").val() == "") {
+			return;
+		}
+		valid = $("#NewEmployee_Email").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_Email").val() == "") {
+			return;
+		}
+		valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_PhoneNumber").val() == "") {
+			return;
+		}
+		valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
+		if (valid == "true") {
+			return;
+		}
+		valid = $("#NewEmployee_StartedWorking").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_StartedWorking").val() == "") {
+			return;
+		}
+		if (valid == "false" || valid == undefined) {
+			$(".salary-tab").prop("disabled", false);
+		}
+		return valid;
+	}
+	$('#addWorker').submit(function () {
+		if ($("#createModalForm").valid()) {
+			$("#addWorker").removeClass("disabled-submit");
+			return true;
+		} else {
+			e.preventDefault();
+			e.stopPropagation();
+			$("#addWorker").addClass("disabled-submit");
+			return false;
+		}
+	});
+	$('.workersHours').change(function () {
+		var url = $(this).val();
+		if (url != null && url != '') {
+			window.location.href = url;
+		}
 	});
 });
