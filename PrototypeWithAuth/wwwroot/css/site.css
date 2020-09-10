@@ -51,8 +51,17 @@ for details on configuring this project to bundle and minify static web assets. 
 .timekeeper-font-color {
     color: var(--timekeeper-color);
 }
+
+.timekeeper-filter {
+    filter: var(--timekeeper-filter);
+}
+
 .users-color {
     background-color: var(--user-color);
+}
+
+.users-filter {
+    filter: var(--users-filter);
 }
 
 .users-font-color {

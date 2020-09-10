@@ -174,10 +174,11 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.SearchSupplier;
             }
-            else
+            else if (SectionType == AppUtility.MenuItems.Accounting)
             {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
-                TempData["Action"] = AppUtility.SuppliersEnum.Search;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.SearchSupplierAC;
             }
             //return View(vendorSearchViewModel);
             if (AppUtility.IsAjaxRequest(this.Request))

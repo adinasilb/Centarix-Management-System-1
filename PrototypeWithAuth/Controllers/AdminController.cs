@@ -47,7 +47,8 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult Index()
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
-            TempData["SideBar"] = AppUtility.UserSideBarEnum.Index;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersList;
             List<ApplicationUser> users = new List<ApplicationUser>();
             users = _context.Users
                 .Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
@@ -65,7 +66,8 @@ namespace PrototypeWithAuth.Controllers
 
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
-            TempData["SideBar"] = AppUtility.UserSideBarEnum.Add;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
             var roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
             {
@@ -122,7 +124,8 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult CreateUser()
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
-            TempData["SideBar"] = AppUtility.UserSideBarEnum.Add;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
 
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()

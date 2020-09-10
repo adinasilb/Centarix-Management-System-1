@@ -24,6 +24,7 @@ namespace PrototypeWithAuth.Data
 
         [Display(Name = "ID")]
         public string CentarixID { get; set; }
+        [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
         public double LabMonthlyLimit { get; set; }
         public double LabUnitLimit { get; set; }

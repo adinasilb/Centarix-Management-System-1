@@ -41,6 +41,14 @@
     {
         MainMenuItems = CreateMenus.CreateOperationsMainMenu(pageType, initalClasses, " text-dark operations-filter");
     }
+    else if (MenuType == AppUtility.MenuItems.Users.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateUsersMainMenu(pageType, initalClasses, " text-dark users-filter");
+    }
+    else if (MenuType == AppUtility.MenuItems.TimeKeeper.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateTimekeeperMainMenu(pageType, initalClasses, " text-dark timekeeper-filter");
+    }
 
     //passing the
     string inventoryClass = initalClasses;
@@ -147,7 +155,24 @@
     {
         SidebarMenuItems = CreateMenus.CreateOperationsSearchSidebar(sidebarType, originalNavClasses, "operations-filter");
     }
+    else if (pageType == AppUtility.UserPageTypeEnum.User.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateUsersUsersSidebar(sidebarType, originalNavClasses, "users-filter");
+    }
+    else if (pageType == AppUtility.UserPageTypeEnum.Workers.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateUsersWorkersSidebar(sidebarType, originalNavClasses, "users-filter");
+    }
+    else if (pageType == AppUtility.TimeKeeperPageTypeEnum.Report.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateTimekeeperReportsSidebar(sidebarType, originalNavClasses, "timekeeper-filter");
+    }
+    else if (pageType == AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateTimekeeperSummarySidebar(sidebarType, originalNavClasses, "timekeeper-filter");
+    }
 
+    var sidebarWidth = "110px";
 
     //not using this right now --> see if we should put it back in
     var SendEmail = "0";
@@ -180,13 +205,19 @@
 
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
 
-        <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" /></a>
+        @{ var styleClass = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + ";";} 
+        <span style="@styleClass" >
+            <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" />
+            </a>
+        </span>
 
         <div class="collapse navbar-collapse">
-            <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; ">
+            <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; padding-left: 5.625rem;">
+                
                 @foreach (var MenuItem in MainMenuItems)
                 {
-                    <li class="nav-item mx-5">
+                    <li class="nav-item" style="margin-right: 4.375rem;">
                         @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes, @id = MenuItem.ID })
                     </li>
                 }
@@ -246,7 +277,8 @@
             <img src="~/images/css/Loading/centarix_loading3.gif" />
         </div>
         <div style="display: flex">
-            <div style="min-width: 110px; max-width:110px; min-height:100rem; padding: 5px;" class=" d-md-block sidebar-shadow   navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
+            @{ var style = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + "; min-height:100rem; padding: 5px;"; } 
+            <div style="@style" class=" d-md-block sidebar-shadow   navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
                 @*<nav class="navbar navbar-expand-lg">*@
                 <ul class="nav flex-column nav-pills nav-stacked mt-4">
                     @{

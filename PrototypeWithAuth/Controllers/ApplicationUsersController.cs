@@ -60,8 +60,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Details()
         {
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.Workers;
-            TempData["Sidebar"] = AppUtility.UserSideBarEnum.Details;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersDetails;
             var employees = _context.Users.OfType<Employee>().Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
                 .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobCategoryType);
             EmployeeDetailsViewModel employeeDetailsViewModel = new EmployeeDetailsViewModel
@@ -88,8 +89,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 month = DateTime.Now.Month;
             }
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.Workers;
-            TempData["Sidebar"] = AppUtility.UserSideBarEnum.Hours;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersHours;
             var employees = _context.Users.OfType<Employee>().Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
               .Include(e => e.EmployeeStatus).Include(e => e.JobCategoryType).Include(e=>e.EmployeeHours);
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
@@ -141,8 +143,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Salary()
         {
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.Workers;
-            TempData["Sidebar"] = AppUtility.UserSideBarEnum.Salary;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersSalary;
             return View();
         }
 
@@ -150,8 +153,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> AwaitingApproval()
         {
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.Workers;
-            TempData["Sidebar"] = AppUtility.UserSideBarEnum.AwaitingApproval;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersAwaitingApproval;
 
             var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatus).ToList();
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
@@ -200,8 +204,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> AddWorker(string chosenID=null)
         {
-            TempData["PageType"] = UserPageTypeEnum.Workers;
-            TempData["SideBar"] = UserSideBarEnum.AddWorker;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.AddWorker;
+
             Employee employee = new Employee();
             if (chosenID != null)
             {
