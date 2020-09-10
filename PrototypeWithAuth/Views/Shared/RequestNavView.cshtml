@@ -41,6 +41,10 @@
     {
         MainMenuItems = CreateMenus.CreateOperationsMainMenu(pageType, initalClasses, " text-dark operations-filter");
     }
+    else if (MenuType == AppUtility.MenuItems.Users.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateUsersMainMenu(pageType, initalClasses, " text-dark users-filter");
+    }
 
     //passing the
     string inventoryClass = initalClasses;
@@ -146,6 +150,14 @@
     else if (pageType == AppUtility.OperationsPageTypeEnum.SearchOperations.ToString())
     {
         SidebarMenuItems = CreateMenus.CreateOperationsSearchSidebar(sidebarType, originalNavClasses, "operations-filter");
+    }
+    else if (pageType == AppUtility.UserPageTypeEnum.User.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateUsersUsersSidebar(sidebarType, originalNavClasses, "users-filter");
+    }
+    else if (pageType == AppUtility.UserPageTypeEnum.Workers.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateUsersWorkersSidebar(sidebarType, originalNavClasses, "users-filter");
     }
 
 

@@ -124,7 +124,8 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult CreateUser()
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
-            TempData["SideBar"] = AppUtility.UserSideBarEnum.Add;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
 
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()

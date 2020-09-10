@@ -55,6 +55,10 @@ for details on configuring this project to bundle and minify static web assets. 
     background-color: var(--user-color);
 }
 
+.users-filter {
+    filter: var(--users-filter);
+}
+
 .users-font-color {
     color: var(--user-color);
 }
