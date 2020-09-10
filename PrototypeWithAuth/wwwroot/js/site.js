@@ -2131,9 +2131,11 @@ $(function () {
 	$("#addSupplier").click(function () {
 		console.log('$("#createModalForm").valid()');
 		if ($("#createModalForm").valid()) {
+			$("#addSupplier").removeClass("disabled-submit");
 			return true;
 		} else {
-			$("#addSupplier").prop("disabled", true);
+			e.preventDefault();
+			e.stopPropagation();
 			$("#addSupplier").addClass("disabled-submit");
 			return false;
 		}
@@ -2260,7 +2262,8 @@ $(function () {
 	$("#addUser").click(function () {
 		console.log($("#createModalForm").valid());
 		if (!$("#createModalForm").valid()) {
-			$("#addUser").prop("disabled", true);
+			e.preventDefault();
+			e.stopPropagation();
 		}
 	});
 
@@ -2701,7 +2704,7 @@ $.fn.SaveOffDays = function (url) {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				$("body").html(data);
+				$(document).html(data);
 			}
 		});
 	})
