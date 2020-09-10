@@ -27,8 +27,8 @@ namespace PrototypeWithAuth.AppData
         public enum UserSideBarEnum { UsersList, UsersAdd, WorkersDetails, WorkersHours, WorkersSalary, WorkersAwaitingApproval, AddWorker }
         public enum OperationsPageTypeEnum { RequestOperations, InventoryOperations, SearchOperations }
         public enum OperationsSidebarEnum { LastItem, AddItem, Type, Vendors, Owner, Search }
-        public enum TimeKeeperPageTypeEnum { None, Report, Summary }
-        public enum TimeKeeperSidebarEnum { None, ReportHours, Days, Hours, DaysOff, Documents, CompanyAbsences }
+        public enum TimeKeeperPageTypeEnum { None, Report, TimekeeperSummary }
+        public enum TimeKeeperSidebarEnum { ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences }
         public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }
         public enum AccountingNotificationsEnum { NoInvoice, DidntArrive, PartialDelivery, ForClarification }
         public enum AccountingPaymentsEnum { MonthlyPayment, PayNow, PayLater, Installments, StandingOrders }

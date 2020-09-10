@@ -45,6 +45,10 @@
     {
         MainMenuItems = CreateMenus.CreateUsersMainMenu(pageType, initalClasses, " text-dark users-filter");
     }
+    else if (MenuType == AppUtility.MenuItems.TimeKeeper.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateTimekeeperMainMenu(pageType, initalClasses, " text-dark timekeeper-filter");
+    }
 
     //passing the
     string inventoryClass = initalClasses;
@@ -158,6 +162,14 @@
     else if (pageType == AppUtility.UserPageTypeEnum.Workers.ToString())
     {
         SidebarMenuItems = CreateMenus.CreateUsersWorkersSidebar(sidebarType, originalNavClasses, "users-filter");
+    }
+    else if (pageType == AppUtility.TimeKeeperPageTypeEnum.Report.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateTimekeeperReportsSidebar(sidebarType, originalNavClasses, "timekeeper-filter");
+    }
+    else if (pageType == AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateTimekeeperSummarySidebar(sidebarType, originalNavClasses, "timekeeper-filter");
     }
 
 

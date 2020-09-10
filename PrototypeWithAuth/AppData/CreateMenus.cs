@@ -280,6 +280,34 @@ namespace PrototypeWithAuth.AppData
 
             return MainMenuItems;
         }
+        public static List<MenuItems> CreateTimekeeperMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
+        {
+            var MainMenuItems = new List<MenuItems>();
+
+            var CurrentClasses = OrigClasses;
+            if (MainMenu == AppUtility.TimeKeeperPageTypeEnum.Report.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Reports",
+                Controller = "Timekeeper",
+                Action = "ReportHours",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                ID = "reports-link"
+            });
+            if (MainMenu == AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Summary",
+                Controller = "Timekeeper",
+                Action = "Documents",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                ID = "summary-link"
+            });
+
+            return MainMenuItems;
+        }
         public static List<MenuItems> GetOrdersAndInventoryRequestsSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
             var SidebarMenuItems = new List<MenuItems>();
@@ -1020,5 +1048,83 @@ namespace PrototypeWithAuth.AppData
 
             return SidebarMenuItems;
         }
+
+        public static List<MenuItems> CreateTimekeeperReportsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+            var CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.ReportHours.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Report Hours",
+                Controller = "Timekeeper",
+                Action = "ReportHours",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-assignment-24px"
+            });
+            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.SummaryHours.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Summary Hours",
+                Controller = "Timekeeper",
+                Action = "SummaryHours",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-access_time-24px"
+            });
+            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.ReportDaysOff.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Report Days Off",
+                Controller = "Timekeeper",
+                Action = "ReportDaysOff",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-event-24px"
+            });
+            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.SummaryDaysOff.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Summary Days Off",
+                Controller = "Timekeeper",
+                Action = "SummaryDaysOff",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-highlight_off-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+        public static List<MenuItems> CreateTimekeeperSummarySidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+            var CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.Documents.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Documents",
+                Controller = "Timekeeper",
+                Action = "Documents",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-description-24px-2"
+            });
+            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.CompanyAbsences.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Company Absences",
+                Controller = "Timekeeper",
+                Action = "CompanyAbsences",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-event-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
     }
 }
