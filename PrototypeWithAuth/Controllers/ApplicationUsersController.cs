@@ -33,10 +33,26 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.CategoryTypeEnum categoryType = AppUtility.CategoryTypeEnum.Lab)
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData["CategoryType"] = categoryType;
-            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Owner;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+            if (categoryType == AppUtility.CategoryTypeEnum.Lab)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+                TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Owner;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+            }
+            if (categoryType == AppUtility.CategoryTypeEnum.Operations)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Owner;
+                if (PageType == AppUtility.RequestPageTypeEnum.Request || PageType.ToString() == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
+                {
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
+                }
+                else if (PageType == AppUtility.RequestPageTypeEnum.Inventory || PageType.ToString() == AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString())
+                {
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
+                }
+            }
             return View(await _context.Users.Where(u=>!u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync());
         }
 

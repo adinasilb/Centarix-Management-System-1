@@ -15,7 +15,7 @@
 @{
     ViewData["Title"] = "Index";
 
-    Layout = "~/Views/Shared/OperationsNavView.cshtml";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
     /*
      * BEGIN REMEMBERING DATA
      */
@@ -110,21 +110,21 @@
         applicationUserID = TempData["ApplicationUserID"].ToString();
     }
 
-    var PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()];
+    var PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString();
 
     //saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
     bool Request = false;
     bool Inventory = false;
     bool Summary = false;
-    if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
+    if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request.ToString()))
     {
         Request = true;
     }
-    else if (PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    else if (PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory.ToString()))
     {
         Inventory = true;
     }
-    else if (PageType.Equals(AppUtility.RequestPageTypeEnum.Summary))
+    else if (PageType.Equals(AppUtility.RequestPageTypeEnum.Summary.ToString()))
     {
         Summary = true;
     }

@@ -72,12 +72,14 @@ namespace PrototypeWithAuth.Controllers
         //ALSO when changing defaults -> change the defaults on the index page for paged list 
 
 
-        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, RequestsSearchViewModel? requestsSearchViewModel = null)
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0,
+            string applicationUserID = null, int parentLocationInstanceID = 0, string PageType = "Request",
+            RequestsSearchViewModel? requestsSearchViewModel = null)
         {
 
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
-                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r=>r.ParentQuote)
+                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
                 .OrderBy(r => r.CreationDate);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
@@ -96,7 +98,23 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             //use an enum to determine which page type you are using and fill the data accordingly, 
             //also pass the data through tempdata to the page so you can 
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+            if (PageType == AppUtility.RequestPageTypeEnum.Inventory.ToString())
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
+            }
+            else if (PageType == AppUtility.RequestPageTypeEnum.Request.ToString())
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
+            }
+            else if (PageType == AppUtility.RequestPageTypeEnum.Search.ToString())
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.SearchOperations;
+            }
+            else
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+            }
+
             //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
 
@@ -104,7 +122,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
             }
-            else if (PageType == AppUtility.RequestPageTypeEnum.Request)
+            else if (PageType == AppUtility.RequestPageTypeEnum.Request.ToString() || PageType == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
             {
                 /*
                  * In order to combine all the requests each one needs to be in a separate list
@@ -154,7 +172,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
-            else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
+            else if (PageType == AppUtility.RequestPageTypeEnum.Inventory.ToString())
             {
                 //partial and clarify?
                 RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3);
@@ -173,6 +191,7 @@ namespace PrototypeWithAuth.Controllers
                 //pass the vendorID into the temp data to use if you'd like to sort from there
                 SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
                 TempData["VendorID"] = vendorID;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Vendors;
             }
             else if (subcategoryID > 0 && requestsSearchViewModel != null)
             {
@@ -182,6 +201,7 @@ namespace PrototypeWithAuth.Controllers
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
                 SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Type;
                 TempData["SubcategoryID"] = subcategoryID;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Type;
             }
             else if (applicationUserID != null && requestsSearchViewModel != null)
             {
@@ -191,10 +211,12 @@ namespace PrototypeWithAuth.Controllers
                 //pass the subcategoryID into the temp data to use if you'd like to sort from there
                 SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Owner;
                 TempData["ApplicationUserID"] = applicationUserID;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Owner;
             }
             else
             {
                 SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.LastItem;
             }
 
 
@@ -220,13 +242,15 @@ namespace PrototypeWithAuth.Controllers
             /*string*/
             TempData["TempApplicationUserID"] = applicationUserID;
             /*AppUtility.RequestPageTypeEnum*/
-            TempData["TempPageType"] = (int)PageType;
+            //TempData["TempPageType"] = (int)PageType; //TODO: put this back in here!!!!!!!!!
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
             TempData["ParentLocationInstanceID"] = parentLocationInstanceID;
             //Getting the page that is going to be seen (if no page was specified it will be one)
             var pageNumber = page ?? 1;
             var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
+
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation.ToString();
 
             try
             {
@@ -243,6 +267,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
+
 
             return View(onePageOfProducts);
         }
@@ -272,7 +297,9 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.AddItem;
             TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.AddItem;
             if (AppUtility.IsAjaxRequest(this.Request))
             {
@@ -299,7 +326,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 2).Count() > 0).ToListAsync();
             requestItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
             //formatting the select list of the unit types
-            
+
             //declared outside the if b/c it's used farther down too 
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
@@ -404,9 +431,9 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
                 try
-                {                   
-                 
-                   if (!String.IsNullOrEmpty(requestItemViewModel.NewComment.CommentText))
+                {
+
+                    if (!String.IsNullOrEmpty(requestItemViewModel.NewComment.CommentText))
                     {
                         try
                         {
@@ -764,7 +791,7 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var parentcategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID==2).ToListAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 2).ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 2).Count() > 0).ToListAsync();
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
@@ -782,7 +809,7 @@ namespace PrototypeWithAuth.Controllers
             ModalViewType = "Edit";
 
             requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
-                .Include(r=>r.ParentQuote)
+                .Include(r => r.ParentQuote)
                 .Include(r => r.ParentRequest)
                 .Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.Product.ProductSubcategory.ParentCategory)
@@ -792,7 +819,7 @@ namespace PrototypeWithAuth.Controllers
                 .SingleOrDefault(r => r.RequestID == id);
 
             //load the correct list of subprojects
-            
+
             var comments = Enumerable.Empty<Comment>();
             comments = _context.Comments
                 .Include(r => r.ApplicationUser)
@@ -954,7 +981,7 @@ namespace PrototypeWithAuth.Controllers
 
             //locations:
             //get the list of requestLocationInstances in this request
-          
+
             if (requestItemViewModel.Request == null)
             {
                 TempData["InnerMessage"] = "The request sent in was null";
@@ -977,7 +1004,7 @@ namespace PrototypeWithAuth.Controllers
         //[Authorize(Roles = "Admin, Operation")]
         //public async Task<IActionResult> EditSummaryModalView(int? id, bool NewRequestFromProduct = false)
         //{
-           
+
         //    //not imlemented yet
         //}
 
@@ -987,12 +1014,12 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
-            requestItemViewModel.Request.ParentRequest = null;         
-           // requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
-          //  var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
-           // parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
-           // parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
-           // requestItemViewModel.Request.ParentQuote = parentQuote;
+            requestItemViewModel.Request.ParentRequest = null;
+            // requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
+            //  var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
+            // parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
+            // parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
+            // requestItemViewModel.Request.ParentQuote = parentQuote;
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
@@ -1000,7 +1027,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
-          
+
             //declared outside the if b/c it's used farther down to (for parent request the new comment too)
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
@@ -1019,7 +1046,7 @@ namespace PrototypeWithAuth.Controllers
             var results = new List<ValidationResult>();
             if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
             {
-           
+
                 requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 try
                 {
@@ -1243,10 +1270,10 @@ namespace PrototypeWithAuth.Controllers
                 return View("~/Views/Shared/RequestError.cshtml");
             }
             return RedirectToAction("Index", "Operations", new
-                {
-                    requestStatusID = 2,
-                    PageType = AppUtility.RequestPageTypeEnum.Request
-                });
+            {
+                requestStatusID = 2,
+                PageType = AppUtility.RequestPageTypeEnum.Request
+            });
         }
 
 

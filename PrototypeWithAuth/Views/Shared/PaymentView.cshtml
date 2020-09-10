@@ -35,7 +35,7 @@
         case AppUtility.PaymentPageTypeEnum.General:
             generalClass = initalClasses + currentClasses;
             break;
-        case AppUtility.PaymentPageTypeEnum.Suppliers:
+        case AppUtility.PaymentPageTypeEnum.SuppliersAC:
             suppliersClass = initalClasses + currentClasses;
             break;
         case AppUtility.PaymentPageTypeEnum.Payments:
@@ -64,7 +64,7 @@
                     @Html.ActionLink("General", "GeneralPaymentList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = generalClass })
                 </li>
                 <li class="nav-item mx-5">
-                    @Html.ActionLink("Suppliers", "IndexForPayment", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.Suppliers, @SectionType = AppUtility.MenuItems.Accounting }, new { @class = suppliersClass })
+                    @Html.ActionLink("Suppliers", "IndexForPayment", "Vendors", new { @PageType = AppUtility.PaymentPageTypeEnum.SuppliersAC, @SectionType = AppUtility.MenuItems.Accounting }, new { @class = suppliersClass })
                 </li>
             </ul>
         </div>

@@ -135,7 +135,7 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary(),
                 Classes = AllClasses
             });
-            if (MainMenu == AppUtility.LabManagementPageTypeEnum.Quotes.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+            if (MainMenu == AppUtility.LabManagementPageTypeEnum.SearchLM.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
                 Description = "Search",
@@ -146,6 +146,111 @@ namespace PrototypeWithAuth.AppData
                     {"SectionType", AppUtility.MenuItems.LabManagement }
                 },
                 Classes = AllClasses
+            });
+
+            return MainMenuItems;
+        }
+
+        public static List<MenuItems> CreateAccountingMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
+        {
+            var MainMenuItems = new List<MenuItems>();
+
+            var MainClasses = OrigClasses;
+            if (MainMenu == AppUtility.PaymentPageTypeEnum.Payments.ToString()) { MainClasses += ActiveClasses; } else { MainClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Payments",
+                Controller = "Requests",
+                Action = "AccountingPayments",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingPaymentsEnum", AppUtility.AccountingPaymentsEnum.MonthlyPayment }
+                },
+                Classes = MainClasses
+            });
+            if (MainMenu == AppUtility.PaymentPageTypeEnum.Notifications.ToString()) { MainClasses += ActiveClasses; } else { MainClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Notifications",
+                Controller = "Requests",
+                Action = "AccountingNotifications",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", AppUtility.PaymentPageTypeEnum.Notifications }
+                },
+                Classes = MainClasses
+            });
+            if (MainMenu == AppUtility.PaymentPageTypeEnum.General.ToString()) { MainClasses += ActiveClasses; } else { MainClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "General",
+                Controller = "ParentRequests",
+                Action = "GeneralPaymentList",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", AppUtility.PaymentPageTypeEnum.General }
+                },
+                Classes = MainClasses
+            });
+            if (MainMenu == AppUtility.PaymentPageTypeEnum.SuppliersAC.ToString()) { MainClasses += ActiveClasses; } else { MainClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Suppliers",
+                Controller = "Vendors",
+                Action = "IndexForPayment",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Accounting }
+                },
+                Classes = MainClasses
+            });
+
+            return MainMenuItems;
+        }
+
+        public static List<MenuItems> CreateOperationsMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
+        {
+            var MainMenuItems = new List<MenuItems>();
+
+            var CurrentClasses = OrigClasses;
+            if (MainMenu == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Requests",
+                Controller = "Operations",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", AppUtility.RequestPageTypeEnum.Request.ToString() }
+                },
+                Classes = CurrentClasses,
+                ID = "request-link"
+            });
+            if (MainMenu == AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Inventory",
+                Controller = "Operations",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", AppUtility.RequestPageTypeEnum.Inventory.ToString() }
+                },
+                Classes = CurrentClasses,
+                ID = "inventory-link"
+            });
+            if (MainMenu == AppUtility.OperationsPageTypeEnum.SearchOperations.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Requests",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Operation.ToString() }
+                },
+                Classes = CurrentClasses,
+                ID = "search-link"
             });
 
             return MainMenuItems;
@@ -393,7 +498,7 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
 
-        public static List<MenuItems> CreateLabManageSuppliersSidebar (string SidebarTitle, string OrigClasses, string ActiveClasses)
+        public static List<MenuItems> CreateLabManageSuppliersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
             var SidebarMenuItems = new List<MenuItems>();
 
@@ -436,6 +541,368 @@ namespace PrototypeWithAuth.AppData
                 },
                 IconName = "icon-zoom_in-24px-01",
                 Classes = Classes
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateLabManageLocationsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.LocationsList.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "List",
+                Controller = "Locations",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                Classes = Classes,
+                IconName = "icon-zoom_in-24px-01"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateLabManageOrdersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.Quotes.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Quotes",
+                Controller = "Requests",
+                Action = "LabManageQuotes",
+                RouteValues = new RouteValueDictionary(),
+                Classes = Classes,
+                IconName = "icon-book-24px"
+            });
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.Orders.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Orders",
+                Controller = "Requests",
+                Action = "LabManageOrders",
+                RouteValues = new RouteValueDictionary(),
+                Classes = Classes,
+                IconName = "icon-shopping_cart-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateLabManageSearchSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.SearchRequests.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Requests",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                Classes = Classes,
+                IconName = "icon-zoom_in-24px-01"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateAccountingPaymentsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.AccountingPaymentsEnum.MonthlyPayment.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Monthly Payment",
+                Controller = "Requests",
+                Action = "AccountingPayments",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingPaymentsEnum", AppUtility.AccountingPaymentsEnum.MonthlyPayment }
+                },
+                Classes = Classes,
+                IconName = "icon-monetization_on-24px"
+            });
+            if (SidebarTitle == AppUtility.AccountingPaymentsEnum.PayNow.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Pay Now",
+                Controller = "Requests",
+                Action = "AccountingPayments",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingPaymentsEnum", AppUtility.AccountingPaymentsEnum.PayNow }
+                },
+                Classes = Classes,
+                IconName = "icon-payment-24px"
+            });
+            if (SidebarTitle == AppUtility.AccountingPaymentsEnum.PayLater.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Pay Later",
+                Controller = "Requests",
+                Action = "AccountingPayments",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingPaymentsEnum", AppUtility.AccountingPaymentsEnum.PayLater }
+                },
+                Classes = Classes,
+                IconName = "icon-centarix-icons-19"
+            });
+            if (SidebarTitle == AppUtility.AccountingPaymentsEnum.Installments.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Installments",
+                Controller = "Requests",
+                Action = "AccountingPayments",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingPaymentsEnum", AppUtility.AccountingPaymentsEnum.Installments }
+                },
+                Classes = Classes,
+                IconName = "icon-centarix-icons-20"
+            });
+            if (SidebarTitle == AppUtility.AccountingPaymentsEnum.StandingOrders.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Standing Orders",
+                Controller = "Requests",
+                Action = "AccountingPayments",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingPaymentsEnum", AppUtility.AccountingPaymentsEnum.StandingOrders }
+                },
+                Classes = Classes,
+                IconName = "icon-standing_orders-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateAccountingNotificationsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.AccountingNotificationsEnum.NoInvoice.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "No Invoice",
+                Controller = "Requests",
+                Action = "AccountingNotifications",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingNotificationsEnum", AppUtility.AccountingNotificationsEnum.NoInvoice }
+                },
+                Classes = Classes,
+                IconName = "icon-cancel_presentation-24px"
+            });
+            if (SidebarTitle == AppUtility.AccountingNotificationsEnum.DidntArrive.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Didn't Arrive",
+                Controller = "Requests",
+                Action = "AccountingNotifications",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingNotificationsEnum", AppUtility.AccountingNotificationsEnum.DidntArrive }
+                },
+                Classes = Classes,
+                IconName = "icon-local_shipping-24px"
+            });
+            if (SidebarTitle == AppUtility.AccountingNotificationsEnum.PartialDelivery.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Partial Delivery",
+                Controller = "Requests",
+                Action = "AccountingNotifications",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingNotificationsEnum", AppUtility.AccountingNotificationsEnum.PartialDelivery }
+                },
+                Classes = Classes,
+                IconName = "icon-remove_shopping_cart-24px"
+            });
+            if (SidebarTitle == AppUtility.AccountingNotificationsEnum.ForClarification.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "For Clarification",
+                Controller = "Requests",
+                Action = "AccountingNotifications",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingNotificationsEnum", AppUtility.AccountingNotificationsEnum.ForClarification }
+                },
+                Classes = Classes,
+                IconName = "icon-notification_didnt_arrive-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+        public static List<MenuItems> CreateAccountingSuppliersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+            var CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.AccountingSidebarEnum.AllSuppliersAC.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "All",
+                Controller = "Vendors",
+                Action = "IndexForPayment",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-storefront-24px1"
+            });
+            if (SidebarTitle == AppUtility.AccountingSidebarEnum.NewSupplierAC.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "New Supplier",
+                Controller = "Vendors",
+                Action = "Create",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Accounting }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-add_circle_outline-24px"
+            });
+            if (SidebarTitle == AppUtility.AccountingSidebarEnum.SearchSupplierAC.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Vendors",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Accounting }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-zoom_in-24px-01"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateOperationsRequestsSidebar(string PageType, string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+            var CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.OperationsSidebarEnum.LastItem.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            var  typePageType = "Request";
+            if (PageType == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
+            {
+                typePageType = AppUtility.RequestPageTypeEnum.Request.ToString();
+            }
+            if (PageType == AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString())
+            {
+                typePageType = AppUtility.RequestPageTypeEnum.Inventory.ToString();
+            }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Last Item",
+                Controller = "Operations",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", PageType }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-format_list_bulleted-24px-01"
+            });
+            if (SidebarTitle == AppUtility.OperationsSidebarEnum.AddItem.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Add Item",
+                Controller = "Operations",
+                Action = "CreateModalView",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", PageType },
+                    {"categoryType", 2 }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-add_circle_outline-24px"
+            });
+            if (SidebarTitle == AppUtility.OperationsSidebarEnum.Type.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Type",
+                Controller = "ProductSubcategories",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", typePageType },
+                    {"categoryType", 2 }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-category-24px1"
+            });
+            if (SidebarTitle == AppUtility.OperationsSidebarEnum.Vendors.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Vendor",
+                Controller = "Vendors",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", typePageType },
+                    {"categoryType", 2 }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-storefront-24px"
+            });
+            if (SidebarTitle == AppUtility.OperationsSidebarEnum.Owner.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Owner",
+                Controller = "ApplicationUsers",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", typePageType },
+                    {"categoryType", AppUtility.CategoryTypeEnum.Operations }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-face-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
+
+        public static List<MenuItems> CreateOperationsSearchSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+            var CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.OperationsSidebarEnum.Search.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "Requests",
+                Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Operation.ToString() }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-zoom_in-24px-01"
             });
 
             return SidebarMenuItems;

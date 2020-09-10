@@ -2497,7 +2497,7 @@ namespace PrototypeWithAuth.Controllers
          * BEGIN SEARCH
          */
         [HttpGet]
-        [Authorize(Roles = "Admin, OrdersAndInventory, LabManagement")]
+        [Authorize(Roles = "Admin, OrdersAndInventory, LabManagement, Operations")]
         public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
         {
             if (SectionType == AppUtility.MenuItems.OrdersAndInventory)
@@ -2509,9 +2509,17 @@ namespace PrototypeWithAuth.Controllers
             else if (SectionType == AppUtility.MenuItems.LabManagement)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Search;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.SearchLM;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.SearchRequests;
             }
+            else if (SectionType == AppUtility.MenuItems.Operation)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.SearchOperations;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Search;
+            }
+
+
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
                 ParentCategories = await _context.ParentCategories.ToListAsync(),
@@ -3407,6 +3415,11 @@ namespace PrototypeWithAuth.Controllers
                 AccountingPaymentsEnum = accountingPaymentsEnum,
                 Requests = requestsList.ToLookup(r => r.Product.Vendor)
             };
+
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Payments;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingPaymentsEnum;
+
             return View(accountingPaymentsViewModel);
         }
 
@@ -3445,6 +3458,9 @@ namespace PrototypeWithAuth.Controllers
                 AccountingNotificationsEnum = accountingNotificationsEnum,
                 Requests = requestsList.ToList().ToLookup(r => r.Product.Vendor)
             };
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Notifications;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingNotificationsEnum;
             return View(accountingPaymentsViewModel);
         }
 
