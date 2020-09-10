@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200910074143_AddDegreeCitizenshipMaritalModels")]
+    partial class AddDegreeCitizenshipMaritalModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -313,18 +315,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("CitizenshipID");
 
                     b.ToTable("Citizenships");
-
-                    b.HasData(
-                        new
-                        {
-                            CitizenshipID = 1,
-                            Description = "Israel"
-                        },
-                        new
-                        {
-                            CitizenshipID = 2,
-                            Description = "USA"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
@@ -396,28 +386,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("DegreeID");
 
                     b.ToTable("Degrees");
-
-                    b.HasData(
-                        new
-                        {
-                            DegreeID = 1,
-                            Description = "B.Sc"
-                        },
-                        new
-                        {
-                            DegreeID = 2,
-                            Description = "M.Sc"
-                        },
-                        new
-                        {
-                            DegreeID = 3,
-                            Description = "P.hd"
-                        },
-                        new
-                        {
-                            DegreeID = 4,
-                            Description = "Post P.hd"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHours", b =>
@@ -910,23 +878,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("MaritalStatusID");
 
                     b.ToTable("MaritalStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            MaritalStatusID = 1,
-                            Description = "Married"
-                        },
-                        new
-                        {
-                            MaritalStatusID = 2,
-                            Description = "Single"
-                        },
-                        new
-                        {
-                            MaritalStatusID = 3,
-                            Description = "Divorced"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Menu", b =>

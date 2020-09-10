@@ -1183,6 +1183,58 @@ namespace PrototypeWithAuth.Data
                      Description = "Software Developer"
                  }
               );
+            modelBuilder.Entity<Degree>().HasData(
+                new Degree
+                {
+                    DegreeID = 1,
+                    Description = "B.Sc"
+                },
+                  new Degree
+                  {
+                      DegreeID = 2,
+                      Description = "M.Sc"
+                  },
+                new Degree
+                {
+                    DegreeID = 3,
+                    Description = "P.hd"
+                },
+                new Degree
+                {
+                    DegreeID = 4,
+                    Description = "Post P.hd"
+                }
+            );
+            modelBuilder.Entity<Citizenship>().HasData(
+                  new Citizenship
+                  {
+                      CitizenshipID = 1,
+                      Description = "Israel"
+                  },
+                 new Citizenship
+                 {
+                     CitizenshipID = 2,
+                     Description = "USA"
+                 }
+            );
+            modelBuilder.Entity<MaritalStatus>().HasData(
+                new MaritalStatus
+                {
+                    MaritalStatusID = 1,
+                    Description = "Married"
+                },
+                new MaritalStatus
+                {
+                    MaritalStatusID = 2,
+                    Description = "Single"
+                },
+                new MaritalStatus
+                {
+                    MaritalStatusID = 3,
+                    Description = "Divorced"
+                }
+            );
+
         }
     }
 }
