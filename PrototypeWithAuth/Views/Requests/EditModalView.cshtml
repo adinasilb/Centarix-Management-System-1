@@ -26,8 +26,6 @@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
                 @*Requests search view model*@
 
-
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
                 <input type="hidden" asp-for="@Model.Request.ProductID" />
 
@@ -222,14 +220,14 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                        <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom " min="@DateTime.Now.Date.ToString("yyyy-MM-dd")"   />
+                                        <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom "  />
                                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                     </div>
                                     @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                     {
                                         <div class="col-4">
                                             <label class="control-label">Expected supply date</label>
-                                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays??0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
+                                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays??0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled"  min="@DateTime.Now.Date.ToString("yyyy-MM-dd")"  />
                                         </div>
                                     }
                                     else

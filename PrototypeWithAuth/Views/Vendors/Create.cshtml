@@ -24,8 +24,6 @@
     <div class="card col-8 offset-2 mt-4" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
         <div class="card-body" id="addVendorModal">
             <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 @Html.HiddenFor(c => c.SectionType)
                 <div class="new-modal-header border-bottom container-fluid" style="padding: 0.5em 6em">
                     <div class="row mt-3 mb-5">

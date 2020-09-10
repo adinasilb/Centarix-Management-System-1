@@ -330,7 +330,7 @@ $(function () {
 			var mm = parseInt(date.getMonth() + 1);
 			var yyyy = parseInt(date.getFullYear());
 		}
-
+	
 		for (i = 0; i < $(this).val(); i++) {
 			switch (mm) {
 				case 1:
@@ -404,6 +404,9 @@ $(function () {
 
 	$("#expected-supply-date").change(function () {
 		var date = new Date($(this).val());
+		if (date < new Date()) {
+			return;
+		}
 		console.log("-------expected supply date: " + date)
 		var Sdd = parseInt(date.getDate());
 		var Smm = parseInt(date.getMonth() + 1);
@@ -1637,13 +1640,10 @@ $(function () {
 		}
 	});
 
-
-
-
 	$.fn.validateItemTab = function () {
-		$("#price-tab").prop("disabled", true);
-		$("#location-tab").prop("disabled", true);
-		$("#order-tab").prop("disabled", true);
+		$(".request-price-tab").prop("disabled", true);
+		$(".request-location-tab").prop("disabled", true);
+		$(".request-order-tab").prop("disabled", true);
 
 		console.log("in $.fn.validateItemTab");
 		valid = $("#parentlist").attr('aria-invalid');
@@ -1660,20 +1660,17 @@ $(function () {
 		if (valid == "true" || $("#sublist").val() == "") {
 			return;
 		}
-		valid = $("#Request_SubProjectID").attr('aria-invalid');
-		if (valid == "true" || $("#Request_SubProjectID").val() == "") {
-			return;
-		}
 		valid = $("#Request_SubProject_ProjectID").attr('aria-invalid');
 		if (valid == "true" || $("#Request_SubProject_ProjectID").val() == "") {
 			return;
 		}
-		valid = $("#vendorList").attr('aria-invalid');
-		if (valid == "true" || $("#vendorList").val() == "") {
+		console.log("valid1: " + valid);
+		valid = $("#SubProject").attr('aria-invalid');
+		if (valid == "true" || $("#SubProject").val() == "") {
 			return;
 		}
-		valid = $("#Request_ParentRequest_InvoiceNumber").attr('aria-invalid');
-		if (valid == "true" || $("#Request_ParentRequest_InvoiceNumber").val() == "") {
+		valid = $("#vendorList").attr('aria-invalid');
+		if (valid == "true" || $("#vendorList").val() == "") {
 			return;
 		}
 		valid = $("#Request_Warranty").attr('aria-invalid');
@@ -1681,21 +1678,15 @@ $(function () {
 			return;
 		}
 		valid = $("#Request_ParentQuote_QuoteDate").attr('aria-invalid');
-		if (valid == "true") {
+		if (valid == "true" || $("#Request_ParentQuote_QuoteDate").val() == "") {
 			return;
 		}
-		var validDate = true;
-		var dateVal = $(".create-modal-quote-date").val();
-		if (dateVal != undefined) {
-
-			validDate = $.fn.validateDateisGreaterThanOrEqualToToday(dateVal)
-		}
-		valid = "" + !validDate;
-		if (valid == "true" || $("#Request_ParentRequest_QuoteDate").val() == "") {
+		valid = $("#Request_ParentQuote_QuoteNumber").attr('aria-invalid');
+		if (valid == "true" || $("#Request_ParentQuote_QuoteNumber").val() == "") {
 			return;
 		}
 		valid = $("#Request_ExpectedSupplyDays").attr('aria-invalid');
-		if (valid == "true" || $("#Request_ExpectedSupplyDays").val() == "") {
+		if (valid == "true" ) {
 			return;
 		}
 		valid = $("#Request_CatalogNumber").attr('aria-invalid');
@@ -1703,47 +1694,20 @@ $(function () {
 			return;
 		}
 		if (valid == "false" || valid == undefined) {
-			$("#price-tab").prop("disabled", false);
-			$("#location-tab").prop("disabled", false);
-			$("#saveEditModal").removeClass("disabled");
-			$("#saveEditModal").prop("disabled", false);
-			$("#order-tab").prop("disabled", false);
+			console.log("made it here!!")
+			$(".request-price-tab").prop("disabled", false);
+			$(".request-location-tab").prop("disabled", false);
+			$(".request-order-tab").prop("disabled", false);
 		}
 		return valid;
 	}
 
-
-	$("#Request_ParentRequest_InvoiceDate").change(function () {
-
-	});
 	$('#myModal').change(		function () {
 			$.validator.unobtrusive.parse("#myForm");
 		});
 
-
-	$("#price-tab").click(function () {
-		console.log("in onclick price tab");
-		$("#myForm").valid();
-		$.fn.validateItemTab();
-	});
-
-	$("#saveEditModal").click(function () {
-		console.log("in onclick save modal");
-		$("#saveEditModal").addClass("disabled");
-		$("#saveEditModal").prop("disabled", true);
-		$("#myForm").valid();
-		var valid = $.fn.validateItemTab();
-		if (valid == "false" || valid == undefined) {
-			valid = $.fn.validatePriceTab();
-			if (valid == "false" || valid == undefined) {
-				$("#saveEditModal").removeClass("disabled");
-				$("#saveEditModal").prop("disabled", false);
-				return true;
-			}
-		};
-		$("#saveEditModal").removeClass("disabled");
-		$("#saveEditModal").prop("disabled", false);
-		return false;
+	$("#saveEditModal").click(function (e) {
+		
 
 	});
 
@@ -1769,21 +1733,34 @@ $(function () {
 		return true;
 	};
 
-	$("#price-tab").click(function () {
+	$(".request-price-tab").click(function () {
 		console.log("in onclick price tab");
 		$("#myForm").valid();
 		$.fn.validateItemTab();
 
 	});
+	$(".create-modal-submit").click(function () {
+		console.log('$("#createModalForm").valid()');
+		if ($("#createModalForm").valid()) {
+			$(".create-modal-submit").removeClass("disabled-submit");
+			return true;
+		} else {
+			e.preventDefault();
+			e.stopPropagation();
+			$(".create-modal-submit").addClass("disabled-submit");
+			return false;
+		}
 
-	$("#archive-tab").click(function () {
+	});
+
+	$(".request-archive-tab").click(function () {
 		console.log("in onclick archive-tab");
 		$("#myForm").valid();
 		$.fn.validatePriceTab();
 
 	});
 
-	$("#history-tab").click(function () {
+	$(".request-history-tab").click(function () {
 		console.log("in onclick history-tab");
 		$("#myForm").valid();
 		$.fn.validateItemTab();
@@ -1791,7 +1768,7 @@ $(function () {
 
 	});
 
-	$("#order-tab").click(function () {
+	$(".request-order-tab").click(function () {
 		console.log("in onclick order-tab");
 		$("#myForm").valid();
 		var valid = $.fn.validateItemTab();
@@ -1801,13 +1778,13 @@ $(function () {
 
 	});
 
-	$("#comments-tab").click(function () {
+	$(".request-comments-tab").click(function () {
 		console.log("in onclick comments-tab");
 		$("#myForm").valid();
 		$.fn.validatePriceTab();
 	});
 
-	$("#location-tab").click(function () {
+	$(".request-location-tab").click(function () {
 		console.log("in onclick location-tab");
 		$("#myForm").valid();
 		$.fn.validateItemTab();
@@ -1826,28 +1803,24 @@ $(function () {
 
 	$.fn.validatePriceTab = function () {
 		//all the true and falses are opposite because fo the ariainvalid is true if invalid
-		$("#documents-tab").prop("disabled", true);
-		$("#comments-tab").prop("disabled", true);
-		$("#archive-tab").prop("disabled", true);
-		$("#history-tab").prop("disabled", true);
-		$("#order-tab").prop("disabled", true);
+		$(".request-documents-tab").prop("disabled", true);
+		$(".request-comments-tab").prop("disabled", true);
+		$(".request-archive-tab").prop("disabled", true);
+		$(".request-history-tab").prop("disabled", true);
+		$(".request-order-tab").prop("disabled", true);
 		valid = $("#Request_Product_ProductName").attr('aria-invalid');
-		console.log("valid: " + valid);
 		if (valid == "true" || $("#Request_Product_ProductName").val() == "") {
-			console.log("valid: " + valid);
 			return;
 		}
 		valid = $("#Request_Unit").attr('aria-invalid');
-		console.log("valid: " + valid);
 		if (valid == "true" || $("#Request_Unit").val() == "") {
-			console.log("valid: " + valid);
 			return;
 		}
-		console.log("valid1: " + valid);
-		valid = $("#Request_UnitTypeID").attr('aria-invalid');
-		if (valid == "true" || $("#Request_UnitTypeID").val() == "") {
+		valid = $("#Request_Unit").attr('aria-invalid');
+		if (valid == "true" || $("#Request_Unit").val() == "") {
 			return;
 		}
+
 		//TALK TO DEBBIE ABOUT THE NEW MATERIAL SELECT
 		console.log("valid2: " + valid);
 		valid = $("#Request_ExchangeRate").attr('aria-invalid');
@@ -1870,12 +1843,12 @@ $(function () {
 		}
 
 		if (valid == "false" || valid == undefined) {
-			$("#item-tab").prop("disabled", false);
-			$("#documents-tab").prop("disabled", false);
-			$("#comments-tab").prop("disabled", false);
-			$("#archive-tab").prop("disabled", false);
-			$("#history-tab").prop("disabled", false);
-			$("#order-tab").prop("disabled", false);
+			$(".request-item-tab").prop("disabled", false);
+			$(".request-documents-tab").prop("disabled", false);
+			$(".request-comments-tab").prop("disabled", false);
+			$(".request-archive-tab").prop("disabled", false);
+			$(".request-history-tab").prop("disabled", false);
+			$(".request-order-tab").prop("disabled", false);
 		}
 		return valid;
 	}

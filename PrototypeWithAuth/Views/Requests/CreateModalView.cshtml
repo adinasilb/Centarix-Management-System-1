@@ -31,9 +31,7 @@
             @Html.HiddenFor(model => model.VendorID)
             @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
             @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
-
-
-            <div asp-validation-summary="All" class="text-danger"></div>
+        
             <input type="hidden" asp-for="@Model.Request.RequestID" />
 
             <!-- Modal Header -->
@@ -57,13 +55,13 @@
                     <div class="col-12 px-0">
                         <div class="container-fluid div-tabs text-center">
                             <ul id="create-modal-tabs" class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
-                                <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link active"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                <li class="nav-item" id="price-tab"><a data-toggle="tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#archive" class="nav-link"><i class="icon-archive-24px" style="font-size: 2rem;"></i><br />Archive</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link"> <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order</a></li>
+                                <li class="nav-item "><a data-toggle="tab" href="#item" class="request-item-tab nav-link active"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                <li class="nav-item " id="price-tab"><a data-toggle="tab" href="#price" class="request-price-tab nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                <li class="nav-item "><a data-toggle="tab" href="#documents" class="request-documents-tab nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                <li class="nav-item comments-tab"><a data-toggle="tab" href="#comments" class="comments-tab nav-link"><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments</a></li>
+                                <li class="nav-item archive-tab"><a data-toggle="tab" href="#archive" class="request-archive-tab nav-link"><i class="icon-archive-24px" style="font-size: 2rem;"></i><br />Archive</a></li>
+                                <li class="nav-item history-tab"><a data-toggle="tab" href="#history" class="request-history-tab nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
+                                <li class="nav-item order-tab"><a data-toggle="tab" href="#order" class="request-order-tab nav-link"> <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order</a></li>
                             </ul>
                         </div>
                     </div>
@@ -109,7 +107,7 @@
                                                 "ProjectDescription"
                                                 ),
                                             "Select Project",
-                                            new { @class = "mdb-select md-form  colorful-select dropdown-primary Project" }
+                                            new { @class = "mdb-select md-form  colorful-select dropdown-primary Project", @id = "subProject" }
                                         )
                                         <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger"></span>
                                     </div>
@@ -183,13 +181,13 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                    <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")"  />
+                                    <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days"  />
                                     <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">Expected supply date</label>
-                                        <input value="00-00-0000" class="form-control-plaintext border-bottom datepicker" type="date" name="expected-supply-days" id="expected-supply-date" />
+                                        <input value="00-00-0000" class="form-control-plaintext border-bottom" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")"  />
                                     </div>
                                 </div>
                                 <div class="col-md-4">
