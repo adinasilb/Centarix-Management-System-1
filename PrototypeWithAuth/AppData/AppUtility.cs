@@ -12,18 +12,21 @@ namespace PrototypeWithAuth.AppData
 {
     public static class AppUtility
     {
-        public enum YearlyMonthlyEnum{ Yearly, Monthly}
+        public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location, Summary }
-        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers, Payments } //these are all going to the ParentRequestIndex
+        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, SuppliersAC, Payments } //these are all going to the ParentRequestIndex
+        public enum AccountingSidebarEnum { General, AllSuppliersAC, NewSupplierAC, SearchSupplierAC }
         public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, SearchLM }
         public enum LabManagementSidebarEnum { None, Orders, Quotes, AllSuppliers, NewSupplier, SearchSupplier, LocationsList, SearchRequests }
         public enum OrdersAndInventorySidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits } //Listed in the site.js (if you change here must change there)
         public enum UserPageTypeEnum { None, User, Workers }
         public enum UserSideBarEnum { None, Index, Add, Details, AddWorker, AwaitingApproval, Salary, Hours }
+        public enum OperationsPageTypeEnum { RequestOperations, InventoryOperations, SearchOperations }
+        public enum OperationsSidebarEnum { LastItem, AddItem, Type, Vendors, Owner, Search }
         public enum TimeKeeperPageTypeEnum { None, Report, Summary }
         public enum TimeKeeperSidebarEnum { None, ReportHours, Days, Hours, DaysOff, Documents, CompanyAbsences }
         public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }

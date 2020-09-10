@@ -29,9 +29,17 @@
     {
         MainMenuItems = CreateMenus.CreateOrdersAndInventoryMainMenu(pageType, initalClasses, " activeNavLink");
     }
-    if (MenuType == AppUtility.MenuItems.LabManagement.ToString())
+    else if (MenuType == AppUtility.MenuItems.LabManagement.ToString())
     {
         MainMenuItems = CreateMenus.CreateLabManagementMainMenu(pageType, initalClasses, " text-dark lab-man-filter");
+    }
+    else if (MenuType == AppUtility.MenuItems.Accounting.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateAccountingMainMenu(pageType, initalClasses, " text-dark accounting-filter");
+    }
+    else if (MenuType == AppUtility.MenuItems.Operation.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateOperationsMainMenu(pageType, initalClasses, " text-dark operations-filter");
     }
 
     //passing the
@@ -114,6 +122,30 @@
     else if (pageType == AppUtility.LabManagementPageTypeEnum.SearchLM.ToString())
     {
         SidebarMenuItems = CreateMenus.CreateLabManageSearchSidebar(sidebarType, originalNavClasses, "lab-man-filter");
+    }
+    else if (pageType == AppUtility.PaymentPageTypeEnum.Payments.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateAccountingPaymentsSidebar(sidebarType, originalNavClasses, "accounting-filter");
+    }
+    else if (pageType == AppUtility.PaymentPageTypeEnum.Notifications.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateAccountingNotificationsSidebar(sidebarType, originalNavClasses, "accounting-filter");
+    }
+    else if (pageType == AppUtility.PaymentPageTypeEnum.General.ToString())
+    {
+        //TODO: LATER
+    }
+    else if (pageType == AppUtility.PaymentPageTypeEnum.SuppliersAC.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateAccountingSuppliersSidebar(sidebarType, originalNavClasses, "accounting-filter");
+    }
+    else if (pageType == AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString() || pageType == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateOperationsRequestsSidebar(pageType, sidebarType, originalNavClasses, "operations-filter");
+    }
+    else if (pageType == AppUtility.OperationsPageTypeEnum.SearchOperations.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateOperationsSearchSidebar(sidebarType, originalNavClasses, "operations-filter");
     }
 
 

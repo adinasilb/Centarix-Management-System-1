@@ -4,14 +4,14 @@
     ViewData["Title"] = "Index";
     var pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()];
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-    if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
-    {
-        Layout = "~/Views/Shared/RequestNavView.cshtml";
-    }
-    else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
-    {
-        Layout = "~/Views/Shared/OperationsNavView.cshtml";
-    }
+    //if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
+    //{
+    //    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    //}
+    //else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
+    //{
+    //    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    //}
 }
 
 @*<<<<<<<<<<<< This is the Owner page >>>>>>>>>>>>>>>*@

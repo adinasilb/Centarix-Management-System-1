@@ -150,7 +150,9 @@ namespace PrototypeWithAuth.Controllers
 
 
             //tempdata page type for active tab link
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.General;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.General;
 
             return View(await fullParentRequestsListByDate.ToListAsync());
         }
