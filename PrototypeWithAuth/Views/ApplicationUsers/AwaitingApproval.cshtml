@@ -9,102 +9,104 @@
 }
 
 
-    <div class="row"><h3><strong>Awaiting Approval</strong></h3></div>
-    <div class="row ">
-        <table class="table table-headerspaced  col-12 ">
-            <tbody>
-                <tr class="text-center " style="border-color:transparent; border-bottom: 2px solid lightgrey;">
-                    <td width="12%"></td>
-                    <td class="text-left" width="10%">
-                        Name
-                    </td>
-                    <td width="20%">
-                        Type
-                    </td>
-                    <td width="16%">
-                        Date
-                    </td>
-                    <td width="9%">
-                        Entry Time
-                    </td>
-                    <td width="9%">
-                        Exit Time
-                    </td>
-                    <td width="9%">
-                        Total
-                    </td>
-                    <td width="15%">
-                    </td>
-                </tr>
-                @{
+    <div class="container-fluid">
+        <div class="row"><h3><strong>Awaiting Approval</strong></h3></div>
+        <div class="row ">
+            <table class="table table-headerspaced  col-12 ">
+                <tbody>
+                    <tr class="text-center " style="border-color:transparent; border-bottom: 2px solid lightgrey;">
+                        <td width="12%"></td>
+                        <td class="text-left" width="10%">
+                            Name
+                        </td>
+                        <td width="20%">
+                            Type
+                        </td>
+                        <td width="16%">
+                            Date
+                        </td>
+                        <td width="9%">
+                            Entry Time
+                        </td>
+                        <td width="9%">
+                            Exit Time
+                        </td>
+                        <td width="9%">
+                            Total
+                        </td>
+                        <td width="15%">
+                        </td>
+                    </tr>
+                    @{
 
-                    var specialClass = "users-font-color font-weight-bold";
-                    foreach (var hours in Model)
-                    {
-                        string Entry1 = "";
-                        string Entry2 = "";
-                        string Exit1 = "";
-                        string Exit2 = "";
-                        string TotalHours = "";
-                        if (hours.Entry1)
+                        var specialClass = "users-font-color font-weight-bold";
+                        foreach (var hours in Model)
                         {
-                            Entry1 = specialClass;
-                        }
-                        if (hours.Entry2)
-                        {
-                            Entry2 = specialClass;
-                        }
-                        if (hours.Exit1)
-                        {
-                            Exit1 = specialClass;
-                        }
-                        if (hours.Exit2)
-                        {
-                            Exit2 = specialClass;
-                        }
-                        if (hours.TotalHours)
-                        {
-                            TotalHours = specialClass;
-                        }
+                            string Entry1 = "";
+                            string Entry2 = "";
+                            string Exit1 = "";
+                            string Exit2 = "";
+                            string TotalHours = "";
+                            if (hours.Entry1)
+                            {
+                                Entry1 = specialClass;
+                            }
+                            if (hours.Entry2)
+                            {
+                                Entry2 = specialClass;
+                            }
+                            if (hours.Exit1)
+                            {
+                                Exit1 = specialClass;
+                            }
+                            if (hours.Exit2)
+                            {
+                                Exit2 = specialClass;
+                            }
+                            if (hours.TotalHours)
+                            {
+                                TotalHours = specialClass;
+                            }
 
-                        <tr class="text-center users-tr ">
-                            <td width="12%">
-                                @{
-                                    var src = "/UserImages/profile_circle_big.png";
-                                    if (hours.EmployeeHoursAwaitingApproval.Employee.UserImage != null)
-                                    {
-                                        src = UserManager.GetUserAsync(User).Result.UserImage;
+                            <tr class="text-center users-tr ">
+                                <td width="12%">
+                                    @{
+                                        var src = "/UserImages/profile_circle_big.png";
+                                        if (hours.EmployeeHoursAwaitingApproval.Employee.UserImage != null)
+                                        {
+                                            src = UserManager.GetUserAsync(User).Result.UserImage;
+                                        }
                                     }
-                                }
-                                <img src="@src" class="user-image ml-0" height="65" alt="default User image" />
-                            </td>
-                            <td class="text-left" width="10%">
-                                @hours.EmployeeHoursAwaitingApproval.Employee.FirstName  @hours.EmployeeHoursAwaitingApproval.Employee.LastName
-                            </td>
-                            <td width="20%">
-                                @hours.EmployeeHoursAwaitingApproval.EmployeeHoursStatus.Description
-                            </td>
-                            <td width="16%">
-                                @hours.EmployeeHoursAwaitingApproval.Date.ToLongDateString()
-                            </td>
-                            <td width="9%">
-                                <label class="@Entry1">@hours.EmployeeHoursAwaitingApproval.Entry1?.ToShortTimeString()</label>  <br />
-                                <label class="@Entry2">@hours.EmployeeHoursAwaitingApproval.Entry2?.ToShortTimeString() </label>
-                            </td>
-                            <td width="9%">
-                                <label class="@Exit1">@hours.EmployeeHoursAwaitingApproval.Exit1?.ToShortTimeString() </label><br />
-                                <label class="@Exit2">@hours.EmployeeHoursAwaitingApproval.Exit2?.ToShortTimeString()</label>
-                            </td>
-                            <td width="9%" class="@TotalHours">
-                                @hours.EmployeeHoursAwaitingApproval.TotalHours?.ToString(@"h\:mm")
-                            </td>
-                            <td width="15%">
-                                <button type="button" class="rounded-pill px-4 py-1 text-white no-box-shadow border-0 approve-hours" style="background-color:var(--user-color)" value="@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID">Approve</button>
-                            </td>
+                                    <img src="@src" class="user-image ml-0" height="65" alt="default User image" />
+                                </td>
+                                <td class="text-left" width="10%">
+                                    @hours.EmployeeHoursAwaitingApproval.Employee.FirstName  @hours.EmployeeHoursAwaitingApproval.Employee.LastName
+                                </td>
+                                <td width="20%">
+                                    @hours.EmployeeHoursAwaitingApproval.EmployeeHoursStatus.Description
+                                </td>
+                                <td width="16%">
+                                    @hours.EmployeeHoursAwaitingApproval.Date.ToLongDateString()
+                                </td>
+                                <td width="9%">
+                                    <label class="@Entry1">@hours.EmployeeHoursAwaitingApproval.Entry1?.ToShortTimeString()</label>  <br />
+                                    <label class="@Entry2">@hours.EmployeeHoursAwaitingApproval.Entry2?.ToShortTimeString() </label>
+                                </td>
+                                <td width="9%">
+                                    <label class="@Exit1">@hours.EmployeeHoursAwaitingApproval.Exit1?.ToShortTimeString() </label><br />
+                                    <label class="@Exit2">@hours.EmployeeHoursAwaitingApproval.Exit2?.ToShortTimeString()</label>
+                                </td>
+                                <td width="9%" class="@TotalHours">
+                                    @hours.EmployeeHoursAwaitingApproval.TotalHours?.ToString(@"h\:mm")
+                                </td>
+                                <td width="15%">
+                                    <button type="button" class="rounded-pill px-4 py-1 text-white no-box-shadow border-0 approve-hours" style="background-color:var(--user-color)" value="@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID">Approve</button>
+                                </td>
 
-                        </tr>
+                            </tr>
+                        }
                     }
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>

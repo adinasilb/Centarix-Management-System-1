@@ -139,6 +139,8 @@
     <Compile Remove="Data\Migrations\20200907094621_RedoEmployeeStatusfk.Designer.cs" />
     <Compile Remove="Data\Migrations\20200908084940_JobCategoryTypefk.cs" />
     <Compile Remove="Data\Migrations\20200908084940_JobCategoryTypefk.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200910074008_AddDegreeCitizenshipMaritalModels.cs" />
+    <Compile Remove="Data\Migrations\20200910074008_AddDegreeCitizenshipMaritalModels.Designer.cs" />
   </ItemGroup>
 
 

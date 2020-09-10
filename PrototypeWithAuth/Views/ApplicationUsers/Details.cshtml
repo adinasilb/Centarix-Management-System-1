@@ -9,40 +9,41 @@
 }
 
 
-<div class="row"><h3><strong>Workers &nbsp;</strong></h3><h4 class="mt-1">@Model.SalariedEmployeeCount Employees, @Model.FreelancerCount Freelancers, @Model.AdvisorCount Advisors </h4></div>
-<div class="row ">
-    <table class="table table-headerspaced  col-12 ">
-        <tbody>
-            <tr class="text-center " style="border-color:transparent; border-bottom: 2px solid lightgrey;">
-                <td width="9%"></td>
-                <td width="9%">Employee Number</td>
-                <td width="12%">
-                    Name
-                </td>
-                <td width="11%">
-                    Job Title
-                </td>
-                <td width="9%">
-                    Job Category
-                </td>
-                <td width="9%">
-                    Job Type
-                </td>
-                <td width="12%">
-                    Email Address
-                </td>
-                <td width="10%">
-                    Phone Number
-                </td>
-                <td width="10%">
-                    Started Working
-                </td>
-                <td width="9%">
-                    Job Scope
-                </td>
-            </tr>
-                @foreach (var employee in Model.Employees)
-                {
+    <div class="container-fluid">
+        <div class="row"><h3><strong>Workers &nbsp;</strong></h3><h4 class="mt-1">@Model.SalariedEmployeeCount Employees, @Model.FreelancerCount Freelancers, @Model.AdvisorCount Advisors </h4></div>
+        <div class="row ">
+            <table class="table table-headerspaced  col-12 ">
+                <tbody>
+                    <tr class="text-center " style="border-color:transparent; border-bottom: 2px solid lightgrey;">
+                        <td width="9%"></td>
+                        <td width="9%">Employee Number</td>
+                        <td width="12%">
+                            Name
+                        </td>
+                        <td width="11%">
+                            Job Title
+                        </td>
+                        <td width="9%">
+                            Job Category
+                        </td>
+                        <td width="9%">
+                            Job Type
+                        </td>
+                        <td width="12%">
+                            Email Address
+                        </td>
+                        <td width="10%">
+                            Phone Number
+                        </td>
+                        <td width="10%">
+                            Started Working
+                        </td>
+                        <td width="9%">
+                            Job Scope
+                        </td>
+                    </tr>
+                    @foreach (var employee in Model.Employees)
+                    {
                         <tr class="text-center users-tr ">
                             <td width="9%">
                                 @{
@@ -77,11 +78,12 @@
                                 @employee.StartedWorking.ToShortDateString()
                             </td>
                             <td width="9%">
-                               @{ var scope = Math.Round(employee.SalariedEmployee?.WorkScope ?? 0) == 0 ? "" : Math.Round(employee.SalariedEmployee?.WorkScope ?? 0) + "%";}
+                                @{ var scope = Math.Round(employee.SalariedEmployee?.WorkScope ?? 0) == 0 ? "" : Math.Round(employee.SalariedEmployee?.WorkScope ?? 0) + "%";}
                                 @scope
                             </td>
                         </tr>
-                }
-        </tbody>
-    </table>
-</div>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
