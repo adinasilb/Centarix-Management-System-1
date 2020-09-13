@@ -922,11 +922,36 @@ a.nav-link {
 }
 
 .container-fluid ul li a.nav-link.active {
+    color: var(--order-inv-color);
+}
+
+.container-fluid ul li a.nav-link:hover {
+    border: 0;
+    color: inherit;
+}
+
+.container-fluid ul li a.nav-link.active,
+.container-fluid ul li a.nav-link:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--order-inv-color);
+    outline: none;
+}
+
+/*.container-fluid ul li a.nav-link.active {
     color: var(--order-inv-color);
 }
+.container-fluid ul li a.nav-link:hover{
+    border: 0;
+    color: inherit;
+}
+
+.container-fluid ul li a.nav-link.active,
+.container-fluid ul li a.nav-link:hover {
+    background-color: transparent;
+    border-width: 0px;
+    border-bottom: 4px solid var(--order-inv-color);
+}*/
 
 .container-fluid ul li a.oper-link.active {
     background-color: transparent;
@@ -1501,9 +1526,20 @@ td .btn {
 
 
 
+/*take out the border radius of the dropdowns*/
+.select-wrapper input.select-dropdown{
+    border-radius: 0 !important;
+}
+
 .custom.select-wrapper input.select-dropdown {
-    border: 0.063rem solid #808080;
+}
+
+.custom.select-wrapper.full-border-select input.select-dropdown {
     text-align: center;
+    border: 0.063rem solid #808080;
+}
+
+.custom.select-wrapper input.timekeeper {
 }
 
 .timekeeper.select-wrapper input.select-dropdown:active {
@@ -1514,9 +1550,9 @@ td .btn {
     border: 0.063rem solid var(--timekeeper-color);
 }
 
-.custom .caret {
+/*.custom .caret {
     display: none;
-}
+}*/
 
 .custom .dropdown-content {
     margin-top: 2.5rem;
