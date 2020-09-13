@@ -15,7 +15,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-6">
-                                <h4 style="font-weight: bolder;">Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</h4>
+                                <span class="heading-1">Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName.ToLower()</span>
                             </div>
                         </div>
                         <hr />
@@ -78,12 +78,10 @@
                     </div>
                     <hr />
                     <div class="row">
-                        <div class="col-6">
+                        <div >
                             @*<button class="btn inv-payments-button float-right">Paid</button>*@
-                            <input type="submit" class="btn inv-payments-button float-right" value="Paid" />
-                        </div>
-                        <div class="col-6">
-                            <button class="btn inv-clear-button float-left">Cancel</button>
+                            <input type="submit" class="btn  custom-button custom-button-font accounting-background-color between-button-margin" value="Paid" />
+                            <button class="btn custom-button custom-cancel ">Cancel</button>
                         </div>
                     </div>
                 </div>

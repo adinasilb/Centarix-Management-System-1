@@ -90,6 +90,10 @@
 .lab-man-background-color {
     background-color: var(--lab-man-color) !important;
 }
+.oper-background-color {
+    background-color: var(--operations-color) !important;
+}
+
 
 .lab-man-50-background-color {
     background-color: var(--lab-man-50-color) !important;
@@ -150,7 +154,7 @@ body{
     font-size: 1rem;
     font-weight: var(--bold-light)
 }
-input {
+input:not(input[type=button]) {
     font-size: 1rem !important;
     font-weight: var(--bold-regular) !important
 }

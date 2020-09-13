@@ -55,7 +55,7 @@
                                     }
                                 </div>
                                 <div class="col-10">
-                                    <h3><input asp-for="Request.Product.ProductName" class="form-control-plaintext mt-2 center-horizontally my-auto" readonly />
+                                   <input asp-for="Request.Product.ProductName" class="form-control-plaintext heading-1 mt-2 center-horizontally my-auto" readonly />
                                 </div>
                             </div>
                             <br />
@@ -160,10 +160,10 @@
                 <!--</div>
                 </div>-->
 
-                <div class="modal-footer border-0">
-                    <div class="container" style="display:flex; justify-content:center;">
-                        <input type="submit" asp-action="ReceivedModal" class="inv-button m-3" />
-                        <input type="button" value="Cancel" data-dismiss="modal" class="cancel-button m-3" />
+                <div class="modal-footer border-0 mb-4">
+                    <div class="m-auto" >
+                        <input type="submit" asp-action="ReceivedModal" class="custom-button custom-button-font order-inv-background-color between-button-margin"   />
+                        <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button"  />
                     </div>
 
                 </div>

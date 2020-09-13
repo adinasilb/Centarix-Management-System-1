@@ -11,12 +11,12 @@
                 <div class="modal-header border-0">
                     <div class="container">
                         <div >
-                            <h3><strong>Send Message to @Model.Product.Vendor.VendorEnName</strong></h3>
+                            <span class="heading-1">Send Message to @Model.Product.Vendor.VendorEnName.ToLower()</span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-body border rounded mx-4">
-                    <p class="p-3" style="font-size:1.125rem;">
+                    <p class="p-3 text" >
                         The order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName , has not arrived yet.<br />
                         Please update us on the matter.<br />
                         Best regards,<br />
@@ -24,9 +24,11 @@
                         Centarix
                     </p>
                 </div>
-                <div class="modal-footer mt-4 border-0 p-4" style="justify-content:center;">
-                    <input type="submit" class="inv-button mr-4" asp-action="OrderLateModal" value="Send" style="width:30%;"/>
-                    <button class="cancel-button cancel-email" data-dismiss="modal"  style="width:30%;">Cancel</button>@*FAIGE: should this delete the request?*@
+                <div class="modal-footer mt-4 border-0 " >
+                    <div class="m-auto">
+                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="OrderLateModal" value="Send" />
+                        <button class="custom-button custom-cancel cancel-email" data-dismiss="modal" >Cancel</button>
+                    </div>
                 </div>
             </form>
         </div>

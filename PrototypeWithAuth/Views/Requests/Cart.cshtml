@@ -36,7 +36,7 @@
                 </tr>
             </thead>
             <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
-                <td width="10%" class="p-0" rowspan="2"><h4><strong>@vendor.Key.VendorEnName</strong></h4></td>
+                <td width="10%" class="p-0" rowspan="2"><span class="heading-1">@vendor.Key.VendorEnName.ToLower()</span></td>
                 <td colspan="7" class="border-bottom"></td>
             </tr>
             <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
@@ -61,7 +61,7 @@
                         @request.Product.ProductName
                     </td>
                     <td width="10%">
-                        @request.Product.Vendor.VendorEnName
+                        @request.Product.Vendor.VendorEnName.ToLower()
                     </td>
                     <td>
                         @request.Product.ProductSubcategory.ProductSubcategoryDescription

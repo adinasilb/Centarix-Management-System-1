@@ -49,8 +49,8 @@
                                 }
                             </div>
 
-                            <div class="col-3">
-                                <h4 class="modal-title ml-4 pt-4"><label class="rounded form-control-plaintext border-0">@Model.Request.Product.ProductName</label> </h4>
+                            <div class="col-3 heading-1">
+                               @Model.Request.Product.ProductName
                             </div>
 
                         </div>
@@ -233,8 +233,8 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                     </div>
 
                     <div class="form-group text-center my-5">
-                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="inv-button mr-2" style="width:20%" />
-                        <button type="button" class="cancel-button " data-dismiss="modal" style="width:20%">Cancel</button>
+                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="custom-button custom-button-font order-inv-background-color between-button-margin"   style="width:20%" />
+                        <button type="button" class="custom-cancel custom-button " data-dismiss="modal" style="width:20%">Cancel</button>
                     </div>
                 </div>
             </form>

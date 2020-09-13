@@ -1,13 +1,13 @@
 ﻿@model PrototypeWithAuth.ViewModels.TermsViewModel;
 <script src="~/js/TermsModal.js"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:60rem; ">
+    <div class="modal-dialog modal-lg rounded-reorder" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block rounded" style="width:60rem;">
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" id="TermsModal">
                 <input type="hidden" asp-for="ParentRequest.ParentRequestID" />
                 <div class="modal-header">
                     <div class="col-10 float-left">
-                        <h5>Terms</h5>
+                       <span class="heading-1">Terms</span>
                     </div>
                 </div>
                 <div class="modal-body">
@@ -106,7 +106,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" asp value="Save" class="inv-button" asp-action="TermsModal" />
+                    <input type="submit" asp value="Save" class="custom-button custom-button-font order-inv-background-color"  asp-action="TermsModal" />
                 </div>
             </form>
         </div>
