@@ -121,9 +121,35 @@ table td {
 }
 
 .outer-page-margins {
-    margin-top: 5rem;
     margin-left: 5.625rem;
 }
+
+.nav-top-margin1 {
+    padding-top: 4.85rem;
+}
+
+.nav-top-margin2 {
+    margin-top: 5rem;
+}
+
+.sidebar-shadow1 {
+    box-shadow: 2px 3px 3px rgba(0,0,0, .16);
+    height: 100%;
+}
+
+.sidebar-shadow2 {
+    box-shadow: 2px 0px 6px rgba(0,0,0, .16);
+}
+
+.navbar-shadow-1 {
+    box-shadow: 0px 0px 12px rgba(0,0,0, .16);
+}
+
+.navbar-shadow-2 {
+    box-shadow: 0px 6px 6px rgba(0,0,0, .16);
+}
+
+
 /*BEGIN ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 html.wf-loading * {
     opacity: 0;

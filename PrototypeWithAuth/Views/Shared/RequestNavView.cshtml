@@ -203,68 +203,72 @@
 }
 <header class="sticky-top">
 
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
+    <div class="navbar-shadow-2">
+        <div class="navbar-shadow-1">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white ourNavBar p-0 no-box-shadow">
 
-        @{ var styleClass = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + ";";} 
-        <span style="@styleClass" >
-            <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" />
-            </a>
-        </span>
+                @{ var styleClass = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + ";";}
+                <span style="@styleClass">
+                    <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" />
+                    </a> 
+                </span>
 
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; padding-left: 5.625rem;">
-                
-                @foreach (var MenuItem in MainMenuItems)
-                {
-                    <li class="nav-item" style="margin-right: 4.375rem;">
-                        @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes, @id = MenuItem.ID })
-                    </li>
-                }
-            </ul>
-        </div>
-        <div class="  container col-1  pl-5">
-            <ul class="list-unstyled m-0">
-                <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow "><div class="alerts-icon"><i style='font-size: 2.5rem;   color: #808080;' class='icon-notifications-24px '></i> <span id="alertCount" class="alert-count"></span></div>  </button> </li>
-                <div style="display:none;" id="notifications-popover">
-                    <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
-                    <div style="width:410px" class="p-4">
-                        <h5><strong>Notifications</strong></h5>
-                    </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; padding-left: 5.625rem;">
+
+                        @foreach (var MenuItem in MainMenuItems)
+                        {
+                            <li class="nav-item" style="margin-right: 4.375rem;">
+                                @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes, @id = MenuItem.ID })
+                            </li>
+                        }
+                    </ul>
                 </div>
-            </ul>
-        </div>
-        <div class="  ">
-            <ul class="list-unstyled mb-0 ">
-                <li>
-                    <div class="form-inline pr-3">
-                        <div class="md-form my-0 p-2">
-                            <a href="#" class="text-dark">
-                                @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
-                            </a>
-                            <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0">
-                                @{
-                                    var src = "/UserImages/profile_circle_big.png";
-                                    if (UserManager.GetUserAsync(User).Result.UserImage != null)
-                                    {
-                                        src = UserManager.GetUserAsync(User).Result.UserImage;
-                                    }
-                                }
-                                <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
-                            </button>
+                <div class="  container col-1  pl-5">
+                    <ul class="list-unstyled m-0">
+                        <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow "><div class="alerts-icon"><i style='font-size: 2.5rem;   color: #808080;' class='icon-notifications-24px '></i> <span id="alertCount" class="alert-count"></span></div>  </button> </li>
+                        <div style="display:none;" id="notifications-popover">
+                            <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
+                            <div style="width:410px" class="p-4">
+                                <h5><strong>Notifications</strong></h5>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <div style="display:none;" id="logout-popover">
-                    <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button type="submit" id="logout-form" class="nav-link  border-0 no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
-                    </form>
+                    </ul>
                 </div>
-            </ul>
+                <div class="  ">
+                    <ul class="list-unstyled mb-0 ">
+                        <li>
+                            <div class="form-inline pr-3">
+                                <div class="md-form my-0 p-2">
+                                    <a href="#" class="text-dark">
+                                        @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
+                                    </a>
+                                    <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0">
+                                        @{
+                                            var src = "/UserImages/profile_circle_big.png";
+                                            if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                                            {
+                                                src = UserManager.GetUserAsync(User).Result.UserImage;
+                                            }
+                                        }
+                                        <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <div style="display:none;" id="logout-popover">
+                            <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" id="logout-form" class="nav-link  border-0 no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
+                            </form>
+                        </div>
+                    </ul>
+                </div>
+
+
+            </nav>
         </div>
-
-
-    </nav>
+    </div>
 
 </header>
 <div class="container-fluid pl-0">
@@ -276,30 +280,33 @@
         <div class="center" role="status" id="loading" style="display:none;">
             <img src="~/images/css/Loading/centarix_loading3.gif" />
         </div>
-        <div style="display: flex">
-            @{ var style = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + "; min-height:100rem; padding: 5px;"; } 
-            <div style="@style" class=" d-md-block sidebar-shadow   navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
-                @*<nav class="navbar navbar-expand-lg">*@
-                <ul class="nav flex-column nav-pills nav-stacked mt-4">
-                    @{
-                        var liMargins = "mb-1";
-                    }
-                    @foreach (var sidebarNavItem in SidebarMenuItems)
-                    {
-                        <li class="nav-item @liMargins @sidebarNavItem.Classes">
-                            <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="bold-hover-effects p-1">
-                                <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
-                                <br />@sidebarNavItem.Description
-                            </a>
-                        </li>
-                        liMargins = "my-1";
-                    }
+        <div style="display: flex; ">
+            @{ var style = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + "; min-height:100rem;"; }
+            <div class="sidebar-shadow2">
+                <div class="sidebar-shadow1">
+                    <div style="@style" class="navbar-expand-lg text-center ourNavBar">
+                        @*<nav class="navbar navbar-expand-lg">*@
+                        <ul class="nav flex-column nav-pills nav-stacked nav-top-margin1">
+                            @{
+                                var liMargins = "margin-bottom: 4.063rem;";
+                            }
+                            @foreach (var sidebarNavItem in SidebarMenuItems)
+                            {
+                                <li class="nav-item @sidebarNavItem.Classes" style="@liMargins">
+                                    <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="bold-hover-effects">
+                                        <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
+                                        <br />@sidebarNavItem.Description
+                                    </a>
+                                </li>
+                            }
 
 
-                </ul>
+                        </ul>
+                    </div>
+                </div>
                 @*</nav>*@
             </div>
-            <div style="flex-grow: 1" class="outer-page-margins">
+            <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2">
                 <!--class="col-md-10 border-left"-->
                 @RenderBody()
             </div>
