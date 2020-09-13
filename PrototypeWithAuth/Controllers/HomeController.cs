@@ -112,25 +112,25 @@ namespace PrototypeWithAuth.Controllers
 
         private void fillInTimekeeperMissingDays(ApplicationUser user)
         {
-            DateTime nextDay = user.LastLogin.AddDays(1);
-            while (nextDay.Date <= DateTime.Today)
-            {
-                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
-                {
-                    var existentHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Date == nextDay.Date).FirstOrDefault();
-                    if (existentHours == null)
-                    {
-                        EmployeeHours employeeHours = new EmployeeHours
-                        {
-                            EmployeeID = user.Id,
-                            Date = nextDay.Date
-                        };
-                        _context.Update(employeeHours);
-                    }
-                }
-                nextDay = nextDay.AddDays(1);
-            }
-            _context.SaveChanges();
+            //DateTime nextDay = user.LastLogin.AddDays(1);
+            //while (nextDay.Date <= DateTime.Today)
+            //{
+            //    if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
+            //    {
+            //        var existentHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Date == nextDay.Date).FirstOrDefault();
+            //        if (existentHours == null)
+            //        {
+            //            EmployeeHours employeeHours = new EmployeeHours
+            //            {
+            //                EmployeeID = user.Id,
+            //                Date = nextDay.Date
+            //            };
+            //            _context.Update(employeeHours);
+            //        }
+            //    }
+            //    nextDay = nextDay.AddDays(1);
+            //}
+            //_context.SaveChanges();
         }
 
         private void fillInOrderLate(ApplicationUser user)

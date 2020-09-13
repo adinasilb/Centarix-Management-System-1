@@ -23,16 +23,16 @@ namespace PrototypeWithAuth.Data
         public DbSet<Degree> Degrees { get; set; }
         public DbSet<Citizenship> Citizenships { get; set; }
         public DbSet<MaritalStatus> MaritalStatuses { get; set; }
-        public DbSet<JobCategoryType> JobCategoryTypes { get; set; }
+        //public DbSet<JobCategoryType> JobCategoryTypes { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<Freelancer> Freelancers { get; set; }
-        public DbSet<EmployeeStatus> EmployeeStatuses { get; set; }
-        public DbSet<SalariedEmployee> SalariedEmployees { get; set; }
-        public DbSet<EmployeeHoursStatus> EmployeeHoursStatuses { get; set; }
-        public DbSet<OffDayType> OffDayTypes { get; set; }
-        public DbSet<EmployeeHoursAwaitingApproval> EmployeeHoursAwaitingApprovals { get; set; }
-        public DbSet<EmployeeHours> EmployeeHours { get; set; }
-        public DbSet<Employee> Employees { get; set; }
+        //public DbSet<Freelancer> Freelancers { get; set; }
+        //public DbSet<EmployeeStatus> EmployeeStatuses { get; set; }
+        //public DbSet<SalariedEmployee> SalariedEmployees { get; set; }
+        //public DbSet<EmployeeHoursStatus> EmployeeHoursStatuses { get; set; }
+        //public DbSet<OffDayType> OffDayTypes { get; set; }
+        //public DbSet<EmployeeHoursAwaitingApproval> EmployeeHoursAwaitingApprovals { get; set; }
+        //public DbSet<EmployeeHours> EmployeeHours { get; set; }
+        //public DbSet<Employee> Employees { get; set; }
         public DbSet<RequestNotificationStatus> RequestNotificationStatuses { get; set; }
         public DbSet<NotificationStatus> NotificationStatuses { get; set; }
         public DbSet<RequestNotification> RequestNotifications { get; set; }
@@ -165,9 +165,10 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ParentQuote>()
            .HasQueryFilter(item => !item.IsDeleted);
 
-            modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
-            modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
-            modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
+            //TODO: IMPORTANT: PUT BACK IN
+            //modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
+            //modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
+            //modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
 
             modelBuilder.Seed();
 

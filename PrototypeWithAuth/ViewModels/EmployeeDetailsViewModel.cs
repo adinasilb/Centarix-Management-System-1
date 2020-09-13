@@ -8,9 +8,9 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class EmployeeDetailsViewModel
     {
-        public int FreelancerCount { get; set; }
-        public int AdvisorCount { get; set; }
-        public int SalariedEmployeeCount { get; set; }
-        public List<Employee> Employees {get;set;}
+        //public int FreelancerCount { get; set; }
+        //public int AdvisorCount { get; set; }
+        //public int SalariedEmployeeCount { get; set; }
+        //public List<Employee> Employees {get;set;}
     }
 }

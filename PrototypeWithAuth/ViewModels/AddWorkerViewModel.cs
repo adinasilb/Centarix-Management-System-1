@@ -10,9 +10,9 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class AddWorkerViewModel
     {
-        public List<SelectListItem> ApplicationUsers { get; set; }
-        public Employee NewEmployee { get; set; }
-        public List<JobCategoryType> JobCategoryTypes {get; set;}
-        public List<EmployeeStatus> EmployeeStatuses { get; set; }
+        //public List<SelectListItem> ApplicationUsers { get; set; }
+        //public Employee NewEmployee { get; set; }
+        //public List<JobCategoryType> JobCategoryTypes {get; set;}
+        //public List<EmployeeStatus> EmployeeStatuses { get; set; }
     }
 }

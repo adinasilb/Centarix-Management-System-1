@@ -60,17 +60,17 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Details()
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersDetails;
-            var employees = _context.Users.OfType<Employee>().Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
-                .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobCategoryType);
+            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            //TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            //TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersDetails;
+            //var employees = _context.Users.OfType<Employee>().Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
+            //    .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobCategoryType);
             EmployeeDetailsViewModel employeeDetailsViewModel = new EmployeeDetailsViewModel
             {
-                Employees = employees.ToList(),
-                SalariedEmployeeCount = employees.Where(e => e.EmployeeStatusID == 1).Count(),
-                FreelancerCount = employees.Where(e => e.EmployeeStatusID == 2).Count(),
-                AdvisorCount = employees.Where(e => e.EmployeeStatusID == 3).Count(),
+                //Employees = employees.ToList(),
+                //SalariedEmployeeCount = employees.Where(e => e.EmployeeStatusID == 1).Count(),
+                //FreelancerCount = employees.Where(e => e.EmployeeStatusID == 2).Count(),
+                //AdvisorCount = employees.Where(e => e.EmployeeStatusID == 3).Count(),
             };
 
             return View(employeeDetailsViewModel);
@@ -116,15 +116,15 @@ namespace PrototypeWithAuth.Controllers
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
                         break;
                 }
-                var worker = new WorkerHourViewModel
-                {
-                    Employee = employee,
-                    SickDays =sickDays, 
-                    VacationDays =vacationDays,
-                    WorkingDays = workDays,
-                    Hours = hours
-                };
-                workerHoursViewModel.Add(worker);
+                //var worker = new WorkerHourViewModel
+                //{
+                //    Employee = employee,
+                //    SickDays =sickDays, 
+                //    VacationDays =vacationDays,
+                //    WorkingDays = workDays,
+                //    Hours = hours
+                //};
+                //workerHoursViewModel.Add(worker);
             }
             var viewModel = new WorkersHoursViewModel
             {
@@ -157,47 +157,47 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersAwaitingApproval;
 
-            var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatus).ToList();
-            List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
-            foreach (var ehaa in employeeHoursAwaitingApproval)
-            {
-                bool entry1 = false;
-                bool entry2 = false;
-                bool exit1 = false;
-                bool exit2 = false;
-                bool totalHours = false;
-                if (ehaa.EmployeeHours?.Entry1?.ZeroSeconds().TimeOfDay != ehaa.Entry1?.TimeOfDay)
-                {
-                    entry1 = true;
-                }
-                if (ehaa.EmployeeHours?.Entry2?.ZeroSeconds().TimeOfDay != ehaa.Entry2?.TimeOfDay)
-                {
-                    entry2 = true;
-                }
-                if (ehaa.EmployeeHours?.Exit1?.ZeroSeconds().TimeOfDay != ehaa.Exit1?.TimeOfDay)
-                {
-                    exit1 = true;
-                }
-                if (ehaa.EmployeeHours?.Exit2?.ZeroSeconds().TimeOfDay != ehaa.Exit2?.TimeOfDay)
-                {
-                    exit2 = true;
-                }
-                if (ehaa.EmployeeHours?.TotalHours != ehaa.TotalHours)
-                {
-                    totalHours = true;
-                }
-                EmployeeHoursAwaitingApprovalViewModel viewModel = new EmployeeHoursAwaitingApprovalViewModel
-                {
-                    Entry1 = entry1,
-                    Entry2 = entry2,
-                    Exit1 = exit1,
-                    Exit2 = exit2,
-                    TotalHours = totalHours,
-                    EmployeeHoursAwaitingApproval = ehaa
-                };
-                awaitingApproval.Add(viewModel);
-            }
-            return View(awaitingApproval);
+            //var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatus).ToList();
+            //List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
+            //foreach (var ehaa in employeeHoursAwaitingApproval)
+            //{
+            //    bool entry1 = false;
+            //    bool entry2 = false;
+            //    bool exit1 = false;
+            //    bool exit2 = false;
+            //    bool totalHours = false;
+            //    if (ehaa.EmployeeHours?.Entry1?.ZeroSeconds().TimeOfDay != ehaa.Entry1?.TimeOfDay)
+            //    {
+            //        entry1 = true;
+            //    }
+            //    if (ehaa.EmployeeHours?.Entry2?.ZeroSeconds().TimeOfDay != ehaa.Entry2?.TimeOfDay)
+            //    {
+            //        entry2 = true;
+            //    }
+            //    if (ehaa.EmployeeHours?.Exit1?.ZeroSeconds().TimeOfDay != ehaa.Exit1?.TimeOfDay)
+            //    {
+            //        exit1 = true;
+            //    }
+            //    if (ehaa.EmployeeHours?.Exit2?.ZeroSeconds().TimeOfDay != ehaa.Exit2?.TimeOfDay)
+            //    {
+            //        exit2 = true;
+            //    }
+            //    if (ehaa.EmployeeHours?.TotalHours != ehaa.TotalHours)
+            //    {
+            //        totalHours = true;
+            //    }
+            //    EmployeeHoursAwaitingApprovalViewModel viewModel = new EmployeeHoursAwaitingApprovalViewModel
+            //    {
+            //        //Entry1 = entry1,
+            //        //Entry2 = entry2,
+            //        //Exit1 = exit1,
+            //        //Exit2 = exit2,
+            //        //TotalHours = totalHours,
+            //        //EmployeeHoursAwaitingApproval = ehaa
+            //    };
+            //    awaitingApproval.Add(viewModel);
+            //}
+            return View(/*awaitingApproval*/);
         }
 
         [HttpGet]
@@ -208,25 +208,25 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.AddWorker;
 
-            Employee employee = new Employee();
-            if (chosenID != null)
-            {
-                employee = new Employee();
-                var user =await _context.Users.Where(u => u.Id == chosenID).FirstOrDefaultAsync();
-                employee.Id = user.Id;
-                employee.Email = user.Email;
-                employee.PhoneNumber = user.PhoneNumber;
-                employee.CentarixID = user.CentarixID;                
-            }
-            AddWorkerViewModel addWorkerViewModel = new AddWorkerViewModel
-            {
-                ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).Select(u=> new SelectListItem { Value=u.Id, Text=u.FirstName+" "+u.LastName}).ToListAsync(),
-                JobCategoryTypes = await _context.JobCategoryTypes.Select(jc => jc).ToListAsync(),
-                EmployeeStatuses = await _context.EmployeeStatuses.Select(es => es).ToListAsync(),
-                NewEmployee = employee,
-             };
+            //Employee employee = new Employee();
+            //if (chosenID != null)
+            //{
+            //    employee = new Employee();
+            //    var user =await _context.Users.Where(u => u.Id == chosenID).FirstOrDefaultAsync();
+            //    employee.Id = user.Id;
+            //    employee.Email = user.Email;
+            //    employee.PhoneNumber = user.PhoneNumber;
+            //    employee.CentarixID = user.CentarixID;                
+            //}
+            //AddWorkerViewModel addWorkerViewModel = new AddWorkerViewModel
+            //{
+            //    ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).Select(u=> new SelectListItem { Value=u.Id, Text=u.FirstName+" "+u.LastName}).ToListAsync(),
+            //    JobCategoryTypes = await _context.JobCategoryTypes.Select(jc => jc).ToListAsync(),
+            //    EmployeeStatuses = await _context.EmployeeStatuses.Select(es => es).ToListAsync(),
+            //    NewEmployee = employee,
+            // };
            
-            return View(addWorkerViewModel);
+            return View(/*addWorkerViewModel*/);
 
         }
 
@@ -235,49 +235,49 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> ApproveHours(int id)
         {
-            EmployeeHours employeeHours = new EmployeeHours();
-            var employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).FirstOrDefaultAsync();
-            var oldEmployeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
-            if (oldEmployeeHours != null)
-            {
-                if (oldEmployeeHours.EmployeeHoursStatusID != 1)
-                {
-                    oldEmployeeHours.EmployeeHoursStatusID = employeeHoursBeingApproved.EmployeeHoursStatusID;
-                }
-                oldEmployeeHours.Entry1 = employeeHoursBeingApproved.Entry1;
-                oldEmployeeHours.Entry2 = employeeHoursBeingApproved.Entry2;
-                oldEmployeeHours.Exit1 = employeeHoursBeingApproved.Exit1;
-                oldEmployeeHours.Exit2 = employeeHoursBeingApproved.Exit2;
-                oldEmployeeHours.TotalHours = employeeHoursBeingApproved.TotalHours;
-                employeeHours = oldEmployeeHours;
-            }
-            else
-            {
-                employeeHours = new EmployeeHours
-                {
-                    Entry1 = employeeHoursBeingApproved.Entry1,
-                    Entry2 = employeeHoursBeingApproved.Entry2,
-                    Exit1 = employeeHoursBeingApproved.Exit1,
-                    Exit2 = employeeHoursBeingApproved.Exit2,
-                    TotalHours = employeeHoursBeingApproved.TotalHours,
-                    EmployeeHoursStatusID = employeeHoursBeingApproved.EmployeeHoursStatusID,
-                    EmployeeID = employeeHoursBeingApproved.EmployeeID,
-                    Date = employeeHoursBeingApproved.Date
-                };
-            }
-            try
-            {
-                _context.Update(employeeHours);
-                await _context.SaveChangesAsync();
-                _context.Remove(employeeHoursBeingApproved);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
-            }
+            //EmployeeHours employeeHours = new EmployeeHours();
+            //var employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).FirstOrDefaultAsync();
+            //var oldEmployeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
+            //if (oldEmployeeHours != null)
+            //{
+            //    if (oldEmployeeHours.EmployeeHoursStatusID != 1)
+            //    {
+            //        oldEmployeeHours.EmployeeHoursStatusID = employeeHoursBeingApproved.EmployeeHoursStatusID;
+            //    }
+            //    oldEmployeeHours.Entry1 = employeeHoursBeingApproved.Entry1;
+            //    oldEmployeeHours.Entry2 = employeeHoursBeingApproved.Entry2;
+            //    oldEmployeeHours.Exit1 = employeeHoursBeingApproved.Exit1;
+            //    oldEmployeeHours.Exit2 = employeeHoursBeingApproved.Exit2;
+            //    oldEmployeeHours.TotalHours = employeeHoursBeingApproved.TotalHours;
+            //    employeeHours = oldEmployeeHours;
+            //}
+            //else
+            //{
+            //    employeeHours = new EmployeeHours
+            //    {
+            //        Entry1 = employeeHoursBeingApproved.Entry1,
+            //        Entry2 = employeeHoursBeingApproved.Entry2,
+            //        Exit1 = employeeHoursBeingApproved.Exit1,
+            //        Exit2 = employeeHoursBeingApproved.Exit2,
+            //        TotalHours = employeeHoursBeingApproved.TotalHours,
+            //        EmployeeHoursStatusID = employeeHoursBeingApproved.EmployeeHoursStatusID,
+            //        EmployeeID = employeeHoursBeingApproved.EmployeeID,
+            //        Date = employeeHoursBeingApproved.Date
+            //    };
+            //}
+            //try
+            //{
+            //    _context.Update(employeeHours);
+            //    await _context.SaveChangesAsync();
+            //    _context.Remove(employeeHoursBeingApproved);
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (Exception ex)
+            //{
+            //    TempData["ErrorMessage"] = ex.Message;
+            //    TempData["InnerMessage"] = ex.InnerException;
+            //    return View("~/Views/Shared/RequestError.cshtml");
+            //}
           
             return Redirect("AwaitingApproval");
         }
