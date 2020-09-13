@@ -1,0 +1,46 @@
+﻿
+.on-form-modal {
+    box-shadow: none;
+    max-height: 100%;
+    margin-top: -2.9rem;
+}
+
+.on-form-modal-border {
+    border: .031rem solid #DCDCDC;
+}
+
+.modal-line-1-header {
+    padding-top: 3.75rem;
+}
+
+.div-tabs{
+    padding-top: 3.75rem;
+}
+
+.modal-sides {
+    padding-left: 5.375rem !important;
+    padding-right: 5.375rem !important;
+}
+
+.nav-item.icon{
+    font-size: 1.125rem;
+}
+
+.icon .nav-link{
+    padding: 0;
+}
+
+.nav-tabs-icons {
+    display: inline-flex;
+    justify-content: space-between;
+    color: #666666;
+}
+
+.modal-body-top-p{
+    padding-top: 4.5rem;
+}
+
+/*OVERRIDING BOOTSTRAP*/
+.tab-content {
+    padding: 0 !important;
+}
