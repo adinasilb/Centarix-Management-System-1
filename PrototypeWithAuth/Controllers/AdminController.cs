@@ -120,6 +120,17 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        public IActionResult AddPerson()
+        {
+
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
+
+            return View();
+        }
+
+        [HttpGet]
         [Authorize(Roles = "Admin, Users")]
         public IActionResult CreateUser()
         {

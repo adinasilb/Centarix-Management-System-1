@@ -982,7 +982,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Add",
                 Controller = "Admin",
-                Action = "CreateUser",
+                Action = "AddPerson",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-add_circle_outline-24px"
