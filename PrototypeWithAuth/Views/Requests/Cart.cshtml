@@ -103,8 +103,9 @@
                         }
                         @stringItemCost
                     </td>
-                    <td width="10%" style="border-right: 2px solid #ebebeb;">
+                    <td width="10%" class="border-right">
                         <button class="btn no-box-shadow p-0 mx-5 load-confirm-delete-quote" data-title="delete" value="@request.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
+                        </button>
                     </td>
                 </tr>
                 }
@@ -114,7 +115,7 @@
                     <td></td>
                
                     <td>
-                        <h5><strong>Items: @vendor.Count()</strong></h5>
+                        <span class="text font-weight-bold">Items: @vendor.Count()</span>
                     </td>
                     <td colspan="2">
                         @{
@@ -122,10 +123,10 @@
                             var decTotalCost = (decimal)totalCost;
                             var stringTotalCost = decTotalCost.ToString("C02");
                         }
-                        <h5><strong>Total: @stringTotalCost</strong></h5>
+                        <span class="text font-weight-bold">Total: @stringTotalCost</span>
                     </td>
                     <td>
-                        <button class="inv-button float-right load-terms-modal cart" type="button" value="@vendor.Key.VendorID">Order</button>
+                        <button class="custom-button-font custom-button order-inv-background-color float-right load-terms-modal cart" type="button" value="@vendor.Key.VendorID">Order</button>
                         @*<button class="inv-button float-right load-confirm-email cart" type="button" value="@vendor.Key.VendorID">Order</button>*@
                     </td>
                 </tr>

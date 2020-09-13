@@ -4,7 +4,7 @@
 
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; max-width:35rem; overflow-y:auto;">
+    <div class="modal-dialog modal-lg rounded-reorder" role="document" style="max-height:100%; max-width:35rem; overflow-y:auto;">
 
         <div class="modal-content d-inline-block" style="width:35rem;">
 
@@ -22,17 +22,17 @@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
 
                 <div class="new-modal-header border-bottom box-shadow" style="padding: 1em 2em">
-                    <h3>Are you sure you would like to delete @Model.Request.Product.ProductName ?</h3>
+                    <span class="heading-1">Are you sure you would like to delete @Model.Request.Product.ProductName ?</span>
                 </div>
 
                 <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
-                    <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 1em 2em; border: 2px solid #EAEAEB;">
-                        <span style="font-size: 1.7em;">Details:</span>
+                    <div class="container-fluid div-tabs box-shadow">
+                        <span class="text pt-2">Details:</span>
                         <hr />
                         <div class="row">
                             <div class="col-4">
                                 <div class="form-group">
-                                    <label class="control-label" style="font-weight:500;">@Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)</label>
+                                    <label class="control-label " >@Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)</label>
                                     <input class="form-control-plaintext border-bottom" value="@Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)" disabled />
                                 </div>
                             </div>
@@ -81,10 +81,12 @@
 
 
                 </div>
+                <div class="modal-footer" style="padding: 2em;">
+                    <div class="text-center">
 
-                <div class="modal-footer-nope" style="padding: 2em;">
-                    <input type="submit" asp-action="DeleteModal" value="Confirm" class="inv-button float-left mb-4" />
-                    <button class="cancel-button float-right mb-4" data-dismiss="modal">Cancel</button>
+                        <input type="submit" asp-action="DeleteModal" value="Confirm" class="custom-button custom-button-font order-inv-background-color mb-4 between-button-margin" />
+                        <button class="custom-cancel custom-button  mb-4" data-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
 
             </form>

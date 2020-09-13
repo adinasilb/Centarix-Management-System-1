@@ -150,8 +150,12 @@ body{
     font-size: 1rem;
     font-weight: var(--bold-light)
 }
-.text-field-placeholder {
-    font-size: 1rem;
+input {
+    font-size: 1rem !important;
+    font-weight: var(--bold-regular) !important
+}
+.control-label {
+    font-size: .75rem;
     font-weight: var(--bold-regular)
 }
 .button {
@@ -166,21 +170,26 @@ body{
 }
 
 .custom-cancel {
-    border: .0625rem solid #000000DB;
+    border: .0625rem solid #000000DB !important;
     background-color:transparent;
     font-weight: var(--bold-light);
     font-size: 1.438rem;
 }
 
+.custom-cancel:hover {
+    background-color: rgba(229,229,229, .55);
+}
 
-table td, table td .btn, .text {
+.custom-button-font:hover {
+    opacity: 0.67;
+}
+
+
+
+table td, table td .btn, .text, table th {
     font-size: var(--text-font-size) !important;
     font-weight: var(--text-font-size) !important;
     text-transform: capitalize
-}
-
-table th {
-    font-size: var(--text-font-size) !important;
 }
 
 /*margins*/
@@ -195,7 +204,28 @@ table th {
 .nav-top-margin2 {
     margin-top: 5rem;
 }
+.m-6 {
+    margin: 4rem !important;
+}
 
+.mt-6 {
+    margin-top: 4rem !important;
+}
+
+.mb-6 {
+    margin-bottom: 4rem !important;
+}
+
+.mr-6 {
+    margin-right: 4rem !important;
+}
+
+.ml-6 {
+    margin-left: 4rem !important;
+}
+.between-button-margin{
+    margin-right:3.125rem;
+}
 
 /*body shadows*/
 .sidebar-shadow1 {

@@ -219,8 +219,8 @@
 
                         @foreach (var MenuItem in MainMenuItems)
                         {
-                            <li class="nav-item" style="margin-right: 4.375rem;">
-                                @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes, @id = MenuItem.ID })
+                            <li class="nav-item " style="margin-right: 4.375rem;">
+                                @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes+" top-menu", @id = MenuItem.ID })
                             </li>
                         }
                     </ul>
@@ -230,8 +230,8 @@
                         <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow "><div class="alerts-icon"><i style='font-size: 2.5rem;   color: #808080;' class='icon-notifications-24px '></i> <span id="alertCount" class="alert-count"></span></div>  </button> </li>
                         <div style="display:none;" id="notifications-popover">
                             <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
-                            <div style="width:410px" class="p-4">
-                                <h5><strong>Notifications</strong></h5>
+                            <div style="width:410px" class="p-4 heading-1">
+                                Notifications
                             </div>
                         </div>
                     </ul>
@@ -241,9 +241,9 @@
                         <li>
                             <div class="form-inline pr-3">
                                 <div class="md-form my-0 p-2">
-                                    <a href="#" class="text-dark">
+                                    <span class="text">
                                         @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
-                                    </a>
+                                    </span>
                                     <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0">
                                         @{
                                             var src = "/UserImages/profile_circle_big.png";
@@ -292,7 +292,7 @@
                             }
                             @foreach (var sidebarNavItem in SidebarMenuItems)
                             {
-                                <li class="nav-item @sidebarNavItem.Classes" style="@liMargins">
+                                <li class="nav-item @sidebarNavItem.Classes side-menu px-2" style="@liMargins">
                                     <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="bold-hover-effects">
                                         <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
                                         <br />@sidebarNavItem.Description

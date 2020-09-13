@@ -12,7 +12,7 @@
             </div>
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;">
-               
+
                 <div style="padding:1rem 2rem">
 
                     <header class="page-header">
@@ -133,11 +133,14 @@
                     <br />
                     <br />
                     <div class="modal-footer p-4" style="justify-content:space-evenly;">
-                        <input asp-for="VendorId" style="display: none;" />
-                        <input type="submit" class="inv-lab-button" asp-action="ConfirmQuoteOrderEmailModal" value="Confirm & Send Email" />
-                        <button class="cancel-button cancel-email" data-dismiss="modal">Cancel</button>@*FAIGE: should this delete the request?*@
-                    </div>
+                        <div>
+                            <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
+
+                            <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel Email</button>
+                        </div>
                 </div>
+
+</div>
 
                 <script>
                     var today = new Date();

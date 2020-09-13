@@ -577,53 +577,9 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 
-    .cancel-button:hover {
-        background-color: rgba(229,229,229, .55);
-    }
-
-.inv-button {
-    background-color: var(--order-inv-color);
-    border: 1px solid var(--order-inv-color);
-    border-radius: 3rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.56rem 1.5rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
-    /*text-transform: uppercase;*/
-}
-
-.lab-man-button {
-    background-color: var(--lab-man-color);
-    border: 1px solid var(--lab-man-color);
-    border-radius: 3rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.56rem 1.5rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
-    /*text-transform: uppercase;*/
-}
-
-.timekeeper-button {
-    background-color: var(--timekeeper-color);
-    border: 1px solid var(--timekeeper-color);
-    border-radius: 3rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.56rem 1.5rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
-    /*text-transform: uppercase;*/
-}
-
 .oper-button {
     background-color: var(--operations-color);
     border: 1px solid var(--operations-color);
-}
-
-.inv-button:hover, inv-user-button:hover {
-    opacity: 0.67;
 }
 
 .form-control-file::-webkit-file-upload-button {
@@ -667,90 +623,11 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 
-.inv-lab-button {
-    background-color: var(--lab-man-color);
-    border: 1px solid var(--lab-man-color);
-    border-radius: 3rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.56rem 1.5rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
-    /*text-transform: uppercase;*/
-}
 
-.inv-lab-button-submit {
-    background-color: var(--lab-man-color);
-    border: 1px solid var(--lab-man-color);
-    border-radius: 3rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.56rem 1.5rem;
-    font-size: 1.5625rem;
-    line-height: 1.5;
-    /*text-transform: capitalize;*/
-}
-
-.quote-lab-button {
-    background-color: var(--lab-man-color);
-    border: 1px solid var(--lab-man-color);
-    border-radius: 3rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.56rem 1.5rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
-    text-transform: uppercase;
-}
-
-.inv-user-button {
-    background-color: var(--user-color);
-    border: 1px solid var(--user-color);
-    border-radius: 3rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.56rem 1.5rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
-    /*text-transform: uppercase;*/
-}
 
     .inv-user-button.disabled-submit {
         border: 0 !important;
     }
-
-.inv-supplier-button {
-    background-color: var(--acc-color);
-    border: 1px solid var(--acc-color);
-    border-radius: 3rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.56rem 1.5rem;
-    font-size: 1.5625rem;
-    line-height: 1.5;
-}
-
-.inv-payments-button {
-    background-color: var(--acc-color);
-    border: 1px solid var(--acc-color);
-    border-radius: 3rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.56rem 3.25rem;
-    font-size: 1.2rem;
-    line-height: 1;
-}
-
-.inv-clear-button {
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 3rem;
-    color: black;
-    font-weight: 500;
-    padding: 0.56rem 3.25rem;
-    font-size: 1.2rem;
-    line-height: 1;
-}
 
 #createModalForm .mdb-select li:nth-child(2) {
     z-index: 1;
@@ -769,163 +646,10 @@ input.select-dropdown {
     height: 2.5em;
 }
 
-/*.inv-permissions-button input {
-        border-bottom: none !important;
-    }
-
-    .inv-permissions-button ul.dropdown-content {
-        margin-top: 2rem;
-    }
-
-        .inv-permissions-button ul.dropdown-content li > span,
-        .inv-permissions-button ul.dropdown-content li > a {
-            color: black;
-        }
-
-.orders-color {
-    color: #30BCC9;
-    border: 1px solid #30BCC9;
-    border-radius: 3rem;
-}
-
-    .orders-color:hover {
-        color: #fff;
-        background-color: #30BCC9;
-    }
-
-
-select option[value="US"] {
-    background-image: url(flags/usa.png);
-}
-
-.protocols-color {
-    color: #00CA72;
-    border: 1px solid #00CA72;
-    border-radius: 3rem;
-}
-
-    .protocols-color:hover {
-        color: #fff;
-        background-color: #00CA72;
-    }
-
-.operation-color {
-    color: #5F79E2;
-    border: 1px solid #5F79E2;
-    border-radius: 3rem;
-}
-
-    .operation-color:hover {
-        color: #fff;
-        background-color: #5F79E2;
-    }
-
-.biomarkers-color {
-    color: #E95252;
-    border: 1px solid #E95252;
-    border-radius: 3rem;
-}
-
-    .biomarkers-color:hover {
-        color: #fff;
-        background-color: #E95252;
-    }
-
-
-.labmanagement-color {
-    color: #D5A522;
-    border: 1px solid #D5A522;
-    border-radius: 3rem;
-}
-
-    .labmanagement-color:hover {
-        color: #fff;
-        background-color: #D5A522;
-    }
-
-.accounting-color {
-    color: #A26FF0;
-    border: 1px solid #A26FF0;
-    border-radius: 3rem;
-}
-
-    .accounting-color:hover {
-        color: #fff;
-        background-color: #A26FF0;
-    }
-
-.expenses-color {
-    color: #E27933;
-    border: 1px solid #E27933;
-    border-radius: 3rem;
-}
-
-    .expenses-color:hover {
-        color: #fff;
-        background-color: #E27933;
-    }
-
-.income-color {
-    color: #90C939;
-    border: 1px solid #90C939;
-    border-radius: 3rem;
-}
-
-    .income-color:hover {
-        color: #fff;
-        background-color: #90C939;
-    }
-
-
-
-.users-color {
-    color: #DB669D;
-    border: 1px solid #DB669D;
-    border-radius: 3rem;
-}
-
-    .users-color:hover {
-        color: #fff;
-        background-color: #DB669D;
-    }*/
-
 .main-permissions span {
     font-size: .85em;
 }
 
-/*.disabled-permissions {
-    filter: grayscale(100%);
-}*/
-
-
-/*.orders-color input.select-dropdown.form-control {
-    padding-bottom: .3em !important;
-    padding-left: 2.2em !important;
-    background-image: url(../images/css/usericons/inventory_dropdown.png);
-    background-repeat: no-repeat;
-}
-
-.protocols-color input.select-dropdown.form-control {
-    padding-bottom: .3em !important;
-    padding-left: 2.2em !important;
-    background-image: url(../images/css/usericons/protocols_dropdown.png);
-    background-repeat: no-repeat;
-}
-
-.labmanagement-color input.select-dropdown.form-control {
-    padding-bottom: .3em !important;
-    padding-left: 2.2em !important;
-    background-image: url(../images/css/usericons/labmanagments_dropdown.png);
-    background-repeat: no-repeat;
-}
-
-.accounting-color input.select-dropdown.form-control {
-    padding-bottom: .3em !important;
-    padding-left: 2.2em !important;
-    background-image: url(../images/css/usericons/accounting_dropdown@2x.png);
-    background-size: 1em;
-    background-repeat: no-repeat;
-}*/
 .edit-user-modal /*the a that opens it*/ {
     color: #000;
     text-decoration: none;
@@ -962,12 +686,6 @@ select option[value="US"] {
         text-decoration: none;
     }
 
-
-
-
-table th {
-    font-size: 1rem;
-}
 
 .acc-link-clr {
     color: black;
@@ -1740,10 +1458,6 @@ td .btn {
         opacity: 0;
     }
 
-.navbar-nav li a {
-    font-weight: normal;
-}
-
 .alerts-icon {
     position: relative;
 }
@@ -1785,25 +1499,7 @@ td .btn {
     border-radius: 3.8rem;
 }
 
-.m-6 {
-    margin: 4rem !important;
-}
 
-.mt-6 {
-    margin-top: 4rem !important;
-}
-
-.mb-6 {
-    margin-bottom: 4rem !important;
-}
-
-.mr-6 {
-    margin-right: 4rem !important;
-}
-
-.ml-6 {
-    margin-left: 4rem !important;
-}
 
 .custom.select-wrapper input.select-dropdown {
     border: 0.063rem solid #808080;
