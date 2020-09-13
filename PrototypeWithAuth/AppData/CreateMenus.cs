@@ -67,6 +67,19 @@ namespace PrototypeWithAuth.AppData
                 Classes = AllClasses,
                 ID = "location-link"
             });
+            if (MainMenu == AppUtility.RequestPageTypeEnum.Cart.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Personal",
+                Controller = "Requests",
+                Action = "Cart",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", AppUtility.RequestPageTypeEnum.Cart }
+                },
+                Classes = AllClasses,
+                ID = "personal-link"
+            });
             if (MainMenu == AppUtility.RequestPageTypeEnum.Inventory.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {

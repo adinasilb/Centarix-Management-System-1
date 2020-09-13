@@ -4,26 +4,6 @@
     ViewData["Title"] = "GeneralPaymentList";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<div style="display:flex">
-
-    @*<div style="width: 100px; min-height:100rem;" class="p-2 border-right sidebar-shadow text-center">
-        <<<<< side navbar >>>>>
-        <ul class="nav flex-column nav-pills nav-stacked mt-4">
-            @{int yearCount = 0;}
-            @foreach (var group in Model.GroupBy(m => m.OrderDate.Year))
-            {
-                <li class="nav-item m-3">
-                    <a href="#@group.Key">
-                        <strong style="        color: var(--acc-color);"> @group.Key </strong>
-                    </a>
-                </li>
-                yearCount++;
-            }
-        </ul>
-
-    </div>*@
-    @*<<<< content >>>>>*@
-    <div style="flex-grow:1;" class="outer-page-margins">
 
         @foreach (var group in Model.GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month }))
         {
@@ -75,9 +55,9 @@
                         //int index = 0;
                         @if (total.Equals(group.Count()))
                         {
-                            <h5 id=@item.OrderDate.Year>
-                                @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.OrderDate.Month) [@total]
-                            </h5>
+                            <div class="heading-1 d-inline-flex" id=@item.OrderDate.Year>
+                                @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.OrderDate.Month) &nbsp; <div class="text pt-2 pb-0">[@total]</div>
+                            </div>
 
                         }
                         var cult = System.Globalization.CultureInfo.CurrentCulture;
@@ -130,9 +110,6 @@
             </table>
             <br />
         }
-
-    </div>
-</div>
 
 
 <script>
