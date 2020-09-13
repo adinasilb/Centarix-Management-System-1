@@ -8,30 +8,35 @@
     <thead>
         <tr style="border-color:transparent;">
             <th colspan="8" style="border-color:transparent;" class="pt-2">
-                <h5>
-                    @{
-                        var count = 0;
-                        if (Model.Requests != null)
-                        {
-                            var vendorsCount = Model.Requests.Count();
-                            for (int x=0; x<vendorsCount; x++)
+                <div class="d-inline-flex">
+                    <div class="heading-1">
+                        @{
+                            var count = 0;
+                            if (Model.Requests != null)
                             {
-                                count += Model.Requests.ElementAt(x).Count();
+                                var vendorsCount = Model.Requests.Count();
+                                for (int x = 0; x < vendorsCount; x++)
+                                {
+                                    count += Model.Requests.ElementAt(x).Count();
+                                }
                             }
                         }
-                    }
-                    <strong>@Model.AccountingPaymentsEnum</strong> &nbsp; [@count]
-                    @{
-                        var totalCost = 0;
-                        var decCost = (decimal)totalCost;
-                        var formattedTotalCost = decCost.ToString("C02");
-                    }
-                    <span>&emsp; Total: </span><span>@formattedTotalCost</span>
-                </h5>
+                        @Html.DisplayFor(m=>m.AccountingPaymentsEnum) &nbsp;
+                    </div>
+                    <div class="text pt-2">
+                        [@count]
+                        @{
+                            var totalCost = 0;
+                            var decCost = (decimal)totalCost;
+                            var formattedTotalCost = decCost.ToString("C02");
+                        }
+                        <span>&emsp; Total: </span><span>@formattedTotalCost</span>
+                    </div>
+                </div>
             </th>
         </tr>
-        <tr class="text-center">
-            <td style="width:11.1%;">
+        <tr class="text-center text">
+            <td style="width:8%;">
                 No
             </td>
             <td style="width:11.1%;"></td>
@@ -55,22 +60,23 @@
             </td>
             <td style="width:11.1%">
             </td>
+
         </tr>
     </thead>
 </table>
 @foreach (var Vendor in Model.Requests)
 {
-    <div class="mt-5 mr-5">
+    <div class="mt-5 ">
         <div class=" row text-dark ">
-            <div class="col-2"><h5>@Vendor.Key.VendorEnName</h5></div>
+            <div class="col-2 text-capitalize heading-1"><h5>@Vendor.Key.VendorEnName.ToLower()</h5></div>
             <div class="col-10"><hr /></div>
         </div>
-        <table class="table table-headerspaced table-borderless table-hover mt-3 ">
+        <table class="table table-headerspaced table-borderless table-hover mt-3 text ">
             <tbody>
                 @foreach (var Request in Vendor)
                 {
                     <tr class="text-center">
-                        <td class="text-center" style="width:11.1%;">
+                        <td class="text-center" style="width:8%;">
                             <div class="form-check text-center">
                                 <input type="checkbox" class="form-check-input" id="@Request.RequestID" /><br />
                                 <label for="@Request.RequestID" class="form-check-label pl-0" style="margin-left: -1.7rem">
@@ -105,7 +111,7 @@
                             @formattedRequestCost
                         </td>
                         <td style="width:11.1%">
-                            @Vendor.Key.VendorEnName
+                            @Vendor.Key.VendorEnName.ToLower()
                         </td>
                         <td style="width:11.1%">
                             @Request.Product.ProductSubcategory.ProductSubcategoryDescription

@@ -1,4 +1,8 @@
-﻿@model PrototypeWithAuth.ViewModels.AccountingPaymentsViewModel
+﻿@using System;
+@using System.ComponentModel.DataAnnotations;
+@using System.Linq;
+@using System.Reflection;
+@model PrototypeWithAuth.ViewModels.AccountingPaymentsViewModel
 @{
     ViewData["Title"] = "AccountingNotifications";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
@@ -7,32 +11,40 @@
 <script src="~/js/site.js"></script>
 <table class="table table-headerspaced table-borderless table-hover">
     <thead>
-        <tr style="border-color:transparent;">
-            <th colspan="8" style="border-color:transparent;" class="pt-2">
-                <h5>
-                    @{
-                        var count = 0;
-                        if (Model.Requests != null)
-                        {
-                            var vendorsCount = Model.Requests.Count();
-                            for (int x = 0; x < vendorsCount; x++)
+        <tr class="border-0">
+
+            <th colspan="8" class=" p-0 ">
+                <div class="d-inline-flex">
+                    <div class="heading-1">
+                        @{
+                            var count = 0;
+                            if (Model.Requests != null)
                             {
-                                count += Model.Requests.ElementAt(x).Count();
+                                var vendorsCount = Model.Requests.Count();
+                                for (int x = 0; x < vendorsCount; x++)
+                                {
+                                    count += Model.Requests.ElementAt(x).Count();
+                                }
                             }
                         }
-                    }
-                    <strong>@Model.AccountingNotificationsEnum</strong> &nbsp; [@count]
-                    @{
-                        var totalCost = 0;
-                        var decCost = (decimal)totalCost;
-                        var formattedTotalCost = decCost.ToString("C02");
-                    }
-                    <span>&emsp; Total: </span><span>@formattedTotalCost</span>
-                </h5>
+                       @Html.DisplayFor(m=>m.AccountingNotificationsEnum)
+                        &nbsp;&nbsp;
+                        </div>
+                        <div class="text pt-2">
+                            [@count]
+                            @{
+                                var totalCost = 0;
+                                var decCost = (decimal)totalCost;
+                                var formattedTotalCost = decCost.ToString("C02");
+                            }
+                            <span>&emsp; Total: </span><span>@formattedTotalCost</span>
+                        </div>
+                    </div>
             </th>
+
         </tr>
         <tr class="text-center">
-            <td style="width:11.1%;">
+            <td style="width:8%;">
                 No
             </td>
             <td style="width:11.1%;"></td>
@@ -61,28 +73,28 @@
 </table>
 @foreach (var Vendor in Model.Requests)
 {
-    <div class="mb-5 mr-5">
+    <div class="mb-5 ">
         <div class=" row text-dark ">
-            <div class="col-2"><h5><strong>@Vendor.Key.VendorEnName</strong></h5></div>
+            <div class="col-2 heading-1 text-capitalize">@Vendor.Key.VendorEnName.ToLower()</div>
             <div class="col-10"><hr /></div>
         </div>
         <table class="table table-headerspaced table-borderless table-hover mt-3 ">
-            <tbody>
+            <tbody class="text-center">
                 @{
                     double VendorTotal = 0;
                 }
                 @foreach (var Request in Vendor)
                 {
                     <tr class="text-center">
-                        <td class="text-center" style="width:11.1%;">
+                        <td class="text-center" style="width:8%;">
                             <div class="form-check accounting-select">
                                 <input type="checkbox" class="form-check-input filled-in" id="@Request.RequestID">
                                 <label class="form-check-label" for="@Request.RequestID">@Request.RequestID</label>
                             </div>
                             @*<div class="form-check text-center">
-                                <input type="checkbox" class="form-check-input" id="@Request.RequestID" /><br />
-                                
-                            </div>*@
+                                    <input type="checkbox" class="form-check-input" id="@Request.RequestID" /><br />
+
+                                </div>*@
                         </td>
                         <td style="width:11.1%;">
                             @if (Request.Product.ProductSubcategory.ImageURL != null)
@@ -111,7 +123,7 @@
                             @formattedRequestCost
                         </td>
                         <td style="width:11.1%">
-                            @Vendor.Key.VendorEnName
+                            @Vendor.Key.VendorEnName.ToLower()
                         </td>
                         <td style="width:11.1%">
                             @Request.Product.ProductSubcategory.ProductSubcategoryDescription
@@ -166,7 +178,7 @@
 
                     <span>&emsp; Total: </span><span>@(((decimal)(VendorTotal)).ToString("C02"))</span>
 
-                    <button class="inv-payments-button ml-5 float-right invoice-add-all" vendor="@Vendor.Key.VendorID" >Add to All</button>
+                    <button class="inv-payments-button ml-5 float-right invoice-add-all" vendor="@Vendor.Key.VendorID">Add to All</button>
                 </div>
             </div>
         </div>

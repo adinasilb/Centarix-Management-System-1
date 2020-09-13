@@ -5,6 +5,8 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,8 +32,24 @@ namespace PrototypeWithAuth.AppData
         public enum TimeKeeperPageTypeEnum { None, Report, TimekeeperSummary }
         public enum TimeKeeperSidebarEnum { ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences }
         public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }
-        public enum AccountingNotificationsEnum { NoInvoice, DidntArrive, PartialDelivery, ForClarification }
-        public enum AccountingPaymentsEnum { MonthlyPayment, PayNow, PayLater, Installments, StandingOrders }
+        public enum AccountingNotificationsEnum {
+            [Display(Name = "No Invoice")]
+            NoInvoice,
+            [Display(Name = "Didnt Arrive")]
+            DidntArrive,
+            [Display(Name = "Partial Delivery")]
+            PartialDelivery,
+            [Display(Name = "For Clarification")]
+            ForClarification }
+        public enum AccountingPaymentsEnum {
+            [Display(Name = "Monthly Payment")]
+            MonthlyPayment,
+            [Display(Name = "Pay Now")] 
+            PayNow,
+            [Display(Name = "Pay Later")]
+            PayLater, Installments,
+            [Display(Name = "Standing Orders")]
+            StandingOrders }
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
