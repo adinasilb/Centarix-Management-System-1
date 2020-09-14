@@ -147,9 +147,18 @@ namespace PrototypeWithAuth.Controllers
             _context.VendorComments.Where(c => c.VendorID == id).ToList().ForEach(c => vendorComments.Add(new AddCommentViewModel { VendorComment = c, IsActive = true }));
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
-
-            //tempdata page type for active tab link
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;           
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
+            }
+            else if (SectionType == AppUtility.MenuItems.Accounting)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
+                TempData["Action"] = AppUtility.SuppliersEnum.NewSupplier;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
+            }
             return View(createSupplierViewModel);
         }
 
@@ -414,10 +423,19 @@ namespace PrototypeWithAuth.Controllers
             }
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
-      
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             //tempdata page type for active tab link
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
-
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
+            }
+            else if (SectionType == AppUtility.MenuItems.Accounting)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
+                TempData["Action"] = AppUtility.SuppliersEnum.NewSupplier;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
+            }
             return View(createSupplierViewModel);
         }
 
