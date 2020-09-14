@@ -25,14 +25,14 @@
                 @Html.HiddenFor(model => model.Page)
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
 
                 <!-- Modal Header -->
                 <div class="new-modal-header no-box-shadow" style="padding: 0.5em 6em">
                     @if (TempData["ErrorMessage"] != null)
                     {
-                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
 
@@ -67,7 +67,7 @@
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.Unit" class="control-label"></label>
                                         <input asp-for="Request.Unit" class="form-control-plaintext border-bottom align-with-select" min="1" />
-                                        <span asp-validation-for="Request.Unit" class="text-danger"></span>
+                                        <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -78,7 +78,7 @@ Model.UnitTypeList,
 "",
 htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary " }
 )
-                                            <span asp-validation-for="Request.UnitType" class="text-danger"></span>
+                                            <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -107,7 +107,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubUnit" class="control-label"></label>
                                         <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom align-with-select" min="0" disabled />
-                                        <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
+                                        <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubUnitType" class="control-label"></label>
@@ -117,7 +117,7 @@ Model.UnitTypeList,
 "",
 htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
 )
-                                        <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
+                                        <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -145,7 +145,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubSubUnit" class="control-label"></label>
                                         <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom align-with-select" min="0" disabled />
-                                        <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
+                                        <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
@@ -155,7 +155,7 @@ Model.UnitTypeList,
 "",
 htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary ", @disabled = "disabled" }
 )
-                                        <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
+                                        <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -195,7 +195,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
                                     <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1"/>
-                                    <span class="text-danger" asp-validation-for="Request.Cost"></span>
+                                    <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                 </div>
                             </div>
                         </div>

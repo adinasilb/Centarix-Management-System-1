@@ -179,24 +179,24 @@ $(function () {
 		htmlTR += "<tr class='payment-line'>";
 		htmlTR += "<td>";
 		htmlTR += '<input class="form-control-plaintext border-bottom payment-date" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
+		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
 		htmlTR += '</td>';
 		htmlTR += '<td>';
 		htmlTR += '<select class="form-control-plaintext border-bottom paymentType" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
 		htmlTR += '<option value="1">Credit Card</option>';
 		htmlTR += '<option value="2">Bank Account</option>';
 		htmlTR += '</select>';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
+		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
 		htmlTR += '</td>';
 		htmlTR += '<td>';
 		var newPaymentsId = "NewPayments_" + increment + "__CompanyAccountID";
 		var newPaymentsName = "NewPayments[" + increment + "].CompanyAccountID";
 		htmlTR += '<select class="form-control-plaintext border-bottom companyAccountNum" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
+		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
 		htmlTR += '</td>';
 		htmlTR += '<td>';
 		htmlTR += '<input class="form-control-plaintext border-bottom" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
+		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
 		htmlTR += '</td>';
 		htmlTR += '</tr >';
 		//$("body").append(htmlTR);
@@ -1117,49 +1117,18 @@ $(function () {
 		}
 	}
 
-	$(".documents-tab").click(function (e) {
-		//this is for validation
-		$("#myForm").valid();
-		$.fn.validatePriceTab();
+	//$(".documents-tab").click(function (e) {
+	//	//this is for validation
+	//	$("#myForm").valid();
+	//	$.fn.validatePriceTab();
 
-		$.fn.HideAllDocs();
-		//$.fn.CheckIfFileSelectsAreFull();
+	//	$.fn.HideAllDocs();
+	//	//$.fn.CheckIfFileSelectsAreFull();
 
 
-	});
+	//});
 
-	//$(".upload-file-1").click(function () {
-	//	console.log("file select clicked 1");
-	//	$(".file-select-1").click();
-	//});
-	//$(".upload-file-2").click(function () {
-	//	console.log("file select clicked 2");
-	//	$(".file-select-2").click();
-	//});
-	//$(".upload-file-3").click(function () {
-	//	console.log("file select clicked 3 ");
-	//	$(".file-select-3").click();
-	//});
-	//$(".upload-file-4").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-4").click();
-	//});
-	//$(".upload-file-5").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-5").click();
-	//});
-	//$(".upload-file-6").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-6").click();
-	//});
-	//$(".upload-file-7").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-7").click();
-	//});
-	//$(".upload-file-8").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-8").click();
-	//});
+
 
 	$(".open-document-modal").click(function (e) {
 		e.preventDefault();
@@ -1733,12 +1702,12 @@ $(function () {
 		return true;
 	};
 
-	$(".request-price-tab").click(function () {
-		console.log("in onclick price tab");
-		$("#myForm").valid();
-		$.fn.validateItemTab();
+	//$(".request-price-tab").click(function () {
+	//	console.log("in onclick price tab");
+	//	$("#myForm").valid();
+	//	$.fn.validateItemTab();
 
-	});
+	//});
 	$(".create-modal-submit").click(function () {
 		console.log('$("#createModalForm").valid()');
 		if ($("#createModalForm").valid()) {
@@ -1753,42 +1722,42 @@ $(function () {
 
 	});
 
-	$(".request-archive-tab").click(function () {
-		console.log("in onclick archive-tab");
-		$("#myForm").valid();
-		$.fn.validatePriceTab();
+	//$(".request-archive-tab").click(function () {
+	//	console.log("in onclick archive-tab");
+	//	$("#myForm").valid();
+	//	$.fn.validatePriceTab();
 
-	});
+	//});
 
-	$(".request-history-tab").click(function () {
-		console.log("in onclick history-tab");
-		$("#myForm").valid();
-		$.fn.validateItemTab();
-		$.fn.validatePriceTab();
+	//$(".request-history-tab").click(function () {
+	//	console.log("in onclick history-tab");
+	//	$("#myForm").valid();
+	//	$.fn.validateItemTab();
+	//	$.fn.validatePriceTab();
 
-	});
+	//});
 
-	$(".request-order-tab").click(function () {
-		console.log("in onclick order-tab");
-		$("#myForm").valid();
-		var valid = $.fn.validateItemTab();
-		if (valid == "false" || valid == undefined) {
-			$.fn.validatePriceTab();
-		};
+	//$(".request-order-tab").click(function () {
+	//	console.log("in onclick order-tab");
+	//	$("#myForm").valid();
+	//	var valid = $.fn.validateItemTab();
+	//	if (valid == "false" || valid == undefined) {
+	//		$.fn.validatePriceTab();
+	//	};
 
-	});
+	//});
 
-	$(".request-comments-tab").click(function () {
-		console.log("in onclick comments-tab");
-		$("#myForm").valid();
-		$.fn.validatePriceTab();
-	});
+	//$(".request-comments-tab").click(function () {
+	//	console.log("in onclick comments-tab");
+	//	$("#myForm").valid();
+	//	$.fn.validatePriceTab();
+	//});
 
-	$(".request-location-tab").click(function () {
-		console.log("in onclick location-tab");
-		$("#myForm").valid();
-		$.fn.validateItemTab();
-	});
+	//$(".request-location-tab").click(function () {
+	//	console.log("in onclick location-tab");
+	//	$("#myForm").valid();
+	//	$.fn.validateItemTab();
+	//});
 
 
 	$("#Request_Terms").change(function () {

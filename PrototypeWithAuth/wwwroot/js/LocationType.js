@@ -57,7 +57,7 @@ $.fn.AddSublocation = function () {
 	sublocationHtml += '<input type="text" class="form-control" id="' + newSublocationID + '" name="' + newSublocationName + '" class="' + newSublocationClass + '" />';
 	//sublocationHtml += '<input type="text" class="form-control" ' + newSublocationClass + '  />';
 	var spanClass = 'spanSublocation' + $sublocationCounter;
-	sublocationHtml += '<span class="text-danger ' + spanClass + '></span>"';
+	sublocationHtml += '<span class="text-danger-centarix ' + spanClass + '></span>"';
 	sublocationHtml += '</div>';
 	$(".addSublocation").append(sublocationHtml);
 	$(".addSublocation").show();

@@ -1,4 +1,42 @@
-﻿
+﻿/*color*/
+:root {
+    --white: white;
+    --user-color: #795548;
+    --lab-man-color: rgb(125,155,170); /*#7D9BAA;*/
+    --lab-man-50-color: rgba(125,155,170, .5);
+    --order-inv-color: #2196F3;
+    --acc-color: #A26FF0;
+    --protocol-color: #009688;
+    --expense-color: #00BCD4;
+    --income-color: #4CAF50;
+    --timekeeper-color: #FF9800;
+    --biomarkers-color: #F44336;
+    --operations-color: #3F51B5;
+    --order-inv-filter: brightness(0) saturate(100%) invert(57%) sepia(42%) saturate(5293%) hue-rotate(184deg) brightness(96%) contrast(99%);
+    --lab-man-filter: brightness(0) saturate(100%) invert(44%) sepia(48%) saturate(220%) hue-rotate(155deg) brightness(96%) contrast(87%);
+    --acc-filter: brightness(0) saturate(100%) invert(51%) sepia(93%) saturate(1777%) hue-rotate(225deg) brightness(93%) contrast(103%);
+    --users-filter: brightness(0) saturate(100%) invert(32%) sepia(36%) saturate(440%) hue-rotate(330deg) brightness(99%) contrast(89%);
+    --operations-filter: brightness(0) saturate(100%) invert(25%) sepia(82%) saturate(1564%) hue-rotate(217deg) brightness(90%) contrast(84%);
+    --timekeeper-filter: brightness(0) saturate(100%) invert(72%) sepia(32%) saturate(7497%) hue-rotate(1deg) brightness(106%) contrast(104%);
+    --notifications-orderlate-color: #DB2127;
+    --notifications-ordered-color: #5F79E2;
+    --notifications-approved-color: #00CA72;
+    --notifications-received-color: #5F79E2;
+    --danger-color: #E95252;
+    --success-color: #00ca72;
+    --bold-regular: 400;
+    --bold-medium: 500;
+    --bold-light: 300;
+    --text-font-size: 1.125rem;
+    --text-font-weight: 400;
+}
+
+.modal-title input{
+    border-radius: 0px !important;
+}
+
+
+
 .on-form-modal {
     box-shadow: none;
     max-height: 100%;
@@ -36,11 +74,51 @@
     color: #666666;
 }
 
-.modal-body-top-p{
-    padding-top: 4.5rem;
+.on-form-modal span.text-danger-centarix,
+.modal span.text-danger-centarix {
+    font-size: .75rem;
 }
 
+.modal-body-top-p{
+    padding-top: 4.3rem;
+}
+
+.modal-tab-name {
+    margin-bottom: 2.125rem;
+}
 /*OVERRIDING BOOTSTRAP*/
 .tab-content {
     padding: 0 !important;
+}
+
+.order-inv-form .form-control-plaintext:focus{
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+}
+
+.order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+}
+
+
+.order-inv-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+}
+
+.input-group-text{
+    padding: 0 !important;
+    border-radius: 0px !important;
+}
+
+
+
+.mx-2rem {
+    margin-right: 2rem;
+    margin-left: 2rem;
+}
+
+.document-border {
+    border-radius: 0.625rem;
 }

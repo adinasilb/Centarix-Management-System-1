@@ -1,4 +1,17 @@
-﻿/*color*/
+﻿html {
+    overflow: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+    width: 0px; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+    scrollbar-width: none;
+}
+
+
+/*color*/
 :root {
     --white: white;
     --user-color: #795548;
@@ -33,6 +46,10 @@
 
 .success-color {
     background-color: var(--success-color);
+}
+
+.text-danger-centarix {
+    color: var(--danger-color);
 }
 
 .danger-color {
@@ -152,11 +169,15 @@ body{
 }
 input {
     font-size: 1rem !important;
-    font-weight: var(--bold-regular) !important
+    font-weight: var(--bold-regular) !important;
 }
 .control-label {
     font-size: .75rem;
-    font-weight: var(--bold-regular)
+    font-weight: var(--bold-regular);
+    margin-bottom: 0px;
+}
+.form-group {
+    margin-bottom: 0 !important;
 }
 .button {
     font-size: 1rem;
@@ -252,4 +273,11 @@ table td, table td .btn, .text, table th {
     height: 2.875rem;
     border-radius: 1.438rem;
     border: none;
+}
+
+.new-modal-body .row {
+    margin-bottom: 2.063rem ;
+}
+.no-mb {
+    margin-bottom: 0 !important;
 }

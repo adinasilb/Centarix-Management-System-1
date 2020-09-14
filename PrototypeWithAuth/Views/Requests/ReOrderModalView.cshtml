@@ -31,14 +31,14 @@
                 @*Requests search view model*@
 
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
 
                 <!-- Modal Header -->
                 <div class="new-modal-header border-bottom box-shadow" style="padding: 0.5em 6em">
                     @if (TempData["ErrorMessage"] != null)
                     {
-                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
                     <div>
@@ -48,7 +48,7 @@
                     <div class="form-group">
                         <h4><label asp-for="Request.Product.ProductName" class="control-label"> Request : </label> </h4>
                         <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" readonly /></h4>
-                        <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
+                        <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
                     </div>
                     <br />
                     <div class="row">
@@ -93,7 +93,7 @@
     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
     "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary ", @id = "parentlist", @disabled = "disabled" })
                                             @*do not need a hiddenfor here b/c it's built into the subcategory*@
-                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4 px-4">
@@ -103,7 +103,7 @@
     new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
     "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist", @disabled = "disabled" })
                                             @Html.HiddenFor(m => m.Request.Product.ProductSubcategoryID)
-                                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -119,7 +119,7 @@
                                                 "Select Project",
                                                 new { @class = "mdb-select md-form  colorful-select dropdown-primary Project" }
                                             )
-                                            <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -138,7 +138,7 @@
                                                 "Select Sub Project",
                                                 new { @class = "mdb-select md-form  colorful-select dropdown-primary SubProject", @id = "SubProject" }
                                             )
-                                            <span asp-validation-for="Request.SubProjectID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4 px-4">
@@ -154,7 +154,7 @@
                                                 htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary ", @id = "vendorList", @disabled = "disabled" }
                                             )
                                             @Html.HiddenFor(model => model.Request.Product.VendorID)
-                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -171,12 +171,12 @@
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
                                         <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom " readonly />
-                                        <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
+                                        <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
                                         <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom  datepicker" readonly />
-                                        <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
+                                        <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger-centarix" />
                                     </div>
                                 </div>
                                 <br />
@@ -184,12 +184,12 @@
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentRequest.InvoiceNumber" class="control-label"></label>
                                         <input asp-for="Request.ParentRequest.InvoiceNumber" asp-format="" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger" />
+                                        <span asp-validation-for="Request.ParentRequest.InvoiceNumber" class="text-danger-centarix" />
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentRequest.InvoiceDate" class="control-label"></label>
                                         <input asp-for="Request.ParentRequest.InvoiceDate" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger" />
+                                        <span asp-validation-for="Request.ParentRequest.InvoiceDate" class="text-danger-centarix" />
                                     </div>
                                 </div>
                                 <br />
@@ -197,12 +197,12 @@
                                     <div class="col-md-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
                                         <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
+                                        <span asp-validation-for="Request.CatalogNumber" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-3">
                                         <label asp-for="Request.Warranty" class="control-label"></label>
                                         <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.Warranty" class="text-danger"></span>
+                                        <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="control-label">End Date</label>
@@ -215,7 +215,7 @@
                                     <div class="col-md-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
                                         <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
+                                        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="control-label">Expected Supply Date</label>
@@ -224,7 +224,7 @@
                                     <div class="col-md-4">
                                         <label asp-for="Request.URL" class="control-label"></label>
                                         <input asp-for="Request.URL" class="form-control-plaintext border-bottom " readonly />
-                                        <span asp-validation-for="Request.URL" class="text-danger"></span>
+                                        <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                             </div>
@@ -247,7 +247,7 @@
                                         <div class="form-group">
                                             <label asp-for="Request.ExchangeRate" class="control-label"></label>
                                             <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " />
-                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
+                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -259,7 +259,7 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.Unit" class="control-label"></label>
                                                     <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="0" />
-                                                    <span asp-validation-for="Request.Unit" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -270,7 +270,7 @@
         "",
         htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary " }
         )
-                                                        <span asp-validation-for="Request.UnitType" class="text-danger"></span>
+                                                        <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -299,7 +299,7 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubUnit" class="control-label"></label>
                                                     <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                    <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubUnitType" class="control-label"></label>
@@ -309,7 +309,7 @@
                     "",
                     htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
                 )
-                                                    <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -337,7 +337,7 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubSubUnit" class="control-label"></label>
                                                     <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
@@ -347,7 +347,7 @@
         "",
         htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary ", @disabled = "disabled" }
         )
-                                                    <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -387,7 +387,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" />
-                                                <span class="text-danger" asp-validation-for="Request.Cost"></span>
+                                                <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -447,7 +447,7 @@
                                         <div class="form-group">
                                             <label asp-for="Request.Installments" class="control-label"></label>
                                             <input asp-for="Request.Installments" class="form-control-plaintext border-bottom " />
-                                            <span asp-validation-for="Request.Installments" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-8 rounded card p-3">
@@ -621,7 +621,7 @@
                                         <div class="form-group">
                                             <label asp-for="NewComment.CommentText" class="control-label"></label>
                                             <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
-                                            <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
+                                            <span asp-validation-for="NewComment.CommentText" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>

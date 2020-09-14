@@ -21,12 +21,12 @@
         NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
             they need the hiddenfors that are right underneath it
                 *@
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <!-- Modal Header -->
                 <div class="new-modal-header no-box-shadow" style="padding: 0.5em 6em">
                     @if (TempData["ErrorMessage"] != null)
                     {
-                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
 
@@ -44,7 +44,7 @@
                                 <div class="form-group d-inline-flex">
                                     <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
                                     <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
-                                    <span asp-validation-for="@Model.QuoteNumber" class="text-danger"></span>
+                                    <span asp-validation-for="@Model.QuoteNumber" class="text-danger-centarix"></span>
                                 </div>
                             </div>
 
@@ -52,7 +52,7 @@
                                 <div class="form-group d-inline-flex">
                                     <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
                                     <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
-                                    <span asp-validation-for="@Model.QuoteDate" class="text-danger"></span>
+                                    <span asp-validation-for="@Model.QuoteDate" class="text-danger-centarix"></span>
                                 </div>
                             </div>
 
@@ -117,13 +117,13 @@
                                         <td width="15%">
                                             <div class="form-group">
                                                 <input asp-for="@Model.Reorders[i].Cost" class="form-control-plaintext border-bottom align-with-select" min="1" />
-                                                <span asp-validation-for="@Model.Reorders[i].Cost" class="text-danger"></span>
+                                                <span asp-validation-for="@Model.Reorders[i].Cost" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
                                         <td width="15%">
                                             <div class="form-group">
                                                 <input asp-for="@Model.Reorders[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom align-with-select   expected-supply-days" min="1" />
-                                                <span asp-validation-for="@Model.Reorders[i].ExpectedSupplyDays" class="text-danger"></span>
+                                                <span asp-validation-for="@Model.Reorders[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
                                         <td width="15%">
