@@ -156,7 +156,7 @@ namespace PrototypeWithAuth.Controllers
             else if (SectionType == AppUtility.MenuItems.Accounting)
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
-                TempData["Action"] = AppUtility.SuppliersEnum.NewSupplier;
+                TempData["Action"] = AppUtility.SuppliersEnum.All;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
             }
             return View(createSupplierViewModel);
@@ -433,7 +433,7 @@ namespace PrototypeWithAuth.Controllers
             else if (SectionType == AppUtility.MenuItems.Accounting)
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
-                TempData["Action"] = AppUtility.SuppliersEnum.NewSupplier;
+                TempData["Action"] = AppUtility.SuppliersEnum.All;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
             }
             return View(createSupplierViewModel);

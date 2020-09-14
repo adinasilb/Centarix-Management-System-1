@@ -830,7 +830,10 @@ namespace PrototypeWithAuth.AppData
                 Description = "All",
                 Controller = "Vendors",
                 Action = "IndexForPayment",
-                RouteValues = new RouteValueDictionary(),
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Accounting }
+                },
                 Classes = CurrentClasses,
                 IconName = "icon-storefront-24px1"
             });
