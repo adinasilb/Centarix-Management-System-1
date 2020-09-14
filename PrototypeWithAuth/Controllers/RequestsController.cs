@@ -2061,6 +2061,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             request.RequestStatusID = 2;
                             _context.Update(request);
+                            _context.SaveChanges();
                             RequestNotification requestNotification = new RequestNotification();
                             requestNotification.RequestID = request.RequestID;
                             requestNotification.IsRead = false;
@@ -2074,7 +2075,6 @@ namespace PrototypeWithAuth.Controllers
                             requestNotification.OrderDate = DateTime.Now;
                             requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                             _context.Update(requestNotification);
-                            _context.SaveChanges();
 
                         }
                         await _context.SaveChangesAsync();

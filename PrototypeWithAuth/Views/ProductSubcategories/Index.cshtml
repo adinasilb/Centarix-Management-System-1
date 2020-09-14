@@ -38,58 +38,42 @@
             if (i > 0 && i % 8 == 0 )
             {
                 first = true;
-            @:</div><div class="d-flex mt-5">
+            @:</div><div class="d-flex type-outer-div">
             }
-            else if (firstRow)
-            {
-                first = true;
-                firstRow = false;
-            }
-            else
-            {
-                first = false;
-            }
-            var marginClass = "";
-            if (first)
-            {
-                marginClass = " mr-3";
-            }
-            else
-            {
-                marginClass = " mx-2";
-            }
-            <div class="@marginClass" style="width:11.5%;">
-                <fieldset class="border rounded-large py-4">
+           
+            <div class="type-div" >
+                <fieldset class=" type-fieldset">
                     @*@Html.ActionLink(Model.ElementAt(i).ProductSubcategoryDescription, "Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)*@
                     @if (Model.FirstOrDefault().ParentCategory.CategoryTypeID == 1)
                     {
-                        <a href="@Url.ActionLink("Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)">
+                        <a href="@Url.ActionLink("Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)" class="text text-dark">
                             @if (Model.ElementAt(i).ImageURL != null)
                             {
-                                <img class="rounded-sm mb-2" style="height:100px" src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
+                                <img class=" type-img " src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
                             }
                             else
                             {
 
-                                <img class="rounded-sm mb-2" style="height:100px" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle" />
+                                <img class=" type-img" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle" />
                             }
-                            <br />@Model.ElementAt(i).ProductSubcategoryDescription
+                        <label> @Model.ElementAt(i).ProductSubcategoryDescription</label>
+                         
                         </a>
                     }
                     else if (Model.FirstOrDefault().ParentCategory.CategoryTypeID == 2)
                     {
-                        <a href="@Url.ActionLink("Index", "Operations", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)">
-                            @if (Model.ElementAt(i).ImageURL != null)
-                            {
-                                <img class="rounded-sm mb-2" style="height:100px" src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
-                            }
-                            else
-                            {
+                <a href="@Url.ActionLink("Index", "Operations", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)" class="text text-dark">
+                    @if (Model.ElementAt(i).ImageURL != null)
+                    {
+                        <img class=" type-img" src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
+                    }
+                    else
+                    {
 
-                                <img class="rounded-sm mb-2" style="height:100px" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle" />
-                            }
-                            <br />@Model.ElementAt(i).ProductSubcategoryDescription
-                        </a>
+                        <img class="type-img" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle" />
+                    }
+                    <label>@Model.ElementAt(i).ProductSubcategoryDescription</label>
+                </a>
                     }
 
                 </fieldset>
