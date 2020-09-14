@@ -28,7 +28,7 @@
                 {
                     <ul class="pl-0">
                         <li class="list-inline-item">
-                            <button class="opac-87 clicked-button btn location-type-name load-location-index-view mr-3 pt-0 mt-0 ml-0 pl-0" value=@type.LocationTypeID>
+                            <button class="opac-87 clicked-button btn location-type-name  top-menu load-location-index-view mr-3 pt-0 mt-0 ml-0 pl-0" value=@type.LocationTypeID>
                                 @type.LocationTypeName
                             </button>
                         </li>
@@ -40,8 +40,8 @@
         <div class="col-3">
             @if ((@User.IsInRole("Admin") || @User.IsInRole("Manager")) && Model.SectionType == AppUtility.MenuItems.LabManagement)
             {
-                <button class="lab-man-button lab-man-background-color load-add-location px-5 mt-3 float-right" data-target="item" data-backdrop="static" data-keyboard="false" href="item" style="vertical-align: middle;">
-                    + &nbsp;&nbsp; ADD LOCATION
+                <button class="custom-button custom-button-font lab-man-background-color load-add-location  mt-3 float-right" data-target="item" data-backdrop="static" data-keyboard="false" href="item" style="vertical-align: middle;">
+                    + &nbsp;&nbsp; Add Location
                 </button>
 
             }

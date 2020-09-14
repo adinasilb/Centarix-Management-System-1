@@ -285,8 +285,8 @@ body {
 }
 
 .category-image {
-    border-radius: 8px;
-    border: .5px solid #ebebeb;
+    border-radius: .5rem;
+    border: .31px solid #ebebeb;
 }
 
 .center {
@@ -967,14 +967,14 @@ a.nav-link {
     color: var(--user-color);
 }
 
-.container-fluid ul li a.supplier-nav-link.active {
+.container-fluid ul li a.supplier-nav-link.active  {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--acc-color);
     color: var(--acc-color);
 }
 
-.container-fluid ul li a.lab-man-nav-link.active {
+.container-fluid ul li a.lab-man-nav-link.active, .container-fluid ul li a.nav-link.lab-man-nav-link:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--lab-man-color);
@@ -1021,13 +1021,11 @@ a.nav-link {
 }
 
 .new-button {
-    /*padding: 5px 18px;*/
-    padding-bottom: .1em;
-    margin: 0 1.5em 0 0;
-    background-color: #fff;
-    color: #000;
-    opacity: 0.87;
-    font-size: 1.2rem;
+    margin: 0 4rem 0 0;
+    background-color: transparent;
+    color: var(--black-87);
+    font-size: 1.25rem;
+
 }
 
     .new-button:hover {
@@ -1041,10 +1039,20 @@ a.nav-link {
 
     .new-button.active {
         color: var(--order-inv-color);
-        font-weight: 500;
-        border-bottom: 4px solid var(--order-inv-color);
+        font-weight: var(--bold-regular);
+        border-bottom: .188rem solid var(--order-inv-color);
     }
+.new-button-text {
+    padding-right: 1rem;
+    line-height: 2.50rem;
+    vertical-align: text-bottom;
+    margin:0px;
+}
 
+.new-icon{
+    font-size:1.75rem;
+    margin-right: .75rem;
+}
 
 .new-oper-button:hover {
     color: var(--operations-color);
@@ -1429,7 +1437,7 @@ body {
 }
 
 .disabled-submit {
-    background-color: grey;
+    background-color: grey !important;
 }
 
 td .btn {
@@ -1457,7 +1465,7 @@ td .btn {
 .work-from-home-modal {
     position: absolute;
     max-height: 100%;
-    min-width: 30%;
+    min-width: 35%;
     top: 15%;
 }
 
@@ -1606,9 +1614,45 @@ td .btn {
     margin-right: 2.313rem;
     margin-left: 2.313rem;
 }
-.type-div{
-    margin-right: 1.25rem;
-}
 .type-div {
-    margin-bottom: 1.25rem;
+    margin-right: 2rem;
+    margin-bottom: 2rem;
 }
+.type-label{
+    min-width:6.25rem;
+}
+.entry-exit-button {
+    padding: .563rem 2.625rem;
+    font-size: 4rem;
+    font-weight: var(--bold-medium)
+}
+.datepicker--nav {
+    border: none;
+    border-bottom: none !important;
+    padding-bottom: 3.875rem !important;
+    font-size: var(--text-font-size) !important;
+}
+.datepicker{
+    border:none !important;
+    margin:auto !important;
+    width:100% !important;
+}
+.datepicker--days-names{
+    display:none !important;
+}
+.datepicker--cell {
+    font-size: var(--text-font-size);
+    padding: 1.9375rem;
+}
+.datepicker--cell.-current- {
+    color: var(--timekeeper-color) !important;
+}
+    .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current- {
+        background: var(--timekeeper-color) !important;
+        color: white !important
+      
+    }
+    .datepicker--cell.-in-range-{
+        background-color: #FF980064 !important;
+        color: var(--black-87) !important;
+    }

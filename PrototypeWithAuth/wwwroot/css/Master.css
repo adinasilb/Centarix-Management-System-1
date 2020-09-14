@@ -1,5 +1,6 @@
 ﻿/*color*/
 :root {
+    --black-87 :#000000DE;
     --white: white;
     --user-color: #795548;
     --lab-man-color: rgb(125,155,170); /*#7D9BAA;*/
@@ -27,7 +28,7 @@
     --bold-regular: 400;
     --bold-medium: 500;
     --bold-light: 300;
-    --text-font-size: 1.125rem; 
+    --text-font-size: 1rem; 
     --text-font-weight: 400;
 }
 
@@ -95,6 +96,7 @@
 }
 
 
+
 .lab-man-50-background-color {
     background-color: var(--lab-man-50-color) !important;
     /*opacity: .5;*/
@@ -131,8 +133,8 @@ body{
 
 /*fonts*/
 .heading-1{
-    font-size: 1.75rem;
-    font-weight: var(--bold-medium);
+    font-size: 1.75rem !important;
+    font-weight: var(--bold-medium) !important;
 }
 .tabs-font {
     font-size: 1.25rem;
@@ -172,14 +174,22 @@ input:not(input[type=button]) {
     color: var(--white);
     
 }
-
+.custom-button-table-font {
+    font-size: 1rem;
+    font-weight: var(--bold-medium);
+    color: var(--white);
+}
 .custom-cancel {
     border: .0625rem solid #000000DB !important;
     background-color:transparent;
     font-weight: var(--bold-light);
     font-size: 1.438rem;
 }
-
+.custom-clear-button-table {
+    background-color: transparent;
+    font-weight: var(--bold-medium);
+    font-size: 1rem;
+}
 .custom-cancel:hover {
     background-color: rgba(229,229,229, .55);
 }
@@ -255,5 +265,12 @@ table td, table td .btn, .text, table th {
     padding-right: 3.125rem;
     height: 2.875rem;
     border-radius: 1.438rem;
+    border: none;
+}
+.table-button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    height: 2.25rem;
+    border-radius: 1.125rem;
     border: none;
 }

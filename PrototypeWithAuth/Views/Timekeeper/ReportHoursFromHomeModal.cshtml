@@ -13,7 +13,7 @@
                 <div class="modal-header border-0 border-bottom">
                     <div class="container">
                         <div class="">
-                            <h3><strong>Report Hours From Home</strong></h3>
+                            <div class="heading-1">Report Hours From Home</div>
                         </div>
                         <div class="mt-5 mb-3">
                             <hr />
@@ -52,9 +52,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer mt-4 border-0 p-4" style="justify-content:center;">
-                    <input type="submit" class="timekeeper-button mr-4" asp-action="ReportHoursFromHomeModal" value="Save" style="width:40%;" />
-                    <button class="cancel-button cancel-email" data-dismiss="modal" style="width:40%;">Cancel</button>
+                <div class="modal-footer mt-4 border-0" >
+                    <div class="m-auto">
+                        <input type="submit" class="custom-button-font timekeeper-color custom-button between-button-margin" asp-action="ReportHoursFromHomeModal" value="Save" />
+                        <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
             </form>
         </div>

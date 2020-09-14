@@ -12,14 +12,14 @@
     }
     //
     var buttonSubmitClass = Model.SectionType == AppUtility.MenuItems.LabManagement ?
-        "inv-lab-button" : Model.SectionType == AppUtility.MenuItems.OrdersAndInventory ? "order-inv-background-color" : "oper-background-color";
+        "lab-man-background-color" : Model.SectionType == AppUtility.MenuItems.OrdersAndInventory ? "order-inv-background-color" : "oper-background-color";
 }
 @*<div class="modal modal-view  right fader " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">*@
 
 <form action="" method="post" enctype="multipart/form-data" id="search-form">
  
 
-    <div class="row mt-5 " style="flex-grow: 1;">
+    <div class="row mt-5  " style="flex-grow: 1;">
         <div class="col-1 offset-1 mt-3">
             <input type="checkbox" class="custom-checkbox" asp-for="Inventory" />
             <label asp-for="Inventory" class="inv-link-clr"> &ensp; Inventory</label><br />

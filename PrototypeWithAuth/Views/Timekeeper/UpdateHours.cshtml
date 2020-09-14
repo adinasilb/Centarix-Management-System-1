@@ -13,8 +13,8 @@
                 @Html.HiddenFor(r => r.EmployeeID)
                 <div class="modal-header border-0 border-bottom">
                     <div class="container">
-                        <div class="">
-                            <h3><strong>Update Hours</strong></h3>
+                        <div class="heading-1">
+                            Update Hours
                         </div>
                         <div class="mt-5 mb-3">
                             <hr />
@@ -68,9 +68,11 @@
                     }
 
                 </div>
-                <div class="modal-footer mt-4 border-0 p-4" style="justify-content:center;">
-                    <input type="submit" class="timekeeper-button mr-4" asp-action="UpdateHours" value="Save" style="width:40%;" />
-                    <button class="cancel-button cancel-email" data-dismiss="modal" style="width:40%;">Cancel</button>@*FAIGE: should this delete the request?*@
+                <div class="modal-footer mt-4 border-0 " >
+                    <div>
+                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin" asp-action="UpdateHours" value="Save" />
+                        <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>@*FAIGE: should this delete the request?*@
+                    </div>
                 </div>
             </form>
         </div>

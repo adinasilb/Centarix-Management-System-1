@@ -5,22 +5,17 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Details";
-}
-@{ string buttonClass = "";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}@{ string buttonClass = "";
     string navLinkClass = "";
     string backgroundColor = "";
     if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-
     {
-        Layout = "~/Views/Shared/SuppliersNavViewForLabManage.cshtml";
-        buttonClass = "inv-lab-button-submit";
         navLinkClass = "lab-man-nav-link";
         backgroundColor = "var(--lab-man-color)";
     }
     else
     {
-        Layout = "~/Views/Shared/SuppliersNavView.cshtml";
-        buttonClass = "inv-supplier-button";
         navLinkClass = "supplier-nav-link";
         backgroundColor = " var(--acc-color)";
     }
@@ -31,12 +26,12 @@
                 <div class="new-modal-header border-bottom  container-fluid" style="padding: 0.5em 6em">
                     <div class="row mt-3 mb-5">
                         <div class="col-8 offset-0">
-                            <h2 class="mt-1">Supplier Details</h2>
+                            <div class="mt-1 heading-1">Supplier Details</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 px-0">
-                            <div class="container-fluid div-tabs text-center">
+                            <div class="container-fluid div-tabs text-center ">
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                     <li class="nav-item"><a data-toggle="tab" href="#details" id="vendor-details-tab" class="nav-link  @navLinkClass"><i class="icon-storefront-24px" style="font-size: 2rem;"></i><br />Details</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#categories" id="vendor-categories-tab" class="nav-link  @navLinkClass " disabled><i class="icon-category-24px" style="font-size: 2rem;"></i><br />Categories</a></li>
@@ -73,7 +68,7 @@
                                 <div class="row mb-3">
                                     <div class="col-6">
                                         <label class="control-label">Category Type</label>
-                                        <select  class="mdb-select md-form colorful-select dropdown-primary" asp-for="VendorCategoryTypes" multiple disabled>
+                                        <select class="mdb-select md-form colorful-select dropdown-primary" asp-for="VendorCategoryTypes" multiple disabled>
                                             @foreach (var categoryType in Model.CategoryTypes)
                                             {
                                                 <option value="@categoryType.CategoryTypeID">
@@ -233,7 +228,7 @@
                                                         <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addComment('@item')">@item</button><hr class="m-0" />
 
                                                     </div>
-                                                 }
+                                                }
 
                                             </div>
                                         </ul>
@@ -242,39 +237,39 @@
                                 <div id="comment-info">
                                     @for (int i = 0; i < Model.VendorComments.Count(); i++)
                                     {
-                                    <div class="table comment-info border p-2 mb-3">
-                                        @Html.HiddenFor(x => x.VendorComments[i].IsActive, htmlAttributes: new { @class = "comment-active" })
-                                        @Html.HiddenFor(x => x.VendorComments[i].VendorComment.CommentType, htmlAttributes: new { @class = "comment-type" })
+                                        <div class="table comment-info border p-2 mb-3">
+                                            @Html.HiddenFor(x => x.VendorComments[i].IsActive, htmlAttributes: new { @class = "comment-active" })
+                                            @Html.HiddenFor(x => x.VendorComments[i].VendorComment.CommentType, htmlAttributes: new { @class = "comment-type" })
 
-                                        <div class="row ml-2  border-bottom-0">
-                                            <div class="col-1 mt-auto mb-auto ">
-                                                <img src="~/images/css/profile_circle_big.png" height="45" alt="default User image" />
-                                            </div>
-                                            <div class="col-9 ">
-                                                <div class=" p-3 ">
-                                                    <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
-                                                    <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
-                                                    <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
+                                            <div class="row ml-2  border-bottom-0">
+                                                <div class="col-1 mt-auto mb-auto ">
+                                                    <img src="~/images/css/profile_circle_big.png" height="45" alt="default User image" />
+                                                </div>
+                                                <div class="col-9 ">
+                                                    <div class=" p-3 ">
+                                                        <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
+                                                        <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
+                                                        <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
 
-                                                    <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0" />
-                                                    <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger"></span>
+                                                        <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0" />
+                                                        <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger"></span>
+                                                    </div>
+
+                                                </div>
+                                                <div class=" col-2 ">
+                                                    @if (Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
+                                                    {
+                                                        <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
+                                                    }
+                                                    else if (Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
+                                                    {
+                                                        <i class="icon-report_problem-24px-2 float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
+                                                    }
+
                                                 </div>
 
                                             </div>
-                                            <div class=" col-2 ">
-                                                @if(Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
-                                                {
-                                                <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
-                                                }
-                                                else if(Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
-                                                {
-                                            <i class="icon-report_problem-24px-2 float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
-                                                }
-
-                                            </div>
-
                                         </div>
-                                    </div>
                                     }
                                 </div>
 
@@ -325,5 +320,5 @@
             </form>
         </div>
     </div>
-    }
+}
 

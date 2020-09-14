@@ -30,7 +30,7 @@
                            @if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
                             {
                             <a href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
-                               class="owner-link bold-hover-effects" id="profile-img">
+                               class=" bold-hover-effects" id="profile-img">
                                 @{
                                     var src = "UserImages/profile_circle_big.png";
                                     if (Model.ElementAt(i).UserImage != null)
@@ -46,7 +46,7 @@
                             else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
                             {
                         <a href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
-                           class="owner-link bold-hover-effects" id="profile-img">
+                           class=" bold-hover-effects" id="profile-img">
                             @{
                                 var src = "UserImages/profile_circle_big.png";
                                 if (Model.ElementAt(i).UserImage != null)

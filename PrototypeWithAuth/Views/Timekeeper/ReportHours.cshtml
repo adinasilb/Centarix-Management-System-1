@@ -9,8 +9,8 @@
     ViewData["Title"] = "Report Hours";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
-    <div class="m-6">
-        <div class="row m-6 mb-4">
+    <div >
+        <div class="row mb-4">
             <div class="col-2 mt-2 text-left">
 
                 @{
@@ -100,21 +100,27 @@
 
         <form action="" id="myForm" method="post" enctype="multipart/form-data">
             @Html.HiddenFor(e => e.EntryExitEnum);
-            <div class="row entry-exit-background p-5 m-6 mt-5">
+            <div class="row entry-exit-background p-5  mt-5">
                 <div class="col-6 pr-5  my-3 text-right">
-                    <button id="entry" class="no-box-shadow border-0 rounded-pill p-3 @entryClasses text-white" style="width:55%; font-size:4rem;" @isEntryDisabled type="submit" asp-action="ReportHours">@entryDescription</button>
+                    <button id="entry" class="no-box-shadow border-0 rounded-pill @entryClasses text-white entry-exit-button" @isEntryDisabled type="submit" asp-action="ReportHours"><span>
+    <i class="icon-entry-24px" style=" font-size: 4rem; top:.25rem; position:relative;  margin-right: 2rem;
+"></i>@entryDescription
+</span></button>
                 </div>
                 <div class="col-6 pl-5 my-3 text-left">
-                    <button id="exit" class="no-box-shadow border-0 rounded-pill p-3 @exitClasses text-white" style="width: 55%; font-size: 4rem;" @isExitDisabled type="submit" asp-action="ReportHours">@exitDescription</button>
+                    <button id="exit" class="no-box-shadow border-0 rounded-pill @exitClasses text-white entry-exit-button" @isExitDisabled type="submit" asp-action="ReportHours">
+                        <span>
+                            @exitDescription<i class="icon-exit-24px" style="        font-size: 4rem; top:.25rem; position:relative;  margin-left: 2rem;
+"></i>
+                    </span>
+                    </button>
                 </div>
             </div>
         </form>
         <div class="row mt-5 ">
-            <div class="col-6 pr-5  my-3 text-right">
-                <button class="no-box-shadow border-0 rounded-pill py-1 px-2 timekeeper-color text-white open-work-from-home-modal" style="width:40%; font-size:2rem;" type="button">Work From Home</button>
-            </div>
-            <div class="col-6 pl-5 my-3 text-left">
-                <button class="no-box-shadow border-0 rounded-pill py-1 px-4 timekeeper-color text-white open-update-hours-modal" style="width: 35%; font-size: 2rem;" type="button">Update Hours</button>
+            <div class=" text-center col-12">
+                <button class="timekeeper-color custom-button custom-button-font open-work-from-home-modal between-button-margin" type="button">Work From Home</button>
+                <button class=" timekeeper-color custom-button custom-button-font open-update-hours-modal" type="button">Update Hours</button>
             </div>
 
 
