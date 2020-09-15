@@ -194,7 +194,7 @@ input {
     border: .0625rem solid #000000DB !important;
     background-color:transparent;
     font-weight: var(--bold-light);
-    font-size: 1.438rem;
+    /*font-size: 1.438rem;*/
 }
 
 .custom-cancel:hover {
