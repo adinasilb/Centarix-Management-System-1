@@ -72,7 +72,15 @@
                                 </div>
                             </td>
                             <td>
-                                <img src="~/images/css/inventory/Type/bottle.png" alt="Image" width="75" />
+                                @if (item.Requests.FirstOrDefault().Product.ProductSubcategory.ImageURL != null)
+                                {
+                                    <img class=" type-img " src="@item.Requests.FirstOrDefault().Product.ProductSubcategory.ImageURL" alt="Type Bottle" />
+                                }
+                                else
+                                {
+
+                                    <img class=" type-img" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle" />
+                                }
                             </td>
                             <td>
                                 <button class="load-request-details btn btn-link acc-link-clr" value="@item.Requests.FirstOrDefault().RequestID">  @Html.DisplayFor(modelItem => item.Requests.FirstOrDefault().Product.ProductName)</button>

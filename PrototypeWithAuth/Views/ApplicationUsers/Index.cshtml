@@ -20,7 +20,7 @@
     <div class="row">
         @for (int i = 0; i < Model.Count(); i++)
         {
-            if (i > 0 && i % 8 == 0)
+            if (i > 0 && i % 7 == 0)
             {
             @:</div><div class="row">
             }
@@ -38,7 +38,7 @@
                                         src = Model.ElementAt(i).UserImage;
                                     }
                                 }
-                                <img src="@src" class="user-image-bold ml-0" width="160" height="160" alt="default user circle" />
+                                <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="user-image" src="@src" /></div>
                                 <br />
                                 @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
                             </a>
@@ -54,7 +54,7 @@
                                     src = Model.ElementAt(i).UserImage;
                                 }
                             }
-                            <img src="@src" class="user-image-bold ml-0" width="160" height="160" alt="default user circle" />
+                             <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="user-image" src="@src"/></div>
                             <br />
                             @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
                         </a>

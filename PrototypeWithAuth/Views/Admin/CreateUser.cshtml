@@ -25,7 +25,7 @@
                         <h2 class="mt-1">New User</h2>
                     </div>
                     <div class="col-4">
-                        <input type="submit" id="addUser" value="ADD USER" asp-action="CreateUser" class="inv-user-button mt-1 btn-block py-2 disabled-submit" style="float: right;" />
+                        <input type="submit" id="addUser" value="Add User" asp-action="CreateUser" class="custom-button custom-button-font users-background-color btn-block disabled-submit" style="float: right;" />
                     </div>
                 </div>
                 <div class="row">
@@ -450,9 +450,9 @@
                             <div class="row">
                                 <div class="col-6">
                                     <label asp-for="UserImage" class="control-label"></label>
-                                    <input type="file" asp-for="UserImage" class="form-control-file pt-1" accept=".png, .jpg, .jpeg, .pdf">
+                                    <input type="file" asp-for="UserImage" class="form-control-file  ta pt-1" accept=".png, .jpg, .jpeg, .pdf">
                                     <span asp-validation-for="UserImage" class="text-danger"></span>
-                                    <img id="user-image" max-width="400" />
+                                    <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img  id="user-image" /></div>
                                 </div>
                             </div>
                         </div>

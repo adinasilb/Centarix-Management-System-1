@@ -596,7 +596,7 @@ namespace PrototypeWithAuth.Controllers
 
             var folderName = "UserImages";
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, folderName);
-            Directory.CreateDirectory(uploadFolder);
+            var directory = Directory.CreateDirectory(uploadFolder);
             if (editUserViewModel.UserImage != null) //test for more than one???
             {
                 //create file
@@ -604,12 +604,14 @@ namespace PrototypeWithAuth.Controllers
                 var extension = editUserViewModel.UserImage.FileName.Substring(indexOfDot, editUserViewModel.UserImage.FileName.Length - indexOfDot);
                 string uniqueFileName = userEditted.UserNum.ToString() + extension;
                 string filePath = Path.Combine(uploadFolder, uniqueFileName);
-                editUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
+                var stream = new FileStream(filePath, FileMode.Create);
+                editUserViewModel.UserImage.CopyTo(stream);
 
                 var pathToSave = Path.Combine(folderName, uniqueFileName);
                 userEditted.UserImage = "/" + pathToSave;
                 _context.Update(userEditted);
                 _context.SaveChanges();
+                stream.Close();
             }
 
             return RedirectToAction("Index");

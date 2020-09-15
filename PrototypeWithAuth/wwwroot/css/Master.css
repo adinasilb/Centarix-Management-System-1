@@ -83,7 +83,12 @@
 .order-inv-background-color {
     background-color: var(--order-inv-color) !important;
 }
-
+.users-background-color {
+    background-color: var(--user-color) !important;
+}
+.users-border-color {
+    border: solid 2px var(--user-color) !important;
+}
 .lab-man-filter {
     filter: var(--lab-man-filter) !important;
 }
@@ -273,4 +278,36 @@ table td, table td .btn, .text, table th {
     height: 2.25rem;
     border-radius: 1.125rem;
     border: none;
+}
+
+
+.circular-profile-img {
+    height: 50px;
+    width: 50px;
+    border-radius:50% !important;
+    border: 1px solid rgba(0, 0, 0, .54) !important;
+}
+.circular-profile-img-50 {
+    height: 50px;
+    width: 50px;
+    clip-path: circle(25px at center);
+}
+.circular-profile-img-65 {
+    height: 65px;
+    width: 65px;
+    clip-path: circle(32.5 px at center);
+}
+.circular-profile-img-150 {
+    height: 150px;
+    width: 150px;
+    clip-path: circle(75px at center);
+}
+.circular-profile-img-400 {
+    height: 400px;
+    width: 400px;
+    clip-path: circle(200px at center);
+}
+.circular-profile-img img {
+    position: relative;
+    height: 100%;
 }

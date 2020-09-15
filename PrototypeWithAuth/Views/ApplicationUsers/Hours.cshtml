@@ -28,20 +28,19 @@
 
     <div class="container-fluid m-0">
         <div class="row">
-            <div class="col-2 heading-1">
+            <div class="col-3 heading-1">
                 @header@date.Year
             </div>
-            <div class="col-1 mr-6 ">
-                <a class="black-text py-2  rounded-pill @monthStyle text-center  px-5 font-weight-bolder border border-dark black-text" asp-action="Hours" asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Monthly" style="font-size:1.4375rem; " asp-route-month="@Model.Month" asp-route-year="@Model.Year">Monthly</a>
-            </div>
-            <div class="col-1 ">
+            <div class="col-5  ">
+                <a class="black-text py-2 mr-6  rounded-pill @monthStyle text-center  px-5 font-weight-bolder border border-dark black-text" asp-action="Hours" asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Monthly" style="font-size:1.4375rem; " asp-route-month="@Model.Month" asp-route-year="@Model.Year">Monthly</a>
+
                 <a class="@yearStyle  px-5  py-2 rounded-pill text-center  font-weight-bolder border border-dark black-text" asp-action="Hours"
                    asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Yearly" style="font-size:1.4375rem " asp-route-month="@Model.Month" asp-route-year="@Model.Year">Yearly</a>
             </div>
-            @{ var yearDropDown = "offset-6"; }
+            @{ var yearDropDown = "offset-3"; }
             @if (Model.YearlyMonthlyEnum == AppUtility.YearlyMonthlyEnum.Monthly)
             {
-                <div class="col-1 text-right offset-5">
+                <div class="col-1 text-right offset-2 ">
                     <div>
                         @Html.DropDownList("months", Model.Months.Select(x =>
                             new SelectListItem
@@ -101,7 +100,7 @@
                     @foreach (var employee in Model.Employees)
                     {
                         <tr class="text-center users-tr ">
-                            <td width="11%">
+                            <td width="11%" class="py-2">
                                 @{
                                     var src = "/UserImages/profile_circle_big.png";
                                     if (employee.Employee.UserImage != null)
@@ -109,7 +108,7 @@
                                         src = UserManager.GetUserAsync(User).Result.UserImage;
                                     }
                                 }
-                                <img src="@src" class="user-image ml-0" height="65" alt="default User image" />
+                                <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
                             </td>
                             <td width="11%">
                                 @employee.Employee.FirstName  @employee.Employee.LastName

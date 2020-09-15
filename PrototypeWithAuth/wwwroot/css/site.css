@@ -960,7 +960,7 @@ a.nav-link {
     color: var(--operations-color);
 }
 
-.container-fluid ul li a.user-nav-link.active {
+.container-fluid ul li a.user-nav-link.active, .container-fluid ul li a.user-nav-link:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--user-color);
