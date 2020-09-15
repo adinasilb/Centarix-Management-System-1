@@ -286,18 +286,19 @@
                 <div class="sidebar-shadow1">
                     <div style="@style" class="navbar-expand-lg text-center ourNavBar">
                         @*<nav class="navbar navbar-expand-lg">*@
-                        <ul class="nav flex-column nav-pills nav-stacked nav-top-margin1">
+                        <ul class="nav flex-column nav-pills nav-stacked nav-top-sidebar1">
                             @{
-                                var liMargins = "margin-bottom: 4.063rem;";
+                                var liMargins = "padding-bottom: 2.25rem; padding-top: 2.25rem;";
                             }
                             @foreach (var sidebarNavItem in SidebarMenuItems)
                             {
-                                <li class="nav-item @sidebarNavItem.Classes side-menu px-2" style="@liMargins">
-                                    <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="bold-hover-effects">
+                                <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="text-black">
+                                    <li class="nav-item sidenav-button @sidebarNavItem.Classes side-menu px-2" style="@liMargins">
                                         <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
-                                        <br />@sidebarNavItem.Description
-                                    </a>
-                                </li>
+                                        <br /><span>@sidebarNavItem.Description</span>
+                                    </li>
+                                </a>
+                                liMargins += "";
                             }
 
 

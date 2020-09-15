@@ -69,7 +69,7 @@
                                         var id = "EmployeeStatusID" + status.EmployeeStatusID;
                                         <div class="custom-control custom-radio mr-5 ml-2 employee-type">
                                                 @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID,  htmlAttributes: new { @class = "custom-control-input", @id = id}) 
-                                        <label class="custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
+                                        <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
                                          </div>
                                     }
                                 </div>

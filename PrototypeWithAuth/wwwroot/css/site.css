@@ -318,6 +318,10 @@ center-horizontally {
     background-color: rgb(232,240,254);
 }
 
+.sidenav-button:hover {
+    background-color: rgba(0,0,0,.08);
+}
+
 .vlz-bgcolor {
     background-color: rgba(0,0,0,.0001) !important;
 }
@@ -522,7 +526,7 @@ body {
 }
 
 
-    /*.form-control-plaintext:focus {
+/*.form-control-plaintext:focus {
         outline-width: 0;
         box-shadow: 0 1px 0 0 black;
     }*/
@@ -633,9 +637,9 @@ input.select-dropdown {
 
 
 
-    .inv-user-button.disabled-submit {
-        border: 0 !important;
-    }
+.inv-user-button.disabled-submit {
+    border: 0 !important;
+}
 
 #createModalForm .mdb-select li:nth-child(2) {
     z-index: 1;
@@ -745,6 +749,10 @@ a.bold-hover-effects {
     color: black !important;
 }
 
+.text-black {
+    color: black !important;
+}
+
     a.bold-hover-effects:hover,
     ul li button.bold-hover-effects:hover {
         /*color: black !important;*/
@@ -768,7 +776,7 @@ a.bold-hover-effects {
     font-weight: bold;
 }
 /*.ourNavBar li a { color: #333 }*/
-.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
+.ourNavBar a li.activeNavLink > i, .ourNavBar a li.activeNavLink > span /*, .ourNavBar a.activeNavLink*/, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     opacity: 1;
     filter: var(--order-inv-filter);
     font-weight: 500;
@@ -1033,7 +1041,6 @@ a.nav-link {
     background-color: transparent;
     color: var(--black-87);
     font-size: 1.25rem;
-
 }
 
     .new-button:hover {
@@ -1050,15 +1057,16 @@ a.nav-link {
         font-weight: var(--bold-regular);
         border-bottom: .188rem solid var(--order-inv-color);
     }
+
 .new-button-text {
     padding-right: 1rem;
     line-height: 2.50rem;
     vertical-align: text-bottom;
-    margin:0px;
+    margin: 0px;
 }
 
-.new-icon{
-    font-size:1.75rem;
+.new-icon {
+    font-size: 1.75rem;
     margin-right: .75rem;
 }
 
@@ -1556,7 +1564,7 @@ td .btn {
     border: 0.063rem solid #808080;
 }
 
-.select-wrapper{
+.select-wrapper {
     padding: 0 !important;
 }
 
@@ -1576,29 +1584,34 @@ td .btn {
     margin-top: 2.5rem;
     width: inherit;
 }
-.custom .dropdown-content li > span {
-    color: black;
-}
 
-.custom-control-input:checked ~ .custom-control-label::before {
+    .custom .dropdown-content li > span {
+        color: black;
+    }
+
+.custom-control-input:checked ~ .radio-button.custom-control-label::before {
     color: black !important;
     border: .125rem solid black !important;
     background-color: white !important;
-    box-shadow:none;
+    box-shadow: none;
 }
-.custom-control-label::after {
+
+.radio-button.custom-control-label::after {
     top: .37rem !important;
     left: -1.45rem !important;
     background: no-repeat 85%/85% 85% !important;
 }
-.custom-control-label::before {
+
+.radio-button.custom-control-label::before {
     width: 1.25rem !important;
     height: 1.25rem !important;
 }
-    .custom-radio .custom-control-input:checked ~ .custom-control-label::after {
+
+.custom-radio .custom-control-input:checked ~ .radio-button.custom-control-label::after {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23000'/%3e%3c/svg%3e") !important;
-    background-size:cover
+    background-size: cover
 }
+
 .select-wrapper.worker-header input.select-dropdown {
     font-size: 1.875rem;
 }
@@ -1613,7 +1626,22 @@ td .btn {
 
 /*------------------------------------------*/
 /*FORMS.CSS*/
+/*
+    
+*/
 /*------------------------------------------*/
+.modal-product-title{
+    width: 26.75rem;
+    margin-left: 9.063rem;
+    bottom: .938rem;
+    position: absolute;
+}
+
+.modal-title-line{
+    height: 5.625rem;
+    position: relative;
+}
+
 .modal-title input {
     border-radius: 0px !important;
 }
@@ -1630,6 +1658,21 @@ td .btn {
 
 .modal-line-1-header {
     padding-top: 3.75rem;
+}
+
+.modal-line-1-header-with-back {
+    padding-top: 1.094rem;
+}
+
+.back-button {
+    padding-bottom: 1.094rem;
+}
+
+.top-modal-image {
+    height: 5.625rem;
+    width: 5.625rem;
+    border: .031rem solid #F2F2F2;
+    border-radius: .5rem;
 }
 
 .div-tabs {
@@ -1693,21 +1736,24 @@ td .btn {
     border-radius: 0px !important;
 }
 
-
+.nav-top-sidebar1 {
+    padding-top: 3.2rem;
+}
 
 .mx-2rem {
-    margin-right: 2rem;
-    margin-left: 2rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
 }
 
 .document-border {
     border-radius: 0.625rem !important;
 }
 
-.shortened-padding{
+.shortened-padding {
     padding-left: 2rem !important;
     padding-right: 2rem !important;
 }
+
 }
 
 .type-fieldset {
@@ -1716,6 +1762,7 @@ td .btn {
     width: 10.938rem;
     box-shadow: inset 0px 0px .313rem #00000029;
 }
+
 .type-img {
     margin-top: .938rem;
     margin-bottom: .5rem;
@@ -1723,45 +1770,98 @@ td .btn {
     margin-right: 2.313rem;
     margin-left: 2.313rem;
 }
+
 .type-div {
     margin-right: 2rem;
     margin-bottom: 2rem;
 }
-.type-label{
-    min-width:6.25rem;
+
+.type-label {
+    min-width: 6.25rem;
 }
+
 .entry-exit-button {
     padding: .563rem 2.625rem;
     font-size: 4rem;
     font-weight: var(--bold-medium)
 }
+
 .datepicker--nav {
     border: none;
     border-bottom: none !important;
     padding-bottom: 3.875rem !important;
     font-size: var(--text-font-size) !important;
 }
-.datepicker{
-    border:none !important;
-    margin:auto !important;
-    width:100% !important;
+
+.datepicker {
+    border: none !important;
+    margin: auto !important;
+    width: 100% !important;
 }
-.datepicker--days-names{
-    display:none !important;
+
+/*.order-inv-form .datepicker {
+    position: relative !important;
+    opacity: 100 !important;
+    left: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0px !important;
+}*/
+
+.datepicker--days-names {
+    display: none !important;
 }
+
 .datepicker--cell {
     font-size: var(--text-font-size);
     padding: 1.9375rem;
 }
-.datepicker--cell.-current- {
-    color: var(--timekeeper-color) !important;
-}
+
+    .datepicker--cell.-current- {
+        color: var(--timekeeper-color) !important;
+    }
+
     .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current- {
         background: var(--timekeeper-color) !important;
         color: white !important
-      
     }
-    .datepicker--cell.-in-range-{
+
+    .datepicker--cell.-in-range- {
         background-color: #FF980064 !important;
         color: var(--black-87) !important;
     }
+
+.inner-modal-tabs {
+    background: #FFF;
+    padding-top: 3.25rem;
+    padding-right: 3.688rem !important;
+    padding-left: 3.688rem !important;
+    border: .5px solid #EAEAEB;
+    box-shadow: 0px 3px 6px #00000026;
+}
+
+.order-inv-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--order-inv-color) !important;
+}
+
+.order-inv-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--order-inv-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
+
+.select-wrapper input.select-dropdown:disabled {
+    color: var(--black-87) !important;
+}
+
+.modal-tab-content .modal-tab-name span{
+    margin-bottom: 1.875rem;
+}
+
+.new-modal-body {
+    padding: 1.25rem;
+    background: #F6F7F8;
+}
+
+.modal-dialog {
+    box-shadow: 6px 0px 10px #0000008C !important;
+}

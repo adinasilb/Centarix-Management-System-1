@@ -70,11 +70,11 @@
                                         <i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments
                                     </a>
                                 </li>
-                                <li class="nav-item icon archive-tab">
+                                @*<li class="nav-item icon archive-tab">
                                     <a data-toggle="tab" href="#archive" class="request-archive-tab nav-link">
                                         <i class="icon-archive-24px" style="font-size: 2rem;"></i><br />Archive
                                     </a>
-                                </li>
+                                </li>*@
                                 <li class="nav-item icon history-tab">
                                     <a data-toggle="tab" href="#history" class="request-history-tab nav-link">
                                         <i class="icon-history-24px" style="font-size: 2rem;"></i><br />History
@@ -630,7 +630,7 @@
                                         </div>
                                         <div class="col-9">
                                             <div class="form-group">
-                                                <label class="font-weight-bold text">
+                                                <label class="font-weight-bold small-text">
                                                     @_userManager.GetUserAsync(User).Result.FirstName
                                                     @_userManager.GetUserAsync(User).Result.LastName
                                                     @DateTime.Now.ToLongDateString()
@@ -668,11 +668,11 @@
                                 <br />
                                 <div class="form-group">
                                     @*you can only add to cart if you are creating a new one*@
-                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
 
-                                    <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-                                    <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-                                    <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                    <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                    <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                    <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
                                     <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>
                                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 </div>
