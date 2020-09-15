@@ -15,7 +15,7 @@
     <div class="card-body no-box-shadow p-0">
         <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow-y: auto; overflow-x:hidden" >
 
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger-centarix"></div>
 
             <div class="new-modal-header border-bottom container-fluid pb-0" style="padding:.5rem 5rem" >
                 <div class="row mt-3 mb-5">
@@ -35,7 +35,7 @@
                                                dataTextField: "Text"),
                                                htmlAttributes: new { @class = "mb-0 mdb-select md-form  colorful-select dropdown-primary align-bottom worker-header",  }
                                                )
-                            <span asp-validation-for="NewEmployee.Id" class="text-danger"></span>
+                            <span asp-validation-for="NewEmployee.Id" class="text-danger-centarix"></span>
                         </div>
                     </div>
                     <br />
@@ -79,17 +79,17 @@
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.IDNumber" class="control-label"></label>
                                         <input asp-for="NewEmployee.IDNumber" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="NewEmployee.IDNumber" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.IDNumber" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4 ">
                                         <label asp-for="NewEmployee.CentarixID" class="control-label">Employee Number</label>
                                         <input asp-for="NewEmployee.CentarixID" class="form-control-plaintext border-bottom" required/>
-                                        <span asp-validation-for="NewEmployee.CentarixID" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.CentarixID" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4 ">
                                         <label asp-for="NewEmployee.JobTitle" class="control-label"></label>
                                         <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" required />
-                                        <span asp-validation-for="NewEmployee.JobTitle" class="text-danger" ></span>
+                                        <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix" ></span>
                                     </div>
                                 </div>
                                 <div class="row pt-4">
@@ -104,46 +104,46 @@
                                             optionLabel: "Select A Category",
                                             htmlAttributes: new { @class = "mt-0 mdb-select md-form  colorful-select dropdown-primary ", @required="true" }
                                             )
-                                        <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4 ">
                                         <label asp-for="NewEmployee.Email" class="control-label"></label>
                                         <input asp-for="NewEmployee.Email" class="form-control-plaintext border-bottom" required />
-                                        <span asp-validation-for="NewEmployee.Email" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.Email" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.PhoneNumber" class="control-label">Phone Number 1</label>
                                         <input asp-for="NewEmployee.PhoneNumber" class="form-control-plaintext border-bottom" required />
-                                        <span asp-validation-for="NewEmployee.PhoneNumber" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.PhoneNumber" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                                 <div class="row pt-4">
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.PhoneNumber" class="control-label">Phone Number 2</label>
                                         <input asp-for="NewEmployee.PhoneNumber" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="NewEmployee.PhoneNumber" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.PhoneNumber" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.Degree" class="control-label"></label>
                                         <input asp-for="NewEmployee.Degree" class="form-control-plaintext border-bottom"/>
-                                        <span asp-validation-for="NewEmployee.Degree" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.Degree" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.StartedWorking" class="control-label"></label>
                                         <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom"  />
-                                        <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                                 <div class="row pt-4">
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.RelationshipStatus" class="control-label"></label>
                                         <input asp-for="NewEmployee.RelationshipStatus" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="NewEmployee.RelationshipStatus" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.RelationshipStatus" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.Citizenship" class="control-label"></label>
                                         <input asp-for="NewEmployee.Citizenship" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="NewEmployee.Citizenship" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.Citizenship" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                             </div>
@@ -155,17 +155,17 @@
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.SalariedEmployee.WorkScope" class="control-label"></label>
                                         <input asp-for="NewEmployee.SalariedEmployee.WorkScope" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="NewEmployee.SalariedEmployee.WorkScope" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.SalariedEmployee.WorkScope" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.SalariedEmployee.HoursPerDay" class="control-label"></label>
                                         <input asp-for="NewEmployee.SalariedEmployee.HoursPerDay" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.VacationDays" class="control-label"></label>
                                         <input asp-for="NewEmployee.VacationDays" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="NewEmployee.VacationDays" class="text-danger"></span>
+                                        <span asp-validation-for="NewEmployee.VacationDays" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                             </div>

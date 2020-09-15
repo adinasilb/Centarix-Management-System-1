@@ -279,14 +279,19 @@ body {
     height: 100%;
 }
 
-.document-border {
-    /*border: 1px solid black !important; /*Dani - edited color. 200622*/
+/*.document-border {
+    /*border: 1px solid black !important;
     border-radius: 18px;
-}
+}*/
 
 .category-image {
     border-radius: .5rem;
     border: .31px solid #ebebeb;
+}
+
+input.form-control-plaintext:not(.select-dropdown) {
+    padding-bottom: .5rem !important;
+    padding-top: .5rem !important;
 }
 
 .center {
@@ -399,6 +404,8 @@ center-horizontally {
     -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.16), 0 1px 6px 0 rgba(0,0,0,0.12);
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.16), 0 1px 6px 0 rgba(0,0,0,0.12);
 }
+
+
 /*END ADINA ADDED TO MAKE MODAL SCROLLABLE*/
 a.navbar-brand {
     white-space: normal;
@@ -514,10 +521,11 @@ body {
     margin-bottom: 1rem;
 }
 
-    .form-control-plaintext:focus {
+
+    /*.form-control-plaintext:focus {
         outline-width: 0;
         box-shadow: 0 1px 0 0 black;
-    }
+    }*/
 
 input.select-dropdown {
     margin: 0 !important;
@@ -1535,8 +1543,9 @@ td .btn {
 
 
 /*take out the border radius of the dropdowns*/
-.select-wrapper input.select-dropdown{
+.select-wrapper input.select-dropdown {
     border-radius: 0 !important;
+    border-bottom: 1px solid #dee2e6 !important;
 }
 
 .custom.select-wrapper input.select-dropdown {
@@ -1547,7 +1556,8 @@ td .btn {
     border: 0.063rem solid #808080;
 }
 
-.custom.select-wrapper input.timekeeper {
+.select-wrapper{
+    padding: 0 !important;
 }
 
 .timekeeper.select-wrapper input.select-dropdown:active {
@@ -1599,6 +1609,105 @@ td .btn {
 
 .users.select-wrapper input.select-dropdown:focus {
     border: 0.063rem solid var(--user-color);
+}
+
+/*------------------------------------------*/
+/*FORMS.CSS*/
+/*------------------------------------------*/
+.modal-title input {
+    border-radius: 0px !important;
+}
+
+.on-form-modal {
+    box-shadow: none;
+    max-height: 100%;
+    margin-top: -2.9rem;
+}
+
+.on-form-modal-border {
+    border: .031rem solid #DCDCDC;
+}
+
+.modal-line-1-header {
+    padding-top: 3.75rem;
+}
+
+.div-tabs {
+    padding-top: 3.75rem;
+}
+
+.modal-sides {
+    padding-left: 5.375rem !important;
+    padding-right: 5.375rem !important;
+}
+
+.nav-item.icon {
+    font-size: 1.125rem;
+}
+
+.icon .nav-link {
+    padding: 0;
+}
+
+.nav-tabs-icons {
+    display: inline-flex;
+    justify-content: space-between;
+    color: #666666;
+}
+
+.on-form-modal span.text-danger-centarix,
+.modal span.text-danger-centarix {
+    font-size: .75rem;
+}
+
+.modal-body-top-p {
+    padding-top: 4.3rem;
+}
+
+.modal-tab-name {
+    margin-bottom: 2.125rem;
+}
+/*OVERRIDING BOOTSTRAP*/
+.tab-content {
+    padding: 0 !important;
+}
+
+.order-inv-form .form-control-plaintext:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+}
+
+.order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+}
+
+
+.order-inv-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+}
+
+.input-group-text {
+    padding: 0 !important;
+    border-radius: 0px !important;
+}
+
+
+
+.mx-2rem {
+    margin-right: 2rem;
+    margin-left: 2rem;
+}
+
+.document-border {
+    border-radius: 0.625rem !important;
+}
+
+.shortened-padding{
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+}
 }
 
 .type-fieldset {

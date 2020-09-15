@@ -29,11 +29,11 @@
 
 
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 @if (TempData["ErrorMessage"] != null)
                 {
                     <div class="modal-header border-bottom-0">
-                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     </div>
                 }
@@ -63,7 +63,7 @@
                                 <div class="col-4">
                                     <label asp-for="Request.ArrivalDate" class="control-label"></label>
                                     <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" />
-                                    <span asp-validation-for="Request.ArrivalDate" class="text-danger"></span>
+                                    <span asp-validation-for="Request.ArrivalDate" class="text-danger-centarix"></span>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group">
@@ -74,7 +74,7 @@
                                                 <option value="@user.Id">@user.UserName</option>
                                             }
                                         </select>
-                                        <span asp-validation-for="Request.ApplicationUserReceiverID" class="text-danger"></span>
+                                        <span asp-validation-for="Request.ApplicationUserReceiverID" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">

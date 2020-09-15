@@ -15,6 +15,7 @@ namespace PrototypeWithAuth.ViewModels
     //this is the model for the modal view - this views a specific request and details - CRU (D)
     public class RequestItemViewModel
     {
+        //public ApplicationUser CurrentUser { get; set; }
         public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
         public List<Request> RequestsByProduct { get; set; }
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
