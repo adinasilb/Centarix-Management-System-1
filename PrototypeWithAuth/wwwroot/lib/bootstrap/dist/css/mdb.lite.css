@@ -2213,12 +2213,12 @@ a.text-primary:focus {
     color: #1266f1 !important
 }
 
-.text-danger {
+.text-danger-centarix {
     color: #ff3547 !important
 }
 
-a.text-danger:hover,
-a.text-danger:focus {
+a.text-danger-centarix:hover,
+a.text-danger-centarix:focus {
     color: #ff0219 !important
 }
 

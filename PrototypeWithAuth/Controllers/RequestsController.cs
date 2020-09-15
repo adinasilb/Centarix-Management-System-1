@@ -412,7 +412,8 @@ namespace PrototypeWithAuth.Controllers
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 UnitTypes = unittypeslookup,
                 PaymentTypes = paymenttypes,
-                CompanyAccounts = companyaccounts
+                CompanyAccounts = companyaccounts,
+                //CurrentUser = 
             };
 
             requestItemViewModel.Request = new Request();

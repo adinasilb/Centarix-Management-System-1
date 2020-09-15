@@ -36,7 +36,7 @@
 
                     @if (TempData["ErrorMessage"] != null)
                     {
-                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
                     <div>
@@ -58,7 +58,7 @@
                             <!--<h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>-->
                             <!-- <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>  -->
                             <h3>@Model.Request.Product.ProductName</h3>
-                            <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
+                            <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
                         </div>
 
                     </div>
@@ -105,7 +105,7 @@
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
          new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
          "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "parentlist", @disabled = "disabled" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4 px-4">
@@ -114,7 +114,7 @@
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
          new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
          "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist", @disabled = "disabled" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4 px-4">
@@ -129,7 +129,7 @@
          optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
          htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "vendorList", @disabled = "disabled" }
          )
-                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -151,12 +151,12 @@
                                         <div class="col-6 pr-4">
                                             <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
                                             <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
+                                            <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                                         </div>
                                         <div class="col-6">
                                             <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
                                             <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
-                                            <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
+                                            <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger-centarix" />
                                         </div>
                                     </div>
                                     <br />
@@ -166,12 +166,12 @@
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
                                         <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger" />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
                                         <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
-                                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger quote-date" />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
                                     </div>
                                 </div>*@
                                 <br />
@@ -179,12 +179,12 @@
                                     <div class="col-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
                                         <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
+                                        <span asp-validation-for="Request.CatalogNumber" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-3">
                                         <label asp-for="Request.Warranty" class="control-label"></label>
                                         <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.Warranty" class="text-danger"></span>
+                                        <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
                                     </div>
                                     @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                     {
@@ -212,7 +212,7 @@
                                     <div class="col-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
                                         <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
+                                        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
                                     </div>
                                     @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                     {
@@ -232,7 +232,7 @@
                                     <div class="col-4">
                                         <label asp-for="Request.URL" class="control-label"></label>
                                         <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.URL" class="text-danger"></span>
+                                        <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                             </div>
@@ -255,7 +255,7 @@
                                         <div class="form-group">
                                             <label asp-for="Request.ExchangeRate" class="control-label"></label>
                                             <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
+                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" disabled />
-                                                <span class="text-danger" asp-validation-for="Request.Cost"></span>
+                                                <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -287,7 +287,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " disabled />
-                                                <span class="text-danger" asp-validation-for="Request.VAT"></span>
+                                                <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -339,7 +339,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         <div class="form-group">
                                             <label asp-for="Request.Installments" class="control-label"></label>
                                             <input asp-for="Request.Installments" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.Installments" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-8 p-3">

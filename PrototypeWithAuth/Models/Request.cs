@@ -35,28 +35,29 @@ namespace PrototypeWithAuth.Models
 
         public bool IsDeleted { get; set; } // check if this request's parentrequests requests are deleted - if so give parent request true for is deleted
         public bool IsApproved { get; set; }
-      //  [Range(1, uint.MaxValue, ErrorMessage = "Field must be more than 0")]
+        //  [Range(1, uint.MaxValue, ErrorMessage = "Field must be more than 0")]
+        [Display(Name = "Amount")]
         public uint Unit { get; set; } //largest unit the request comes in - amount of unit
         //public int Unit { get; set; }
         public int? UnitTypeID { get; set; }
         [ForeignKey("UnitTypeID")]
-        [Display(Name = "Unit Type")]
+        [Display(Name = "Unit")]
 
         public UnitType UnitType { get; set; }
         // public int[] UnitTypes { get; set; }
-        [Display(Name = "Subunit")]
+        [Display(Name = "Amount")]
         public uint? SubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subunit
         public int? SubUnitTypeID { get; set; }
         [ForeignKey("SubUnitTypeID")]
-        [Display(Name = "Subunit Type")]
+        [Display(Name = "Unit")]
         public UnitType SubUnitType { get; set; }
-        [Display(Name = "Sub Subunit")]
+        [Display(Name = "Amount")]
         public uint? SubSubUnit { get; set; } // if this is not null, then it this is the smallest unit - amount of subsubunit
 
         public int? SubSubUnitTypeID { get; set; }
 
         [ForeignKey("SubSubUnitTypeID")]
-        [Display(Name = "Sub Subunit Type")]
+        [Display(Name = "Unit")]
         public UnitType SubSubUnitType { get; set; }
         public uint UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
         public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
