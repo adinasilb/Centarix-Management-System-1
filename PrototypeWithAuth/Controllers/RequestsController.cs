@@ -426,8 +426,18 @@ namespace PrototypeWithAuth.Controllers
 
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
             string requestFolder = Path.Combine(uploadFolder, "0");
+
             if (Directory.Exists(requestFolder))
             {
+                System.IO.DirectoryInfo di = new DirectoryInfo(requestFolder);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in di.EnumerateDirectories())
+                {
+                    dir.Delete(true);
+                }
                 Directory.Delete(requestFolder);
             }
             Directory.CreateDirectory(requestFolder);

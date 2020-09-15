@@ -1,0 +1,65 @@
+﻿@model List<PrototypeWithAuth.Models.RequestNotification>
+@{
+    ViewData["Title"] = "Index";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+<div class="">
+    <table class="table table-headerspaced table-noheaderlines table-hover" style="width:95%;">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Vendor</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string iconStyle = item.NotificationStatus.Icon;
+                string icon = item.NotificationStatus.Icon;
+                string color = "var(" + item.NotificationStatus.Color + ")";
+                string description = item.Description;
+
+                var fontWeight = "";
+                @if (!item.IsRead)
+                {
+                    fontWeight = "notification-bold";
+                }
+
+                <tr style="height:100px;" class="@fontWeight">
+                    <td class="px-5 " style="width:10%;">
+                        <i style='font-size:1.4rem; @iconStyle' class='@icon '></i>
+
+                    </td>
+                    <td style="width:20%;"><a href="@Url.Action("NotificationsView", new { requestID =item.NotificationID} )">@Html.DisplayFor(modelItem => item.RequestName)</a></td>
+                    <td style="color: @color; width:20%;">@description</td>
+                    <td> @Html.DisplayFor(modelItem => item.TimeStamp) </td>
+                    <td>@Html.DisplayFor(modelItem => item.Vendor) </td>
+
+                    @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
+                    @if (item.NotificationStatusID == 1)
+                    {
+                        <td>
+                        </td>
+                        <td class="text-right mr-3">
+                            <button class="btn order-late no-box-shadow danger-color rounded-pill text-white text-capitalize font-weight-normal" data-title="Ask" style="padding: .34rem 1.25rem !important;" value="@item.RequestID">Ask</button>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

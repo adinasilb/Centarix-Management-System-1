@@ -9,7 +9,7 @@ $(".file-select").on("change", function (e) {
 	e.stopPropagation();
 	console.log("upload file submitted");
 
-	var inputButton = $('input[type="submit"]');
+	var inputButton = $('#save-documents');
 
 	//var $form = $(this).parents('form');
 	console.log("in save doc files");

@@ -330,7 +330,7 @@ $(function () {
 			var mm = parseInt(date.getMonth() + 1);
 			var yyyy = parseInt(date.getFullYear());
 		}
-	
+
 		for (i = 0; i < $(this).val(); i++) {
 			switch (mm) {
 				case 1:
@@ -1655,7 +1655,7 @@ $(function () {
 			return;
 		}
 		valid = $("#Request_ExpectedSupplyDays").attr('aria-invalid');
-		if (valid == "true" ) {
+		if (valid == "true") {
 			return;
 		}
 		valid = $("#Request_CatalogNumber").attr('aria-invalid');
@@ -1671,12 +1671,12 @@ $(function () {
 		return valid;
 	}
 
-	$('#myModal').change(		function () {
-			$.validator.unobtrusive.parse("#myForm");
-		});
+	$('#myModal').change(function () {
+		$.validator.unobtrusive.parse("#myForm");
+	});
 
 	$("#saveEditModal").click(function (e) {
-		
+
 
 	});
 
@@ -1708,7 +1708,7 @@ $(function () {
 	//	$.fn.validateItemTab();
 
 	//});
-	$(".create-modal-submit").click(function () {
+	$(".create-modal-submit").click(function (e) {
 		console.log('$("#createModalForm").valid()');
 		if ($("#createModalForm").valid()) {
 			$(".create-modal-submit").removeClass("disabled-submit");
@@ -1721,6 +1721,7 @@ $(function () {
 		}
 
 	});
+
 
 	//$(".request-archive-tab").click(function () {
 	//	console.log("in onclick archive-tab");
