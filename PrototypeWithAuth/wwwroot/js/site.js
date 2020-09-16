@@ -1134,7 +1134,7 @@ $(function () {
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal");
-		//$(".open-document-modal").removeClass("active-document-modal");
+		$(".open-document-modal").removeClass("active-document-modal");
 		$(this).addClass("active-document-modal");
 		var enumString = $(this).data("string");
 		console.log("enumString: " + enumString);
@@ -1709,8 +1709,8 @@ $(function () {
 
 	//});
 	$(".create-modal-submit").click(function (e) {
-		console.log('$("#createModalForm").valid()');
-		if ($("#createModalForm").valid()) {
+		console.log('$("#myForm").valid()');
+		if ($("#myForm").valid()) {
 			$(".create-modal-submit").removeClass("disabled-submit");
 			return true;
 		} else {

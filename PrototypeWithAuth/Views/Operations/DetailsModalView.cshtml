@@ -389,8 +389,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
-
-
+                                @{
+                                    var urlAction = Url.Action("DocumentsModal", "Requests");
+                                }
+                                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" />
                                 <div class="row">
                                     <div class="col-md-3 mb-4">
                                         @{
@@ -418,10 +420,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                 filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()"  data-val="@false">
-                                            <div class="card document-border " style="height:86%">
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
+                                            <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="invoice" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
 
                                             </div>
@@ -443,8 +445,8 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                 </div>
 
                                             </div>
-                                            </a>
-                                            <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
+                                        </a>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                     </div>
                                     <div class="col-md-3 mb-4">
                                         @{
@@ -459,10 +461,9 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
-                                             
                                             </div>
-                                            </a>
-                                            <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
+                                        </a>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -477,7 +478,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/info_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -492,9 +493,9 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
-                                            <div class="card document-border"  style="height:86%">
+                                            <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/pictures_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -511,7 +512,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/return_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -528,7 +529,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                       <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/credit_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>

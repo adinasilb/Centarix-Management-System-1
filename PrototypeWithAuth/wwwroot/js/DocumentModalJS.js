@@ -18,6 +18,7 @@ $(".file-select").on("change", function (e) {
 	//var url = $("#documentModalForm").data('string');
 	console.log("input button: " + inputButton);
 	var url = inputButton.attr("href");
+	var $isEdittable = $('#IsEdittable').val();
 	console.log("url : " + url);
 	var formData = new FormData($("#documentModalForm")[0]);
 	var data = $("#documentModalForm").serialize();
@@ -35,11 +36,13 @@ $(".file-select").on("change", function (e) {
 			//this.options.noteModalElement.modal('hide');
 			$(".carousel-item").remove();
 			$("#documentsModal").replaceWith('');
+
 			var $enumString = $(".open-document-modal.active-document-modal").data("string");
 			var $requestId = $(".open-document-modal.active-document-modal").data("id");
-			console.log("enumstring: " + $enumString + "    : requestid: " + $requestId);
+			
+			console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
 			$.fn.ChangeColorsOfModal($enumString);
-			$.fn.OpenDocumentsModal($enumString, $requestId);
+			$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable);
 			return false;
 		},
 		processData: false,
@@ -51,15 +54,15 @@ $(".file-select").on("change", function (e) {
 
 
 
-$.fn.OpenDocumentsModal = function (enumString, requestId) {
+$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
 	$("#documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString,
+		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable,
 		type: 'GET',
-		cache: false,
-		success: function (data) {
+		cache: false,		
+	    success: function (data) {
 			var modal = $(data);
 			$('body').append(modal);
 			$("#documentsModal").modal({

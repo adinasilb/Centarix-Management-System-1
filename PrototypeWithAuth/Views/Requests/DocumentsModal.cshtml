@@ -116,19 +116,19 @@
                                                     <div class="col-12 col-md-4 m-0">
                                                         @if (ModelCount > i)
                                                         {
-                                                            <div class="card document-border m-0">
+                                                            <div class="card iframe-container document-border m-0">
                                                                 <div class="card-body responsive-iframe-container">
                                                                     @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
                                                                     @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
                                                                         <div class="blocker"></div>*@
-                                                                    <iframe src="@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
+                                                                    <iframe src="\@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
                                                                     @*</a>*@
                                                                 </div>
                                                                 <div class="card-body text-center">
-                                                                    <a href="@Url.Action("DeleteDocumentModal","Requests", new { FileString = Model.FileStrings[i], id = requestid, FolderName = Model.RequestFolderName } )" id="deleteUrl" style="display: none;"></a>
-                                                                    <a href="@Model.FileStrings[i]" target="_blank" class="mx-3">
+                                                                    <a href="@Url.Action("DeleteDocumentModal","Requests", new { FileString = Model.FileStrings[i], id = requestid, FolderName = Model.RequestFolderName, IsEdittable = Model.IsEdittable } )" id="deleteUrl" style="display: none;"></a>
+                                                                    <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3"  >
                                                                         <img src="~/images/css/inventory/add-item/other icons/view_dis.png" />
                                                                     </a>
                                                                     <a href="" class="delete-document mx-3" id="delete-file-document">

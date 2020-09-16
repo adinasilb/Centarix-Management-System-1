@@ -1413,7 +1413,7 @@ namespace PrototypeWithAuth.Controllers
         {
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
             requestItemViewModel.Request.ParentRequest = null;
-            requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
+            //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
             var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
             parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
             parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
@@ -2963,7 +2963,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-            return PartialView(documentsModalViewModel);
+            return View(documentsModalViewModel);
         }
 
 
