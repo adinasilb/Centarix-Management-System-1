@@ -127,7 +127,7 @@
                                                                     @*</a>*@
                                                                 </div>
                                                                 <div class="card-body text-center">
-                                                                    <a href="@Url.Action("DeleteDocumentModal","Requests", new { FileString = Model.FileStrings[i], id = requestid, FolderName = Model.RequestFolderName, IsEdittable = Model.IsEdittable } )" id="deleteUrl" style="display: none;"></a>
+                                                                    <a href="@Url.Action("DeleteDocumentModal","Requests", new { FileString = Model.FileStrings[i], id = requestid, RequestFolderNameEnum = Model.RequestFolderName, IsEdittable = Model.IsEdittable } )" id="deleteUrl" style="display: none;"></a>
                                                                     <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3"  >
                                                                         <img src="~/images/css/inventory/add-item/other icons/view_dis.png" />
                                                                     </a>

@@ -1415,12 +1415,26 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentRequest = null;
             //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
             var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
-            parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
-            parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
-            requestItemViewModel.Request.ParentQuote = parentQuote;
-            requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
-            requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
+            if(parentQuote != null)
+            {
+                parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
+                parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
+                requestItemViewModel.Request.ParentQuote = parentQuote;
+            }
+            //else if(requestItemViewModel.Request.ParentQuote?.QuoteNumber !=null || requestItemViewModel.Request.ParentQuote?.QuoteDate != null)
+            //{ 
+            //    parentQuote= new ParentQuote();
+            //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
+            //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
+            //    requestItemViewModel.Request.ParentQuote = parentQuote;
 
+            //}
+            else
+            {
+                requestItemViewModel.Request.ParentQuote = null;
+            }
+            requestItemViewModel.Request.Product = _context.Products.Include(p=>p.Vendor).Include(p=>p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Request.ProductID);
+           
             //in case we need to return to the modal view
             requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
@@ -2992,15 +3006,16 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum)
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable)
         {
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
                 FileName = FileString,
                 RequestID = id,
-                FolderName = RequestFolderNameEnum
+                FolderName = RequestFolderNameEnum,
+                IsEdittable = IsEdittable
             };
-            return View(deleteDocumentsViewModel);
+            return PartialView(deleteDocumentsViewModel);
         }
 
         [HttpPost]
@@ -3529,7 +3544,7 @@ namespace PrototypeWithAuth.Controllers
                     InvoiceDate = DateTime.Today
                 }
             };
-            return View(addInvoiceViewModel);
+            return PartialView(addInvoiceViewModel);
         }
 
         [HttpPost]

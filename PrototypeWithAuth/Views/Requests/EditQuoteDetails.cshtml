@@ -33,7 +33,7 @@
                     <div class="form-group mb-3 ">
                         <div class="row">
                             <div class="col-2">
-                                <h4><strong>Update Quote</strong></h4>
+                                <div class="heading-1">Update Quote</div>
                             </div>
                             <div class="col-4">
                                 <h4>@Model.Vendor.VendorEnName</h4>
@@ -134,13 +134,13 @@
                                     </tr>
                                 }
                                 <tr class="border-0 mb-3 no-hover">
-                                    <td colspan="4">
+                                    <td colspan="3">
                                         <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1" accept=".pdf" required>
                                     </td>
-                                    <td colspan="3">
+                                    <td colspan="4">
                                         <div class="form-group text-center my-5">
-                                            <input type="submit" asp-action="EditQuoteDetails" name="OrderType" value="Save" class="inv-lab-button mr-3 px-5" />
-                                            <button type="button" class="cancel-button px-5" data-dismiss="modal">Cancel</button>
+                                            <input type="submit" asp-action="EditQuoteDetails" name="OrderType" value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color" />
+                                            <button type="button" class="custom-cancel custom-button px-5" data-dismiss="modal">Cancel</button>
                                         </div>
                                     </td>
 

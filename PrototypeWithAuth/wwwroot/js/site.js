@@ -2272,9 +2272,10 @@ $(function () {
 
 
 	$("#SaveInvoiceModal").on("click", function (e) {
+		$("#myForm").valid();
 		var valid = $("#Invoice_InvoiceNumber").attr("aria-invalid");
 		console.log("invoice number validation + " + valid);
-		if (valid == false || valid == undefined) {
+		if (valid == "true" || $("#Invoice_InvoiceNumber")=="" ) {
 			e.preventDefault();
 			e.stopPropagation();
 			$("#invoice-number-validation").html("Please enter a valid Number");
@@ -2303,7 +2304,7 @@ $(function () {
 		console.log("vendor: " + vendorid);
 		console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid;
+		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -2312,7 +2313,7 @@ $(function () {
 		e.preventDefault();
 		e.stopPropagation();
 		var vendorid = $(this).attr("vendor");
-		var itemUrl = "AddInvoiceModal/?vendorid=" + vendorid;
+		var itemUrl = "/Requests/AddInvoiceModal/?vendorid=" + vendorid;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl);
 	});
@@ -2321,7 +2322,7 @@ $(function () {
 		e.preventDefault();
 		e.stopPropagation();
 		var requestid = $(this).attr("request");
-		var itemUrl = "AddInvoiceModal/?requestid=" + requestid;
+		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl);
 	});

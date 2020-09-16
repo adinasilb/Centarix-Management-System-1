@@ -424,7 +424,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/DeleteModal/?id=" + $(this).val() + "&isQuote=true";
+            var $itemurl = "/Requests/DeleteModal/?id=" + $(this).val() + "&isQuote=true";
             $.fn.CallPageRequest($itemurl, "delete");
             return false;
         });
@@ -446,7 +446,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).val();
+            var $itemurl = "/Requests/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "quote");
             return false;
         });
@@ -675,7 +675,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/TermsModal/?id=" + $(this).val() + "&IsCart=true";
+            var $itemurl = "/Requests/TermsModal/?id=" + $(this).val() + "&IsCart=true";
             console.log("itemurl: " + $itemurl);
             $.fn.CallPageRequest($itemurl, "termsmodal");
             return false;
@@ -689,7 +689,7 @@
             if ($(this).hasClass("cart")) {
                 cart = "&cart=true"
             }
-            var $itemurl = "/ConfirmEmailModal/?id=" + $(this).val() + cart;
+            var $itemurl = "/Requests/ConfirmEmailModal/?id=" + $(this).val() + cart;
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
@@ -698,7 +698,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/ConfirmQuoteEmailModal/?id=" + $(this).val();
+            var $itemurl = "/Requests/ConfirmQuoteEmailModal/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
@@ -706,7 +706,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/ConfirmQuoteEmailModal/?id=" + $(this).val() + "&isResend=true";
+            var $itemurl = "/Requests/ConfirmQuoteEmailModal/?id=" + $(this).val() + "&isResend=true";
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });
@@ -714,7 +714,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/ConfirmQuoteOrderEmailModal/?id=" + $(this).val();
+            var $itemurl = "/Requests/ConfirmQuoteOrderEmailModal/?id=" + $(this).val();
             $.fn.CallPageRequest($itemurl, "confirmemail");
             return false;
         });

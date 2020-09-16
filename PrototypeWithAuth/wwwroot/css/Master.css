@@ -209,7 +209,7 @@ input:not(input[type=button]) {
     border: .0625rem solid #000000DB !important;
     background-color:transparent;
     font-weight: var(--bold-light);
-    /*font-size: 1.438rem;*/
+    font-size: 1.438rem;
 }
 .custom-clear-button-table {
     background-color: transparent;
@@ -300,7 +300,7 @@ table td, table td .btn, .text, table th {
 .no-mb {
     margin-bottom: 0 !important;
 }
-}
+
 .table-button {
     padding-left: 1rem;
     padding-right: 1rem;
