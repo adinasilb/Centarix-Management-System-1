@@ -13,12 +13,13 @@
 
 /*color*/
 :root {
-    --black-87 :#000000DE;
+    --black-87: #000000DE;
     --white: white;
     --user-color: #795548;
     --lab-man-color: rgb(125,155,170); /*#7D9BAA;*/
     --lab-man-50-color: rgba(125,155,170, .5);
     --order-inv-color: #2196F3;
+    --order-inv-25: rgba(33,150,243, .25);
     --acc-color: #A26FF0;
     --protocol-color: #009688;
     --expense-color: #00BCD4;
@@ -41,12 +42,17 @@
     --bold-regular: 400;
     --bold-medium: 500;
     --bold-light: 300;
-    --text-font-size: 1rem; 
+    --text-font-size: 1rem;
     --text-font-weight: 400;
+    --small-text-font-size: .9rem;
 }
 
 .success-color {
     background-color: var(--success-color);
+}
+
+.small-text {
+    font-size: var(--small-text-font-size);
 }
 
 .text-danger-centarix {
