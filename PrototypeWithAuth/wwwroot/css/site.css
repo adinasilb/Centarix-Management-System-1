@@ -1856,7 +1856,7 @@ td .btn {
     margin-bottom: 1.875rem;
 }
 
-.new-modal-body {
+.modal .new-modal-body { /*only for new modal body's descended from the modal*/
     padding: 1.25rem;
     background: #F6F7F8;
 }
