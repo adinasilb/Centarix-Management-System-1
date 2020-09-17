@@ -6,7 +6,7 @@
 
 <div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog reorder-modal  modal-lg " role="document" >
+    <div class="modal-dialog reorder-modal  modal-lg " role="document">
 
         <div class="modal-content d-inline-block" style="border-radius:2rem;">
 
@@ -16,8 +16,8 @@
                 </div>
 
                 @*
-        NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
-            they need the hiddenfors that are right underneath it
+                    NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+                        they need the hiddenfors that are right underneath it
                 *@
 
                 @Html.HiddenFor(model => model.Request.RequestID)
@@ -37,7 +37,7 @@
                     }
 
                     <div class="form-group mb-3 ">
-                        <div class="row">
+                        <div class="row modal-title-line">
                             <div class="col-1">
                                 @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
                                 {
@@ -49,8 +49,8 @@
                                 }
                             </div>
 
-                            <div class="col-3 heading-1">
-                               @Model.Request.Product.ProductName
+                            <div class="modal-product-title" @*style="width: 80%;"*@>
+                                <input asp-for="Request.Product.ProductName" class="form-control-plaintext heading-1" readonly />
                             </div>
 
                         </div>
@@ -62,7 +62,7 @@
 
                     <div class="row" id="edit">
                         <div class="col RequestUnitCard">
-                            <div class="border rounded rounded-reorder p-3">
+                            <div class="border p-3">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.Unit" class="control-label"></label>
@@ -102,7 +102,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                             </div>
                         </div>
                         <div class="col RequestSubunitCard pl-0">
-                            <div class="border rounded rounded-reorder p-3">
+                            <div class="border p-3">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubUnit" class="control-label"></label>
@@ -140,7 +140,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                             </div>
                         </div>
                         <div class="col-4 RequestSubsubunitCard pl-0">
-                            <div class="border rounded rounded-reorder p-3">
+                            <div class="border p-3">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubSubUnit" class="control-label"></label>
@@ -194,18 +194,18 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 <label asp-for="Request.Cost" class="control-label"></label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
-                                    <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1"/>
+                                    <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1" />
                                     <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label  class="control-label">VAT</label>
+                                <label class="control-label">VAT</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#x20aa;</span>   
-                                    @{ var vat = .17 * Model.Request.Cost;} 
-                                    <input class="form-control-plaintext border-bottom vat" disabled  value="@vat.ToString("N2");"/>
+                                    <span class="input-group-text">&#x20aa;</span>
+                                    @{ var vat = .17 * Model.Request.Cost;}
+                                    <input class="form-control-plaintext border-bottom vat" disabled value="@vat.ToString("N2");" />
                                 </div>
                             </div>
                         </div>
@@ -233,7 +233,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                     </div>
 
                     <div class="form-group text-center my-5">
-                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="custom-button custom-button-font order-inv-background-color between-button-margin"   style="width:20%" />
+                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="custom-button custom-button-font order-inv-background-color between-button-margin" style="width:20%" />
                         <button type="button" class="custom-cancel custom-button " data-dismiss="modal" style="width:20%">Cancel</button>
                     </div>
                 </div>
