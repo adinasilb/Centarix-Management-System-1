@@ -1134,6 +1134,11 @@ namespace PrototypeWithAuth.Data
            {
                EmployeeStatusID = 3,
                Description = "Advisor"
+           },
+           new EmployeeStatus
+           {
+               EmployeeStatusID = 4,
+               Description = "User"
            }
        );
             modelBuilder.Entity<JobCategoryType>().HasData(

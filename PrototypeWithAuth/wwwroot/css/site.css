@@ -1714,6 +1714,8 @@ td .btn {
     padding: 0 !important;
 }
 
+
+/*HOVER FOR EACH SECTION*/
 .order-inv-form .form-control-plaintext:focus {
     outline-width: 0px !important;
     outline-color: none !important;
@@ -1725,10 +1727,28 @@ td .btn {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
-
 .order-inv-form .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
+
+
+.users-form .form-control-plaintext:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--user-color) !important;
+}
+
+.users-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var(--user-color) !important;
+}
+
+
+.users-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--user-color) !important;
+}
+
+
 
 .input-group-text {
     padding: 0 !important;

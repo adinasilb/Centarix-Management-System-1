@@ -128,6 +128,11 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
 
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
+
+            registerUserViewModel.NewEmployee = new Employee();
+            registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
+            registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.OrdersAndInventory, Name="General", Selected=false }
