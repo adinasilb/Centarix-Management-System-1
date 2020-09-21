@@ -66,6 +66,10 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Phone Number 2")]
+        public string PhoneNumber2 { get; set; }
+
         //Permissions
         public List<UserRoleViewModel> OrderRoles { get; set; }
         public List<UserRoleViewModel> ProtocolRoles { get; set; }
@@ -108,5 +112,6 @@ namespace PrototypeWithAuth.ViewModels
         public Employee NewEmployee { get; set; }
         public List<JobCategoryType> JobCategoryTypes { get; set; }
         public List<EmployeeStatus> EmployeeStatuses { get; set; }
+        public List<MaritalStatus> MaritalStatuses { get; set; }
     }
 }

@@ -132,6 +132,7 @@ namespace PrototypeWithAuth.Controllers
             registerUserViewModel.NewEmployee = new Employee();
             registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
             registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+            registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
 
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {
@@ -197,6 +198,7 @@ namespace PrototypeWithAuth.Controllers
                     SecureAppPass = registerUserViewModel.SecureAppPass,
                     CentarixID = registerUserViewModel.CentarixID,
                     PhoneNumber = registerUserViewModel.PhoneNumber,
+                    PhoneNumber2 = registerUserViewModel.PhoneNumber2,
                     UserNum = usernum,
                     LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
                     LabUnitLimit = registerUserViewModel.LabUnitLimit,

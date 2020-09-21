@@ -141,6 +141,20 @@
     <Compile Remove="Data\Migrations\20200908084940_JobCategoryTypefk.Designer.cs" />
     <Compile Remove="Data\Migrations\20200910074008_AddDegreeCitizenshipMaritalModels.cs" />
     <Compile Remove="Data\Migrations\20200910074008_AddDegreeCitizenshipMaritalModels.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200921172642_AddedPhoneNumber2ToUser.cs" />
+    <Compile Remove="Data\Migrations\20200921172642_AddedPhoneNumber2ToUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200921173023_AddedPhoneNumber2ToUser.cs" />
+    <Compile Remove="Data\Migrations\20200921173023_AddedPhoneNumber2ToUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200921173219_AddedPhoneNumber2ToUser.cs" />
+    <Compile Remove="Data\Migrations\20200921173219_AddedPhoneNumber2ToUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200921173423_AddedPhoneNumber2ToUser.cs" />
+    <Compile Remove="Data\Migrations\20200921173423_AddedPhoneNumber2ToUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200921173810_AddedPhoneNumber2ToUser.cs" />
+    <Compile Remove="Data\Migrations\20200921173810_AddedPhoneNumber2ToUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200921174038_AddedPhoneNumber2ToUser.cs" />
+    <Compile Remove="Data\Migrations\20200921174038_AddedPhoneNumber2ToUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200921174444_AddedPhoneNumber2ToUser.cs" />
+    <Compile Remove="Data\Migrations\20200921174444_AddedPhoneNumber2ToUser.Designer.cs" />
   </ItemGroup>
 
 

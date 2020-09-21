@@ -314,7 +314,7 @@ center-horizontally {
     filter: drop-shadow(5px 5px 5px #a7a7a7);
 }*/
 
-.module-button-div:hover, .main-permissions div:hover {
+.module-button-div:hover, .main-permissions div.row div:hover {
     border-radius: 15px;
     background-color: rgb(232,240,254);
 }
