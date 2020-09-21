@@ -862,7 +862,7 @@ namespace PrototypeWithAuth.Data
                     MenuDescription = AppUtility.MenuItems.LabManagement.ToString(),
                     MenuViewName = "Lab Management",
                     ControllerName = "Vendors",
-                    ActionName = "IndexForLabManage",
+                    ActionName = "IndexForPayment",
                     MenuImageURL = "/images/css/main_menu_icons/lab.png"
                 },
                 new Menu

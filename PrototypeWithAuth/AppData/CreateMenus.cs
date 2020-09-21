@@ -377,7 +377,8 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary()
                 {
                     { "PageType", pageType },
-                    { "CategoryType", categoryType }
+                    { "CategoryType", categoryType },
+                    { "SectionType", AppUtility.MenuItems.OrdersAndInventory}
                 },
                 Classes = menuClass,
                 IconName = "icon-storefront-24px"
@@ -455,7 +456,8 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary()
                 {
                     { "PageType", pageType },
-                    { "CategoryType", categoryType }
+                    { "CategoryType", categoryType },
+                    { "SectionType", AppUtility.MenuItems.OrdersAndInventory}
                 },
                 Classes = menuClass,
                 IconName = "icon-storefront-24px"
@@ -931,7 +933,8 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary()
                 {
                     {"PageType", typePageType },
-                    {"categoryType", 2 }
+                    {"categoryType", 2 },
+                           { "SectionType", AppUtility.MenuItems.Operation}
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-storefront-24px"

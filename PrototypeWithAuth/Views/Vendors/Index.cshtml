@@ -1,10 +1,17 @@
 ﻿@model IEnumerable<PrototypeWithAuth.Models.Vendor>
 @using PrototypeWithAuth.AppData
-
 @{
-    ViewData["Title"] = "IndexForLabManage";
-    Layout = "~/Views/Shared/SuppliersNavViewForLabManage.cshtml";
-    // string pageType = TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString();
+    string hoverClass = "";
+    ViewData["Title"] = "IndexForPayment";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (TempData["SectionType"].Equals(AppUtility.MenuItems.Operation))
+    {
+        hoverClass = "oper-link-clr";
+    }
+    else
+    {
+        hoverClass = "inv-link-clr";
+    }
 }
 
 <div class="">
@@ -44,7 +51,7 @@
                         @Html.DisplayFor(modelItem => item.VendorID)
                     </td>
                     <td>
-                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="lab-man-link-clr" asp-route-SectionType="@AppUtility.MenuItems.LabManagement">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
+                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="@hoverClass" asp-route-SectionType="@AppUtility.MenuItems.LabManagement">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorHeName)

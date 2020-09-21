@@ -39,8 +39,9 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: Vendors
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1)
+        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1, AppUtility.MenuItems SectionType= AppUtility.MenuItems.OrdersAndInventory)
         {
+            TempData["SectionType"] = SectionType;
             if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
@@ -66,7 +67,7 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: Vendors
         [Authorize(Roles = "Admin, Accounting,  LabManagement")]
-        public async Task<IActionResult> IndexForPayment(AppUtility.MenuItems SectionType)
+        public async Task<IActionResult> IndexForPayment(AppUtility.MenuItems SectionType  = AppUtility.MenuItems.LabManagement)
         {
             TempData["SectionType"] = SectionType;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
@@ -85,15 +86,6 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        [Authorize(Roles = "Admin, LabManagement")]
-        public async Task<IActionResult> IndexForLabManage()
-        {
-            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
-            //TempData["Action"] = AppUtility.SuppliersEnum.All;
-            //TempData["Action"] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
-            //return View(await _context.Vendors.ToListAsync());
-            return RedirectToAction("IndexForPayment", new { SectionType = AppUtility.MenuItems.LabManagement });
-        }
 
         // GET: Vendors/Details/5
         [Authorize(Roles = "Admin")] //don't know where this goes to so can't have a role
