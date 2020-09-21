@@ -2,12 +2,16 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog reorder-modal  modal-lg " style="min-width:1300PX !important" role="document">
-        <div class="modal-content d-inline-block" style="border-radius:1rem;">
-            <form action="" method="post" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <div class="heading-1">Adjust Payments Modal</div>
-                </div>
+    <div class="add-invoice-modal modal-dialog-centered mx-auto">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding">
+
+                <div class="modal-header  m-0 p-0 ">
+                        <div class="heading-1">Adjust Payments Modal</div>
+                    </div>
             </form>
         </div>
     </div>

@@ -6,18 +6,18 @@
 
 <div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog reorder-modal  modal-lg " role="document" >
+    <div class="modal-dialog-centered modal-xl mx-auto" role="document" >
 
-        <div class="modal-content d-inline-block" style="border-radius:2rem;">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius mx-auto">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" id="reorderForm" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
 
-            <form action="" method="post" id="reorderForm" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-                <div class="text-right mr-5 mt-4">
-                    <button type="button" class="close" style="font-size:2rem;" data-dismiss="modal">&times;</button>
-                </div>
 
                 @*
-        NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
-            they need the hiddenfors that are right underneath it
+            NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+                they need the hiddenfors that are right underneath it
                 *@
 
                 @Html.HiddenFor(model => model.Request.RequestID)
@@ -29,7 +29,7 @@
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
 
                 <!-- Modal Header -->
-                <div class="new-modal-header no-box-shadow" style="padding: 0.5em 6em">
+                <div class="new-modal-header no-box-shadow modal-header-padding">
                     @if (TempData["ErrorMessage"] != null)
                     {
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
@@ -50,7 +50,7 @@
                             </div>
 
                             <div class="col-3 heading-1">
-                               @Model.Request.Product.ProductName
+                                @Model.Request.Product.ProductName
                             </div>
 
                         </div>
@@ -194,18 +194,18 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 <label asp-for="Request.Cost" class="control-label"></label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
-                                    <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1"/>
+                                    <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1" />
                                     <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label  class="control-label">VAT</label>
+                                <label class="control-label">VAT</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#x20aa;</span>   
-                                    @{ var vat = .17 * Model.Request.Cost;} 
-                                    <input class="form-control-plaintext border-bottom vat" disabled  value="@vat.ToString("N2");"/>
+                                    <span class="input-group-text">&#x20aa;</span>
+                                    @{ var vat = .17 * Model.Request.Cost;}
+                                    <input class="form-control-plaintext border-bottom vat" disabled value="@vat.ToString("N2");" />
                                 </div>
                             </div>
                         </div>
@@ -232,8 +232,8 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                         <hr class="col-12" />
                     </div>
 
-                    <div class="form-group text-center my-5">
-                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="custom-button custom-button-font order-inv-background-color between-button-margin"   style="width:20%" />
+                    <div class="form-group text-center modal-footer-mt">
+                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="custom-button custom-button-font order-inv-background-color between-button-margin" style="width:20%" />
                         <button type="button" class="custom-cancel custom-button " data-dismiss="modal" style="width:20%">Cancel</button>
                     </div>
                 </div>

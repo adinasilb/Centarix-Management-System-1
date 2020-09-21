@@ -1472,7 +1472,7 @@ td .btn {
     top: 15%;
 }
 
-.ask-modal {
+.sm-modal {
     width: 45.63rem;
     height: 35.31rem;
 }
@@ -1769,8 +1769,8 @@ td .btn {
 }
 
 .type-div {
-    margin-right: 2rem;
-    margin-bottom: 2rem;
+    margin-right: 3rem;
+    margin-bottom: 3rem;
 }
 
 .type-label {

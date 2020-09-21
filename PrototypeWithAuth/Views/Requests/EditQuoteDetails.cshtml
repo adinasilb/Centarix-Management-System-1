@@ -6,37 +6,34 @@
 
 <div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog reorder-modal  modal-lg " style="min-width:1300PX !important" role="document">
+    <div class="modal-dialog-centered  mx-auto  modal-xl " role="document">
 
-        <div class="modal-content d-inline-block" style="border-radius:2rem;">
-
-            <form action="" method="post" id="reorderForm" enctype="multipart/form-data" style="height: 100%;">
-                <div class="text-right mr-5 mt-4">
-                    <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close" style="font-size:2.5rem; font-weight:400;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" id="reorderForm" enctype="multipart/form-data" style="height: 100%;" class="modal-padding">
 
                 @*
-        NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
-            they need the hiddenfors that are right underneath it
+                NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+                    they need the hiddenfors that are right underneath it
                 *@
                 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <!-- Modal Header -->
-                <div class="new-modal-header no-box-shadow" style="padding: 0.5em 6em">
+                <div class="new-modal-header no-box-shadow" 
                     @if (TempData["ErrorMessage"] != null)
                     {
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
 
-                    <div class="form-group mb-3 ">
-                        <div class="row">
-                            <div class="col-2">
+                    <div class="form-group">
+                        <div class="row  modal-header-padding">
+                            <div class="col-3">
                                 <div class="heading-1">Update Quote</div>
                             </div>
-                            <div class="col-4">
-                                <h4>@Model.Vendor.VendorEnName</h4>
+                            <div class="col-3">
+                                <div class="top-menu">@Model.Vendor.VendorEnName</div>
                             </div>
                             <input type="hidden" asp-for="@Model.Vendor.VendorID" />
                             <input type="hidden" asp-for="@Model.ParentQuoteID" />
@@ -57,10 +54,12 @@
                             </div>
 
                         </div>
-                        <div class="row">
-                            <hr class="col-12" />
+                        <div class="container p-0">
+                            <div class="row">
+                                <div class="col-12"><hr  /></div>
+                            </div>
                         </div>
-                        <table class="table table-headerspaced table-borderless mb-5">
+                        <table class="table table-headerspaced table-borderless">
                             <thead>
                                 <tr>
                                     <td class="pb-0" width="15%"></td>
@@ -88,7 +87,7 @@
                                     @Html.HiddenFor(model => Model.Reorders[i].RequestID)
                                     <tr class="">
                                         <td class="" width="15%">
-                                            <input type="hidden" asp-for="@Model.Reorders[i].RequestID" />                                           
+                                            <input type="hidden" asp-for="@Model.Reorders[i].RequestID" />
                                             @if (Model.Reorders[i].Product.ProductSubcategory.ImageURL != null)
                                             {
                                                 var imageurl = Model.Reorders[i].Product.ProductSubcategory.ImageURL;
@@ -126,19 +125,19 @@
                                                 <span asp-validation-for="@Model.Reorders[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
-                                        <td width="15%">
+                                        <td width="15%" class="border-right">
                                             <div class="form-group">
                                                 <input value="00-00-0000" class="form-control-plaintext border-bottom datepicker" type="date" name="expected-supply-days" id="expected-supply-date" />
                                             </div>
                                         </td>
                                     </tr>
                                 }
-                                <tr class="border-0 mb-3 no-hover">
-                                    <td colspan="3">
-                                        <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1" accept=".pdf" required>
+                                <tr class="border-0  no-hover ">
+                                    <td colspan="3" class="p-0">
+                                        <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt" accept=".pdf" required>
                                     </td>
-                                    <td colspan="4">
-                                        <div class="form-group text-center my-5">
+                                    <td colspan="4"  class="p-0 ">
+                                        <div class="form-group text-center modal-footer-mt">
                                             <input type="submit" asp-action="EditQuoteDetails" name="OrderType" value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color" />
                                             <button type="button" class="custom-cancel custom-button px-5" data-dismiss="modal">Cancel</button>
                                         </div>

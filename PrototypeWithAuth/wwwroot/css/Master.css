@@ -342,6 +342,11 @@ table td, table td .btn, .text, table th {
     width: 400px;
     clip-path: circle(200px at center);
 }
+.circular-profile-img-225{
+    height: 225px;
+    width: 225px;
+    clip-path: circle(112.5px at center);
+}
 .circular-profile-img img {
     position: relative;
     height: 100%;
@@ -368,7 +373,7 @@ table td, table td .btn, .text, table th {
 .modal-box-shadow{
     box-shadow: 0 0 .625rem #00000091 !important;
 }
-.modal-submit-mt{
+.modal-footer-mt{
     margin-top:3.25rem !important;
 }
 .modal-header-padding{

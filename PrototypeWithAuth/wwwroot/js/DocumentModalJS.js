@@ -101,7 +101,7 @@ $("#delete-file-document").on("click", function (e) {
 		type: 'GET',
 		cache: false,
 		success: function (data) {
-			var modal = $(data);
+			var modal = data;
 			$('body').append(modal);
 			$("#DeleteDocumentsModal").modal({
 				backdrop: false,
