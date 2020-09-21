@@ -1117,16 +1117,16 @@ $(function () {
 		}
 	}
 
-	//$(".documents-tab").click(function (e) {
-	//	//this is for validation
-	//	$("#myForm").valid();
-	//	$.fn.validatePriceTab();
+	$(".documents-tab").click(function (e) {
+		//this is for validation
+		$("#myForm").valid();
+		$.fn.validatePriceTab();
 
-	//	$.fn.HideAllDocs();
-	//	//$.fn.CheckIfFileSelectsAreFull();
+		$.fn.HideAllDocs();
+		//$.fn.CheckIfFileSelectsAreFull();
 
 
-	//});
+	});
 
 
 
@@ -1702,12 +1702,12 @@ $(function () {
 		return true;
 	};
 
-	//$(".request-price-tab").click(function () {
-	//	console.log("in onclick price tab");
-	//	$("#myForm").valid();
-	//	$.fn.validateItemTab();
+	$(".request-price-tab").click(function () {
+		console.log("in onclick price tab");
+		$("#myForm").valid();
+		$.fn.validateItemTab();
 
-	//});
+	});
 	$(".create-modal-submit").click(function (e) {
 		console.log('$("#myForm").valid()');
 		if ($("#myForm").valid()) {
@@ -1723,42 +1723,42 @@ $(function () {
 	});
 
 
-	//$(".request-archive-tab").click(function () {
-	//	console.log("in onclick archive-tab");
-	//	$("#myForm").valid();
-	//	$.fn.validatePriceTab();
+	$(".request-archive-tab").click(function () {
+		console.log("in onclick archive-tab");
+		$("#myForm").valid();
+		$.fn.validatePriceTab();
 
-	//});
+	});
 
-	//$(".request-history-tab").click(function () {
-	//	console.log("in onclick history-tab");
-	//	$("#myForm").valid();
-	//	$.fn.validateItemTab();
-	//	$.fn.validatePriceTab();
+	$(".request-history-tab").click(function () {
+		console.log("in onclick history-tab");
+		$("#myForm").valid();
+		$.fn.validateItemTab();
+		$.fn.validatePriceTab();
 
-	//});
+	});
 
-	//$(".request-order-tab").click(function () {
-	//	console.log("in onclick order-tab");
-	//	$("#myForm").valid();
-	//	var valid = $.fn.validateItemTab();
-	//	if (valid == "false" || valid == undefined) {
-	//		$.fn.validatePriceTab();
-	//	};
+	$(".request-order-tab").click(function () {
+		console.log("in onclick order-tab");
+		$("#myForm").valid();
+		var valid = $.fn.validateItemTab();
+		if (valid == "false" || valid == undefined) {
+			$.fn.validatePriceTab();
+		};
 
-	//});
+	});
 
-	//$(".request-comments-tab").click(function () {
-	//	console.log("in onclick comments-tab");
-	//	$("#myForm").valid();
-	//	$.fn.validatePriceTab();
-	//});
+	$(".request-comments-tab").click(function () {
+		console.log("in onclick comments-tab");
+		$("#myForm").valid();
+		$.fn.validatePriceTab();
+	});
 
-	//$(".request-location-tab").click(function () {
-	//	console.log("in onclick location-tab");
-	//	$("#myForm").valid();
-	//	$.fn.validateItemTab();
-	//});
+	$(".request-location-tab").click(function () {
+		console.log("in onclick location-tab");
+		$("#myForm").valid();
+		$.fn.validateItemTab();
+	});
 
 
 	$("#Request_Terms").change(function () {
