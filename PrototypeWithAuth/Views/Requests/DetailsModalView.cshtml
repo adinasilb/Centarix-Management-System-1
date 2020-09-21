@@ -56,10 +56,7 @@
                         }
                         @*</div>*@
                         <div class="modal-product-title" @*style="width: 80%;"*@>
-                            <!--<h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>-->
-                            <!-- <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>  -->
                             <input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom" readonly />
-                            @*<h3>@Model.Request.Product.ProductName</h3>*@
                             <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
                         </div>
 

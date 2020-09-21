@@ -37,7 +37,7 @@
                     }
 
                     <div class="form-group mb-3 ">
-                        <div class="row">
+                        <div class="row modal-title-line">
                             <div class="col-1">
                                 @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
                                 {
@@ -62,7 +62,7 @@
 
                     <div class="row" id="edit">
                         <div class="col RequestUnitCard">
-                            <div class="border rounded rounded-reorder p-3">
+                            <div class="border p-3">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.Unit" class="control-label"></label>
@@ -102,7 +102,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                             </div>
                         </div>
                         <div class="col RequestSubunitCard pl-0">
-                            <div class="border rounded rounded-reorder p-3">
+                            <div class="border p-3">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubUnit" class="control-label"></label>
@@ -140,7 +140,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                             </div>
                         </div>
                         <div class="col-4 RequestSubsubunitCard pl-0">
-                            <div class="border rounded rounded-reorder p-3">
+                            <div class="border p-3">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubSubUnit" class="control-label"></label>

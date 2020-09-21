@@ -272,7 +272,7 @@
 
 </header>
 <div class="container-fluid pl-0">
-    <main role="main">
+    <main role="main" class="overflow-hidden">
         @*<div class="spinner-border center" role="status" id="loading" style="display:none;">
                 <span class="sr-only">Loading...</span>
             </div>*@
@@ -280,8 +280,8 @@
         <div class="center" role="status" id="loading" style="display:none;">
             <img src="~/images/css/Loading/centarix_loading3.gif" />
         </div>
-        <div style="display: flex; ">
-            @{ var style = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + "; min-height:100rem;"; }
+        <div style="display: flex; overflow: hidden;">
+            @{ var style = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + "; min-height:100rem; aria-hidden=true;"; }
             <div class="sidebar-shadow2">
                 <div class="sidebar-shadow1">
                     <div style="@style" class="navbar-expand-lg text-center ourNavBar">
@@ -307,7 +307,7 @@
                 </div>
                 @*</nav>*@
             </div>
-            <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2">
+            <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 overflow-hidden">
                 <!--class="col-md-10 border-left"-->
                 @RenderBody()
             </div>
