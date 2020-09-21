@@ -1,38 +1,40 @@
 ﻿@model PrototypeWithAuth.Models.EmployeeHours;
 
 <div class="modal modal-document fader" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
-    <div class="modal-dialog modal-sm  work-from-home-modal">
-        <div class="modal-content d-inline-block pl-4" style="border-radius:2rem;">
-            <a type="button" class="close mr-4 mt-4" asp-action="ReportHours" aria-label="Close" style="font-size:2.5rem; font-weight:400;">
+    <div class="modal-dialog-centered modal-sm mx-auto work-from-home-modal">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius modal-padding">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
-            </a>
-                <div class="modal-header border-0 border-bottom mt-6 ml-5 p-0">
+            </button>
+            <div class="modal-padding">
+                <div class="modal-header px-0 border-0 border-bottom modal-header-padding">
                     <div class="container p-0">
                         <div class="">
                             @{ var totalHours = Model.TotalHours?.ToString(@"hh\:mm");}
                             <div class="heading-1">Today's Hours, @totalHours</div>
                         </div>
-                        <div class="mt-5 mb-3">
+                        <div class="">
                             <hr />
                         </div>
                     </div>
                 </div>
-                <div class="modal-body border-0 rounded mx-5 mb-5">
+
+                <div class="modal-body border-0 pt-0 rounded">
                     <div class="row font-weight-bolder" style="font-size:1.5rem;">
-                       @Model.Date.DayOfWeek, @Model.Date.ToShortDateString()
+                        @Model.Date.DayOfWeek, @Model.Date.ToShortDateString()
                     </div>
                     <br />
-                    <div class="row"  style="font-size:1.25rem;">
-                       @{ var entry2Description = "";}
-                      You have worked from @Model.Entry1?.ToShortTimeString() - @Model.Exit1?.ToShortTimeString()
-                        @if(Model.Entry2 != null)
+                    <div class="row" style="font-size:1.25rem;">
+                        @{ var entry2Description = "";}
+                        You have worked from @Model.Entry1?.ToShortTimeString() - @Model.Exit1?.ToShortTimeString()
+                        @if (Model.Entry2 != null)
                         {
-                            entry2Description= ",\n and from" + Model.Entry2?.ToShortTimeString() + " - " + Model.Exit2?.ToShortTimeString();
+                            entry2Description = ",\n and from" + Model.Entry2?.ToShortTimeString() + " - " + Model.Exit2?.ToShortTimeString();
                         }
-                         @entry2Description
+                        @entry2Description
                     </div>
                 </div>
-               
+            </div>
         </div>
     </div>
 </div>

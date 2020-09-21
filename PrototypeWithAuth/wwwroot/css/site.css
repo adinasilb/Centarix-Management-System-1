@@ -1478,10 +1478,8 @@ td .btn {
 }
 
 .work-from-home-modal {
-    position: absolute;
     max-height: 100%;
     min-width: 35%;
-    top: 15%;
 }
 
 .no-arrow-input::-webkit-inner-spin-button,
