@@ -1,21 +1,21 @@
 ﻿@model PrototypeWithAuth.Models.Request;
 
 <div class="modal modal-document fader" id="orderLateModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
-    <div class="modal-dialog ask-modal  modal-sm " style="width:40%;">
-        <div class="modal-content d-inline-block" style="border-radius:2rem;">
-            <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close" style="font-size:2.5rem; font-weight:400;">
+    <div class="ask-modal modal-dialog-centered mx-auto" >
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
                 @Html.HiddenFor(r => r.RequestID)
-                <div class="modal-header border-0">
-                    <div class="container">
+                <div class="modal-header border-0 pt-0 px-0 modal-header-padding">
+                    <div class="container p-0">
                         <div >
                             <span class="heading-1">Send Message to @Model.Product.Vendor.VendorEnName.ToLower()</span>
                         </div>
                     </div>
                 </div>
-                <div class="modal-body border rounded mx-4">
+                <div class="modal-body border rounded m-0 p-0">
                     <p class="p-3 text" >
                         The order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName , has not arrived yet.<br />
                         Please update us on the matter.<br />
@@ -24,8 +24,8 @@
                         Centarix
                     </p>
                 </div>
-                <div class="modal-footer mt-4 border-0 " >
-                    <div class="m-auto">
+                <div class="modal-footer border-0 p-0" >
+                    <div class="mx-auto modal-submit-mt">
                         <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="OrderLateModal" value="Send" />
                         <button class="custom-button custom-cancel cancel-email" data-dismiss="modal" >Cancel</button>
                     </div>

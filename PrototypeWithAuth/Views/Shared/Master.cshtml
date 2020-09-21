@@ -473,7 +473,7 @@
         e.preventDefault();
         e.stopPropagation();
         $("#loading").show();
-        var $itemurl = "/OrderLateModal/?id=" + $(this).val();
+        var $itemurl = "/Requests/OrderLateModal/?id=" + $(this).val();
         $.fn.CallOrderLateModal($(this).val());
         return false;
     });
@@ -484,7 +484,7 @@
         $(".modal-backdrop").remove();
         $('#loading').show();
         //var url = @Url.Action("Requests", "OrderLate");
-        var url = "/OrderLateModal/?id=" + id;
+        var url = "/Requests/OrderLateModal/?id=" + id;
         $.ajax({
             async: true,
             type: 'GET',

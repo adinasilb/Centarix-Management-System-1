@@ -131,7 +131,12 @@
                                                                     <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3"  >
                                                                         <img src="~/images/css/inventory/add-item/other icons/view_dis.png" />
                                                                     </a>
-                                                                    <a href="" class="delete-document mx-3" id="delete-file-document">
+                                                                    @{var link = "delete-file-document"; }
+                                                                    @if (!Model.IsEdittable)
+                                                                    {
+                                                                        link = " ";
+                                                                    }
+                                                                    <a href="#" class="delete-document mx-3" id="@link" >
                                                                         <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
                                                                     </a>
                                                                     @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@

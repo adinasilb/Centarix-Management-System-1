@@ -346,3 +346,31 @@ table td, table td .btn, .text, table th {
     position: relative;
     height: 100%;
 }
+
+.modal-border-radius{
+    border-radius: 2.8125rem !important;
+    border: none !important;
+}
+.modal-padding {
+    margin-top: 5rem;
+    margin-left: 5rem;
+    margin-right: 5rem;
+    margin-bottom: 3.5rem;
+}
+.modal-close-padding {
+    margin-top: 1.375rem;
+    margin-right: 2rem;
+}
+.modal-close-style {
+    font-size:2.5rem !important; 
+    font-weight:400 !important;
+}
+.modal-box-shadow{
+    box-shadow: 0 0 .625rem #00000091 !important;
+}
+.modal-submit-mt{
+    margin-top:3.25rem !important;
+}
+.modal-header-padding{
+    padding-bottom: 3.25rem !important;
+}
