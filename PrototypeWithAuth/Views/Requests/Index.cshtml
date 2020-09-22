@@ -384,43 +384,45 @@
                             <td>@Html.DisplayFor(m => item.CreationDate)</td>
                         }
                     }
-                    <td style="width:3rem;">
-                        @if (item.RequestStatusID == 1)
-                        {
-                            //this is a nested if b/c if user can't approve then i still don't want it to go the the else
-                            if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
+                    <td class="row" >
+                        <div class="col-4">
+
+                            @if (item.RequestStatusID == 1)
                             {
-                                if (item is Reorder)
+                                //this is a nested if b/c if user can't approve then i still don't want it to go the the else
+                                if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
                                 {
-                                    <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder", new { id = item.RequestID })">
-                                        <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
-                                    </a>
+                                    if (item is Reorder)
+                                    {
+                                        <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder", new { id = item.RequestID })">
+                                            <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
+
+                                        <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("Approve", new { id = item.RequestID })">
+                                            <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
+                                        </a>
+                                    }
+
+
                                 }
-                                else
-                                {
-                                    @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
-
-                                    <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("Approve", new { id = item.RequestID })">
-                                        <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
-                                    </a>
-                                }
-
-
                             }
-                        }
-                        else if (item.RequestStatusID == 2)
-                        {
-                            <button class="btn load-receive-and-location no-box-shadow" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
-                        }
-                        else
-                        {
-                            @*work on getting the correct syntax to create a new product with*@
-                            <button class="btn load-order-details no-box-shadow" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
-                        }
-                    </td>
+                            else if (item.RequestStatusID == 2)
+                            {
+                                <button class="btn load-receive-and-location no-box-shadow" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
+                            }
+                            else
+                            {
+                                @*work on getting the correct syntax to create a new product with*@
+                                <button class="btn load-order-details no-box-shadow" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
+                            }
+
+                        </div>
                     @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
-                    <td style="width:3rem;">
-                        <button class="btn load-confirm-delete no-box-shadow" data-title="delete" value="@item.RequestID" name="@AppUtility.MenuItems.OrdersAndInventory" ><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button> @*delete*@
+                    <div class="col-3"><button class="btn load-confirm-delete no-box-shadow" data-title="delete" value="@item.RequestID" name="@AppUtility.MenuItems.OrdersAndInventory"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button></div> @*delete*@
 
                         @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
                         @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@

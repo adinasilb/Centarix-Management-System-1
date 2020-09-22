@@ -1733,6 +1733,48 @@ td .btn {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
+.supplier-form .select-wrapper.active span.caret,
+.supplier-form .select-wrapper.active label.mdb-main-label {
+    color: var(--lab-man-color) !important;
+}
+
+.supplier-form .form-control-plaintext:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
+}
+
+.supplier-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
+}
+
+
+.supplier-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
+}
+
+.accounting-form .select-wrapper.active span.caret,
+.accounting-form .select-wrapper.active label.mdb-main-label {
+    color: var(--acc-color) !important;
+}
+
+.accounting-form .form-control-plaintext:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--acc-color) !important;
+}
+
+.accounting-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var(--acc-color) !important;
+}
+
+
+.accounting-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--acc-color) !important;
+}
+
 .oper-form .form-control-plaintext:focus {
     outline-width: 0px !important;
     outline-color: none !important;
