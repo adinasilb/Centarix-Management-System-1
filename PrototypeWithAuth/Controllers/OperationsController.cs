@@ -289,7 +289,23 @@ namespace PrototypeWithAuth.Controllers
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts
             };
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string requestFolder = Path.Combine(uploadFolder, "0");
 
+            if (Directory.Exists(requestFolder))
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(requestFolder);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in di.EnumerateDirectories())
+                {
+                    dir.Delete(true);
+                }
+                Directory.Delete(requestFolder);
+            }
+            Directory.CreateDirectory(requestFolder);
             requestItemViewModel.Request = new Request();
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.Product = new Product();
@@ -450,95 +466,11 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
 
-                    //check if there are any files to upload first
-                    //save the files
+                    //rename temp folder to the request id
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
-                    Directory.CreateDirectory(requestFolder);
-                    if (requestItemViewModel.OrderFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + orderfile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.InvoiceFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile invoiceFile in requestItemViewModel.InvoiceFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + invoiceFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            invoiceFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.ShipmentFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile shipmentFile in requestItemViewModel.ShipmentFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + shipmentFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            shipmentFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.QuoteFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile quoteFile in requestItemViewModel.QuoteFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + quoteFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            quoteFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.InfoFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Info.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + infoFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            infoFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.PictureFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + pictureFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            pictureFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
+                    string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                    string requestFolderTo = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
+                    Directory.Move(requestFolderFrom, requestFolderTo);
 
                     return RedirectToAction("Index", new
                     {

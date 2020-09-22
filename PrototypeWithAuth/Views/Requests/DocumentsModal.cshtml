@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel;
-
+@using PrototypeWithAuth.AppData
 @{
-    Layout= null;
+    Layout = null;
     int requestid;
     if (Model.Request != null)
     {
@@ -11,6 +11,13 @@
     {
         requestid = 0;
     }
+    var bcColor = "order-inv-background-color";
+    var color = "order-inv-color";
+    if (Model.SectionType == AppUtility.MenuItems.Operation)
+    {
+        bcColor = "oper-background-color";
+        color = "operations-filter";
+    }
 }
 <script src="~/js/DocumentModalJS.js">
 </script>
@@ -19,7 +26,7 @@
 <div class="modal modal-document fader" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding" id="documentModalForm">
@@ -27,30 +34,31 @@
                 <input type="hidden" asp-for="Request.RequestID" />
                 <input type="hidden" asp-for="RequestFolderName" />
                 <input type="hidden" asp-for="IsEdittable" />
+                <input type="hidden" asp-for="SectionType" />
                 <a href="" class="open-document-modal active-document-modal" data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;"></a>
                 <div class="modal-header modal-header-padding">
                     <div class="container">
                         <div class="row">
                             <div class="col-2">
-                                <div class="heading-1"><input type="text" class="form-control-plaintext" asp-for="RequestFolderName" /></div>
+                                <div class="heading-1"><input type="text" class="form-control-plaintext " asp-for="RequestFolderName" /></div>
                             </div>
 
                             @if (Model.IsEdittable)
                             {
-                            <div class="col-3 offset-7">
-                                <div class="upload-btn-wrapper">
-                                    <button class="custom-button custom-button-font order-inv-background-color float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
-                                    <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple>
+                                <div class="col-3 offset-7">
+                                    <div class="upload-btn-wrapper">
+                                        <button class="custom-button custom-button-font @bcColor  float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
+                                        <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple>
+                                    </div>
+                                    @*<div class="upload-btn-wrapper">*@
+                                    <input type="submit" value="Save" id="save-documents" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
+                                    @*</div>*@
+                                    @*<input type="submit" value="Save" asp-action="DocumentsModal" class="btn btn-block inv-button save-document-files" />*@
+                                    @*<button class="btn inv-button save-document-files">Save</button>*@
+                                    @*@Html.ActionLink("Save", "DocumentsModal", new { documentsModalViewModel = Model }, new { @class = "btn inv-button save-document-files" })*@
+                                    @*@Html.ActionLink("Save", "DocumentsModal", new { }, new { @class = "btn inv-button save-document-files" })*@
+                                    @*<button class="btn inv-button save-document-files"  data-string="@Html.ActionLink("Save","SaveDocumentFiles", n)">Save</button>*@
                                 </div>
-                                @*<div class="upload-btn-wrapper">*@
-                                <input type="submit" value="Save" id="save-documents" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
-                                @*</div>*@
-                                @*<input type="submit" value="Save" asp-action="DocumentsModal" class="btn btn-block inv-button save-document-files" />*@
-                                @*<button class="btn inv-button save-document-files">Save</button>*@
-                                @*@Html.ActionLink("Save", "DocumentsModal", new { documentsModalViewModel = Model }, new { @class = "btn inv-button save-document-files" })*@
-                                @*@Html.ActionLink("Save", "DocumentsModal", new { }, new { @class = "btn inv-button save-document-files" })*@
-                                @*<button class="btn inv-button save-document-files"  data-string="@Html.ActionLink("Save","SaveDocumentFiles", n)">Save</button>*@
-                            </div>
                             }
 
                         </div>
@@ -59,9 +67,9 @@
                 <div class="modal-body">
                     @if (Model.FileStrings != null)
                     {
-                    <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
+                        <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
 
-                        @*@if (Model.FileStrings.Count > 3)
+                            @*@if (Model.FileStrings.Count > 3)
                     {
                         <div class="controls-top">
                             <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
@@ -80,18 +88,18 @@
                     }*@
 
 
-                        <div class="row">
-                            <div class="col-1">
-                                @if (Model.FileStrings.Count > 3)
+                            <div class="row">
+                                <div class="col-1">
+                                    @if (Model.FileStrings.Count > 3)
                                     {
-                                <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
-                                    <i class="fas fa-chevron-left"></i>
-                                </a>
+                                        <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
                                     }
-                            </div>
-                            <div class="col-10">
-                                <div class="carousel-inner v-2" role="listbox">
-                                    @{
+                                </div>
+                                <div class="col-10">
+                                    <div class="carousel-inner v-2" role="listbox">
+                                        @{
                                             var ModelCount = Model.FileStrings.Count;
                                             var EndCount = ModelCount;
                                             switch (ModelCount % 3)
@@ -112,45 +120,45 @@
                                                 {
                                                     carouselItemClass += " active";
                                                 }
-                                        <div class="@carouselItemClass">
-                                            <div class="col-12 col-md-4 m-0">
-                                                @if (ModelCount > i)
+                                                <div class="@carouselItemClass">
+                                                    <div class="col-12 col-md-4 m-0">
+                                                        @if (ModelCount > i)
                                                         {
-                                                <div class="card iframe-container document-border m-0">
-                                                    <div class="card-body responsive-iframe-container">
-                                                        @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
+                                                            <div class="card iframe-container document-border m-0">
+                                                                <div class="card-body responsive-iframe-container">
+                                                                    @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
-                                                        @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
-                                                    <div class="blocker"></div>*@
-                                                        <iframe src="\@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
+                                                                    @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
+                                                            <div class="blocker"></div>*@
+                                                                    <iframe src="\@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
-                                                        @*</a>*@
-                                                    </div>
-                                                    <div class="card-body text-center">
-                                                        <a href="@Url.Action("DeleteDocumentModal","Requests", new { FileString = Model.FileStrings[i], id = requestid, RequestFolderNameEnum = Model.RequestFolderName, IsEdittable = Model.IsEdittable } )" id="deleteUrl" style="display: none;"></a>
-                                                        <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3">
-                                                            <img src="~/images/css/inventory/add-item/other icons/view_dis.png" />
-                                                        </a>
-                                                        @{var link = "delete-file-document"; }
-                                                        @if (!Model.IsEdittable)
+                                                                    @*</a>*@
+                                                                </div>
+                                                                <div class="card-body text-center">
+                                                                    <a href="@Url.Action("DeleteDocumentModal","Requests", new { FileString = Model.FileStrings[i], id = requestid, RequestFolderNameEnum = Model.RequestFolderName, IsEdittable = Model.IsEdittable, IsOperations = (Model.SectionType.ToString().Equals("Operation")) } )" id="deleteUrl" style="display: none;"></a>
+                                                                    <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3">
+                                                                        <img src="~/images/css/inventory/add-item/other icons/view_dis.png" />
+                                                                    </a>
+                                                                    @{var link = "delete-file-document"; }
+                                                                    @if (!Model.IsEdittable)
                                                                     {
                                                                         link = " ";
                                                                     }
-                                                        <a href=" " class="delete-document mx-3" id="@link">
-                                                            <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
-                                                        </a>
-                                                        @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@
-                                                        @*<p class="align-to-bottom w-100">@Model.FileStrings[i]</p>*@
-                                                    </div>
-                                                </div>
+                                                                    <a href=" " class="delete-document @Model.SectionType.ToString() mx-3" id="@link">
+                                                                        <i style="font-size:2rem;" class="icon-delete-24px hover-bold @color"></i>
+                                                                    </a>
+                                                                    @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@
+                                                                    @*<p class="align-to-bottom w-100">@Model.FileStrings[i]</p>*@
+                                                                </div>
+                                                            </div>
 
                                                         }
-                                            </div>
-                                        </div>
+                                                    </div>
+                                                </div>
                                             }
 
-                                    }
-                                    @*<div class="carousel-item active">
+                                        }
+                                        @*<div class="carousel-item active">
                                     <div class="col-12 col-md-4">
                                         <div class="card mb-2">
                                             <img class="card-img-top" src="@Model.FileStrings[0]"
@@ -177,21 +185,21 @@
 
                                     </div>
                                 </div>*@
+                                    </div>
+                                </div>
+
+                                <div class="col-1">
+                                    @if (Model.FileStrings.Count > 3)
+                                    {
+                                        <a class="btn-floating" href="#carousel-example-multi" data-slide="next">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    }
                                 </div>
                             </div>
 
-                            <div class="col-1">
-                                @if (Model.FileStrings.Count > 3)
-                                    {
-                                <a class="btn-floating" href="#carousel-example-multi" data-slide="next">
-                                    <i class="fas fa-chevron-right"></i>
-                                </a>
-                                    }
-                            </div>
+
                         </div>
-
-
-                    </div>
                     }
                 </div>
             </form>

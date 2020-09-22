@@ -399,10 +399,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             var filterClass = "";
                                             if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
                                             {
-                                                filterClass = "order-inv-filter";
+                                                filterClass = "oper-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
+                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
                                             <div class="card document-border " style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/order_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
@@ -417,10 +417,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             filterClass = "";
                                             if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
                                             {
-                                                filterClass = "order-inv-filter";
+                                                filterClass = "oper-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
+                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
@@ -435,10 +435,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             filterClass = "";
                                             if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
                                             {
-                                                filterClass = "order-inv-filter";
+                                                filterClass = "oper-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@false">
+                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/shipment_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
@@ -453,10 +453,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             filterClass = "";
                                             if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
                                             {
-                                                filterClass = "order-inv-filter";
+                                                filterClass = "oper-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
+                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
@@ -472,10 +472,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             filterClass = "";
                                             if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
                                             {
-                                                filterClass = "order-inv-filter";
+                                                filterClass = "oper-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
+                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/info_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
@@ -489,10 +489,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             filterClass = "";
                                             if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
                                             {
-                                                filterClass = "order-inv-filter";
+                                                filterClass = "oper-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
+                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/pictures_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
@@ -506,10 +506,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             filterClass = "";
                                             if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
                                             {
-                                                filterClass = "order-inv-filter";
+                                                filterClass = "oper-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
+                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/return_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
@@ -523,10 +523,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             filterClass = "";
                                             if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
                                             {
-                                                filterClass = "order-inv-filter";
+                                                filterClass = "oper-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
+                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/credit_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />

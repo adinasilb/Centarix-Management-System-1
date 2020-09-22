@@ -6,6 +6,7 @@
 	var formData = new FormData($("#DeleteDocumentModalForm")[0]);
 	$foldername = $("#FolderName").val();
 	$requestId = $("#RequestID").val();
+	var isOperations = $("#SectionType").val()!="Operation";
 	var $isEdittable = $('#IsEdittable').val();
 	console.log("foldername: " + $foldername);
 	console.log("$requestId: " + $requestId);
@@ -16,7 +17,7 @@
 		data: formData,
 		success: (partialResult) => {
 			$("#DeleteDocumentsModal").replaceWith('');
-			$.fn.OpenDocumentsModal($foldername, $requestId, $isEdittable );
+			$.fn.OpenDocumentsModal($foldername, $requestId, $isEdittable, isOperations);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
@@ -46,12 +47,12 @@ $.fn.ChangeColorsOfDocs = function ($foldername) {
 	//}
 };
 
-$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable)  {
+$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations)  {
 	$("#documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable,
+		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&IsOperations=" + isOperations,
 		type: 'GET',
 		cache: false,
 		success: function (data) {

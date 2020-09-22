@@ -970,7 +970,7 @@ a.nav-link {
     border-bottom: 4px solid var(--order-inv-color);
 }*/
 
-.container-fluid ul li a.oper-link.active {
+.container-fluid ul li a.oper-link.active, .container-fluid ul li a.oper-link:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--operations-color);
@@ -1430,7 +1430,8 @@ body {
 }
 
 .home-nav-item {
-    padding-left: 1.6rem;
+    padding-left: 2.25rem;
+    margin-right:0px !important;
 }
 
 .btn-circle.btn-xl {
@@ -1478,10 +1479,8 @@ td .btn {
 }
 
 .work-from-home-modal {
-    position: absolute;
     max-height: 100%;
     min-width: 35%;
-    top: 15%;
 }
 
 .no-arrow-input::-webkit-inner-spin-button,
@@ -1714,6 +1713,10 @@ td .btn {
     padding: 0 !important;
 }
 
+.order-inv-form .select-wrapper.active span.caret,
+.order-inv-form .select-wrapper.active label.mdb-main-label {
+    color: var(--order-inv-color) !important;
+}
 
 /*HOVER FOR EACH SECTION*/
 .order-inv-form .form-control-plaintext:focus {
@@ -1736,6 +1739,69 @@ td .btn {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--user-color) !important;
+}
+
+.supplier-form .select-wrapper.active span.caret,
+.supplier-form .select-wrapper.active label.mdb-main-label {
+    color: var(--lab-man-color) !important;
+}
+
+.supplier-form .form-control-plaintext:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
+}
+
+.supplier-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
+}
+
+
+.supplier-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
+}
+
+.accounting-form .select-wrapper.active span.caret,
+.accounting-form .select-wrapper.active label.mdb-main-label {
+    color: var(--acc-color) !important;
+}
+
+.accounting-form .form-control-plaintext:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--acc-color) !important;
+}
+
+.accounting-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var(--acc-color) !important;
+}
+
+
+.accounting-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--acc-color) !important;
+}
+
+.oper-form .form-control-plaintext:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var( --operations-color) !important;
+}
+
+.oper-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var( --operations-color) !important;
+}
+
+
+.oper-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var( --operations-color) !important;
+}
+
+.oper-form .select-wrapper.active span.caret,
+.oper-form .select-wrapper.active label.mdb-main-label {
+    color: var( --operations-color) !important;
 }
 
 .users-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
@@ -1884,4 +1950,7 @@ td .btn {
 }
 .add-invoice-modal{
     width:93.31rem;
+}
+.select-wrapper.mdb-select-sublist.mdb-select.custom.select-dropdown.form-control-plaintext, .select-wrapper.mdb-select-subProject.mdb-select.custom.select-dropdown.form-control-plaintext {
+    border: none !important;
 }

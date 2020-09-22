@@ -1,106 +1,107 @@
 ﻿@model PrototypeWithAuth.ViewModels.LabManageQuotesViewModel
+@using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "LabManageQuotes";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
-    <form method="post" enctype="multipart/form-data" style="height: 100%; ">
+<form method="post" enctype="multipart/form-data" style="height: 100%; ">
 
-        @foreach (var vendor in Model.RequestsByVendor)
-        {
-            <input type="hidden" asp-for="@vendor.Key.VendorID" class="key-vendor-id" />
-            <table class="table table-headerspaced table-borderless table-hover mb-5">
-                <thead>
+    @foreach (var vendor in Model.RequestsByVendor)
+    {
+        <input type="hidden" asp-for="@vendor.Key.VendorID" class="key-vendor-id" />
+        <table class="table table-headerspaced table-borderless table-hover mb-5">
+            <thead>
+                <tr class="text-center">
+                    <td class="pb-0" width="15%"></td>
+                    <td class="pb-0" style="width:10%;">
+                        Item Name
+                    </td>
+                    <td class="pb-0" style="width:10%;">
+                        Vendor
+                    </td>
+                    <td class="pb-0" style="width:10%">
+                        Type
+                    </td>
+                    <td class="pb-0" style="width:10%">
+                        Amount
+                    </td>
+                    <td class="pb-0" style="width:10%">
+                        Price
+                    </td>
+                    <td class="pb-0" style="width:15%">
+                        Requested By
+                    </td>
+                    <td class="pb-0" style="width:7%">
+                    </td>
+                    <td class="pb-0" style="width:13%">
+                    </td>
+                </tr>
+            </thead>
+            <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
+                <td width="10%" class="p-0" rowspan="2"><div class="heading-1">@vendor.Key.VendorEnName.ToLower()</div></td>
+                <td colspan="7" class="border-bottom"></td>
+            </tr>
+            <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
+            <tbody>
+                @foreach (var request in vendor)
+                {
                     <tr class="text-center">
-                        <td class="pb-0" width="15%"></td>
-                        <td class="pb-0" style="width:10%;">
-                            Item Name
+                        <td class="text-center" width="15%">
+                            <input type="hidden" asp-for="@request.RequestID" />
+                            @if (request.Product.ProductSubcategory.ImageURL != null)
+                            {
+                                var imageurl = request.Product.ProductSubcategory.ImageURL;
+                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                            }
+                            else
+                            {
+                                <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                            }
                         </td>
-                        <td class="pb-0" style="width:10%;">
-                            Vendor
+                        <td width="10%">
+                            @request.Product.ProductName
                         </td>
-                        <td class="pb-0" style="width:10%">
-                            Type
+                        <td width="10%">
+                            @request.Product.Vendor.VendorEnName.ToLower()
                         </td>
-                        <td class="pb-0" style="width:10%">
-                            Amount
+                        <td>
+                            @request.Product.ProductSubcategory.ProductSubcategoryDescription
                         </td>
-                        <td class="pb-0" style="width:10%">
-                            Price
+                        <td width="10%">
+                            @request.Unit @request.UnitType.UnitTypeDescription
+                            @if (request.SubUnitType != null)
+                            {
+                                @request.SubUnit @request.SubUnitType.UnitTypeDescription
+                            }
+                            @if (request.SubSubUnitType != null)
+                            {
+                                @request.SubSubUnit @request.SubSubUnitType.UnitTypeDescription
+                            }
                         </td>
-                        <td class="pb-0" style="width:15%">
-                            Requested By
+                        <td width="10%">
+                            @{
+                                var ItemCost = request.Cost;
+                                var decItemCost = (decimal)ItemCost;
+                                var stringItemCost = decItemCost.ToString("C02");
+                            }
+                            @stringItemCost
                         </td>
-                        <td class="pb-0" style="width:7%">
+                        <td width="15%">
+                            @request.ApplicationUserCreator.FirstName @request.ApplicationUserCreator.LastName
                         </td>
-                        <td class="pb-0" style="width:13%">
+                        <td width="7%">
+                            @if (request.ParentQuote.QuoteStatusID == 2)
+                            {
+                                <button class="table-button custom-button-table-font lab-man-background-color float-right text-center confirm-quote-resend " value="@request.RequestID">Resend</button>
+                            }
+                        </td>
+                        <td width="13%" class="text-right">
+                            <button class="btn no-box-shadow p-0 load-quote-details mr-3" data-title="edit" value="@request.RequestID"> <img src="~/images/css/accounting/icons/payment.png" /></button>
+                            <button class="btn no-box-shadow p-0 mr-5 load-confirm-delete-quote" data-title="delete" value="@request.RequestID" name="@AppUtility.MenuItems.LabManagement" ><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button>
                         </td>
                     </tr>
-                </thead>
-                <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
-                    <td width="10%" class="p-0" rowspan="2"><div class="heading-1">@vendor.Key.VendorEnName.ToLower()</div></td>
-                    <td colspan="7" class="border-bottom"></td>
-                </tr>
-                <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
-                <tbody>
-                    @foreach (var request in vendor)
-                    {
-                        <tr class="text-center">
-                            <td class="text-center" width="15%">
-                                <input type="hidden" asp-for="@request.RequestID" />
-                                @if (request.Product.ProductSubcategory.ImageURL != null)
-                                {
-                                    var imageurl = request.Product.ProductSubcategory.ImageURL;
-                                    <img src="@imageurl" alt="Image" width="75" class="category-image" />
-                                }
-                                else
-                                {
-                                    <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
-                                }
-                            </td>
-                            <td width="10%">
-                                @request.Product.ProductName
-                            </td>
-                            <td width="10%">
-                                @request.Product.Vendor.VendorEnName.ToLower()
-                            </td>
-                            <td>
-                                @request.Product.ProductSubcategory.ProductSubcategoryDescription
-                            </td>
-                            <td width="10%">
-                                @request.Unit @request.UnitType.UnitTypeDescription
-                                @if (request.SubUnitType != null)
-                                {
-                                    @request.SubUnit @request.SubUnitType.UnitTypeDescription
-                                }
-                                @if (request.SubSubUnitType != null)
-                                {
-                                    @request.SubSubUnit @request.SubSubUnitType.UnitTypeDescription
-                                }
-                            </td>
-                            <td width="10%">
-                                @{
-                                    var ItemCost = request.Cost;
-                                    var decItemCost = (decimal)ItemCost;
-                                    var stringItemCost = decItemCost.ToString("C02");
-                                }
-                                @stringItemCost
-                            </td>
-                            <td width="15%">
-                                @request.ApplicationUserCreator.FirstName @request.ApplicationUserCreator.LastName
-                            </td>
-                            <td width="7%">
-                                @if (request.ParentQuote.QuoteStatusID == 2)
-                                {
-                                    <button class="table-button custom-button-table-font lab-man-background-color float-right text-center confirm-quote-resend " value="@request.RequestID">Resend</button>
-                                }
-                            </td>
-                            <td width="13%" class="text-right">
-                                <button class="btn no-box-shadow p-0 load-quote-details mr-3" data-title="edit" value="@request.RequestID"> <img src="~/images/css/accounting/icons/payment.png" /></button>
-                                <button class="btn no-box-shadow p-0 mr-5 load-confirm-delete-quote" data-title="delete" value="@request.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button>
-                            </td>
-                        </tr>
-                    }
+                }
                 <tr class="border-0 mb-5 no-hover">
                     <td></td>
                     <td></td>
@@ -129,10 +130,10 @@
 
                 </tr>
 
-                </tbody>
-            </table>
+            </tbody>
+        </table>
 
-        }
-    </form>
+    }
+</form>
 
 

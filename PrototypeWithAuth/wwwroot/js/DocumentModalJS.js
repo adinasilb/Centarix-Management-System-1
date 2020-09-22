@@ -41,8 +41,9 @@ $(".file-select").on("change", function (e) {
 			var $requestId = $(".open-document-modal.active-document-modal").data("id");
 			
 			console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
-			$.fn.ChangeColorsOfModal($enumString);
-			$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable);
+			var isOperations = $(".open-document-modal.active-document-modal").hasClass('operations')
+			$.fn.ChangeColorsOfModal($enumString, isOperations);
+			$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, isOperations);
 			return false;
 		},
 		processData: false,
@@ -54,12 +55,12 @@ $(".file-select").on("change", function (e) {
 
 
 
-$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
+$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations) {
 	$("#documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable,
+		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&IsOperations=" + isOperations,
 		type: 'GET',
 		cache: false,		
 	    success: function (data) {
@@ -74,18 +75,23 @@ $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
 	});
 };
 
-$.fn.ChangeColorsOfModal = function ($foldername) {
+$.fn.ChangeColorsOfModal = function ($foldername, isOperations) {
 	console.log("foldername: " + $foldername);
 	var numCards = $(".card.document-border").length;
 	console.log("numcards: " + numCards);
 
 	var div = $("#"+$foldername + " img");
 	console.log("div: " + div);
-	if (div.hasClass("order-inv-filter")) {
+	if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter")) {
 		console.log("has class already");
 	} else {
 		console.log("does not class already");
-		div.addClass("order-inv-filter");
+		if (isOperations) {
+			div.addClass("oper-filter");
+		} else {
+			div.addClass("order-inv-filter");
+		}
+		
 	}
 };
 

@@ -1135,6 +1135,7 @@ $(function () {
 		e.stopPropagation();
 		console.log("clicked open doc modal");
 		$(".open-document-modal").removeClass("active-document-modal");
+		var isOperations = $(".open-document-modal").hasClass('operations')
 		$(this).addClass("active-document-modal");
 		var enumString = $(this).data("string");
 		console.log("enumString: " + enumString);
@@ -1142,16 +1143,16 @@ $(function () {
 		console.log("requestId: " + requestId);
 		var isEdittable = $(this).data("val");
 		console.log("isEdittable: " + isEdittable);
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable);
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, isOperations);
 	});
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
+	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations) {
 		console.log("in open doc modal");
 		$("#documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
 		console.log("urltogo: " + urltogo);
-		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable
+		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&IsOperations=" + isOperations
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
@@ -1358,6 +1359,9 @@ $(function () {
 		} else {
 			$("#Debt").val(sum);
 		}
+		var vatCalc = sum * .17;
+		console.log("vatCalc" + vatCalc);
+		$('#Request_VAT').val(vatCalc.toFixed(2));
 	};
 
 	$(".payments-table").on("change", ".payment-date", function (e) {

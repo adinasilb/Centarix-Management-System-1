@@ -267,7 +267,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> DeleteModal(int? id, bool isQuote = false)
+        public async Task<IActionResult> DeleteModal(int? id, bool isQuote = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.OrdersAndInventory)
         {
             if (id == null)
             {
@@ -286,7 +286,8 @@ namespace PrototypeWithAuth.Controllers
             DeleteRequestViewModel deleteRequestViewModel = new DeleteRequestViewModel()
             {
                 Request = request,
-                IsReorder = isQuote
+                IsReorder = isQuote,
+                SectionType = SectionType
             };
 
             return View(deleteRequestViewModel);
@@ -2682,7 +2683,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ReceivedModal(int RequestID)
+        public async Task<IActionResult> ReceivedModal(int RequestID, bool IsOperations = false)
         {
             //foreach(var li in _context.LocationInstances)
             //{
@@ -2697,7 +2698,8 @@ namespace PrototypeWithAuth.Controllers
                     .FirstOrDefault(),
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
-                ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync()
+                ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
+                SectionType = IsOperations ? AppUtility.MenuItems.Operation : AppUtility.MenuItems.OrdersAndInventory
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
@@ -2923,14 +2925,16 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public ActionResult DocumentsModal(int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable)
+        public ActionResult DocumentsModal(int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations = false)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
                 RequestFolderName = RequestFolderNameEnum,
-                IsEdittable = IsEdittable
-                //Files = new List<FileInfo>()
+                IsEdittable = IsEdittable,
+                //Files = new List<FileInfo>(),
+                SectionType = IsOperations ? AppUtility.MenuItems.Operation : AppUtility.MenuItems.OrdersAndInventory
+
             };
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -2980,14 +2984,15 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable)
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations =false)
         {
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
                 FileName = FileString,
                 RequestID = id,
                 FolderName = RequestFolderNameEnum,
-                IsEdittable = IsEdittable
+                IsEdittable = IsEdittable,
+                SectionType = IsOperations ? AppUtility.MenuItems.Operation : AppUtility.MenuItems.OrdersAndInventory
             };
             return PartialView(deleteDocumentsViewModel);
         }

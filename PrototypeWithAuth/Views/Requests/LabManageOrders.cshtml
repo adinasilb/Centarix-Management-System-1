@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.LabManageQuotesViewModel
+@using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "LabManageOrders";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
@@ -6,11 +7,11 @@
     if (Model.RequestsByVendor.Count() == 0)
     {
         <div class="heading-1">There are currently no orders</div>
-        }
     }
-    <form method="post" enctype="multipart/form-data" style="height: 100%; ">
-        @foreach (var vendor in Model.RequestsByVendor)
-        {
+}
+<form method="post" enctype="multipart/form-data" style="height: 100%; ">
+    @foreach (var vendor in Model.RequestsByVendor)
+    {
         <table class="table table-headerspaced table-borderless table-hover mb-5">
             <thead>
                 <tr class="text-center">
@@ -91,32 +92,33 @@
                             @request.ApplicationUserCreator.FirstName @request.ApplicationUserCreator.LastName
                         </td>
                         <td width="10%">
-                            <button class="btn no-box-shadow p-0 mx-5  load-confirm-delete-quote" data-title="delete" value="@request.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
+                            <button class="btn no-box-shadow p-0 mx-5  load-confirm-delete-quote" data-title="delete" name="@AppUtility.MenuItems.LabManagement" value="@request.RequestID">
+                                <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
                             </button>
                         </td>
                     </tr>
                 }
-            <tr class="border-0 mb-5 no-hover">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td> <span class="text font-weight-bold">Items: @vendor.Count()</span> </td>
-                <td colspan="2">
-                    @{
-                        var totalCost = vendor.Sum(r => r.Cost);
-                        var decTotalCost = (decimal)totalCost;
-                        var stringTotalCost = decTotalCost.ToString("C02");
-                    }
-                    <span class="text font-weight-bold">Total: @stringTotalCost</span>
-                </td>
-                <td>
-                    <button class="custom-button custom-button-font lab-man-background-color float-right confirm-quote-order" type="button" value="@vendor.Key.VendorID">Order</button>
-                </td>
-            </tr>
+                <tr class="border-0 mb-5 no-hover">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td> <span class="text font-weight-bold">Items: @vendor.Count()</span> </td>
+                    <td colspan="2">
+                        @{
+                            var totalCost = vendor.Sum(r => r.Cost);
+                            var decTotalCost = (decimal)totalCost;
+                            var stringTotalCost = decTotalCost.ToString("C02");
+                        }
+                        <span class="text font-weight-bold">Total: @stringTotalCost</span>
+                    </td>
+                    <td>
+                        <button class="custom-button custom-button-font lab-man-background-color float-right confirm-quote-order" type="button" value="@vendor.Key.VendorID">Order</button>
+                    </td>
+                </tr>
 
             </tbody>
         </table>
-        }
-        </form>
+    }
+</form>
 

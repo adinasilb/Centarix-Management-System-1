@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
@@ -18,5 +19,6 @@ namespace PrototypeWithAuth.ViewModels
         public int VendorID { get; set; }
         public string ApplicationUserID { get; set; }
         public int /*AppUtility.RequestPageTypeEnum*/ PageType { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
     }
 }
