@@ -940,7 +940,7 @@ namespace PrototypeWithAuth.Data
                 new RequestNotificationStatus
                 {
                     NotificationStatusID = 2,
-                    Icon = "icon-centarix-icons-05",
+                    Icon = "icon-centarix-icons-03",
                     Color = "--notifications-ordered-color",
                     Description = "ItemOrdered"
                 },
@@ -959,7 +959,15 @@ namespace PrototypeWithAuth.Data
                     Description = "ItemReceived"
                 }
           );
-
+            modelBuilder.Entity<TimekeeperNotificationStatus>().HasData(
+                new RequestNotificationStatus
+                {
+                    NotificationStatusID = 5,
+                    Icon = "icon-access_time-24px",
+                    Color = "--timekeeper-color",
+                    Description = "UpdateHours"
+                }
+          );
 
             modelBuilder.Entity<LocationType>().HasData(
                 new LocationType

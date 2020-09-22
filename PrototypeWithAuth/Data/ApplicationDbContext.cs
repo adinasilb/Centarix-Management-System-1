@@ -33,9 +33,11 @@ namespace PrototypeWithAuth.Data
         public DbSet<EmployeeHoursAwaitingApproval> EmployeeHoursAwaitingApprovals { get; set; }
         public DbSet<EmployeeHours> EmployeeHours { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<TimekeeperNotificationStatus> TimekeeperNotificationStatuses { get; set; }
         public DbSet<RequestNotificationStatus> RequestNotificationStatuses { get; set; }
         public DbSet<NotificationStatus> NotificationStatuses { get; set; }
         public DbSet<RequestNotification> RequestNotifications { get; set; }
+        public DbSet<TimekeeperNotification> TimekeeperNotifications { get; set; }
         //public DbSet<Notification<NotificationStatus>> Notifications { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
         public DbSet<Reorder> Reorder { get; set; }
