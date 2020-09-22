@@ -105,7 +105,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //await _userManager.AddToRoleAsync(user, registerUserViewModel.Role);
                     await _signManager.SignInAsync(user, false);
-                   
+
                     return RedirectToAction("Index", "ApplicationUsers");
                 }
                 else
@@ -129,11 +129,15 @@ namespace PrototypeWithAuth.Controllers
 
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
 
-            registerUserViewModel.NewEmployee = new Employee();
+            registerUserViewModel.NewEmployee = new Employee()
+            {
+                StartedWorking = DateTime.Today
+            };
             registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
             registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
             registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
             registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
+            registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
 
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {
@@ -304,21 +308,21 @@ namespace PrototypeWithAuth.Controllers
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    string confirmationLink  = Url.Page(
+                    string confirmationLink = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
                 values: new { area = "Identity", userId = userId, code = code },
                 protocol: Request.Scheme);
-           
 
-                var message = new MimeMessage();
+
+                    var message = new MimeMessage();
 
                     //instantiate the body builder
                     var builder = new BodyBuilder();
 
 
 
-                    
+
 
                     //add a "From" Email
                     message.From.Add(new MailboxAddress("debbie", "debbie@centarix.com"));
@@ -330,7 +334,7 @@ namespace PrototypeWithAuth.Controllers
                     message.Subject = "Confirm centarix sign-up Link";
 
                     //body
-                    builder.TextBody =confirmationLink;
+                    builder.TextBody = confirmationLink;
 
                     message.Body = builder.ToMessageBody();
 
@@ -647,7 +651,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult SuspendUserModal(string Id )
+        public IActionResult SuspendUserModal(string Id)
         {
             var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
             return PartialView(user);
@@ -658,7 +662,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> SuspendUserModal(ApplicationUser applicationUser)
         {
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
-            if(applicationUser.LockoutEnabled ==true && (applicationUser.LockoutEnd >DateTime.Now))
+            if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > DateTime.Now))
             {
                 applicationUser.LockoutEnabled = false;
                 applicationUser.LockoutEnd = DateTime.Now;

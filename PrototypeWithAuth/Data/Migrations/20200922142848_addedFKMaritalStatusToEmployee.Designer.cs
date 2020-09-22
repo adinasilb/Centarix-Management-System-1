@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200922142848_addedFKMaritalStatusToEmployee")]
+    partial class addedFKMaritalStatusToEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2651,8 +2653,8 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasBaseType("PrototypeWithAuth.Data.ApplicationUser");
 
-                    b.Property<int>("CitizenshipID")
-                        .HasColumnType("int");
+                    b.Property<string>("Citizenship")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DegreeID")
                         .HasColumnType("int");
@@ -2684,13 +2686,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("StartedWorking")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TaxCredits")
-                        .HasColumnType("int");
-
                     b.Property<int>("VacationDays")
                         .HasColumnType("int");
-
-                    b.HasIndex("CitizenshipID");
 
                     b.HasIndex("DegreeID");
 
@@ -3132,12 +3129,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Employee", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.Citizenship", "Citizenship")
-                        .WithMany()
-                        .HasForeignKey("CitizenshipID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PrototypeWithAuth.Models.Degree", "Degree")
                         .WithMany()
                         .HasForeignKey("DegreeID")

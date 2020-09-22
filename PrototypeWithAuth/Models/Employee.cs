@@ -19,6 +19,8 @@ namespace PrototypeWithAuth.Models
         public double EmployerTax { get; set; }
         public double TotalCost { get { return GrossSalary + EmployerTax; } private set {; } }
         public double IncomeTax { get; set; }
+        [Display(Name ="Tax Credits")]
+        public int TaxCredits { get; set; }
         public int VacationDays { get; set; }
         [Display(Name = "Job Title")]
         public string JobTitle { get; set; }
@@ -30,11 +32,17 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "ID Number")]
         public int IDNumber { get; set; }
         [Display(Name = "Relationship Status")]    
-        public string RelationshipStatus {get; set;}
+        public int MaritalStatusID { get; set; }
+        [ForeignKey("MaritalStatusID")]
+        public MaritalStatus MaritalStatus { get; set; }
+        //public string RelationshipStatus {get; set;}
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber2 { get; set; }
-        public string Citizenship { get; set; }
+        //public string Citizenship { get; set; }
+        public int CitizenshipID { get; set; }
+        [ForeignKey("CitizenshipID")]
+        public Citizenship Citizenship { get; set; }
         public IEnumerable<EmployeeHours> EmployeeHours { get; set; }
         public int EmployeeStatusID { get; set; }
         public EmployeeStatus EmployeeStatus { get; set; }
