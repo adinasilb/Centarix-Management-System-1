@@ -113,5 +113,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<JobCategoryType> JobCategoryTypes { get; set; }
         public List<EmployeeStatus> EmployeeStatuses { get; set; }
         public List<MaritalStatus> MaritalStatuses { get; set; }
+        public List<Degree> Degrees { get; set; }
     }
 }

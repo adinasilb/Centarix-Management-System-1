@@ -133,6 +133,7 @@ namespace PrototypeWithAuth.Controllers
             registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
             registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
             registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
+            registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
 
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {

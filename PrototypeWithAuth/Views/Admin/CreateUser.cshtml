@@ -66,10 +66,10 @@
                 </div>
             </div>
             <div class="new-modal-body">
-                <div class="div-tabs modal-sides" style="background: #FFF; " @*border: 2px solid #EAEAEB;"*@>
+                <div class="" style="background: #FFF; " @*border: 2px solid #EAEAEB;"*@>
                     <div class="tab-content">
                         <div id="details" class="tab-pane fade">
-                            <div class="row ">
+                            <div class="row modal-sides top-radio-buttons">
                                 <input type="hidden" asp-for="NewEmployee.EmployeeStatusID" />
                                 @{ var first = true; }
                                 @foreach (var status in Model.EmployeeStatuses)
@@ -92,80 +92,96 @@
                                     }
                                 }
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label asp-for="FirstName" class="control-label"></label>
-                                    <input asp-for="FirstName" class="form-control-plaintext border-bottom" />
-                                    <span asp-validation-for="FirstName" class="text-danger-centarix"></span>
+                            <hr />
+                            <div class="div-tabs modal-sides" >
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label asp-for="FirstName" class="control-label"></label>
+                                        <input asp-for="FirstName" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="FirstName" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <label asp-for="LastName" class="control-label"></label>
+                                        <input asp-for="LastName" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="LastName" class="text-danger-centarix"></span>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <label asp-for="LastName" class="control-label"></label>
-                                    <input asp-for="LastName" class="form-control-plaintext border-bottom" />
-                                    <span asp-validation-for="LastName" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-6">
-                                    <label asp-for="CentarixID" class="control-label"></label>
-                                    <input asp-for="CentarixID" class="form-control-plaintext border-bottom" />
-                                    <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label asp-for="CentarixID" class="control-label"></label>
+                                        <input asp-for="CentarixID" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-6 ">
+                                        <label asp-for="NewEmployee.JobTitle" class="control-label"></label>
+                                        <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" required />
+                                        <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>
+                                    </div>
                                 </div>
-                                <div class="col-6 ">
-                                    <label asp-for="NewEmployee.JobTitle" class="control-label"></label>
-                                    <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" required />
-                                    <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="control-label">Job Category</label>
+                                        @Html.DropDownListFor(
+                                            vm => vm.NewEmployee.JobCategoryTypeID,
+                                            new SelectList(
+                                            Model.JobCategoryTypes,
+                                            dataValueField: "JobCategoryTypeID",
+                                            dataTextField: "Description"),
+                                            optionLabel: "Select A Category",
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true" }
+                                            )
+                                        <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="Email" class="control-label"></label>
+                                        <input asp-for="Email" class="form-control-plaintext border-bottom" autocomplete="nope" type="text" />
+                                        <span asp-validation-for="Email" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="PhoneNumber" class="control-label"></label>
+                                        <input asp-for="PhoneNumber" class="form-control-plaintext border-bottom" required />
+                                        <span asp-validation-for="PhoneNumber" class="text-danger-centarix"></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <label class="control-label">Job Category</label>
-                                    @Html.DropDownListFor(
-                                        vm => vm.NewEmployee.JobCategoryTypeID,
-                                        new SelectList(
-                                        Model.JobCategoryTypes,
-                                        dataValueField: "JobCategoryTypeID",
-                                        dataTextField: "Description"),
-                                        optionLabel: "Select A Category",
-                                        htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true" }
-                                        )
-                                    <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger-centarix"></span>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label asp-for="PhoneNumber2" class="control-label"></label>
+                                        <input asp-for="PhoneNumber2" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="PhoneNumber2" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="control-label">Degree</label>
+                                        @Html.DropDownListFor(
+                                            vm => vm.NewEmployee.DegreeID,
+                                            new SelectList(
+                                            Model.JobCategoryTypes,
+                                            dataValueField: "JobCategoryTypeID",
+                                            dataTextField: "Description"),
+                                            optionLabel: "Select A Category",
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true" }
+                                            )
+                                        <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger-centarix"></span>
+                                    </div>
                                 </div>
-                                <div class="col-4">
-                                    <label asp-for="Email" class="control-label"></label>
-                                    <input asp-for="Email" class="form-control-plaintext border-bottom" autocomplete="nope" type="text" />
-                                    <span asp-validation-for="Email" class="text-danger-centarix"></span>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label asp-for="SecureAppPass" class="control-label"></label>
+                                        <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                        <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
+                                    </div>
                                 </div>
-                                <div class="col-4">
-                                    <label asp-for="PhoneNumber" class="control-label"></label>
-                                    <input asp-for="PhoneNumber" class="form-control-plaintext border-bottom" required />
-                                    <span asp-validation-for="PhoneNumber" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <label asp-for="PhoneNumber2" class="control-label"></label>
-                                    <input asp-for="PhoneNumber2" class="form-control-plaintext border-bottom" />
-                                    <span asp-validation-for="PhoneNumber2" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label asp-for="SecureAppPass" class="control-label"></label>
-                                    <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom" autocomplete="off" />
-                                    <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label asp-for="Password" class="control-label"></label>
-                                    <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />
-                                    <span asp-validation-for="Password" class="text-danger-centarix"></span>
-                                </div>
-                                <div class="col-6">
-                                    <label asp-for="ConfirmPassword" class="control-label"></label>
-                                    <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" />
-                                    <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label asp-for="Password" class="control-label"></label>
+                                        <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                        <span asp-validation-for="Password" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <label asp-for="ConfirmPassword" class="control-label"></label>
+                                        <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

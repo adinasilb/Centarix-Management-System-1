@@ -1455,7 +1455,7 @@ body {
 }
 
 .disabled-submit {
-    background-color: grey !important;
+    background-color: rgba(0,0,0, .38) !important;
 }
 
 td .btn {

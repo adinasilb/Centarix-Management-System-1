@@ -22,7 +22,11 @@ namespace PrototypeWithAuth.Models
         public int VacationDays { get; set; }
         [Display(Name = "Job Title")]
         public string JobTitle { get; set; }
-        public string Degree { get; set; }
+   
+        public int DegreeID { get; set; }
+        [ForeignKey("DegreeID")]
+        public Degree Degree { get; set; }
+        //public string Degree { get; set; }
         [Display(Name = "ID Number")]
         public int IDNumber { get; set; }
         [Display(Name = "Relationship Status")]    
