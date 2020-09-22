@@ -970,7 +970,7 @@ a.nav-link {
     border-bottom: 4px solid var(--order-inv-color);
 }*/
 
-.container-fluid ul li a.oper-link.active {
+.container-fluid ul li a.oper-link.active, .container-fluid ul li a.oper-link:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--operations-color);
@@ -1712,6 +1712,10 @@ td .btn {
     padding: 0 !important;
 }
 
+.order-inv-form .select-wrapper.active span.caret,
+.order-inv-form .select-wrapper.active label.mdb-main-label {
+    color: var(--order-inv-color) !important;
+}
 .order-inv-form .form-control-plaintext:focus {
     outline-width: 0px !important;
     outline-color: none !important;
@@ -1726,6 +1730,27 @@ td .btn {
 
 .order-inv-form .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+}
+
+.oper-form .form-control-plaintext:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var( --operations-color) !important;
+}
+
+.oper-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var( --operations-color) !important;
+}
+
+
+.oper-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var( --operations-color) !important;
+}
+
+.oper-form .select-wrapper.active span.caret,
+.oper-form .select-wrapper.active label.mdb-main-label {
+    color: var( --operations-color) !important;
 }
 
 .input-group-text {
@@ -1862,4 +1887,7 @@ td .btn {
 }
 .add-invoice-modal{
     width:93.31rem;
+}
+.select-wrapper.mdb-select-sublist.mdb-select.custom.select-dropdown.form-control-plaintext, .select-wrapper.mdb-select-subProject.mdb-select.custom.select-dropdown.form-control-plaintext {
+    border: none !important;
 }

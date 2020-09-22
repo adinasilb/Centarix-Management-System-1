@@ -100,8 +100,12 @@
 }
 
 .order-inv-filter {
-    filter: invert(50%) sepia(19%) saturate(6552%) hue-rotate(184deg) brightness(99%) contrast(92%);
+    filter: var(--order-inv-filter);
 }
+.oper-filter {
+    filter: var(--operations-filter);
+}
+
 
 .order-inv-background-color {
     background-color: var(--order-inv-color) !important;
