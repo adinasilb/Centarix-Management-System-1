@@ -194,30 +194,99 @@ namespace PrototypeWithAuth.Controllers
             }
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser
+                var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
+                var user = new ApplicationUser();
+                if (UserType == 4)
                 {
-                    UserName = registerUserViewModel.Email,
-                    Email = registerUserViewModel.Email,
-                    FirstName = registerUserViewModel.FirstName,
-                    LastName = registerUserViewModel.LastName,
-                    SecureAppPass = registerUserViewModel.SecureAppPass,
-                    CentarixID = registerUserViewModel.CentarixID,
-                    PhoneNumber = registerUserViewModel.PhoneNumber,
-                    PhoneNumber2 = registerUserViewModel.PhoneNumber2,
-                    UserNum = usernum,
-                    LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
-                    LabUnitLimit = registerUserViewModel.LabUnitLimit,
-                    LabOrderLimit = registerUserViewModel.LabOrderLimit,
-                    OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
-                    OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
-                    OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
-                    DateCreated = DateTime.Now
-                };
+                    user = new ApplicationUser
+                    {
+                        /*User*/
+                        UserName = registerUserViewModel.Email,
+                        Email = registerUserViewModel.Email,
+                        FirstName = registerUserViewModel.FirstName,
+                        LastName = registerUserViewModel.LastName,
+                        SecureAppPass = registerUserViewModel.SecureAppPass,
+                        CentarixID = registerUserViewModel.CentarixID,
+                        PhoneNumber = registerUserViewModel.PhoneNumber,
+                        PhoneNumber2 = registerUserViewModel.PhoneNumber2,
+                        UserNum = usernum,
+                        LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
+                        LabUnitLimit = registerUserViewModel.LabUnitLimit,
+                        LabOrderLimit = registerUserViewModel.LabOrderLimit,
+                        OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
+                        OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
+                        OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
+                        DateCreated = DateTime.Now,
+                    };
+                }
+                else
+                {
+                    user = new Employee
+                    {
+                        /*User*/
+                        UserName = registerUserViewModel.Email,
+                        Email = registerUserViewModel.Email,
+                        FirstName = registerUserViewModel.FirstName,
+                        LastName = registerUserViewModel.LastName,
+                        SecureAppPass = registerUserViewModel.SecureAppPass,
+                        CentarixID = registerUserViewModel.CentarixID,
+                        PhoneNumber = registerUserViewModel.PhoneNumber,
+                        PhoneNumber2 = registerUserViewModel.PhoneNumber2,
+                        UserNum = usernum,
+                        LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
+                        LabUnitLimit = registerUserViewModel.LabUnitLimit,
+                        LabOrderLimit = registerUserViewModel.LabOrderLimit,
+                        OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
+                        OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
+                        OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
+                        DateCreated = DateTime.Now,
+                        /*Employee*/
+                        StartedWorking = registerUserViewModel.NewEmployee.StartedWorking,
+                        DOB = registerUserViewModel.NewEmployee.DOB,
+                        GrossSalary = registerUserViewModel.NewEmployee.GrossSalary,
+                        EmployerTax = registerUserViewModel.NewEmployee.EmployerTax,
+                        IncomeTax = registerUserViewModel.NewEmployee.IncomeTax,
+                        TaxCredits = registerUserViewModel.NewEmployee.TaxCredits,
+                        VacationDays = registerUserViewModel.NewEmployee.VacationDays,
+                        JobTitle = registerUserViewModel.NewEmployee.JobTitle,
+                        DegreeID = registerUserViewModel.NewEmployee.DegreeID,
+                        IDNumber = registerUserViewModel.NewEmployee.IDNumber,
+                        MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID,
+                        /*phonenumber2 is not working --> talk to Debbie*/
+                        CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID,
+                        EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
+                        JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID,
+                        /*Salaried Employee*/
 
+                    };
+                }
                 var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
-                //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
+                                //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
                 if (result.Succeeded)
                 {
+                    switch (UserType)
+                    {
+                        case 1: /*Salaried Employee*/
+                            var salariedEmployee = new SalariedEmployee()
+                            {
+                                EmployeeId = user.Id,
+                                HoursPerDay= registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay
+                            };
+                            _context.Add(salariedEmployee);
+                            break;
+                        case 2: /*Freelancer*/
+                            var freelancer = new Freelancer()
+                            {
+                                EmployeeId = user.Id
+                            };
+                            _context.Add(freelancer);
+                            break;
+                        case 3: /*Advisor*/
+                            break;
+                    }
+                    _context.SaveChangesAsync();
+
+
                     foreach (var orderRole in registerUserViewModel.OrderRoles)
                     {
                         if (orderRole.Name == "General" && orderRole.Selected == true)

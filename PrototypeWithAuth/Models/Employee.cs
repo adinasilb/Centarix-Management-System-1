@@ -14,6 +14,22 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Started Working")]
         [DataType(DataType.Date)]
         public DateTime StartedWorking { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime DOB { get; set; }
+        public int Age
+        {
+            get
+            {
+                int _age = 0;
+                _age = DateTime.Now.Year - DOB.Year;
+                if (DateTime.Now.DayOfYear > DOB.DayOfYear)
+                {
+                    _age--;
+                }
+                return _age;
+            }
+            private set {; }
+        }
         public double GrossSalary { get; set; }
         public double NetSalary { get { return GrossSalary - IncomeTax; } private set {; } }
         public double EmployerTax { get; set; }

@@ -16,7 +16,7 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 <div class="card col-8 offset-2 create-user users-form" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
-    <div class="card-body">
+    <div class="">
         <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
             @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
             <input type="email" class="hidden" />
@@ -38,6 +38,16 @@
                                 <li class="nav-item">
                                     <a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link">
                                         <i class="icon-face-24px" style="font-size: 2rem;"></i><br />Details
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a data-toggle="tab" href="#salary" id="user-salary-tab" class="nav-link user-nav-link salary-tab">
+                                        <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Salary
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a data-toggle="tab" href="#security" id="user-security-tab" class="nav-link user-nav-link security-tab">
+                                        <i class="icon-https-24px" style="font-size: 2rem;"></i><br />Security
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -106,7 +116,6 @@
                                         <span asp-validation-for="LastName" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-6">
                                         <label asp-for="CentarixID" class="control-label"></label>
@@ -117,6 +126,17 @@
                                         <label asp-for="NewEmployee.JobTitle" class="control-label"></label>
                                         <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" required />
                                         <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label asp-for="NewEmployee.DOB" class="control-label"></label>
+                                        <input asp-for="NewEmployee.DOB" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="NewEmployee.DOB" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-6 ">
+                                        <label asp-for="NewEmployee.Age" class="control-label"></label>
+                                        <input id="Age" name="Age" class="form-control-plaintext border-bottom" required />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -202,26 +222,52 @@
                                         <span asp-validation-for="NewEmployee.TaxCredits" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
-                                @*<div class="row">
-                                        <div class="col-6">
-                                            <label asp-for="SecureAppPass" class="control-label"></label>
-                                            <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom" autocomplete="off" />
-                                            <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
-                                        </div>
-                                        <div class="col-4">
-                                            <label asp-for="Password" class="control-label"></label>
-                                            <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />
-                                            <span asp-validation-for="Password" class="text-danger-centarix"></span>
-                                        </div>
-                                        <div class="col-4">
-                                            <label asp-for="ConfirmPassword" class="control-label"></label>
-                                            <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" />
-                                            <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
-                                        </div>
-                                    </div>*@
                             </div>
                         </div>
-
+                        <div id="salary" class="tab-pane fade">
+                            <div class="div-tabs modal-sides">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="control-label" asp-for="NewEmployee.SalariedEmployee.WorkScope"></label>
+                                        <input class="form-control-plaintext border-bottom" asp-for="NewEmployee.SalariedEmployee.WorkScope" />
+                                        <span asp-validation-for="NewEmployee.SalariedEmployee.WorkScope" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="control-label" asp-for="NewEmployee.SalariedEmployee.HoursPerDay"></label>
+                                        <input class="form-control-plaintext border-bottom" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" />
+                                        <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="control-label" asp-for="NewEmployee.VacationDays"></label>
+                                        <input class="form-control-plaintext border-bottom" asp-for="NewEmployee.VacationDays" />
+                                        <span class="text-danger-centarix" asp-validation-for="NewEmployee.VacationDays"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="security" class="tab-pane fade">
+                            <div class="div-tabs modal-sides">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label asp-for="Password" class="control-label"></label>
+                                        <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                        <span asp-validation-for="Password" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <label asp-for="ConfirmPassword" class="control-label"></label>
+                                        <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label asp-for="SecureAppPass" class="control-label"></label>
+                                        <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                        <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div id="permissions" class="tab-pane fade">
                             <div class="div-tabs modal-sides">
                                 <div class="main-permissions row">
@@ -587,7 +633,9 @@
                             </div>
                         </div>
                         <div id="more" class="tab-pane fade">
-                            More
+                            <div class="div-tabs modal-sides">
+                                More
+                            </div>
                         </div>
                     </div>
                 </div>
