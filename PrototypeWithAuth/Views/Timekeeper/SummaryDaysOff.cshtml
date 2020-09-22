@@ -5,12 +5,12 @@
 
 @{
     ViewData["Title"] = "Summary Days";
-    Layout = "~/Views/Shared/TimeKeeperView.cshtml";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-    <div class="ml-6 mt-4">
+    <div class="container-fluid">
 
         <div class="row mb-6">
-            <div class="col-6"><h3><strong>Days Off</strong></h3></div>
+            <div class="col-6"><div class="heading-1">Days Off</div></div>
             <div class="col-6">
 
             </div>
@@ -22,7 +22,7 @@
                     <table class=" col-5 text-center ">
                         <thead>
                             <tr class="text-left ">
-                                <th class="p-4  pl-5"><h5><strong>Vacations</strong></h5></th>
+                                <th class="p-4  pl-5 text font-weight-bold">Vacations</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,7 +38,7 @@
                     <table class="col-5 offset-2 text-center">
                         <thead>
                             <tr class="text-left">
-                                <th class="p-4 pl-5"><h5><strong>Sick Days</strong></h5></th>
+                                <th class="p-4 pl-5 text font-weight-bold">Sick Days</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,8 +73,7 @@
                         @Model.VacationDaysTaken.Count()
                     </div>
                     <div class="col-3">
-                        @{var vactionDaysLeft = Model.VacationDays - Model.VacationDaysTaken.Count();}
-                        @vactionDaysLeft
+                        @Model.VacationDaysLeft
                     </div>
                     <div class="col-3">
                         @Model.SickDaysTaken.Count()

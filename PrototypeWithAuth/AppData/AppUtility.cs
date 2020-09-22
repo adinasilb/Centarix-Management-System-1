@@ -5,6 +5,8 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,24 +14,45 @@ namespace PrototypeWithAuth.AppData
 {
     public static class AppUtility
     {
+        public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
-        public enum CommentTypeEnum { Warning, Comment}
+        public enum CommentTypeEnum { Warning, Comment }
+        public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location, Summary }
-        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, Suppliers, Payments } //these are all going to the ParentRequestIndex
-        public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, Search }
-        public enum LabManagementSidebarEnum { None, Orders, Quotes }
-        public enum RequestSidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
-        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits} //Listed in the site.js (if you change here must change there)
-        public enum UserPageTypeEnum { None, User, Workers}
-        public enum UserSideBarEnum { None, Index, Add, Details, AddWorker, AwaitingApproval, Salary, Hours }
-        public enum TimeKeeperPageTypeEnum { None, Report, Summary }
-        public enum TimeKeeperSidebarEnum { None, ReportHours, Days, Hours, DaysOff, Documents, CompanyAbsences }
+        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, SuppliersAC, Payments } //these are all going to the ParentRequestIndex
+        public enum AccountingSidebarEnum { General, AllSuppliersAC, NewSupplierAC, SearchSupplierAC }
+        public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, SearchLM }
+        public enum LabManagementSidebarEnum { None, Orders, Quotes, AllSuppliers, NewSupplier, SearchSupplier, LocationsList, SearchRequests }
+        public enum OrdersAndInventorySidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
+        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits } //Listed in the site.js (if you change here must change there)
+        public enum UserPageTypeEnum { None, User, Workers }
+        public enum UserSideBarEnum { UsersList, UsersAdd, WorkersDetails, WorkersHours, WorkersSalary, WorkersAwaitingApproval, AddWorker }
+        public enum OperationsPageTypeEnum { RequestOperations, InventoryOperations, SearchOperations }
+        public enum OperationsSidebarEnum { LastItem, AddItem, Type, Vendors, Owner, Search }
+        public enum TimeKeeperPageTypeEnum { None, Report, TimekeeperSummary }
+        public enum TimeKeeperSidebarEnum { ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences }
         public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }
-        public enum AccountingNotificationsEnum {  NoInvoice, DidntArrive, PartialDelivery, ForClarification }
-        public enum AccountingPaymentsEnum { MonthlyPayment, PayNow, PayLater, Installments, StandingOrders }
-        public enum PaymentsEnum { ToPay, PayNow}
+        public enum AccountingNotificationsEnum {
+            [Display(Name = "No Invoice")]
+            NoInvoice,
+            [Display(Name = "Didnt Arrive")]
+            DidntArrive,
+            [Display(Name = "Partial Delivery")]
+            PartialDelivery,
+            [Display(Name = "For Clarification")]
+            ForClarification }
+        public enum AccountingPaymentsEnum {
+            [Display(Name = "Monthly Payment")]
+            MonthlyPayment,
+            [Display(Name = "Pay Now")] 
+            PayNow,
+            [Display(Name = "Pay Later")]
+            PayLater, Installments,
+            [Display(Name = "Standing Orders")]
+            StandingOrders }
+        public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
-        public enum CategoryTypeEnum { Operations, Lab}
+        public enum CategoryTypeEnum { Operations, Lab }
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
         {
             int ReturnList = 0;
@@ -132,16 +155,6 @@ namespace PrototypeWithAuth.AppData
             public int Amount;
         }
 
-        //public static int InsertToLocationTierModelReturnForiegnKey() 
-        //{
-        // LocationsTier1Model locationsTier1Model = new LocationsTier1Model();
-        //locationsTier1Model.LocationsTier1ModelDescription = addLocationTypeViewModel.Sublocations[i];
-        //                locationsTier1Model.LocationsTier1ModelAbbreviation = addLocationTypeViewModel.Sublocations[i].Substring(0,1);
-        //_context.Add(locationsTier1Model);
-        //                _context.SaveChanges();
-        //                var ltm = _context.LocationsTier1Models.Where(m => m.LocationsTier1ModelDescription == addLocationTypeViewModel.Sublocations[i]).FirstOrDefault();
-        //foriegnKey = ltm.LocationsTier1ModelID;
-        //}
 
 
         //.NetCore does not have the function .IsAjaxRequest so we took a similar function created online to do the same thing
@@ -189,32 +202,13 @@ namespace PrototypeWithAuth.AppData
             string newFileName = longFileName.Substring(place + 2, longFileName.Length - place - 2);
             return newFileName;
         }
-        //private static Task<string> RenderPartialViewToString(string viewName, object model)
-        //{
-        //    if (string.IsNullOrEmpty(viewName))
-        //        viewName = ControllerContext.ActionDescriptor.ActionName;
 
-        //    ViewData.Model = model;
 
-        //    using (var writer = new StringWriter())
-        //    {
-        //        ViewEngineResult viewResult =
-        //            _viewEngine.FindView(ControllerContext, viewName, false);
-
-        //        ViewContext viewContext = new ViewContext(
-        //            ControllerContext,
-        //            viewResult.View,
-        //            ViewData,
-        //            TempData,
-        //            writer,
-        //            new HtmlHelperOptions()
-        //        );
-
-        //        await viewResult.View.RenderAsync(viewContext);
-
-        //        return writer.GetStringBuilder().ToString();
-        //    }
-        //}
+        public static DateTime ZeroSeconds(this DateTime value)
+        {
+            return new DateTime(value.Year, value.Month, value.Day,
+              value.Hour, value.Minute, 0);
+        }
 
     }
 

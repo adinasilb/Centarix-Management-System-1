@@ -30,41 +30,22 @@ namespace PrototypeWithAuth.Controllers
 
         public IActionResult Index()
         {
-            //debbie added in
-            var currentUserID = _userManager.GetUserId(User);
-            var user = _context.Users.Where(u => u.Id == currentUserID).FirstOrDefault();
-            if(user.LastLogin != DateTime.Today)
+            var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
+            if (user.LastLogin.Date < DateTime.Today)
             {
-                var lateOrders = _context.Requests.Where(r=>r.ApplicationUserCreatorID==currentUserID).Where(r => r.RequestStatusID == 2)
-                    .Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0) >= user.LastLogin && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0) < DateTime.Today)
-                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.ParentRequest);
-                foreach(var request in lateOrders)
-                {
-                    RequestNotification requestNotification = new RequestNotification();
-                    requestNotification.RequestID = request.RequestID;
-                    requestNotification.IsRead = false;
-                    requestNotification.RequestName = request.Product.ProductName;
-                    requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd/MM/yyyy");
-                    requestNotification.NotificationStatusID = 1;
-                    requestNotification.TimeStamp = DateTime.Now;
-                    requestNotification.Controller = "Requests";
-                    requestNotification.Action = "NotificationsView";
-                    requestNotification.OrderDate = request.ParentRequest.OrderDate;
-                    requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                    _context.Update(requestNotification);            
-                }
-                _context.SaveChanges();
-                user.LastLogin = DateTime.Today;
+                fillInOrderLate(user);
+                fillInTimekeeperMissingDays(user);
+                user.LastLogin = DateTime.Now;
                 _context.Update(user);
                 _context.SaveChanges();
-            }
+            }          
             //Adina added in 3 lines
             if (User.IsInRole("Admin"))
             {
                 return RedirectToAction("IndexAdmin");
             }
             IEnumerable<Menu> menu = _context.Menus.Select(x => x);
+       
             return View(menu);
         }
 
@@ -128,5 +109,56 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();          
             return true;
         }
+
+        private void fillInTimekeeperMissingDays(ApplicationUser user)
+        {
+            DateTime nextDay = user.LastLogin.AddDays(1);
+            while (nextDay.Date <= DateTime.Today)
+            {
+                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    var existentHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Date == nextDay.Date).FirstOrDefault();
+                    if (existentHours == null)
+                    {
+                        EmployeeHours employeeHours = new EmployeeHours
+                        {
+                            EmployeeID = user.Id,
+                            Date = nextDay.Date
+                        };
+                        _context.Update(employeeHours);
+                    }
+                }
+                nextDay = nextDay.AddDays(1);
+            }
+            _context.SaveChanges();
         }
+
+        private void fillInOrderLate(ApplicationUser user)
+        {
+            if (user.LastLogin.Date != DateTime.Now.Date)
+            {
+                var lateOrders = _context.Requests.Where(r => r.ApplicationUserCreatorID == user.Id).Where(r => r.RequestStatusID == 2)
+                    .Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date >= user.LastLogin.Date && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today)
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.ParentRequest);
+                foreach (var request in lateOrders)
+                {
+                    RequestNotification requestNotification = new RequestNotification();
+                    requestNotification.RequestID = request.RequestID;
+                    requestNotification.IsRead = false;
+                    requestNotification.RequestName = request.Product.ProductName;
+                    requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
+                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd/MM/yyyy");
+                    requestNotification.NotificationStatusID = 1;
+                    requestNotification.TimeStamp = DateTime.Now;
+                    requestNotification.Controller = "Requests";
+                    requestNotification.Action = "NotificationsView";
+                    requestNotification.OrderDate = request.ParentRequest.OrderDate;
+                    requestNotification.Vendor = request.Product.Vendor.VendorEnName;
+                    _context.Update(requestNotification);
+                }
+                _context.SaveChanges();
+
+            }
+        }
+    }
 }

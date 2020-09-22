@@ -1,11 +1,11 @@
 ﻿@model PrototypeWithAuth.ViewModels.LabManageQuotesViewModel
 @{
     ViewData["Title"] = "LabManageOrders";
-    Layout = "~/Views/Shared/LabManageOrdersSideBar.cshtml";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 
     if (Model.RequestsByVendor.Count() == 0)
     {
-        <div><h5>There are currently no orders</h5></div>
+        <div class="heading-1">There are currently no orders</div>
         }
     }
     <form method="post" enctype="multipart/form-data" style="height: 100%; ">
@@ -38,7 +38,7 @@
                 </tr>
             </thead>
             <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
-                <td width="10%" class="p-0" rowspan="2"><h4><strong>@vendor.Key.VendorEnName</strong></h4></td>
+                <td width="10%" class="p-0 " rowspan="2"><div class="heading-1">@vendor.Key.VendorEnName.ToLower()</div></td>
                 <td colspan="7" class="border-bottom"></td>
             </tr>
             <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
@@ -63,7 +63,7 @@
                             @request.Product.ProductName
                         </td>
                         <td width="10%">
-                            @request.Product.Vendor.VendorEnName
+                            @request.Product.Vendor.VendorEnName.ToLower()
                         </td>
                         <td>
                             @request.Product.ProductSubcategory.ProductSubcategoryDescription
@@ -91,30 +91,29 @@
                             @request.ApplicationUserCreator.FirstName @request.ApplicationUserCreator.LastName
                         </td>
                         <td width="10%">
-                            <button class="btn no-box-shadow p-0 mx-5 load-confirm-delete-quote" data-title="delete" value="@request.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
+                            <button class="btn no-box-shadow p-0 mx-5  load-confirm-delete-quote" data-title="delete" value="@request.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
+                            </button>
                         </td>
                     </tr>
                 }
-                <tr class="border-0 mb-5 no-hover">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <h5><strong>Items: @vendor.Count()</strong></h5>
-                    </td>
-                    <td colspan="2">
-                        @{
-                            var totalCost = vendor.Sum(r => r.Cost);
-                            var decTotalCost = (decimal)totalCost;
-                            var stringTotalCost = decTotalCost.ToString("C02");
-                        }
-                        <h5><strong>Total: @stringTotalCost</strong></h5>
-                    </td>
-                    <td>
-                        <button class="inv-lab-button float-right confirm-quote-order" type="button" value="@vendor.Key.VendorID">Order</button>
-                    </td>
-                </tr>
+            <tr class="border-0 mb-5 no-hover">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td> <span class="text font-weight-bold">Items: @vendor.Count()</span> </td>
+                <td colspan="2">
+                    @{
+                        var totalCost = vendor.Sum(r => r.Cost);
+                        var decTotalCost = (decimal)totalCost;
+                        var stringTotalCost = decTotalCost.ToString("C02");
+                    }
+                    <span class="text font-weight-bold">Total: @stringTotalCost</span>
+                </td>
+                <td>
+                    <button class="custom-button custom-button-font lab-man-background-color float-right confirm-quote-order" type="button" value="@vendor.Key.VendorID">Order</button>
+                </td>
+            </tr>
 
             </tbody>
         </table>

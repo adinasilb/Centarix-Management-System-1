@@ -110,7 +110,7 @@
         applicationUserID = TempData["ApplicationUserID"].ToString();
     }
 
-    var PageType = TempData["PageType"];
+    var PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()];
 
     //saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
     bool Request = false;
@@ -147,10 +147,10 @@
         approvedButtonText = "Approved [" + TempData["AmountApproved"].ToString() + "]";
 
         //newActiveClass = "btn btn-outline-secondary text-dark new-button"; //used to be this...
-        newActiveClass = "new-button";
-        orderedActiveClass = "new-button";
-        receivedActiveClass = "new-button";
-        approvedActiveClass = "new-button";
+        newActiveClass = "new-button pt-4 ";
+        orderedActiveClass = "new-button pt-4 ";
+        receivedActiveClass = "new-button pt-4 ";
+        approvedActiveClass = "new-button pt-4 ";
 
         //changing the classes for the action links based on the tempdata of request status
 
@@ -161,16 +161,16 @@
             case 4:
             case 5:
                 //newActiveClass = "btn btn-secondary text-dark new-button"; //used to be this...
-                newActiveClass = "new-button active";
+                newActiveClass = "new-button active  pt-4";
                 break;
             case 2:
-                orderedActiveClass = "new-button active";
+                orderedActiveClass = "new-button active pt-4";
                 break;
             case 3:
-                receivedActiveClass = "new-button active";
+                receivedActiveClass = "new-button active  pt-4";
                 break;
             case 6:
-                approvedActiveClass = "new-button active";
+                approvedActiveClass = "new-button active  pt-4";
                 break;
 
         }
@@ -205,7 +205,7 @@
 
 @if (backTextBool)
 {
-    <div class="row ml-5 mt-5">
+    <div class="row">
         <a href="@backLink">
             <i class="fas fa-long-arrow-alt-left"></i> @backText
         </a>
@@ -214,37 +214,30 @@
 
 @if (PageType.Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
 {
-    <div class="row ml-5 mt-3 mb-4">
+    <div class="">
         <div class="">
-            <ul class="list-inline">
-                <li class="list-inline-item active mr-3">
-                    <a class="@newActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i style="font-size:1.4rem;" class="icon-centarix-icons-04"></i>   @newButtonText </a>
-                    @*<img src="~/images/css/inventory/icons/new_tab.png" alt="New" />*@
-
-                    @*@Html.ActionLink(newButtonText, "Index", "Requests", new {@applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request}, new {@class = newActiveClass})*@
+            <ul class="pl-0">
+                <li class="list-inline-item active m-0">
+                    <a class="@newActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
                 </li>
-                <li class="list-inline-item mr-3">
-                    <a class="@approvedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-approve-24px"></i>  @approvedButtonText</a>
+                <li class="list-inline-item m-0">
+                    <a class="@approvedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
 
                 </li>
 
-                <li class="list-inline-item mr-3">
-                    <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-centarix-icons-03"></i>  @orderedButtonText</a>
-
-                    @*@Html.ActionLink(orderedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = orderedActiveClass })*@
+                <li class="list-inline-item m-0">
+                    <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
                 </li>
 
                 <li class="list-inline-item ">
-                    <a class="@receivedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i style="font-size:1.4rem;" class="icon-done-24px"></i> @receivedButtonText</a>
-
-                    @*@Html.ActionLink(receivedButtonText, "Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request }, new { @class = receivedActiveClass })*@
+                    <a class="@receivedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
                 </li>
             </ul>
         </div>
     </div>
 }
 
-<div class="mx-5 mt-3 pt-4">
+<div class="">
     <table class="table table-headerspaced table-noheaderlines table-hover">
         <thead>
             <tr class="text-center">

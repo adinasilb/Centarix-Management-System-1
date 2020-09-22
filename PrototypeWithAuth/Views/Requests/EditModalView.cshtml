@@ -5,7 +5,7 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 
-<div class="modal modal-view right fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view right fader order-inv-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
@@ -26,8 +26,6 @@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
                 @*Requests search view model*@
 
-
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
                 <input type="hidden" asp-for="@Model.Request.ProductID" />
 
@@ -37,7 +35,7 @@
 
                     @if (TempData["ErrorMessage"] != null)
                     {
-                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
+                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
                     <div>
@@ -49,7 +47,7 @@
                     <div class="form-group">
                         <h4><label asp-for="Request.Product.ProductName" class="control-label font-weight-bold"> Edit Request : </label> </h4>
                         <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" /></h4>
-                        <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
+                        <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
                     </div>
                     <div class="row">
                         <div class="col-12 px-0">
@@ -69,12 +67,19 @@
                 <!-- Modal body -->
                 <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
                     <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
-
+                        <!-- Default switch -->
+                        <div class="float-right">
+                            <div class="switch">
+                                <label>
+                                    Edit Mode On
+                                    <input type="checkbox" class="load-product-details" value="@Model.Request.RequestID" checked>
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                        </div>
                         <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
-                                <span style="font-size: 1.7em;">Item</span>
-                                <br />
-                                <br />
+                                <span class="heading-1 modal-tab-name">Item</span>
                                 <div class="row">
                                     <div class="col-4">
                                         <div class="form-group">
@@ -82,7 +87,7 @@
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
             new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
             "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "parentlist" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4 px-4">
@@ -91,7 +96,7 @@
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
             new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
             "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4">
@@ -107,11 +112,10 @@
                                                 "Select Project",
                                                 new { @class = "mdb-select md-form  colorful-select dropdown-primary Project" }
                                             )
-                                            <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-4">
                                         <div class="form-group">
@@ -126,7 +130,7 @@
                                                 "Select Sub Project",
                                                 new { @class = "mdb-select md-form  colorful-select dropdown-primary SubProject", @id = "SubProject" }
                                             )
-                                            <span asp-validation-for="Request.SubProjectID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4 px-4">
@@ -141,7 +145,7 @@
                                                     optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
                                                 htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "vendorList" }
                                             )
-                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4">
@@ -153,59 +157,54 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br />
-
-                                <br />
                                 @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                 {
                                     <div class="row">
                                         <div class="col-6 pr-4">
                                             <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
                                             <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
+                                            <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                                         </div>
                                         <div class="col-6">
                                             <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
                                             <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
-                                            <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
+                                            <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger-centarix" />
                                         </div>
                                     </div>
-                                    <br />
                                 }
 
                                 <div class="row">
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
                                         <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger" />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
                                         <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
-                                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger quote-date" />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
                                         <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
+                                        <span asp-validation-for="Request.CatalogNumber" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-3">
                                         <label asp-for="Request.Warranty" class="control-label"></label>
                                         <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.Warranty" class="text-danger"></span>
+                                        <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
                                     </div>
                                     @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                     {
                                         <div class="col-3">
                                             <label class="control-label">End Date</label>
                                             @*@{
-                            //get this just to return the date (not the time)
-                            //adding the amount of months of the warranty to the invoice date
-                            var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                        }*@
+                                //get this just to return the date (not the time)
+                                //adding the amount of months of the warranty to the invoice date
+                                var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                            }*@
                                             <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                         </div>
                                     }
@@ -218,18 +217,17 @@
                                     }
 
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
                                         <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
+                                        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
                                     </div>
                                     @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                     {
                                         <div class="col-4">
                                             <label class="control-label">Expected supply date</label>
-                                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays??0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
+                                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays??0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
                                         </div>
                                     }
                                     else
@@ -243,15 +241,13 @@
                                     <div class="col-4">
                                         <label asp-for="Request.URL" class="control-label"></label>
                                         <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.URL" class="text-danger"></span>
+                                        <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                             </div>
 
                             <div id="location" class="tab-pane fade">
-                                <span style="font-size: 1.7em;">Location</span>
-                                <br />
-                                <br />
+                                <span class="heading-1 modal-tab-name">Location</span>
                                 @if (Model.ChildrenLocationInstances != null && Model.ChildrenLocationInstances.Any())
                                 {
                                     <h4>@Model.ParentLocationInstance.LocationInstanceName</h4> //this should be a link to the manage page for admins only
@@ -300,14 +296,13 @@
                                 else
                                 {
                                     <span>No Locations yet</span>
-                                    <br />
                                     @*<button>Add Locations</button>*@
                                 }
                             </div>
                             <div id="price" class="tab-pane fade">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <span style="font-size: 1.7em;">Price</span>
+                                        <span class="heading-1 modal-tab-name">Price</span>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -322,11 +317,10 @@
                                         <div class="form-group">
                                             <label asp-for="Request.ExchangeRate" class="control-label"></label>
                                             <input asp-for="Request.ExchangeRate" min="1" class="form-control-plaintext border-bottom" />
-                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
+                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row" id="edit">
                                     <div class="col-4 RequestUnitCard">
                                         <div class="border p-3">
@@ -334,7 +328,7 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.Unit" class="control-label"></label>
                                                     <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" min="1" />
-                                                    <span asp-validation-for="Request.Unit" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -345,7 +339,7 @@
         "",
         htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
         )
-                                                        <span asp-validation-for="Request.UnitType" class="text-danger"></span>
+                                                        <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -374,7 +368,7 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubUnit" class="control-label"></label>
                                                     <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                    <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubUnitType" class="control-label"></label>
@@ -384,7 +378,7 @@
                  "",
                  htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
              )
-                                                    <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -412,7 +406,7 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubSubUnit" class="control-label"></label>
                                                     <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
@@ -422,7 +416,7 @@
                                                         "",
                                                         htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
                                                         )
-                                                    <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -437,7 +431,7 @@
                                                     <div class="col-md-6">
                                                         <div class="input-group">
                                                             <span class="input-group-text">&#x20aa;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
+                                                            <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -445,7 +439,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -462,7 +455,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom" />
-                                                <span class="text-danger" asp-validation-for="Request.Cost"></span>
+                                                <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -473,7 +466,7 @@
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 @{ var vat = .17 * Model.Request.Cost;}
                                                 <input value="@vat.ToString("N2");" class="form-control-plaintext border-bottom " disabled />
-                                                <span class="text-danger" asp-validation-for="Request.VAT"></span>
+                                                <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -496,7 +489,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -519,82 +511,86 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 @*<div class="row installments">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label asp-for="Request.Installments" class="control-label"></label>
-                                            <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
-                                            <span asp-validation-for="Request.Installments" class="text-danger"></span>
-                                        </div>
-                                        @if (Model.NewPayments != null && Model.NewPayments.Any())
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label asp-for="Request.Installments" class="control-label"></label>
+                            <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
+                        </div>
+                        @if (Model.NewPayments != null && Model.NewPayments.Any())
+                        {
+                            <script>
+                                console.log("in script for installments disabled");
+                                $("#Request_ParentRequest_Installments").attr("disabled", true);
+                            </script>
+                        }
+                    </div>
+                    <div class="col-md-8 rounded card p-3">
+                        <table class="table table-sm payments-table">
+                            <thead class="thead-light rounded">
+                                <tr>
+                                    <th>Payment Date</th>
+                                    <th>Payment Type</th>
+                                    <th>Account</th>
+                                    <th>Reference</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (Model.NewPayments != null)
+                                    {
+                                        int counter = 0;
+                                        foreach (var payment in Model.NewPayments)
                                         {
-                                            <script>
-                                                console.log("in script for installments disabled");
-                                                $("#Request_ParentRequest_Installments").attr("disabled", true);
-                                            </script>
+                                            <tr class="payment-line">
+                                                <td>
+                                                    <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownListFor(
+                                                   m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
+                                                   new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
+                                                   , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
+                                                   )
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownListFor(
+                                                   m => m.NewPayments[counter].CompanyAccountID,
+                                                   new SelectList(
+                                                       Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
+                                                   "CompanyAccountID", "CompanyAccountNum"),
+                                                   new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
+                                                <td>
+                                                    <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
+                                                </td>
+                                                @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
+                                            </tr>
+                                            counter++;
                                         }
-                                    </div>
-                                    <div class="col-md-8 rounded card p-3">
-                                        <table class="table table-sm payments-table">
-                                            <thead class="thead-light rounded">
-                                                <tr>
-                                                    <th>Payment Date</th>
-                                                    <th>Payment Type</th>
-                                                    <th>Account</th>
-                                                    <th>Reference</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @{
-                                                    if (Model.NewPayments != null)
-                                                    {
-                                                        int counter = 0;
-                                                        foreach (var payment in Model.NewPayments)
-                                                        {
-                                                            <tr class="payment-line">
-                                                                <td>
-                                                                    <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
-                                                                </td>
-                                                                <td>
-                                                                    @Html.DropDownListFor(
-                                                                   m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
-                                                                   new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
-                                                                   , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
-                                                                   )
-                                                                </td>
-                                                                <td>
-                                                                    @Html.DropDownListFor(
-                                                                   m => m.NewPayments[counter].CompanyAccountID,
-                                                                   new SelectList(
-                                                                       Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
-                                                                   "CompanyAccountID", "CompanyAccountNum"),
-                                                                   new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
-                                                                <td>
-                                                                    <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
-                                                                </td>
-                                                                @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
-                                                            </tr>
-                                                            counter++;
-                                                        }
-                                                    }
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Debt</label>
-                                            <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
-                                        </div>
-                                    </div>
-                                </div>*@
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label">Debt</label>
+                            <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
+                        </div>
+                    </div>
+                </div>*@
                             </div>
 
 
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
 
+                                @{
+                                    var urlAction = Url.Action("DocumentsModal", "Requests");
+                                }
+
+                                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
 
                                 <div class="row">
                                     <div class="col-md-3 mb-4">
@@ -664,21 +660,6 @@
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
-
-                                                @*<div class="card-footer">
-                                <div class="custom-file text-center">
-                                    <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                    <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                                    @if (boolQuote)
-                                    {
-                                        <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
-                                    }
-                                    else
-                                    {
-                                        <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                                    }
-                                </div>
-                            </div>*@
                                             </div>
                                         </a>
                                         <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
@@ -696,7 +677,7 @@
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/info_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -713,7 +694,7 @@
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/pictures_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -730,7 +711,7 @@
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/return_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -747,7 +728,7 @@
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/credit_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -758,9 +739,7 @@
 
 
                             <div id="comments" class="tab-pane fade">
-                                <span style="font-size: 1.7em;">Comments</span>
-                                <br />
-                                <br />
+                                <span class="heading-1 modal-tab-name">Comments</span>
                                 @{
                                     if (Model.OldComments != null)
                                     {
@@ -774,8 +753,8 @@
                                                                 <div class="col-md-2">
                                                                     <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
                                                                     @*Insert Pic
-                                                <img src="" />
-                                                changing this to the user's profile picture*@
+                                                    <img src="" />
+                                                    changing this to the user's profile picture*@
                                                                 </div>
                                                                 <div class="col-md-10">
                                                                     <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
@@ -786,7 +765,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <br />
                                         }
                                     }
                                 }
@@ -797,7 +775,7 @@
                                         <div class="form-group">
                                             <label asp-for="NewComment.CommentText" class="control-label font-weight-bold"></label>
                                             <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
-                                            <span asp-validation-for="NewComment.CommentText" class="text-danger"></span>
+                                            <span asp-validation-for="NewComment.CommentText" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -809,10 +787,10 @@
                 </div>
                 <div class="modal-footer">
                     @*you can only add to cart if you are creating a new one*@
-                    <input type="submit" id="saveEditModal" name="OrderType" value="Save" asp-action="EditModalView" class="inv-button mr-4" />
+                    <input type="submit" id="saveEditModal" name="OrderType" value="Save" asp-action="EditModalView" class="custom-button custom-button-font order-inv-background-color between-button-margin"  />
 
                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
-                    <button type="button" class="cancel-button" data-dismiss="modal">Close</button>
+                    <button type="button" class="custom-cancel custom-button" data-dismiss="modal">Close</button>
                 </div>
 
 

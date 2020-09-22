@@ -1,77 +1,180 @@
-﻿@using PrototypeWithAuth.AppData
+﻿@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
+@using Microsoft.AspNetCore.Routing
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "RequestNavView";
-    Layout = "~/Views/Shared/View.cshtml";
+    Layout = "~/Views/Shared/Master.cshtml";
 
-    AppUtility.RequestPageTypeEnum pageType = AppUtility.RequestPageTypeEnum.None;
-    if (TempData["PageType"] != null)
+    string pageType = "";
+    var categoryType = AppUtility.CategoryTypeEnum.Lab;
+
+    var MenuType = TempData[AppUtility.TempDataTypes.MenuType.ToString()]?.ToString();
+    List<MenuItems> MainMenuItems = new List<MenuItems>();
+
+    //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
+    if (TempData[AppUtility.TempDataTypes.PageType.ToString()] != null)
     {
-        pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData["PageType"].ToString());
+        pageType = TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString();
+        //pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString());
     }
 
-    var categoryType = AppUtility.CategoryTypeEnum.Lab;
+    string initalClasses = "opac87 align-text-bottom  py-3";
+    string currentClasses = " activeNavLink  ";
+
+    if (MenuType == AppUtility.MenuItems.OrdersAndInventory.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateOrdersAndInventoryMainMenu(pageType, initalClasses, " activeNavLink");
+    }
+    else if (MenuType == AppUtility.MenuItems.LabManagement.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateLabManagementMainMenu(pageType, initalClasses, " text-dark lab-man-filter");
+    }
+    else if (MenuType == AppUtility.MenuItems.Accounting.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateAccountingMainMenu(pageType, initalClasses, " text-dark accounting-filter");
+    }
+    else if (MenuType == AppUtility.MenuItems.Operation.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateOperationsMainMenu(pageType, initalClasses, " text-dark operations-filter");
+    }
+    else if (MenuType == AppUtility.MenuItems.Users.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateUsersMainMenu(pageType, initalClasses, " text-dark users-filter");
+    }
+    else if (MenuType == AppUtility.MenuItems.TimeKeeper.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateTimekeeperMainMenu(pageType, initalClasses, " text-dark timekeeper-filter");
+    }
+
+    //passing the
+    string inventoryClass = initalClasses;
+    string summaryClass = initalClasses;
+    string requestClass = initalClasses;
+    string cartClass = initalClasses;
+    string searchClass = initalClasses;
+    string locationClass = initalClasses;
+
 
     bool Cart = false;
     bool Requests = false;
     bool Inventory = false;
     bool Summary = false;
-    switch (pageType)
-    {
-        case AppUtility.RequestPageTypeEnum.Request:
-            Requests = true;
-            break;
-        case AppUtility.RequestPageTypeEnum.Inventory:
-            Inventory = true;
-            break;
-        case AppUtility.RequestPageTypeEnum.Summary:
-            Summary = true;
-            break;
-        case AppUtility.RequestPageTypeEnum.Cart:
-            Cart = true;
-            break;
-    }
+
 
     string originalNavClasses = " ";
     string activeClass = " font-weight-bold activeNavLink  ";
-    string lastItem = originalNavClasses;
-    string type = originalNavClasses;
-    string vendor = originalNavClasses;
-    string owner = originalNavClasses;
-    string location = originalNavClasses;
-    string cart = originalNavClasses;
-    string addItem = originalNavClasses;
-    string notifications = originalNavClasses;
 
-    var SidebarType = TempData["SidebarTitle"];
-    switch (SidebarType)
+    List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+    string sidebarTitle = ""; //TODO: cchange this to SideabrType!!!!!;
+    if (TempData["SidebarTitle"] != null)
     {
-        case AppUtility.RequestSidebarEnum.LastItem:
-            lastItem += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Type:
-            type += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Vendor:
-            vendor += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Owner:
-            owner += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Location:
-            location += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Cart:
-            cart += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.AddItem:
-            addItem += activeClass;
-            break;
-        case AppUtility.RequestSidebarEnum.Notifications:
-            notifications += activeClass;
-            break;
+        sidebarTitle = TempData["SidebarTitle"].ToString();
+    }
+    string sidebarType = "";
+    if (TempData[AppUtility.TempDataTypes.SidebarType.ToString()] != null)
+    {
+        sidebarType = TempData[AppUtility.TempDataTypes.SidebarType.ToString()].ToString();
     }
 
-    //not using this right now --> see with Faige if we should put it back in
+    var menuClass = originalNavClasses;
+    if (pageType == AppUtility.RequestPageTypeEnum.Inventory.ToString())
+    {
+        //inventoryClass = initalClasses + currentClasses;
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
+        Inventory = true;
+    }
+    else if (pageType == AppUtility.RequestPageTypeEnum.Summary.ToString())
+    {
+        //summaryClass = initalClasses + currentClasses;
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
+        Summary = true;
+    }
+    else if (pageType == AppUtility.RequestPageTypeEnum.Request.ToString())
+    {
+        Requests = true;
+        //requestClass = initalClasses + currentClasses;
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventoryRequestsSidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
+    }
+    else if (pageType == AppUtility.RequestPageTypeEnum.Cart.ToString())
+    {
+        //cartClass = initalClasses + currentClasses;
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventoryCartSidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
+        Cart = true;
+    }
+    else if (pageType == AppUtility.RequestPageTypeEnum.Search.ToString())
+    {
+        //searchClass = initalClasses + currentClasses + " search-link";
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventorySearchSidebarMenuItems(originalNavClasses, activeClass, pageType, categoryType);
+    }
+    else if (pageType == AppUtility.RequestPageTypeEnum.Location.ToString())
+    {
+        //locationClass = initalClasses + currentClasses;
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventoryLocationSidebarMenuItems(originalNavClasses, activeClass, pageType, categoryType);
+    }
+    else if (pageType == AppUtility.LabManagementPageTypeEnum.Suppliers.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateLabManageSuppliersSidebar(sidebarType, originalNavClasses, "lab-man-filter");
+    }
+    else if (pageType == AppUtility.LabManagementPageTypeEnum.Locations.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateLabManageLocationsSidebar(sidebarType, originalNavClasses, "lab-man-filter");
+    }
+    else if (pageType == AppUtility.LabManagementPageTypeEnum.Quotes.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateLabManageOrdersSidebar(sidebarType, originalNavClasses, "lab-man-filter");
+    }
+    else if (pageType == AppUtility.LabManagementPageTypeEnum.SearchLM.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateLabManageSearchSidebar(sidebarType, originalNavClasses, "lab-man-filter");
+    }
+    else if (pageType == AppUtility.PaymentPageTypeEnum.Payments.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateAccountingPaymentsSidebar(sidebarType, originalNavClasses, "accounting-filter");
+    }
+    else if (pageType == AppUtility.PaymentPageTypeEnum.Notifications.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateAccountingNotificationsSidebar(sidebarType, originalNavClasses, "accounting-filter");
+    }
+    else if (pageType == AppUtility.PaymentPageTypeEnum.General.ToString())
+    {
+        //TODO: LATER
+    }
+    else if (pageType == AppUtility.PaymentPageTypeEnum.SuppliersAC.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateAccountingSuppliersSidebar(sidebarType, originalNavClasses, "accounting-filter");
+    }
+    else if (pageType == AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString() || pageType == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateOperationsRequestsSidebar(pageType, sidebarType, originalNavClasses, "operations-filter");
+    }
+    else if (pageType == AppUtility.OperationsPageTypeEnum.SearchOperations.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateOperationsSearchSidebar(sidebarType, originalNavClasses, "operations-filter");
+    }
+    else if (pageType == AppUtility.UserPageTypeEnum.User.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateUsersUsersSidebar(sidebarType, originalNavClasses, "users-filter");
+    }
+    else if (pageType == AppUtility.UserPageTypeEnum.Workers.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateUsersWorkersSidebar(sidebarType, originalNavClasses, "users-filter");
+    }
+    else if (pageType == AppUtility.TimeKeeperPageTypeEnum.Report.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateTimekeeperReportsSidebar(sidebarType, originalNavClasses, "timekeeper-filter");
+    }
+    else if (pageType == AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateTimekeeperSummarySidebar(sidebarType, originalNavClasses, "timekeeper-filter");
+    }
+
+    var sidebarWidth = "110px";
+
+    //not using this right now --> see if we should put it back in
     var SendEmail = "0";
     if (TempData["SendEmail"] != null)
     {
@@ -98,80 +201,118 @@
         <div>@TempData["SuccessMessage"].ToString()</div>
     }
 }
+<header class="sticky-top">
+
+    <div class="navbar-shadow-2">
+        <div class="navbar-shadow-1">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white ourNavBar p-0 no-box-shadow">
+
+                @{ var styleClass = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + ";";}
+                <span style="@styleClass">
+                    <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" />
+                    </a> 
+                </span>
+
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; padding-left: 5.625rem;">
+
+                        @foreach (var MenuItem in MainMenuItems)
+                        {
+                            <li class="nav-item " style="margin-right: 4.375rem;">
+                                @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes+" top-menu", @id = MenuItem.ID })
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="  container col-1  pl-5">
+                    <ul class="list-unstyled m-0">
+                        <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow "><div class="alerts-icon"><i style='font-size: 2.5rem;   color: #808080;' class='icon-notifications-24px '></i> <span id="alertCount" class="alert-count"></span></div>  </button> </li>
+                        <div style="display:none;" id="notifications-popover">
+                            <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
+                            <div style="width:410px" class="p-4 heading-1">
+                                Notifications
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+                <div class="  ">
+                    <ul class="list-unstyled mb-0 ">
+                        <li>
+                            <div class="form-inline pr-3">
+                                <div class="md-form my-0 p-2">
+                                    <span class="text">
+                                        @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
+                                    </span>
+                                        <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
+                                            @{
+                                                var src = "/UserImages/profile_circle_big.png";
+                                                if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                                                {
+                                                    src = UserManager.GetUserAsync(User).Result.UserImage;
+                                                }
+                                            }
+                                            <img src="@src" class=" ml-0" alt="default User image" />
+                                        </button>
+                                </div>
+                            </div>
+                        </li>
+                        <div style="display:none;" id="logout-popover">
+                            <form class="form-inline " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" id="logout-form" class="nav-link  border-0 no-box-shadow btn-white btn-link text-dark logout-button">Logout</button>
+                            </form>
+                        </div>
+                    </ul>
+                </div>
 
 
-<div style="display: flex">
-    <div style="min-width: 100px; min-height:100rem; padding: 5px;" class=" d-md-block sidebar-shadow   navbar-expand-lg navbar-light bg-white text-center ourNavBar ">
-        @*<nav class="navbar navbar-expand-lg">*@
-        <ul class="nav flex-column nav-pills nav-stacked mt-4">
-
-            @if (Requests || Inventory || Summary)
-            {
-
-                <li class="nav-item mb-1 @lastItem">
-                    <a href="@Url.ActionLink("Index", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1 add-item">
-                        <img src="~/images/css/inventory/sidebar/list.png" alt="Last item" />
-                        <br />Last Item
-                    </a>
-                </li>
-            }
-
-            @if (Requests || Inventory || Summary)
-            {
-                <li class="nav-item my-1 @addItem">
-                    <a href="@Url.ActionLink("CreateModalView", "Requests", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1">  <img src="~/images/css/inventory/sidebar/add_circle_outline-2.png" alt="Add Item" /><br />Add Item</a>
-                </li>
-            }
-            @if (Requests || Inventory || Summary)
-            {
-                <li class="nav-item bold-hover-effects my-1 @type">
-                    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pageType, @categoryType=1 })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/type.png" alt="Alternate Text" /><br />Type</a>
-                </li>
-
-            }
-            @if (Requests || Inventory || Summary)
-            {
-
-                <li class="nav-item my-1 @vendor">
-                    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = pageType,  @categoryType= 1 })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/vendor.png" alt="Vendors" /><br />Vendors</a>
-                </li>
-            }
-            @if (Requests || Inventory)
-            {
-                @*have to create contorller for application user?*@
-
-                <li class="nav-item my-1 @owner">
-                    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pageType ,  @categoryType=categoryType})" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/owner.png" alt="Owner" /><br />Owner</a>
-                </li>
-            }
-            @if (Inventory || Summary)
-            {
-
-                @*Redo the location class in the controller*@
-                <li class="nav-item my-1 @location">
-                    <a href="@Url.ActionLink("IndexForInventory", "Locations", new { @PageType = pageType })" class="bold-hover-effects opac87 p-1"><img src="~/images/css/inventory/sidebar/location.png" alt="Location" /><br />Location</a>
-                </li>
-            }
-            @if (Cart)
-            {
-                <li class="nav-item  mt-4 mb-4 bold-hover-effects">
-                    <a href="@Url.ActionLink("Cart", "Requests", new { @PageType = pageType })" class="@cart bold-hover-effects opac87 p-1">
-                        <i class=" icon-shopping_cart-24px" style="font-size:1.5rem;"></i>
-                        <br /><span class="sidebar-text" style="font-size: 1rem;">Cart</span>
-                    </a>
-                </li>
-                <li class="nav-item mb-3 bold-hover-effects">
-                    <a href="@Url.ActionLink("NotificationsView", "Requests")" class="@notifications bold-hover-effects opac87 p-1">  <i class=" icon-notifications-24px" style=" font-size: 1.75rem;  "></i><br />Notifications</a>
-                </li>
-            }
-
-        </ul>
-        @*</nav>*@
+            </nav>
+        </div>
     </div>
-    <div style="flex-grow: 1" class="mt-5 ml-5">
-        <!--class="col-md-10 border-left"-->
-        @RenderBody()
-    </div>
+
+</header>
+<div class="container-fluid pl-0">
+    <main role="main" class="overflow-hidden">
+        @*<div class="spinner-border center" role="status" id="loading" style="display:none;">
+                <span class="sr-only">Loading...</span>
+            </div>*@
+
+        <div class="center" role="status" id="loading" style="display:none;">
+            <img src="~/images/css/Loading/centarix_loading3.gif" />
+        </div>
+        <div style="display: flex; overflow: hidden;">
+            @{ var style = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + "; min-height:100rem; aria-hidden=true;"; }
+            <div class="sidebar-shadow2">
+                <div class="sidebar-shadow1">
+                    <div style="@style" class="navbar-expand-lg text-center ourNavBar">
+                        @*<nav class="navbar navbar-expand-lg">*@
+                        <ul class="nav flex-column nav-pills nav-stacked nav-top-sidebar1">
+                            @{
+                                var liMargins = "padding-bottom: 2.25rem; padding-top: 2.25rem;";
+                            }
+                            @foreach (var sidebarNavItem in SidebarMenuItems)
+                            {
+                                <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="text-black">
+                                    <li class="nav-item sidenav-button @sidebarNavItem.Classes side-menu px-2" style="@liMargins">
+                                        <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
+                                        <br /><span>@sidebarNavItem.Description</span>
+                                    </li>
+                                </a>
+                                liMargins += "";
+                            }
+
+
+                        </ul>
+                    </div>
+                </div>
+                @*</nav>*@
+            </div>
+            <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 ">
+                <!--class="col-md-10 border-left"-->
+                @RenderBody()
+            </div>
+        </div>
+    </main>
 </div>
 
 

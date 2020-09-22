@@ -1,36 +1,36 @@
 ﻿@model PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval;
 
 <div class="modal modal-document fader" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
-    <div class="modal-dialog modal-sm  work-from-home-modal">
-        <div class="modal-content d-inline-block" style="border-radius:2rem;">
-            <button type="button" class="close mr-4 mt-4" data-dismiss="modal" aria-label="Close" style="font-size:2.5rem; font-weight:400;">
+    <div class="modal-dialog-centered mx-auto modal-sm  work-from-home-modal">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
                 @Html.HiddenFor(r => r.EmployeeHoursID)
                 @Html.HiddenFor(r => r.EmployeeID)
                 @Html.HiddenFor(r => r.EmployeeHoursAwaitingApprovalID)
-                <div class="modal-header border-0 border-bottom">
+                <div class="modal-header border-0 border-bottom modal-header-padding">
                     <div class="container">
                         <div class="">
-                            <h3><strong>Report Hours From Home</strong></h3>
+                            <div class="heading-1">Report Hours From Home</div>
                         </div>
-                        <div class="mt-5 mb-3">
+                        <div class="">
                             <hr />
                         </div>
                     </div>
                 </div>
-                <div class="modal-body border-0 rounded mx-4">
+                <div class="modal-body border-0 rounded p-0 mx-4 ">
                     <div class="row">
                         <div class="col-md-6 pr-4">
                             <label class="control-label">Day</label>
                             <input asp-for="Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week" disabled />
-                            <span asp-validation-for="Date.DayOfWeek" class="text-danger " />
+                            <span asp-validation-for="Date.DayOfWeek" class="text-danger-centarix " />
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Date" class="control-label"></label>
-                            <input asp-for="Date" class="form-control-plaintext  border-bottom  update-work-from-home" />
-                            <span asp-validation-for="Date" class="text-danger quote-date" />
+                            <input asp-for="Date" class="form-control-plaintext  border-bottom  update-work-from-home" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="Date" class="text-danger-centarix quote-date" />
                         </div>
                     </div>
                     <br />
@@ -38,23 +38,25 @@
                         <div class="col-4 ">
                             <label class="control-label">Entry</label>
                             <input asp-for="Entry1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="Entry1" class="text-danger"></span>
+                            <span asp-validation-for="Entry1" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-4 ">
                             <label class="control-label">Exit</label>
                             <input asp-for="Exit1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="Exit1" class="text-danger"></span>
+                            <span asp-validation-for="Exit1" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-4">
                             <label asp-for="TotalHours" class="control-label"></label>
                             <input asp-for="TotalHours" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="TotalHours" class="text-danger"></span>
+                            <span asp-validation-for="TotalHours" class="text-danger-centarix"></span>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer mt-4 border-0 p-4" style="justify-content:center;">
-                    <input type="submit" class="timekeeper-button mr-4" asp-action="ReportHoursFromHomeModal" value="Save" style="width:40%;" />
-                    <button class="cancel-button cancel-email" data-dismiss="modal" style="width:40%;">Cancel</button>
+                <div class="modal-footer modal-footer-mt border-0">
+                    <div class="m-auto">
+                        <input type="submit" class="custom-button-font timekeeper-color custom-button between-button-margin" asp-action="ReportHoursFromHomeModal" value="Save" />
+                        <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
             </form>
         </div>

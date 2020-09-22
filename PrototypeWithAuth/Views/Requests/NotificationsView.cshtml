@@ -4,12 +4,12 @@
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<div class="mx-5 pt-4 ">
-    <table class="table table-headerspaced table-noheaderlines table-hover ml-5 " style="width:95%;">
+<div class="">
+    <table class="table table-headerspaced table-noheaderlines table-hover" style="width:95%;">
         <thead>
             <tr>
                 <th></th>
-                <th >Name</th>
+                <th>Name</th>
                 <th>Description</th>
                 <th>Date</th>
                 <th>Vendor</th>
@@ -24,7 +24,7 @@
                 string icon = item.NotificationStatus.Icon;
                 string color = "var(" + item.NotificationStatus.Color + ")";
                 string description = item.Description;
-          
+
                 var fontWeight = "";
                 @if (!item.IsRead)
                 {

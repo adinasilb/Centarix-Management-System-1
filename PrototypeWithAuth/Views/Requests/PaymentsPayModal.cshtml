@@ -1,25 +1,22 @@
 ﻿@model PrototypeWithAuth.ViewModels.PaymentsPayModalViewModel
 
-<script src="~/js/site.js" asp-append-version="true"></script>
 <link href="~/css/site.css" rel="stylesheet" />
 <div class="modal modal-view fader" id="myModal" data-backdrop="false">
-    <div class="modal-dialog" style="min-width:1000PX !important; top: 20%; bottom: 0; margin-top: auto; margin-bottom:auto;">
-        <div class="modal-content d-inline-block" style="border-radius:1rem;">
-            <form action="" method="post" enctype="multipart/form-data">
+    <div class="modal-dialog-centered mx-auto modal-xl" style="min-width:1000PX !important; top: 20%;">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" class="modal-padding">
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent; font-size:1.5rem; font-weight:bold;" class="float-right mb-2">&times;</button>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
+                    <div class="container ">
+                        <div class="row modal-header-padding">
                             <div class="col-6">
-                                <h4 style="font-weight: bolder;">Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</h4>
+                                <span class="heading-1">Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName.ToLower()</span>
                             </div>
                         </div>
                         <hr />
-                        @{ 
+                        @{
                             var CostShekel = Model.Requests.Sum(r => r.Cost);
                             var VAT = Model.Requests.Sum(r => r.VAT);
                             var TotalShekel = CostShekel + VAT;
@@ -78,12 +75,10 @@
                     </div>
                     <hr />
                     <div class="row">
-                        <div class="col-6">
+                        <div class="modal-footer-mt mx-auto">
                             @*<button class="btn inv-payments-button float-right">Paid</button>*@
-                            <input type="submit" class="btn inv-payments-button float-right" value="Paid" />
-                        </div>
-                        <div class="col-6">
-                            <button class="btn inv-clear-button float-left">Cancel</button>
+                            <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" value="Paid" />
+                            <button class="custom-button custom-cancel ">Cancel</button>
                         </div>
                     </div>
                 </div>

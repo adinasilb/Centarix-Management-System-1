@@ -9,6 +9,7 @@ using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.AppData;
 using Microsoft.AspNetCore.Authorization;
+using Abp.Extensions;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -22,11 +23,29 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, OrdersAndInventory, Operation")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType=1)
         {
-            TempData["PageType"] = PageType;
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Type;
+            if (categoryType == 1)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+                TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Type;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+            }
+            else if (categoryType == 2)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Type;
+                if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
+                {
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
+                }
+                else if (PageType == AppUtility.RequestPageTypeEnum.Request)
+                {
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
+
+                }
+            }
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
                 .Where(ps => ps.ParentCategory.CategoryTypeID == categoryType);
             return View(await applicationDbContext.ToListAsync());

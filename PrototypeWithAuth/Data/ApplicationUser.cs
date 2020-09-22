@@ -24,6 +24,7 @@ namespace PrototypeWithAuth.Data
 
         [Display(Name = "ID")]
         public string CentarixID { get; set; }
+        [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
         public double LabMonthlyLimit { get; set; }
         public double LabUnitLimit { get; set; }
@@ -33,6 +34,9 @@ namespace PrototypeWithAuth.Data
         public double OperaitonOrderLimit { get; set; }
         public bool IsDeleted { get; set; }
         public string UserImage { get; set; }
+   
+        [DataType (DataType.PhoneNumber)]
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
         public DateTime DateLastReadNotifications { get; set; }
         public DateTime LastLogin { get; set; }

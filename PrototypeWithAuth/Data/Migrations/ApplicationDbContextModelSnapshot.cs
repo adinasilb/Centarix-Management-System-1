@@ -300,6 +300,33 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Citizenship", b =>
+                {
+                    b.Property<int>("CitizenshipID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CitizenshipID");
+
+                    b.ToTable("Citizenships");
+
+                    b.HasData(
+                        new
+                        {
+                            CitizenshipID = 1,
+                            Description = "Israel"
+                        },
+                        new
+                        {
+                            CitizenshipID = 2,
+                            Description = "USA"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
                 {
                     b.Property<int>("CommentID")
@@ -354,6 +381,43 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("PaymentTypeID");
 
                     b.ToTable("CompanyAccounts");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Degree", b =>
+                {
+                    b.Property<int>("DegreeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DegreeID");
+
+                    b.ToTable("Degrees");
+
+                    b.HasData(
+                        new
+                        {
+                            DegreeID = 1,
+                            Description = "B.Sc"
+                        },
+                        new
+                        {
+                            DegreeID = 2,
+                            Description = "M.Sc"
+                        },
+                        new
+                        {
+                            DegreeID = 3,
+                            Description = "P.hd"
+                        },
+                        new
+                        {
+                            DegreeID = 4,
+                            Description = "Post P.hd"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHours", b =>
@@ -483,6 +547,57 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeStatus", b =>
+                {
+                    b.Property<int>("EmployeeStatusID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EmployeeStatusID");
+
+                    b.ToTable("EmployeeStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            EmployeeStatusID = 1,
+                            Description = "Salaried Employee"
+                        },
+                        new
+                        {
+                            EmployeeStatusID = 2,
+                            Description = "Freelancer"
+                        },
+                        new
+                        {
+                            EmployeeStatusID = 3,
+                            Description = "Advisor"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Freelancer", b =>
+                {
+                    b.Property<int>("FreelancerID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("FreelancerID");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique()
+                        .HasFilter("[EmployeeId] IS NOT NULL");
+
+                    b.ToTable("Freelancers");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Invoice", b =>
                 {
                     b.Property<int>("InvoiceID")
@@ -499,6 +614,68 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("InvoiceID");
 
                     b.ToTable("Invoices");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.JobCategoryType", b =>
+                {
+                    b.Property<int>("JobCategoryTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("JobCategoryTypeID");
+
+                    b.ToTable("JobCategoryTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            JobCategoryTypeID = 1,
+                            Description = "Executive"
+                        },
+                        new
+                        {
+                            JobCategoryTypeID = 2,
+                            Description = "Senior Manager"
+                        },
+                        new
+                        {
+                            JobCategoryTypeID = 3,
+                            Description = "Manager"
+                        },
+                        new
+                        {
+                            JobCategoryTypeID = 4,
+                            Description = "Senior Bioinformatician"
+                        },
+                        new
+                        {
+                            JobCategoryTypeID = 5,
+                            Description = "Bioinformatician"
+                        },
+                        new
+                        {
+                            JobCategoryTypeID = 6,
+                            Description = "Senior Scientist"
+                        },
+                        new
+                        {
+                            JobCategoryTypeID = 7,
+                            Description = "Lab Technician"
+                        },
+                        new
+                        {
+                            JobCategoryTypeID = 8,
+                            Description = "Research Associate"
+                        },
+                        new
+                        {
+                            JobCategoryTypeID = 9,
+                            Description = "Software Developer"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -720,6 +897,38 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.MaritalStatus", b =>
+                {
+                    b.Property<int>("MaritalStatusID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MaritalStatusID");
+
+                    b.ToTable("MaritalStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            MaritalStatusID = 1,
+                            Description = "Married"
+                        },
+                        new
+                        {
+                            MaritalStatusID = 2,
+                            Description = "Single"
+                        },
+                        new
+                        {
+                            MaritalStatusID = 3,
+                            Description = "Divorced"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Menu", b =>
                 {
                     b.Property<int>("menuID")
@@ -795,7 +1004,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             menuID = 6,
-                            ActionName = "IndexForLabManage",
+                            ActionName = "IndexForPayment",
                             ControllerName = "Vendors",
                             MenuDescription = "LabManagement",
                             MenuImageURL = "/images/css/main_menu_icons/lab.png",
@@ -2017,6 +2226,28 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>
+                {
+                    b.Property<int>("SalariedEmployeeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("HoursPerDay")
+                        .HasColumnType("float");
+
+                    b.HasKey("SalariedEmployeeID");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique()
+                        .HasFilter("[EmployeeId] IS NOT NULL");
+
+                    b.ToTable("SalariedEmployees");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
                 {
                     b.Property<int>("SubProjectID")
@@ -2412,38 +2643,48 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasBaseType("PrototypeWithAuth.Data.ApplicationUser");
 
-                    b.Property<double?>("BituachLeumiEmployer")
-                        .HasColumnType("float");
+                    b.Property<string>("Citizenship")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("EducationFundEmployer")
-                        .HasColumnType("float");
+                    b.Property<string>("Degree")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("Food")
+                    b.Property<int>("EmployeeStatusID")
+                        .HasColumnType("int");
+
+                    b.Property<double>("EmployerTax")
                         .HasColumnType("float");
 
                     b.Property<double>("GrossSalary")
                         .HasColumnType("float");
 
-                    b.Property<double>("HoursPerWeek")
-                        .HasColumnType("float");
+                    b.Property<int>("IDNumber")
+                        .HasColumnType("int");
 
                     b.Property<double>("IncomeTax")
                         .HasColumnType("float");
 
-                    b.Property<double?>("PensionEmployer")
-                        .HasColumnType("float");
+                    b.Property<int>("JobCategoryTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("JobTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RelationshipStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartedWorking")
                         .HasColumnType("datetime2");
 
-                    b.Property<double?>("Transportation")
-                        .HasColumnType("float");
-
                     b.Property<int>("VacationDays")
                         .HasColumnType("int");
 
-                    b.Property<int>("WorkScope")
-                        .HasColumnType("int");
+                    b.HasIndex("EmployeeStatusID");
+
+                    b.HasIndex("JobCategoryTypeID");
 
                     b.HasDiscriminator().HasValue("Employee");
                 });
@@ -2604,6 +2845,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.OffDayType", "OffDayType")
                         .WithMany()
                         .HasForeignKey("OffDayTypeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Freelancer", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
+                        .WithOne("Freelancer")
+                        .HasForeignKey("PrototypeWithAuth.Models.Freelancer", "EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -2803,6 +3052,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
+                        .WithOne("SalariedEmployee")
+                        .HasForeignKey("PrototypeWithAuth.Models.SalariedEmployee", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Project", "Project")
@@ -2855,6 +3112,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Vendor", "Vendor")
                         .WithMany("VendorContacts")
                         .HasForeignKey("VendorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Employee", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeStatus", "EmployeeStatus")
+                        .WithMany("Employees")
+                        .HasForeignKey("EmployeeStatusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.JobCategoryType", "JobCategoryType")
+                        .WithMany("Employees")
+                        .HasForeignKey("JobCategoryTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

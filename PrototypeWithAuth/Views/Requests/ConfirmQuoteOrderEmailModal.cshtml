@@ -8,11 +8,13 @@
         <div class="modal-content d-inline-block" style="width:58.96rem;">
 
             <div class="modal-header pb-0 border-bottom-0">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
 
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;">
-               
+
                 <div style="padding:1rem 2rem">
 
                     <header class="page-header">
@@ -42,7 +44,7 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="vendor-info">
-                                <span style="font-weight: 700; font-size:1.5rem;">@Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</span><br>
+                                <span class="heading-1">@Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</span><br>
                                 <span>ID: @Model.Requests.FirstOrDefault().Product.Vendor.VendorBuisnessID</span><br>
                                 <span> @Model.Requests.FirstOrDefault().Product.Vendor.VendorCity</span><br>
                                 <span>Tel:  @Model.Requests.FirstOrDefault().Product.Vendor.VendorTelephone</span>
@@ -50,8 +52,8 @@
                         </div>
                         <div class="col-6 offset-2">
                             <div class="note-message p-4 pl-5">
-                                <span style="font-weight: 700; font-size:1.5rem;">Please Note</span><br>
-                                <span>We need this order by next Sunday. Thank you!</span>
+                                <span class="heading-1">Please Note</span><br>
+                                <span class="text">We need this order by next Sunday. Thank you!</span>
                             </div>
                         </div>
                     </div>
@@ -132,12 +134,15 @@
 
                     <br />
                     <br />
-                    <div class="modal-footer p-4" style="justify-content:space-evenly;">
-                        <input asp-for="VendorId" style="display: none;" />
-                        <input type="submit" class="inv-lab-button" asp-action="ConfirmQuoteOrderEmailModal" value="Confirm & Send Email" />
-                        <button class="cancel-button cancel-email" data-dismiss="modal">Cancel</button>@*FAIGE: should this delete the request?*@
-                    </div>
+                    <div class="modal-footer p-4">
+                        <div class="m-auto">
+                            <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="ConfirmQuoteOrderEmailModal" value="Confirm & Send Email" />
+
+                            <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel Email</button>
+                        </div>
                 </div>
+
+</div>
 
                 <script>
                     var today = new Date();

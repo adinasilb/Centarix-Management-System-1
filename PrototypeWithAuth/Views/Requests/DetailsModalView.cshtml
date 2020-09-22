@@ -4,12 +4,13 @@
 @using PrototypeWithAuth.Data
 @inject SignInManager<ApplicationUser> SignInManager
 @{
+    Layout = null;
 }
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-<div class="modal modal-view right fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view right fader order-inv-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog modal-lg box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
+    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
 
         <div class="modal-content d-inline-block">
@@ -30,51 +31,45 @@
                 @*Requests search view model*@
 
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
 
                 <!-- Modal Header -->
-                <div class="new-modal-header border-bottom box-shadow" style="padding: 0.5em 6em">
+                <div class="new-modal-header border-bottom modal-line-1-header-with-back modal-sides">
                     @*class needed here to override bootstraps modal limitations*@
 
                     @if (TempData["ErrorMessage"] != null)
                     {
-                        <h6 class="text-danger">@TempData["ErrorMessage"]</h6>
-                        <br />
+                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                     }
-                    <div>
+                    <div class="back-button">
                         <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent"><img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" /></button>
                     </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-md-2">
-                            @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
-                            {
-                                <img src="@Model.Request.Product.ProductSubcategory.ImageURL" alt="Alternate Text" width="75" />
-                            }
-                            else
-                            {
-                                <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" width="75" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
-                            }
-                        </div>
-                        <div class="col-md-8 offset-1">
-                            <!--<h4><label asp-for="Request.Product.ProductName" class="control-label"></label> </h4>-->
-                            <!-- <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" disabled /></h4>  -->
-                            <h3>@Model.Request.Product.ProductName</h3>
-                            <span asp-validation-for="Request.Product.ProductName" class="text-danger"></span>
+                    <div class="row modal-title-line">
+                        @*<div class="col-md-2 px-0">*@
+                        @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
+                        {
+                            <img src="@Model.Request.Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
+                        }
+                        else
+                        {
+                            <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" class="top-modal-image" width="75" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
+                        }
+                        @*</div>*@
+                        <div class="modal-product-title" @*style="width: 80%;"*@>
+                            <input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom" readonly />
+                            <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
                         </div>
 
                     </div>
-                    <br />
                     <div class="row">
                         <div class="col-12 px-0">
-                            <div class="container-fluid div-tabs text-center">
+                            <div class="container-fluid text-center div-tabs">
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
-                                    <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
                                     @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li>
                                         Commented out below - because this is the DETAILS modal, so cant order from here.*@
                                 </ul>
@@ -85,31 +80,35 @@
                 </div>
 
                 <!-- Modal body -->
-                <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
-                    <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
+                <div class="new-modal-body">
+                    <div class="container-fluid div-tabs inner-modal-tabs">
 
-                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                        {
-                        <div class="row">
-                            <div class="col-12">
-                                <button class="btn inv-link-clr load-product-edit float-md-right" title="edit" value="@Model.Request.RequestID" data-target="item" href="item">Edit <i class="icon-create-24px"></i></button>
-                            </div>
-                        </div>
-                        }
-
-                        <div class="tab-content">
+                        <div class="tab-content modal-tab-content">
                             <div id="item" class="tab-pane fade in active">
-                                <span style="font-size: 1.7em;">Item</span>
-                                <br />
-                                <br />
+                                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                                {
+                                    <!-- Default switch -->
+                                    <div class="float-right">
+                                        <div class="switch">
+                                            <label>
+                                                Edit Mode Off
+                                                <input type="checkbox" class="load-product-edit" value="@Model.Request.RequestID">
+                                                <span class="lever"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+
+                                <span class="heading-1 modal-tab-name">Item</span>
+
                                 <div class="row">
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
          new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-         "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "parentlist", @disabled = "disabled" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger"></span>
+         "Select Category", new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "parentlist", @disabled = "disabled" })
+                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4 px-4">
@@ -117,8 +116,8 @@
                                             <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
          new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-         "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist", @disabled = "disabled" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger"></span>
+         "Select Subcategory", new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "sublist", @disabled = "disabled" })
+                                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4">
@@ -132,14 +131,13 @@
                                                     "ProjectDescription"
                                                     ),
                                                 "Select Project",
-                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+                                                new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
                                             )
                                             @Html.HiddenFor(m => m.Request.SubProject.ProjectID)
-                                            <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-4">
                                         <div class="form-group">
@@ -152,10 +150,10 @@
                                                     "SubProjectDescription"
                                                     ),
                                                 "Select Sub Project",
-                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+                                                new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
                                             )
                                             @Html.HiddenFor(m => m.Request.SubProjectID)
-                                            <span asp-validation-for="Request.SubProjectID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4 px-4">
@@ -168,71 +166,68 @@
          dataValueField: "VendorID",
          dataTextField: "VendorEnName"),
          optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-         htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "vendorList", @disabled = "disabled" }
+         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "vendorList", @disabled = "disabled" }
          )
-                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="form-group">
                                             @* IN MIDDLE *@
                                             <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                                            <label class="vendorBusinessId form-control-plaintext border-bottom" />
+                                            <input asp-for="Request.Product.Vendor.VendorBuisnessID" class="form-control-plaintext border-bottom" disabled />
                                             @*don't need a validation here because you it's not saving*@
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                 {
                                     <div class="row">
                                         <div class="col-6 pr-4">
                                             <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
                                             <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger"></span>
+                                            <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                                         </div>
                                         <div class="col-6">
                                             <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                            <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
-                                            <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger" />
+                                            <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom" disabled />
+                                            <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger-centarix" />
                                         </div>
                                     </div>
-                                    <br />
                                 }
 
                                 <div class="row">
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
                                         <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger" />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
                                         <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
-                                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger quote-date" />
+                                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
                                         <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.CatalogNumber" class="text-danger"></span>
+                                        <span asp-validation-for="Request.CatalogNumber" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-3">
                                         <label asp-for="Request.Warranty" class="control-label"></label>
                                         <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.Warranty" class="text-danger"></span>
+                                        <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
                                     </div>
                                     @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                     {
                                         <div class="col-3">
                                             <label class="control-label">End Date</label>
                                             @*@{
-                        //get this just to return the date (not the time)
-                        //adding the amount of months of the warranty to the invoice date
-                        var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                    }*@
+                                                    //get this just to return the date (not the time)
+                                                    //adding the amount of months of the warranty to the invoice date
+                                                    var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                                                }*@
                                             <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                         </div>
                                     }
@@ -245,12 +240,11 @@
                                     }
 
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
                                         <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger"></span>
+                                        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
                                     </div>
                                     @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                     {
@@ -270,65 +264,83 @@
                                     <div class="col-4">
                                         <label asp-for="Request.URL" class="control-label"></label>
                                         <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.URL" class="text-danger"></span>
+                                        <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                             </div>
 
                             <div id="location" class="tab-pane fade">
-                                <span style="font-size: 1.7em;">Location</span>
-                                <br />
-                                <br />
+                                <span class="heading-1 modal-tab-name">Location</span>
                                 @if (Model.ChildrenLocationInstances != null && Model.ChildrenLocationInstances.Any())
                                 {
-                                <h4>@Model.ParentLocationInstance.LocationInstanceName</h4> //this should be a link to the manage page for admins only
-                                <table class="table table-sm border">
-                                    @{
-                                            int z = -1; //initiated to -1 b/c it didn't let me put the z++ on the bottom of the fx. Really should be 0.
-    }
-    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+                                    @Model.ParentLocationInstance.LocationInstanceName
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label asp-for="LocationType.LocationTypeName" class="control-label"></label>
+                                            <input asp-for="LocationType.LocationTypeName" class="form-control-plaintext border-bottom" readonly />
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="control-label">Location Name:</label>
+                                            <input class="form-control-plaintext border-bottom" value="@Model.LocationInstances[Model.LocationInstances.Count-2].LocationType.LocationTypeName" />
+                                        </div>
+                                        @for (int w = Model.LocationInstances.Count - 2; w > 0; w--)
                                         {
-                                    <tr>
-                                        @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                                            string inputValue = Model.LocationInstances[w].LocationType.LocationTypeName;
+                                            inputValue += Model.LocationInstances[w].Place?.Substring(1, Model.LocationInstances[w].Place.Length - 1);
+                                            <div class="col-3">
+                                                <label class="control-label">Location Name @w+1:</label>
+                                                <input class="form-control-plaintext border-bottom" value="@inputValue" />
+                                            </div>
+                                        }
+                                    </div>
+                                    @*<h4>@Model.ParentLocationInstance.LocationInstanceName</h4>*@ //this should be a link to the manage page for admins only
+                                    <table class="table table-sm border">
+                                        @{
+                                            int z = -1; //initiated to -1 b/c it didn't let me put the z++ on the bottom of the fx. Really should be 0.
+                                        }
+                                        @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+                                        {
+                                            <tr>
+                                                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                                                 {
                                                     z++;
                                                     var backgroundClass = "border";
-    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
-    {
-        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
-        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
+                                                    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                                                    {
+                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
+                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
 
-        if (Model.ChildrenLocationInstances[z].IsFull)
-        {
-            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
-            {
-                backgroundClass += " bg-info text-light text-center";
-            }
-            else //why is this else here? it doesn't seem to ever get used.
-            {
-                backgroundClass += " bg-secondary";
-            }
-                                        <td class="@backgroundClass">
-                                            @Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName
-                                        </td>
+                                                        if (Model.ChildrenLocationInstances[z].IsFull)
+                                                        {
+                                                            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
+                                                            {
+                                                                backgroundClass += " bg-info text-light text-center";
+                                                            }
+                                                            else //why is this else here? it doesn't seem to ever get used.
+                                                            {
+                                                                backgroundClass += " bg-secondary";
+                                                            }
+                                                            <td class="@backgroundClass">
+                                                                @Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName
+                                                            </td>
                                                         }
                                                         else
                                                         {
-                                        <td class="@backgroundClass"><span style="font-size:xx-small">empty</span></td>
+                                                            <td class="@backgroundClass"><span style="font-size:xx-small">empty</span></td>
                                                         }
 
                                                     }
 
                                                 }
-                                    </tr>
+                                            </tr>
                                         }
-                                </table>
+                                    </table>
                                 }
                                 else
                                 {
-                                <span>No Locations yet</span>
-                                <br />
-                                @*<button>Add Locations</button>*@
+
+                                    <br /><span>No Locations yet</span>
+                                    @*<button>Add Locations</button>*@
                                 }
                             </div>
 
@@ -350,11 +362,10 @@
                                         <div class="form-group">
                                             <label asp-for="Request.ExchangeRate" class="control-label"></label>
                                             <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger"></span>
+                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row" id="#details">
                                     <div class="col-4 RequestUnitCard">
                                         <div class="border p-3">
@@ -362,7 +373,7 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.Unit" class="control-label"></label>
                                                     <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                    <span asp-validation-for="Request.Unit" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -371,9 +382,9 @@
          vm => vm.Request.UnitTypeID,
          Model.UnitTypeList,
          "",
-         htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
          )
-                                                        <span asp-validation-for="Request.UnitType" class="text-danger"></span>
+                                                        <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -402,7 +413,7 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubUnit" class="control-label"></label>
                                                     <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                    <span asp-validation-for="Request.SubUnit" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubUnitType" class="control-label"></label>
@@ -410,9 +421,9 @@
          vm => vm.Request.SubUnitTypeID,
          Model.UnitTypeList,
          "",
-         htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
          )
-                                                    <span asp-validation-for="Request.SubUnitType" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -440,7 +451,7 @@
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubSubUnit" class="control-label"></label>
                                                     <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
@@ -448,9 +459,9 @@
          vm => vm.Request.SubSubUnitTypeID,
          Model.UnitTypeList,
          "",
-         htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
          )
-                                                    <span asp-validation-for="Request.SubSubUnitType" class="text-danger"></span>
+                                                    <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -473,7 +484,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -490,7 +500,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" disabled />
-                                                <span class="text-danger" asp-validation-for="Request.Cost"></span>
+                                                <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -501,7 +511,7 @@
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 @{ var vat = .17 * Model.Request.Cost;}
                                                 <input value="@vat.ToString("N2");" class="form-control-plaintext border-bottom " disabled />
-                                                <span class="text-danger" asp-validation-for="Request.VAT"></span>
+                                                <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -524,7 +534,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -537,7 +546,7 @@
                                             @Html.DropDownListFor(
 model => model.Request.Terms,
 new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
      )
                                         </div>
                                     </div>
@@ -547,13 +556,12 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         </div>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="row installments">
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.Installments" class="control-label"></label>
                                             <input asp-for="Request.Installments" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.Installments" class="text-danger"></span>
+                                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-8 p-3">
@@ -572,20 +580,20 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                     {
                                                         foreach (var payment in Model.NewPayments)
                                                         {
-                                                    <tr>
-                                                        <td>
-                                                            <input asp-for="@payment.PaymentDate" class="form-control-plaintext border-bottom" disabled />
-                                                        </td>
-                                                        <td>
-                                                            <input asp-for="@payment.CompanyAccount.PaymentType.PaymentTypeDescription" class="form-control-plaintext border-bottom" disabled />
-                                                        </td>
-                                                        <td>
-                                                            <input asp-for="@payment.CompanyAccount.CompanyAccountNum" class="form-control-plaintext border-bottom" disabled />
-                                                        </td>
-                                                        <td>
-                                                            <input asp-for="@payment.Reference" class="form-control-plaintext border-bottom" disabled />
-                                                        </td>
-                                                    </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input asp-for="@payment.PaymentDate" class="form-control-plaintext border-bottom" disabled />
+                                                                </td>
+                                                                <td>
+                                                                    <input asp-for="@payment.CompanyAccount.PaymentType.PaymentTypeDescription" class="form-control-plaintext border-bottom" disabled />
+                                                                </td>
+                                                                <td>
+                                                                    <input asp-for="@payment.CompanyAccount.CompanyAccountNum" class="form-control-plaintext border-bottom" disabled />
+                                                                </td>
+                                                                <td>
+                                                                    <input asp-for="@payment.Reference" class="form-control-plaintext border-bottom" disabled />
+                                                                </td>
+                                                            </tr>
                                                         }
                                                     }
                                                 }
@@ -604,7 +612,10 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                             <div id="documents" class="tab-pane fade">
                                 <span style="font-size: 1.7em;">Documents</span>
 
-                                <input type="submit" style="display:none;" id="documentSubmit" href="@Url.Action("DocumentsModal", "Requests")" />
+                                @{
+                                    var urlAction = Url.Action("DocumentsModal", "Requests");
+                                }
+                                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
 
                                 <div class="row">
                                     <div class="col-md-3 mb-4">
@@ -633,7 +644,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                 filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()"  data-val="@false">
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
                                             <div class="card document-border " style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="invoice" class="@filterClass" />
@@ -658,8 +669,8 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                 </div>
 
                                             </div>
-                                            </a>
-                                            <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
+                                        </a>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
                                     </div>
                                     <div class="col-md-3 mb-4">
                                         @{
@@ -674,24 +685,9 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                                 <div class="card-body text-center" style="height:150px;">
                                                     <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
-
-                                                @*<div class="card-footer">
-                    <div class="custom-file text-center">
-                        <label for="QuoteFiles"><i class="icon-centarix-icons-07 upload-file-4 mr-5" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                        <input type="file" asp-for="QuoteFiles" class="file-select file-select-4" accept=".png, .jpg, .jpeg, .pdf" style="display: none" multiple disabled>
-                        @if (boolQuote)
-                        {
-                            <a class="show-quotes-view"><label><i class="icon-centarix-icons-09 hover-bold align-bottom" style="color: #30BCC9; cursor:pointer; font-size: 1.8rem;"></i> </label></a>
-                        }
-                        else
-                        {
-                            <label><i class="icon-centarix-icons-09" style="color: #B6B6B6; font-size: 1.8rem;"></i></label>
-                        }
-                    </div>
-                </div>*@
                                             </div>
-                                            </a>
-                                            <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
+                                        </a>
+                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -706,7 +702,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/info.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/info_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -721,9 +717,9 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
-                                            <div class="card document-border"  style="height:86%">
+                                            <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/pictures.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/pictures_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -740,7 +736,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/return.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/return_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -757,7 +753,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
                                             <div class="card document-border" style="height:86%">
                                                 <div class="card-body text-center" style="height:150px;">
-                                                       <img src="~/images/css/inventory/add-item/other icons/credit.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                                    <img src="~/images/css/inventory/add-item/other icons/credit_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
                                             </div>
                                         </a>
@@ -767,35 +763,32 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                             </div>
 
                             <div id="comments" class="tab-pane fade">
-                                <span style="font-size: 1.7em;">Comments</span>
-                                <br />
-                                <br />
+                                <span class="heading-1 modal-tab-name">Comments</span>
                                 @{
                                     if (Model.OldComments != null)
                                     {
                                         foreach (Comment comment in Model.OldComments)
                                         {
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card rounded">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-md-2">
-                                                            <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
-                                                            @*Insert Pic
-                                                <img src="" />
-                                                changing this to the user's profile picture*@
-                                                        </div>
-                                                        <div class="col-md-10">
-                                                            <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
-                                                            @comment.CommentText
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card rounded">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
+                                                                    @*Insert Pic
+                                                                        <img src="" />
+                                                                        changing this to the user's profile picture*@
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
+                                                                    @comment.CommentText
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <br />
                                         }
                                     }
                                 }
@@ -807,7 +800,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 
                     <!-- Modal footer -->
                     @*<div class="modal-footer">
-        </div>*@
+                        </div>*@
 
                     @*Begin Hidden Inputs:*@
                     @Html.HiddenFor(vm => vm.Request.ProductID)

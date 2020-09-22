@@ -86,7 +86,9 @@
         @Model.Where(eh => eh.OffDayTypeID == 2).Count()
     </div>
     <div class="col-6 text-right pr-5 timekeeper-font-color font-weight-bold">
-        @Model.Select(eh => eh.TotalHours).Aggregate(TimeSpan.Zero, (t1, t2) => t1 + (t2 ?? TimeSpan.Zero)).ToString(@"hh\:mm")
-
+        @{ var sum = new TimeSpan(Model.Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
+        @{var totalHours = sum.Days * 24 + sum.Hours;
+        }
+        @totalHours:@sum.ToString("mm")
     </div>
 </div>

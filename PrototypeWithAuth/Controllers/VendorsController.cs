@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
+using Abp.Extensions;
 //using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -38,33 +39,53 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: Vendors
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1)
+        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1, AppUtility.MenuItems SectionType= AppUtility.MenuItems.OrdersAndInventory)
         {
-            TempData["PageType"] = PageType;
-            TempData["SidebarTitle"] = AppUtility.RequestSidebarEnum.Vendor;
+            TempData["SectionType"] = SectionType;
+            if (categoryType == 1)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+                TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
+            }
+            else
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
+                if (PageType == AppUtility.RequestPageTypeEnum.Request || PageType.ToString() == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
+                {
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations.ToString();
+                }
+                else if (PageType == AppUtility.RequestPageTypeEnum.Inventory || PageType.ToString() == AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString())
+                {
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString();
+                }
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Vendors;
+            }
             TempData["CategoryType"] = categoryType;
             return View(await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync());
         }
 
         // GET: Vendors
         [Authorize(Roles = "Admin, Accounting,  LabManagement")]
-        public async Task<IActionResult> IndexForPayment(AppUtility.MenuItems SectionType)
+        public async Task<IActionResult> IndexForPayment(AppUtility.MenuItems SectionType  = AppUtility.MenuItems.LabManagement)
         {
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
             TempData["SectionType"] = SectionType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
+            }
+            else
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
+            }
             TempData["Action"] = AppUtility.SuppliersEnum.All;
             return View(await _context.Vendors.ToListAsync());
 
         }
 
-        [Authorize(Roles = "Admin, LabManagement")]
-        public async Task<IActionResult> IndexForLabManage()
-        {
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-            TempData["Action"] = AppUtility.SuppliersEnum.All;
-            return View(await _context.Vendors.ToListAsync());
-
-        }
 
         // GET: Vendors/Details/5
         [Authorize(Roles = "Admin")] //don't know where this goes to so can't have a role
@@ -118,16 +139,25 @@ namespace PrototypeWithAuth.Controllers
             _context.VendorComments.Where(c => c.VendorID == id).ToList().ForEach(c => vendorComments.Add(new AddCommentViewModel { VendorComment = c, IsActive = true }));
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
-
-            //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;           
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
+            }
+            else if (SectionType == AppUtility.MenuItems.Accounting)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
+                TempData["Action"] = AppUtility.SuppliersEnum.All;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
+            }
             return View(createSupplierViewModel);
         }
 
      
         // GET: Vendors/Search
         [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Admin, Accounting, LabManagement")]
         public IActionResult Search(AppUtility.MenuItems SectionType)
         {
      
@@ -139,8 +169,18 @@ namespace PrototypeWithAuth.Controllers
             };
 
             //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-            TempData["Action"] = AppUtility.SuppliersEnum.Search;
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.SearchSupplier;
+            }
+            else if (SectionType == AppUtility.MenuItems.Accounting)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.SearchSupplierAC;
+            }
             //return View(vendorSearchViewModel);
             if (AppUtility.IsAjaxRequest(this.Request))
                 return PartialView(vendorSearchViewModel);
@@ -216,7 +256,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
             }
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
             TempData["SectionType"] = vendorSearchViewModel.SectionType;
             return View("IndexForPayment", filteredVendors.ToList());
         }
@@ -231,12 +271,22 @@ namespace PrototypeWithAuth.Controllers
 
 
         // GET: Vendors/Create
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Admin, LabManagement, Accounting")]
         public IActionResult Create(AppUtility.MenuItems SectionType)
         {
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-            TempData["Action"] = AppUtility.SuppliersEnum.NewSupplier;
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.NewSupplier;
+            }
+            else if (SectionType == AppUtility.MenuItems.Accounting)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
+                TempData["Action"] = AppUtility.SuppliersEnum.NewSupplier;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.NewSupplierAC;
+            }
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
             createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
@@ -250,7 +300,7 @@ namespace PrototypeWithAuth.Controllers
             }
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
-            createSupplierViewModel.SectionType = SectionType;
+            createSupplierViewModel.SectionType = SectionType; //TODO: take this out when all the views are combined
             createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
 
             return View(createSupplierViewModel);
@@ -260,7 +310,7 @@ namespace PrototypeWithAuth.Controllers
         //public IActionResult AddContact()
         //{
         //    //tempdata page type for active tab link
-        //    TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
+        //    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
         //    VendorContact vendorContact = new VendorContact();
         //    return PartialView(vendorContact);
         //}
@@ -365,10 +415,19 @@ namespace PrototypeWithAuth.Controllers
             }
             createSupplierViewModel.VendorContacts = vendorContacts;
             createSupplierViewModel.VendorComments = vendorComments;
-      
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             //tempdata page type for active tab link
-            TempData["PageType"] = AppUtility.PaymentPageTypeEnum.Suppliers;
-
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
+            }
+            else if (SectionType == AppUtility.MenuItems.Accounting)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
+                TempData["Action"] = AppUtility.SuppliersEnum.All;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
+            }
             return View(createSupplierViewModel);
         }
 

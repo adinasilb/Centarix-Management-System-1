@@ -179,24 +179,24 @@ $(function () {
 		htmlTR += "<tr class='payment-line'>";
 		htmlTR += "<td>";
 		htmlTR += '<input class="form-control-plaintext border-bottom payment-date" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
+		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
 		htmlTR += '</td>';
 		htmlTR += '<td>';
 		htmlTR += '<select class="form-control-plaintext border-bottom paymentType" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
 		htmlTR += '<option value="1">Credit Card</option>';
 		htmlTR += '<option value="2">Bank Account</option>';
 		htmlTR += '</select>';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
+		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
 		htmlTR += '</td>';
 		htmlTR += '<td>';
 		var newPaymentsId = "NewPayments_" + increment + "__CompanyAccountID";
 		var newPaymentsName = "NewPayments[" + increment + "].CompanyAccountID";
 		htmlTR += '<select class="form-control-plaintext border-bottom companyAccountNum" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
+		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
 		htmlTR += '</td>';
 		htmlTR += '<td>';
 		htmlTR += '<input class="form-control-plaintext border-bottom" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
-		htmlTR += '<span class="text-danger field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
+		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
 		htmlTR += '</td>';
 		htmlTR += '</tr >';
 		//$("body").append(htmlTR);
@@ -404,6 +404,9 @@ $(function () {
 
 	$("#expected-supply-date").change(function () {
 		var date = new Date($(this).val());
+		if (date < new Date()) {
+			return;
+		}
 		console.log("-------expected supply date: " + date)
 		var Sdd = parseInt(date.getDate());
 		var Smm = parseInt(date.getMonth() + 1);
@@ -1125,44 +1128,13 @@ $(function () {
 
 	});
 
-	//$(".upload-file-1").click(function () {
-	//	console.log("file select clicked 1");
-	//	$(".file-select-1").click();
-	//});
-	//$(".upload-file-2").click(function () {
-	//	console.log("file select clicked 2");
-	//	$(".file-select-2").click();
-	//});
-	//$(".upload-file-3").click(function () {
-	//	console.log("file select clicked 3 ");
-	//	$(".file-select-3").click();
-	//});
-	//$(".upload-file-4").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-4").click();
-	//});
-	//$(".upload-file-5").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-5").click();
-	//});
-	//$(".upload-file-6").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-6").click();
-	//});
-	//$(".upload-file-7").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-7").click();
-	//});
-	//$(".upload-file-8").click(function () {
-	//	console.log("file select clicked");
-	//	$(".file-select-8").click();
-	//});
+
 
 	$(".open-document-modal").click(function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal");
-		//$(".open-document-modal").removeClass("active-document-modal");
+		$(".open-document-modal").removeClass("active-document-modal");
 		$(this).addClass("active-document-modal");
 		var enumString = $(this).data("string");
 		console.log("enumString: " + enumString);
@@ -1386,6 +1358,9 @@ $(function () {
 		} else {
 			$("#Debt").val(sum);
 		}
+		var vatCalc = sum * .17;
+		console.log("vatCalc" + vatCalc);
+		$('#Request_VAT').val(vatCalc.toFixed(2));
 	};
 
 	$(".payments-table").on("change", ".payment-date", function (e) {
@@ -1637,13 +1612,10 @@ $(function () {
 		}
 	});
 
-
-
-
 	$.fn.validateItemTab = function () {
-		$("#price-tab").prop("disabled", true);
-		$("#location-tab").prop("disabled", true);
-		$("#order-tab").prop("disabled", true);
+		$(".request-price-tab").prop("disabled", true);
+		$(".request-location-tab").prop("disabled", true);
+		$(".request-order-tab").prop("disabled", true);
 
 		console.log("in $.fn.validateItemTab");
 		valid = $("#parentlist").attr('aria-invalid');
@@ -1652,112 +1624,62 @@ $(function () {
 			return;
 		}
 		valid = $("#Request_Product_ProductName").attr('aria-invalid');
-		console.log("valid: " + valid);
 		if (valid == "true" || $("#Request_Product_ProductName").val() == "") {
 			console.log("valid: " + valid);
 			return;
 		}
-		console.log("valid1: " + valid);
 		valid = $("#sublist").attr('aria-invalid');
 		if (valid == "true" || $("#sublist").val() == "") {
 			return;
 		}
-		console.log("valid2: " + valid);
-		valid = $("#Request_SubProjectID").attr('aria-invalid');
-		if (valid == "true" || $("#Request_SubProjectID").val() == "") {
-			return;
-		}
-		console.log("valid3: " + valid);
 		valid = $("#Request_SubProject_ProjectID").attr('aria-invalid');
 		if (valid == "true" || $("#Request_SubProject_ProjectID").val() == "") {
 			return;
 		}
-		console.log("valid4: " + valid);
+		console.log("valid1: " + valid);
+		valid = $("#SubProject").attr('aria-invalid');
+		if (valid == "true" || $("#SubProject").val() == "") {
+			return;
+		}
 		valid = $("#vendorList").attr('aria-invalid');
 		if (valid == "true" || $("#vendorList").val() == "") {
 			return;
 		}
-		console.log("valid5: " + valid);
-		valid = $("#Request_ParentRequest_InvoiceNumber").attr('aria-invalid');
-		if (valid == "true" || $("#Request_ParentRequest_InvoiceNumber").val() == "") {
-			return;
-		}
-		console.log("valid5: " + valid);
 		valid = $("#Request_Warranty").attr('aria-invalid');
 		if (valid == "true") {
 			return;
 		}
-		console.log("valid6: " + valid);
 		valid = $("#Request_ParentQuote_QuoteDate").attr('aria-invalid');
-		if (valid == "true") {
+		if (valid == "true" || $("#Request_ParentQuote_QuoteDate").val() == "") {
 			return;
 		}
-		var validDate = true;
-		var dateVal = $(".create-modal-quote-date").val();
-		console.log("date val: " + dateVal)
-		if (dateVal != undefined) {
-
-			validDate = $.fn.validateDateisGreaterThanOrEqualToToday(dateVal)
-		}
-		valid = "" + !validDate;
-		console.log("valid date: " + valid);
-		if (valid == "true" || $("#Request_ParentRequest_QuoteDate").val() == "") {
+		valid = $("#Request_ParentQuote_QuoteNumber").attr('aria-invalid');
+		if (valid == "true" || $("#Request_ParentQuote_QuoteNumber").val() == "") {
 			return;
 		}
-
-
-		console.log("valid7: " + valid);
 		valid = $("#Request_ExpectedSupplyDays").attr('aria-invalid');
-		if (valid == "true" || $("#Request_ExpectedSupplyDays").val() == "") {
+		if (valid == "true") {
 			return;
 		}
 		valid = $("#Request_CatalogNumber").attr('aria-invalid');
 		if (valid == "true" || $("#Request_CatalogNumber").val() == "") {
 			return;
 		}
-		console.log("valid8: " + valid);
 		if (valid == "false" || valid == undefined) {
-			$("#price-tab").prop("disabled", false);
-			$("#location-tab").prop("disabled", false);
-			$("#saveEditModal").removeClass("disabled");
-			$("#saveEditModal").prop("disabled", false);
-			$("#order-tab").prop("disabled", false);
+			console.log("made it here!!")
+			$(".request-price-tab").prop("disabled", false);
+			$(".request-location-tab").prop("disabled", false);
+			$(".request-order-tab").prop("disabled", false);
 		}
 		return valid;
 	}
 
-
-	$("#Request_ParentRequest_InvoiceDate").change(function () {
-
-	});
-	$('#myModal').change(		function () {
-			$.validator.unobtrusive.parse("#myForm");
-		});
-
-
-	$("#price-tab").click(function () {
-		console.log("in onclick price tab");
-		$("#myForm").valid();
-		$.fn.validateItemTab();
+	$('#myModal').change(function () {
+		$.validator.unobtrusive.parse("#myForm");
 	});
 
-	$("#saveEditModal").click(function () {
-		console.log("in onclick save modal");
-		$("#saveEditModal").addClass("disabled");
-		$("#saveEditModal").prop("disabled", true);
-		$("#myForm").valid();
-		var valid = $.fn.validateItemTab();
-		if (valid == "false" || valid == undefined) {
-			valid = $.fn.validatePriceTab();
-			if (valid == "false" || valid == undefined) {
-				$("#saveEditModal").removeClass("disabled");
-				$("#saveEditModal").prop("disabled", false);
-				return true;
-			}
-		};
-		$("#saveEditModal").removeClass("disabled");
-		$("#saveEditModal").prop("disabled", false);
-		return false;
+	$("#saveEditModal").click(function (e) {
+
 
 	});
 
@@ -1783,21 +1705,35 @@ $(function () {
 		return true;
 	};
 
-	$("#price-tab").click(function () {
+	$(".request-price-tab").click(function () {
 		console.log("in onclick price tab");
 		$("#myForm").valid();
 		$.fn.validateItemTab();
 
 	});
+	$(".create-modal-submit").click(function (e) {
+		console.log('$("#myForm").valid()');
+		if ($("#myForm").valid()) {
+			$(".create-modal-submit").removeClass("disabled-submit");
+			return true;
+		} else {
+			e.preventDefault();
+			e.stopPropagation();
+			$(".create-modal-submit").addClass("disabled-submit");
+			return false;
+		}
 
-	$("#archive-tab").click(function () {
+	});
+
+
+	$(".request-archive-tab").click(function () {
 		console.log("in onclick archive-tab");
 		$("#myForm").valid();
 		$.fn.validatePriceTab();
 
 	});
 
-	$("#history-tab").click(function () {
+	$(".request-history-tab").click(function () {
 		console.log("in onclick history-tab");
 		$("#myForm").valid();
 		$.fn.validateItemTab();
@@ -1805,7 +1741,7 @@ $(function () {
 
 	});
 
-	$("#order-tab").click(function () {
+	$(".request-order-tab").click(function () {
 		console.log("in onclick order-tab");
 		$("#myForm").valid();
 		var valid = $.fn.validateItemTab();
@@ -1815,13 +1751,13 @@ $(function () {
 
 	});
 
-	$("#comments-tab").click(function () {
+	$(".request-comments-tab").click(function () {
 		console.log("in onclick comments-tab");
 		$("#myForm").valid();
 		$.fn.validatePriceTab();
 	});
 
-	$("#location-tab").click(function () {
+	$(".request-location-tab").click(function () {
 		console.log("in onclick location-tab");
 		$("#myForm").valid();
 		$.fn.validateItemTab();
@@ -1840,28 +1776,24 @@ $(function () {
 
 	$.fn.validatePriceTab = function () {
 		//all the true and falses are opposite because fo the ariainvalid is true if invalid
-		$("#documents-tab").prop("disabled", true);
-		$("#comments-tab").prop("disabled", true);
-		$("#archive-tab").prop("disabled", true);
-		$("#history-tab").prop("disabled", true);
-		$("#order-tab").prop("disabled", true);
+		$(".request-documents-tab").prop("disabled", true);
+		$(".request-comments-tab").prop("disabled", true);
+		$(".request-archive-tab").prop("disabled", true);
+		$(".request-history-tab").prop("disabled", true);
+		$(".request-order-tab").prop("disabled", true);
 		valid = $("#Request_Product_ProductName").attr('aria-invalid');
-		console.log("valid: " + valid);
 		if (valid == "true" || $("#Request_Product_ProductName").val() == "") {
-			console.log("valid: " + valid);
 			return;
 		}
 		valid = $("#Request_Unit").attr('aria-invalid');
-		console.log("valid: " + valid);
 		if (valid == "true" || $("#Request_Unit").val() == "") {
-			console.log("valid: " + valid);
 			return;
 		}
-		console.log("valid1: " + valid);
-		valid = $("#Request_UnitTypeID").attr('aria-invalid');
-		if (valid == "true" || $("#Request_UnitTypeID").val() == "") {
+		valid = $("#Request_Unit").attr('aria-invalid');
+		if (valid == "true" || $("#Request_Unit").val() == "") {
 			return;
 		}
+
 		//TALK TO DEBBIE ABOUT THE NEW MATERIAL SELECT
 		console.log("valid2: " + valid);
 		valid = $("#Request_ExchangeRate").attr('aria-invalid');
@@ -1884,12 +1816,12 @@ $(function () {
 		}
 
 		if (valid == "false" || valid == undefined) {
-			$("#item-tab").prop("disabled", false);
-			$("#documents-tab").prop("disabled", false);
-			$("#comments-tab").prop("disabled", false);
-			$("#archive-tab").prop("disabled", false);
-			$("#history-tab").prop("disabled", false);
-			$("#order-tab").prop("disabled", false);
+			$(".request-item-tab").prop("disabled", false);
+			$(".request-documents-tab").prop("disabled", false);
+			$(".request-comments-tab").prop("disabled", false);
+			$(".request-archive-tab").prop("disabled", false);
+			$(".request-history-tab").prop("disabled", false);
+			$(".request-order-tab").prop("disabled", false);
 		}
 		return valid;
 	}
@@ -2131,9 +2063,11 @@ $(function () {
 	$("#addSupplier").click(function () {
 		console.log('$("#createModalForm").valid()');
 		if ($("#createModalForm").valid()) {
+			$("#addSupplier").removeClass("disabled-submit");
 			return true;
 		} else {
-			$("#addSupplier").prop("disabled", true);
+			e.preventDefault();
+			e.stopPropagation();
 			$("#addSupplier").addClass("disabled-submit");
 			return false;
 		}
@@ -2260,7 +2194,8 @@ $(function () {
 	$("#addUser").click(function () {
 		console.log($("#createModalForm").valid());
 		if (!$("#createModalForm").valid()) {
-			$("#addUser").prop("disabled", true);
+			e.preventDefault();
+			e.stopPropagation();
 		}
 	});
 
@@ -2340,9 +2275,10 @@ $(function () {
 
 
 	$("#SaveInvoiceModal").on("click", function (e) {
+		$("#myForm").valid();
 		var valid = $("#Invoice_InvoiceNumber").attr("aria-invalid");
 		console.log("invoice number validation + " + valid);
-		if (valid == false || valid == undefined) {
+		if (valid == "true" || $("#Invoice_InvoiceNumber")=="" ) {
 			e.preventDefault();
 			e.stopPropagation();
 			$("#invoice-number-validation").html("Please enter a valid Number");
@@ -2371,7 +2307,7 @@ $(function () {
 		console.log("vendor: " + vendorid);
 		console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid;
+		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -2380,7 +2316,7 @@ $(function () {
 		e.preventDefault();
 		e.stopPropagation();
 		var vendorid = $(this).attr("vendor");
-		var itemUrl = "AddInvoiceModal/?vendorid=" + vendorid;
+		var itemUrl = "/Requests/AddInvoiceModal/?vendorid=" + vendorid;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl);
 	});
@@ -2389,7 +2325,7 @@ $(function () {
 		e.preventDefault();
 		e.stopPropagation();
 		var requestid = $(this).attr("request");
-		var itemUrl = "AddInvoiceModal/?requestid=" + requestid;
+		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl);
 	});
@@ -2493,7 +2429,12 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 	$(".open-update-hours-modal").click(function (e) {
-		var itemurl = "UpdateHours";
+		var val = $(this).val();
+		if (val != '') {
+			var date = new Date(val).toISOString();
+			console.log(date)
+		}
+		var itemurl = "UpdateHours?chosenDate=" +date;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -2662,13 +2603,90 @@ $.fn.SaveOffDays = function (url) {
 	});
 }
 
-$("body").on("click", "#saveVacation", function (e) {
-	e.preventDefault();
-	$.fn.SaveOffDays("SaveVacation");
-});
-$("body").on("click", "#saveSick", function (e) {
-	e.preventDefault();
-	$.fn.SaveOffDays("SaveSick");
-});
+	$("body").on("click", "#saveVacation", function (e) {
+		e.preventDefault();
+		$.fn.SaveOffDays("SaveVacation");
+	});
+	$("body").on("click", "#saveSick", function (e) {
+		e.preventDefault();
+		$.fn.SaveOffDays("SaveSick");
+	});
 
+	$(".approve-hours").click(function (e) {
+		$.ajax({
+			async: true,
+			url: "ApproveHours" + '?id=' +$(this).val(),
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("body").html(data);
+			}
+		});
+	});
+	//$('.employee-type').change(function () {
+	//	console.log($(this).val());
+	//	$('#NewEmployee_EmployeeStatusID').val($(this).val())
+	//})
+
+	$('.salary-tab').click(function (e) {
+		$("#createModalForm").valid();
+		$.fn.validatePersonalTab();
+	});
+	$.fn.validatePersonalTab = function () {
+		$(".salary-tab").prop("disabled", true);
+		$(".documents-tab").prop("disabled", true);
+
+		console.log("in $.fn.validateItemTab");
+		valid = $("#NewEmployee_IDNumber").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_IDNumber").val() == "") {
+			console.log("valid: " + valid);
+			return;
+		}
+		valid = $("#NewEmployee_CentarixID").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_CentarixID").val() == "") {
+			console.log("valid: " + valid);
+			return;
+		}
+		valid = $("#NewEmployee_JobTitle").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_JobTitle").val() == "") {
+			return;
+		}
+		valid = $("#NewEmployee_Email").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_Email").val() == "") {
+			return;
+		}
+		valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_PhoneNumber").val() == "") {
+			return;
+		}
+		valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
+		if (valid == "true") {
+			return;
+		}
+		valid = $("#NewEmployee_StartedWorking").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_StartedWorking").val() == "") {
+			return;
+		}
+		if (valid == "false" || valid == undefined) {
+			$(".salary-tab").prop("disabled", false);
+		}
+		return valid;
+	}
+	$('#addWorker').submit(function () {
+		if ($("#createModalForm").valid()) {
+			$("#addWorker").removeClass("disabled-submit");
+			return true;
+		} else {
+			e.preventDefault();
+			e.stopPropagation();
+			$("#addWorker").addClass("disabled-submit");
+			return false;
+		}
+	});
+	$('.workersHours').change(function () {
+		var url = $(this).val();
+		if (url != null && url != '') {
+			window.location.href = url;
+		}
+	});
 });

@@ -5,38 +5,37 @@
 
 @{
     ViewData["Title"] = "Summary Hours";
-    Layout = "~/Views/Shared/TimeKeeperView.cshtml";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<div class="ml-6 mt-4">
+<div class=" container-fluid">
 
     <div class="row mb-6">
         <div class="col-7">
        
             <div class="row">
-                <h3 class="col-9"><strong>Monthly Summary</strong></h3>
-                <div class="col-2 offset-1 monthsHours">
-                    <select class="mdb-select  timekeeper select-dropdown" name="DOBMonth"  >
-                        <option>Month</option>
-                        <option value="1">January</option>
-                        <option value="2">Febuary</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
+                <div  class="col-8 heading-1 p-0"><label class="m-0 p-0">Monthly Summary</label></div>
+                <div class="col-3 offset-1 p-0 monthsHours">
+
+                    @{
+                        int[] months = Enumerable.Range(1, 12).ToArray();
+                        int curMonth = DateTime.Today.Month;
+                    }
+
+                    @Html.DropDownList("months", months.Select(x =>
+                        new SelectListItem
+                        {
+                            Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
+                            Value = x.ToString(),
+                            Selected = (x == curMonth)
+                        }
+                    ), htmlAttributes: new { @class = "mdb-select custom timekeeper full-border-select select-dropdown", @name = "DOBMonth" })                 
                 </div>
       
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-7" id="hoursTable">
+        <div class="col-8" id="hoursTable">
             <div class="row mt-6 p-3 text-center">
                 <div class="col-4 pl-5 text-left">
                     Date
@@ -64,22 +63,22 @@
                         @eh.OffDayType?.Description
                     </div>
                     <div class="col-2 p-0">
-                        @if (eh.Entry1 == null && eh.OffDayType == null)
+                        @if (eh.Entry1 == null && eh.OffDayType == null && (eh.TotalHours==null || eh.TotalHours == TimeSpan.Zero))
                         {
-                            <button type="button" class="rounded-pill timekeeper-font-color no-box-shadow py-2 px-3 report-sick-days" style="background: transparent; border: .125rem solid var(--timekeeper-color);">Report Sick</button>
+                            <button type="button" class="custom-clear-button-table table-button timekeeper-font-color report-sick-days" style="background: transparent; border: .125rem solid var(--timekeeper-color);" value="@eh.Date.ToString("yyyy-MM-dd")">Report Sick</button>
                         }
                         @eh.Entry1?.ToShortTimeString()
                         <br />
                         @eh.Entry2?.ToShortTimeString()
                     </div>
                     <div class="col-2 p-0">
-                        @if (eh.OffDayType == null && eh.Exit1 == null || (eh.Entry2 != null && eh.Exit2 == null))
+                        @if ((eh.OffDayType == null && eh.Exit1 == null || (eh.Entry2 != null && eh.Exit2 == null)) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
                         {
-                            <button type="button" class="rounded-pill timekeeper-color text-white no-box-shadow border-0 py-2 px-3 mt-1 open-update-hours-modal">Update Hours</button>
+                            <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
                         }
-                        else if (eh.OffDayType != null && ((eh.Entry1 != null && eh.Exit1 == null) || (eh.Entry2 != null && eh.Exit2 == null)))
+                        else if ((eh.OffDayType != null && ((eh.Entry1 != null && eh.Exit1 == null) || (eh.Entry2 != null && eh.Exit2 == null))) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
                         {
-                            <button type="button" class="rounded-pill timekeeper-color text-white no-box-shadow border-0 py-2 px-3 mt-1 open-update-hours-modal">Update Hours</button>
+                            <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
                         }
                         @eh.Exit1?.ToShortTimeString()
                         <br />
@@ -121,7 +120,9 @@
                 </div>
                 <div class="col-6 text-right pr-5 timekeeper-font-color font-weight-bold">
                     @{ var sum = new TimeSpan(Model.Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
-                    @sum.ToString(@"hh\:mm")
+                    @{var totalHours = sum.Days * 24 + sum.Hours;
+                    }
+                    @totalHours:@sum.ToString("mm")
 
                 </div>
             </div>

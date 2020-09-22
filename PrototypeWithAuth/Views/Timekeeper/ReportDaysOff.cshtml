@@ -5,17 +5,17 @@
 
 @{
     ViewData["Title"] = "Report Days Off";
-    Layout = "~/Views/Shared/TimeKeeperView.cshtml";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<div class="ml-6 mt-4">
+<div class="container-fluid">
 
     <div class="row mb-5">
         <div class="col-7">
 
             <div class="row">
-                <h3 class="col-4"><strong>Summary Of Days Off</strong></h3>
-                <div class="col-3 mt-4 ">
-                    <h5 class="font-weight-bolder"> Vacation Days Left: @Model.Select(d=>d.VacationDaysLeft).Sum(vd=>vd)</h5>
+                <div class="col-6 heading-1 p-0"><label class="m-0 p-0">Summary Of Days Off</label></div>
+                <div class="col-4 mt-4 ">
+                    <label class="font-weight-bolder text"> Vacation Days Left: @Model.Select(d => d.VacationDaysLeft).Sum(vd => vd)</label>
                 </div>
 
             </div>
@@ -23,8 +23,8 @@
     </div>
     <div class="row">
         <div class="col-9">
-            <div class="row p-3 text-center">
-                <div class="col-2 pl-5 text-center">
+            <div class="row p-3 ">
+                <div class="col-2 pl-5">
                     Year
                 </div>
                 <div class="col-2">
@@ -60,17 +60,22 @@
 
             <div class="row mt-6 ">
                 <div class="col-2  my-3 ml-5 text-center pt-3">
-                    <h5 class="font-weight-bolder"> Vacation Days</h5>
+                    <label class="font-weight-bolder text "> Vacation Days</label>
+                    <i class="icon-info-24px-2 ml-2" style="font-size: 1.25rem; top: .24rem;
+        position: relative;"></i>
                 </div>
 
                 <div class="col-3  my-3 text-center">
-                    <button class="no-box-shadow border-0 rounded-pill py-1 px-2 timekeeper-color text-white report-vacation-days" style="width:50%; font-size:1.5625rem;" type="button">Vacaton</button>
+                    <button class="custom-button-font custom-button timekeeper-color report-vacation-days" type="button">Vacaton</button>
                 </div>
                 <div class="col-2 my-3 text-center pt-3">
-                    <h5 class="font-weight-bolder"> Sick Days</h5>
+                    <label class="font-weight-bolder text"> Sick Days</label>
+                    <i class="icon-info-24px-2 ml-2" style="font-size: 1.25rem; top: .24rem;
+        position: relative;
+"></i>
                 </div>
                 <div class="col-3 my-3 text-center">
-                    <button class="no-box-shadow border-0 rounded-pill py-1 px-2 timekeeper-color text-white report-sick-days" style="width: 55%; font-size: 1.5625rem;" type="button">Sick Leave</button>
+                    <button class="custom-button-font custom-button timekeeper-color report-sick-days"  type="button">Sick Leave</button>
                 </div>
 
 

@@ -8,23 +8,23 @@
     if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
 
     {
-        Layout = "~/Views/Shared/SuppliersNavViewForLabManage.cshtml";
-        buttonClass = "inv-lab-button-submit";
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+        buttonClass = "lab-man-background-color";
     }
     else
     {
-        Layout = "~/Views/Shared/SuppliersNavView.cshtml";
-        buttonClass = "inv-supplier-button";
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+        buttonClass = "order-inv-background-color";
     }
 
     <div class="card-body border-0 m-auto" style="max-width:55%;">
         <form asp-action="Search">
             @Html.HiddenFor(v => v.SectionType)
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="new-modal-header border-bottom box-shadow container-fluid" style="padding: 0.5em 6em">
+            <div class="new-modal-header border-bottom box-shadow container-fluid " style="padding: 0.5em 6em">
                 <div class="row mt-3 mb-5">
                     <div class="col-8 offset-0">
-                        <h2 class="mt-1">Search Supplier</h2>
+                        <div class="mt-1 heading-1">Search Supplier</div>
                     </div>
 
                 </div>
@@ -169,8 +169,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group text-center m-auto" style="width:50%;">
-                            <input type="submit" value="Search" class=" @buttonClass mt-1 mb-4 btn-block p-0" />
+                        <div class="form-group text-center m-auto" >
+                            <input type="submit" value="Search" class=" @buttonClass custom-button custom-button-font mt-1  mb-4 " />
                         </div>
 
                     </div>

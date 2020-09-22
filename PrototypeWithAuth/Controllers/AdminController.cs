@@ -46,8 +46,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public IActionResult Index()
         {
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.User;
-            TempData["SideBar"] = AppUtility.UserSideBarEnum.Index;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersList;
             List<ApplicationUser> users = new List<ApplicationUser>();
             users = _context.Users
                 .Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
@@ -64,8 +65,9 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult RegisterUser()
 
         {
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.User;
-            TempData["SideBar"] = AppUtility.UserSideBarEnum.Add;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
             var roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
             {
@@ -121,8 +123,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public IActionResult CreateUser()
         {
-            TempData["PageType"] = AppUtility.UserPageTypeEnum.User;
-            TempData["SideBar"] = AppUtility.UserSideBarEnum.Add;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
 
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
@@ -593,7 +596,7 @@ namespace PrototypeWithAuth.Controllers
 
             var folderName = "UserImages";
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, folderName);
-            Directory.CreateDirectory(uploadFolder);
+            var directory = Directory.CreateDirectory(uploadFolder);
             if (editUserViewModel.UserImage != null) //test for more than one???
             {
                 //create file
@@ -601,12 +604,14 @@ namespace PrototypeWithAuth.Controllers
                 var extension = editUserViewModel.UserImage.FileName.Substring(indexOfDot, editUserViewModel.UserImage.FileName.Length - indexOfDot);
                 string uniqueFileName = userEditted.UserNum.ToString() + extension;
                 string filePath = Path.Combine(uploadFolder, uniqueFileName);
-                editUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
+                var stream = new FileStream(filePath, FileMode.Create);
+                editUserViewModel.UserImage.CopyTo(stream);
 
                 var pathToSave = Path.Combine(folderName, uniqueFileName);
                 userEditted.UserImage = "/" + pathToSave;
                 _context.Update(userEditted);
                 _context.SaveChanges();
+                stream.Close();
             }
 
             return RedirectToAction("Index");

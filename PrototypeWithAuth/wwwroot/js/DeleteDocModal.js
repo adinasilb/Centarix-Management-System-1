@@ -6,15 +6,17 @@
 	var formData = new FormData($("#DeleteDocumentModalForm")[0]);
 	$foldername = $("#FolderName").val();
 	$requestId = $("#RequestID").val();
+	var $isEdittable = $('#IsEdittable').val();
 	console.log("foldername: " + $foldername);
 	console.log("$requestId: " + $requestId);
+	console.log("$isEdittable: " + $isEdittable);
 	$.ajax({
 		url: link,
 		method: 'POST',
 		data: formData,
 		success: (partialResult) => {
 			$("#DeleteDocumentsModal").replaceWith('');
-			$.fn.OpenDocumentsModal($foldername, $requestId);
+			$.fn.OpenDocumentsModal($foldername, $requestId, $isEdittable );
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
@@ -44,12 +46,12 @@ $.fn.ChangeColorsOfDocs = function ($foldername) {
 	//}
 };
 
-$.fn.OpenDocumentsModal = function (enumString, requestId) {
+$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable)  {
 	$("#documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: "Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString,
+		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable,
 		type: 'GET',
 		cache: false,
 		success: function (data) {

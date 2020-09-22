@@ -2,16 +2,16 @@
 @using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "Index";
-    var pagetype = TempData["PageType"];
+    var pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()];
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-    if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
-    {
-        Layout = "~/Views/Shared/RequestNavView.cshtml";
-    }
-    else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
-    {
-        Layout = "~/Views/Shared/OperationsNavView.cshtml";
-    }
+    //if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
+    //{
+    //    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    //}
+    //else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
+    //{
+    //    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    //}
 }
 
 @*<<<<<<<<<<<< This is the Owner page >>>>>>>>>>>>>>>*@
@@ -20,7 +20,7 @@
     <div class="row">
         @for (int i = 0; i < Model.Count(); i++)
         {
-            if (i > 0 && i % 8 == 0)
+            if (i > 0 && i % 7 == 0)
             {
             @:</div><div class="row">
             }
@@ -30,7 +30,7 @@
                            @if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
                             {
                             <a href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
-                               class="owner-link bold-hover-effects" id="profile-img">
+                               class=" bold-hover-effects" id="profile-img">
                                 @{
                                     var src = "UserImages/profile_circle_big.png";
                                     if (Model.ElementAt(i).UserImage != null)
@@ -38,7 +38,7 @@
                                         src = Model.ElementAt(i).UserImage;
                                     }
                                 }
-                                <img src="@src" class="user-image-bold ml-0" width="160" height="160" alt="default user circle" />
+                                <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="user-image" src="@src" /></div>
                                 <br />
                                 @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
                             </a>
@@ -46,7 +46,7 @@
                             else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
                             {
                         <a href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
-                           class="owner-link bold-hover-effects" id="profile-img">
+                           class=" bold-hover-effects" id="profile-img">
                             @{
                                 var src = "UserImages/profile_circle_big.png";
                                 if (Model.ElementAt(i).UserImage != null)
@@ -54,7 +54,7 @@
                                     src = Model.ElementAt(i).UserImage;
                                 }
                             }
-                            <img src="@src" class="user-image-bold ml-0" width="160" height="160" alt="default user circle" />
+                             <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="user-image" src="@src"/></div>
                             <br />
                             @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
                         </a>

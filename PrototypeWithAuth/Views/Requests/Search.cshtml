@@ -1,16 +1,25 @@
-﻿@model PrototypeWithAuth.ViewModels.RequestsSearchViewModel
+﻿@using PrototypeWithAuth.AppData
+@model PrototypeWithAuth.ViewModels.RequestsSearchViewModel
 @{
     ViewData["Title"] = "Search";
-    Layout = "~/Views/Shared/ManageSharedView.cshtml";
-    var buttonSubmitClass = Model.SectionType == PrototypeWithAuth.AppData.AppUtility.MenuItems.LabManagement ?
-        "inv-lab-button" : Model.SectionType == PrototypeWithAuth.AppData.AppUtility.MenuItems.OrdersAndInventory ? "inv-button" : "oper-button";
+    if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
+    //
+    var buttonSubmitClass = Model.SectionType == AppUtility.MenuItems.LabManagement ?
+        "lab-man-background-color" : Model.SectionType == AppUtility.MenuItems.OrdersAndInventory ? "order-inv-background-color" : "oper-background-color";
 }
 @*<div class="modal modal-view  right fader " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">*@
 
 <form action="" method="post" enctype="multipart/form-data" id="search-form">
  
 
-    <div class="row mt-5" style="flex-grow: 1;">
+    <div class="row mt-5  " style="flex-grow: 1;">
         <div class="col-1 offset-1 mt-3">
             <input type="checkbox" class="custom-checkbox" asp-for="Inventory" />
             <label asp-for="Inventory" class="inv-link-clr"> &ensp; Inventory</label><br />
@@ -32,11 +41,11 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-9">
-                        <span style="font-size:1.8rem;"> <i class="icon-zoom_in-24px-01"></i> Search</span>
+                        <span class="heading-1"> Search In Centarix</span>
                     </div>
 
                     <div class="col-md-3 text-center">
-                        <input type="submit" value="Search" class="@buttonSubmitClass inv-button" style="padding-right: 3.5rem;padding-left: 3.5rem;" />
+                        <input type="submit" value="Search" class="@buttonSubmitClass custom-button custom-button-font"  />
                     </div>
                 </div>
                 <br />

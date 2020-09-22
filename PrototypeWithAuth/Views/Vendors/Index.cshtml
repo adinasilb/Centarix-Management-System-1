@@ -1,28 +1,21 @@
 ﻿@model IEnumerable<PrototypeWithAuth.Models.Vendor>
 @using PrototypeWithAuth.AppData
-
 @{
-    ViewData["Title"] = "Index";
-
-    string pageType = TempData["PageType"].ToString();
-    var pagetype = TempData["PageType"];
-    if (TempData["CategoryType"].Equals(1))
+    string hoverClass = "";
+    ViewData["Title"] = "IndexForPayment";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (TempData["SectionType"].Equals(AppUtility.MenuItems.Operation))
     {
-        Layout = "~/Views/Shared/RequestNavView.cshtml";
+        hoverClass = "oper-link-clr";
     }
-    else if (TempData["CategoryType"].Equals(2))
+    else
     {
-        Layout = "~/Views/Shared/OperationsNavView.cshtml";
+        hoverClass = "inv-link-clr";
     }
 }
 
-@*<p>
-    <a asp-action="Create"><img src="~/images/css/inventory/icons/add_circle_outline_colored.png" alt="Create New" /></a><small>(not supposed to be here)</small>
-</p>*@
-
-<div class="m-5">
-
-    <table class="table table-headerspaced table-noheaderlines table-hover text-center">
+<div class="">
+    <table class="table table-headerspaced table-noheaderlines text-center">
         <thead>
             <tr>
                 <th>
@@ -47,6 +40,7 @@
                     @Html.DisplayNameFor(model => model.VendorTelephone)
                 </th>
 
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -57,18 +51,7 @@
                         @Html.DisplayFor(modelItem => item.VendorID)
                     </td>
                     <td>
-                        @if (TempData["CategoryType"].Equals(1))
-                        {
-                            <a href="@Url.ActionLink("Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)">
-                                @Html.DisplayFor(modelItem => item.VendorEnName)
-                            </a>
-                        }
-                        else if (TempData["CategoryType"].Equals(2))
-                        {
-                            <a href="@Url.ActionLink("Index", "Operations", new { vendorID = @item.VendorID, @PageType = pageType }, null)">
-                                @Html.DisplayFor(modelItem => item.VendorEnName)
-                            </a>
-                        }
+                        <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID" class="@hoverClass" asp-route-SectionType="@AppUtility.MenuItems.LabManagement">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorHeName)
@@ -83,11 +66,15 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorTelephone)
                     </td>
-                    <!--<td>
+                    @*<td>
 
-                        @Html.ActionLink("orders", "Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)
-                    </td>-->
-                
+                            @Html.ActionLink("orders", "Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)
+                        </td>*@
+                    <td>
+                        @*<a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |*@
+
+                        @*<a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>*@
+                    </td>
                 </tr>
             }
         </tbody>

@@ -862,7 +862,7 @@ namespace PrototypeWithAuth.Data
                     MenuDescription = AppUtility.MenuItems.LabManagement.ToString(),
                     MenuViewName = "Lab Management",
                     ControllerName = "Vendors",
-                    ActionName = "IndexForLabManage",
+                    ActionName = "IndexForPayment",
                     MenuImageURL = "/images/css/main_menu_icons/lab.png"
                 },
                 new Menu
@@ -1119,6 +1119,122 @@ namespace PrototypeWithAuth.Data
                     Description = "Forgot to report"
                 }
             );
+            modelBuilder.Entity<EmployeeStatus>().HasData(
+           new EmployeeStatus
+           {
+               EmployeeStatusID = 1,
+               Description = "Salaried Employee"
+           },
+           new EmployeeStatus
+           {
+               EmployeeStatusID = 2,
+               Description = "Freelancer"
+           },
+           new EmployeeStatus
+           {
+               EmployeeStatusID = 3,
+               Description = "Advisor"
+           }
+       );
+            modelBuilder.Entity<JobCategoryType>().HasData(
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 1,
+                      Description = "Executive"
+                  },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 2,
+                     Description = "Senior Manager"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 3,
+                     Description = "Manager"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 4,
+                     Description = "Senior Bioinformatician"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 5,
+                     Description = "Bioinformatician"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 6,
+                     Description = "Senior Scientist"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 7,
+                     Description = "Lab Technician"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 8,
+                     Description = "Research Associate"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 9,
+                     Description = "Software Developer"
+                 }
+              );
+            modelBuilder.Entity<Degree>().HasData(
+                new Degree
+                {
+                    DegreeID = 1,
+                    Description = "B.Sc"
+                },
+                  new Degree
+                  {
+                      DegreeID = 2,
+                      Description = "M.Sc"
+                  },
+                new Degree
+                {
+                    DegreeID = 3,
+                    Description = "P.hd"
+                },
+                new Degree
+                {
+                    DegreeID = 4,
+                    Description = "Post P.hd"
+                }
+            );
+            modelBuilder.Entity<Citizenship>().HasData(
+                  new Citizenship
+                  {
+                      CitizenshipID = 1,
+                      Description = "Israel"
+                  },
+                 new Citizenship
+                 {
+                     CitizenshipID = 2,
+                     Description = "USA"
+                 }
+            );
+            modelBuilder.Entity<MaritalStatus>().HasData(
+                new MaritalStatus
+                {
+                    MaritalStatusID = 1,
+                    Description = "Married"
+                },
+                new MaritalStatus
+                {
+                    MaritalStatusID = 2,
+                    Description = "Single"
+                },
+                new MaritalStatus
+                {
+                    MaritalStatusID = 3,
+                    Description = "Divorced"
+                }
+            );
+
         }
     }
 }
