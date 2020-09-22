@@ -1358,6 +1358,9 @@ $(function () {
 		} else {
 			$("#Debt").val(sum);
 		}
+		var vatCalc = sum * .17;
+		console.log("vatCalc" + vatCalc);
+		$('#Request_VAT').val(vatCalc.toFixed(2));
 	};
 
 	$(".payments-table").on("change", ".payment-date", function (e) {
