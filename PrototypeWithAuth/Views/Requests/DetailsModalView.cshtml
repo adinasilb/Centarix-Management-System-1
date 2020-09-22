@@ -42,7 +42,8 @@
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                     }
                     <div class="back-button">
-                        <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent"><img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" /></button>
+                        <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent">
+                        <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" /></button>
                     </div>
                     <div class="row modal-title-line">
                         @*<div class="col-md-2 px-0">*@
@@ -534,83 +535,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Discount:</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Terms:</label>
-                                            @Html.DropDownListFor(
-model => model.Request.Terms,
-new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
-     )
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-check">
-                                            <label class="form-check-label"><input class="form-check-input" type="checkbox" disabled />Paid</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row installments">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label asp-for="Request.Installments" class="control-label"></label>
-                                            <input asp-for="Request.Installments" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8 p-3">
-                                        <table class="table table-sm payments-table">
-                                            <thead class="thead-light rounded">
-                                                <tr>
-                                                    <th>Payment Date</th>
-                                                    <th>Payment Type</th>
-                                                    <th>Account</th>
-                                                    <th>Reference</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @{
-                                                    if (Model.NewPayments != null)
-                                                    {
-                                                        foreach (var payment in Model.NewPayments)
-                                                        {
-                                                            <tr>
-                                                                <td>
-                                                                    <input asp-for="@payment.PaymentDate" class="form-control-plaintext border-bottom" disabled />
-                                                                </td>
-                                                                <td>
-                                                                    <input asp-for="@payment.CompanyAccount.PaymentType.PaymentTypeDescription" class="form-control-plaintext border-bottom" disabled />
-                                                                </td>
-                                                                <td>
-                                                                    <input asp-for="@payment.CompanyAccount.CompanyAccountNum" class="form-control-plaintext border-bottom" disabled />
-                                                                </td>
-                                                                <td>
-                                                                    <input asp-for="@payment.Reference" class="form-control-plaintext border-bottom" disabled />
-                                                                </td>
-                                                            </tr>
-                                                        }
-                                                    }
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Debt</label>
-                                            <input class="form-control-plaintext border-bottom" asp-for="@Model.Debt" disabled />
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
 
                             <div id="documents" class="tab-pane fade">
-                                <span style="font-size: 1.7em;">Documents</span>
+                                <span class="heading-1 modal-tab-name">Documents</span>
 
                                 @{
                                     var urlAction = Url.Action("DocumentsModal", "Requests");
@@ -771,7 +700,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                         {
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <div class="card rounded">
+                                                    <div class="card document-border">
                                                         <div class="card-body">
                                                             <div class="row">
                                                                 <div class="col-md-2">

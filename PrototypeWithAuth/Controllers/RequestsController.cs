@@ -1834,6 +1834,7 @@ namespace PrototypeWithAuth.Controllers
         {
             //TODO: add temp data memory here 
             int lastParentRequestOrderNum = 0;
+            var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
             {
                 lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
@@ -2462,6 +2463,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> LabManageQuotes()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
+            var labmanagerequests = _context.Requests.OfType<Reorder>();
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
