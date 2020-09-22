@@ -172,7 +172,7 @@
         SidebarMenuItems = CreateMenus.CreateTimekeeperSummarySidebar(sidebarType, originalNavClasses, "timekeeper-filter");
     }
 
-    var sidebarWidth = "110px";
+    var sidebarWidth = "119px";
 
     //not using this right now --> see if we should put it back in
     var SendEmail = "0";
@@ -286,7 +286,9 @@
                 <div class="sidebar-shadow1">
                     <div style="@style" class="navbar-expand-lg text-center ourNavBar">
                         @*<nav class="navbar navbar-expand-lg">*@
-                        <ul class="nav flex-column nav-pills nav-stacked nav-top-sidebar1">
+                        <ul class="nav flex-column nav-pills nav-stacked nav-top-sidebar1" 
+                            style="left: 55px !important;  position: fixed; left: 50%; transform: translate(-55px, 0); max-width: @sidebarWidth; min-width: @sidebarWidth; min-height: 100rem;
+">
                             @{
                                 var liMargins = "padding-bottom: 2.25rem; padding-top: 2.25rem;";
                             }

@@ -17,5 +17,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<FileInfo> Files { get; set; }
         public List<IFormFile> FilesToSave { get; set; }
         public bool IsEdittable { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
     }
 }

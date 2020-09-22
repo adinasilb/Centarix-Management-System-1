@@ -1,8 +1,17 @@
-﻿@*
+﻿@using PrototypeWithAuth.AppData
+@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model PrototypeWithAuth.ViewModels.ReceivedLocationViewModel
-
+@{
+    var bcColor = "order-inv-background-color";
+    var form = "order-inv-form";
+    if (Model.SectionType == AppUtility.MenuItems.Operation)
+    {
+        bcColor = "oper-background-color";
+        form = "oper-form";
+    }
+}
 <script src="~/js/site.js" asp-append-version="true"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
@@ -12,10 +21,10 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding @form">
                 @*the following hidden fors are here so i can do a request.save in for the info that is being given here.
-            in the future might want to change it to loading the request from this request id and then adding in the values
-            given here (done in the controller)*@
+                    in the future might want to change it to loading the request from this request id and then adding in the values
+                    given here (done in the controller)*@
                 @Html.HiddenFor(vm => vm.Request.RequestID)
 
                 @Html.HiddenFor(vm => vm.CategoryType)
@@ -41,7 +50,7 @@
                 }
 
                 <div class="modal-body p-0">
-                  
+
                     <div class="row">
                         <div class="col-8">
                             <div class="row">
@@ -80,9 +89,9 @@
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
-                                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                                <label asp-for="Arrival">Arrival</label>
-                            </div>*@
+                                        <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                                        <label asp-for="Arrival">Arrival</label>
+                                    </div>*@
                                 <div class="col-2 text-center">
                                     <label asp-for="Clarify">Clarify</label>
                                     <br />
@@ -100,9 +109,9 @@
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
-                                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                                <label for="test-chkbx">Trial</label>
-                            </div>*@
+                                        <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                                        <label for="test-chkbx">Trial</label>
+                                    </div>*@
                             </div>
 
                             <br />
@@ -125,13 +134,13 @@
                                 </div>
                                 <br />
                                 @*<div class="row">
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Location Details</label>
-                                        <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
-                                    </div>
-                                </div>
-                            </div>*@}
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="control-label">Location Details</label>
+                                                <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
+                                            </div>
+                                        </div>
+                                    </div>*@}
                         </div>
                         @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
@@ -147,24 +156,24 @@
 
                 @*Why are there 2 empty modal-body's here?*@
                 <!--<div class="modal-body">
-        <div class="row">-->
+                <div class="row">-->
                 @*<div class="divSublocations">
 
-            </div>*@
+                    </div>*@
                 <!--</div>
-        </div>
+                </div>
 
-        <div class="modal-body">
-            <div class="row">-->
+                <div class="modal-body">
+                    <div class="row">-->
                 @*<div class="visualView col-md-12 text-center">
 
-            </div>*@
+                    </div>*@
                 <!--</div>
-        </div>-->
+                </div>-->
 
                 <div class="modal-footer border-0 modal-footer-mt">
                     <div class="m-auto">
-                        <input type="submit" asp-action="ReceivedModal" class="custom-button custom-button-font order-inv-background-color between-button-margin" />
+                        <input type="submit" asp-action="ReceivedModal" class="custom-button custom-button-font @bcColor between-button-margin" />
                         <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button" />
                     </div>
 

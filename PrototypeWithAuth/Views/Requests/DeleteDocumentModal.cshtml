@@ -1,6 +1,12 @@
 ﻿@model PrototypeWithAuth.ViewModels.DeleteDocumentsViewModel
-@{ 
-Layout= null;
+@using PrototypeWithAuth.AppData
+@{
+    Layout = null;
+    var bcColor = "order-inv-background-color";
+    if (Model.SectionType == AppUtility.MenuItems.Operation)
+    {
+        bcColor = "oper-background-color";
+    }
 }
 <script src="~/js/DeleteDocModal.js"></script>
 <div class="modal modal-document-delete fader" id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
@@ -15,6 +21,7 @@ Layout= null;
                 <input asp-for="FileName" type="hidden" />
                 <input asp-for="FolderName" type="hidden" />
                 <input asp-for="IsEdittable" type="hidden" />
+                <input asp-for="SectionType" type="hidden" />
                 <div class="modal-header modal-header-padding">
                     <div class="heading-1">Delete File</div>
                 </div>
@@ -30,7 +37,7 @@ Layout= null;
                                     <div class="card-body text-center">
                                         Are you sure you want to delete?<br />
                                         <input type="submit" value="Save" href="@Url.Action("DeleteDocumentModal", "Requests")" id="submitDelete" style="display: none;" />
-                                        <button class="custom-button custom-button-font order-inv-background-color delete-file-perm">Delete</button>
+                                        <button class="custom-button custom-button-font @bcColor delete-file-perm">Delete</button>
                                     </div>
                                 </div>
                             </div>

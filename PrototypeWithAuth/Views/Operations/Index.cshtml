@@ -204,19 +204,19 @@
         <div class="">
             <ul class="">
                 <li class="list-inline-item active m-0">
-                    <a class="@newActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
+                    <a class="@newActiveClass" href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
                 </li>
                 <li class="list-inline-item m-0">
-                    <a class="@approvedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
+                    <a class="@approvedActiveClass" href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
 
                 </li>
 
                 <li class="list-inline-item m-0">
-                    <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
+                    <a class="@orderedActiveClass" href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
                 </li>
 
                 <li class="list-inline-item ">
-                    <a class="@receivedActiveClass" href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
+                    <a class="@receivedActiveClass" href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
                 </li>
             </ul>
         </div>
@@ -359,7 +359,7 @@
                 }
                 else if (item.RequestStatusID == 2)
                 {
-                    <button class="btn load-receive-and-location no-box-shadow" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
+                    <button class="btn load-receive-and-location no-box-shadow operations" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold "></i></button> // receive
                 }
                 else if (item.RequestStatusID == 6)
                 {
@@ -370,7 +370,7 @@
             </td>
                 @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
                 <td style="width:3rem;">
-                    <button class="btn load-confirm-delete no-box-shadow" data-title="delete" value="@item.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button> @*delete*@
+                    <button class="btn load-confirm-delete no-box-shadow " data-title="delete" value="@item.RequestID" name="@AppUtility.MenuItems.Operation" ><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button> @*delete*@
 
                     @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
                     @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@

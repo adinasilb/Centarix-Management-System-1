@@ -1,5 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.CartViewModel
-
+@using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "Cart";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
@@ -44,76 +44,77 @@
 
                 @foreach (var request in vendor)
                 {
-                <tr class="text-center inv-list-item">
-                    <td class="text-center" width="15%">
-                        <input type="hidden" asp-for="@request.RequestID" />
-                        @if (request.Product.ProductSubcategory.ImageURL != null)
-                        {
-                            var imageurl = request.Product.ProductSubcategory.ImageURL;
-                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
-                        }
-                        else
-                        {
-                            <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
-                        }
-                    </td>
-                    <td width="20%">
-                        @request.Product.ProductName
-                    </td>
-                    <td width="10%">
-                        @request.Product.Vendor.VendorEnName.ToLower()
-                    </td>
-                    <td>
-                        @request.Product.ProductSubcategory.ProductSubcategoryDescription
-                    </td>
-                    <td>
-                        <ul style="list-style: none;">
-
-                            @if (request.Unit != null)
+                    <tr class="text-center inv-list-item">
+                        <td class="text-center" width="15%">
+                            <input type="hidden" asp-for="@request.RequestID" />
+                            @if (request.Product.ProductSubcategory.ImageURL != null)
                             {
-                                <li>
-                                    @Html.DisplayFor(modelItem => request.Unit)
-                                    @Html.DisplayFor(modelItem => request.UnitType.UnitTypeDescription)
-                                </li>
-                                @if (request.SubUnit != null)
+                                var imageurl = request.Product.ProductSubcategory.ImageURL;
+                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                            }
+                            else
+                            {
+                                <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                            }
+                        </td>
+                        <td width="20%">
+                            @request.Product.ProductName
+                        </td>
+                        <td width="10%">
+                            @request.Product.Vendor.VendorEnName.ToLower()
+                        </td>
+                        <td>
+                            @request.Product.ProductSubcategory.ProductSubcategoryDescription
+                        </td>
+                        <td>
+                            <ul style="list-style: none;">
+
+                                @if (request.Unit != null)
                                 {
                                     <li>
-                                        @Html.DisplayFor(modelItem => request.SubUnit)
-                                        @Html.DisplayFor(modelItem => request.SubUnitType.UnitTypeDescription)
+                                        @Html.DisplayFor(modelItem => request.Unit)
+                                        @Html.DisplayFor(modelItem => request.UnitType.UnitTypeDescription)
                                     </li>
-                                    @if (request.SubSubUnit != null)
+                                    @if (request.SubUnit != null)
                                     {
                                         <li>
-                                            @Html.DisplayFor(modelItem => request.SubSubUnit)
-                                            @Html.DisplayFor(modelItem => request.SubSubUnitType.UnitTypeDescription)
+                                            @Html.DisplayFor(modelItem => request.SubUnit)
+                                            @Html.DisplayFor(modelItem => request.SubUnitType.UnitTypeDescription)
                                         </li>
+                                        @if (request.SubSubUnit != null)
+                                        {
+                                            <li>
+                                                @Html.DisplayFor(modelItem => request.SubSubUnit)
+                                                @Html.DisplayFor(modelItem => request.SubSubUnitType.UnitTypeDescription)
+                                            </li>
+                                        }
                                     }
+
                                 }
 
+
+                            </ul>
+                        </td>
+                        <td width="10%">
+                            @{
+                                var ItemCost = request.Cost;
+                                var decItemCost = (decimal)ItemCost;
+                                var stringItemCost = decItemCost.ToString("C02");
                             }
-
-
-                        </ul>
-                    </td>
-                    <td width="10%">
-                        @{
-                            var ItemCost = request.Cost;
-                            var decItemCost = (decimal)ItemCost;
-                            var stringItemCost = decItemCost.ToString("C02");
-                        }
-                        @stringItemCost
-                    </td>
-                    <td width="10%" class="border-right">
-                        <button class="btn no-box-shadow p-0 mx-5 load-confirm-delete-quote" data-title="delete" value="@request.RequestID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
-                        </button>
-                    </td>
-                </tr>
+                            @stringItemCost
+                        </td>
+                        <td width="10%" class="border-right">
+                            <button class="btn no-box-shadow p-0 mx-5 load-confirm-delete-quote" data-title="delete" name="@AppUtility.MenuItems.OrdersAndInventory" value="@request.RequestID">
+                                <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
+                            </button>
+                        </td>
+                    </tr>
                 }
                 <tr class="border-0 mb-5 no-hover">
                     <td></td>
                     <td></td>
                     <td></td>
-               
+
                     <td>
                         <span class="text font-weight-bold">Items: @vendor.Count()</span>
                     </td>
