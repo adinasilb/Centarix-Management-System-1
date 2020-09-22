@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int DegreeID { get; set; }
         public string Description { get; set; }
+        public IEnumerable<Employee> Employees { get; set; }
     }
 }

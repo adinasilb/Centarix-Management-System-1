@@ -67,6 +67,7 @@ namespace PrototypeWithAuth.Models
         public JobCategoryType JobCategoryType { get; set; }
         public Freelancer Freelancer { get; set; }
         public SalariedEmployee SalariedEmployee { get; set; }
+        public Advisor Advisor { get; set; }
         //todo add job category
     }
 }

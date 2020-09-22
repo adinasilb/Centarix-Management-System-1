@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int CitizenshipID { get; set; }
         public string Description { get; set; }
+        public IEnumerable<Employee> Employees { get; set; }
     }
 }
