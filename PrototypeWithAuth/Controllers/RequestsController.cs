@@ -3496,7 +3496,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid)
+        public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid, int[] requestIds)
         {
             List<Request> Requests = new List<Request>();
             var queryableRequests = _context.Requests
@@ -3514,6 +3514,13 @@ namespace PrototypeWithAuth.Controllers
             else if (requestid != null)
             {
                 Requests = queryableRequests.Where(r => r.RequestID == requestid).ToList();
+            }
+            else if (requestIds != null)
+            {
+                foreach(int rId in requestIds)
+                {
+                    Requests.Add(queryableRequests.Where(r => r.RequestID == rId).FirstOrDefault());
+                }
             }
             AddInvoiceViewModel addInvoiceViewModel = new AddInvoiceViewModel()
             {

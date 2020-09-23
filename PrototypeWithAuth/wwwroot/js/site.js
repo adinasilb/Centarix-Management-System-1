@@ -2326,6 +2326,39 @@ $(function () {
 		$.fn.CallModal(itemUrl);
 	});
 
+	$("#add-to-selected").on("click", function (e) {
+		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+			return $(this).attr("id")
+		}).get()
+		console.log("arrayOfSelected: " + arrayOfSelected);
+		//var itemUrl = "/Requests/AddInvoiceModal/?requestids=" + arrayOfSelected;
+		$("#loading").show();
+		$('.modal').replaceWith('');
+		$(".modal-backdrop").remove();
+		$.ajax({
+			type: "GET",
+			url: "/Requests/AddInvoiceModal/",
+			traditional: true,
+			data: { 'requestIds': arrayOfSelected },
+			cache: true,
+			success: function (data) {
+				$("#loading").hide();
+				var modal = $(data);
+				$('body').append(modal);
+				//replaces the modal-view class with the ModalView view
+				//$(".modal-view").html(data);
+				//turn off data dismiss by clicking out of the box and by pressing esc
+				$(".modal-view").modal({
+					backdrop: true,
+					keyboard: false,
+				});
+				//shows the modal
+				$(".modal").modal('show');
+			}
+		});
+		//$.fn.CallModal(itemUrl);
+	});
+
 	$(".invoice-add-one").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -2357,14 +2390,7 @@ $(function () {
 				});
 				//shows the modal
 				$(".modal").modal('show');
-			},
-			//error: function (data) {
-			//	$("#loading").hide();
-			//	console.log("error : " + data.responseText);
-			//	console.log("error : " + data.responseJSON);
-			//	console.log("error : " + data.responseXML);
-			//	console.log("error : " + data.readAsDataURL);
-			//}
+			}
 		});
 		$("#loading").hide();
 	};
