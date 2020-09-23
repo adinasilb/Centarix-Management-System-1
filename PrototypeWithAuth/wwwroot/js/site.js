@@ -1128,7 +1128,11 @@ $(function () {
 
 	});
 
-
+	$(".open-invoice-doc-modal").click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		console.log("in opened invoice doc modal");
+	});
 
 	$(".open-document-modal").click(function (e) {
 		e.preventDefault();
@@ -2326,7 +2330,7 @@ $(function () {
 		$.fn.CallModal(itemUrl);
 	});
 
-	$("#add-to-selected").on("click", function (e) {
+	$("#add-to-selected").off("click").on("click", function (e) {
 		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
 			return $(this).attr("id")
 		}).get()
@@ -2343,6 +2347,8 @@ $(function () {
 			cache: true,
 			success: function (data) {
 				$("#loading").hide();
+				console.log("data:");
+				console.log(data);
 				var modal = $(data);
 				$('body').append(modal);
 				//replaces the modal-view class with the ModalView view
@@ -2376,8 +2382,9 @@ $(function () {
 			async: false,
 			url: url,
 			type: 'GET',
-			cache: true,
+			cache: false,
 			success: function (data) {
+				$("#loading").hide();
 				$("#loading").hide();
 				var modal = $(data);
 				$('body').append(modal);
@@ -2390,9 +2397,9 @@ $(function () {
 				});
 				//shows the modal
 				$(".modal").modal('show');
+				return false;
 			}
 		});
-		$("#loading").hide();
 	};
 
 
