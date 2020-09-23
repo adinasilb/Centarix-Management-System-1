@@ -10,11 +10,11 @@
 <div class=" container-fluid">
 
     <div class="row mb-6">
-        <div class="col-7">
+        <div class="col-8">
        
             <div class="row">
-                <div  class="col-8 heading-1 p-0"><label class="m-0 p-0">Monthly Summary</label></div>
-                <div class="col-3 offset-1 p-0 monthsHours">
+                <div  class="col-7 heading-1 p-0"><label class="m-0 p-0">Monthly Summary</label></div>
+                <div class="col-3 offset-2  p-0 monthsHours">
 
                     @{
                         int[] months = Enumerable.Range(1, 12).ToArray();
@@ -28,7 +28,7 @@
                             Value = x.ToString(),
                             Selected = (x == curMonth)
                         }
-                    ), htmlAttributes: new { @class = "mdb-select custom timekeeper full-border-select select-dropdown", @name = "DOBMonth" })                 
+                    ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })                 
                 </div>
       
             </div>

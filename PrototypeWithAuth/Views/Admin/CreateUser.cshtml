@@ -15,25 +15,27 @@
     ViewData["Title"] = "CreateUser";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<div class="card col-8 offset-2 create-user users-form" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
-    <div class="">
+
+<div class="col-12 create-user mx-auto on-form-modal users-form" style="width: 60%">
+    <div class="on-form-modal-border">
         <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
             @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
             <input type="email" class="hidden" />
             <input type="password" class="hidden" />
 
-            <div class="new-modal-header border-bottom container-fluid">
-                <div class="row modal-sides">
-                    <div class="col-8 offset-0">
-                        <h2 class="mt-1">New User</h2>
+            <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
+                <div class="row">
+                    <div class="col-7 form-group modal-line-1-header modal-sides">
+                        <div class="mt-1 heading-1">New User</div>
                     </div>
-                    <div class="col-4">
+
+                    <div class="col-4 modal-line-1-header">
                         <input type="submit" id="addUser" value="Add User" asp-action="CreateUser" class="custom-button custom-button-font btn-block disabled-submit" style="float: right;" />
                     </div>
                 </div>
-                <div class="row modal-sides div-tabs">
+                <div class="row">
                     <div class="col-12 px-0">
-                        <div class="container-fluid p-0 text-center">
+                        <div class="container-fluid div-tabs text-center modal-sides">
                             <ul class="nav nav-tabs container-fluid p-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                 <li class="nav-item">
                                     <a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link">

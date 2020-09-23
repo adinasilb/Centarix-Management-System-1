@@ -69,16 +69,16 @@
                             }
 
                             <tr class="text-center users-tr ">
-                                <td width="12%">
-                                    @{
-                                        var src = "/UserImages/profile_circle_big.png";
-                                        if (hours.EmployeeHoursAwaitingApproval.Employee.UserImage != null)
-                                        {
-                                            src = UserManager.GetUserAsync(User).Result.UserImage;
-                                        }
-                                    }
-                                    <img src="@src" class="user-image ml-0" height="65" alt="default User image" />
-                                </td>
+                                                    <td width="12%">
+                                                        @{
+                                                            var src = "/UserImages/profile_circle_big.png";
+                                                            if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                                                            {
+                                                                src = UserManager.GetUserAsync(User).Result.UserImage;
+                                                            }
+                                                        }
+                                                        <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
+                                                    </td>
                                 <td class="text-left" width="10%">
                                     @hours.EmployeeHoursAwaitingApproval.Employee.FirstName  @hours.EmployeeHoursAwaitingApproval.Employee.LastName
                                 </td>

@@ -254,6 +254,7 @@
             $('#dtBasicExample').DataTable();
             $('.dataTables_length').addClass('bs-select');
             $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             $('.timekeeper .dropdown-content').removeClass('w-100');
             $('.datepicker').pickadate();
             $('#request-search a:first').tab('show'); @* I had to put this in here b / c otherwise it wasn't coming up on .search-link.click*@
@@ -592,6 +593,7 @@
                             break;
                         case "received":
                             $('.mdb-select').materialSelect();
+                            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
                             AddTempDataMemory();
                             break;
                         case "confirmemail":
@@ -627,6 +629,7 @@
 
         $.fn.OnOpenModalView = function () {
             $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             $('.modal-content a:first').tab('show');
             var parentCategoryId = $("#parentlist").val();
             var subcategoryId1 = $("#sublist").val();
@@ -668,7 +671,7 @@
             $("#loading").show();
             var $itemurl = "/Admin/EditUser/?id=" + $(this).attr("value");
             console.log("itemurl: " + $itemurl);
-            $.fn.CallPageRequest($itemurl, "edituser");
+            $.fn.CallPageUser($itemurl);
             return false;
         });
 
@@ -726,56 +729,10 @@
             item.classList.add("activeNavLink");
         }
 
-        $(".create-user-modal").on("click", function (e) {
-            $("li a").removeClass("active");
-            $(".create-user-modal").addClass("active");
-
-            console.log("create user modal clicked");
-            var $itemurl = "/Admin/CreateUserModal/";
-            console.log("itemurl: " + $itemurl);
-            //$("#loading").show();
-            $.fn.CallPageUser($itemurl);
-            return false;
-        });
-
-        $(".edit-user-modal").on("click", function (e) {
-            console.log("edit user modal clicked");
-            console.log("val: " + $(this).data('string'));
-            var $itemurl = "/Admin/EditUserModal/?id=" + $(this).data('string');
-            console.log("itemurl: " + $itemurl);
-            //$("#loading").show();
-            $.fn.CallPageUser($itemurl);
-            return false;
-        });
-
-        $.fn.CallPageUser = function ($itemurl) {
-            //delete existing modals
-            $('.modal').replaceWith('');
-            $(".modal-backdrop").remove();
-            $.ajax({
-                async: true,
-                url: $itemurl,
-                type: 'GET',
-                cache: true,
-                success: function (data) {
-                    //$("#loading").hide();
-                    //console.log("success!");
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $(".modal-view").modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    //shows the modal
-                    $(".modal").modal('show');
-                    $.fn.OnOpenModal();
-                }
-            });
-        };
-
         $.fn.OnOpenModal = function () {
             $('.modal-content a:first').tab('show');
             $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             $('.mdb-select li:first-child').hide();
             $('.mdb-select li:nth-child(2)').hide();
         };
@@ -802,30 +759,32 @@
             return false;
         };
 
+
         $.fn.CallPageUser = function ($itemurl) {
-            console.log("item url: " + $itemurl);
+            //delete existing modals
             $('.modal').replaceWith('');
             $(".modal-backdrop").remove();
             $.ajax({
-                //async: true,
+                async: true,
                 url: $itemurl,
                 type: 'GET',
                 cache: true,
                 success: function (data) {
+                    $("#loading").hide();
+                    //console.log("success!");
                     var modal = $(data);
                     $('body').append(modal);
-                    //replaces the modal-view class with the ModalView view
-                    //$(".modal-view").html(data);
-                    //turn off data dismiss by clicking out of the box and by pressing esc
                     $(".modal-view").modal({
                         backdrop: true,
                         keyboard: false,
                     });
                     //shows the modal
                     $(".modal").modal('show');
+                    $.fn.OnOpenModal();
                 }
             });
-        }
+        };
+
 
         $(".load-vendor-search").on("click", function (e) {
             e.preventDefault();
