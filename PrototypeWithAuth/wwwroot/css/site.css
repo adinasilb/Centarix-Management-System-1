@@ -1665,6 +1665,11 @@ td .btn {
     padding-right: 5.375rem !important;
 }
 
+.modal-edit-sides {
+    padding-left: 3.125rem !important;
+    padding-right: 3.125rem !important;
+}
+
 .nav-item.icon {
     font-size: 1.125rem;
 }
@@ -1882,6 +1887,7 @@ td .btn {
 
 .document-border {
     border-radius: 0.625rem !important;
+    border:1px solid #000000DB !important;
 }
 
 .shortened-padding {
@@ -2003,4 +2009,22 @@ td .btn {
 }
 .select-wrapper.mdb-select-sublist.mdb-select.custom.select-dropdown.form-control-plaintext, .select-wrapper.mdb-select-subProject.mdb-select.custom.select-dropdown.form-control-plaintext {
     border: none !important;
+}
+
+.document-card {
+    height: 154px;
+    width: 154px;
+    display:inline-flex;
+}
+.document-margin {
+    margin-right: 3.4rem;
+}
+.document-margin-bottom {
+    margin-bottom: 3.25rem;
+}
+.document-icon{
+    margin:3.85rem;
+}
+.document-text-margin{
+    margin-top: .625rem;
 }

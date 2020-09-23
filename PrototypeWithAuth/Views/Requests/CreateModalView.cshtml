@@ -116,7 +116,7 @@
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
                                             new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-                                            "Select Category", new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "parentlist", @searchable = "Select Category" })
+                                         new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "parentlist", @searchable = "Select Category" })
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -162,7 +162,7 @@
                                                 Model.Vendors,
                                                 dataValueField: "VendorID",
                                                 dataTextField: "VendorEnName"),
-                                                optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                                     //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
                                                 htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext", @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
                                                 )
                                             <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
@@ -464,8 +464,8 @@
 
                                 <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
 
-                                <div class="row">
-                                    <div class="col-md-3 mb-4">
+                                <div class="row document-margin-bottom">
+                                    <div class=" document-margin">
                                         @{
                                             var filterClass = "opac87";
                                             if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
@@ -474,16 +474,16 @@
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
-                                            <div class="card document-border " style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <i class="icon-centarix-icons-03 @filterClass"  alt="order"style="font-size:@fontSize" ></i>
+                                            <div class="card document-border ">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                                                 </div>
 
                                             </div>
                                         </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
                                     </div>
-                                    <div class="col-md-3 mb-4">
+                                    <div class=" document-margin ">
                                         @{
                                             filterClass = "opac87";
                                             if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
@@ -492,16 +492,16 @@
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <i class="icon-book-24px @filterClass" alt="order" style="font-size:@fontSize;"></i>
+                                            <div class="card document-border">
+                                                <div class=" document-card text-center">
+                                                    <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
                                                 </div>
 
                                             </div>
                                         </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
                                     </div>
-                                    <div class="col-md-3 mb-4">
+                                    <div class=" document-margin">
                                         @{
                                             filterClass = "opac87";
                                             if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
@@ -510,16 +510,16 @@
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <i class="icon-local_shipping-24px @filterClass" alt="order" style="font-size:@fontSize"></i>
+                                            <div class="card document-border">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                                                 </div>
 
                                             </div>
                                         </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
                                     </div>
-                                    <div class="col-md-3 mb-4">
+                                    <div class="">
                                         @{
                                             filterClass = "opac87";
                                             if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
@@ -528,17 +528,17 @@
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <i class="icon-chrome_reader_mode-24px @filterClass" alt="order" style="font-size:@fontSize"></i>
+                                            <div class="card document-border">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                                                 </div>
                                             </div>
                                         </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3 mb-4">
+                                <div class="row document-margin-bottom">
+                                    <div class=" document-margin">
                                         @{
                                             filterClass = "opac87";
                                             if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
@@ -547,15 +547,15 @@
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <i class="icon-info-24px-2 @filterClass" alt="order" style="font-size:@fontSize"></i>
+                                            <div class="card document-border">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                                                 </div>
                                             </div>
                                         </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Info</label>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Info</label>
                                     </div>
-                                    <div class="col-md-3 mb-4">
+                                    <div class=" document-margin">
                                         @{
                                             filterClass = "opac87";
                                             if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
@@ -564,15 +564,15 @@
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <i class="icon-camera_alt-24px @filterClass" alt="order" style="font-size:@fontSize"></i>
+                                            <div class="card document-border">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                                                 </div>
                                             </div>
                                         </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Picture</label>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Picture</label>
                                     </div>
-                                    <div class="col-md-3 mb-4">
+                                    <div class=" document-margin">
                                         @{
                                             filterClass = "opac87";
                                             if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
@@ -581,15 +581,15 @@
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <i class="icon-remove_shopping_cart-24px @filterClass" alt="order" style="font-size:@fontSize"></i>
+                                            <div class="card document-border">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
                                                 </div>
                                             </div>
                                         </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Return</label>
+                                        <label class="control-label text-center text  document-text-margin" style="width:100%;">Return</label>
                                     </div>
-                                    <div class="col-md-3 mb-4">
+                                    <div class="">
                                         @{
                                             filterClass = "opac87";
                                             if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
@@ -598,13 +598,13 @@
                                             }
                                         }
                                         <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <i class="icon-insert_drive_file-24px-1 @filterClass" alt="order" style="font-size:@fontSize"></i>
+                                            <div class="card document-border">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                                                 </div>
                                             </div>
                                         </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Credit</label>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Credit</label>
                                     </div>
                                 </div>
                             </div>

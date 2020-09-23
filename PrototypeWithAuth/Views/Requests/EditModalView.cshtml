@@ -30,7 +30,7 @@
                 <input type="hidden" asp-for="@Model.Request.ProductID" />
 
                 <!-- Modal Header -->
-                <div class="new-modal-header border-bottom modal-line-1-header-with-back modal-sides" style="padding: 0.5em 6em">
+                <div class="new-modal-header border-bottom modal-line-1-header-with-back modal-edit-sides" style="padding: 0.5em 6em">
                     @*class needed here to override bootstraps modal limitations*@
 
                     @if (TempData["ErrorMessage"] != null)
@@ -211,10 +211,10 @@
                                         <div class="col-3">
                                             <label class="control-label">End Date</label>
                                             @*@{
-                                //get this just to return the date (not the time)
-                                //adding the amount of months of the warranty to the invoice date
-                                var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                            }*@
+                            //get this just to return the date (not the time)
+                            //adding the amount of months of the warranty to the invoice date
+                            var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                        }*@
                                             <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                         </div>
                                     }
@@ -522,227 +522,230 @@
                                     </div>
                                 </div>
                                 @*<div class="row installments">
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label asp-for="Request.Installments" class="control-label"></label>
-                            <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
-                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
-                        </div>
-                        @if (Model.NewPayments != null && Model.NewPayments.Any())
-                        {
-                            <script>
-                                console.log("in script for installments disabled");
-                                $("#Request_ParentRequest_Installments").attr("disabled", true);
-                            </script>
-                        }
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label asp-for="Request.Installments" class="control-label"></label>
+                        <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
                     </div>
-                    <div class="col-md-8 rounded card p-3">
-                        <table class="table table-sm payments-table">
-                            <thead class="thead-light rounded">
-                                <tr>
-                                    <th>Payment Date</th>
-                                    <th>Payment Type</th>
-                                    <th>Account</th>
-                                    <th>Reference</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @{
-                                    if (Model.NewPayments != null)
+                    @if (Model.NewPayments != null && Model.NewPayments.Any())
+                    {
+                        <script>
+                            console.log("in script for installments disabled");
+                            $("#Request_ParentRequest_Installments").attr("disabled", true);
+                        </script>
+                    }
+                </div>
+                <div class="col-md-8 rounded card p-3">
+                    <table class="table table-sm payments-table">
+                        <thead class="thead-light rounded">
+                            <tr>
+                                <th>Payment Date</th>
+                                <th>Payment Type</th>
+                                <th>Account</th>
+                                <th>Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                if (Model.NewPayments != null)
+                                {
+                                    int counter = 0;
+                                    foreach (var payment in Model.NewPayments)
                                     {
-                                        int counter = 0;
-                                        foreach (var payment in Model.NewPayments)
-                                        {
-                                            <tr class="payment-line">
-                                                <td>
-                                                    <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
-                                                </td>
-                                                <td>
-                                                    @Html.DropDownListFor(
-                                                   m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
-                                                   new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
-                                                   , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
-                                                   )
-                                                </td>
-                                                <td>
-                                                    @Html.DropDownListFor(
-                                                   m => m.NewPayments[counter].CompanyAccountID,
-                                                   new SelectList(
-                                                       Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
-                                                   "CompanyAccountID", "CompanyAccountNum"),
-                                                   new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
-                                                <td>
-                                                    <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
-                                                </td>
-                                                @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
-                                            </tr>
-                                            counter++;
-                                        }
+                                        <tr class="payment-line">
+                                            <td>
+                                                <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(
+                                               m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
+                                               new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
+                                               , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
+                                               )
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(
+                                               m => m.NewPayments[counter].CompanyAccountID,
+                                               new SelectList(
+                                                   Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
+                                               "CompanyAccountID", "CompanyAccountNum"),
+                                               new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
+                                            <td>
+                                                <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
+                                            </td>
+                                            @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
+                                        </tr>
+                                        counter++;
                                     }
                                 }
-                            </tbody>
-                        </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="control-label">Debt</label>
+                        <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
                     </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label class="control-label">Debt</label>
-                            <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
-                        </div>
-                    </div>
-                </div>*@
+                </div>
+            </div>*@
                             </div>
 
 
                             <div id="documents" class="tab-pane fade">
-                                <span style="font-size: 1.7em;">Documents</span>
+                                <div class="modal-edit-sides modal-body-top-p">
+                                    <div class="row"><span class="heading-1 modal-tab-name">Documents</span></div>
 
-                                @{
-                                    var urlAction = Url.Action("DocumentsModal", "Requests");
-                                }
+                                    @{
+                                        var urlAction = Url.Action("DocumentsModal", "Requests");
+                                        var fontSize = "2rem";
+                                    }
 
-                                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+                                    <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
 
-                                <div class="row">
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            var filterClass = "";
-                                            if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
-                                            {
-                                                filterClass = "order-inv-filter";
+                                    <div class="row document-margin-bottom">
+                                        <div class=" document-margin">
+                                            @{
+                                                var filterClass = "opac87";
+                                                if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "order-inv-filter";
+                                                }
                                             }
-                                        }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
-                                            <div class="card document-border " style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/order_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
-                                                </div>
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
+                                                <div class="card document-border ">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
 
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
-                                            {
-                                                filterClass = "order-inv-filter";
-                                            }
-                                        }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
+                                        </div>
+                                        <div class=" document-margin ">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "order-inv-filter";
+                                                }
+                                            }
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class=" document-card text-center">
+                                                        <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
+                                                    </div>
 
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
-                                            {
-                                                filterClass = "order-inv-filter";
-                                            }
-                                        }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/shipment_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
+                                        </div>
+                                        <div class=" document-margin">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "order-inv-filter";
+                                                }
+                                            }
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
 
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
-                                            {
-                                                filterClass = "order-inv-filter";
-                                            }
-                                        }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
                                                 </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
-                                            {
-                                                filterClass = "order-inv-filter";
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
+                                        </div>
+                                        <div class="">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "order-inv-filter";
+                                                }
                                             }
-                                        }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/info_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Info</label>
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
-                                            {
-                                                filterClass = "order-inv-filter";
+                                    <div class="row document-margin-bottom">
+                                        <div class=" document-margin">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "order-inv-filter";
+                                                }
                                             }
-                                        }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/pictures_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Picture</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
-                                            {
-                                                filterClass = "order-inv-filter";
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Info</label>
+                                        </div>
+                                        <div class=" document-margin">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "order-inv-filter";
+                                                }
                                             }
-                                        }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/return_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Return</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
-                                            {
-                                                filterClass = "order-inv-filter";
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Picture</label>
+                                        </div>
+                                        <div class=" document-margin">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "order-inv-filter";
+                                                }
                                             }
-                                        }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/credit_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Credit</label>
+                                            </a>
+                                            <label class="control-label text-center text  document-text-margin" style="width:100%;">Return</label>
+                                        </div>
+                                        <div class="">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "order-inv-filter";
+                                                }
+                                            }
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Credit</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -763,8 +766,8 @@
                                                                 <div class="col-md-2">
                                                                     <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
                                                                     @*Insert Pic
-                                                    <img src="" />
-                                                    changing this to the user's profile picture*@
+                                                <img src="" />
+                                                changing this to the user's profile picture*@
                                                                 </div>
                                                                 <div class="col-md-10">
                                                                     <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
