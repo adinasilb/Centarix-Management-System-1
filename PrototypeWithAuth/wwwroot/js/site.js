@@ -2266,6 +2266,10 @@ $(function () {
 		if (valid == "true" || $("#ConfirmPassword").val() == "") {
 			return;
 		}
+		if (!$('input[name="NewEmployee.EmployeeStatusID"]:checked').length) {
+			// none of the radio buttons were checked
+			return;
+		}
 		if (valid == "false" || valid == undefined) {
 			$("#user-permissions-tab").prop("disabled", false);
 			$("#user-budget-tab").prop("disabled", false);

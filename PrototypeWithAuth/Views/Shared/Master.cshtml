@@ -676,7 +676,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/Requests/TermsModal/?id=" + $(this).val() + "&IsCart=true";
+            var $itemurl = "TermsModal/?id=" + $(this).val() + "&IsCart=true";
             console.log("itemurl: " + $itemurl);
             $.fn.CallPageRequest($itemurl, "termsmodal");
             return false;

@@ -105,7 +105,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //await _userManager.AddToRoleAsync(user, registerUserViewModel.Role);
                     await _signManager.SignInAsync(user, false);
-                   
+
                     return RedirectToAction("Index", "ApplicationUsers");
                 }
                 else
@@ -128,6 +128,17 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
 
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
+
+            registerUserViewModel.NewEmployee = new Employee()
+            {
+                StartedWorking = DateTime.Today
+            };
+            registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
+            registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+            registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
+            registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
+            registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
+
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.OrdersAndInventory, Name="General", Selected=false }
@@ -183,29 +194,99 @@ namespace PrototypeWithAuth.Controllers
             }
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser
+                var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
+                var user = new ApplicationUser();
+                if (UserType == 4)
                 {
-                    UserName = registerUserViewModel.Email,
-                    Email = registerUserViewModel.Email,
-                    FirstName = registerUserViewModel.FirstName,
-                    LastName = registerUserViewModel.LastName,
-                    SecureAppPass = registerUserViewModel.SecureAppPass,
-                    CentarixID = registerUserViewModel.CentarixID,
-                    PhoneNumber = registerUserViewModel.PhoneNumber,
-                    UserNum = usernum,
-                    LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
-                    LabUnitLimit = registerUserViewModel.LabUnitLimit,
-                    LabOrderLimit = registerUserViewModel.LabOrderLimit,
-                    OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
-                    OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
-                    OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
-                    DateCreated = DateTime.Now
-                };
+                    user = new ApplicationUser
+                    {
+                        /*User*/
+                        UserName = registerUserViewModel.Email,
+                        Email = registerUserViewModel.Email,
+                        FirstName = registerUserViewModel.FirstName,
+                        LastName = registerUserViewModel.LastName,
+                        SecureAppPass = registerUserViewModel.SecureAppPass,
+                        CentarixID = registerUserViewModel.CentarixID,
+                        PhoneNumber = registerUserViewModel.PhoneNumber,
+                        PhoneNumber2 = registerUserViewModel.PhoneNumber2,
+                        UserNum = usernum,
+                        LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
+                        LabUnitLimit = registerUserViewModel.LabUnitLimit,
+                        LabOrderLimit = registerUserViewModel.LabOrderLimit,
+                        OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
+                        OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
+                        OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
+                        DateCreated = DateTime.Now,
+                    };
+                }
+                else
+                {
+                    user = new Employee
+                    {
+                        /*User*/
+                        UserName = registerUserViewModel.Email,
+                        Email = registerUserViewModel.Email,
+                        FirstName = registerUserViewModel.FirstName,
+                        LastName = registerUserViewModel.LastName,
+                        SecureAppPass = registerUserViewModel.SecureAppPass,
+                        CentarixID = registerUserViewModel.CentarixID,
+                        PhoneNumber = registerUserViewModel.PhoneNumber,
+                        PhoneNumber2 = registerUserViewModel.PhoneNumber2,
+                        UserNum = usernum,
+                        LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
+                        LabUnitLimit = registerUserViewModel.LabUnitLimit,
+                        LabOrderLimit = registerUserViewModel.LabOrderLimit,
+                        OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
+                        OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
+                        OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
+                        DateCreated = DateTime.Now,
+                        /*Employee*/
+                        StartedWorking = registerUserViewModel.NewEmployee.StartedWorking,
+                        DOB = registerUserViewModel.NewEmployee.DOB,
+                        GrossSalary = registerUserViewModel.NewEmployee.GrossSalary,
+                        EmployerTax = registerUserViewModel.NewEmployee.EmployerTax,
+                        IncomeTax = registerUserViewModel.NewEmployee.IncomeTax,
+                        TaxCredits = registerUserViewModel.NewEmployee.TaxCredits,
+                        VacationDays = registerUserViewModel.NewEmployee.VacationDays,
+                        JobTitle = registerUserViewModel.NewEmployee.JobTitle,
+                        DegreeID = registerUserViewModel.NewEmployee.DegreeID,
+                        IDNumber = registerUserViewModel.NewEmployee.IDNumber,
+                        MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID,
+                        /*phonenumber2 is not working --> talk to Debbie*/
+                        CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID,
+                        EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
+                        JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID,
+                        /*Salaried Employee*/
 
+                    };
+                }
                 var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
-                //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
+                                //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
                 if (result.Succeeded)
                 {
+                    switch (UserType)
+                    {
+                        case 1: /*Salaried Employee*/
+                            var salariedEmployee = new SalariedEmployee()
+                            {
+                                EmployeeId = user.Id,
+                                HoursPerDay= registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay
+                            };
+                            _context.Add(salariedEmployee);
+                            break;
+                        case 2: /*Freelancer*/
+                            var freelancer = new Freelancer()
+                            {
+                                EmployeeId = user.Id
+                            };
+                            _context.Add(freelancer);
+                            break;
+                        case 3: /*Advisor*/
+                            break;
+                    }
+                    _context.SaveChangesAsync();
+
+
                     foreach (var orderRole in registerUserViewModel.OrderRoles)
                     {
                         if (orderRole.Name == "General" && orderRole.Selected == true)
@@ -296,21 +377,21 @@ namespace PrototypeWithAuth.Controllers
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    string confirmationLink  = Url.Page(
+                    string confirmationLink = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
                 values: new { area = "Identity", userId = userId, code = code },
                 protocol: Request.Scheme);
-           
 
-                var message = new MimeMessage();
+
+                    var message = new MimeMessage();
 
                     //instantiate the body builder
                     var builder = new BodyBuilder();
 
 
 
-                    
+
 
                     //add a "From" Email
                     message.From.Add(new MailboxAddress("debbie", "debbie@centarix.com"));
@@ -322,7 +403,7 @@ namespace PrototypeWithAuth.Controllers
                     message.Subject = "Confirm centarix sign-up Link";
 
                     //body
-                    builder.TextBody =confirmationLink;
+                    builder.TextBody = confirmationLink;
 
                     message.Body = builder.ToMessageBody();
 
@@ -639,7 +720,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult SuspendUserModal(string Id )
+        public IActionResult SuspendUserModal(string Id)
         {
             var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
             return PartialView(user);
@@ -650,7 +731,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> SuspendUserModal(ApplicationUser applicationUser)
         {
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
-            if(applicationUser.LockoutEnabled ==true && (applicationUser.LockoutEnd >DateTime.Now))
+            if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > DateTime.Now))
             {
                 applicationUser.LockoutEnabled = false;
                 applicationUser.LockoutEnd = DateTime.Now;

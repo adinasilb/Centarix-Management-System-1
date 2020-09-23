@@ -314,7 +314,7 @@ center-horizontally {
     filter: drop-shadow(5px 5px 5px #a7a7a7);
 }*/
 
-.module-button-div:hover, .main-permissions div:hover {
+.module-button-div:hover, .main-permissions div.row div:hover {
     border-radius: 15px;
     background-color: rgb(232,240,254);
 }
@@ -1455,7 +1455,7 @@ body {
 }
 
 .disabled-submit {
-    background-color: grey !important;
+    background-color: rgba(0,0,0, .38) !important;
 }
 
 td .btn {
@@ -1717,6 +1717,8 @@ td .btn {
 .order-inv-form .select-wrapper.active label.mdb-main-label {
     color: var(--order-inv-color) !important;
 }
+
+/*HOVER FOR EACH SECTION*/
 .order-inv-form .form-control-plaintext:focus {
     outline-width: 0px !important;
     outline-color: none !important;
@@ -1728,9 +1730,15 @@ td .btn {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
-
 .order-inv-form .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
+}
+
+
+.users-form .form-control-plaintext:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--user-color) !important;
 }
 
 .supplier-form .select-wrapper.active span.caret,
@@ -1795,6 +1803,18 @@ td .btn {
 .oper-form .select-wrapper.active label.mdb-main-label {
     color: var( --operations-color) !important;
 }
+
+.users-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+    border-bottom: none !important;
+    box-shadow: 0 2px 0 0 var(--user-color) !important;
+}
+
+
+.users-form .input-group:focus-within > .input-group-text {
+    box-shadow: 0 2px 0 0 var(--user-color) !important;
+}
+
+
 
 .input-group-text {
     padding: 0 !important;

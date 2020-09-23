@@ -34,10 +34,14 @@ namespace PrototypeWithAuth.Data
         public double OperaitonOrderLimit { get; set; }
         public bool IsDeleted { get; set; }
         public string UserImage { get; set; }
-   
-        [DataType (DataType.PhoneNumber)]
+
+        [DataType(DataType.PhoneNumber)]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
+
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Phone Number 2")]
+        public string PhoneNumber2 { get; set; }
         public DateTime DateLastReadNotifications { get; set; }
         public DateTime LastLogin { get; set; }
         public IEnumerable<Request> RequestsReceived { get; set; }

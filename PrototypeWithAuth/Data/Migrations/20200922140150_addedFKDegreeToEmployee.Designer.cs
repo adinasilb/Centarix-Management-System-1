@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200922140150_addedFKDegreeToEmployee")]
+    partial class addedFKDegreeToEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -274,25 +276,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("ApplicationUser");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Advisor", b =>
-                {
-                    b.Property<int>("AdvisorID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("EmployeeID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("AdvisorID");
-
-                    b.HasIndex("EmployeeID")
-                        .IsUnique()
-                        .HasFilter("[EmployeeID] IS NOT NULL");
-
-                    b.ToTable("Advisors");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.CategoryType", b =>
@@ -2339,46 +2322,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
-                {
-                    b.Property<int>("NotificationID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Controller")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmployeeHoursID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("NotificationStatusID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("NotificationID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("NotificationStatusID");
-
-                    b.ToTable("TimekeeperNotifications");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.UnitParentType", b =>
                 {
                     b.Property<int>("UnitParentTypeID")
@@ -2710,14 +2653,8 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasBaseType("PrototypeWithAuth.Data.ApplicationUser");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CitizenshipID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DOB")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Citizenship")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DegreeID")
                         .HasColumnType("int");
@@ -2743,27 +2680,20 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("JobTitle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MaritalStatusID")
-                        .HasColumnType("int");
+                    b.Property<string>("RelationshipStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartedWorking")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TaxCredits")
-                        .HasColumnType("int");
-
                     b.Property<int>("VacationDays")
                         .HasColumnType("int");
-
-                    b.HasIndex("CitizenshipID");
 
                     b.HasIndex("DegreeID");
 
                     b.HasIndex("EmployeeStatusID");
 
                     b.HasIndex("JobCategoryTypeID");
-
-                    b.HasIndex("MaritalStatusID");
 
                     b.HasDiscriminator().HasValue("Employee");
                 });
@@ -2787,7 +2717,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             NotificationStatusID = 2,
                             Color = "--notifications-ordered-color",
                             Description = "ItemOrdered",
-                            Icon = "icon-centarix-icons-03"
+                            Icon = "icon-centarix-icons-05"
                         },
                         new
                         {
@@ -2802,22 +2732,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             Color = "--notifications-received-color",
                             Description = "ItemReceived",
                             Icon = "icon-local_mall-24px"
-                        });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotificationStatus", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.NotificationStatus");
-
-                    b.HasDiscriminator().HasValue("TimekeeperNotificationStatus");
-
-                    b.HasData(
-                        new
-                        {
-                            NotificationStatusID = 5,
-                            Color = "--timekeeper-color",
-                            Description = "UpdateHours",
-                            Icon = "icon-access_time-24px"
                         });
                 });
 
@@ -2877,14 +2791,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Advisor", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
-                        .WithOne("Advisor")
-                        .HasForeignKey("PrototypeWithAuth.Models.Advisor", "EmployeeID")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
@@ -3172,20 +3078,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.TimekeeperNotificationStatus", "NotificationStatus")
-                        .WithMany("TimekeeperNotifications")
-                        .HasForeignKey("NotificationStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.UnitType", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.UnitParentType", "UnitParentType")
@@ -3235,14 +3127,8 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Employee", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.Citizenship", "Citizenship")
-                        .WithMany("Employees")
-                        .HasForeignKey("CitizenshipID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PrototypeWithAuth.Models.Degree", "Degree")
-                        .WithMany("Employees")
+                        .WithMany()
                         .HasForeignKey("DegreeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -3256,12 +3142,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.JobCategoryType", "JobCategoryType")
                         .WithMany("Employees")
                         .HasForeignKey("JobCategoryTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.MaritalStatus", "MaritalStatus")
-                        .WithMany("Employees")
-                        .HasForeignKey("MaritalStatusID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

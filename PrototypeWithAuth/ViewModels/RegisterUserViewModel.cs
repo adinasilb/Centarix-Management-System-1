@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
+using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -65,6 +66,10 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Phone Number 2")]
+        public string PhoneNumber2 { get; set; }
+
         //Permissions
         public List<UserRoleViewModel> OrderRoles { get; set; }
         public List<UserRoleViewModel> ProtocolRoles { get; set; }
@@ -101,5 +106,14 @@ namespace PrototypeWithAuth.ViewModels
         public IFormFile UserImage { get; set; }
 
         public string UserImageSaved { get; set; }
+
+
+        //Added For Employees
+        public Employee NewEmployee { get; set; }
+        public List<JobCategoryType> JobCategoryTypes { get; set; }
+        public List<EmployeeStatus> EmployeeStatuses { get; set; }
+        public List<MaritalStatus> MaritalStatuses { get; set; }
+        public List<Degree> Degrees { get; set; }
+        public List<Citizenship> Citizenships { get; set; }
     }
 }

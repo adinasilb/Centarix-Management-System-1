@@ -7,7 +7,7 @@
 
 <div class="modal modal-view right fader order-inv-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog modal-lg box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
+    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
 
         <div class="modal-content d-inline-block">
@@ -30,24 +30,34 @@
                 <input type="hidden" asp-for="@Model.Request.ProductID" />
 
                 <!-- Modal Header -->
-                <div class="new-modal-header border-bottom box-shadow" style="padding: 0.5em 6em">
+                <div class="new-modal-header border-bottom modal-line-1-header-with-back modal-sides" style="padding: 0.5em 6em">
                     @*class needed here to override bootstraps modal limitations*@
 
                     @if (TempData["ErrorMessage"] != null)
                     {
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
-                        <br />
                     }
                     <div>
                         <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent">
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                         </button>
                     </div>
-                    <br />
-                    <div class="form-group">
-                        <h4><label asp-for="Request.Product.ProductName" class="control-label font-weight-bold"> Edit Request : </label> </h4>
-                        <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" /></h4>
-                        <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
+                    <div class="row modal-title-line">
+                        @*<div class="col-md-2 px-0">*@
+                        @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
+                        {
+                            <img src="@Model.Request.Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
+                        }
+                        else
+                        {
+                            <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" class="top-modal-image" width="75" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
+                        }
+                        @*</div>*@
+                        <div class="modal-product-title" @*style="width: 80%;"*@>
+                            <input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
+                        </div>
+
                     </div>
                     <div class="row">
                         <div class="col-12 px-0">
@@ -57,7 +67,7 @@
                                     <li class="nav-item"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
                                     <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#comments"  class="nav-link"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
                                 </ul>
                             </div>
                         </div>

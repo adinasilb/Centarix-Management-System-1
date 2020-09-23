@@ -27,6 +27,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Freelancer> Freelancers { get; set; }
         public DbSet<EmployeeStatus> EmployeeStatuses { get; set; }
+        public DbSet<Advisor> Advisors { get; set; }
         public DbSet<SalariedEmployee> SalariedEmployees { get; set; }
         public DbSet<EmployeeHoursStatus> EmployeeHoursStatuses { get; set; }
         public DbSet<OffDayType> OffDayTypes { get; set; }

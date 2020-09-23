@@ -6,7 +6,6 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    ViewData["Title"] = "RequestNavView";
     Layout = "~/Views/Shared/Master.cshtml";
 
     string pageType = "";
@@ -277,7 +276,7 @@
                 <span class="sr-only">Loading...</span>
             </div>*@
 
-        <div class="center" role="status" id="loading" style="display:none;">
+        <div class="center" role="status" id="loading" style="display:none; z-index:2000 !important; position: relative;">
             <img src="~/images/css/Loading/centarix_loading3.gif" />
         </div>
         <div style="display: flex; overflow: hidden;">
