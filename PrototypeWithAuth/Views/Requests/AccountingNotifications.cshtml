@@ -7,7 +7,7 @@
     ViewData["Title"] = "AccountingNotifications";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-
+<script src="~/js/accounting.js"></script>
 <script src="~/js/site.js"></script>
 <table class="table table-headerspaced table-borderless table-hover">
     <thead>
@@ -27,27 +27,27 @@
                                 }
                             }
                         }
-                       @Html.DisplayFor(m=>m.AccountingNotificationsEnum)
+                        @Html.DisplayFor(m => m.AccountingNotificationsEnum)
                         &nbsp;&nbsp;
-                        </div>
-                        <div class="text pt-2">
-                            [@count]
-                            @{
-                                var totalCost = 0;
-                                var decCost = (decimal)totalCost;
-                                var formattedTotalCost = decCost.ToString("C02");
-                            }
-                            <span>&emsp; Total: </span><span>@formattedTotalCost</span>
-                        </div>
                     </div>
+                    <div class="text pt-2">
+                        [@count]
+                        @{
+                            var totalCost = 0;
+                            var decCost = (decimal)totalCost;
+                            var formattedTotalCost = decCost.ToString("C02");
+                        }
+                        <span>&emsp; Total: </span><span>@formattedTotalCost</span>
+                    </div>
+                </div>
             </th>
 
         </tr>
         <tr class="text-center">
-            <td style="width:8%;">
+            <td style="width:5%;">
                 No
             </td>
-            <td style="width:11.1%;"></td>
+            <td style="width:8.1%;"></td>
             <td style="width:11.1%;">
                 Name
             </td>
@@ -66,7 +66,8 @@
             <td style="width:11.1%">
                 Date
             </td>
-            <td style="width:11.1%">
+            <td style="width:17.1%">
+                <button class="float-right accounting-background-color invoice-add-all custom-button-font custom-button px-2rem hidden" id="add-to-selected">Add To Selected</button>
             </td>
         </tr>
     </thead>
@@ -86,7 +87,7 @@
                 @foreach (var Request in Vendor)
                 {
                     <tr class="text-center">
-                        <td class="text-center" style="width:8%;">
+                        <td class="text-center" style="width:5%;">
                             <div class="form-check accounting-select">
                                 <input type="checkbox" class="form-check-input filled-in" id="@Request.RequestID">
                                 <label class="form-check-label" for="@Request.RequestID">@Request.RequestID</label>
@@ -96,7 +97,7 @@
 
                                 </div>*@
                         </td>
-                        <td style="width:11.1%;">
+                        <td style="width:8.1%;">
                             @if (Request.Product.ProductSubcategory.ImageURL != null)
                             {
                                 var imageurl = Request.Product.ProductSubcategory.ImageURL;
@@ -131,7 +132,7 @@
                         <td style="width:11.1%">
                             @String.Format("{0:d}", @Request.CreationDate.Date)
                         </td>
-                        <td style="width:11.1%">
+                        <td style="width:17.1%">
                             <a href="" class="invoice-add-one" request="@Request.RequestID">
                                 <i class="icon-cancel_presentation-24px green-overlay px-1" style="font-size:1.6rem;"></i>
                             </a>
@@ -178,7 +179,7 @@
 
                     <label class="mt-3">&emsp; Total: </label>&nbsp;<span>@(((decimal)(VendorTotal)).ToString("C02"))</span>
 
-                    <button class=" ml-5 float-right accounting-background-color invoice-add-all custom-button-font custom-button "  vendor="@Vendor.Key.VendorID">Add to All</button>
+                    <button class=" ml-5 float-right accounting-background-color invoice-add-all custom-button-font custom-button " vendor="@Vendor.Key.VendorID">Add To All</button>
                 </div>
             </div>
         </div>
