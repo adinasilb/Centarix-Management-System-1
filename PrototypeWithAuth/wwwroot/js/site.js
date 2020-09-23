@@ -1131,7 +1131,29 @@ $(function () {
 	$(".open-invoice-doc-modal").click(function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("in opened invoice doc modal");
+		//console.log("in opened invoice doc modal");
+		//$("#documentsModal").replaceWith('');
+		//var urltogo = $("#documentSubmit").attr("url");
+		//var arrRequestIds = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+		//	return $(this).attr("id")
+		//}).get()
+		//urltogo = urltogo + "?ids=" + arrRequestIds + "&RequestFolderNameEnum=Invoices&IsEdittable=true&IsOperations=false&IsNotifications=true";
+		//console.log("urltogo: " + urltogo);
+		//$.ajax({
+		//	async: true,
+		//	url: urltogo,
+		//	type: 'GET',
+		//	cache: false,
+		//	success: function (data) {
+		//		var modal = $(data);
+		//		$('body').append(modal);
+		//		$("#documentsModal").modal({
+		//			backdrop: false,
+		//			keyboard: true,
+		//		});
+		//		$(".modal").modal('show');
+		//	}
+		//});
 	});
 
 	$(".open-document-modal").click(function (e) {

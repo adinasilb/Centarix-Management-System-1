@@ -11,6 +11,11 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding">
 
+                @{
+                    var urlAction = Url.Action("DocumentsModal", "Requests");
+                }
+                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+
                 <div class="modal-body  m-0 p-0 ">
 
                     <div class="container-fluid p-0 m-0">
@@ -99,10 +104,11 @@
                                 <a href="" class="open-document-modal">
 
                                 </a>
-                                <button class="accounting-background-color custom-button-font custom-button open-invoice-doc-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()"   
+                                <button class="accounting-background-color custom-button-font custom-button open-invoice-doc-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()"
                                         @*data-ids="@Model.Request.RequestID"   ---> Get all the ids when in javascript*@
                                         id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
-                                Select File</button>
+                                    Select File
+                                </button>
                             </div>
                             <div class="col-2 offset-5">
                                 <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" id="SaveInvoiceModal" value="Save" />
