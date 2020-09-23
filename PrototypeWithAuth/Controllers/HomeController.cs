@@ -85,9 +85,10 @@ namespace PrototypeWithAuth.Controllers
         {
             var currentUserID = _userManager.GetUserId(User);
             DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id ==currentUserID).DateLastReadNotifications;
-            int count = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication & n.ApplicationUserID==currentUserID).Count();
-            count += _context.TimekeeperNotifications.Where(n => n.TimeStamp > lastReadNotfication & n.ApplicationUserID == currentUserID).Count();
-            return count;
+            int count1 = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID==currentUserID).Count();
+            var tk = _context.TimekeeperNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID);
+            int count2 = tk.Count();            
+            return count1+count2;
         }
         [HttpGet]
         public JsonResult GetLatestNotifications()
@@ -109,7 +110,7 @@ namespace PrototypeWithAuth.Controllers
                  isRead = n.IsRead
              });
             //todo: figure out how to filter out - maybe only select those that are from less then 10 days ago
-            var tnotification = _context.TimekeeperNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id)
+            var tnotification = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == currentUser.Id).Include(n => n.NotificationStatus)
 
                .Select(n => new
                {
@@ -200,7 +201,7 @@ namespace PrototypeWithAuth.Controllers
                     timekeeperNotification.IsRead = false;
                     timekeeperNotification.ApplicationUserID = e.EmployeeID;
                     timekeeperNotification.Description = "update hours for " + e.Date.ToString("dd/MM/yyyy");
-                    timekeeperNotification.NotificationStatusID = 2;
+                    timekeeperNotification.NotificationStatusID = 5;
                     timekeeperNotification.TimeStamp = DateTime.Now;
                     timekeeperNotification.Controller = "Timekeeper";
                     timekeeperNotification.Action = "SummaryHours";

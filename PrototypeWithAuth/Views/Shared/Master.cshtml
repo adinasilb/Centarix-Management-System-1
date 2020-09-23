@@ -1071,7 +1071,7 @@
                 type: 'POST',
                 cache: true,
                 success: function (data) {
-
+                    $.fn.GetNotifcationCount();
                 }
             });
         }
@@ -1080,8 +1080,10 @@
             $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
                     var timestamp = new Date(notification.timeStamp)
-                    var link = '/Requests/NotificationsView?requestID=-3';
+                    var link = '/-1/-2?requestID=-3';
                     link = link.replace("-3", notification.id);
+                    link = link.replace("-2", notification.action);
+                    link = link.replace("-1", notification.controller);
                     var bold = "";
                     console.log( notification.isRead);
                     if (notification.isRead == false) {
@@ -1127,7 +1129,7 @@
             });
             $('#openNotifications').popover('toggle');
             $.fn.UpdateNotificationLastRead();
-            $.fn.GetNotifcationCount();
+        
         });
 
         $.fn.GetHoursString = function (date) {
