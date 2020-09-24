@@ -213,10 +213,10 @@
                                                     <div class="col-3">
                                                         <label class="control-label">End Date</label>
                                                         @*@{
-                                            //get this just to return the date (not the time)
-                                            //adding the amount of months of the warranty to the invoice date
-                                            var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                                        }*@
+                            //get this just to return the date (not the time)
+                            //adding the amount of months of the warranty to the invoice date
+                            var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                        }*@
                                                         <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                                     </div>
                                                 }
@@ -469,7 +469,7 @@
                                                         <label asp-for="Request.Cost" class="control-label"></label>
                                                         <div class="input-group">
                                                             <span class="input-group-text">&#x20aa;</span>
-                                                            <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom" />
+                                                            <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                                             <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                                         </div>
                                                     </div>
@@ -528,75 +528,76 @@
                                                 </div>
                                             </div>
                                             @*<div class="row installments">
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label asp-for="Request.Installments" class="control-label"></label>
-                                        <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
-                                        <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
-                                    </div>
-                                    @if (Model.NewPayments != null && Model.NewPayments.Any())
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label asp-for="Request.Installments" class="control-label"></label>
+                        <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
+                    </div>
+                    @if (Model.NewPayments != null && Model.NewPayments.Any())
+                    {
+                        <script>
+                            console.log("in script for installments disabled");
+                            $("#Request_ParentRequest_Installments").attr("disabled", true);
+                        </script>
+                    }
+                </div>
+                <div class="col-md-8 rounded card p-3">
+                    <table class="table table-sm payments-table">
+                        <thead class="thead-light rounded">
+                            <tr>
+                                <th>Payment Date</th>
+                                <th>Payment Type</th>
+                                <th>Account</th>
+                                <th>Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                if (Model.NewPayments != null)
+                                {
+                                    int counter = 0;
+                                    foreach (var payment in Model.NewPayments)
                                     {
-                                        <script>
-                                            console.log("in script for installments disabled");
-                                            $("#Request_ParentRequest_Installments").attr("disabled", true);
-                                        </script>
+                                        <tr class="payment-line">
+                                            <td>
+                                                <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(
+                                               m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
+                                               new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
+                                               , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
+                                               )
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(
+                                               m => m.NewPayments[counter].CompanyAccountID,
+                                               new SelectList(
+                                                   Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
+                                               "CompanyAccountID", "CompanyAccountNum"),
+                                               new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
+                                            <td>
+                                                <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
+                                            </td>
+                                            @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
+                                        </tr>
+                                        counter++;
                                     }
-                                </div>
-                                <div class="col-md-8 rounded card p-3">
-                                    <table class="table table-sm payments-table">
-                                        <thead class="thead-light rounded">
-                                            <tr>
-                                                <th>Payment Date</th>
-                                                <th>Payment Type</th>
-                                                <th>Account</th>
-                                                <th>Reference</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @{
-                                                if (Model.NewPayments != null)
-                                                {
-                                                    int counter = 0;
-                                                    foreach (var payment in Model.NewPayments)
-                                                    {
-                                                        <tr class="payment-line">
-                                                            <td>
-                                                                <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
-                                                            </td>
-                                                            <td>
-                                                                @Html.DropDownListFor(
-                                                               m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
-                                                               new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
-                                                               , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
-                                                               )
-                                                            </td>
-                                                            <td>
-                                                                @Html.DropDownListFor(
-                                                               m => m.NewPayments[counter].CompanyAccountID,
-                                                               new SelectList(
-                                                                   Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
-                                                               "CompanyAccountID", "CompanyAccountNum"),
-                                                               new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
-                                                            <td>
-                                                                <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
-                                                            </td>
-                                                            @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
-                                                        </tr>
-                                                        counter++;
-                                                    }
-                                                }
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="control-label">Debt</label>
-                                        <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
-                                    </div>
-                                </div>
-                            </div>*@
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="control-label">Debt</label>
+                        <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
+                    </div>
+                </div>
+            </div>*@
                                         </div>
+
 
 
                                         <div id="documents" class="tab-pane fade">
@@ -620,7 +621,7 @@
                                                             filterClass = "order-inv-filter";
                                                         }
                                                     }
-                                                    <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
+                                                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
                                                         <div class="card document-border ">
                                                             <div class="document-card text-center">
                                                                 <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -638,7 +639,7 @@
                                                             filterClass = "order-inv-filter";
                                                         }
                                                     }
-                                                    <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
+                                                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@true">
                                                         <div class="card document-border">
                                                             <div class=" document-card text-center">
                                                                 <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
@@ -656,7 +657,7 @@
                                                             filterClass = "order-inv-filter";
                                                         }
                                                     }
-                                                    <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@false">
+                                                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@true">
                                                         <div class="card document-border">
                                                             <div class="document-card text-center">
                                                                 <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -674,7 +675,7 @@
                                                             filterClass = "order-inv-filter";
                                                         }
                                                     }
-                                                    <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
+                                                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
                                                         <div class="card document-border">
                                                             <div class="document-card text-center">
                                                                 <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -693,7 +694,7 @@
                                                             filterClass = "order-inv-filter";
                                                         }
                                                     }
-                                                    <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
+                                                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
                                                         <div class="card document-border">
                                                             <div class="document-card text-center">
                                                                 <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -710,7 +711,7 @@
                                                             filterClass = "order-inv-filter";
                                                         }
                                                     }
-                                                    <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
+                                                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
                                                         <div class="card document-border">
                                                             <div class="document-card text-center">
                                                                 <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -727,7 +728,7 @@
                                                             filterClass = "order-inv-filter";
                                                         }
                                                     }
-                                                    <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
+                                                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
                                                         <div class="card document-border">
                                                             <div class="document-card text-center">
                                                                 <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
@@ -744,7 +745,7 @@
                                                             filterClass = "order-inv-filter";
                                                         }
                                                     }
-                                                    <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
+                                                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
                                                         <div class="card document-border">
                                                             <div class="document-card text-center">
                                                                 <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>

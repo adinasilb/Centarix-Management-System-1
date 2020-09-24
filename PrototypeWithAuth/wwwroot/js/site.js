@@ -2788,6 +2788,13 @@ $(function () {
 	$('.turn-edit-on-off').change(function () {
 		var type = $(this).attr('name');
 		console.log(type);
+		var url = '';
+		if ($(this).hasClass('operations')) {
+			var url = "/Operations/EditModalView";
+		} else {
+			url = "/Requests/EditModalView";
+		}
+
 		if (type == 'edit')
 		{
 			var formData = new FormData($("#myForm")[0]);
@@ -2796,7 +2803,7 @@ $(function () {
 				contentType: false,
 				data: formData,
 				async: true,
-				url: "/Requests/EditModalView",
+				url: url,
 				type: 'POST',
 				cache: true,
 				success: function (data) {
