@@ -455,8 +455,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> EditUser(string id)
         {
-            var editUserViewModel = _context.Users.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
-                .Select(u => new EditUserViewModel
+            var registerUserViewModel = _context.Users.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
+                .Select(u => new RegisterUserViewModel
                 {
                     ApplicationUserID = u.Id,
                     FirstName = u.FirstName,
@@ -474,46 +474,49 @@ namespace PrototypeWithAuth.Controllers
                     OperaitonOrderLimit = u.OperaitonOrderLimit
                 }).FirstOrDefault();
 
+            //check if the user is an employee
+            registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).FirstOrDefault();
+
             var userToShow = _context.Users.Where(u => u.Id == id).FirstOrDefault();
             var rolesList = await _userManager.GetRolesAsync(userToShow).ConfigureAwait(false);
 
-            editUserViewModel.OrderRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.OrdersAndInventory, Name="General", Selected=false }
             };
-            editUserViewModel.ProtocolRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Protocols, Name="General", Selected=false }
             };
-            editUserViewModel.OperationRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.OperationRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Operation, Name="General", Selected=false }
             };
-            editUserViewModel.BiomarkerRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.BiomarkerRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Biomarkers, Name="General", Selected=false }
             };
-            editUserViewModel.TimekeeperRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.TimekeeperRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.TimeKeeper, Name="General", Selected=false }
             };
-            editUserViewModel.LabManagementRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.LabManagementRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.LabManagement, Name="General", Selected=false }
             };
-            editUserViewModel.AccountingRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.AccountingRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Accounting, Name="General", Selected=false }
             };
-            editUserViewModel.ExpenseesRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.ExpenseesRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Expenses, Name="General", Selected=false }
             };
-            editUserViewModel.IncomeRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.IncomeRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Income, Name="General", Selected=false }
             };
-            editUserViewModel.UserRoles = new List<UserRoleViewModel>()
+            registerUserViewModel.UserRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Users, Name="General", Selected=false }
             };
@@ -521,47 +524,47 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (role == AppUtility.MenuItems.OrdersAndInventory.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.OrderRoles[0].Selected = true;
+                    registerUserViewModel.OrderRoles[0].Selected = true;
                 }
                 else if (role == AppUtility.MenuItems.Protocols.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.ProtocolRoles[0].Selected = true;
+                    registerUserViewModel.ProtocolRoles[0].Selected = true;
                 }
                 else if (role == AppUtility.MenuItems.LabManagement.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.LabManagementRoles[0].Selected = true;
+                    registerUserViewModel.LabManagementRoles[0].Selected = true;
                 }
                 else if (role == AppUtility.MenuItems.Accounting.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.AccountingRoles[0].Selected = true;
+                    registerUserViewModel.AccountingRoles[0].Selected = true;
                 }
                 else if (role == AppUtility.MenuItems.Operation.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.OperationRoles[0].Selected = true;
+                    registerUserViewModel.OperationRoles[0].Selected = true;
                 }
                 else if (role == AppUtility.MenuItems.Expenses.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.ExpenseesRoles[0].Selected = true;
+                    registerUserViewModel.ExpenseesRoles[0].Selected = true;
                 }
                 else if (role == AppUtility.MenuItems.Biomarkers.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.BiomarkerRoles[0].Selected = true;
+                    registerUserViewModel.BiomarkerRoles[0].Selected = true;
                 }
                 else if (role == AppUtility.MenuItems.Income.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.IncomeRoles[0].Selected = true;
+                    registerUserViewModel.IncomeRoles[0].Selected = true;
                 }
                 else if (role == AppUtility.MenuItems.TimeKeeper.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.TimekeeperRoles[0].Selected = true;
+                    registerUserViewModel.TimekeeperRoles[0].Selected = true;
                 }
                 else if (role == AppUtility.MenuItems.Users.ToString()) //this was giving me an error in a switch case
                 {
-                    editUserViewModel.UserRoles[0].Selected = true;
+                    registerUserViewModel.UserRoles[0].Selected = true;
                 }
             }
 
-            return View(editUserViewModel);
+            return View(registerUserViewModel);
         }
 
         [HttpPost]

@@ -40,7 +40,7 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required, DataType(DataType.Password)]
+        [DataType(DataType.Password)]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         //[DataType(DataType.Password)]
         [Display(Name = "Password")]
@@ -57,7 +57,7 @@ namespace PrototypeWithAuth.ViewModels
         //[Required]
         //public string Role { get; set; }
 
-        [Required, DataType(DataType.Password)]
+        [DataType(DataType.Password)]
         [Display(Name = "Google Secure App Password")]
         public string SecureAppPass { get; set; }
 
