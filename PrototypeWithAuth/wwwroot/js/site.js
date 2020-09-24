@@ -1639,6 +1639,37 @@ $(function () {
 		}
 	});
 
+	$("#InvoiceImage").on("change", function () {
+		var imgPath = $("#InvoiceImage")[0].value;
+		console.log("imgPath: " + imgPath);
+		var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+		console.log("extn: " + extn);
+		var imageHolder = $("#invoice-image");
+		imageHolder.empty();
+
+		if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+			console.log("inside the if statement");
+			if (typeof (FileReader) != "undefined") {
+				console.log("file reader does not equal undefined");
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					//console.log(e.target.result);
+					//$("<img />", {
+					//	"src": e.target.result,
+					//	"class": "thumb-image"
+					//}).appendTo(imageHolder);
+					$("#invoive-image").attr("src", e.target.result);
+				}
+				imageHolder.show();
+				reader.readAsDataURL($(this)[0].files[0]);
+			}
+		}
+		else {
+			alert("Please only select images");
+		}
+	});
+
+
 	$.fn.validateItemTab = function () {
 		$(".request-price-tab").prop("disabled", true);
 		$(".request-location-tab").prop("disabled", true);
