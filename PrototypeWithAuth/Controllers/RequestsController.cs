@@ -1387,9 +1387,10 @@ namespace PrototypeWithAuth.Controllers
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
             requestItemViewModel.Request.ParentRequest = null;
             //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
-            var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
+            var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).First();
             if(parentQuote != null)
             {
+
                 parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
                 parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
                 requestItemViewModel.Request.ParentQuote = parentQuote;
@@ -1448,142 +1449,28 @@ namespace PrototypeWithAuth.Controllers
                     //_context.Update(requestItemViewModel.Request.Product);
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
+                    if (requestItemViewModel.NewComment != null)
+                    {
+                        if (!String.IsNullOrEmpty(requestItemViewModel.NewComment?.CommentText))
+                        {
+                            try
+                            {
+                                //save the new comment
+                                requestItemViewModel.NewComment.ApplicationUserID = currentUser.Id;
+                                requestItemViewModel.NewComment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                                requestItemViewModel.NewComment.RequestID = requestItemViewModel.Request.RequestID;
+                                _context.Add(requestItemViewModel.NewComment);
+                                await _context.SaveChangesAsync();
+                            }
+                            catch (Exception ex)
+                            {
+                                //Tell the user that the comment didn't save here
+                            }
+                        }
+                    }
+               
 
-                    if (!String.IsNullOrEmpty(requestItemViewModel.NewComment.CommentText))
-                    {
-                        try
-                        {
-                            //save the new comment
-                            requestItemViewModel.NewComment.ApplicationUserID = currentUser.Id;
-                            requestItemViewModel.NewComment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
-                            requestItemViewModel.NewComment.RequestID = requestItemViewModel.Request.RequestID;
-                            _context.Add(requestItemViewModel.NewComment);
-                            await _context.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            //Tell the user that the comment didn't save here
-                        }
-                    }
-
-                    //check if there are any files to upload first
-                    //save the files
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
-                    Directory.CreateDirectory(requestFolder);
-                    if (requestItemViewModel.OrderFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile orderfile in requestItemViewModel.OrderFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + orderfile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            orderfile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.InvoiceFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile invoiceFile in requestItemViewModel.InvoiceFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + invoiceFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            invoiceFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.ShipmentFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile shipmentFile in requestItemViewModel.ShipmentFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + shipmentFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            shipmentFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.QuoteFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile quoteFile in requestItemViewModel.QuoteFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + quoteFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            quoteFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.InfoFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile infoFile in requestItemViewModel.InfoFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Info.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + infoFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            infoFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.PictureFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile pictureFile in requestItemViewModel.PictureFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + pictureFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            pictureFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.ReturnFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile returnFile in requestItemViewModel.ReturnFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Returns.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + returnFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            returnFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-                    if (requestItemViewModel.CreditFiles != null) //test for more than one???
-                    {
-                        var x = 1;
-                        foreach (IFormFile creditFile in requestItemViewModel.CreditFiles)
-                        {
-                            //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Credits.ToString());
-                            Directory.CreateDirectory(folderPath);
-                            string uniqueFileName = x + creditFile.FileName;
-                            string filePath = Path.Combine(folderPath, uniqueFileName);
-                            creditFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                            x++;
-                        }
-                    }
-
+                 
                     ////Saving the Payments - each one should come in with a 1) date 2) companyAccountID
                     //if (requestItemViewModel.NewPayments != null)
                     //{

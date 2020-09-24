@@ -276,9 +276,12 @@ $(function () {
 		});
 	});
 
-
+	$('.modal').on('change', '#vendorList', function () {
+		console.log('in on change vendor')
+		var vendorid = $(this).val();
+		$.fn.ChangeVendorBusinessId(vendorid);
+	});
 	$("#vendorList").change(function () {
-		//get the new vendor id selected
 		var vendorid = $("#vendorList").val();
 		$.fn.ChangeVendorBusinessId(vendorid);
 	});
@@ -297,6 +300,7 @@ $(function () {
 				//console.log("newBusinessID: " + newBusinessID);
 				//cannot only use the load outside. apparently it needs this one in order to work
 				$(".vendorBusinessId").val(newBusinessID);
+				$(".vendorBusinessId").text(newBusinessID);
 			})
 		}
 		//console.log("newBusinessID: " + newBusinessID);
@@ -2786,6 +2790,20 @@ $(function () {
 		console.log(type);
 		if (type == 'edit')
 		{
+			var formData = new FormData($("#myForm")[0]);
+			$.ajax({
+				processData: false,
+				contentType: false,
+				data: formData,
+				async: true,
+				url: "/Requests/EditModalView",
+				type: 'POST',
+				cache: true,
+				success: function (data) {
+					alert("save edit successful!")
+				}
+			});
+
 			$('.mark-readonly').prop("disabled", true);
 			$('.mark-readonly input').prop("disabled", true);
 			$('.mark-edditable').data("val", false)

@@ -1548,7 +1548,7 @@ td .btn {
     border-bottom: 1px solid #dee2e6 !important;
 }
 
-.custom.select-wrapper input.select-dropdown {
+.form-control-plaintext, .custom.select-wrapper input.select-dropdown {
     padding-left: .875rem;
 }
 .select-wrapper .select-dropdown li {
@@ -1694,7 +1694,8 @@ td .btn {
 }
 
 .modal-tab-name {
-    margin-bottom: 2.125rem;
+    margin-bottom: 2.125rem !important;
+
 }
 /*OVERRIDING BOOTSTRAP*/
 .tab-content {
@@ -2027,4 +2028,21 @@ td .btn {
 }
 .document-text-margin{
     margin-top: .625rem;
+}
+.switch-margin {
+    margin-bottom: -2.5rem;
+    z-index: 9;
+}
+.edit-modal-top {
+    
+}
+.edit-modal-body {
+    padding-top: 3.4375rem;
+    padding-bottom: 3.4375rem;
+    padding-right: 3.6875rem !important;
+    padding-left: 3.6875rem !important;
+}
+.edit-modal-outer-body {
+    padding: 1.25rem;
+    background: #F6F7F8;
 }
