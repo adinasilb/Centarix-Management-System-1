@@ -2285,9 +2285,11 @@ $(function () {
 		$("#createModalForm").valid();
 		$.fn.validateUserDetailsTab();
 	});
+
 	$("#user-budget-tab").click(function () {
 		$("#createModalForm").valid();
 	});
+
 	$("#user-more-tab").click(function () {
 		console.log('"#user-more-tab").click');
 		$("#createModalForm").valid();
@@ -2312,7 +2314,7 @@ $(function () {
 			return;
 		}
 		valid = $("#SecureAppPass").attr('aria-invalid');
-		if (valid == "true" || $("#SecureAppPass").val() == "") {
+		if (valid == "true" /*|| $("#SecureAppPass").val() == ""*/) {
 			return;
 		}
 		valid = $("#CentarixID").attr('aria-invalid');
@@ -2320,11 +2322,11 @@ $(function () {
 			return;
 		}
 		valid = $("#Password").attr('aria-invalid');
-		if (valid == "true" || $("#Password").val() == "") {
+		if (valid == "true" /*|| $("#Password").val() == ""*/) {
 			return;
 		}
 		valid = $("#ConfirmPassword").attr('aria-invalid');
-		if (valid == "true" || $("#ConfirmPassword").val() == "") {
+		if (valid == "true" /*|| $("#ConfirmPassword").val() == ""*/) {
 			return;
 		}
 		if (!$('input[name="NewEmployee.EmployeeStatusID"]:checked').length) {
@@ -2732,6 +2734,17 @@ $(function () {
 		$(".documents-tab").prop("disabled", true);
 
 		console.log("in $.fn.validateItemTab");
+		checkedItem1 = $(".EmployeeStatusID1").is(':checked');
+		checkedItem2 = $(".EmployeeStatusID2").is(':checked');
+		checkedItem3 = $(".EmployeeStatusID3").is(':checked');
+		checkedItem4 = $(".EmployeeStatusID4").is(':checked');
+		if (checkedItem1 != true && checkedItem2 != true && checkedItem3 != true && checkedItem4 != true) {
+			$("#validation-EmployeeStatus").removeClass("hidden");
+			return;
+		}
+		else {
+			$("#validation-EmployeeStatus").addClass("hidden");
+		}
 		valid = $("#NewEmployee_IDNumber").attr('aria-invalid');
 		if (valid == "true" || $("#NewEmployee_IDNumber").val() == "") {
 			console.log("valid: " + valid);
@@ -2767,6 +2780,25 @@ $(function () {
 		}
 		return valid;
 	}
+	$(".security-tab").on("click", function () {
+		$.fn.validateSalaryTab();
+	});
+	$.fn.validateSalaryTab = function () {
+		$(".security-tab").prop("disabled", true);
+		console.log("in $.fn.validateItemTab");
+		valid = $("#NewEmployee_SalariedEmployee_HoursPerDay").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() == "") {
+			return;
+		}
+		valid = $("#NewEmployee_VacationDays").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_VacationDays").val() == "") {
+			return;
+		}
+		if (valid == "false" || valid == undefined) {
+			$(".security-tab").prop("disabled", false);
+		}
+		return valid;
+	};
 	$('#addWorker').submit(function () {
 		if ($("#createModalForm").valid()) {
 			$("#addWorker").removeClass("disabled-submit");

@@ -84,25 +84,45 @@
                             <div class="row modal-sides top-radio-buttons">
                                 <input type="hidden" asp-for="NewEmployee.EmployeeStatusID" />
                                 @{ var first = true; }
+                                @*@for (int m = 0; m < Model.EmployeeStatuses.Count; m++)
+                                    {
+                                        var id = "EmployeeStatusID" + Model.EmployeeStatuses[m].EmployeeStatusID;
+                                        <div class="custom-control custom-radio mr-4 employee-type">
+                                            @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, Model.EmployeeStatuses[m].EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id, @checked = "checked" })
+                                            <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@Model.EmployeeStatuses[m].Description</label>
+                                        </div>
+                                    }*@
                                 @foreach (var status in Model.EmployeeStatuses)
                                 {
-                                    var id = "EmployeeStatusID" + status.EmployeeStatusID;
-                                    if (first)
-                                    {
-                                        <div class="custom-control custom-radio mr-4  employee-type">
-                                            @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id, @checked = "true" })
-                                            <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="custom-control custom-radio mr-4 ml-4 employee-type">
-                                            @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id })
-                                            <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
-                                        </div>
-                                        first = false;
-                                    }
+                                    var id = "EmployeeStatusID" + status.EmployeeStatusID + " custom-control-input";
+                                    <div class="custom-control custom-radio mr-4 ml-4 employee-type">
+                                        <input class="custom-control-input" asp-for="NewEmployee.EmployeeStatusID" id="@id" type="radio" value="@status.EmployeeStatusID">
+                                        @*@Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id, @checked = "checked" })*@
+                                        @*<input type="radio" asp-for="NewEmployee.EmployeeStatusID" value="@status.EmployeeStatusID" class="id" />*@
+                                        @*@Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = id })*@
+                                        <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
+                                    </div>
                                 }
+                                @*@foreach (var status in Model.EmployeeStatuses)
+                                    {
+                                        var id = "EmployeeStatusID" + status.EmployeeStatusID;
+                                        if (first)
+                                        {
+                                            <div class="custom-control custom-radio mr-4  employee-type">
+                                                @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id, @checked = "checked" })
+                                                <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="custom-control custom-radio mr-4 ml-4 employee-type">
+                                                @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id })
+                                                <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
+                                            </div>
+                                            first = false;
+                                        }
+                                    }*@
+                                <br /><span id="validation-EmployeeStatus" class="hidden text-danger-centarix">Please choose a valid Employee Status</span>
                             </div>
                             <hr />
                             <div class="div-tabs modal-sides">
@@ -151,7 +171,7 @@
                                             dataValueField: "JobCategoryTypeID",
                                             dataTextField: "Description"),
                                             optionLabel: "Select A Category",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true" }
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
                                             )
                                         <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger-centarix"></span>
                                     </div>
@@ -181,7 +201,7 @@
                                             dataValueField: "DegreeID",
                                             dataTextField: "Description"),
                                             optionLabel: "Select A Degree",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true" }
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
                                             )
                                         <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
                                     </div>
@@ -201,7 +221,7 @@
                                             dataValueField: "MaritalStatusID",
                                             dataTextField: "Description"),
                                             optionLabel: "Select A Status",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true" }
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
                                             )
                                         <span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>
                                     </div>
@@ -214,7 +234,7 @@
                                             dataValueField: "CitizenshipID",
                                             dataTextField: "Description"),
                                             optionLabel: "Select A Country",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true" }
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
                                             )
                                         <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
                                     </div>
