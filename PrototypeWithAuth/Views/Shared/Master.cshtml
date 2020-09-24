@@ -359,12 +359,12 @@
             $("#loading").show();
             var $itemurl = "";
             if ($(this).hasClass('operations')) {
-                $itemurl = "/Operations/DetailsModalView/?id=" + $(this).val();
+                $itemurl = "/Operations/DetailModalView/?id=" + $(this).val();
             }
             else {
                 console.log("Requests/EditModalView/?id")
                 //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-                $itemurl = "/Requests/DetailsModalView/?id=" + $(this).val();
+                $itemurl = "/Requests/EditModalView/?id=" + $(this).val();
             }
             $.fn.CallPageRequest($itemurl, "details");
             return false;

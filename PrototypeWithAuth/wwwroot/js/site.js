@@ -2786,23 +2786,35 @@ $(function () {
 		console.log(type);
 		if (type == 'edit')
 		{
-			$('.mark-readonly').attr("disabled", true)
-			$('.mark-edditable').attr("data-val", true)
-			$('.mode-switch-description').text("Edit Mode Off")
+			$('.mark-readonly').prop("disabled", true);
+			$('.mark-readonly input').prop("disabled", true);
+			$('.mark-edditable').data("val", false)
+			$('.edit-mode-switch-description').text("Edit Mode Off");
 			$('.turn-edit-on-off').attr('name', 'details')
 			
 		}
 		else if (type == 'details')
 		{
 			$('.mark-readonly').attr("disabled", false);
-			$('.mark-edditable').attr("data-val", true);
-			$('.mode-switch-description').text("Edit Mode On")
+			$('.mark-edditable').data("val", true);
+			$('.edit-mode-switch-description').text("Edit Mode On");
 			$('.turn-edit-on-off').attr('name', 'edit')
-			$("#parentlist").prop("disabled", false);
-			$("#parentlist").destroyMaterialSelect();
-			$("#parentlist").removeAttr("disabled")
-			$('#parentlist').materialSelect();
-			$('[data-activates="select-options-parentlist"]').prop('disabled', false);
+			$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
+			$.fn.EnableMaterialSelect('#sublist','select-options-sublist')
+			$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID')
+			$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject')
+			$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
+			$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID')
+			$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
+			$.fn.CheckUnitsFilled();
+			$.fn.CheckSubUnitsFilled();
 		}
-		});
+	}); 
+	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
+		$(selectID).prop("disabled", false);
+		$(selectID).destroyMaterialSelect();
+		$(selectID).removeAttr("disabled")
+		$(selectID).materialSelect();
+		$('[data-activates="'+ dataActivates+'"]').prop('disabled', false);
+	}
 });

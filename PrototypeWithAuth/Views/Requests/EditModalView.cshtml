@@ -77,11 +77,11 @@
                 <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
                     <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
                         <!-- Default switch -->
-                        <div class="float-right">
-                            <div class="switch">
-                                <label class="edit-mode-switch-description">
-                                    Edit Mode Off
-                                    <input type="checkbox" class="turn-edit-on-off" value="@Model.Request.RequestID" name="details" checked>
+                        <div class=" row text-right">
+                            <div class="switch col-12">
+                                <label >
+                                    <label class="edit-mode-switch-description">Edit Mode Off</label> 
+                                    <input type="checkbox" class="turn-edit-on-off" value="@Model.Request.RequestID" name="details">
                                     <span class="lever"></span>
                                 </label>
                             </div>
@@ -95,7 +95,7 @@
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
             new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-            "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly", @id = "parentlist" , @disabled="disabled"})
+            new { @class = " mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist" , @disabled="disabled", @searchable = "Select Category" })
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -104,7 +104,7 @@
                                             <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
             new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-            "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly", @id = "sublist", @disabled = "disabled" })
+            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "sublist", @disabled = "disabled", @searchable = "Select SubCategory" })
                                             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -118,8 +118,7 @@
                                                     "ProjectID",
                                                     "ProjectDescription"
                                                     ),
-                                                "Select Project",
-                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary Project mark-readonly", @disabled = "disabled" }
+                                                new { @class = "mdb-select custom select-dropdown form-control-plaintext Project mark-readonly", @disabled = "disabled" , @searchable = "Select Project" }
                                             )
                                             <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
                                         </div>
@@ -135,9 +134,8 @@
                                                     Model.SubProjects,
                                                     "SubProjectID",
                                                     "SubProjectDescription"
-                                                    ),
-                                                "Select Sub Project",
-                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary SubProject mark-readonly", @id = "SubProject", @disabled = "disabled" }
+                                                    ),                                               
+                                                new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext mark-readonly", @id = "SubProject", @disabled = "disabled", @searchable = "Select Sub Project" }
                                             )
                                             <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
                                         </div>
@@ -151,8 +149,8 @@
                                                 Model.Vendors,
                                                     dataValueField: "VendorID",
                                                     dataTextField: "VendorEnName"),
-                                                    optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                                                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly", @id = "vendorList", @disabled = "disabled" }
+                                                    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                                                htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "vendorList", @disabled = "disabled", @searchable = "Select A Vendor" }
                                             )
                                             <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
                                         </div>
@@ -316,7 +314,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="currency" class="control-label">Currency</label>
-                                            <select id="currency" asp-for="Request.Currency" class="mdb-select md-form colorful-select dropdown-primary mark-readonly" disabled>
+                                            <select id="currency" asp-for="Request.Currency" class="mdb-select custom select-dropdown form-control-plaintext mark-readonly" disabled>
                                                 <option value="dollar">&dollar; USD</option>
                                                 <option value="shekel">&#8362; NIS</option>
                                             </select>
@@ -346,7 +344,7 @@
         vm => vm.Request.UnitTypeID,
         Model.UnitTypeList,
         "",
-        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly" , @disabled = "disabled" }
+        htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @disabled = "disabled" }
         )
                                                         <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                                     </div>
@@ -385,7 +383,7 @@
                  vm => vm.Request.SubUnitTypeID,
                  Model.UnitTypeList,
                  "",
-                 htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+                 htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
              )
                                                     <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                                 </div>
@@ -423,7 +421,7 @@
                                                         vm => vm.Request.SubSubUnitTypeID,
                                                         Model.UnitTypeList,
                                                         "",
-                                                        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+                                                        htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
                                                         )
                                                     <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
                                                 </div>
