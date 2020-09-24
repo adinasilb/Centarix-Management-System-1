@@ -2283,7 +2283,7 @@ $(function () {
 		$("#myForm").valid();
 		var valid = $("#Invoice_InvoiceNumber").attr("aria-invalid");
 		console.log("invoice number validation + " + valid);
-		if (valid == "true" || $("#Invoice_InvoiceNumber")=="" ) {
+		if (valid == "true" || $("#Invoice_InvoiceNumber") == "") {
 			e.preventDefault();
 			e.stopPropagation();
 			$("#invoice-number-validation").html("Please enter a valid Number");
@@ -2439,7 +2439,7 @@ $(function () {
 			var date = new Date(val).toISOString();
 			console.log(date)
 		}
-		var itemurl = "UpdateHours?chosenDate=" +date;
+		var itemurl = "UpdateHours?chosenDate=" + date;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -2456,7 +2456,7 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
-		
+
 	$("body").on("change", "#Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
 	});
@@ -2501,112 +2501,112 @@ $(function () {
 
 
 
-//DROPDOWN
-/*Dropdown Menu*/
-$('.dropdown-main').off("click").on("click", function () {
-	$(this).attr('tabindex', 1).focus();
-	//$(this).toggleClass('active');
-	$(this).find('.dropdown-menu').slideToggle(300);
-});
-$('.dropdown-main').focusout(function () {
-	$(this).removeClass('active');
-	$(this).find('.dropdown-menu').slideUp(300);
-});
-$('.dropdown-main .dropdown-menu li').click(function () {
-	$(this).parents('.dropdown-main').find('span').text($(this).text());
-	$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
-});
-/*End Dropdown Menu*/
-
-
-$('.dropdown-menu li').click(function () {
-	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-		msg = '<span class="msg">Hidden input value: ';
-	$('.msg').html(msg + input + '</span>');
-});
-
-
-
-$('.dropdown-multiple').click(function () {
-	$(this).attr('tabindex', 1).focus();
-	$(this).addClass('active');
-	$(this).find('.dropdown-menu-multiple').slideToggle(300);
-});
-$('.dropdown-multiple').focusout(function () {
-	$(this).removeClass('active');
-	$(this).find('.dropdown-menu-multiple').slideUp(300);
-});
-$('.dropdown-multiple .dropdown-menu div label').click(function () {
-	//$(this).parents('.dropdown').find('span').text($(this).text());
-	$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
-	$(this).parents('.dropdown-multiple').addClass('active');
-});
-/*End Dropdown Menu*/
-
-
-//$('.dropdown-menu li').click(function () {
-//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-//		msg = '<span class="msg">Hidden input value: ';
-//	$('.msg').html(msg + input + '</span>');
-//}); 
-
-$("body").on("change", "#TotalHours", function (e) {
-	$('#Exit1').val('');
-	$('#Entry1').val('');
-	$('#Exit2').val('');
-	$('#Entry2').val('');
-});
-
-$("body").on("change", "#Exit1", function (e) {
-	$('#TotalHours').val('');
-});
-$("body").on("change", "#Entry1", function (e) {
-	$('#TotalHours').val('');
-});
-$("body").on("change", "#Exit2", function (e) {
-	$('#TotalHours').val('');
-});
-$("body").on("change", "#Entry2", function (e) {
-	$('#TotalHours').val('');
-});
-//});
-/*End Dropdown Menu*/
-
-
-//$('.dropdown-menu li').click(function () {
-//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-//		msg = '<span class="msg">Hidden input value: ';
-//	$('.msg').html(msg + input + '</span>');
-//}); 
-$.fn.SaveOffDays = function (url) {
-	var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
-	var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
-	var dateRangeFromDay = rangeFrom.attr('data-date');
-	var dateRangeFromMonth = rangeFrom.attr('data-month');
-	var dateRangeFromYear = rangeFrom.attr('data-year');
-	var dateRangeToDay = rangeTo.attr('data-date');
-	var dateRangeToMonth = rangeTo.attr('data-month');
-	var dateRangeToYear = rangeTo.attr('data-year');
-	var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toISOString();
-	var dateTo = '';
-	if (dateRangeToDay == undefined) {
-		dateTo = null;
-	}
-	else {
-		dateTo = new Date(dateRangeToYear, dateRangeToMonth, dateRangeToDay, 0, 0, 0).toISOString();
-	}
-
-	console.log(dateFrom + "-" + dateTo);
-	$.ajax({
-		async: false,
-		url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo,
-		type: 'POST',
-		cache: false,
-		success: function (data) {
-			$(".modal").modal('hide');
-		}
+	//DROPDOWN
+	/*Dropdown Menu*/
+	$('.dropdown-main').off("click").on("click", function () {
+		$(this).attr('tabindex', 1).focus();
+		//$(this).toggleClass('active');
+		$(this).find('.dropdown-menu').slideToggle(300);
 	});
-}
+	$('.dropdown-main').focusout(function () {
+		$(this).removeClass('active');
+		$(this).find('.dropdown-menu').slideUp(300);
+	});
+	$('.dropdown-main .dropdown-menu li').click(function () {
+		$(this).parents('.dropdown-main').find('span').text($(this).text());
+		$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
+	});
+	/*End Dropdown Menu*/
+
+
+	$('.dropdown-menu li').click(function () {
+		var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+			msg = '<span class="msg">Hidden input value: ';
+		$('.msg').html(msg + input + '</span>');
+	});
+
+
+
+	$('.dropdown-multiple').click(function () {
+		$(this).attr('tabindex', 1).focus();
+		$(this).addClass('active');
+		$(this).find('.dropdown-menu-multiple').slideToggle(300);
+	});
+	$('.dropdown-multiple').focusout(function () {
+		$(this).removeClass('active');
+		$(this).find('.dropdown-menu-multiple').slideUp(300);
+	});
+	$('.dropdown-multiple .dropdown-menu div label').click(function () {
+		//$(this).parents('.dropdown').find('span').text($(this).text());
+		$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
+		$(this).parents('.dropdown-multiple').addClass('active');
+	});
+	/*End Dropdown Menu*/
+
+
+	//$('.dropdown-menu li').click(function () {
+	//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+	//		msg = '<span class="msg">Hidden input value: ';
+	//	$('.msg').html(msg + input + '</span>');
+	//}); 
+
+	$("body").on("change", "#TotalHours", function (e) {
+		$('#Exit1').val('');
+		$('#Entry1').val('');
+		$('#Exit2').val('');
+		$('#Entry2').val('');
+	});
+
+	$("body").on("change", "#Exit1", function (e) {
+		$('#TotalHours').val('');
+	});
+	$("body").on("change", "#Entry1", function (e) {
+		$('#TotalHours').val('');
+	});
+	$("body").on("change", "#Exit2", function (e) {
+		$('#TotalHours').val('');
+	});
+	$("body").on("change", "#Entry2", function (e) {
+		$('#TotalHours').val('');
+	});
+	//});
+	/*End Dropdown Menu*/
+
+
+	//$('.dropdown-menu li').click(function () {
+	//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+	//		msg = '<span class="msg">Hidden input value: ';
+	//	$('.msg').html(msg + input + '</span>');
+	//}); 
+	$.fn.SaveOffDays = function (url) {
+		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
+		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
+		var dateRangeFromDay = rangeFrom.attr('data-date');
+		var dateRangeFromMonth = rangeFrom.attr('data-month');
+		var dateRangeFromYear = rangeFrom.attr('data-year');
+		var dateRangeToDay = rangeTo.attr('data-date');
+		var dateRangeToMonth = rangeTo.attr('data-month');
+		var dateRangeToYear = rangeTo.attr('data-year');
+		var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toISOString();
+		var dateTo = '';
+		if (dateRangeToDay == undefined) {
+			dateTo = null;
+		}
+		else {
+			dateTo = new Date(dateRangeToYear, dateRangeToMonth, dateRangeToDay, 0, 0, 0).toISOString();
+		}
+
+		console.log(dateFrom + "-" + dateTo);
+		$.ajax({
+			async: false,
+			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo,
+			type: 'POST',
+			cache: false,
+			success: function (data) {
+				$(".modal").modal('hide');
+			}
+		});
+	}
 
 	$("body").on("click", "#saveVacation", function (e) {
 		e.preventDefault();
@@ -2620,7 +2620,7 @@ $.fn.SaveOffDays = function (url) {
 	$(".approve-hours").click(function (e) {
 		$.ajax({
 			async: true,
-			url: "ApproveHours" + '?id=' +$(this).val(),
+			url: "ApproveHours" + '?id=' + $(this).val(),
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -2694,4 +2694,29 @@ $.fn.SaveOffDays = function (url) {
 			window.location.href = url;
 		}
 	});
+
+	$('.turn-edit-on-off').change(function () {
+		var type = $(this).attr('name');
+		console.log(type);
+		if (type == 'edit')
+		{
+			$('.mark-readonly').attr("disabled", true)
+			$('.mark-edditable').attr("data-val", true)
+			$('.mode-switch-description').text("Edit Mode Off")
+			$('.turn-edit-on-off').attr('name', 'details')
+			
+		}
+		else if (type == 'details')
+		{
+			$('.mark-readonly').attr("disabled", false);
+			$('.mark-edditable').attr("data-val", true);
+			$('.mode-switch-description').text("Edit Mode On")
+			$('.turn-edit-on-off').attr('name', 'edit')
+			$("#parentlist").prop("disabled", false);
+			$("#parentlist").destroyMaterialSelect();
+			$("#parentlist").removeAttr("disabled")
+			$('#parentlist').materialSelect();
+			$('[data-activates="select-options-parentlist"]').prop('disabled', false);
+		}
+		});
 });

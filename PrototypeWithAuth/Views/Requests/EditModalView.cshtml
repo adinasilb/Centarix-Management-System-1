@@ -4,7 +4,6 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-
 <div class="modal modal-view right fader order-inv-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
@@ -37,7 +36,7 @@
                     {
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                     }
-                    <div>
+                    <div class="back-button">
                         <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent">
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                         </button>
@@ -54,7 +53,7 @@
                         }
                         @*</div>*@
                         <div class="modal-product-title" @*style="width: 80%;"*@>
-                            <input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom" />
+                            <input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom mark-readonly" disabled/>
                             <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
                         </div>
 
@@ -80,9 +79,9 @@
                         <!-- Default switch -->
                         <div class="float-right">
                             <div class="switch">
-                                <label>
-                                    Edit Mode On
-                                    <input type="checkbox" class="load-product-details" value="@Model.Request.RequestID" checked>
+                                <label class="edit-mode-switch-description">
+                                    Edit Mode Off
+                                    <input type="checkbox" class="turn-edit-on-off" value="@Model.Request.RequestID" name="details" checked>
                                     <span class="lever"></span>
                                 </label>
                             </div>
@@ -96,7 +95,7 @@
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
             new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-            "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "parentlist" })
+            "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly", @id = "parentlist" , @disabled="disabled"})
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -105,7 +104,7 @@
                                             <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
             new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-            "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist" })
+            "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly", @id = "sublist", @disabled = "disabled" })
                                             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -120,7 +119,7 @@
                                                     "ProjectDescription"
                                                     ),
                                                 "Select Project",
-                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary Project" }
+                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary Project mark-readonly", @disabled = "disabled" }
                                             )
                                             <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
                                         </div>
@@ -138,7 +137,7 @@
                                                     "SubProjectDescription"
                                                     ),
                                                 "Select Sub Project",
-                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary SubProject", @id = "SubProject" }
+                                                new { @class = "mdb-select md-form  colorful-select dropdown-primary SubProject mark-readonly", @id = "SubProject", @disabled = "disabled" }
                                             )
                                             <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
                                         </div>
@@ -153,7 +152,7 @@
                                                     dataValueField: "VendorID",
                                                     dataTextField: "VendorEnName"),
                                                     optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                                                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "vendorList" }
+                                                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly", @id = "vendorList", @disabled = "disabled" }
                                             )
                                             <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
                                         </div>
@@ -172,7 +171,7 @@
                                     <div class="row">
                                         <div class="col-6 pr-4">
                                             <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                                            <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
+                                            <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom " disabled />
                                             <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                                         </div>
                                         <div class="col-6">
@@ -186,24 +185,24 @@
                                 <div class="row">
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                         <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
+                                        <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date mark-readonly" disabled/>
                                         <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
                                         <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                                        <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                         <span asp-validation-for="Request.CatalogNumber" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-3">
                                         <label asp-for="Request.Warranty" class="control-label"></label>
-                                        <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                         <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
                                     </div>
                                     @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
@@ -230,7 +229,7 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                        <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom mark-readonly " disabled />
                                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
                                     </div>
                                     @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
@@ -250,7 +249,7 @@
 
                                     <div class="col-4">
                                         <label asp-for="Request.URL" class="control-label"></label>
-                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                         <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
@@ -317,7 +316,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="currency" class="control-label">Currency</label>
-                                            <select id="currency" asp-for="Request.Currency" class="mdb-select md-form colorful-select dropdown-primary">
+                                            <select id="currency" asp-for="Request.Currency" class="mdb-select md-form colorful-select dropdown-primary mark-readonly" disabled>
                                                 <option value="dollar">&dollar; USD</option>
                                                 <option value="shekel">&#8362; NIS</option>
                                             </select>
@@ -326,7 +325,7 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.ExchangeRate" class="control-label"></label>
-                                            <input asp-for="Request.ExchangeRate" min="1" class="form-control-plaintext border-bottom" />
+                                            <input asp-for="Request.ExchangeRate" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                             <span asp-validation-for="Request.ExchangeRate" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -337,7 +336,7 @@
                                             <div class="row">
                                                 <div class="col-md-6 form-group">
                                                     <label asp-for="Request.Unit" class="control-label"></label>
-                                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" min="1" />
+                                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom mark-readonly" disabled min="1" />
                                                     <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6">
@@ -347,7 +346,7 @@
         vm => vm.Request.UnitTypeID,
         Model.UnitTypeList,
         "",
-        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
+        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly" , @disabled = "disabled" }
         )
                                                         <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                                     </div>
@@ -511,7 +510,7 @@
                                             @Html.DropDownListFor(
                                                                     model => model.Request.Terms,
                                                                     new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-            htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
+            htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly", @disabled = "disabled" }
                                                                 )
                                         </div>
                                     </div>
@@ -613,7 +612,7 @@
                                                     filterClass = "order-inv-filter";
                                                 }
                                             }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
+                                            <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
                                                 <div class="card document-border ">
                                                     <div class="document-card text-center">
                                                         <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -631,7 +630,7 @@
                                                     filterClass = "order-inv-filter";
                                                 }
                                             }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@true">
+                                            <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
                                                 <div class="card document-border">
                                                     <div class=" document-card text-center">
                                                         <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
@@ -649,7 +648,7 @@
                                                     filterClass = "order-inv-filter";
                                                 }
                                             }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@true">
+                                            <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@false">
                                                 <div class="card document-border">
                                                     <div class="document-card text-center">
                                                         <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -667,7 +666,7 @@
                                                     filterClass = "order-inv-filter";
                                                 }
                                             }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
+                                            <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
                                                 <div class="card document-border">
                                                     <div class="document-card text-center">
                                                         <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -686,7 +685,7 @@
                                                     filterClass = "order-inv-filter";
                                                 }
                                             }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
+                                            <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
                                                 <div class="card document-border">
                                                     <div class="document-card text-center">
                                                         <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -703,7 +702,7 @@
                                                     filterClass = "order-inv-filter";
                                                 }
                                             }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
+                                            <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
                                                 <div class="card document-border">
                                                     <div class="document-card text-center">
                                                         <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -720,7 +719,7 @@
                                                     filterClass = "order-inv-filter";
                                                 }
                                             }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
+                                            <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
                                                 <div class="card document-border">
                                                     <div class="document-card text-center">
                                                         <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
@@ -737,7 +736,7 @@
                                                     filterClass = "order-inv-filter";
                                                 }
                                             }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
+                                            <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
                                                 <div class="card document-border">
                                                     <div class="document-card text-center">
                                                         <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
