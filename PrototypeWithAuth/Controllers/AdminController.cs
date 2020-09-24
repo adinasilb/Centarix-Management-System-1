@@ -260,10 +260,25 @@ namespace PrototypeWithAuth.Controllers
 
                     };
                 }
+                var IsUser = true;
+                if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
+                {
+                    IsUser = false;
+                    registerUserViewModel.Password = "ABC12345*centarix";
+                }
                 var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
                                 //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
                 if (result.Succeeded)
                 {
+
+                    if (!IsUser)
+                    {
+                        user.LockoutEnabled = true;
+                        user.LockoutEnd = new DateTime(2999, 01, 01);
+                        _context.Update(user);
+                        _context.SaveChangesAsync();
+                    }
+
                     switch (UserType)
                     {
                         case 1: /*Salaried Employee*/

@@ -1,112 +1,126 @@
 ﻿@model AddInvoiceViewModel
+@using PrototypeWithAuth.AppData 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 <link href="~/css/site.css" rel="stylesheet" />
 <div class="modal modal-view fader" id="myModal" data-backdrop="false">
-       <div class="add-invoice-modal modal-dialog-centered mx-auto" >
-           <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-               <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
-                   <span aria-hidden="true">&times;</span>
-               </button>
-               <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding">
+    <div class="add-invoice-modal modal-dialog-centered mx-auto">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding">
 
-                   <div class="modal-body  m-0 p-0 ">
+                @{
+                    var urlAction = Url.Action("DocumentsModal", "Requests");
+                }
+                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
 
-                       <div class="container-fluid p-0 m-0">
-                           <div class="row">
-                               <div class="col-4 d-inline-flex">
-                                   <label class="heading-1 m-0">Add Invoice</label>&nbsp; &nbsp;&nbsp;<label class="mt-1 top-menu">@Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName.ToLower()</label>
-                               </div>
-                               <div class="col-2 pr-0">
-                                   <span class="float-right">Invoice Number: </span>
-                               </div>
-                               <div class="col-2">
-                                   <input asp-for="Invoice.InvoiceNumber" class="form-control-plaintext border-bottom" min="1" />
-                                   <span asp-validation-for="Invoice.InvoiceNumber" class="text-danger-centarix" id="invoice-number-validation"></span>
-                               </div>
-                               <div class="col-2 pr-0">
-                                   <span class="float-right">Invoice Date: </span>
-                               </div>
-                               <div class="col-2">
-                                   <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom" />
-                                   <span asp-validation-for="Invoice.InvoiceDate" class="text-danger-centarix"></span>
-                               </div>
-                           </div>
-                           <br /><hr />
+                <div class="modal-body  m-0 p-0 ">
 
-                           <table class="table table-headerspaced table-borderless table-hover">
-                               <thead>
-                                   <tr class="">
-                                       <td style="width:15%;" class="pb-0">
-                                       </td>
-                                       <td style="width:25%;" class="pb-0">
-                                           Name
-                                       </td>
-                                       <td style="width:15%;" class="pb-0">
-                                           Units
-                                       </td>
-                                       <td style="width:15%;" class="pb-0">
-                                           Total Price
-                                       </td>
-                                       <td style="width:30%;" class="pb-0">
-                                       </td>
-                                   </tr>
-                               </thead>
+                    <div class="container-fluid p-0 m-0">
+                        <div class="row">
+                            <div class="col-4 d-inline-flex">
+                                <label class="heading-1 m-0">Add Invoice</label>&nbsp; &nbsp;&nbsp;<label class="mt-1 top-menu">@Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName.ToLower()</label>
+                            </div>
+                            <div class="col-2 pr-0">
+                                <span class="float-right">Invoice Number: </span>
+                            </div>
+                            <div class="col-2">
+                                <input asp-for="Invoice.InvoiceNumber" class="form-control-plaintext border-bottom" min="1" />
+                                <span asp-validation-for="Invoice.InvoiceNumber" class="text-danger-centarix" id="invoice-number-validation"></span>
+                            </div>
+                            <div class="col-2 pr-0">
+                                <span class="float-right">Invoice Date: </span>
+                            </div>
+                            <div class="col-2">
+                                <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="Invoice.InvoiceDate" class="text-danger-centarix"></span>
+                            </div>
+                        </div>
+                        <br /><hr />
 
-                               <tbody>
-                                   @{var x = -1; }
-                                   @foreach (var Request in Model.Requests)
-                                   {
-                                       x++;
-                                       <tr class="">
-                                           <td style="width:15%;">
-                                               <input style="display: none;" asp-for="Requests[x].RequestID" />
-                                               @if (Request.Product.ProductSubcategory.ImageURL != null)
-                                               {
-                                                   var imageurl = Request.Product.ProductSubcategory.ImageURL;
-                                                   <img src="@imageurl" alt="Image" width="75" class="category-image" />
-                                               }
-                                           </td>
-                                           <td style="width:25%;">
-                                               @Request.Product.ProductName
-                                           </td>
-                                           <td style="width:15%;">
-                                               @Request.Unit @if (Request.UnitType != null)
-                                               {@Request.UnitType.UnitTypeDescription<br />}
-                                               @Request.SubUnit @if (Request.SubUnitType != null)
-                                               {@Request.SubUnitType.UnitTypeDescription<br />}
-                                               @Request.SubSubUnit @if (Request.SubSubUnitType != null)
-                                               {@Request.SubSubUnitType.UnitTypeDescription<br />}
-                                           </td>
-                                           <td style="width:15%;">
-                                               <div class="input-group">
-                                                   <span class="input-group-text">&#36;</span>
-                                                   <input class="form-control-plaintext border-bottom" asp-for="Requests[x].Cost" />
-                                               </div>
-                                           </td>
-                                           <td style="width:30%;">
-                                               <a href="" class="remove-invoice-item float-right" request="@Request.RequestID">
-                                                   <i class="icon-delete-24px px-1 mr-3" style="font-size:1.6rem;"></i>
-                                               </a>
-                                           </td>
-                                       </tr>
-                                   }
-                               </tbody>
-                           </table>
-                           <div class="row mt-5">
-                               <div class="col-3">
-                                   <button class="accounting-background-color custom-button-font custom-button">Select File</button>
-                               </div>
-                               <div class="col-2 offset-5">
-                                   <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" id="SaveInvoiceModal" value="Save" />
-                               </div>
-                               <div class="col-2">
-                                   <button data-dismiss="modal" class="custom-button custom-cancel">Cancel</button>
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-               </form>
-           </div>
+                        <table class="table table-headerspaced table-borderless table-hover">
+                            <thead>
+                                <tr class="">
+                                    <td style="width:15%;" class="pb-0">
+                                    </td>
+                                    <td style="width:25%;" class="pb-0">
+                                        Name
+                                    </td>
+                                    <td style="width:15%;" class="pb-0">
+                                        Units
+                                    </td>
+                                    <td style="width:15%;" class="pb-0">
+                                        Total Price
+                                    </td>
+                                    <td style="width:30%;" class="pb-0">
+                                    </td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @{var x = -1; }
+                                @foreach (var Request in Model.Requests)
+                                {
+                                    x++;
+                                    <tr class="">
+                                        <td style="width:15%;">
+                                            <input style="display: none;" asp-for="Requests[x].RequestID" />
+                                            @if (Request.Product.ProductSubcategory.ImageURL != null)
+                                            {
+                                                var imageurl = Request.Product.ProductSubcategory.ImageURL;
+                                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                            }
+                                        </td>
+                                        <td style="width:25%;">
+                                            @Request.Product.ProductName
+                                        </td>
+                                        <td style="width:15%;">
+                                            @Request.Unit @if (Request.UnitType != null)
+                                            {@Request.UnitType.UnitTypeDescription<br />}
+                                            @Request.SubUnit @if (Request.SubUnitType != null)
+                                            {@Request.SubUnitType.UnitTypeDescription<br />}
+                                            @Request.SubSubUnit @if (Request.SubSubUnitType != null)
+                                            {@Request.SubSubUnitType.UnitTypeDescription<br />}
+                                        </td>
+                                        <td style="width:15%;">
+                                            <div class="input-group">
+                                                <span class="input-group-text">&#36;</span>
+                                                <input class="form-control-plaintext border-bottom" asp-for="Requests[x].Cost" />
+                                            </div>
+                                        </td>
+                                        <td style="width:30%;">
+                                            <a href="" class="remove-invoice-item float-right" request="@Request.RequestID">
+                                                <i class="icon-delete-24px px-1 mr-3" style="font-size:1.6rem;"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="row mt-5">
+                            <div class="col-3">
+                                <label asp-for="InvoiceImage" class="control-label"></label>
+                                <input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1" accept=".png, .jpg, .jpeg, .pdf">
+                                <span asp-validation-for="InvoiceImage" class="text-danger"></span>
+                                <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
+                                <button class="accounting-background-color custom-button-font custom-button open-invoice-doc-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()"
+                                        @*data-ids="@Model.Request.RequestID"   ---> Get all the ids when in javascript*@
+                                        id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
+                                    Select File
+                                </button>
+                            </div>
+                            <div class="col-2 offset-5">
+                                <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" id="SaveInvoiceModal" value="Save" />
+                            </div>
+                            <div class="col-2">
+                                <button data-dismiss="modal" class="custom-button custom-cancel">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

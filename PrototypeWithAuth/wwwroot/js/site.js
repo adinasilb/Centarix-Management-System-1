@@ -1128,7 +1128,33 @@ $(function () {
 
 	});
 
-
+	$(".open-invoice-doc-modal").click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		//console.log("in opened invoice doc modal");
+		//$("#documentsModal").replaceWith('');
+		//var urltogo = $("#documentSubmit").attr("url");
+		//var arrRequestIds = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+		//	return $(this).attr("id")
+		//}).get()
+		//urltogo = urltogo + "?ids=" + arrRequestIds + "&RequestFolderNameEnum=Invoices&IsEdittable=true&IsOperations=false&IsNotifications=true";
+		//console.log("urltogo: " + urltogo);
+		//$.ajax({
+		//	async: true,
+		//	url: urltogo,
+		//	type: 'GET',
+		//	cache: false,
+		//	success: function (data) {
+		//		var modal = $(data);
+		//		$('body').append(modal);
+		//		$("#documentsModal").modal({
+		//			backdrop: false,
+		//			keyboard: true,
+		//		});
+		//		$(".modal").modal('show');
+		//	}
+		//});
+	});
 
 	$(".open-document-modal").click(function (e) {
 		e.preventDefault();
@@ -1612,6 +1638,37 @@ $(function () {
 			alert("Please only select images");
 		}
 	});
+
+	$("#InvoiceImage").on("change", function () {
+		var imgPath = $("#InvoiceImage")[0].value;
+		console.log("imgPath: " + imgPath);
+		var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+		console.log("extn: " + extn);
+		var imageHolder = $("#invoice-image");
+		imageHolder.empty();
+
+		if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+			console.log("inside the if statement");
+			if (typeof (FileReader) != "undefined") {
+				console.log("file reader does not equal undefined");
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					//console.log(e.target.result);
+					//$("<img />", {
+					//	"src": e.target.result,
+					//	"class": "thumb-image"
+					//}).appendTo(imageHolder);
+					$("#invoive-image").attr("src", e.target.result);
+				}
+				imageHolder.show();
+				reader.readAsDataURL($(this)[0].files[0]);
+			}
+		}
+		else {
+			alert("Please only select images");
+		}
+	});
+
 
 	$.fn.validateItemTab = function () {
 		$(".request-price-tab").prop("disabled", true);
@@ -2326,6 +2383,41 @@ $(function () {
 		$.fn.CallModal(itemUrl);
 	});
 
+	$("#add-to-selected").off("click").on("click", function (e) {
+		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+			return $(this).attr("id")
+		}).get()
+		console.log("arrayOfSelected: " + arrayOfSelected);
+		//var itemUrl = "/Requests/AddInvoiceModal/?requestids=" + arrayOfSelected;
+		$("#loading").show();
+		$('.modal').replaceWith('');
+		$(".modal-backdrop").remove();
+		$.ajax({
+			type: "GET",
+			url: "/Requests/AddInvoiceModal/",
+			traditional: true,
+			data: { 'requestIds': arrayOfSelected },
+			cache: true,
+			success: function (data) {
+				$("#loading").hide();
+				console.log("data:");
+				console.log(data);
+				var modal = $(data);
+				$('body').append(modal);
+				//replaces the modal-view class with the ModalView view
+				//$(".modal-view").html(data);
+				//turn off data dismiss by clicking out of the box and by pressing esc
+				$(".modal-view").modal({
+					backdrop: true,
+					keyboard: false,
+				});
+				//shows the modal
+				$(".modal").modal('show');
+			}
+		});
+		//$.fn.CallModal(itemUrl);
+	});
+
 	$(".invoice-add-one").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -2343,8 +2435,9 @@ $(function () {
 			async: false,
 			url: url,
 			type: 'GET',
-			cache: true,
+			cache: false,
 			success: function (data) {
+				$("#loading").hide();
 				$("#loading").hide();
 				var modal = $(data);
 				$('body').append(modal);
@@ -2357,16 +2450,9 @@ $(function () {
 				});
 				//shows the modal
 				$(".modal").modal('show');
-			},
-			//error: function (data) {
-			//	$("#loading").hide();
-			//	console.log("error : " + data.responseText);
-			//	console.log("error : " + data.responseJSON);
-			//	console.log("error : " + data.responseXML);
-			//	console.log("error : " + data.readAsDataURL);
-			//}
+				return false;
+			}
 		});
-		$("#loading").hide();
 	};
 
 

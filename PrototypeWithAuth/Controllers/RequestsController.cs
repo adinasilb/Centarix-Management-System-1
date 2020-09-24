@@ -2925,33 +2925,50 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public ActionResult DocumentsModal(int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations = false)
+        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations = false, bool IsNotifications = false)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
-                Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
+                Requests = new List<Request>(),
+                //Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
                 RequestFolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 //Files = new List<FileInfo>(),
-                SectionType = IsOperations ? AppUtility.MenuItems.Operation : AppUtility.MenuItems.OrdersAndInventory
+                SectionType = IsOperations ? AppUtility.MenuItems.Operation : AppUtility.MenuItems.OrdersAndInventory,
+                IsNotifications = IsNotifications
 
             };
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string uploadFolder2 = Path.Combine(uploadFolder1, id.ToString());
-            string uploadFolder3 = Path.Combine(uploadFolder2, RequestFolderNameEnum.ToString());
-
-            if (Directory.Exists(uploadFolder3))
+            if (id != null)
             {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
-                //searching for the partial file name in the directory
-                FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
-                documentsModalViewModel.FileStrings = new List<String>();
-                foreach (var docfile in docfilesfound)
+                documentsModalViewModel.Requests.Add(_context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault());
+            }
+            else if (ids != null)
+            {
+                foreach(int requestID in ids)
                 {
-                    string newFileString = AppUtility.GetLastFourFiles(docfile.FullName);
-                    documentsModalViewModel.FileStrings.Add(newFileString);
-                    //documentsModalViewModel.Files.Add(docfile);
+                    documentsModalViewModel.Requests.Add(_context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault());
+                }
+            }
+
+            if (!IsNotifications) //Don't want to see old ones if it's notifications b/c has multiple requests
+            {
+                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                string uploadFolder2 = Path.Combine(uploadFolder1, id.ToString());
+                string uploadFolder3 = Path.Combine(uploadFolder2, RequestFolderNameEnum.ToString());
+
+                if (Directory.Exists(uploadFolder3))
+                {
+                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
+                    //searching for the partial file name in the directory
+                    FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
+                    documentsModalViewModel.FileStrings = new List<String>();
+                    foreach (var docfile in docfilesfound)
+                    {
+                        string newFileString = AppUtility.GetLastFourFiles(docfile.FullName);
+                        documentsModalViewModel.FileStrings.Add(newFileString);
+                        //documentsModalViewModel.Files.Add(docfile);
+                    }
                 }
             }
 
@@ -2963,7 +2980,7 @@ namespace PrototypeWithAuth.Controllers
         public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string requestFolder = Path.Combine(uploadFolder, documentsModalViewModel.Request.RequestID.ToString());
+            string requestFolder = Path.Combine(uploadFolder, documentsModalViewModel.Requests[0].RequestID.ToString());
             Directory.CreateDirectory(requestFolder);
             if (documentsModalViewModel.FilesToSave != null) //test for more than one???
             {
@@ -3496,7 +3513,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid)
+        public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid, int[] requestIds)
         {
             List<Request> Requests = new List<Request>();
             var queryableRequests = _context.Requests
@@ -3514,6 +3531,13 @@ namespace PrototypeWithAuth.Controllers
             else if (requestid != null)
             {
                 Requests = queryableRequests.Where(r => r.RequestID == requestid).ToList();
+            }
+            else if (requestIds != null)
+            {
+                foreach(int rId in requestIds)
+                {
+                    Requests.Add(queryableRequests.Where(r => r.RequestID == rId).FirstOrDefault());
+                }
             }
             AddInvoiceViewModel addInvoiceViewModel = new AddInvoiceViewModel()
             {
