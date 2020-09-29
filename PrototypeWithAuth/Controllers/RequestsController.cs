@@ -1118,8 +1118,8 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var parentcategories = await _context.ParentCategories.ToListAsync();
-            var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID==1).ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps=>ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             //redo the unit types when seeded
@@ -1387,7 +1387,7 @@ namespace PrototypeWithAuth.Controllers
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
             requestItemViewModel.Request.ParentRequest = null;
             //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
-            var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).First();
+            var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
             if(parentQuote != null)
             {
 
@@ -1411,6 +1411,7 @@ namespace PrototypeWithAuth.Controllers
             product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
             product.VendorID = requestItemViewModel.Request.Product.VendorID;
             //in case we need to return to the modal view
+
             requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
@@ -1442,7 +1443,8 @@ namespace PrototypeWithAuth.Controllers
                  * it will create a new one instead of updating the existing one
                  * only need this if using an existing product
                  */
-               // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
+                requestItemViewModel.Request.Product = product;
+                // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
                 try
                 {
