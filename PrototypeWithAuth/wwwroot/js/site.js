@@ -2747,12 +2747,12 @@ $(function () {
 		$(".salary-tab").prop("disabled", true);
 		$(".documents-tab").prop("disabled", true);
 
-		console.log("in $.fn.validateItemTab");
-		checkedItem1 = $(".EmployeeStatusID1").is(':checked');
-		checkedItem2 = $(".EmployeeStatusID2").is(':checked');
-		checkedItem3 = $(".EmployeeStatusID3").is(':checked');
-		checkedItem4 = $(".EmployeeStatusID4").is(':checked');
-		if (checkedItem1 != true && checkedItem2 != true && checkedItem3 != true && checkedItem4 != true) {
+		//console.log("in $.fn.validateItemTab");
+		//checkedItem1 = $(".EmployeeStatusID1").is(':checked');
+		//checkedItem2 = $(".EmployeeStatusID2").is(':checked');
+		//checkedItem3 = $(".EmployeeStatusID3").is(':checked');
+		//checkedItem4 = $(".EmployeeStatusID4").is(':checked');
+		if (/*checkedItem1 != true && checkedItem2 != true && checkedItem3 != true && checkedItem4 != true*/$('#NewEmployee_EmployeeStatusID').val() == '' || $('#NewEmployee_EmployeeStatusID').val()  == 0) {
 			$("#validation-EmployeeStatus").removeClass("hidden");
 			return;
 		}
@@ -2919,4 +2919,9 @@ $(function () {
 		$('#addSupplierComment').popover('toggle');
 
 	});
+	$('.employee-status-radio').click(function () {
+		console.log('employee status')
+		$('#NewEmployee_EmployeeStatusID').val($(this).val())
+		$("#validation-EmployeeStatus").addClass("hidden");
+	})
 });

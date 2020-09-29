@@ -96,7 +96,7 @@
                                 {
                                     var id = "EmployeeStatusID" + status.EmployeeStatusID + " custom-control-input";
                                     <div class="custom-control custom-radio mr-4 ml-4 employee-type">
-                                        <input class="custom-control-input" asp-for="NewEmployee.EmployeeStatusID" id="@id" type="radio" value="@status.EmployeeStatusID">
+                                        <input class="custom-control-input  employee-status-radio" asp-for="NewEmployee.EmployeeStatusID" id="@id" type="radio" value="@status.EmployeeStatusID">
                                         @*@Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id, @checked = "checked" })*@
                                         @*<input type="radio" asp-for="NewEmployee.EmployeeStatusID" value="@status.EmployeeStatusID" class="id" />*@
                                         @*@Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = id })*@
