@@ -690,7 +690,12 @@ input.select-dropdown {
     .lab-man-link-clr:hover {
         font-weight: bold;
         filter: brightness(0) saturate(100%) var(--lab-man-filter);
-        text-decoration: none;
+        text-decoration: none !important;
+    }
+    .lab-man-link-clr:active {
+        font-weight: bold;
+        filter: brightness(0) saturate(100%) var(--lab-man-filter);
+        text-decoration: none !important;
     }
 
 
@@ -1988,6 +1993,38 @@ td .btn {
     opacity: 50 !important;
     border: .5px solid #f3f3f3 !important;
 }
+
+
+.oper-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--operations-color) !important;
+}
+
+.oper-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--operations-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
+
+
+.supplier-form .switch label input[type="checkbox"]:checked + .lever:after {
+    background-color: var(--lab-man-color) !important;
+}
+
+.supplier-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--lab-man-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
+
+    .accounting-form .switch label input[type="checkbox"]:checked + .lever:after {
+        background-color: var(--acc-color) !important;
+    }
+.accounting-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--accounting-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
+
 
 .select-wrapper input.select-dropdown:disabled {
     color: var(--black-87) !important;

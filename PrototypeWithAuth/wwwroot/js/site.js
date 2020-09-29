@@ -6,6 +6,7 @@
 //global Exchange Rate variable (usd --> nis)
 
 $(function () {
+
 	var VatPercentage = .17;
 
 
@@ -36,6 +37,13 @@ $(function () {
 
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 	$("#parentlist").change(function () {
+		$.fn.parentListChange();
+	});
+	$('.modal').on('change', '#parentlist', function () {
+		$.fn.parentListChange();
+	});
+	
+	$.fn.parentListChange = function () {
 		console.log("in parent list");
 		var parentCategoryId = $("#parentlist").val();
 		console.log("parentcategoryid: " + parentCategoryId);
@@ -56,12 +64,19 @@ $(function () {
 			$("#sublist").materialSelect();
 			return false;
 		});
-	});
-
+	};
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 	$(".Project").change(function () {
+		$.fn.changeProject($(this).val());
+	});
+
+	$('.modal').on('change', ".Project", function () {
+		$.fn.changeProject($(this).val());
+	});
+
+	$.fn.changeProject = function (val) {
 		console.log("project was changed");
-		var projectId = $(this).val();
+		var projectId = val;
 		var url = "/Requests/GetSubProjectList";
 
 		$.getJSON(url, { ProjectID: projectId }, function (data) {
@@ -75,8 +90,7 @@ $(function () {
 			$("#SubProject").materialSelect();
 			return false
 		});
-	});
-
+	};
 
 	//search forms- Redo js in newer versions
 	$("#search-form #Project").change(function () {
@@ -2817,14 +2831,19 @@ $(function () {
 		}
 	});
 
+
+
 	$('.turn-edit-on-off').change(function () {
 		var type = $(this).attr('name');
 		console.log(type);
 		var url = '';
 		if ($(this).hasClass('operations')) {
-			var url = "/Operations/EditModalView";
+		    url = "/Operations/EditModalView";
+		} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting') ) {
+			url = "/Vendors/Edit";
 		} else {
 			url = "/Requests/EditModalView";
+			
 		}
 
 		if (type == 'edit')
@@ -2856,15 +2875,28 @@ $(function () {
 			$('.mark-edditable').data("val", true);
 			$('.edit-mode-switch-description').text("Edit Mode On");
 			$('.turn-edit-on-off').attr('name', 'edit')
-			$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
-			$.fn.EnableMaterialSelect('#sublist','select-options-sublist')
-			$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID')
-			$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject')
-			$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
-			$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID')
-			$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
-			$.fn.CheckUnitsFilled();
-			$.fn.CheckSubUnitsFilled();
+			if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
+				console.log("orders operations")
+				$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
+				$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
+				$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
+				$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
+			}
+			if ($(this).hasClass('orders')) {
+				console.log("orders")
+				$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
+				$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
+				$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
+				$.fn.CheckUnitsFilled();
+				$.fn.CheckSubUnitsFilled();
+			}
+			if ($(this).hasClass('suppliers') || $(this).hasClass('accounting'))
+			{
+				$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+			}
+
+
+
 		}
 	}); 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
@@ -2874,4 +2906,17 @@ $(function () {
 		$(selectID).materialSelect();
 		$('[data-activates="'+ dataActivates+'"]').prop('disabled', false);
 	}
+	$("#addSupplierComment").click(function () {
+		$('[data-toggle="popover"]').popover('dispose');
+		$('#addSupplierComment').popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#popover-content').html();
+			}
+		});
+		$('#addSupplierComment').popover('toggle');
+
+	});
 });

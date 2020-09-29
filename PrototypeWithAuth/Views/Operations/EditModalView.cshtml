@@ -104,7 +104,7 @@
                                                 <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                                 @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
                 new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-                 new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist", @searchable = "Select Category" })
+                 new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist", @disabled = "disabled", @searchable = "Select Category" })
                                                 <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                             </div>
                                         </div>
@@ -113,7 +113,7 @@
                                                 <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                                 @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
                 new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-                "Select Subcategory", new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "sublist", @searchable = "Select SubCategory" })
+                "Select Subcategory", new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "sublist", @disabled = "disabled", @searchable = "Select SubCategory" })
                                                 <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                                             </div>
                                         </div>
@@ -158,7 +158,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                                <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
+                                                <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom " disabled />
                                                 <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger-centarix" />
                                             </div>
                                         </div>
@@ -198,37 +198,48 @@
                                     //adding the amount of months of the warranty to the invoice date
                                     var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                                 }*@
-                                                <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                                <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-3">
                                                 <label class="control-label">Estimated End Date</label>
-                                                <input value="@DateTime.Now.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                                <input value="@DateTime.Now.AddMonths(Model.Request.Warranty??0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                             </div>
                                         }
 
                                     </div>
                                     <br />
                                     <div class="row">
-                                        <div class="col-4">
-                                            <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                            <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom mark-readonly " disabled />
-                                            <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
-                                        </div>
-                                        @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
+
+                                        @if (Model.Request.RequestStatusID == 2)
                                         {
-                                            <div class="col-4">
-                                                <label class="control-label">Expected supply date</label>
-                                                <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays??0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                            <div class="col-md-4">
+                                                <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
+                                                <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days mark-readonly" disabled/>
+                                                <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
                                             </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Expected supply date</label>
+                                                    <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays??0).ToString("yyyy-MM-dd")"  class="form-control-plaintext border-bottom mark-readonly" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" disabled />
+                                                </div>
+                                            </div>
+                                        
                                         }
-                                        else
+                                        else if (Model.Request.RequestStatusID == 1 || Model.Request.RequestStatusID == 6)
                                         {
-                                            <div class="col-4">
-                                                <label class="control-label">Esitmated Expected supply date</label>
-                                                <input value="@DateTime.Now.AddDays(Model.Request.ExpectedSupplyDays??0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
+                                            <div class="col-md-4">
+                                                <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
+                                                <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days mark-readonly" disabled />
+                                                <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Expected supply date</label>
+                                                    <input value="00-00-0000" class="form-control-plaintext border-bottom mark-readonly" disabled type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                                </div>
                                             </div>
                                         }
 

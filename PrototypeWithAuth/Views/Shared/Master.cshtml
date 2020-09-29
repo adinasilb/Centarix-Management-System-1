@@ -370,7 +370,19 @@
             $.fn.CallPageRequest($itemurl, "details");
             return false;
         });
+        $(".load-vendor-edit").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "";
+           
+            console.log("Vendors/Edit/?id")
+            //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+            $itemurl = "/Vendors/Edit/?id=" + $(this).attr('val') + '&SectionType=' + $(this).attr('sectionType');
 
+            $.fn.CallPageRequest($itemurl, "details");
+            return false;
+        });
         $(".load-product-details-summary").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -853,19 +865,7 @@
             hide = false;
         });
 
-        $("#addSupplierComment").click(function () {
-            $('[data-toggle="popover"]').popover('dispose');
-            $('#addSupplierComment').popover({
-                sanitize: false,
-                placement: 'bottom',
-                html: true,
-                content: function () {
-                    return $('#popover-content').html();
-                }
-            });
-            $('#addSupplierComment').popover('toggle');
-
-        });
+       
 
 
 
