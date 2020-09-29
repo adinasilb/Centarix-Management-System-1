@@ -79,16 +79,20 @@
                             <!-- Modal body -->
                             <div class="new-modal-body edit-modal-outer-body">
                                 <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; border: 2px solid #EAEAEB;">
-                                    <!-- Default switch -->
-                                    <div class=" row text-right mb-0">
-                                        <div class="switch col-12 switch-margin">
-                                            <label>
-                                                <label class="edit-mode-switch-description">Edit Mode Off</label>
-                                                <input type="checkbox" class="turn-edit-on-off" value="@Model.Request.RequestID" name="details">
-                                                <span class="lever"></span>
-                                            </label>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <div class=" row text-right mb-0">
+                                            <div class="switch col-12 switch-margin">
+                                                <label>
+                                                    <label class="edit-mode-switch-description">Edit Mode Off</label>
+                                                    <input type="checkbox" class="turn-edit-on-off" value="@Model.Request.RequestID" name="details">
+                                                    <span class="lever"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
+                                    <!-- Default switch -->
+
                                     <div class="tab-content">
                                         <div id="item" class="tab-pane fade in active">
                                             <div class="row modal-tab-name">
@@ -213,10 +217,10 @@
                                                     <div class="col-3">
                                                         <label class="control-label">End Date</label>
                                                         @*@{
-                            //get this just to return the date (not the time)
-                            //adding the amount of months of the warranty to the invoice date
-                            var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                        }*@
+                                //get this just to return the date (not the time)
+                                //adding the amount of months of the warranty to the invoice date
+                                var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                            }*@
                                                         <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                                                     </div>
                                                 }
@@ -528,74 +532,74 @@
                                                 </div>
                                             </div>
                                             @*<div class="row installments">
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label asp-for="Request.Installments" class="control-label"></label>
-                        <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
-                        <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label asp-for="Request.Installments" class="control-label"></label>
+                            <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
+                        </div>
+                        @if (Model.NewPayments != null && Model.NewPayments.Any())
+                        {
+                            <script>
+                                console.log("in script for installments disabled");
+                                $("#Request_ParentRequest_Installments").attr("disabled", true);
+                            </script>
+                        }
                     </div>
-                    @if (Model.NewPayments != null && Model.NewPayments.Any())
-                    {
-                        <script>
-                            console.log("in script for installments disabled");
-                            $("#Request_ParentRequest_Installments").attr("disabled", true);
-                        </script>
-                    }
-                </div>
-                <div class="col-md-8 rounded card p-3">
-                    <table class="table table-sm payments-table">
-                        <thead class="thead-light rounded">
-                            <tr>
-                                <th>Payment Date</th>
-                                <th>Payment Type</th>
-                                <th>Account</th>
-                                <th>Reference</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                if (Model.NewPayments != null)
-                                {
-                                    int counter = 0;
-                                    foreach (var payment in Model.NewPayments)
+                    <div class="col-md-8 rounded card p-3">
+                        <table class="table table-sm payments-table">
+                            <thead class="thead-light rounded">
+                                <tr>
+                                    <th>Payment Date</th>
+                                    <th>Payment Type</th>
+                                    <th>Account</th>
+                                    <th>Reference</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (Model.NewPayments != null)
                                     {
-                                        <tr class="payment-line">
-                                            <td>
-                                                <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
-                                            </td>
-                                            <td>
-                                                @Html.DropDownListFor(
-                                               m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
-                                               new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
-                                               , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
-                                               )
-                                            </td>
-                                            <td>
-                                                @Html.DropDownListFor(
-                                               m => m.NewPayments[counter].CompanyAccountID,
-                                               new SelectList(
-                                                   Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
-                                               "CompanyAccountID", "CompanyAccountNum"),
-                                               new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
-                                            <td>
-                                                <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
-                                            </td>
-                                            @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
-                                        </tr>
-                                        counter++;
+                                        int counter = 0;
+                                        foreach (var payment in Model.NewPayments)
+                                        {
+                                            <tr class="payment-line">
+                                                <td>
+                                                    <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownListFor(
+                                                   m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
+                                                   new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
+                                                   , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
+                                                   )
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownListFor(
+                                                   m => m.NewPayments[counter].CompanyAccountID,
+                                                   new SelectList(
+                                                       Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
+                                                   "CompanyAccountID", "CompanyAccountNum"),
+                                                   new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
+                                                <td>
+                                                    <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
+                                                </td>
+                                                @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
+                                            </tr>
+                                            counter++;
+                                        }
                                     }
                                 }
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Debt</label>
-                        <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-            </div>*@
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label">Debt</label>
+                            <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
+                        </div>
+                    </div>
+                </div>*@
                                         </div>
 
 
