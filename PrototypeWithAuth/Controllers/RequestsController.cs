@@ -1407,8 +1407,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestItemViewModel.Request.ParentQuote = null;
             }
-            requestItemViewModel.Request.Product = _context.Products.Include(p=>p.Vendor).Include(p=>p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Request.ProductID);
-           
+            var product = _context.Products.Include(p=>p.Vendor).Include(p=>p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Request.ProductID);
+            product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
+            product.VendorID = requestItemViewModel.Request.Product.VendorID;
             //in case we need to return to the modal view
             requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
@@ -1441,7 +1442,7 @@ namespace PrototypeWithAuth.Controllers
                  * it will create a new one instead of updating the existing one
                  * only need this if using an existing product
                  */
-                requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
+               // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
                 try
                 {

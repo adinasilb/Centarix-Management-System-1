@@ -299,7 +299,7 @@
                                     </div>
                                     <div class="p-2 row popover-div">
                                         <span class="heading-1 col-10 modal-tab-name">Comments, Warnings, and Discounts</span>
-                                        <div class=" col-2">
+                                        <div class=" col-2 pr-0 text-right">
 
                                             <ul class="list-unstyled m-0">
                                                 <li>
@@ -312,7 +312,8 @@
         margin: auto;
         position: absolute;
         bottom: 22%;
-        left: 22.5%;"> +</span>
+        right: 10.5%;
+"> +</span>
                                                     </button>
                                                 </li>
 
@@ -432,7 +433,7 @@
                                                             <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="text-danger-centarix"></span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-5  ">
+                                                    <div class="col-6  ">
                                                         <div class="form-group">
                                                             <label class="control-label">Category</label>
                                                             <input class="form-control-plaintext border-bottom mark-readonly" disabled />
@@ -447,7 +448,7 @@
                                                             <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="text-danger-centarix"></span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-5">
+                                                    <div class="col-6">
                                                         <div class="form-group">
                                                             <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="control-label"></label>
                                                             <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="form-control-plaintext border-bottom  vendor-contact mark-readonly" disabled />
