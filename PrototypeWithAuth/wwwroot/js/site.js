@@ -6,6 +6,7 @@
 //global Exchange Rate variable (usd --> nis)
 
 $(function () {
+
 	var VatPercentage = .17;
 
 
@@ -36,6 +37,13 @@ $(function () {
 
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 	$("#parentlist").change(function () {
+		$.fn.parentListChange();
+	});
+	$('.modal').on('change', '#parentlist', function () {
+		$.fn.parentListChange();
+	});
+	
+	$.fn.parentListChange = function () {
 		console.log("in parent list");
 		var parentCategoryId = $("#parentlist").val();
 		console.log("parentcategoryid: " + parentCategoryId);
@@ -56,12 +64,19 @@ $(function () {
 			$("#sublist").materialSelect();
 			return false;
 		});
-	});
-
+	};
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 	$(".Project").change(function () {
+		$.fn.changeProject($(this).val());
+	});
+
+	$('.modal').on('change', ".Project", function () {
+		$.fn.changeProject($(this).val());
+	});
+
+	$.fn.changeProject = function (val) {
 		console.log("project was changed");
-		var projectId = $(this).val();
+		var projectId = val;
 		var url = "/Requests/GetSubProjectList";
 
 		$.getJSON(url, { ProjectID: projectId }, function (data) {
@@ -75,8 +90,7 @@ $(function () {
 			$("#SubProject").materialSelect();
 			return false
 		});
-	});
-
+	};
 
 	//search forms- Redo js in newer versions
 	$("#search-form #Project").change(function () {
@@ -276,9 +290,12 @@ $(function () {
 		});
 	});
 
-
+	$('.modal').on('change', '#vendorList', function () {
+		console.log('in on change vendor')
+		var vendorid = $(this).val();
+		$.fn.ChangeVendorBusinessId(vendorid);
+	});
 	$("#vendorList").change(function () {
-		//get the new vendor id selected
 		var vendorid = $("#vendorList").val();
 		$.fn.ChangeVendorBusinessId(vendorid);
 	});
@@ -297,6 +314,7 @@ $(function () {
 				//console.log("newBusinessID: " + newBusinessID);
 				//cannot only use the load outside. apparently it needs this one in order to work
 				$(".vendorBusinessId").val(newBusinessID);
+				$(".vendorBusinessId").text(newBusinessID);
 			})
 		}
 		//console.log("newBusinessID: " + newBusinessID);
@@ -1128,7 +1146,33 @@ $(function () {
 
 	});
 
-
+	$(".open-invoice-doc-modal").click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		//console.log("in opened invoice doc modal");
+		//$("#documentsModal").replaceWith('');
+		//var urltogo = $("#documentSubmit").attr("url");
+		//var arrRequestIds = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+		//	return $(this).attr("id")
+		//}).get()
+		//urltogo = urltogo + "?ids=" + arrRequestIds + "&RequestFolderNameEnum=Invoices&IsEdittable=true&IsOperations=false&IsNotifications=true";
+		//console.log("urltogo: " + urltogo);
+		//$.ajax({
+		//	async: true,
+		//	url: urltogo,
+		//	type: 'GET',
+		//	cache: false,
+		//	success: function (data) {
+		//		var modal = $(data);
+		//		$('body').append(modal);
+		//		$("#documentsModal").modal({
+		//			backdrop: false,
+		//			keyboard: true,
+		//		});
+		//		$(".modal").modal('show');
+		//	}
+		//});
+	});
 
 	$(".open-document-modal").click(function (e) {
 		e.preventDefault();
@@ -1612,6 +1656,37 @@ $(function () {
 			alert("Please only select images");
 		}
 	});
+
+	$("#InvoiceImage").on("change", function () {
+		var imgPath = $("#InvoiceImage")[0].value;
+		console.log("imgPath: " + imgPath);
+		var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+		console.log("extn: " + extn);
+		var imageHolder = $("#invoice-image");
+		imageHolder.empty();
+
+		if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+			console.log("inside the if statement");
+			if (typeof (FileReader) != "undefined") {
+				console.log("file reader does not equal undefined");
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					//console.log(e.target.result);
+					//$("<img />", {
+					//	"src": e.target.result,
+					//	"class": "thumb-image"
+					//}).appendTo(imageHolder);
+					$("#invoive-image").attr("src", e.target.result);
+				}
+				imageHolder.show();
+				reader.readAsDataURL($(this)[0].files[0]);
+			}
+		}
+		else {
+			alert("Please only select images");
+		}
+	});
+
 
 	$.fn.validateItemTab = function () {
 		$(".request-price-tab").prop("disabled", true);
@@ -2224,9 +2299,11 @@ $(function () {
 		$("#createModalForm").valid();
 		$.fn.validateUserDetailsTab();
 	});
+
 	$("#user-budget-tab").click(function () {
 		$("#createModalForm").valid();
 	});
+
 	$("#user-more-tab").click(function () {
 		console.log('"#user-more-tab").click');
 		$("#createModalForm").valid();
@@ -2251,7 +2328,7 @@ $(function () {
 			return;
 		}
 		valid = $("#SecureAppPass").attr('aria-invalid');
-		if (valid == "true" || $("#SecureAppPass").val() == "") {
+		if (valid == "true" /*|| $("#SecureAppPass").val() == ""*/) {
 			return;
 		}
 		valid = $("#CentarixID").attr('aria-invalid');
@@ -2259,11 +2336,11 @@ $(function () {
 			return;
 		}
 		valid = $("#Password").attr('aria-invalid');
-		if (valid == "true" || $("#Password").val() == "") {
+		if (valid == "true" /*|| $("#Password").val() == ""*/) {
 			return;
 		}
 		valid = $("#ConfirmPassword").attr('aria-invalid');
-		if (valid == "true" || $("#ConfirmPassword").val() == "") {
+		if (valid == "true" /*|| $("#ConfirmPassword").val() == ""*/) {
 			return;
 		}
 		if (!$('input[name="NewEmployee.EmployeeStatusID"]:checked').length) {
@@ -2283,7 +2360,7 @@ $(function () {
 		$("#myForm").valid();
 		var valid = $("#Invoice_InvoiceNumber").attr("aria-invalid");
 		console.log("invoice number validation + " + valid);
-		if (valid == "true" || $("#Invoice_InvoiceNumber")=="" ) {
+		if (valid == "true" || $("#Invoice_InvoiceNumber") == "") {
 			e.preventDefault();
 			e.stopPropagation();
 			$("#invoice-number-validation").html("Please enter a valid Number");
@@ -2326,6 +2403,41 @@ $(function () {
 		$.fn.CallModal(itemUrl);
 	});
 
+	$("#add-to-selected").off("click").on("click", function (e) {
+		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+			return $(this).attr("id")
+		}).get()
+		console.log("arrayOfSelected: " + arrayOfSelected);
+		//var itemUrl = "/Requests/AddInvoiceModal/?requestids=" + arrayOfSelected;
+		$("#loading").show();
+		$('.modal').replaceWith('');
+		$(".modal-backdrop").remove();
+		$.ajax({
+			type: "GET",
+			url: "/Requests/AddInvoiceModal/",
+			traditional: true,
+			data: { 'requestIds': arrayOfSelected },
+			cache: true,
+			success: function (data) {
+				$("#loading").hide();
+				console.log("data:");
+				console.log(data);
+				var modal = $(data);
+				$('body').append(modal);
+				//replaces the modal-view class with the ModalView view
+				//$(".modal-view").html(data);
+				//turn off data dismiss by clicking out of the box and by pressing esc
+				$(".modal-view").modal({
+					backdrop: true,
+					keyboard: false,
+				});
+				//shows the modal
+				$(".modal").modal('show');
+			}
+		});
+		//$.fn.CallModal(itemUrl);
+	});
+
 	$(".invoice-add-one").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -2343,8 +2455,9 @@ $(function () {
 			async: false,
 			url: url,
 			type: 'GET',
-			cache: true,
+			cache: false,
 			success: function (data) {
+				$("#loading").hide();
 				$("#loading").hide();
 				var modal = $(data);
 				$('body').append(modal);
@@ -2357,16 +2470,9 @@ $(function () {
 				});
 				//shows the modal
 				$(".modal").modal('show');
-			},
-			//error: function (data) {
-			//	$("#loading").hide();
-			//	console.log("error : " + data.responseText);
-			//	console.log("error : " + data.responseJSON);
-			//	console.log("error : " + data.responseXML);
-			//	console.log("error : " + data.readAsDataURL);
-			//}
+				return false;
+			}
 		});
-		$("#loading").hide();
 	};
 
 
@@ -2439,7 +2545,7 @@ $(function () {
 			var date = new Date(val).toISOString();
 			console.log(date)
 		}
-		var itemurl = "UpdateHours?chosenDate=" +date;
+		var itemurl = "UpdateHours?chosenDate=" + date;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -2456,7 +2562,7 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
-		
+
 	$("body").on("change", "#Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
 	});
@@ -2501,112 +2607,112 @@ $(function () {
 
 
 
-//DROPDOWN
-/*Dropdown Menu*/
-$('.dropdown-main').off("click").on("click", function () {
-	$(this).attr('tabindex', 1).focus();
-	//$(this).toggleClass('active');
-	$(this).find('.dropdown-menu').slideToggle(300);
-});
-$('.dropdown-main').focusout(function () {
-	$(this).removeClass('active');
-	$(this).find('.dropdown-menu').slideUp(300);
-});
-$('.dropdown-main .dropdown-menu li').click(function () {
-	$(this).parents('.dropdown-main').find('span').text($(this).text());
-	$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
-});
-/*End Dropdown Menu*/
-
-
-$('.dropdown-menu li').click(function () {
-	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-		msg = '<span class="msg">Hidden input value: ';
-	$('.msg').html(msg + input + '</span>');
-});
-
-
-
-$('.dropdown-multiple').click(function () {
-	$(this).attr('tabindex', 1).focus();
-	$(this).addClass('active');
-	$(this).find('.dropdown-menu-multiple').slideToggle(300);
-});
-$('.dropdown-multiple').focusout(function () {
-	$(this).removeClass('active');
-	$(this).find('.dropdown-menu-multiple').slideUp(300);
-});
-$('.dropdown-multiple .dropdown-menu div label').click(function () {
-	//$(this).parents('.dropdown').find('span').text($(this).text());
-	$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
-	$(this).parents('.dropdown-multiple').addClass('active');
-});
-/*End Dropdown Menu*/
-
-
-//$('.dropdown-menu li').click(function () {
-//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-//		msg = '<span class="msg">Hidden input value: ';
-//	$('.msg').html(msg + input + '</span>');
-//}); 
-
-$("body").on("change", "#TotalHours", function (e) {
-	$('#Exit1').val('');
-	$('#Entry1').val('');
-	$('#Exit2').val('');
-	$('#Entry2').val('');
-});
-
-$("body").on("change", "#Exit1", function (e) {
-	$('#TotalHours').val('');
-});
-$("body").on("change", "#Entry1", function (e) {
-	$('#TotalHours').val('');
-});
-$("body").on("change", "#Exit2", function (e) {
-	$('#TotalHours').val('');
-});
-$("body").on("change", "#Entry2", function (e) {
-	$('#TotalHours').val('');
-});
-//});
-/*End Dropdown Menu*/
-
-
-//$('.dropdown-menu li').click(function () {
-//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-//		msg = '<span class="msg">Hidden input value: ';
-//	$('.msg').html(msg + input + '</span>');
-//}); 
-$.fn.SaveOffDays = function (url) {
-	var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
-	var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
-	var dateRangeFromDay = rangeFrom.attr('data-date');
-	var dateRangeFromMonth = rangeFrom.attr('data-month');
-	var dateRangeFromYear = rangeFrom.attr('data-year');
-	var dateRangeToDay = rangeTo.attr('data-date');
-	var dateRangeToMonth = rangeTo.attr('data-month');
-	var dateRangeToYear = rangeTo.attr('data-year');
-	var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toISOString();
-	var dateTo = '';
-	if (dateRangeToDay == undefined) {
-		dateTo = null;
-	}
-	else {
-		dateTo = new Date(dateRangeToYear, dateRangeToMonth, dateRangeToDay, 0, 0, 0).toISOString();
-	}
-
-	console.log(dateFrom + "-" + dateTo);
-	$.ajax({
-		async: false,
-		url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo,
-		type: 'POST',
-		cache: false,
-		success: function (data) {
-			$(".modal").modal('hide');
-		}
+	//DROPDOWN
+	/*Dropdown Menu*/
+	$('.dropdown-main').off("click").on("click", function () {
+		$(this).attr('tabindex', 1).focus();
+		//$(this).toggleClass('active');
+		$(this).find('.dropdown-menu').slideToggle(300);
 	});
-}
+	$('.dropdown-main').focusout(function () {
+		$(this).removeClass('active');
+		$(this).find('.dropdown-menu').slideUp(300);
+	});
+	$('.dropdown-main .dropdown-menu li').click(function () {
+		$(this).parents('.dropdown-main').find('span').text($(this).text());
+		$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
+	});
+	/*End Dropdown Menu*/
+
+
+	$('.dropdown-menu li').click(function () {
+		var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+			msg = '<span class="msg">Hidden input value: ';
+		$('.msg').html(msg + input + '</span>');
+	});
+
+
+
+	$('.dropdown-multiple').click(function () {
+		$(this).attr('tabindex', 1).focus();
+		$(this).addClass('active');
+		$(this).find('.dropdown-menu-multiple').slideToggle(300);
+	});
+	$('.dropdown-multiple').focusout(function () {
+		$(this).removeClass('active');
+		$(this).find('.dropdown-menu-multiple').slideUp(300);
+	});
+	$('.dropdown-multiple .dropdown-menu div label').click(function () {
+		//$(this).parents('.dropdown').find('span').text($(this).text());
+		$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
+		$(this).parents('.dropdown-multiple').addClass('active');
+	});
+	/*End Dropdown Menu*/
+
+
+	//$('.dropdown-menu li').click(function () {
+	//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+	//		msg = '<span class="msg">Hidden input value: ';
+	//	$('.msg').html(msg + input + '</span>');
+	//}); 
+
+	$("body").on("change", "#TotalHours", function (e) {
+		$('#Exit1').val('');
+		$('#Entry1').val('');
+		$('#Exit2').val('');
+		$('#Entry2').val('');
+	});
+
+	$("body").on("change", "#Exit1", function (e) {
+		$('#TotalHours').val('');
+	});
+	$("body").on("change", "#Entry1", function (e) {
+		$('#TotalHours').val('');
+	});
+	$("body").on("change", "#Exit2", function (e) {
+		$('#TotalHours').val('');
+	});
+	$("body").on("change", "#Entry2", function (e) {
+		$('#TotalHours').val('');
+	});
+	//});
+	/*End Dropdown Menu*/
+
+
+	//$('.dropdown-menu li').click(function () {
+	//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
+	//		msg = '<span class="msg">Hidden input value: ';
+	//	$('.msg').html(msg + input + '</span>');
+	//}); 
+	$.fn.SaveOffDays = function (url) {
+		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
+		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
+		var dateRangeFromDay = rangeFrom.attr('data-date');
+		var dateRangeFromMonth = rangeFrom.attr('data-month');
+		var dateRangeFromYear = rangeFrom.attr('data-year');
+		var dateRangeToDay = rangeTo.attr('data-date');
+		var dateRangeToMonth = rangeTo.attr('data-month');
+		var dateRangeToYear = rangeTo.attr('data-year');
+		var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toISOString();
+		var dateTo = '';
+		if (dateRangeToDay == undefined) {
+			dateTo = null;
+		}
+		else {
+			dateTo = new Date(dateRangeToYear, dateRangeToMonth, dateRangeToDay, 0, 0, 0).toISOString();
+		}
+
+		console.log(dateFrom + "-" + dateTo);
+		$.ajax({
+			async: false,
+			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo,
+			type: 'POST',
+			cache: false,
+			success: function (data) {
+				$(".modal").modal('hide');
+			}
+		});
+	}
 
 	$("body").on("click", "#saveVacation", function (e) {
 		e.preventDefault();
@@ -2620,7 +2726,7 @@ $.fn.SaveOffDays = function (url) {
 	$(".approve-hours").click(function (e) {
 		$.ajax({
 			async: true,
-			url: "ApproveHours" + '?id=' +$(this).val(),
+			url: "ApproveHours" + '?id=' + $(this).val(),
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -2641,7 +2747,18 @@ $.fn.SaveOffDays = function (url) {
 		$(".salary-tab").prop("disabled", true);
 		$(".documents-tab").prop("disabled", true);
 
-		console.log("in $.fn.validateItemTab");
+		//console.log("in $.fn.validateItemTab");
+		//checkedItem1 = $(".EmployeeStatusID1").is(':checked');
+		//checkedItem2 = $(".EmployeeStatusID2").is(':checked');
+		//checkedItem3 = $(".EmployeeStatusID3").is(':checked');
+		//checkedItem4 = $(".EmployeeStatusID4").is(':checked');
+		if (/*checkedItem1 != true && checkedItem2 != true && checkedItem3 != true && checkedItem4 != true*/$('#NewEmployee_EmployeeStatusID').val() == '' || $('#NewEmployee_EmployeeStatusID').val()  == 0) {
+			$("#validation-EmployeeStatus").removeClass("hidden");
+			return;
+		}
+		else {
+			$("#validation-EmployeeStatus").addClass("hidden");
+		}
 		valid = $("#NewEmployee_IDNumber").attr('aria-invalid');
 		if (valid == "true" || $("#NewEmployee_IDNumber").val() == "") {
 			console.log("valid: " + valid);
@@ -2677,6 +2794,25 @@ $.fn.SaveOffDays = function (url) {
 		}
 		return valid;
 	}
+	$(".security-tab").on("click", function () {
+		$.fn.validateSalaryTab();
+	});
+	$.fn.validateSalaryTab = function () {
+		$(".security-tab").prop("disabled", true);
+		console.log("in $.fn.validateItemTab");
+		valid = $("#NewEmployee_SalariedEmployee_HoursPerDay").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() == "") {
+			return;
+		}
+		valid = $("#NewEmployee_VacationDays").attr('aria-invalid');
+		if (valid == "true" || $("#NewEmployee_VacationDays").val() == "") {
+			return;
+		}
+		if (valid == "false" || valid == undefined) {
+			$(".security-tab").prop("disabled", false);
+		}
+		return valid;
+	};
 	$('#addWorker').submit(function () {
 		if ($("#createModalForm").valid()) {
 			$("#addWorker").removeClass("disabled-submit");
@@ -2694,4 +2830,98 @@ $.fn.SaveOffDays = function (url) {
 			window.location.href = url;
 		}
 	});
+
+
+
+	$('.turn-edit-on-off').change(function () {
+		var type = $(this).attr('name');
+		console.log(type);
+		var url = '';
+		if ($(this).hasClass('operations')) {
+		    url = "/Operations/EditModalView";
+		} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting') ) {
+			url = "/Vendors/Edit";
+		} else {
+			url = "/Requests/EditModalView";
+			
+		}
+
+		if (type == 'edit')
+		{
+			var formData = new FormData($("#myForm")[0]);
+			$.ajax({
+				processData: false,
+				contentType: false,
+				data: formData,
+				async: true,
+				url: url,
+				type: 'POST',
+				cache: true,
+				success: function (data) {
+					alert("save edit successful!")
+				}
+			});
+
+			$('.mark-readonly').prop("disabled", true);
+			$('.mark-readonly input').prop("disabled", true);
+			$('.mark-edditable').data("val", false)
+			$('.edit-mode-switch-description').text("Edit Mode Off");
+			$('.turn-edit-on-off').attr('name', 'details')
+			
+		}
+		else if (type == 'details')
+		{
+			$('.mark-readonly').attr("disabled", false);
+			$('.mark-edditable').data("val", true);
+			$('.edit-mode-switch-description').text("Edit Mode On");
+			$('.turn-edit-on-off').attr('name', 'edit')
+			if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
+				console.log("orders operations")
+				$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
+				$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
+				$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
+				$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
+			}
+			if ($(this).hasClass('orders')) {
+				console.log("orders")
+				$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
+				$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
+				$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
+				$.fn.CheckUnitsFilled();
+				$.fn.CheckSubUnitsFilled();
+			}
+			if ($(this).hasClass('suppliers') || $(this).hasClass('accounting'))
+			{
+				$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+			}
+
+
+
+		}
+	}); 
+	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
+		$(selectID).prop("disabled", false);
+		$(selectID).destroyMaterialSelect();
+		$(selectID).removeAttr("disabled")
+		$(selectID).materialSelect();
+		$('[data-activates="'+ dataActivates+'"]').prop('disabled', false);
+	}
+	$("#addSupplierComment").click(function () {
+		$('[data-toggle="popover"]').popover('dispose');
+		$('#addSupplierComment').popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#popover-content').html();
+			}
+		});
+		$('#addSupplierComment').popover('toggle');
+
+	});
+	$('.employee-status-radio').click(function () {
+		console.log('employee status')
+		$('#NewEmployee_EmployeeStatusID').val($(this).val())
+		$("#validation-EmployeeStatus").addClass("hidden");
+	})
 });

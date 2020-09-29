@@ -100,7 +100,7 @@
         }
 
         <form action="" id="myForm" method="post" enctype="multipart/form-data">
-            @Html.HiddenFor(e => e.EntryExitEnum);
+            @Html.HiddenFor(e => e.EntryExitEnum)
             <div class="row entry-exit-background p-5  mt-5">
                 <div class="col-6 pr-5  my-3 text-right">
                     <button id="entry" class="no-box-shadow border-0 rounded-pill @entryClasses text-white entry-exit-button" @isEntryDisabled type="submit" asp-action="ReportHours"><span>

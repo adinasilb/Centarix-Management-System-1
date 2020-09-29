@@ -1,11 +1,14 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> _userManager
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 
-<div class="modal modal-view right fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view right fader oper-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
@@ -38,25 +41,37 @@
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
-                    <div>
+                    <div class="back-button">
                         <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent">
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                         </button>
                     </div>
-                    <br />
-                    <div class="form-group">
-                        <h4><label asp-for="Request.Product.ProductName" class="control-label font-weight-bold"> Edit Request : </label> </h4>
-                        <h4 class="modal-title"><input asp-for="Request.Product.ProductName" class="rounded form-control-plaintext border-bottom" /></h4>
-                        <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
+
+                    <div class="row modal-title-line">
+                        @*<div class="col-md-2 px-0">*@
+                        @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
+                        {
+                            <img src="@Model.Request.Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
+                        }
+                        else
+                        {
+                            <img src="~/images/css/inventory/Type/bottle.png" alt="Alternate Text" class="top-modal-image" width="75" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
+                        }
+                        @*</div>*@
+                        <div class="modal-product-title" @*style="width: 80%;"*@>
+                            <input asp-for="Request.Product.ProductName" class="form-control-plaintext heading-1 border-bottom mark-readonly" disabled />
+                            <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
+                        </div>
+
                     </div>
                     <div class="row">
                         <div class="col-12 px-0">
-                            <div class="container-fluid div-tabs text-center">
-                                <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
-                                    <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link oper-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#price" class="nav-link oper-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab oper-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#comments"  class="nav-link oper-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
+                            <div class="container-fluid div-tabs text-center pl-0">
+                                <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 nav-tabs-icons">
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link oper-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link oper-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link documents-tab oper-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link oper-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -64,593 +79,558 @@
                 </div>
 
                 <!-- Modal body -->
-                <div class="new-modal-body" style="background: #F6F7F8; padding: 1em">
-                    <div class="container-fluid div-tabs box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
-
-                        <div class="tab-content">
-                            <div id="item" class="tab-pane fade in active">
-                                <span style="font-size: 1.7em;">Item</span>
-                                <br />
-                                <br />
-                                <div class="row">
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-                                            @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-            new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-            "Select Category", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "parentlist" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-4 px-4">
-                                        <div class="form-group sublist">
-                                            <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-                                            @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-            new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-            "Select Subcategory", new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "sublist" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
-                                        </div>
-                                    </div> 
-                                    <div class="col-4 px-4">
-                                        <div class="form-group">
-                                            <label asp-for="Request.Product.Vendor" class="control-label"></label>
-                                            @Html.DropDownListFor(
-                                                vm => vm.Request.Product.VendorID,
-                                                new SelectList(
-                                                Model.Vendors,
-                                                    dataValueField: "VendorID",
-                                                    dataTextField: "VendorEnName"),
-                                                    optionLabel: "Select A Vendor", //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                                                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @id = "vendorList" }
-                                            )
-                                            <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
-                                        </div>
-                                    </div>
+                <div class="new-modal-body edit-modal-outer-body" style="background: #F6F7F8; padding: 1em">
+                    <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class=" row text-right mb-0">
+                                <div class="switch col-12 switch-margin">
+                                    <label>
+                                        <label class="edit-mode-switch-description">Edit Mode Off</label>
+                                        <input type="checkbox" class="turn-edit-on-off operations" value="@Model.Request.RequestID" name="details">
+                                        <span class="lever"></span>
+                                    </label>
                                 </div>
-                                <br />
-                                <div class="row">
-                                    
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            @* IN MIDDLE *@
-                                            <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                                            <label class="vendorBusinessId form-control-plaintext border-bottom -plaintext" />
-                                            @*don't need a validation here because you it's not saving*@
-                                        </div>
+                            </div>
+                        }
+                            <div class="tab-content">
+                                <div id="item" class="tab-pane fade in active">
+                                    <div class="row modal-tab-name">
+                                        <span class="heading-1 col-12 modal-tab-name">Item</span>
                                     </div>
-                                </div>
-                                <br />
-
-                                <br />
-                                @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
-                                {
                                     <div class="row">
-                                        <div class="col-6 pr-4">
-                                            <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                                            <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
-                                            <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                                                @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
+                new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+                 new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist", @disabled = "disabled", @searchable = "Select Category" })
+                                                <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
+                                            </div>
                                         </div>
+                                        <div class="col-4 px-4">
+                                            <div class="form-group sublist">
+                                                <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                                                @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
+                new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+                "Select Subcategory", new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "sublist", @disabled = "disabled", @searchable = "Select SubCategory" })
+                                                <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 px-4">
+                                            <div class="form-group">
+                                                <label asp-for="Request.Product.Vendor" class="control-label"></label>
+                                                @Html.DropDownListFor(
+                                                    vm => vm.Request.Product.VendorID,
+                                                    new SelectList(
+                                                    Model.Vendors,
+                                                        dataValueField: "VendorID",
+                                                        dataTextField: "VendorEnName"),
+                                                    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                                                    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "vendorList", @searchable = "Select A Vendor" }
+                                                )
+                                                <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                @* IN MIDDLE *@
+                                                <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
+                                                <label class="vendorBusinessId form-control-plaintext border-bottom -plaintext" />
+                                                @*don't need a validation here because you it's not saving*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+
+                                    <br />
+                                    @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
+                                    {
+                                        <div class="row">
+                                            <div class="col-6 pr-4">
+                                                <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
+                                                <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom" disabled />
+                                                <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
+                                            </div>
+                                            <div class="col-6">
+                                                <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
+                                                <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom " disabled />
+                                                <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger-centarix" />
+                                            </div>
+                                        </div>
+                                        <br />
+                                    }
+
+                                    @*    <div class="row">
+                        <div class="col-md-6 pr-4">
+                            <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
+                            <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
+                            <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
+                            <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
+                        </div>
+                    </div>*@
+                                    <br />
+                                    <div class="row">
                                         <div class="col-6">
-                                            <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                                            <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker" disabled />
-                                            <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger-centarix" />
+                                            <label asp-for="Request.CatalogNumber" class="control-label"></label>
+                                            <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom  mark-readonly" disabled />
+                                            <span asp-validation-for="Request.CatalogNumber" class="text-danger-centarix"></span>
+                                        </div>
+                                        <div class="col-3">
+                                            <label asp-for="Request.Warranty" class="control-label"></label>
+                                            <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom  mark-readonly" disabled />
+                                            <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
+                                        </div>
+                                        @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
+                                        {
+                                            <div class="col-3">
+                                                <label class="control-label">End Date</label>
+                                                @*@{
+                                    //get this just to return the date (not the time)
+                                    //adding the amount of months of the warranty to the invoice date
+                                    var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
+                                }*@
+                                                <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-3">
+                                                <label class="control-label">Estimated End Date</label>
+                                                <input value="@DateTime.Now.AddMonths(Model.Request.Warranty??0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                            </div>
+                                        }
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+
+                                        @if (Model.Request.RequestStatusID == 2)
+                                        {
+                                            <div class="col-md-4">
+                                                <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
+                                                <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days mark-readonly" disabled/>
+                                                <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Expected supply date</label>
+                                                    <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays??0).ToString("yyyy-MM-dd")"  class="form-control-plaintext border-bottom mark-readonly" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" disabled />
+                                                </div>
+                                            </div>
+                                        
+                                        }
+                                        else if (Model.Request.RequestStatusID == 1 || Model.Request.RequestStatusID == 6)
+                                        {
+                                            <div class="col-md-4">
+                                                <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
+                                                <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days mark-readonly" disabled />
+                                                <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Expected supply date</label>
+                                                    <input value="00-00-0000" class="form-control-plaintext border-bottom mark-readonly" disabled type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="col-4">
+                                            <label asp-for="Request.URL" class="control-label"></label>
+                                            <input asp-for="Request.URL" class="form-control-plaintext border-bottom  mark-readonly" disabled />
+                                            <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div id="price" class="tab-pane fade">
+
+                                    <div class="row modal-tab-name">
+                                        <span class="heading-1 col-12 modal-tab-name">Price</span>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-md-2 offset-8">
+                                            <div class="form-group">
+                                                <label asp-for="Request.Currency" class="control-label">Currency</label>
+                                                <select id="currency" asp-for="Request.Currency" class="mdb-select custom select-dropdown form-control-plaintext mark-readonly" disabled>
+                                                    <option value="dollar">&dollar; USD</option>
+                                                    <option value="shekel">&#8362; NIS</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label asp-for="Request.ExchangeRate" class="control-label"></label>
+                                                <input asp-for="Request.ExchangeRate" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                                                <span asp-validation-for="Request.ExchangeRate" class="text-danger-centarix"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Sum:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#36;</span>
+                                                    <input class="form-control-plaintext border-bottom" name="sum-dollars" min="0" id="sum-dollars" disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label asp-for="Request.Cost" class="control-label"></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#x20aa;</span>
+                                                    <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                                                    <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label asp-for="Request.VAT" class="control-label"></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#x20aa;</span>
+                                                    <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " />
+                                                    <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Total + VAT:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#36;</span>
+                                                    <input class="form-control-plaintext border-bottom" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="control-label">____</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">&#x20aa;</span>
+                                                    <input class="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <br />
-                                }
-
-                            @*    <div class="row">
-                                    <div class="col-md-6 pr-4">
-                                        <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
-                                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
-                                    </div>
-                                </div>*@
-                                <br />
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label asp-for="Request.CatalogNumber" class="control-label"></label>
-                                        <input asp-for="Request.CatalogNumber" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.CatalogNumber" class="text-danger-centarix"></span>
-                                    </div>
-                                    <div class="col-3">
-                                        <label asp-for="Request.Warranty" class="control-label"></label>
-                                        <input asp-for="Request.Warranty" min="0" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
-                                    </div>
-                                    @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
-                                    {
-                                        <div class="col-3">
-                                            <label class="control-label">End Date</label>
-                                            @*@{
-                            //get this just to return the date (not the time)
-                            //adding the amount of months of the warranty to the invoice date
-                            var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
-                        }*@
-                                            <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Discount:</label>
+                                            </div>
                                         </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="col-3">
-                                            <label class="control-label">Estimated End Date</label>
-                                            <input value="@DateTime.Now.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Terms:</label>
+                                                @Html.DropDownListFor(
+                                                                        model => model.Request.Terms,
+                                                                        new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
+                htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
+                                                                    )
+                                            </div>
                                         </div>
-                                    }
-
-                                </div>
-                                <br />
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                        <input asp-for="Request.ExpectedSupplyDays" min="0" class="form-control-plaintext border-bottom "  />
-                                        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                        <div class="col-md-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input mark-readonly" type="checkbox" id="paid_checkbox" onchange="changeTerms(this)" disabled />
+                                                <label class="form-check-label" for="paid_checkbox">Paid</label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
-                                    {
-                                        <div class="col-4">
-                                            <label class="control-label">Expected supply date</label>
-                                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays??0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled"  min="@DateTime.Now.Date.ToString("yyyy-MM-dd")"  />
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="col-4">
-                                            <label class="control-label">Esitmated Expected supply date</label>
-                                            <input value="@DateTime.Now.AddDays(Model.Request.ExpectedSupplyDays??0);" class="form-control-plaintext border-bottom" name="expected-supply-days" disabled="disabled" />
-                                        </div>
-                                    }
-
-                                    <div class="col-4">
-                                        <label asp-for="Request.URL" class="control-label"></label>
-                                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
-                                        <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="location" class="tab-pane fade">
-                                <span style="font-size: 1.7em;">Location</span>
-                                <br />
-                                <br />
-                                @if (Model.ChildrenLocationInstances != null && Model.ChildrenLocationInstances.Any())
-                                {
-                                    <h4>@Model.ParentLocationInstance.LocationInstanceName</h4> //this should be a link to the manage page for admins only
-                                    <table class="table table-sm border">
-                                        @{
-                                            int z = -1; //initiated to -1 b/c it didn't let me put the z++ on the bottom of the fx. Really should be 0.
-                                        }
-                                        @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
-                                        {
-                                            <tr>
-                                                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-                                                {
-                                                    z++;
-                                                    var backgroundClass = "border";
-                                                    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
-                                                    {
-                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
-                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
-
-                                                        if (Model.ChildrenLocationInstances[z].IsFull)
-                                                        {
-                                                            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
-                                                            {
-                                                                backgroundClass += " bg-info text-light text-center";
-                                                            }
-                                                            else //why is this else here? it doesn't seem to ever get used.
-                                                            {
-                                                                backgroundClass += " bg-secondary";
-                                                            }
-                                                            <td class="@backgroundClass">
-                                                                @Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName
-                                                            </td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td class="@backgroundClass"><span style="font-size:x-small">empty</span></td>
-                                                        }
-
-                                                    }
-
-                                                }
-                                            </tr>
-                                        }
-                                    </table>
-                                }
-                                else
-                                {
-                                    <span>No Locations yet</span>
                                     <br />
-                                    @*<button>Add Locations</button>*@
-                                }
+                                    @*<div class="row installments">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="Request.Installments" class="control-label"></label>
+                                <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
                             </div>
-                            <div id="price" class="tab-pane fade">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <span style="font-size: 1.7em;">Price</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="currency" class="control-label">Currency</label>
-                                            <select id="currency" asp-for="Request.Currency" class="mdb-select md-form colorful-select dropdown-primary">
-                                                <option value="dollar">&dollar; USD</option>
-                                                <option value="shekel">&#8362; NIS</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label asp-for="Request.ExchangeRate" class="control-label"></label>
-                                            <input asp-for="Request.ExchangeRate" min="1" class="form-control-plaintext border-bottom" />
-                                            <span asp-validation-for="Request.ExchangeRate" class="text-danger-centarix"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                               <br />
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Sum:</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom" name="sum-dollars" min="0" id="sum-dollars" disabled />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label asp-for="Request.Cost" class="control-label"></label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom" />
-                                                <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label asp-for="Request.VAT" class="control-label"></label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " />
-                                                <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Total + VAT:</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">____</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br />
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Discount:</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Terms:</label>
-                                            @Html.DropDownListFor(
-                                                                    model => model.Request.Terms,
-                                                                    new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-            htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
-                                                                )
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-check">
-                                            <label class="form-check-label"><input class="form-check-input" type="checkbox" id="paid_checkbox" onchange="changeTerms(this)" />Paid</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br />
-                                @*<div class="row installments">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label asp-for="Request.Installments" class="control-label"></label>
-                                            <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
-                                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
-                                        </div>
-                                        @if (Model.NewPayments != null && Model.NewPayments.Any())
+                            @if (Model.NewPayments != null && Model.NewPayments.Any())
+                            {
+                                <script>
+                                    console.log("in script for installments disabled");
+                                    $("#Request_ParentRequest_Installments").attr("disabled", true);
+                                </script>
+                            }
+                        </div>
+                        <div class="col-md-8 rounded card p-3">
+                            <table class="table table-sm payments-table">
+                                <thead class="thead-light rounded">
+                                    <tr>
+                                        <th>Payment Date</th>
+                                        <th>Payment Type</th>
+                                        <th>Account</th>
+                                        <th>Reference</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        if (Model.NewPayments != null)
                                         {
-                                            <script>
-                                                console.log("in script for installments disabled");
-                                                $("#Request_ParentRequest_Installments").attr("disabled", true);
-                                            </script>
-                                        }
-                                    </div>
-                                    <div class="col-md-8 rounded card p-3">
-                                        <table class="table table-sm payments-table">
-                                            <thead class="thead-light rounded">
-                                                <tr>
-                                                    <th>Payment Date</th>
-                                                    <th>Payment Type</th>
-                                                    <th>Account</th>
-                                                    <th>Reference</th>
+                                            int counter = 0;
+                                            foreach (var payment in Model.NewPayments)
+                                            {
+                                                <tr class="payment-line">
+                                                    <td>
+                                                        <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
+                                                    </td>
+                                                    <td>
+                                                        @Html.DropDownListFor(
+                                                       m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
+                                                       new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
+                                                       , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
+                                                       )
+                                                    </td>
+                                                    <td>
+                                                        @Html.DropDownListFor(
+                                                       m => m.NewPayments[counter].CompanyAccountID,
+                                                       new SelectList(
+                                                           Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
+                                                       "CompanyAccountID", "CompanyAccountNum"),
+                                                       new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
+                                                    <td>
+                                                        <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
+                                                    </td>
+                                                    @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
+                                                    @Html.HiddenFor(m => m.NewPayments[counter].RequestID)
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                @{
-                                                    if (Model.NewPayments != null)
-                                                    {
-                                                        int counter = 0;
-                                                        foreach (var payment in Model.NewPayments)
-                                                        {
-                                                            <tr class="payment-line">
-                                                                <td>
-                                                                    <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
-                                                                </td>
-                                                                <td>
-                                                                    @Html.DropDownListFor(
-                                                                   m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
-                                                                   new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
-                                                                   , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
-                                                                   )
-                                                                </td>
-                                                                <td>
-                                                                    @Html.DropDownListFor(
-                                                                   m => m.NewPayments[counter].CompanyAccountID,
-                                                                   new SelectList(
-                                                                       Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
-                                                                   "CompanyAccountID", "CompanyAccountNum"),
-                                                                   new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
-                                                                <td>
-                                                                    <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
-                                                                </td>
-                                                                @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
-                                                                @Html.HiddenFor(m => m.NewPayments[counter].RequestID)
-                                                            </tr>
-                                                            counter++;
-                                                        }
-                                                    }
-                                                }
-                                            </tbody>
-                                        </table>
+                                                counter++;
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">Debt</label>
+                                <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
+                            </div>
+                        </div>
+                    </div>*@
+                                </div>
+
+
+                                <div id="documents" class="tab-pane fade">
+                                    <div class="row modal-tab-name">
+                                        <span class="heading-1 col-12 modal-tab-name">Documents</span>
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="control-label">Debt</label>
-                                            <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
+
+                                    @{
+                                        var urlAction = Url.Action("DocumentsModal", "Requests");
+                                        var fontSize = "2rem";
+                                    }
+
+                                    <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+
+                                    <div class="row document-margin-bottom">
+                                        <div class=" document-margin">
+                                            @{
+                                                var filterClass = "opac87";
+                                                if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "oper-filter";
+                                                }
+                                            }
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
+                                                <div class="card document-border ">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
+
+                                                </div>
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
+                                        </div>
+                                        <div class=" document-margin ">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "oper-filter";
+                                                }
+                                            }
+                                            <a href="" class=" open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class=" document-card text-center">
+                                                        <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
+                                                    </div>
+
+                                                </div>
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
+                                        </div>
+                                        <div class=" document-margin">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "oper-filter";
+                                                }
+                                            }
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
+
+                                                </div>
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
+                                        </div>
+                                        <div class="">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "oper-filter";
+                                                }
+                                            }
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
                                         </div>
                                     </div>
-                                </div>*@
-                            </div>
-
-
-                            <div id="documents" class="tab-pane fade">
-                                <span style="font-size: 1.7em;">Documents</span>
-                                @{
-                                    var urlAction = Url.Action("DocumentsModal", "Requests");
-                                }
-                                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" />
-                                <div class="row">
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            var filterClass = "";
-                                            if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
-                                            {
-                                                filterClass = "oper-filter";
+                                    <div class="row document-margin-bottom">
+                                        <div class=" document-margin">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "oper-filter";
+                                                }
                                             }
-                                        }
-                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
-                                            <div class="card document-border " style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/order_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
                                                 </div>
-
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Order</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
-                                            {
-                                                filterClass = "oper-filter";
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Info</label>
+                                        </div>
+                                        <div class=" document-margin">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "oper-filter";
+                                                }
                                             }
-                                        }
-                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/invoice_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
                                                 </div>
-
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Invoice</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
-                                            {
-                                                filterClass = "oper-filter";
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Picture</label>
+                                        </div>
+                                        <div class=" document-margin">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "oper-filter";
+                                                }
                                             }
-                                        }
-                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/shipment_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
                                                 </div>
-
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Shipment</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
-                                            {
-                                                filterClass = "oper-filter";
+                                            </a>
+                                            <label class="control-label text-center text  document-text-margin" style="width:100%;">Return</label>
+                                        </div>
+                                        <div class="">
+                                            @{
+                                                filterClass = "opac87";
+                                                if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
+                                                {
+                                                    filterClass = "oper-filter";
+                                                }
                                             }
-                                        }
-                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/quote_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
+                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
+                                                <div class="card document-border">
+                                                    <div class="document-card text-center">
+                                                        <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Quote</label>
+                                            </a>
+                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Credit</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
-                                            {
-                                                filterClass = "oper-filter";
-                                            }
-                                        }
-                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/info_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Info</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
-                                            {
-                                                filterClass = "oper-filter";
-                                            }
-                                        }
-                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/pictures_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Picture</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
-                                            {
-                                                filterClass = "oper-filter";
-                                            }
-                                        }
-                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/return_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Return</label>
-                                    </div>
-                                    <div class="col-md-3 mb-4">
-                                        @{
-                                            filterClass = "";
-                                            if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
-                                            {
-                                                filterClass = "oper-filter";
-                                            }
-                                        }
-                                        <a href="" class="open-document-modal operations" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
-                                            <div class="card document-border" style="height:86%">
-                                                <div class="card-body text-center" style="height:150px;">
-                                                    <img src="~/images/css/inventory/add-item/other icons/credit_dis.png" style="margin-top:3rem;" alt="order" class="@filterClass" />
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center" style="width:100%; line-height:2.5;">Credit</label>
-                                    </div>
-                                </div>
-                            </div>
 
 
-                            <div id="comments" class="tab-pane fade">
-                                <span style="font-size: 1.7em;">Comments</span>
-                                <br />
-                                <br />
-                                @{
-                                    if (Model.OldComments != null)
-                                    {
-                                        foreach (Comment comment in Model.OldComments)
+                                <div id="comments" class="tab-pane fade">
+                                    <div class="row modal-tab-name">
+                                        <span class="heading-1 col-12 modal-tab-name">Comments</span>
+                                    </div>
+                                    @{
+                                        if (Model.OldComments != null)
                                         {
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="card rounded">
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
-                                                                    @*Insert Pic
-                                                <img src="" />
-                                                changing this to the user's profile picture*@
-                                                                </div>
-                                                                <div class="col-md-10">
-                                                                    <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
-                                                                    @comment.CommentText
-                                                                </div>
+                                            foreach (Comment comment in Model.OldComments)
+                                            {
+
+                                                <div class="border document-border p-3">
+                                                    <div class="row mb-0">
+                                                        <div class="col-1 mr-3">
+                                                            <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
+                                                                @{
+                                                                    var src = "/UserImages/profile_circle_big.png";
+                                                                    if (_userManager.GetUserAsync(User).Result.UserImage != null)
+                                                                    {
+                                                                        src = _userManager.GetUserAsync(User).Result.UserImage;
+                                                                    }
+                                                                }
+                                                                <img src="@src" class=" ml-0" alt="default User image" />
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-9">
+                                                            <div class="form-group">
+                                                                <label class="font-weight-bold small-text">
+                                                                    @_userManager.GetUserAsync(User).Result.FirstName
+                                                                    @_userManager.GetUserAsync(User).Result.LastName
+                                                                    @DateTime.Now.ToLongDateString()
+                                                                    @DateTime.Now.ToLongTimeString()
+                                                                </label>
+                                                                <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom mark-readonly " disabled />
+                                                                <span asp-validation-for="NewComment.CommentText" class="text-danger-centarix"></span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <br />
+                                            }
                                         }
                                     }
-                                }
-                                @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
-                                <div class="card rounded">
-                                    <div class="card-body">
-                                        <div class="font-weight-bold">+NewComment</div>
-                                        <div class="form-group">
-                                            <label asp-for="NewComment.CommentText" class="control-label font-weight-bold"></label>
-                                            <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
-                                            <span asp-validation-for="NewComment.CommentText" class="text-danger-centarix"></span>
-                                        </div>
-                                    </div>
+                                    @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
+
+
                                 </div>
 
+
                             </div>
-
                         </div>
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    @*you can only add to cart if you are creating a new one*@
-                    <div class="m-auto">
-                        <input type="submit" id="saveEditModal" name="OrderType" value="Save" asp-action="EditModalView" class="custom-button custom-button-font oper-button between-button-margin" />
-
-                        @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
-                        <button type="button" class="custom-cancel custom-button" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-
+            
 
 
 

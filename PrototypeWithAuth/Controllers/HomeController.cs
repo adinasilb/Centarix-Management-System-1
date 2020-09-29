@@ -31,18 +31,20 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult Index()
         {
             var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
-            if (user.LastLogin.Date < DateTime.Today)
-            {
-                fillInOrderLate(user);
-                fillInTimekeeperMissingDays(user);
-                user.LastLogin = DateTime.Now;
-                _context.Update(user);
-                _context.SaveChanges();
-            }          
+                
             //Adina added in 3 lines
             if (User.IsInRole("Admin"))
             {
                 return RedirectToAction("IndexAdmin");
+            }
+            if (user.LastLogin.Date < DateTime.Today)
+            {
+                fillInOrderLate(user);
+                fillInTimekeeperMissingDays(user);
+                fillInTimekeeperNotifications(user);
+                user.LastLogin = DateTime.Now;
+                _context.Update(user);
+                _context.SaveChanges();
             }
             IEnumerable<Menu> menu = _context.Menus.Select(x => x);
        
@@ -53,6 +55,16 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult IndexAdmin()
         {
+            var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
+            if (user.LastLogin.Date < DateTime.Today)
+            {
+                fillInOrderLate(user);
+                fillInTimekeeperMissingDays(user);
+                fillInTimekeeperNotifications(user);
+                user.LastLogin = DateTime.Now;
+                _context.Update(user);
+                _context.SaveChanges();
+            }
             IEnumerable<Menu> menu = _context.Menus.Select(x => x);
             return View(menu);
         }
@@ -73,16 +85,18 @@ namespace PrototypeWithAuth.Controllers
         {
             var currentUserID = _userManager.GetUserId(User);
             DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id ==currentUserID).DateLastReadNotifications;
-            int count = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication & n.ApplicationUserID==currentUserID).Count();
-            return count;
+            int count1 = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID==currentUserID).Count();
+            var tk = _context.TimekeeperNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID);
+            int count2 = tk.Count();            
+            return count1+count2;
         }
         [HttpGet]
         public JsonResult GetLatestNotifications()
         {
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             //todo: figure out exactly which notfications to show
-            var rnotification = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id && n.TimeStamp > DateTime.Now.AddDays(-5))
-             
+            var rnotification = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id)
+
              .Select(n => new
              {
                  id = n.NotificationID,
@@ -94,10 +108,24 @@ namespace PrototypeWithAuth.Controllers
                  controller = n.Controller,
                  action = n.Action,
                  isRead = n.IsRead
-             }).OrderByDescending(n => n.timeStamp).ToList();
+             });
+            //todo: figure out how to filter out - maybe only select those that are from less then 10 days ago
+            var tnotification = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == currentUser.Id).Include(n => n.NotificationStatus)
 
+               .Select(n => new
+               {
+                   id = n.NotificationID,
+                   timeStamp = n.TimeStamp,
+                   description = n.Description,
+                   requestName = "",
+                   icon = n.NotificationStatus.Icon,
+                   color = n.NotificationStatus.Color,
+                   controller = n.Controller,
+                   action = n.Action,
+                   isRead = n.IsRead
+               });           
             //var notificationsCombined = notification.Concat(rnotification).OrderByDescending(n=>n.timeStamp).ToList();
-            return Json(rnotification.Take(4));
+            return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
         }
         [HttpPost]
         public bool UpdateLastReadNotifications()
@@ -164,24 +192,20 @@ namespace PrototypeWithAuth.Controllers
         {
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
-                var lateOrders = _context.Requests.Where(r => r.ApplicationUserCreatorID == user.Id).Where(r => r.RequestStatusID == 2)
-                    .Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date >= user.LastLogin.Date && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today)
-                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.ParentRequest);
-                foreach (var request in lateOrders)
+                var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null) || (r.Entry2 != null && r.Exit2 == null))
+                    .Where(r => r.Date.Date >= user.LastLogin.Date && r.Date.Date < DateTime.Today);
+                foreach (var e in eh)
                 {
-                    RequestNotification requestNotification = new RequestNotification();
-                    requestNotification.RequestID = request.RequestID;
-                    requestNotification.IsRead = false;
-                    requestNotification.RequestName = request.Product.ProductName;
-                    requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd/MM/yyyy");
-                    requestNotification.NotificationStatusID = 1;
-                    requestNotification.TimeStamp = DateTime.Now;
-                    requestNotification.Controller = "Requests";
-                    requestNotification.Action = "NotificationsView";
-                    requestNotification.OrderDate = request.ParentRequest.OrderDate;
-                    requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                    _context.Update(requestNotification);
+                    TimekeeperNotification timekeeperNotification = new TimekeeperNotification();
+                    timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
+                    timekeeperNotification.IsRead = false;
+                    timekeeperNotification.ApplicationUserID = e.EmployeeID;
+                    timekeeperNotification.Description = "update hours for " + e.Date.ToString("dd/MM/yyyy");
+                    timekeeperNotification.NotificationStatusID = 5;
+                    timekeeperNotification.TimeStamp = DateTime.Now;
+                    timekeeperNotification.Controller = "Timekeeper";
+                    timekeeperNotification.Action = "SummaryHours";
+                    _context.Update(timekeeperNotification);
                 }
                 _context.SaveChanges();
 

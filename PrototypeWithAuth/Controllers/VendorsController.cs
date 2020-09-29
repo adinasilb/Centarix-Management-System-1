@@ -428,7 +428,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["Action"] = AppUtility.SuppliersEnum.All;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
             }
-            return View(createSupplierViewModel);
+            return PartialView(createSupplierViewModel);
         }
 
         // POST: Vendors/Edit/5
@@ -473,24 +473,24 @@ namespace PrototypeWithAuth.Controllers
                         _context.Remove(type);
                     }
                 }
-                _context.SaveChanges();
+                
                 foreach (var type in createSupplierViewModel.VendorCategoryTypes)
                 {
                     _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
                 }
-                _context.SaveChanges();
                 foreach (var vendorContact in vendorContacts)
                 {
                     vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
                     _context.Update(vendorContact.VendorContact);
-                    _context.SaveChanges();
+
                 }
                 foreach (var vendorComment in vendorComments)
                 {
                     vendorComment.VendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
                     _context.Update(vendorComment.VendorComment);
-                    _context.SaveChanges();
+                   
                 }
+                _context.SaveChanges();
                 return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType});
             }
 

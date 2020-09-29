@@ -12,11 +12,12 @@ namespace PrototypeWithAuth.ViewModels
     public class DocumentsModalViewModel
     {
         public AppUtility.RequestFolderNamesEnum RequestFolderName { get; set; }
-        public Request Request { get; set; }
+        public List<Request> Requests { get; set; }
         public List<string> FileStrings { get; set; }
         public List<FileInfo> Files { get; set; }
         public List<IFormFile> FilesToSave { get; set; }
         public bool IsEdittable { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
+        public bool IsNotifications { get; set; }
     }
 }

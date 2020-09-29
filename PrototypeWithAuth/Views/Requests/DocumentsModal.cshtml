@@ -3,9 +3,9 @@
 @{
     Layout = null;
     int requestid;
-    if (Model.Request != null)
+    if (Model.Requests.Count == 1)
     {
-        requestid = Model.Request.RequestID;
+        requestid = Model.Requests[0].RequestID;
     }
     else
     {
@@ -31,7 +31,11 @@
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding" id="documentModalForm">
                 @*<a style="display: none;" id="ReopenDocModal" href="@Url.ActionLink("DocumentsModal","Requests", new { id = @Model.Request.RequestID, RequestFolderNameEnum = @Model.RequestFolderName})"></a>*@
-                <input type="hidden" asp-for="Request.RequestID" />
+                @*<input type="hidden" asp-for="Request.RequestID" />*@
+                @for (int x = 0; x< Model.Requests.Count; x++)
+                {
+                    <input type="hidden" asp-for="Requests[x].RequestID" />
+                }
                 <input type="hidden" asp-for="RequestFolderName" />
                 <input type="hidden" asp-for="IsEdittable" />
                 <input type="hidden" asp-for="SectionType" />

@@ -27,15 +27,18 @@ namespace PrototypeWithAuth.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Freelancer> Freelancers { get; set; }
         public DbSet<EmployeeStatus> EmployeeStatuses { get; set; }
+        public DbSet<Advisor> Advisors { get; set; }
         public DbSet<SalariedEmployee> SalariedEmployees { get; set; }
         public DbSet<EmployeeHoursStatus> EmployeeHoursStatuses { get; set; }
         public DbSet<OffDayType> OffDayTypes { get; set; }
         public DbSet<EmployeeHoursAwaitingApproval> EmployeeHoursAwaitingApprovals { get; set; }
         public DbSet<EmployeeHours> EmployeeHours { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<TimekeeperNotificationStatus> TimekeeperNotificationStatuses { get; set; }
         public DbSet<RequestNotificationStatus> RequestNotificationStatuses { get; set; }
         public DbSet<NotificationStatus> NotificationStatuses { get; set; }
         public DbSet<RequestNotification> RequestNotifications { get; set; }
+        public DbSet<TimekeeperNotification> TimekeeperNotifications { get; set; }
         //public DbSet<Notification<NotificationStatus>> Notifications { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
         public DbSet<Reorder> Reorder { get; set; }

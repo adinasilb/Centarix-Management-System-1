@@ -254,6 +254,7 @@
             $('#dtBasicExample').DataTable();
             $('.dataTables_length').addClass('bs-select');
             $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             $('.timekeeper .dropdown-content').removeClass('w-100');
             $('.datepicker').pickadate();
             $('#request-search a:first').tab('show'); @* I had to put this in here b / c otherwise it wasn't coming up on .search-link.click*@
@@ -274,6 +275,7 @@
             //users
             $("#user-permissions-tab").prop("disabled", true);
             $("#user-budget-tab").prop("disabled", true);
+            $("#user-images-tab").prop("disabled", true);
             $("#user-more-tab").prop("disabled", true);
 
             if ($("#tdprconfirmemail").val()) {
@@ -358,17 +360,29 @@
             $("#loading").show();
             var $itemurl = "";
             if ($(this).hasClass('operations')) {
-                $itemurl = "/Operations/DetailsModalView/?id=" + $(this).val();
+                $itemurl = "/Operations/EditModalView/?id=" + $(this).val();
             }
             else {
                 console.log("Requests/EditModalView/?id")
                 //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-                $itemurl = "/Requests/DetailsModalView/?id=" + $(this).val();
+                $itemurl = "/Requests/EditModalView/?id=" + $(this).val();
             }
             $.fn.CallPageRequest($itemurl, "details");
             return false;
         });
+        $(".load-vendor-edit").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+            var $itemurl = "";
+           
+            console.log("Vendors/Edit/?id")
+            //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+            $itemurl = "/Vendors/Edit/?id=" + $(this).attr('val') + '&SectionType=' + $(this).attr('sectionType');
 
+            $.fn.CallPageRequest($itemurl, "details");
+            return false;
+        });
         $(".load-product-details-summary").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -592,6 +606,7 @@
                             break;
                         case "received":
                             $('.mdb-select').materialSelect();
+                            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
                             AddTempDataMemory();
                             break;
                         case "confirmemail":
@@ -627,6 +642,7 @@
 
         $.fn.OnOpenModalView = function () {
             $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             $('.modal-content a:first').tab('show');
             var parentCategoryId = $("#parentlist").val();
             var subcategoryId1 = $("#sublist").val();
@@ -668,7 +684,7 @@
             $("#loading").show();
             var $itemurl = "/Admin/EditUser/?id=" + $(this).attr("value");
             console.log("itemurl: " + $itemurl);
-            $.fn.CallPageRequest($itemurl, "edituser");
+            $.fn.CallPageUser($itemurl);
             return false;
         });
 
@@ -726,56 +742,10 @@
             item.classList.add("activeNavLink");
         }
 
-        $(".create-user-modal").on("click", function (e) {
-            $("li a").removeClass("active");
-            $(".create-user-modal").addClass("active");
-
-            console.log("create user modal clicked");
-            var $itemurl = "/Admin/CreateUserModal/";
-            console.log("itemurl: " + $itemurl);
-            //$("#loading").show();
-            $.fn.CallPageUser($itemurl);
-            return false;
-        });
-
-        $(".edit-user-modal").on("click", function (e) {
-            console.log("edit user modal clicked");
-            console.log("val: " + $(this).data('string'));
-            var $itemurl = "/Admin/EditUserModal/?id=" + $(this).data('string');
-            console.log("itemurl: " + $itemurl);
-            //$("#loading").show();
-            $.fn.CallPageUser($itemurl);
-            return false;
-        });
-
-        $.fn.CallPageUser = function ($itemurl) {
-            //delete existing modals
-            $('.modal').replaceWith('');
-            $(".modal-backdrop").remove();
-            $.ajax({
-                async: true,
-                url: $itemurl,
-                type: 'GET',
-                cache: true,
-                success: function (data) {
-                    //$("#loading").hide();
-                    //console.log("success!");
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $(".modal-view").modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    //shows the modal
-                    $(".modal").modal('show');
-                    $.fn.OnOpenModal();
-                }
-            });
-        };
-
         $.fn.OnOpenModal = function () {
             $('.modal-content a:first').tab('show');
             $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             $('.mdb-select li:first-child').hide();
             $('.mdb-select li:nth-child(2)').hide();
         };
@@ -802,30 +772,32 @@
             return false;
         };
 
+
         $.fn.CallPageUser = function ($itemurl) {
-            console.log("item url: " + $itemurl);
+            //delete existing modals
             $('.modal').replaceWith('');
             $(".modal-backdrop").remove();
             $.ajax({
-                //async: true,
+                async: true,
                 url: $itemurl,
                 type: 'GET',
                 cache: true,
                 success: function (data) {
+                    $("#loading").hide();
+                    //console.log("success!");
                     var modal = $(data);
                     $('body').append(modal);
-                    //replaces the modal-view class with the ModalView view
-                    //$(".modal-view").html(data);
-                    //turn off data dismiss by clicking out of the box and by pressing esc
                     $(".modal-view").modal({
                         backdrop: true,
                         keyboard: false,
                     });
                     //shows the modal
                     $(".modal").modal('show');
+                    $.fn.OnOpenModal();
                 }
             });
-        }
+        };
+
 
         $(".load-vendor-search").on("click", function (e) {
             e.preventDefault();
@@ -893,19 +865,7 @@
             hide = false;
         });
 
-        $("#addSupplierComment").click(function () {
-            $('[data-toggle="popover"]').popover('dispose');
-            $('#addSupplierComment').popover({
-                sanitize: false,
-                placement: 'bottom',
-                html: true,
-                content: function () {
-                    return $('#popover-content').html();
-                }
-            });
-            $('#addSupplierComment').popover('toggle');
-
-        });
+       
 
 
 
@@ -1071,7 +1031,7 @@
                 type: 'POST',
                 cache: true,
                 success: function (data) {
-
+                    $.fn.GetNotifcationCount();
                 }
             });
         }
@@ -1080,8 +1040,10 @@
             $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
                     var timestamp = new Date(notification.timeStamp)
-                    var link = '/Requests/NotificationsView?requestID=-3';
+                    var link = '/-1/-2?requestID=-3';
                     link = link.replace("-3", notification.id);
+                    link = link.replace("-2", notification.action);
+                    link = link.replace("-1", notification.controller);
                     var bold = "";
                     console.log( notification.isRead);
                     if (notification.isRead == false) {
@@ -1127,7 +1089,7 @@
             });
             $('#openNotifications').popover('toggle');
             $.fn.UpdateNotificationLastRead();
-            $.fn.GetNotifcationCount();
+        
         });
 
         $.fn.GetHoursString = function (date) {
