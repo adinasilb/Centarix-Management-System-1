@@ -409,7 +409,7 @@ namespace PrototypeWithAuth.Controllers
 
 
                     //add a "From" Email
-                    message.From.Add(new MailboxAddress("debbie", "debbie@centarix.com"));
+                    message.From.Add(new MailboxAddress("Elixir", "elixir@centarix.com"));
 
                     // add a "To" Email
                     message.To.Add(new MailboxAddress(user.FirstName, user.Email));
@@ -426,7 +426,7 @@ namespace PrototypeWithAuth.Controllers
                     {
 
                         client.Connect("smtp.gmail.com", 587, false);
-                        client.Authenticate("debbie@centarix.com", "zxenlymcoblxkmyr");
+                        client.Authenticate("elixir@centarix.com", "Centarix.2020");
                         try
                         {
                             client.Send(message);

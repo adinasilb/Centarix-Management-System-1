@@ -224,7 +224,7 @@
 }
 
 <div class="">
-    <table class="table table-headerspaced table-noheaderlines table-hover">
+    <table class="table table-headerspaced table-noheaderlines table-hover item-table">
         <thead>
             <tr class="text-center">
                 @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>*@
@@ -271,7 +271,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr class="text-center inv-list-item">
+            <tr class="text-center ">
                 <td>
                     @if (item.Product.ProductSubcategory.ImageURL != null)
                     {

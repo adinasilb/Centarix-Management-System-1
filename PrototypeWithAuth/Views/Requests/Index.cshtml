@@ -238,7 +238,7 @@
 }
 
 <div class="">
-    <table class="table table-headerspaced table-noheaderlines table-hover">
+    <table class="table table-headerspaced table-noheaderlines table-hover item-table">
         <thead>
             <tr class="text-center">
                 @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>*@
@@ -283,14 +283,14 @@
                     <th>Last Ordered</th>
                 }
                 <th></th>
-                <th></th>
+
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr class="text-center inv-list-item">
-                    <td>
+                <tr class="text-center ">
+                    <td >
                         @if (item.Product.ProductSubcategory.ImageURL != null)
                         {
                             var imageurl = item.Product.ProductSubcategory.ImageURL;
@@ -303,19 +303,19 @@
                     </td>
                     @if (Summary)
                     {
-                        <td> <button class="btn inv-link-clr load-product-details-summary no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
+                        <td width="15%"> <button class="btn p-0 m-0 inv-link-clr load-product-details-summary no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item"><p class="m-0">@Html.DisplayFor(modelItem => item.Product.ProductName)</p> </button></td>
                     }
                     else
                     {
-                        <td> <button class="btn inv-link-clr load-product-details no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
+                        <td width="15%"> <button class="btn p-0 m-0 inv-link-clr load-product-details no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item"><p class="m-0">@Html.DisplayFor(modelItem => item.Product.ProductName)</p></button></td>
                     }
 
 
-                    <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
+                    <td > @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
                     @if (!Summary)
                     {
-                        <td>
-                            <ul style="list-style: none;">
+                        <td >
+                            <ul style="list-style: none; padding-left:0px;">
 
                                 @if (item.Unit != null)
                                 {
@@ -373,19 +373,21 @@
                     @{
                         if (requestStatusID == 2 || Summary)
                         {
-                            <td>@Html.DisplayFor(m => item.ParentRequest.OrderDate)</td>
+                            <td>@item.ParentRequest.OrderDate.ToString("yyyy-MM-dd")</td>
                         }
                         else if (requestStatusID == 3)
                         {
-                            <td>@Html.DisplayFor(m => item.ArrivalDate)</td>
+                            <td>@item.ArrivalDate.ToString("yyyy-MM-dd")</td>
                         }
                         else
                         {
-                            <td>@Html.DisplayFor(m => item.CreationDate)</td>
+                            <td>@item.CreationDate.ToString("yyyy-MM-dd")</td>
                         }
                     }
-                    <td class="row" >
-                        <div class="col-4">
+                <td width="9%">
+                    <div class="d-inline-flex">
+                        <div class="table-icon-div">
+
 
                             @if (item.RequestStatusID == 1)
                             {
@@ -410,23 +412,27 @@
 
                                 }
                             }
+
                             else if (item.RequestStatusID == 2)
                             {
-                                <button class="btn load-receive-and-location no-box-shadow" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
+                                <button class="btn p-0 load-receive-and-location no-box-shadow" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
                             }
                             else
                             {
                                 @*work on getting the correct syntax to create a new product with*@
-                                <button class="btn load-order-details no-box-shadow" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
+                                <button class="btn p-0 load-order-details no-box-shadow" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
                             }
-
                         </div>
-                    @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
-                    <div class="col-3"><button class="btn load-confirm-delete no-box-shadow" data-title="delete" value="@item.RequestID" name="@AppUtility.MenuItems.OrdersAndInventory"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button></div> @*delete*@
 
-                        @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
-                        @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
-                    </td>
+                        <div class="table-icon-div">
+                            <button class="btn p-0 load-confirm-delete no-box-shadow" data-title="delete" value="@item.RequestID" name="@AppUtility.MenuItems.OrdersAndInventory"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button>
+                        </div>
+                    </div>
+                  
+
+                    @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
+                    @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
+                </td>
                 </tr>
             }
         </tbody>

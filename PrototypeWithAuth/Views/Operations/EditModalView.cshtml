@@ -127,7 +127,7 @@
                                                         dataValueField: "VendorID",
                                                         dataTextField: "VendorEnName"),
                                                     //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                                                    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "vendorList", @searchable = "Select A Vendor" }
+                                                    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "vendorList", @disabled = "disabled", @searchable = "Select A Vendor" }
                                                 )
                                                 <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
                                             </div>
