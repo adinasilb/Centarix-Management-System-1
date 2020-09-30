@@ -399,7 +399,9 @@ table td, table td .btn, .text, table th {
 .item-table tr{
     height:8.125rem;
 }
-.table-icon-div{
-    height:3rem;
-    width:3rem;
+.table-icon-div {
+    height: 3rem;
+    width: 3rem;
+    display: flex;
+    align-items: center;
 }
