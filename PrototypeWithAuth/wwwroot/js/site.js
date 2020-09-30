@@ -2809,7 +2809,7 @@ $(function () {
 			$(".security-tab").prop("disabled", false);
 		}
 		else {
-			$.fn.validateSalaryTab();
+		$.fn.validateSalaryTab();
 		}
 	});
 	$.fn.validateSalaryTab = function () {
@@ -2935,12 +2935,24 @@ $(function () {
 		console.log('employee status')
 		$('#NewEmployee_EmployeeStatusID').val($(this).val())
 		$("#validation-EmployeeStatus").addClass("hidden");
-		var statIdVal = $("#NewEmployee_EmployeeStatusID").val();
-		console.log("statIdVal: " + statIdVal);
-		if (statIdVal = 4) {
 
-		}
-	})
 
+
+	});
+
+	$(".search").on("input", function (e) {
+		console.log("1 typing....");
+		console.log($(this).val());
+	});
+
+	$(".search").on("click", function (e) {
+		console.log("2 typing....");
+		console.log($(this).val());
+	});
+
+	$(".search").on("change", function (e) {
+		console.log("3 typing....");
+		console.log($(this).val());
+	});
 
 });
