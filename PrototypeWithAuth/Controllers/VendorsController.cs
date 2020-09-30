@@ -258,6 +258,18 @@ namespace PrototypeWithAuth.Controllers
             }
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
             TempData["SectionType"] = vendorSearchViewModel.SectionType;
+            if (vendorSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.SearchSupplier;
+            }
+            else if (vendorSearchViewModel.SectionType == AppUtility.MenuItems.Accounting)
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.SearchSupplierAC;
+            }
             return View("IndexForPayment", filteredVendors.ToList());
         }
 

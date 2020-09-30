@@ -2091,7 +2091,7 @@ td .btn {
     padding: 1.25rem;
     background: #F6F7F8;
 }
-[type=checkbox]:checked + label:before {
+.custom-control [type=checkbox]:checked + label:before {
     border-right: 0px !important;
     border-bottom: 0px !important;
 }

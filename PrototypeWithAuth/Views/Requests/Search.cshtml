@@ -24,7 +24,7 @@
     }
 }
 
-<form action="" method="post" class="container-fluid ml-6 @form " enctype="multipart/form-data" id="search-form">
+<form action="" method="post" class="container-fluid ml-6 @form "  enctype="multipart/form-data" id="search-form">
     <div class="row">
         <div class="col-1  mr-5">
             <div class="custom-control custom-checkbox">
@@ -53,6 +53,7 @@
         <div class="col-7 create-user  on-form-modal ">
             <div class="on-form-modal-border pb-4">
                 <input type="hidden" asp-for="SectionType" />
+    
                 <div class="new-modal-body ">
                     <div class="container-fluid div-tabs no-box-shadow p-0">
 
@@ -64,7 +65,7 @@
                                 </div>
 
                                 <div class="col-md-3 text-center">
-                                    <input type="submit" value="Search" class="@buttonSubmitClass custom-button custom-button-font" />
+                                    <input type="submit" value="Search" asp-action="Search" class="@buttonSubmitClass custom-button custom-button-font" />
                                 </div>
                             </div>
                             <div class="row">
@@ -98,7 +99,12 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                @{var display = "";}
+                                @if (Model.SectionType == AppUtility.MenuItems.Operation)
+                                {
+                                    display = "d-none";
+                                }
+                                <div class="col-4 @display">
                                     <div class="form-group">
                                         <label @*asp-for=""*@ class="control-label">Project</label>
                                         <select searchable="Select a project" @*asp-for="" data-val="false"*@ class="mdb-select custom select-dropdown form-control-plaintext" id="Project">
@@ -111,7 +117,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-4 @display">
                                     <div class="form-group">
                                         <label @*asp-for=""*@ class="control-label">Sub Project</label>
                                         <select searchable="Select a sub project" @*asp-for="" data-val="false"*@ class="mdb-select custom select-dropdown form-control-plaintext" id="SubProject">
@@ -127,9 +133,9 @@
                                         <label asp-for="Request.Product.VendorID" class="control-label">Supplier</label>
                                         <select searchable="Select A Vendor" asp-for="Request.Product.VendorID" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="vendorList">
                                             @foreach (var vendor in Model.Vendors)
-                                            {
+                                               {
                                                 <option value="@vendor.VendorID">@vendor.VendorEnName</option>
-                                            }
+                                               }
                                         </select>
                                     </div>
                                 </div>
