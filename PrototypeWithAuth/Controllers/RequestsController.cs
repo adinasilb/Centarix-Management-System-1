@@ -2467,21 +2467,21 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestsSearched = requestsSearched.Where(r => r.Product.ProductName.Contains(requestsSearchViewModel.Request.Product.ProductName));
             }
-            if (requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID != 0)
+            if (requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != null)
             {
                 requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID);
             }
-            if (requestsSearchViewModel.Request.Product.ProductSubcategoryID != 0)
+            if (requestsSearchViewModel.Request.Product?.ProductSubcategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategoryID != null)
             {
                 requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID);
             }
             //check for project
             //check for sub project
-            if (requestsSearchViewModel.Request.Product.VendorID != 0)
+            if (requestsSearchViewModel.Request.Product?.VendorID != 0 && requestsSearchViewModel.Request.Product?.VendorID != null)
             {
                 requestsSearched = requestsSearched.Where(r => r.Product.VendorID == requestsSearchViewModel.Request.Product.VendorID);
             }
-            if (requestsSearchViewModel.Request.ParentRequest.OrderNumber != null)
+            if (requestsSearchViewModel.Request.ParentRequest?.OrderNumber != null)
             {
                 requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderNumber.ToString().Contains(requestsSearchViewModel.Request.ParentRequest.OrderNumber.ToString()));
             }

@@ -81,6 +81,7 @@
                                     <div class="form-group">
                                         <label asp-for="Request.Product.ProductSubcategory.ParentCategoryID" class="control-label">Category</label>
                                         <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlist" asp-for="Request.Product.ProductSubcategory.ParentCategoryID">
+                                            <option value="0">Select Category</option>
                                             @foreach (var parentCategory in Model.ParentCategories)
                                             {
                                                 <option value="@parentCategory.ParentCategoryID">@parentCategory.ParentCategoryDescription</option>
@@ -92,6 +93,7 @@
                                     <div class="form-group">
                                         <label asp-for="Request.Product.ProductSubcategoryID" class="control-label">Subcategory</label>
                                         <select searchable="Please select a subcategory" asp-for="Request.Product.ProductSubcategoryID" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" id="sublist" data-val="false">
+                                            <option value="0">Select Subcategory</option>
                                             @foreach (var productSubcategory in Model.ProductSubcategories)
                                             {
                                                 <option value="@productSubcategory.ProductSubcategoryID">@productSubcategory.ProductSubcategoryDescription</option>
@@ -108,6 +110,7 @@
                                     <div class="form-group">
                                         <label @*asp-for=""*@ class="control-label">Project</label>
                                         <select searchable="Select a project" @*asp-for="" data-val="false"*@ class="mdb-select custom select-dropdown form-control-plaintext" id="Project">
+                                            <option value="0">Select Project</option>
                                             @foreach (var project in Model.Projects)
                                             {
                                                 <option value="@project.ProjectID">@project.ProjectDescription</option>
@@ -121,6 +124,7 @@
                                     <div class="form-group">
                                         <label @*asp-for=""*@ class="control-label">Sub Project</label>
                                         <select searchable="Select a sub project" @*asp-for="" data-val="false"*@ class="mdb-select-subProject mdb-select custom select-dropdown form-control-plaintext" id="SubProject">
+                                            <option value="0">Select Subproject</option>
                                             @foreach (var subProject in Model.SubProjects)
                                             {
                                                 <option value="@subProject.SubProjectID">@subProject.SubProjectDescription</option>
@@ -132,10 +136,11 @@
                                     <div class="form-group">
                                         <label asp-for="Request.Product.VendorID" class="control-label">Supplier</label>
                                         <select searchable="Select A Vendor" asp-for="Request.Product.VendorID" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="vendorList">
+                                            <option value="0">Select Vendor</option>
                                             @foreach (var vendor in Model.Vendors)
-                                               {
+                                            {
                                                 <option value="@vendor.VendorID">@vendor.VendorEnName</option>
-                                               }
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -144,6 +149,7 @@
                                         @* IN MIDDLE *@
                                         <label class="control-label">Supplier ID</label>
                                         <select searchable="Select A Vendor ID" asp-for="Request.Product.Vendor.VendorBuisnessID" id="vendorBusinessIDList" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext">
+                                            <option value="0">Select Vendor ID</option>
                                             @foreach (var vendor in Model.Vendors)
                                             {
                                                 <option value="@vendor.VendorID">@vendor.VendorBuisnessID</option>
