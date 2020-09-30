@@ -12,7 +12,7 @@
 <form method="post" enctype="multipart/form-data" style="height: 100%;">
     @foreach (var vendor in Model.RequestsByVendor)
     {
-        <table class="table table-headerspaced table-borderless table-hover mb-5">
+        <table class="table table-headerspaced table-borderless table-hover mb-5 item-table">
             <thead>
                 <tr class="text-center">
                     <td class="py-0" width="15%"></td>
@@ -104,9 +104,13 @@
                             @stringItemCost
                         </td>
                         <td width="10%" class="border-right">
-                            <button class="btn no-box-shadow p-0 mx-5 load-confirm-delete-quote" data-title="delete" name="@AppUtility.MenuItems.OrdersAndInventory" value="@request.RequestID">
-                                <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
-                            </button>
+                            <div class="d-inline-flex">
+                                <div class="table-icon-div">
+                                    <button class="btn no-box-shadow p-0 m-0 load-confirm-delete-quote" data-title="delete" name="@AppUtility.MenuItems.OrdersAndInventory" value="@request.RequestID">
+                                        <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 }

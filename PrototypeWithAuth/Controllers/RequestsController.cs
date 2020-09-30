@@ -82,7 +82,7 @@ namespace PrototypeWithAuth.Controllers
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Include(x=>x.ParentRequest)
                 .OrderBy(r => r.CreationDate);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
@@ -1118,8 +1118,8 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var parentcategories = await _context.ParentCategories.ToListAsync();
-            var productsubactegories = await _context.ProductSubcategories.ToListAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID==1).ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps=>ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             //redo the unit types when seeded
@@ -1383,11 +1383,11 @@ namespace PrototypeWithAuth.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
-        {
+      {
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
             requestItemViewModel.Request.ParentRequest = null;
             //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
-            var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).First();
+            var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
             if(parentQuote != null)
             {
 
@@ -1411,6 +1411,7 @@ namespace PrototypeWithAuth.Controllers
             product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
             product.VendorID = requestItemViewModel.Request.Product.VendorID;
             //in case we need to return to the modal view
+
             requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
@@ -1442,7 +1443,8 @@ namespace PrototypeWithAuth.Controllers
                  * it will create a new one instead of updating the existing one
                  * only need this if using an existing product
                  */
-               // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
+                requestItemViewModel.Request.Product = product;
+                // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
                 try
                 {
@@ -2388,11 +2390,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory, LabManagement, Operations")]
         public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
         {
+            int categoryID = 0;
             if (SectionType == AppUtility.MenuItems.OrdersAndInventory)
             {
                 TempData["SectionType"] = SectionType;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Search;
+                categoryID = 2;
             }
             else if (SectionType == AppUtility.MenuItems.LabManagement)
             {
@@ -2405,16 +2409,17 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.SearchOperations;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Search;
+                categoryID = 1;
             }
 
 
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
-                ParentCategories = await _context.ParentCategories.ToListAsync(),
-                ProductSubcategories = await _context.ProductSubcategories.ToListAsync(),
+                ParentCategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID!=categoryID).ToListAsync(),
+                ProductSubcategories = await _context.ProductSubcategories.Where(ps=>ps.ParentCategory.CategoryTypeID!=categoryID).ToListAsync(),
                 Projects = await _context.Projects.ToListAsync(),
                 SubProjects = await _context.SubProjects.ToListAsync(),
-                Vendors = await _context.Vendors.ToListAsync(),
+                Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID != categoryID).Count() > 0).ToListAsync(),
                 Request = new Request(),
                 Inventory = false,
                 Ordered = false,
@@ -2457,7 +2462,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
 
-
+            requestsSearchViewModel.Request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID).FirstOrDefaultAsync();
             if (requestsSearchViewModel.Request.Product.ProductName != null)
             {
                 requestsSearched = requestsSearched.Where(r => r.Product.ProductName.Contains(requestsSearchViewModel.Request.Product.ProductName));
@@ -2492,7 +2497,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestsSearched = requestsSearched.Where(r => r.ParentRequest.InvoiceDate == requestsSearchViewModel.Request.ParentRequest.InvoiceDate);
             }
-            if (requestsSearchViewModel.Request.ExpectedSupplyDays != 0)//should this be on the parent request
+            if (requestsSearchViewModel.Request.ExpectedSupplyDays != null)//should this be on the parent request
             {
                 requestsSearched = requestsSearched.Where(r => r.ExpectedSupplyDays == requestsSearchViewModel.Request.ExpectedSupplyDays);
             }
@@ -2544,16 +2549,27 @@ namespace PrototypeWithAuth.Controllers
             TempData["Search"] = "True";
             if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.OrdersAndInventory)
             {
+                TempData["SectionType"] = requestsSearchViewModel.SectionType;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
                 return View("Index", onePageOfProducts);
             }
             else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
             {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.SearchLM;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.SearchRequests;
                 return RedirectToAction("IndexForLabManage", "Vendors", onePageOfProducts);
             }
             else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operation)
             {
-                return RedirectToAction("Index", "Operations", onePageOfProducts);
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.LastItem;
+                return RedirectToAction("Index", "Operations", new { vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
             }
+
             return View("Index", onePageOfProducts);
 
         }

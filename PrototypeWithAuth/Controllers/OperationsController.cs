@@ -952,9 +952,10 @@ namespace PrototypeWithAuth.Controllers
             // parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
             // parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
             // requestItemViewModel.Request.ParentQuote = parentQuote;
-            requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
-            requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
-
+            
+            var product = _context.Products.Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Request.ProductID);
+            product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
+            product.VendorID = requestItemViewModel.Request.Product.VendorID;
             //in case we need to return to the modal view
             requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
@@ -979,11 +980,12 @@ namespace PrototypeWithAuth.Controllers
             if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
             {
 
-                requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
+               // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 try
                 {
                     //_context.Update(requestItemViewModel.Request.Product.SubProject);
                     //_context.Update(requestItemViewModel.Request.Product);
+                    requestItemViewModel.Request.Product = product;
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
                     if (requestItemViewModel.NewComment != null)
@@ -1007,13 +1009,7 @@ namespace PrototypeWithAuth.Controllers
 
 
                     }
-               
-                    //check if there are any files to upload first
-                    //save the files
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
-                    Directory.CreateDirectory(requestFolder);
-  
+            
                     //Saving the Payments - each one should come in with a 1) date 2) companyAccountID
                     //if (requestItemViewModel.NewPayments != null)
                     //{
@@ -1053,7 +1049,7 @@ namespace PrototypeWithAuth.Controllers
                 return View("~/Views/Shared/RequestError.cshtml");
             }
             //return RedirectToAction("Index");
-            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+            //AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
             return RedirectToAction("Index", new
             {
                 page = requestItemViewModel.Page,
@@ -1061,7 +1057,7 @@ namespace PrototypeWithAuth.Controllers
                 subcategoryID = requestItemViewModel.SubCategoryID,
                 vendorID = requestItemViewModel.VendorID,
                 applicationUserID = requestItemViewModel.ApplicationUserID,
-                PageType = requestPageTypeEnum
+                //PageType = requestPageTypeEnum
             });
         }
 

@@ -2912,11 +2912,14 @@ $(function () {
 		}
 	});
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
+		var selectedIndex = $(selectID).find(":selected").index();		
+		console.log("selectedIndex: "+selectedIndex);
 		$(selectID).prop("disabled", false);
 		$(selectID).destroyMaterialSelect();
 		$(selectID).removeAttr("disabled")
 		$(selectID).materialSelect();
 		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
+		$(selectID).prop('selectedIndex', selectedIndex);
 	}
 	$("#addSupplierComment").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');
