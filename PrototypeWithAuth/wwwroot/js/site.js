@@ -42,7 +42,7 @@ $(function () {
 	$('.modal').on('change', '#parentlist', function () {
 		$.fn.parentListChange();
 	});
-	
+
 	$.fn.parentListChange = function () {
 		console.log("in parent list");
 		var parentCategoryId = $("#parentlist").val();
@@ -2739,63 +2739,78 @@ $(function () {
 	//	$('#NewEmployee_EmployeeStatusID').val($(this).val())
 	//})
 
-	$('.salary-tab').click(function (e) {
+	$('.salary-tab').off("click").on("click", function (e) {
 		$("#createModalForm").valid();
+		console.log("salary tab clicked");
 		$.fn.validatePersonalTab();
 	});
 	$.fn.validatePersonalTab = function () {
+		console.log("validatePersonalTab");
 		$(".salary-tab").prop("disabled", true);
 		$(".documents-tab").prop("disabled", true);
 
-		//console.log("in $.fn.validateItemTab");
-		//checkedItem1 = $(".EmployeeStatusID1").is(':checked');
-		//checkedItem2 = $(".EmployeeStatusID2").is(':checked');
-		//checkedItem3 = $(".EmployeeStatusID3").is(':checked');
-		//checkedItem4 = $(".EmployeeStatusID4").is(':checked');
-		if (/*checkedItem1 != true && checkedItem2 != true && checkedItem3 != true && checkedItem4 != true*/$('#NewEmployee_EmployeeStatusID').val() == '' || $('#NewEmployee_EmployeeStatusID').val()  == 0) {
-			$("#validation-EmployeeStatus").removeClass("hidden");
-			return;
+
+		var statIdVal = parseInt($("#NewEmployee_EmployeeStatusID").val());
+		console.log("vpt statIdVal: " + statIdVal);
+		if (parseInt(statIdVal) == 1 || statIdVal == 2 || statIdVal == 3) {
+			console.log("inside if statement");
+			//if (statIdVal != 4) {
+			//	console.log("statIdVal: " + statIdVal + " entered if statement");
+			if (/*checkedItem1 != true && checkedItem2 != true && checkedItem3 != true && checkedItem4 != true*/$('#NewEmployee_EmployeeStatusID').val() == '' || $('#NewEmployee_EmployeeStatusID').val() == 0) {
+				$("#validation-EmployeeStatus").removeClass("hidden");
+				return;
+			}
+			else {
+				$("#validation-EmployeeStatus").addClass("hidden");
+			}
+			valid = $("#NewEmployee_IDNumber").attr('aria-invalid');
+			if (valid == "true" || $("#NewEmployee_IDNumber").val() == "") {
+				console.log("valid: " + valid);
+				return;
+			}
+			valid = $("#NewEmployee_CentarixID").attr('aria-invalid');
+			if (valid == "true" || $("#NewEmployee_CentarixID").val() == "") {
+				console.log("valid: " + valid);
+				return;
+			}
+			valid = $("#NewEmployee_JobTitle").attr('aria-invalid');
+			if (valid == "true" || $("#NewEmployee_JobTitle").val() == "") {
+				return;
+			}
+			valid = $("#NewEmployee_Email").attr('aria-invalid');
+			if (valid == "true" || $("#NewEmployee_Email").val() == "") {
+				return;
+			}
+			valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
+			if (valid == "true" || $("#NewEmployee_PhoneNumber").val() == "") {
+				return;
+			}
+			valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
+			if (valid == "true") {
+				return;
+			}
+			valid = $("#NewEmployee_StartedWorking").attr('aria-invalid');
+			if (valid == "true" || $("#NewEmployee_StartedWorking").val() == "") {
+				return;
+
+			}
+			if (valid == "false" || valid == undefined) {
+				$(".salary-tab").prop("disabled", false);
+				$(".security-tab").prop("disabled", false);
+			}
 		}
-		else {
-			$("#validation-EmployeeStatus").addClass("hidden");
-		}
-		valid = $("#NewEmployee_IDNumber").attr('aria-invalid');
-		if (valid == "true" || $("#NewEmployee_IDNumber").val() == "") {
-			console.log("valid: " + valid);
-			return;
-		}
-		valid = $("#NewEmployee_CentarixID").attr('aria-invalid');
-		if (valid == "true" || $("#NewEmployee_CentarixID").val() == "") {
-			console.log("valid: " + valid);
-			return;
-		}
-		valid = $("#NewEmployee_JobTitle").attr('aria-invalid');
-		if (valid == "true" || $("#NewEmployee_JobTitle").val() == "") {
-			return;
-		}
-		valid = $("#NewEmployee_Email").attr('aria-invalid');
-		if (valid == "true" || $("#NewEmployee_Email").val() == "") {
-			return;
-		}
-		valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
-		if (valid == "true" || $("#NewEmployee_PhoneNumber").val() == "") {
-			return;
-		}
-		valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
-		if (valid == "true") {
-			return;
-		}
-		valid = $("#NewEmployee_StartedWorking").attr('aria-invalid');
-		if (valid == "true" || $("#NewEmployee_StartedWorking").val() == "") {
-			return;
-		}
-		if (valid == "false" || valid == undefined) {
+		else if (statIdVal == 4) {
 			$(".salary-tab").prop("disabled", false);
 		}
 		return valid;
 	}
 	$(".security-tab").on("click", function () {
-		$.fn.validateSalaryTab();
+		if (parseInt($("#NewEmployee_EmployeeStatusID").val()) == 4) {
+			$(".security-tab").prop("disabled", false);
+		}
+		else {
+			$.fn.validateSalaryTab();
+		}
 	});
 	$.fn.validateSalaryTab = function () {
 		$(".security-tab").prop("disabled", true);
@@ -2838,16 +2853,15 @@ $(function () {
 		console.log(type);
 		var url = '';
 		if ($(this).hasClass('operations')) {
-		    url = "/Operations/EditModalView";
-		} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting') ) {
+			url = "/Operations/EditModalView";
+		} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
 			url = "/Vendors/Edit";
 		} else {
 			url = "/Requests/EditModalView";
-			
+
 		}
 
-		if (type == 'edit')
-		{
+		if (type == 'edit') {
 			var formData = new FormData($("#myForm")[0]);
 			$.ajax({
 				processData: false,
@@ -2867,10 +2881,9 @@ $(function () {
 			$('.mark-edditable').data("val", false)
 			$('.edit-mode-switch-description').text("Edit Mode Off");
 			$('.turn-edit-on-off').attr('name', 'details')
-			
+
 		}
-		else if (type == 'details')
-		{
+		else if (type == 'details') {
 			$('.mark-readonly').attr("disabled", false);
 			$('.mark-edditable').data("val", true);
 			$('.edit-mode-switch-description').text("Edit Mode On");
@@ -2890,21 +2903,20 @@ $(function () {
 				$.fn.CheckUnitsFilled();
 				$.fn.CheckSubUnitsFilled();
 			}
-			if ($(this).hasClass('suppliers') || $(this).hasClass('accounting'))
-			{
+			if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
 				$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
 			}
 
 
 
 		}
-	}); 
+	});
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
 		$(selectID).prop("disabled", false);
 		$(selectID).destroyMaterialSelect();
 		$(selectID).removeAttr("disabled")
 		$(selectID).materialSelect();
-		$('[data-activates="'+ dataActivates+'"]').prop('disabled', false);
+		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
 	}
 	$("#addSupplierComment").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');
@@ -2919,9 +2931,16 @@ $(function () {
 		$('#addSupplierComment').popover('toggle');
 
 	});
-	$('.employee-status-radio').click(function () {
+	$('.employee-status-radio').off("click").on("click", function () {
 		console.log('employee status')
 		$('#NewEmployee_EmployeeStatusID').val($(this).val())
 		$("#validation-EmployeeStatus").addClass("hidden");
+		var statIdVal = $("#NewEmployee_EmployeeStatusID").val();
+		console.log("statIdVal: " + statIdVal);
+		if (statIdVal = 4) {
+
+		}
 	})
+
+
 });
