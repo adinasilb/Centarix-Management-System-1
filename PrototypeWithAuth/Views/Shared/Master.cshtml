@@ -471,7 +471,7 @@
             $("#loading").show();
             var isOperations = $(this).hasClass('operations');
             //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-            var $itemurl = "/Requests/ReceivedModal?RequestID=" + $(this).val() + "&IsOperations="+isop;
+            var $itemurl = "/Requests/ReceivedModal?RequestID=" + $(this).val() + "&IsOperations=" + isOperations;
             $.fn.CallPageRequest($itemurl, "received");
             return false;
         });

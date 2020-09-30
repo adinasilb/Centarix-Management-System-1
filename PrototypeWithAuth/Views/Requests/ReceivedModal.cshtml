@@ -15,7 +15,7 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog-centered mx-auto modal-dialog-scrollable modal-lg" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
+    <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
@@ -79,7 +79,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label class="control-label">Application User Receiver</label>
-                                        <select asp-for="Request.ApplicationUserReceiverID" class="mdb-select md-form  colorful-select dropdown-primary my-0">
+                                        <select asp-for="Request.ApplicationUserReceiverID" class="mdb-select custom select-dropdown form-control-plaintext">
                                             @foreach (var user in Model.ApplicationUsers)
                                             {
                                                 <option value="@user.Id">@user.UserName</option>
@@ -92,20 +92,21 @@
                                         <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
                                         <label asp-for="Arrival">Arrival</label>
                                     </div>*@
-                                <div class="col-2 text-center">
-                                    <label asp-for="Clarify">Clarify</label>
-                                    <br />
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" asp-for="Clarify" onclick="changePartialDelivery()" />
-                                        <label class="form-check-label text-white" style="font-size: 0;" asp-for="Clarify"></label>
-                                    </div>
+                            <div class="col-2 text-center">
+                                <label asp-for="Clarify">Clarify</label>
+                                <br />
+         
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" asp-for="Clarify" onclick="changePartialDelivery()" />
+                                    <label class="custom-control-label text-white" style="font-size: 0;" asp-for="Clarify"></label>
                                 </div>
+                            </div>
                                 <div class="col-2 text-center">
                                     <label asp-for="PartialDelivery">Partial Delivery</label>
                                     <br />
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" asp-for="PartialDelivery" onclick="changeClarify()" />
-                                        <label class="form-check-label text-white" style="font-size: 0;" asp-for="PartialDelivery"></label>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" asp-for="PartialDelivery" onclick="changeClarify()" />
+                                        <label class="custom-control-label text-white" style="font-size: 0;" asp-for="PartialDelivery"></label>
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
@@ -123,7 +124,7 @@
                                             <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
                                             @Html.DropDownListFor(m => m.LocationTypeID,
                                      new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-                                     "Select Type", new { @class = "mdb-select border-bottom ", @id = "locationTypeDepthZero" })
+                                     "Select Type", new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "locationTypeDepthZero" })
                                         </div>
                                     </div>
                                     <div class="col-8">
@@ -132,7 +133,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br />
+                         
                                 @*<div class="row">
                                         <div class="col-12">
                                             <div class="form-group">
@@ -201,4 +202,6 @@
             $box.prop("checked", false);
         }
     });
+ 
+
 </script>

@@ -91,7 +91,7 @@
                                 <div class="col-4 px-md-4">
                                     <div class="form-group">
                                         <label asp-for="Request.Product.ProductSubcategoryID" class="control-label">Subcategory</label>
-                                        <select searchable="Please select a subcategory" asp-for="Request.Product.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext" id="sublist" data-val="false">
+                                        <select searchable="Please select a subcategory" asp-for="Request.Product.ProductSubcategoryID" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" id="sublist" data-val="false">
                                             @foreach (var productSubcategory in Model.ProductSubcategories)
                                             {
                                                 <option value="@productSubcategory.ProductSubcategoryID">@productSubcategory.ProductSubcategoryDescription</option>
@@ -120,7 +120,7 @@
                                 <div class="col-4 @display">
                                     <div class="form-group">
                                         <label @*asp-for=""*@ class="control-label">Sub Project</label>
-                                        <select searchable="Select a sub project" @*asp-for="" data-val="false"*@ class="mdb-select custom select-dropdown form-control-plaintext" id="SubProject">
+                                        <select searchable="Select a sub project" @*asp-for="" data-val="false"*@ class="mdb-select-subProject mdb-select custom select-dropdown form-control-plaintext" id="SubProject">
                                             @foreach (var subProject in Model.SubProjects)
                                             {
                                                 <option value="@subProject.SubProjectID">@subProject.SubProjectDescription</option>
