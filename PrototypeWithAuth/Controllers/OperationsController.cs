@@ -1009,13 +1009,7 @@ namespace PrototypeWithAuth.Controllers
 
 
                     }
-               
-                    //check if there are any files to upload first
-                    //save the files
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
-                    Directory.CreateDirectory(requestFolder);
-  
+            
                     //Saving the Payments - each one should come in with a 1) date 2) companyAccountID
                     //if (requestItemViewModel.NewPayments != null)
                     //{
@@ -1055,7 +1049,7 @@ namespace PrototypeWithAuth.Controllers
                 return View("~/Views/Shared/RequestError.cshtml");
             }
             //return RedirectToAction("Index");
-            AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
+            //AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
             return RedirectToAction("Index", new
             {
                 page = requestItemViewModel.Page,
@@ -1063,7 +1057,7 @@ namespace PrototypeWithAuth.Controllers
                 subcategoryID = requestItemViewModel.SubCategoryID,
                 vendorID = requestItemViewModel.VendorID,
                 applicationUserID = requestItemViewModel.ApplicationUserID,
-                PageType = requestPageTypeEnum
+                //PageType = requestPageTypeEnum
             });
         }
 
