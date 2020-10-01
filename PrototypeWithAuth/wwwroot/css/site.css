@@ -1698,7 +1698,7 @@ td .btn {
 }
 
 .on-form-modal span.text-danger-centarix,
-.modal span.text-danger-centarix {
+.modal span.text-danger-centarix, .on-form-modal label.error {
     font-size: .75rem;
 }
 

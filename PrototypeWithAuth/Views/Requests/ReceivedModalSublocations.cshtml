@@ -8,6 +8,7 @@
         var id = "locationInstancesSelected[" + i + "]";
         <div class="form-group">
             <label class="control-label">@Model.locationTypeNames[i]</label>
+
             @if (i == 0)
             {
                 @Html.DropDownListFor(m => m.locationInstancesSelected[i],
@@ -25,5 +26,5 @@
     }
 </div>
 <script>
-    $('.SLI').materialSelect();
+    $('.SLI.mdb-select').materialSelect();
 </script>

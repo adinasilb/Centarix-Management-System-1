@@ -196,6 +196,7 @@
             var group = "input:checkbox[name='" + $box.attr("name") + "']";
             // the checked state of the group/box on the other hand will change
             // and the current value is retrieved using .prop() method
+            console.log(group)
             $(group).prop("checked", false);
             $box.prop("checked", true);
         } else {

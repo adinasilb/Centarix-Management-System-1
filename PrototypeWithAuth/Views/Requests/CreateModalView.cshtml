@@ -20,7 +20,7 @@
 
 <div class="col-12 create-user mx-auto on-form-modal order-inv-form" style="width: 60%">
     <div class="on-form-modal-border">
-        <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+        <form action="" id="myForm" class="addItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
             @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
             @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -115,7 +115,7 @@
                                         <div class="form-group">
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-                                            new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+                                            new SelectList(Model.ParentCategories,"ParentCategoryID", "ParentCategoryDescription"), "Select a Category",
                                          new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "parentlist", @searchable = "Select Category" })
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>

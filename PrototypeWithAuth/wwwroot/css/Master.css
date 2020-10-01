@@ -58,7 +58,7 @@
     font-size: var(--small-text-font-size);
 }
 
-.text-danger-centarix {
+.text-danger-centarix, .on-form-modal label.error {
     color: var(--danger-color);
 }
 
