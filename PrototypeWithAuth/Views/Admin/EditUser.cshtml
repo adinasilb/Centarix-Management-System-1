@@ -92,6 +92,7 @@
                                                 @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id, @checked = "checked" })
                                                 <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
                                             </div>
+                                            first = false;
                                         }
                                         else
                                         {
@@ -99,7 +100,6 @@
                                                 @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id })
                                                 <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
                                             </div>
-                                            first = false;
                                         }
                                     }
                                     <br /><span id="validation-EmployeeStatus" class="hidden text-danger-centarix">Please choose a valid Employee Status</span>
@@ -628,7 +628,7 @@
                                         <div class="col-6">
                                             <label asp-for="UserImage" class="control-label"></label>
                                             <input type="file" asp-for="UserImage" class="form-control-file  ta pt-1" accept=".png, .jpg, .jpeg, .pdf">
-                                            <span asp-validation-for="UserImage" class="text-danger"></span>
+                                            @*<span asp-validation-for="UserImage" class="text-danger"></span>*@
                                             <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="user-image" /></div>
                                         </div>
                                     </div>

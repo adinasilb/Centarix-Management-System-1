@@ -480,9 +480,13 @@ namespace PrototypeWithAuth.Controllers
                 registerUserViewModel.NewEmployee = new Employee(); //this may be able to be taken out but it might cause errors with users if taken out. so check first
 
                 registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).FirstOrDefault();
-                registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.ToList();
+                registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+                registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
+                registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
+                registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
+                registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
                 if (registerUserViewModel.NewEmployee == null)
-                { 
+                {
                     registerUserViewModel.NewEmployee = new Employee();
                     registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
                 }
@@ -573,6 +577,30 @@ namespace PrototypeWithAuth.Controllers
                         registerUserViewModel.UserRoles[0].Selected = true;
                     }
                 }
+
+                if (registerUserViewModel.NewEmployee.UserImage == null)
+                {
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                    string filePath = Path.Combine(uploadFolder, "profile_circle_big.png");
+                    registerUserViewModel.NewEmployee.UserImage = filePath;
+                }
+
+                //FileStreamResult fs;
+                //using (var img = System.Drawing.Image.FromStream(file.OpenReadStream()))
+                //{
+                //    Stream ms = new MemoryStream(img.Resize(100, 100).ToByteArray());
+
+                //    return new FileStreamResult(ms, "image/jpg");
+                //}
+
+                //                using(var stream = File.OpenRead(registerUserViewModel.NewEmployee.UserImage))
+                //{
+                //                    var file = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name))
+                //                    {
+                //                        Headers = new HeaderDictionary(),
+                //                        ContentType = "application/pdf"
+                //                    };
+                //                }
 
                 return View(registerUserViewModel);
 
