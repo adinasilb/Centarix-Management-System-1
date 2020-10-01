@@ -2443,7 +2443,7 @@ namespace PrototypeWithAuth.Controllers
             int RSNew = 0;
             IQueryable<Request> requestsSearched = _context.Requests.AsQueryable().Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType);
 
-            //convert the bools into thier corresponding IDs
+            //convert the bools into their corresponding IDs
             if (requestsSearchViewModel.Inventory)
             {
                 RSRecieved = 3;
@@ -2507,6 +2507,23 @@ namespace PrototypeWithAuth.Controllers
             bool IsRequest = true;
             bool IsInventory = false;
             bool IsAll = false;
+            if (requestsSearchViewModel.Inventory)
+            {
+                IsRequest = false;
+                IsInventory = true;
+            }
+            else
+            {
+                foreach (Request r in requestsSearched)
+                {
+                    if (r.RequestStatusID != 6)
+                    {
+                        break;
+                    }
+                }
+                IsRequest = false;
+                IsInventory = true;
+            }
 
             //also need to get the list smaller to just request or inventory
 
