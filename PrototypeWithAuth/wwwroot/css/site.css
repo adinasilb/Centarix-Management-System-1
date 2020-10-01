@@ -612,7 +612,7 @@ input.select-dropdown {
         border: 1px solid var(--user-color);
         border-radius: 3rem;
         color: white;
-        font-weight: 550;
+        font-weight: 500;
         padding: 0.16rem 0.5rem;
         font-size: 1rem;
         line-height: 1;
@@ -620,7 +620,7 @@ input.select-dropdown {
     }
 
 .form-control-file-lab::-webkit-file-upload-button:hover {
-    font-weight: 550;
+    font-weight: 500;
     /*text-transform: uppercase;*/
 }
 
@@ -776,7 +776,7 @@ a.bold-hover-effects {
     font-weight: bold;
 }
 /*.ourNavBar li a { color: #333 }*/
-.ourNavBar a li.activeNavLink > i, .ourNavBar a li.activeNavLink > span /*, .ourNavBar a.activeNavLink*/, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
+.ourNavBar li.activeNavLink a, .ourNavBar a.activeNavLink, .ourNavBar li button.activeNavLink, .container li a.activeNavLink {
     opacity: 1;
     filter: var(--order-inv-filter);
     font-weight: 500;
