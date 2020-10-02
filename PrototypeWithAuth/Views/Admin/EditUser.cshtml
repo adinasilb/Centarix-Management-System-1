@@ -5,8 +5,8 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 @{
-//ViewData["Title"] = "Edit User";
-//Layout = null;
+    //ViewData["Title"] = "Edit User";
+    Layout = null;
 }
 
 <div class="modal modal-view right fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
@@ -16,7 +16,7 @@
 
         <div class="modal-content d-inline-block">
             @*<div class="card col-8 offset-2 edit-user" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
-        <div class="card-body">*@
+                <div class="card-body">*@
             <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
                 <input type="email" class="hidden" />
@@ -626,10 +626,19 @@
                                 <div class="modal-sides div-tabs">
                                     <div class="row">
                                         <div class="col-6">
-                                            <label asp-for="UserImage" class="control-label"></label>
-                                            <input type="file" asp-for="UserImage" class="form-control-file  ta pt-1" accept=".png, .jpg, .jpeg, .pdf">
-                                            @*<span asp-validation-for="UserImage" class="text-danger"></span>*@
-                                            <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="user-image" /></div>
+                                            @{
+                                                var src = "/UserImages/profile_circle_big.png";
+                                                if (Model.UserImageSaved != null)
+                                                {
+                                                    src = Model.UserImageSaved;
+                                                }
+                                            }
+                                            <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img src="@src" id="user-image" alt="Default User Image" /></div>
+                                            <br />@*<br /><br />
+                                                <label asp-for="UserImage" class="control-label"></label>*@
+                                            <input type="file" asp-for="UserImage" class="form-control-file pt-1" accept=".png, .jpg, .jpeg, .pdf">
+                                            <span asp-validation-for="UserImage" class="text-danger-centarix"></span>
+
                                         </div>
                                     </div>
                                 </div>
@@ -645,7 +654,7 @@
 
             </form>
             @*</div>
-        </div>*@
+                </div>*@
         </div>
     </div>
 </div>
