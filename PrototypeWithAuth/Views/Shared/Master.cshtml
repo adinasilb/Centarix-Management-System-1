@@ -796,11 +796,16 @@
                         backdrop: true,
                         keyboard: false,
                     });
-                    //shows the modal
+                    $.fn.CalculateAge();
                     $(".modal").modal('show');
                     $.fn.OnOpenModal();
                 }
             });
+        };
+
+        $.fn.CalculateAge = function () {
+            //TODO Calculate age
+            $("#Age").val("0");
         };
 
 
