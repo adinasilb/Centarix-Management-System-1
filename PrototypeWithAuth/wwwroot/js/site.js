@@ -1137,8 +1137,6 @@ $(function () {
 
 	$(".documents-tab").click(function (e) {
 		//this is for validation
-		$("#myForm").valid();
-		$.fn.validatePriceTab();
 
 		$.fn.HideAllDocs();
 		//$.fn.CheckIfFileSelectsAreFull();
@@ -1745,38 +1743,29 @@ $(function () {
 	$(".request-archive-tab").click(function () {
 		console.log("in onclick archive-tab");
 		$("#myForm").valid();
-		$.fn.validatePriceTab();
 
 	});
 
 	$(".request-history-tab").click(function () {
 		console.log("in onclick history-tab");
 		$("#myForm").valid();
-		$.fn.validateItemTab();
-		$.fn.validatePriceTab();
 
 	});
 
 	$(".request-order-tab").click(function () {
 		console.log("in onclick order-tab");
 		$("#myForm").valid();
-		var valid = $.fn.validateItemTab();
-		if (valid == "false" || valid == undefined) {
-			$.fn.validatePriceTab();
-		};
 
 	});
 
 	$(".request-comments-tab").click(function () {
 		console.log("in onclick comments-tab");
 		$("#myForm").valid();
-		$.fn.validatePriceTab();
 	});
 
 	$(".request-location-tab").click(function () {
 		console.log("in onclick location-tab");
 		$("#myForm").valid();
-		$.fn.validateItemTab();
 	});
 
 
@@ -1789,58 +1778,6 @@ $(function () {
 		}
 
 	});
-
-	$.fn.validatePriceTab = function () {
-		//all the true and falses are opposite because fo the ariainvalid is true if invalid
-		$(".request-documents-tab").prop("disabled", true);
-		$(".request-comments-tab").prop("disabled", true);
-		$(".request-archive-tab").prop("disabled", true);
-		$(".request-history-tab").prop("disabled", true);
-		$(".request-order-tab").prop("disabled", true);
-		valid = $("#Request_Product_ProductName").attr('aria-invalid');
-		if (valid == "true" || $("#Request_Product_ProductName").val() == "") {
-			return;
-		}
-		valid = $("#Request_Unit").attr('aria-invalid');
-		if (valid == "true" || $("#Request_Unit").val() == "") {
-			return;
-		}
-		valid = $("#Request_Unit").attr('aria-invalid');
-		if (valid == "true" || $("#Request_Unit").val() == "") {
-			return;
-		}
-
-		//TALK TO DEBBIE ABOUT THE NEW MATERIAL SELECT
-		console.log("valid2: " + valid);
-		valid = $("#Request_ExchangeRate").attr('aria-invalid');
-		if (valid == "true" || $("#Request_ExchangeRate").val() == "") {
-			return;
-		}
-		console.log("valid3: " + valid);
-		valid = $("#Request_Cost").attr('aria-invalid');
-		if (valid == "true" || $("#Request_Cost").val() == "") {
-			return;
-		}
-		console.log("final valid: " + valid);
-		if ($("#Request_Terms").val() != -1) {
-			console.log(".paymentType: " + $(".paymentType").val());
-			if ($(".paymentType").val() != "") {
-				valid = "false";
-			} else {
-				valid = "true";
-			}
-		}
-
-		if (valid == "false" || valid == undefined) {
-			$(".request-item-tab").prop("disabled", false);
-			$(".request-documents-tab").prop("disabled", false);
-			$(".request-comments-tab").prop("disabled", false);
-			$(".request-archive-tab").prop("disabled", false);
-			$(".request-history-tab").prop("disabled", false);
-			$(".request-order-tab").prop("disabled", false);
-		}
-		return valid;
-	}
 
 	$(".create-user .permissions-tab").on("click", function () {
 		console.log("permissions tab opened");
