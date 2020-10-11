@@ -50,14 +50,14 @@
                     <div class="col-12 px-0">
                         <div class="container-fluid div-tabs text-center modal-sides">
                             <ul id="create-modal-tabs" class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
-                                <li class="nav-item icon">
-                                    <a data-toggle="tab" href="#item" class="request-item-tab nav-link active">
+                                <li class="nav-item icon ">
+                                    <a data-toggle="tab" href="#item" class="next-tab nav-link active">
                                         <i class="icon-centarix-icons-05" style="font-size: 2rem;"></i>
                                         <br />Item
                                     </a>
                                 </li>
                                 <li class="nav-item icon" id="price-tab">
-                                    <a data-toggle="tab" href="#price" class="request-price-tab nav-link">
+                                    <a data-toggle="tab" href="#price" class="next-tab nav-link">
                                         <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price
                                     </a>
                                 </li>
@@ -67,7 +67,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item icon comments-tab">
-                                    <a data-toggle="tab" href="#comments" class="request-comments-tab nav-link">
+                                    <a data-toggle="tab" href="#comments" class="next-tab nav-link">
                                         <i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments
                                     </a>
                                 </li>
@@ -77,12 +77,12 @@
                                         </a>
                                     </li>*@
                                 <li class="nav-item icon history-tab">
-                                    <a data-toggle="tab" href="#history" class="request-history-tab nav-link">
+                                    <a data-toggle="tab" href="#history" class="next-tab nav-link">
                                         <i class="icon-history-24px" style="font-size: 2rem;"></i><br />History
                                     </a>
                                 </li>
                                 <li class="nav-item icon order-tab">
-                                    <a data-toggle="tab" href="#order" class="request-order-tab nav-link">
+                                    <a data-toggle="tab" href="#order" class="next-tab nav-link">
                                         <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order
                                     </a>
                                 </li>
@@ -138,7 +138,7 @@
                                                     Model.Projects,
                                                     "ProjectID",
                                                     "ProjectDescription"
-                                                    ),
+                                                    ), "Select a Project",
                                                 new { @class = "mdb-select custom select-dropdown form-control-plaintext Project", @id = "subProject", @searchable = "Select Project" }
                                             )
                                             <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
@@ -162,7 +162,8 @@
                                                 Model.Vendors,
                                                 dataValueField: "VendorID",
                                                 dataTextField: "VendorEnName"),
-                                     //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+                                     //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                                                 "Select a Vendor",
                                                 htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext", @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
                                                 )
                                             <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
@@ -180,7 +181,7 @@
                                 <div class="row">
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " type="text" />
                                         <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
                                     </div>
                                     <div class="col-md-6">
@@ -197,7 +198,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <label asp-for="Request.Warranty" class="control-label"></label>
-                                        <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom " />
+                                        <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom " type="text" />
                                         <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-3">
@@ -209,7 +210,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days" />
+                                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days" type="text" />
                                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-4">
@@ -227,7 +228,7 @@
                             </div>
                         </div>
 
-                        <div id="price" class="tab-pane fade">
+                        <div id="price" class="tab-pane fade ">
                             <div class="modal-sides modal-body-top-p">
                                 <div class="row no-mb">
                                     <div class="col-md-8">
