@@ -1748,10 +1748,12 @@ namespace PrototypeWithAuth.Controllers
                     new SelectListItem{ Text="+30", Value="30"},
                     new SelectListItem{ Text="+45", Value="45"}
                 }
-            };
+                 };
+            bool IsOperations = false;
             if (isSingleRequest)
             {
-                var request = _context.Requests.Where(r => r.RequestID == id).FirstOrDefault();
+                var request = _context.Requests.Where(r => r.RequestID == id).Include(r=>r.Product.ProductSubcategory.ParentCategory).FirstOrDefault();
+                IsOperations = request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2;
                 request.ParentRequestID = termsViewModel.ParentRequest.ParentRequestID;
                 _context.Update(request);
                 await _context.SaveChangesAsync();
@@ -1770,6 +1772,7 @@ namespace PrototypeWithAuth.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
+            termsViewModel.SectionType = IsOperations ? AppUtility.MenuItems.Operation : AppUtility.MenuItems.OrdersAndInventory;
             return PartialView(termsViewModel);
         }
 

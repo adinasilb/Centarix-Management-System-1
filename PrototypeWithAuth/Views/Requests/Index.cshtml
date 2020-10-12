@@ -396,7 +396,7 @@
                                 {
                                     if (item is Reorder)
                                     {
-                                        <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder", new { id = item.RequestID })">
+                                        <a class="btn p-0 m-0 no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder", new { id = item.RequestID })">
                                             <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
                                         </a>
                                     }
@@ -404,7 +404,7 @@
                                     {
                                         @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
 
-                                        <a class="btn no-box-shadow" data-title="Approve" href="@Url.Action("Approve", new { id = item.RequestID })">
+                                        <a class="btn p-0 m-0 no-box-shadow" data-title="Approve" href="@Url.Action("Approve", new { id = item.RequestID })">
                                             <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
                                         </a>
                                     }
@@ -415,12 +415,12 @@
 
                             else if (item.RequestStatusID == 2)
                             {
-                                <button class="btn p-0 load-receive-and-location no-box-shadow" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
+                                <button class="btn p-0 m-0 load-receive-and-location no-box-shadow" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
                             }
                             else
                             {
                                 @*work on getting the correct syntax to create a new product with*@
-                                <button class="btn p-0 load-order-details no-box-shadow" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
+                                <button class="btn p-0 m-0 load-order-details no-box-shadow" data-title="order" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px hover-bold"></i></button>// order
                             }
                         </div>
 

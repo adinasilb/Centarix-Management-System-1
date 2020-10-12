@@ -432,9 +432,17 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.RequestStatusID = 1;
+                            requestItemViewModel.Request.ParentRequest = new ParentRequest();
+                            int lastParentRequestOrderNum = 0;
+                            requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
+                            if (_context.ParentRequests.Any())
+                            {
+                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                            }
                             _context.Update(requestItemViewModel.Request);
                             _context.SaveChanges();
-                            TempData["OpenConfirmEmailModal"] = true;
+                            TempData["OpenTermsModal"] = "Single";
+                            //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
                             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
                         }
 

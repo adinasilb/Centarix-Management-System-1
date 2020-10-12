@@ -4,6 +4,7 @@ using PrototypeWithAuth.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -19,5 +20,6 @@ namespace PrototypeWithAuth.ViewModels
         //public int Credit { get; set; }
         public int Installments { get; set; }
         public List<Payment> NewPayments { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
     }
 }
