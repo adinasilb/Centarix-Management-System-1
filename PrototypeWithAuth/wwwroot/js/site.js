@@ -685,6 +685,7 @@ $(function () {
 		if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
 			|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
 			$.fn.EnableSubSubUnits();
+			
 			console.log("about to change subsubunitdropdown");
 			$.fn.ChangeSubSubUnitDropdown();
 		}
@@ -705,6 +706,8 @@ $(function () {
 		//$("#select-options-Request_SubUnitTypeID").prop("disabled", false);
 		//$("#select-options-Request_SubUnitTypeID").removeAttr("disabled");
 		$('[data-activates="select-options-Request_SubUnitTypeID"]').prop('disabled', false);
+		//enable validation
+		$('#Request_SubUnitTypeID').rules("add", "selectRequired");
 	};
 
 	$.fn.EnableSubSubUnits = function () {
@@ -715,6 +718,8 @@ $(function () {
 		//$("#select-options-Request_SubSubUnitTypeID").prop("disabled", false);
 		//$("#select-options-Request_SubSubUnitTypeID").removeAttr("disabled");
 		$('[data-activates="select-options-Request_SubSubUnitTypeID"]').prop('disabled', false);
+		//enable validation
+		$('#Request_SubSubUnitTypeID').rules("add", "selectRequired");
 	};
 
 	$.fn.DisableSubUnits = function () {
@@ -723,6 +728,8 @@ $(function () {
 		//$("#select-options-Request_SubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubUnitTypeID").prop("aria-disabled", true);
 		$('[data-activates="select-options-Request_SubUnitTypeID"]').prop('disabled', true);
+		//disable validation
+		$('#Request_SubUnitTypeID').rules("remove", "selectRequired");
 	};
 
 	$.fn.DisableSubSubUnits = function () {
@@ -731,6 +738,8 @@ $(function () {
 		//$("#select-options-Request_SubSubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubSubUnitTypeID").prop("aria-disabled", true);
 		$('[data-activates="select-options-Request_SubSubUnitTypeID"]').prop('disabled', true);
+		//disable validation
+		$('#Request_SubSubUnitTypeID').rules("remove", "selectRequired");
 	};
 
 	$.fn.CalculateUnitAmounts = function () {
