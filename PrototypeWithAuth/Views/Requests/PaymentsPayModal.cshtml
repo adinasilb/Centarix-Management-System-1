@@ -8,6 +8,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" class="modal-padding">
+                <input type="hidden" asp-for="AccountingPaymentsEnum" />
                 <div class="modal-body">
                     <div class="container ">
                         <div class="row modal-header-padding">
@@ -77,7 +78,7 @@
                     <div class="row">
                         <div class="modal-footer-mt mx-auto">
                             @*<button class="btn inv-payments-button float-right">Paid</button>*@
-                            <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" value="Paid" />
+                            <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" asp-action="PaymentsPayModal" value="Paid" />
                             <button class="custom-button custom-cancel ">Cancel</button>
                         </div>
                     </div>

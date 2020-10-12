@@ -1969,10 +1969,11 @@ $(function () {
 		e.stopPropagation();
 		var vendorid = $(this).attr("vendor");
 		var paymentstatusid = $(this).attr("paymentstatus");
+		var typeEnum = $(this).attr("type");
 		console.log("vendor: " + vendorid);
 		console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid;
+		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});

@@ -30,7 +30,7 @@ using Microsoft.AspNetCore.Localization;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Internal;
 //using Org.BouncyCastle.Asn1.X509;
-//using System.Data.Entity.Validation;
+//using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
 
 namespace PrototypeWithAuth.Controllers
@@ -3411,7 +3411,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid/*, List<int>? requestIds*/)
+        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid, AppUtility.AccountingPaymentsEnum accountingPaymentsEnum = AppUtility.AccountingPaymentsEnum.MonthlyPayment  /*, List<int>? requestIds*/)
         {
             List<Request> requestsToPay = new List<Request>();
 
@@ -3426,12 +3426,20 @@ namespace PrototypeWithAuth.Controllers
 
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
             {
-                Requests = requestsToPay
+                Requests = requestsToPay,
+                AccountingPaymentsEnum = accountingPaymentsEnum
             };
 
             //check if payment status type is installments to show the installments in the view model
 
             return PartialView(paymentsPayModalViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, Accounting")]
+        public async Task<IActionResult> PaymentsPayModal(PaymentsPayModalViewModel paymentsPayModalViewModel)
+        {
+            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingPaymentsEnum });
         }
 
         [HttpGet]

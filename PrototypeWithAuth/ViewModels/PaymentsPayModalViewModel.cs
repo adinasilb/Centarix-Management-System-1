@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -10,6 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public List<Request> Requests { get; set; }
         public List<Payment> Payments { get; set; }
+        public AppUtility.AccountingPaymentsEnum AccountingPaymentsEnum { get; set; }
 
     }
 }

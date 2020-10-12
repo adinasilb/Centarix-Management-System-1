@@ -165,7 +165,7 @@
                         &emsp; Total: </label>&nbsp;<span>@(((decimal)(00000)).ToString("C02"))</span>
 
                         <button class= "custom-button custom-button-font accounting-background-color ml-5 float-right payments-pay-now"
-                                vendor="@Vendor.Key.VendorID" paymentstatus="@Vendor.FirstOrDefault().PaymentStatusID" >Pay Now</button>
+                                vendor="@Vendor.Key.VendorID" paymentstatus="@Vendor.FirstOrDefault().PaymentStatusID" type="@Model.AccountingPaymentsEnum" >Pay Now</button>
                 </div>
             </div>
         </div>
