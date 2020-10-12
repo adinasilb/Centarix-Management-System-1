@@ -20,7 +20,7 @@
     <div class="col-12 create-user mx-auto on-form-modal oper-form" style="        width: 60%
 ">
         <div class="on-form-modal-border">
-            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" id="myForm" class="operationsAddItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -50,12 +50,12 @@
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center modal-sides">
                                 <ul id="create-modal-tabs" class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons">
-                                    <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link active oper-link"><i class="icon-centarix-icons-05 " style="font-size: 2rem;"></i><br />Item</a></li>
-                                    <li class="nav-item" id="price-tab"><a data-toggle="tab" href="#price" class="nav-link oper-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab oper-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link oper-link"><i class="icon-comment-24px" style="font-size: 2rem;"></i><br />Comments</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#history" class="nav-link oper-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link oper-link"> <i class="icon-shopping_cart-24px" style="font-size: 2rem;"></i> <br />Order</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#item" class="nav-link active oper-link next-tab"><i class="icon-centarix-icons-05 " style="font-size: 2rem;"></i><br />Item</a></li>
+                                    <li class="nav-item" id="price-tab"><a data-toggle="tab" href="#price" class="nav-link oper-link next-tab"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#documents" class="nav-link documents-tab oper-link next-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#comments" class="nav-link oper-link next-tab"><i class="icon-comment-24px" style="font-size: 2rem;"></i><br />Comments</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#history" class="nav-link oper-link next-tab"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link oper-link next-tab"> <i class="icon-shopping_cart-24px" style="font-size: 2rem;"></i> <br />Order</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                 <div class="new-modal-body">
                     <div class="container-fluid div-tabs no-box-shadow p-0">
                         <div class="tab-content">
-                            <div id="item" class="tab-pane fade in active show">
+                            <div id="item" class="tab-pane fade in active show" >
                                 <div class="modal-sides modal-body-top-p">
                                     <span class="heading-1 modal-tab-name">Item</span>
                                     <div class="row">

@@ -685,6 +685,7 @@ $(function () {
 		if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
 			|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
 			$.fn.EnableSubSubUnits();
+			
 			console.log("about to change subsubunitdropdown");
 			$.fn.ChangeSubSubUnitDropdown();
 		}
@@ -694,35 +695,22 @@ $(function () {
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 	}
-
-
 	$.fn.EnableSubUnits = function () {
-		//console.log("enable subunits");
 		$("#Request_SubUnit").prop("disabled", false);
-		$("#Request_SubUnitTypeID").destroyMaterialSelect();
-		$("#Request_SubUnitTypeID").removeAttr("disabled")
-		$('#Request_SubUnitTypeID').materialSelect();
-		//$("#select-options-Request_SubUnitTypeID").prop("disabled", false);
-		//$("#select-options-Request_SubUnitTypeID").removeAttr("disabled");
-		$('[data-activates="select-options-Request_SubUnitTypeID"]').prop('disabled', false);
+		$.fn.EnableMaterialSelect('#Request_SubUnitTypeID', 'select-options-Request_SubUnitTypeID');
 	};
 
 	$.fn.EnableSubSubUnits = function () {
 		$("#Request_SubSubUnit").prop("disabled", false);
-		$("#Request_SubSubUnitTypeID").destroyMaterialSelect()
-		$("#Request_SubSubUnitTypeID").removeAttr("disabled")
-		$('#Request_SubSubUnitTypeID').materialSelect();
-		//$("#select-options-Request_SubSubUnitTypeID").prop("disabled", false);
-		//$("#select-options-Request_SubSubUnitTypeID").removeAttr("disabled");
-		$('[data-activates="select-options-Request_SubSubUnitTypeID"]').prop('disabled', false);
+		$.fn.EnableMaterialSelect('#Request_SubSubUnitTypeID', 'select-options-Request_SubSubUnitTypeID');
 	};
-
 	$.fn.DisableSubUnits = function () {
 		$("#Request_SubUnit").prop("disabled", true);
 		$("#Request_SubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubUnitTypeID").prop("aria-disabled", true);
-		$('[data-activates="select-options-Request_SubUnitTypeID"]').prop('disabled', true);
+	//disable validation
+		//$('#Request_SubUnitTypeID').rules("remove", "selectRequired");
 	};
 
 	$.fn.DisableSubSubUnits = function () {
@@ -730,7 +718,8 @@ $(function () {
 		$("#Request_SubSubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubSubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubSubUnitTypeID").prop("aria-disabled", true);
-		$('[data-activates="select-options-Request_SubSubUnitTypeID"]').prop('disabled', true);
+		//disable validation
+		//$('#Request_SubSubUnitTypeID').rules("remove", "selectRequired");
 	};
 
 	$.fn.CalculateUnitAmounts = function () {
@@ -1136,9 +1125,6 @@ $(function () {
 	}
 
 	$(".documents-tab").click(function (e) {
-		//this is for validation
-		$("#myForm").valid();
-		$.fn.validatePriceTab();
 
 		$.fn.HideAllDocs();
 		//$.fn.CheckIfFileSelectsAreFull();
@@ -1687,17 +1673,6 @@ $(function () {
 		}
 	});
 
-
-	
-	$('#myModal').change(function () {
-		$.validator.unobtrusive.parse("#myForm");
-	});
-
-	$("#saveEditModal").click(function (e) {
-
-
-	});
-
 	$.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
 		var tdate = new Date();
 		var dd = tdate.getDate(); //yields day
@@ -1727,58 +1702,6 @@ $(function () {
 		//$.fn.validateItemTab();
 
 	});
-	$(".create-modal-submit").click(function (e) {
-		console.log('$("#myForm").valid()');
-		if ($("#myForm").valid()) {
-			$(".create-modal-submit").removeClass("disabled-submit");
-			return true;
-		} else {
-			e.preventDefault();
-			e.stopPropagation();
-			$(".create-modal-submit").addClass("disabled-submit");
-			return false;
-		}
-
-	});
-
-
-	$(".request-archive-tab").click(function () {
-		console.log("in onclick archive-tab");
-		$("#myForm").valid();
-		$.fn.validatePriceTab();
-
-	});
-
-	$(".request-history-tab").click(function () {
-		console.log("in onclick history-tab");
-		$("#myForm").valid();
-		$.fn.validateItemTab();
-		$.fn.validatePriceTab();
-
-	});
-
-	$(".request-order-tab").click(function () {
-		console.log("in onclick order-tab");
-		$("#myForm").valid();
-		var valid = $.fn.validateItemTab();
-		if (valid == "false" || valid == undefined) {
-			$.fn.validatePriceTab();
-		};
-
-	});
-
-	$(".request-comments-tab").click(function () {
-		console.log("in onclick comments-tab");
-		$("#myForm").valid();
-		$.fn.validatePriceTab();
-	});
-
-	$(".request-location-tab").click(function () {
-		console.log("in onclick location-tab");
-		$("#myForm").valid();
-		$.fn.validateItemTab();
-	});
-
 
 	$("#Request_Terms").change(function () {
 		console.log("in change Request_Terms");
@@ -1789,58 +1712,6 @@ $(function () {
 		}
 
 	});
-
-	$.fn.validatePriceTab = function () {
-		//all the true and falses are opposite because fo the ariainvalid is true if invalid
-		$(".request-documents-tab").prop("disabled", true);
-		$(".request-comments-tab").prop("disabled", true);
-		$(".request-archive-tab").prop("disabled", true);
-		$(".request-history-tab").prop("disabled", true);
-		$(".request-order-tab").prop("disabled", true);
-		valid = $("#Request_Product_ProductName").attr('aria-invalid');
-		if (valid == "true" || $("#Request_Product_ProductName").val() == "") {
-			return;
-		}
-		valid = $("#Request_Unit").attr('aria-invalid');
-		if (valid == "true" || $("#Request_Unit").val() == "") {
-			return;
-		}
-		valid = $("#Request_Unit").attr('aria-invalid');
-		if (valid == "true" || $("#Request_Unit").val() == "") {
-			return;
-		}
-
-		//TALK TO DEBBIE ABOUT THE NEW MATERIAL SELECT
-		console.log("valid2: " + valid);
-		valid = $("#Request_ExchangeRate").attr('aria-invalid');
-		if (valid == "true" || $("#Request_ExchangeRate").val() == "") {
-			return;
-		}
-		console.log("valid3: " + valid);
-		valid = $("#Request_Cost").attr('aria-invalid');
-		if (valid == "true" || $("#Request_Cost").val() == "") {
-			return;
-		}
-		console.log("final valid: " + valid);
-		if ($("#Request_Terms").val() != -1) {
-			console.log(".paymentType: " + $(".paymentType").val());
-			if ($(".paymentType").val() != "") {
-				valid = "false";
-			} else {
-				valid = "true";
-			}
-		}
-
-		if (valid == "false" || valid == undefined) {
-			$(".request-item-tab").prop("disabled", false);
-			$(".request-documents-tab").prop("disabled", false);
-			$(".request-comments-tab").prop("disabled", false);
-			$(".request-archive-tab").prop("disabled", false);
-			$(".request-history-tab").prop("disabled", false);
-			$(".request-order-tab").prop("disabled", false);
-		}
-		return valid;
-	}
 
 	$(".create-user .permissions-tab").on("click", function () {
 		console.log("permissions tab opened");
@@ -2056,143 +1927,8 @@ $(function () {
 		$(".users-list").show();
 	});
 
-	$("#vendor-payments-tab").click(function () {
-		console.log("$('#vendor - payments - tab')");
-		$("#createModalForm").validate();
-		$("#createModalForm").valid();
-		$.fn.validateVendorDetailsTab();
-	});
-	$("#vendor-categories-tab").click(function () {
-		console.log("$('#vendor - payments - tab')");
-		$("#createModalForm").valid();
-		$.fn.validateVendorDetailsTab();
-	});
-	$("#vendor-comment-tab").click(function () {
-		$("#createModalForm").valid();
-		$.fn.validateVendorPayment();
-	});
-	$("#vendor-contact-tab").click(function () {
-		$('[data-toggle="popover"]').popover('hide');
-		$("#createModalForm").valid();
-		$.fn.validateVendorPayment();
-	});
-	$("#addSupplier").click(function () {
-		console.log('$("#createModalForm").valid()');
-		if ($("#createModalForm").valid()) {
-			$("#addSupplier").removeClass("disabled-submit");
-			return true;
-		} else {
-			e.preventDefault();
-			e.stopPropagation();
-			$("#addSupplier").addClass("disabled-submit");
-			return false;
-		}
-	});
 
-	$.fn.validateVendorDetailsTab = function () {
-		//all the true and falses are opposite because fo the ariainvalid is true if invalid
-		valid = $("#Vendor_VendorEnName").attr('aria-invalid');
-		console.log("valid: " + valid);
-		if (valid == "true" || $("#Vendor_VendorEnName").val() == "") {
-			console.log("valid: " + valid);
-			return;
-		}
-		valid = $("#Vendor_VendorHeName").attr('aria-invalid');
-		console.log("valid: " + valid);
-		if (valid == "true" || $("#Vendor_VendorHeName").val() == "") {
-			console.log("valid: " + valid);
-			return;
-		}
-		console.log("valid1: " + valid);
-		valid = $("#Vendor_VendorBuisnessID").attr('aria-invalid');
-		if (valid == "true" || $("#Vendor_VendorBuisnessID").val() == "") {
-			return;
-		}
-		console.log("valid2: " + valid);
-		valid = $("#Vendor_VendorCountry").attr('aria-invalid');
-		if (valid == "true" || $("#Vendor_VendorCountry").val() == "") {
-			return;
-		}
-		console.log("valid3: " + valid);
-		valid = $("#Vendor_VendorCity").attr('aria-invalid');
-		if (valid == "true" || $("#Vendor_VendorCity").val() == "") {
-			return;
-		}
-		console.log("valid1: " + valid);
-		valid = $("#Vendor_VendorStreet").attr('aria-invalid');
-		if (valid == "true" || $("#Vendor_VendorStreet").val() == "") {
-			return;
-		}
-		console.log("valid2: " + valid);
-		valid = $("#Vendor_VendorTelephone").attr('aria-invalid');
-		if (valid == "true" || $("#Vendor_VendorTelephone").val() == "") {
-			return;
-		}
-		console.log("valid3: " + valid);
-		valid = $("#Vendor_VendorFax").attr('aria-invalid');
-		if (valid == "true") {
-			return;
-		}
-		valid = $("#VendorCategoryTypes").attr('aria-invalid');
-		if (valid == "true" || $("#VendorCategoryTypes").val() == "") {
-			return;
-		}
-		console.log("valid1: " + valid);
-		valid = $("#Vendor_OrdersEmail").attr('aria-invalid');
-		if (valid == "true" || $("#Vendor_OrdersEmail").val() == "") {
-			return;
-		}
-		console.log("valid2: " + valid);
-		valid = $("#Vendor_InfoEmail").attr('aria-invalid');
-		if (valid == "true") {
-			return;
-		}
-		console.log("valid3: " + valid);
-		valid = $("#Vendor_VendorCellPhone").attr('aria-invalid');
-		if (valid == "true") {
-			return;
-		}
-		if (valid == "false" || valid == undefined) {
-			$("#vendor-payments-tab").prop("disabled", false);
-			$("#vendor-categories-tab").prop("disabled", false);
-		}
-		return valid;
-	}
-	$.fn.validateVendorPayment = function () {
-		//all the true and falses are opposite because fo the ariainvalid is true if invalid
-		valid = $("#Vendor_VendorBank").attr('aria-invalid');
-		console.log("valid: " + valid);
-		if (valid == "true" || $("#Vendor_VendorBank").val() == "") {
-			console.log("valid: " + valid);
-			return;
-		}
-		valid = $("#Vendor_VendorBankBranch").attr('aria-invalid');
-		console.log("valid: " + valid);
-		if (valid == "true" || $("#Vendor_VendorBankBranch").val() == "") {
-			console.log("valid: " + valid);
-			return;
-		}
-		console.log("valid1: " + valid);
-		valid = $("#Vendor_VendorAccountNum").attr('aria-invalid');
-		if (valid == "true" || $("#Vendor_VendorAccountNum").val() == "") {
-			return;
-		}
-
-		if (valid == "false" || valid == undefined) {
-			$("#vendor-comment-tab").prop("disabled", false);
-			$("#vendor-contact-tab").prop("disabled", false);
-		}
-		return valid;
-	}
-
-
-	$(".vendor-contact").change(function () {
-		if ($("#createModalForm").valid()) {
-			$("#addSupplier").prop("disabled", false);
-			$("#addSupplier").removeClass("disabled-submit");
-		}
-	});
-
+	
 	$("#vendor-contact-tab").click(function () {
 		console.log("in onclickcontact");
 		$(".contact-info:hidden:first").find(".contact-active").val(true);
@@ -2203,16 +1939,6 @@ $(function () {
 		console.log("in onclick addSuplierContact");
 		$(".contact-info:hidden:first").find(".contact-active").val(true);
 		$(".contact-info:hidden:first").show();
-	});
-
-
-
-	$("#addUser").click(function () {
-		console.log($("#createModalForm").valid());
-		if (!$("#createModalForm").valid()) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
 	});
 
 
@@ -2234,89 +1960,6 @@ $(function () {
 
 		$(".comment-info:hidden:first").show();
 	}
-
-	$("#user-permissions-tab").click(function () {
-		$("#createModalForm").valid();
-		$.fn.validateUserDetailsTab();
-	});
-
-	$("#user-budget-tab").click(function () {
-		$("#createModalForm").valid();
-	});
-
-	$("#user-more-tab").click(function () {
-		console.log('"#user-more-tab").click');
-		$("#createModalForm").valid();
-		$("#addUser").prop("disabled", false);
-		$("#addUser").removeClass("disabled-submit");
-	});
-
-	$.fn.validateUserDetailsTab = function () {
-		//all the true and falses are opposite because fo the ariainvalid is true if invalid
-		valid = $("#FirstName").attr('aria-invalid');
-		if (valid == "true" || $("#FirstName").val() == "") {
-			console.log("valid: " + valid);
-			return;
-		}
-		valid = $("#LastName").attr('aria-invalid');
-		if (valid == "true" || $("#LastName").val() == "") {
-			return;
-		}
-		valid = $("#Email").attr('aria-invalid');
-		if (valid == "true" || $("#Email").val() == "") {
-			console.log("valid: " + valid);
-			return;
-		}
-		valid = $("#SecureAppPass").attr('aria-invalid');
-		if (valid == "true" /*|| $("#SecureAppPass").val() == ""*/) {
-			return;
-		}
-		valid = $("#CentarixID").attr('aria-invalid');
-		if (valid == "true" || $("#CentarixID").val() == "") {
-			return;
-		}
-		valid = $("#Password").attr('aria-invalid');
-		if (valid == "true" /*|| $("#Password").val() == ""*/) {
-			return;
-		}
-		valid = $("#ConfirmPassword").attr('aria-invalid');
-		if (valid == "true" /*|| $("#ConfirmPassword").val() == ""*/) {
-			return;
-		}
-		if (!$('input[name="NewEmployee.EmployeeStatusID"]:checked').length) {
-			// none of the radio buttons were checked
-			return;
-		}
-		if (valid == "false" || valid == undefined) {
-			$("#user-permissions-tab").prop("disabled", false);
-			$("#user-budget-tab").prop("disabled", false);
-			$("#user-more-tab").prop("disabled", false);
-		}
-		return valid;
-	}
-
-
-	$("#SaveInvoiceModal").on("click", function (e) {
-		$("#myForm").valid();
-		var valid = $("#Invoice_InvoiceNumber").attr("aria-invalid");
-		console.log("invoice number validation + " + valid);
-		if (valid == "true" || $("#Invoice_InvoiceNumber") == "") {
-			e.preventDefault();
-			e.stopPropagation();
-			$("#invoice-number-validation").html("Please enter a valid Number");
-		}
-	})
-
-
-	$("#reorderRequest").click(function () {
-		console.log($("#reorderForm").valid());
-		if (!$("#reorderForm").valid()) {
-			$("#reorderRequest").prop("disabled", true);
-
-		}
-		$("#reorderRequest").prop("disabled", false);
-
-	});
 
 
 
@@ -2674,111 +2317,7 @@ $(function () {
 			}
 		});
 	});
-	//$('.employee-type').change(function () {
-	//	console.log($(this).val());
-	//	$('#NewEmployee_EmployeeStatusID').val($(this).val())
-	//})
-
-	$('.salary-tab').off("click").on("click", function (e) {
-		$("#createModalForm").valid();
-		console.log("salary tab clicked");
-		$.fn.validatePersonalTab();
-	});
-	$.fn.validatePersonalTab = function () {
-		console.log("validatePersonalTab");
-		$(".salary-tab").prop("disabled", true);
-		$(".documents-tab").prop("disabled", true);
-
-
-		var statIdVal = parseInt($("#NewEmployee_EmployeeStatusID").val());
-		console.log("vpt statIdVal: " + statIdVal);
-		if (parseInt(statIdVal) == 1 || statIdVal == 2 || statIdVal == 3) {
-			console.log("inside if statement");
-			//if (statIdVal != 4) {
-			//	console.log("statIdVal: " + statIdVal + " entered if statement");
-			if (/*checkedItem1 != true && checkedItem2 != true && checkedItem3 != true && checkedItem4 != true*/$('#NewEmployee_EmployeeStatusID').val() == '' || $('#NewEmployee_EmployeeStatusID').val() == 0) {
-				$("#validation-EmployeeStatus").removeClass("hidden");
-				return;
-			}
-			else {
-				$("#validation-EmployeeStatus").addClass("hidden");
-			}
-			valid = $("#NewEmployee_IDNumber").attr('aria-invalid');
-			if (valid == "true" || $("#NewEmployee_IDNumber").val() == "") {
-				console.log("valid: " + valid);
-				return;
-			}
-			valid = $("#NewEmployee_CentarixID").attr('aria-invalid');
-			if (valid == "true" || $("#NewEmployee_CentarixID").val() == "") {
-				console.log("valid: " + valid);
-				return;
-			}
-			valid = $("#NewEmployee_JobTitle").attr('aria-invalid');
-			if (valid == "true" || $("#NewEmployee_JobTitle").val() == "") {
-				return;
-			}
-			valid = $("#NewEmployee_Email").attr('aria-invalid');
-			if (valid == "true" || $("#NewEmployee_Email").val() == "") {
-				return;
-			}
-			valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
-			if (valid == "true" || $("#NewEmployee_PhoneNumber").val() == "") {
-				return;
-			}
-			valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
-			if (valid == "true") {
-				return;
-			}
-			valid = $("#NewEmployee_StartedWorking").attr('aria-invalid');
-			if (valid == "true" || $("#NewEmployee_StartedWorking").val() == "") {
-				return;
-
-			}
-			if (valid == "false" || valid == undefined) {
-				$(".salary-tab").prop("disabled", false);
-				$(".security-tab").prop("disabled", false);
-			}
-		}
-		else if (statIdVal == 4) {
-			$(".salary-tab").prop("disabled", false);
-		}
-		return valid;
-	}
-	$(".security-tab").on("click", function () {
-		if (parseInt($("#NewEmployee_EmployeeStatusID").val()) == 4) {
-			$(".security-tab").prop("disabled", false);
-		}
-		else {
-		$.fn.validateSalaryTab();
-		}
-	});
-	$.fn.validateSalaryTab = function () {
-		$(".security-tab").prop("disabled", true);
-		console.log("in $.fn.validateItemTab");
-		valid = $("#NewEmployee_SalariedEmployee_HoursPerDay").attr('aria-invalid');
-		if (valid == "true" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() == "") {
-			return;
-		}
-		valid = $("#NewEmployee_VacationDays").attr('aria-invalid');
-		if (valid == "true" || $("#NewEmployee_VacationDays").val() == "") {
-			return;
-		}
-		if (valid == "false" || valid == undefined) {
-			$(".security-tab").prop("disabled", false);
-		}
-		return valid;
-	};
-	$('#addWorker').submit(function () {
-		if ($("#createModalForm").valid()) {
-			$("#addWorker").removeClass("disabled-submit");
-			return true;
-		} else {
-			e.preventDefault();
-			e.stopPropagation();
-			$("#addWorker").addClass("disabled-submit");
-			return false;
-		}
-	});
+	
 	$('.workersHours').change(function () {
 		var url = $(this).val();
 		if (url != null && url != '') {
@@ -2851,15 +2390,38 @@ $(function () {
 
 		}
 	});
-	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
-		var selectedIndex = $(selectID).find(":selected").index();		
-		console.log("selectedIndex: "+selectedIndex);
-		$(selectID).prop("disabled", false);
+
+	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {	
+		var selectedIndex = $('#' + dataActivates).find(".active").index();
+		var isOptGroup = false;
+		if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
+		if (isOptGroup) {
+			var selected = $(':selected', $("#Request_UnitTypeID"));
+			var optgroup = selected.closest('optgroup').attr('label');
+			switch (optgroup) {
+				case "Units":
+					console.log("Units")
+					selectedIndex = selectedIndex - 1;
+					break;
+				case "Weight/Volume":
+					console.log("Volume")
+					selectedIndex = selectedIndex - 2;
+					break;
+				case "Test":
+					console.log("Test")
+					selectedIndex = selectedIndex - 3;
+					break;
+			}
+
+		} else {
+			selectedIndex = selectedIndex - 1;
+		}
 		$(selectID).destroyMaterialSelect();
-		$(selectID).removeAttr("disabled")
-		$(selectID).materialSelect();
-		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
+		$(selectID).prop("disabled", false);
 		$(selectID).prop('selectedIndex', selectedIndex);
+		$(selectID).removeAttr("disabled")
+		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);		
+		$(selectID).materialSelect();		
 	}
 	$("#addSupplierComment").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');
