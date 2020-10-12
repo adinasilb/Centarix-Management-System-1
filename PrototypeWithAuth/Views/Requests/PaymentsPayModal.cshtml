@@ -9,6 +9,11 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" class="modal-padding">
                 <input type="hidden" asp-for="AccountingPaymentsEnum" />
+                @for(int i=0; i<Model.Requests.Count; i++)
+                {
+                    <input type="hidden" asp-for="Requests[i].RequestID" />
+                }
+
                 <div class="modal-body">
                     <div class="container ">
                         <div class="row modal-header-padding">

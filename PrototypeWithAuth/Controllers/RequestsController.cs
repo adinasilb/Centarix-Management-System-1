@@ -3439,6 +3439,14 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> PaymentsPayModal(PaymentsPayModalViewModel paymentsPayModalViewModel)
         {
+            foreach(Request request in paymentsPayModalViewModel.Requests)
+            {
+                var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
+                requestToUpdate.PaymentStatusID = 6;
+                _context.Update(requestToUpdate);
+            }
+            _context.SaveChangesAsync();
+
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingPaymentsEnum });
         }
 
