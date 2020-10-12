@@ -709,8 +709,7 @@ $(function () {
 		$("#Request_SubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubUnitTypeID").prop("aria-disabled", true);
-		$('[data-activates="select-options-Request_SubUnitTypeID"]').prop('disabled', true);
-		//disable validation
+	//disable validation
 		//$('#Request_SubUnitTypeID').rules("remove", "selectRequired");
 	};
 
@@ -719,7 +718,6 @@ $(function () {
 		$("#Request_SubSubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubSubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubSubUnitTypeID").prop("aria-disabled", true);
-		$('[data-activates="select-options-Request_SubSubUnitTypeID"]').prop('disabled', true);
 		//disable validation
 		//$('#Request_SubSubUnitTypeID').rules("remove", "selectRequired");
 	};
@@ -2392,15 +2390,38 @@ $(function () {
 
 		}
 	});
-	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
-		var selectedIndex = $(selectID).find(":selected").index();		
-		console.log("selectedIndex: "+selectedIndex);
-		$(selectID).prop("disabled", false);
+
+	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {	
+		var selectedIndex = $('#' + dataActivates).find(".active").index();
+		var isOptGroup = false;
+		if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
+		if (isOptGroup) {
+			var selected = $(':selected', $("#Request_UnitTypeID"));
+			var optgroup = selected.closest('optgroup').attr('label');
+			switch (optgroup) {
+				case "Units":
+					console.log("Units")
+					selectedIndex = selectedIndex - 1;
+					break;
+				case "Weight/Volume":
+					console.log("Volume")
+					selectedIndex = selectedIndex - 2;
+					break;
+				case "Test":
+					console.log("Test")
+					selectedIndex = selectedIndex - 3;
+					break;
+			}
+
+		} else {
+			selectedIndex = selectedIndex - 1;
+		}
 		$(selectID).destroyMaterialSelect();
-		$(selectID).removeAttr("disabled")
-		$(selectID).materialSelect();
-		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
+		$(selectID).prop("disabled", false);
 		$(selectID).prop('selectedIndex', selectedIndex);
+		$(selectID).removeAttr("disabled")
+		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);		
+		$(selectID).materialSelect();		
 	}
 	$("#addSupplierComment").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');

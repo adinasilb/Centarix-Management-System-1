@@ -109,7 +109,6 @@ $(function () {
 		return  value != "";
 	}, 'Field is required');
 	$.validator.addMethod("integer", function (value, element) {
-		console.log("value" + value);
 		return isInteger(value) || value=='';
 	}, 'Field must be an integer');
 
