@@ -202,37 +202,6 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
-        public async Task<IActionResult> AddWorker(string chosenID=null)
-        {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.AddWorker;
-
-            Employee employee = new Employee();
-            if (chosenID != null)
-            {
-                employee = new Employee();
-                var user =await _context.Users.Where(u => u.Id == chosenID).FirstOrDefaultAsync();
-                employee.Id = user.Id;
-                employee.Email = user.Email;
-                employee.PhoneNumber = user.PhoneNumber;
-                employee.CentarixID = user.CentarixID;                
-            }
-            AddWorkerViewModel addWorkerViewModel = new AddWorkerViewModel
-            {
-                ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).Select(u=> new SelectListItem { Value=u.Id, Text=u.FirstName+" "+u.LastName}).ToListAsync(),
-                JobCategoryTypes = await _context.JobCategoryTypes.Select(jc => jc).ToListAsync(),
-                EmployeeStatuses = await _context.EmployeeStatuses.Select(es => es).ToListAsync(),
-                NewEmployee = employee,
-             };
-           
-            return View(addWorkerViewModel);
-
-        }
-
-
-        [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> ApproveHours(int id)
         {
             EmployeeHours employeeHours = new EmployeeHours();

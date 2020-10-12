@@ -6,15 +6,16 @@
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
 
-<div class="modal modal-view right fader order-inv-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view right fader on-form-modal order-inv-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
 
         <div class="modal-content d-inline-block">
 
-            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
                 @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
 
@@ -65,11 +66,11 @@
                                         <div class="col-12 px-0">
                                             <div class="container-fluid div-tabs text-center pl-0">
                                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons" >
-                                                    <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                                    <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
-                                                    <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
-                                                    <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link documents-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                                    <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
+                                                    <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                                    <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link next-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
+                                                    <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link next-tab"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                                    <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link documents-tab next-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                                    <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link next-tab"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -103,7 +104,7 @@
                                                     <div class="form-group">
                                                         <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                                         @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-                        new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+                        new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),"Select Category",
                         new { @class = " mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist", @disabled = "disabled", @searchable = "Select Category" })
                                                         <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                                     </div>
@@ -398,7 +399,7 @@
                                                         <div class="row">
                                                             <div class="col-md-6 form-group">
                                                                 <label asp-for="Request.SubUnit" class="control-label"></label>
-                                                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom mark-readonly" min="0" disabled />
                                                                 <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                                                             </div>
                                                             <div class="col-md-6 form-group">
@@ -407,7 +408,7 @@
                              vm => vm.Request.SubUnitTypeID,
                              Model.UnitTypeList,
                              "",
-                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
+                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @disabled = "disabled" }
                          )
                                                                 <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                                             </div>
@@ -436,7 +437,7 @@
                                                         <div class="row">
                                                             <div class="col-md-6 form-group">
                                                                 <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom mark-readonly" min="0" disabled />
                                                                 <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                                             </div>
                                                             <div class="col-md-6 form-group">
@@ -445,7 +446,7 @@
                                                                     vm => vm.Request.SubSubUnitTypeID,
                                                                     Model.UnitTypeList,
                                                                     "",
-                                                                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
+                                                                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @disabled = "disabled" }
                                                                     )
                                                                 <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
                                                             </div>
@@ -456,13 +457,13 @@
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">&#36;</span>
-                                                                        <input class="form-control-plaintext border-bottom" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
+                                                                        <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">&#x20aa;</span>
-                                                                        <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
+                                                                        <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                                                     </div>
                                                                 </div>
                                                             </div>

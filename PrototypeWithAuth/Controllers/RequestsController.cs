@@ -1953,7 +1953,6 @@ namespace PrototypeWithAuth.Controllers
                         {
                             request.RequestStatusID = 2;
                             _context.Update(request);
-                            _context.SaveChanges();
                             RequestNotification requestNotification = new RequestNotification();
                             requestNotification.RequestID = request.RequestID;
                             requestNotification.IsRead = false;
