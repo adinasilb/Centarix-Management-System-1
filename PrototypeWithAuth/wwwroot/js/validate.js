@@ -122,12 +122,10 @@ $(function () {
 		},
 	});
 	function isInteger(n) {
-		n = parseFloat(n);
-		console.log(n)
+		n = parseFloat(n)
 		return n === +n && n === (n | 0);
 	}
 	$.validator.addMethod("selectRequired", function (value, element) {
-		console.log("value" + value);
 		return  value != "";
 	}, 'Field is required');
 	$.validator.addMethod("integer", function (value, element) {
@@ -135,7 +133,6 @@ $(function () {
 	}, 'Field must be an integer');
 
 	$('.mdb-select').change(function () {
-		console.log($(this).rules())
 		if ($(this).rules()) {
 			$(this).valid();
 		}
@@ -162,11 +159,8 @@ $(function () {
 
 	});
 	$('#myForm').submit(function (e)  {
-		$.validator.setDefaults({
-			ignore: []
-		});
-		
-		var valid = $("#myForm").valid();
+		$(this).data("validator").settings.ignore = "";
+		var valid = $(this).valid();
 		console.log("valid form: " + valid)
 		if (!valid) {
 			e.preventDefault();
@@ -175,9 +169,7 @@ $(function () {
 		else {
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
 		}
-		$.validator.setDefaults({
-			ignore:':not(select:hidden, input:visible, textarea:visible)'
-		});
+		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
 	$.validator.setDefaults({
 		ignore: ':not(select:hidden, input:visible, textarea:visible)',
