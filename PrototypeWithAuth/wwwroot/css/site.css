@@ -1453,7 +1453,7 @@ body {
     color: white;
 }
 
-.disabled-submit {
+input.disabled-submit, button.disabled-submit {
     background-color: rgba(0,0,0, .38) !important;
 }
 

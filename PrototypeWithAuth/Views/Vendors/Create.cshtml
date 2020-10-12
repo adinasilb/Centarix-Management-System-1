@@ -25,7 +25,7 @@
     }
     <div class="col-12  mx-auto on-form-modal @sectionClass " style="width: 60%">
         <div class="on-form-modal-border" id="addVendorModal"> 
-            <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" id="myForm" class="createVendorForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(c => c.SectionType)
                 <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
                     <div class="row">
@@ -41,11 +41,11 @@
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center modal-sides">
                                 <ul class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
-                                    <li class="nav-item"><a data-toggle="tab" href="#details" id="vendor-details-tab" class="nav-link  @navLinkClass "><i class="icon-storefront-24px" style="font-size: 2rem;"></i><br />Details</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#categories" id="vendor-categories-tab" class="nav-link  @navLinkClass" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Categories</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#payment" id="vendor-payments-tab" class="nav-link @navLinkClass" disabled><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Payment</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="vendor-comment-tab" href="#comments" class="nav-link  @navLinkClass " disabled><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" id="vendor-contact-tab" href="#contact" class="nav-link   @navLinkClass " disabled><i class="icon-centarix-icons-17" e.css style="font-size: 2rem;"></i><br />Contact</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#details" id="vendor-details-tab" class="nav-link next-tab  @navLinkClass "><i class="icon-storefront-24px" style="font-size: 2rem;"></i><br />Details</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#categories" id="vendor-categories-tab" class="nav-link next-tab @navLinkClass" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Categories</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" href="#payment" id="vendor-payments-tab" class="nav-link next-tab @navLinkClass" disabled><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Payment</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="vendor-comment-tab" href="#comments" class="nav-link next-tab @navLinkClass " disabled><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments</a></li>
+                                    <li class="nav-item"><a data-toggle="tab" id="vendor-contact-tab" href="#contact" class="nav-link next-tab   @navLinkClass " disabled><i class="icon-centarix-icons-17" e.css style="font-size: 2rem;"></i><br />Contact</a></li>
                                 </ul>
                             </div>
                         </div>

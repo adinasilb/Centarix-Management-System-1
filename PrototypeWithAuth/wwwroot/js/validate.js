@@ -99,6 +99,28 @@ $(function () {
 			}
 		},
 	});
+	$('.createVendorForm').validate({
+		rules: {
+			"Vendor.VendorEnName": "required",
+			"Vendor.VendorHeName": "required",
+			"VendorCategoryTypes": "selectRequired",
+			"Vendor.VendorBuisnessID": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			"Vendor.VendorCountry": "required",
+			"Vendor.VendorCity": "required",
+			"Vendor.VendorStreet": "required",
+			"Vendor_VendorTelephone": "required",
+			"Vendor.OrdersEmail": "required",
+			"Vendor.VendorBank": "required",
+			"Vendor.VendorBankBranch": "required",
+			"Vendor.VendorAccountNum": "required",
+			
+		},
+	});
 	function isInteger(n) {
 		n = parseFloat(n);
 		console.log(n)
@@ -145,8 +167,13 @@ $(function () {
 		});
 		
 		var valid = $("#myForm").valid();
+		console.log("valid form: " + valid)
 		if (!valid) {
 			e.preventDefault();
+			$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+		}
+		else {
+			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
 		}
 		$.validator.setDefaults({
 			ignore:':not(select:hidden, input:visible, textarea:visible)'
@@ -233,102 +260,6 @@ $(function () {
 //});
 
 
-
-//$.fn.validateVendorDetailsTab = function () {
-//	//all the true and falses are opposite because fo the ariainvalid is true if invalid
-//	valid = $("#Vendor_VendorEnName").attr('aria-invalid');
-//	console.log("valid: " + valid);
-//	if (valid == "true" || $("#Vendor_VendorEnName").val() == "") {
-//		console.log("valid: " + valid);
-//		return;
-//	}
-//	valid = $("#Vendor_VendorHeName").attr('aria-invalid');
-//	console.log("valid: " + valid);
-//	if (valid == "true" || $("#Vendor_VendorHeName").val() == "") {
-//		console.log("valid: " + valid);
-//		return;
-//	}
-//	console.log("valid1: " + valid);
-//	valid = $("#Vendor_VendorBuisnessID").attr('aria-invalid');
-//	if (valid == "true" || $("#Vendor_VendorBuisnessID").val() == "") {
-//		return;
-//	}
-//	console.log("valid2: " + valid);
-//	valid = $("#Vendor_VendorCountry").attr('aria-invalid');
-//	if (valid == "true" || $("#Vendor_VendorCountry").val() == "") {
-//		return;
-//	}
-//	console.log("valid3: " + valid);
-//	valid = $("#Vendor_VendorCity").attr('aria-invalid');
-//	if (valid == "true" || $("#Vendor_VendorCity").val() == "") {
-//		return;
-//	}
-//	console.log("valid1: " + valid);
-//	valid = $("#Vendor_VendorStreet").attr('aria-invalid');
-//	if (valid == "true" || $("#Vendor_VendorStreet").val() == "") {
-//		return;
-//	}
-//	console.log("valid2: " + valid);
-//	valid = $("#Vendor_VendorTelephone").attr('aria-invalid');
-//	if (valid == "true" || $("#Vendor_VendorTelephone").val() == "") {
-//		return;
-//	}
-//	console.log("valid3: " + valid);
-//	valid = $("#Vendor_VendorFax").attr('aria-invalid');
-//	if (valid == "true") {
-//		return;
-//	}
-//	valid = $("#VendorCategoryTypes").attr('aria-invalid');
-//	if (valid == "true" || $("#VendorCategoryTypes").val() == "") {
-//		return;
-//	}
-//	console.log("valid1: " + valid);
-//	valid = $("#Vendor_OrdersEmail").attr('aria-invalid');
-//	if (valid == "true" || $("#Vendor_OrdersEmail").val() == "") {
-//		return;
-//	}
-//	console.log("valid2: " + valid);
-//	valid = $("#Vendor_InfoEmail").attr('aria-invalid');
-//	if (valid == "true") {
-//		return;
-//	}
-//	console.log("valid3: " + valid);
-//	valid = $("#Vendor_VendorCellPhone").attr('aria-invalid');
-//	if (valid == "true") {
-//		return;
-//	}
-//	if (valid == "false" || valid == undefined) {
-//		$("#vendor-payments-tab").prop("disabled", false);
-//		$("#vendor-categories-tab").prop("disabled", false);
-//	}
-//	return valid;
-//}
-//$.fn.validateVendorPayment = function () {
-//	//all the true and falses are opposite because fo the ariainvalid is true if invalid
-//	valid = $("#Vendor_VendorBank").attr('aria-invalid');
-//	console.log("valid: " + valid);
-//	if (valid == "true" || $("#Vendor_VendorBank").val() == "") {
-//		console.log("valid: " + valid);
-//		return;
-//	}
-//	valid = $("#Vendor_VendorBankBranch").attr('aria-invalid');
-//	console.log("valid: " + valid);
-//	if (valid == "true" || $("#Vendor_VendorBankBranch").val() == "") {
-//		console.log("valid: " + valid);
-//		return;
-//	}
-//	console.log("valid1: " + valid);
-//	valid = $("#Vendor_VendorAccountNum").attr('aria-invalid');
-//	if (valid == "true" || $("#Vendor_VendorAccountNum").val() == "") {
-//		return;
-//	}
-
-//	if (valid == "false" || valid == undefined) {
-//		$("#vendor-comment-tab").prop("disabled", false);
-//		$("#vendor-contact-tab").prop("disabled", false);
-//	}
-//	return valid;
-//}
 //$.fn.validatePersonalTab = function () {
 //	console.log("validatePersonalTab");
 //	$(".salary-tab").prop("disabled", true);
