@@ -264,8 +264,10 @@
             $('.datepicker').pickadate();
             $('#request-search a:first').tab('show'); @* I had to put this in here b / c otherwise it wasn't coming up on .search-link.click*@
             $('.edit-user a:first').tab('show');
-
-            $('#createModalForm a:first').tab('show');
+            $('#myForm a:first').tab('show');
+            $(".contact-info:hidden:first").find(".contact-active").val(true);
+            $.fn.AddContactValidation();
+            $(".contact-info:hidden:first").show();
 
             //vendors
 

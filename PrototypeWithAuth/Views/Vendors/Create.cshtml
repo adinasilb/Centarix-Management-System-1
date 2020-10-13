@@ -272,7 +272,7 @@
                                                             <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
                                                             <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
 
-                                                            <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0" />
+                                                            <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0 comment-text" />
                                                             <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger-centarix"></span>
                                                         </div>
 
@@ -296,8 +296,8 @@
                                                     @Html.HiddenFor(x => x.VendorContacts[i].IsActive, htmlAttributes: new { @class = "contact-active" })
                                                     <div class="row mb-3 ">
                                                         <div class="col-6 mr-4  ">
-                                                            <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="control-label"></label>
-                                                            <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="form-control-plaintext border-bottom vendor-contact" />
+                                                            <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="control-label "></label>
+                                                            <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="form-control-plaintext border-bottom vendor-contact contact-name" />
                                                             <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="text-danger-centarix"></span>
                                                         </div>
                                                         <div class="col-5  ">
@@ -308,12 +308,12 @@
                                                     <div class="row mb-3">
                                                         <div class="col-6 mr-4">
                                                             <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="control-label"></label>
-                                                            <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="form-control-plaintext border-bottom  vendor-contact" />
+                                                            <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="form-control-plaintext border-bottom contact-email vendor-contact" />
                                                             <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="text-danger-centarix"></span>
                                                         </div>
                                                         <div class="col-5 mb-5 ">
-                                                            <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="control-label"></label>
-                                                            <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="form-control-plaintext border-bottom  vendor-contact" />
+                                                            <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="control-label "></label>
+                                                            <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="form-control-plaintext border-bottom contact-phone  vendor-contact" />
                                                             <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="text-danger-centarix"></span>
                                                         </div>
                                                     </div>

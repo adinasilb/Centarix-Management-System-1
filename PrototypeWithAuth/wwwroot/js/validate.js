@@ -55,6 +55,7 @@ $(function () {
 			},
 			"Request.UnitTypeID": "selectRequired"
 		},
+		
 	});
 	$('.operationsAddItemForm').validate({
 		rules: {
@@ -113,11 +114,32 @@ $(function () {
 			"Vendor.VendorCountry": "required",
 			"Vendor.VendorCity": "required",
 			"Vendor.VendorStreet": "required",
-			"Vendor_VendorTelephone": "required",
-			"Vendor.OrdersEmail": "required",
+			"Vendor.VendorTelephone": {
+				required : true,
+				minlength : 9
+			},
+			"Vendor.VendorCellPhone": {
+				minlength: 9
+			},
+			"Vendor.VendorFax": {
+				minlength: 9
+			},
+			"Vendor.OrdersEmail": {
+				email: true,
+				required: true
+			},
+			"Vendor.InfoEmail": {
+				email: true
+			},
 			"Vendor.VendorBank": "required",
 			"Vendor.VendorBankBranch": "required",
-			"Vendor.VendorAccountNum": "required",
+			"Vendor.VendorAccountNum": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			
 			
 		},
 	});

@@ -1928,17 +1928,24 @@ $(function () {
 	});
 
 
-	
-	$("#vendor-contact-tab").click(function () {
-		console.log("in onclickcontact");
-		$(".contact-info:hidden:first").find(".contact-active").val(true);
-		$(".contact-info:hidden:first").show();
-	});
+	$.fn.AddContactValidation = function () {
+		$(".contact-info:hidden:first .contact-name").rules("add", "required");
+		$(".contact-info:hidden:first .contact-email").rules("add", {
+			required: true,
+			email: true
+		});
+		$(".contact-info:hidden:first .contact-phone").rules("add", {
+			required: true,
+			minlength: 9
+		});
+	};
 
 	$("#addSuplierContact").click(function () {
 		console.log("in onclick addSuplierContact");
 		$(".contact-info:hidden:first").find(".contact-active").val(true);
+		$.fn.AddContactValidation();
 		$(".contact-info:hidden:first").show();
+
 	});
 
 
@@ -1956,7 +1963,7 @@ $(function () {
 			$(".comment-info:hidden:first i").addClass("icon-report_problem-24px-2");
 			$(".comment-info:hidden:first i").css("color", "var(--danger-color)");
 		}
-
+		$(".comment-info:hidden:first .comment-text").rules("add", "required");
 
 		$(".comment-info:hidden:first").show();
 	}
@@ -2088,7 +2095,7 @@ $(function () {
 
 	$("#entry").dblclick(function () {
 		console.log("in entry")
-		$('#myForm').trigger('submit');
+		$('#entryForm').trigger('submit');
 	});
 	$("#exit").dblclick(function () {
 		console.log("in exit")
@@ -2343,6 +2350,15 @@ $(function () {
 
 		if (type == 'edit') {
 			var formData = new FormData($("#myForm")[0]);
+			$("#myForm").data("validator").settings.ignore = "";
+			var valid = $("#myForm").valid();
+			console.log("valid form: " + valid)
+			if (!valid) {
+				$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+				$('.turn-edit-on-off').prop('checked', true);
+				return false;
+			}
+
 			$.ajax({
 				processData: false,
 				contentType: false,
