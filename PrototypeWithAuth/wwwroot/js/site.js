@@ -51,11 +51,9 @@ $(function () {
 		console.log("url: " + url);
 
 		$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-			console.log("in getjson");
 			var firstitem1 = '<option value=""> Select Subcategory</option>';
 			$("#sublist").empty();
 			$("#sublist").append(firstitem1);
-			console.log("ONE");
 
 			$.each(data, function (i, subCategory) {
 				var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
@@ -80,9 +78,9 @@ $(function () {
 		var url = "/Requests/GetSubProjectList";
 
 		$.getJSON(url, { ProjectID: projectId }, function (data) {
-			var item = "<option value=''>Select Sub Project</option>";
+			var item1 = "<option value=''>Select Sub Project</option>";
 			$("#SubProject").empty();
-			$("#SubProject").append(item);
+			$("#SubProject").append(item1);
 			$.each(data, function (i, subproject) {
 				item = '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
 				$("#SubProject").append(item);
