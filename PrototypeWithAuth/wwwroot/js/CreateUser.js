@@ -2,7 +2,7 @@
 	$("#NewEmployee_DOB").on("change", function () {
 		var age = 0;
 		console.log("age: " + age);
-		var DOB = $(this).val();
+		var DOB = new Date($(this).val());
 		//var Today = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
 		//console.log("dob: " + DOB);
 		//console.log("today: " + Today);
