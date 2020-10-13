@@ -1,6 +1,18 @@
 ﻿
 
 $(function () {
+	$.validator.setDefaults({
+		ignore: ':not(select:hidden, input:visible, textarea:visible)',
+		errorPlacement: function (error, element) {
+			if (element.hasClass('select-dropdown')) {
+				console.log("mdb error if");
+				error.insertAfter(element);
+			} else {
+				console.log("mdb error else");
+				error.insertAfter(element);
+			}
+		}
+	});
 	$('.ordersItemForm').validate({
 		rules: {
 			"Request.Product.ProductName": "required",
@@ -160,6 +172,11 @@ $(function () {
 		}
 	
 	});
+
+	$('.modal').on("change", "#myForm", function () {
+		$(this).valid();
+
+	});
 	$('.next-tab').click(function () {
 		if ($(this).hasClass('request-price')) {
 			$('#Request_UnitTypeID').rules("remove", "selectRequired"); 
@@ -193,16 +210,7 @@ $(function () {
 		}
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
-	$.validator.setDefaults({
-		ignore: ':not(select:hidden, input:visible, textarea:visible)',
-		errorPlacement: function (error, element) {
-			if (element.hasClass('select-dropdown')) {
-				error.insertAfter(element);
-			} else {
-				error.insertAfter(element);
-			}
-		}
-	});
+
 	
 
 			

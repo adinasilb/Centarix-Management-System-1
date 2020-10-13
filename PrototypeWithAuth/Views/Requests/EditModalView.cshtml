@@ -127,7 +127,7 @@
                                                                 Model.Projects,
                                                                 "ProjectID",
                                                                 "ProjectDescription"
-                                                                ),
+                                                                ),"Select Project",
                                                             new { @class = "mdb-select custom select-dropdown form-control-plaintext Project mark-readonly", @disabled = "disabled", @searchable = "Select Project" }
                                                         )
                                                         <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
@@ -144,7 +144,7 @@
                                                                 Model.SubProjects,
                                                                 "SubProjectID",
                                                                 "SubProjectDescription"
-                                                                ),
+                                                                ),"Select Sub Project",
                                                             new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext mark-readonly", @id = "SubProject", @disabled = "disabled", @searchable = "Select Sub Project" }
                                                         )
                                                         <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
@@ -158,7 +158,7 @@
                                                             new SelectList(
                                                             Model.Vendors,
                                                                 dataValueField: "VendorID",
-                                                                dataTextField: "VendorEnName"),
+                                                                dataTextField: "VendorEnName"),"Select A Vendor",
                                                                 //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
                                                             htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "vendorList", @disabled = "disabled", @searchable = "Select A Vendor" }
                                                         )

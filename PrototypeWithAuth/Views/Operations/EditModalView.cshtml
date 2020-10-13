@@ -6,6 +6,7 @@
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
 
 
 <div class="modal modal-view right fader on-form-modal oper-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
@@ -15,7 +16,7 @@
 
         <div class="modal-content d-inline-block">
 
-            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="operationsAddItemForm">
 
                 @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
 
@@ -68,10 +69,10 @@
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center pl-0">
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 nav-tabs-icons">
-                                    <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link oper-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                    <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link oper-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
-                                    <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link documents-tab oper-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                    <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link oper-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link next-tab oper-link"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link next-tab oper-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link next-tab documents-tab oper-link"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link next-tab oper-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -103,7 +104,7 @@
                                             <div class="form-group">
                                                 <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                                                 @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-                new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
+                new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),"Select Category",
                  new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist", @disabled = "disabled", @searchable = "Select Category" })
                                                 <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                             </div>
@@ -125,7 +126,7 @@
                                                     new SelectList(
                                                     Model.Vendors,
                                                         dataValueField: "VendorID",
-                                                        dataTextField: "VendorEnName"),
+                                                        dataTextField: "VendorEnName"),"Select Vendor",
                                                     //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
                                                     htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "vendorList", @disabled = "disabled", @searchable = "Select A Vendor" }
                                                 )
