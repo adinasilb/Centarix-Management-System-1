@@ -217,6 +217,20 @@ $(function () {
 			"NewEmployee.VacationDays": {
 				required: isEmployee,
 			},
+			"NewEmployee.VacationDays": {
+				required: isEmployee,
+			},
+			"NewEmployee.VacationDays": {
+				required: isEmployee,
+			},
+			"Password": {
+				required: isEmployee,
+				// validate format
+			},
+			"ConfirmPassword": {
+				required: isEmployee,
+				equalTo: "#Password"
+			}
 		},
 	});
 
