@@ -155,6 +155,13 @@ $(function () {
 			
 		},
 	});
+	//$('.usersForm').validate({
+	//	rules: {
+			
+	//	},
+	//});
+
+
 	function isInteger(n) {
 		n = parseFloat(n)
 		return n === +n && n === (n | 0);

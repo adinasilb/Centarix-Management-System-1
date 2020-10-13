@@ -2107,3 +2107,9 @@ td .btn {
     border-color: var(--lab-man-color);
     background-color: var(--lab-man-color);
 }
+input.error, select.error {
+    background-image: url('../images/info.png');
+    background-repeat: no-repeat;
+    background-position: 95% .5rem;
+    background-size: 1.25rem 1.25rem;
+}
