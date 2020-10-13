@@ -4,12 +4,13 @@
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
 @{
     //ViewData["Title"] = "Edit User";
     Layout = null;
 }
 
-<div class="modal modal-view right fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view on-form-modal right fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
@@ -17,7 +18,7 @@
         <div class="modal-content d-inline-block">
             @*<div class="card col-8 offset-2 edit-user" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
                 <div class="card-body">*@
-            <form action="" id="createModalForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" id="myForm" method="post" class="usersForm" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
                 <input type="email" class="hidden" />
                 <input type="password" class="hidden" />
@@ -38,37 +39,37 @@
                             <div class="container-fluid div-tabs text-center modal-sides">
                                 <ul class="nav nav-tabs container-fluid p-0 border-bottom-0" style="display:inline-flex; justify-content:space-between; color:#666666;">
                                     <li class="nav-item">
-                                        <a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link">
+                                        <a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link next-tab">
                                             <i class="icon-face-24px" style="font-size: 2rem;"></i><br />Details
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" href="#salary" id="user-salary-tab" class="nav-link user-nav-link salary-tab">
+                                        <a data-toggle="tab" href="#salary" id="user-salary-tab" class="nav-link user-nav-link salary-tab next-tab">
                                             <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Salary
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" href="#security" id="user-security-tab" class="nav-link user-nav-link security-tab">
+                                        <a data-toggle="tab" href="#security" id="user-security-tab" class="nav-link user-nav-link security-tab next-tab">
                                             <i class="icon-https-24px" style="font-size: 2rem;"></i><br />Security
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" href="#permissions" id="user-permissions-tab" class="nav-link user-nav-link permissions-tab">
+                                        <a data-toggle="tab" href="#permissions" id="user-permissions-tab" class="nav-link user-nav-link permissions-tab  next-tab">
                                             <i class="icon-https-24px" style="font-size: 2rem;"></i><br />Permissions
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" href="#budget" id="user-budget-tab" class="nav-link user-nav-link">
+                                        <a data-toggle="tab" href="#budget" id="user-budget-tab" class="nav-link user-nav-link  next-tab">
                                             <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" href="#images" id="user-images-tab" class="nav-link user-nav-link">
+                                        <a data-toggle="tab" href="#images" id="user-images-tab" class="nav-link user-nav-link  next-tab">
                                             <i class="icon-account_box-24px-1" style="font-size: 2rem;"></i><br />Image
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" href="#more" id="user-more-tab" class="nav-link user-nav-link">
+                                        <a data-toggle="tab" href="#more" id="user-more-tab" class="nav-link user-nav-link  next-tab">
                                             <i class="icon-more-24px" style="font-size: 2rem;"></i><br />More
                                         </a>
                                     </li>
