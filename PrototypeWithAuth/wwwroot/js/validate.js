@@ -155,11 +155,32 @@ $(function () {
 			
 		},
 	});
-	//$('.usersForm').validate({
-	//	rules: {
-			
-	//	},
-	//});
+
+	var isEmployee = function () {
+		console.log("$('#NewEmployee_EmployeeStatusID').val()" + $("#NewEmployee_EmployeeStatusID").val())
+		return $("#NewEmployee_EmployeeStatusID").val() != "4";
+	}
+	$('.usersForm').validate({
+		rules: {
+			"FirstName": "required",
+			"LastName": "required",
+			"CentarixID": "required",
+			"Email": "required",
+			"PhoneNumber": "required",
+			"NewEmployee.JobTitle": {
+				required: isEmployee
+			},
+			"NewEmployee.DOB": {
+				required: isEmployee
+			},
+			"NewEmployee.JobCategoryTypeID": {
+				selectRequired: isEmployee
+			},
+			"NewEmployee.DegreeID": {
+				selectRequired: isEmployee
+			},
+		},
+	});
 
 
 	function isInteger(n) {
@@ -167,6 +188,7 @@ $(function () {
 		return n === +n && n === (n | 0);
 	}
 	$.validator.addMethod("selectRequired", function (value, element) {
+		console.log("in select required")
 		return  value != "";
 	}, 'Field is required');
 	$.validator.addMethod("integer", function (value, element) {
@@ -223,154 +245,4 @@ $(function () {
 			
 });
 
-//$.fn.validateUserDetailsTab = function () {
-//	//all the true and falses are opposite because fo the ariainvalid is true if invalid
-//	valid = $("#FirstName").attr('aria-invalid');
-//	if (valid == "true" || $("#FirstName").val() == "") {
-//		console.log("valid: " + valid);
-//		return;
-//	}
-//	valid = $("#LastName").attr('aria-invalid');
-//	if (valid == "true" || $("#LastName").val() == "") {
-//		return;
-//	}
-//	valid = $("#Email").attr('aria-invalid');
-//	if (valid == "true" || $("#Email").val() == "") {
-//		console.log("valid: " + valid);
-//		return;
-//	}
-//	valid = $("#SecureAppPass").attr('aria-invalid');
-//	if (valid == "true" /*|| $("#SecureAppPass").val() == ""*/) {
-//		return;
-//	}
-//	valid = $("#CentarixID").attr('aria-invalid');
-//	if (valid == "true" || $("#CentarixID").val() == "") {
-//		return;
-//	}
-//	valid = $("#Password").attr('aria-invalid');
-//	if (valid == "true" /*|| $("#Password").val() == ""*/) {
-//		return;
-//	}
-//	valid = $("#ConfirmPassword").attr('aria-invalid');
-//	if (valid == "true" /*|| $("#ConfirmPassword").val() == ""*/) {
-//		return;
-//	}
-//	if (!$('input[name="NewEmployee.EmployeeStatusID"]:checked').length) {
-//		// none of the radio buttons were checked
-//		return;
-//	}
-//	if (valid == "false" || valid == undefined) {
-//		$("#user-permissions-tab").prop("disabled", false);
-//		$("#user-budget-tab").prop("disabled", false);
-//		$("#user-more-tab").prop("disabled", false);
-//	}
-//	return valid;
-//}
-//$("#SaveInvoiceModal").on("click", function (e) {
-//	$("#myForm").valid();
-//	var valid = $("#Invoice_InvoiceNumber").attr("aria-invalid");
-//	console.log("invoice number validation + " + valid);
-//	if (valid == "true" || $("#Invoice_InvoiceNumber") == "") {
-//		e.preventDefault();
-//		e.stopPropagation();
-//		$("#invoice-number-validation").html("Please enter a valid Number");
-//	}
-//})
 
-
-//$("#reorderRequest").click(function () {
-//	console.log($("#reorderForm").valid());
-//	if (!$("#reorderForm").valid()) {
-//		$("#reorderRequest").prop("disabled", true);
-
-//	}
-//	$("#reorderRequest").prop("disabled", false);
-
-//});
-
-
-//$.fn.validatePersonalTab = function () {
-//	console.log("validatePersonalTab");
-//	$(".salary-tab").prop("disabled", true);
-//	$(".documents-tab").prop("disabled", true);
-
-
-//	var statIdVal = parseInt($("#NewEmployee_EmployeeStatusID").val());
-//	console.log("vpt statIdVal: " + statIdVal);
-//	if (parseInt(statIdVal) == 1 || statIdVal == 2 || statIdVal == 3) {
-//		console.log("inside if statement");
-//		//if (statIdVal != 4) {
-//		//	console.log("statIdVal: " + statIdVal + " entered if statement");
-//		if (/*checkedItem1 != true && checkedItem2 != true && checkedItem3 != true && checkedItem4 != true*/$('#NewEmployee_EmployeeStatusID').val() == '' || $('#NewEmployee_EmployeeStatusID').val() == 0) {
-//			$("#validation-EmployeeStatus").removeClass("hidden");
-//			return;
-//		}
-//		else {
-//			$("#validation-EmployeeStatus").addClass("hidden");
-//		}
-//		valid = $("#NewEmployee_IDNumber").attr('aria-invalid');
-//		if (valid == "true" || $("#NewEmployee_IDNumber").val() == "") {
-//			console.log("valid: " + valid);
-//			return;
-//		}
-//		valid = $("#NewEmployee_CentarixID").attr('aria-invalid');
-//		if (valid == "true" || $("#NewEmployee_CentarixID").val() == "") {
-//			console.log("valid: " + valid);
-//			return;
-//		}
-//		valid = $("#NewEmployee_JobTitle").attr('aria-invalid');
-//		if (valid == "true" || $("#NewEmployee_JobTitle").val() == "") {
-//			return;
-//		}
-//		valid = $("#NewEmployee_Email").attr('aria-invalid');
-//		if (valid == "true" || $("#NewEmployee_Email").val() == "") {
-//			return;
-//		}
-//		valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
-//		if (valid == "true" || $("#NewEmployee_PhoneNumber").val() == "") {
-//			return;
-//		}
-//		valid = $("#NewEmployee_PhoneNumber").attr('aria-invalid');
-//		if (valid == "true") {
-//			return;
-//		}
-//		valid = $("#NewEmployee_StartedWorking").attr('aria-invalid');
-//		if (valid == "true" || $("#NewEmployee_StartedWorking").val() == "") {
-//			return;
-
-//		}
-//		if (valid == "false" || valid == undefined) {
-//			$(".salary-tab").prop("disabled", false);
-//			$(".security-tab").prop("disabled", false);
-//		}
-//	}
-//	else if (statIdVal == 4) {
-//		$(".salary-tab").prop("disabled", false);
-//	}
-//	return valid;
-//}
-
-//$(".security-tab").on("click", function () {
-//	if (parseInt($("#NewEmployee_EmployeeStatusID").val()) == 4) {
-//		$(".security-tab").prop("disabled", false);
-//	}
-//	else {
-//		$.fn.validateSalaryTab();
-//	}
-//});
-//$.fn.validateSalaryTab = function () {
-//	$(".security-tab").prop("disabled", true);
-//	console.log("in $.fn.validateItemTab");
-//	valid = $("#NewEmployee_SalariedEmployee_HoursPerDay").attr('aria-invalid');
-//	if (valid == "true" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() == "") {
-//		return;
-//	}
-//	valid = $("#NewEmployee_VacationDays").attr('aria-invalid');
-//	if (valid == "true" || $("#NewEmployee_VacationDays").val() == "") {
-//		return;
-//	}
-//	if (valid == "false" || valid == undefined) {
-//		$(".security-tab").prop("disabled", false);
-//	}
-//	return valid;
-//};
