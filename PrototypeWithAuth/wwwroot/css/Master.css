@@ -312,7 +312,8 @@ table td, table td .btn, .text, table th {
     border: none;
 }
 
-.new-modal-body .row {
+.new-modal-body .row,
+.modal-body .row{
     margin-bottom: 2.063rem ;
 }
 
