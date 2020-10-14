@@ -1644,6 +1644,9 @@ td .btn {
     max-height: 100%;
     margin-top: -2.9rem;
 }
+.modal.on-form-modal {
+    margin-top: 0rem !important;
+}
 
 .on-form-modal-border {
     border: .031rem solid #DCDCDC;
