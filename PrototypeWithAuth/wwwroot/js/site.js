@@ -1158,6 +1158,14 @@ $(function () {
 		//});
 	});
 
+	$("input[type=text]").on("change", function (e) {
+		console.log("search was changed");
+	});
+
+	$("input[type=text]").on("click", function (e) {
+		console.log("search was clicked");
+	});
+
 	$(".open-document-modal").click(function (e) {
 		e.preventDefault();
 		e.stopPropagation();
