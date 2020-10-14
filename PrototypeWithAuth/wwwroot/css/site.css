@@ -2050,7 +2050,7 @@ td .btn {
 }
 
 .modal-dialog {
-    box-shadow: 6px 0px 10px #0000008C !important;
+    box-shadow: 6px 0px 10px #0000008C ;
 }
 .add-invoice-modal{
     width:93.31rem;

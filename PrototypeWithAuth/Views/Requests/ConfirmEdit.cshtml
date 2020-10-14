@@ -1,4 +1,4 @@
-﻿
+﻿@model PrototypeWithAuth.AppData.AppUtility.MenuItems
 <div class="modal confirm-edit-modal modal-view  overflow-auto" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog no-box-shadow modal-lg" role="document" style="max-height:100%; max-width:60rem; ">
@@ -12,10 +12,14 @@
             </div>
 
             <div class="modal-body">
-                Are you sure you would like to save?
-                <button>Save</button>
-                <button>Don't Save</button>
-                <button>Cancel</button>
+                <div class="row modal-sides heading-1">
+                    Are you sure you would like to save?
+                </div>
+                <div class="row text-center modal-sides">
+                    <button class="text order-inv-background-color custom-button custom-button-font between-button-margin">Save</button>
+                    <button class="text order-inv-background-color custom-button custom-button-font between-button-margin">Don't Save</button>
+                    <button type="button" class="custom-button custom-cancel float-right text " data-dismiss="modal">Cancel</button>
+                </div>
             </div>
 
         </div>

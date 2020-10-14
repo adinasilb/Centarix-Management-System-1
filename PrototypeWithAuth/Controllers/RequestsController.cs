@@ -3207,9 +3207,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles ="Admin, OrdersAndInventory")]
-        public async Task<IActionResult> ConfirmEdit()
+        public async Task<IActionResult> ConfirmEdit(AppUtility.MenuItems MenuItem = AppUtility.MenuItems.OrdersAndInventory)
         {
-            return PartialView();
+            return PartialView(MenuItem);
         }
 
 
