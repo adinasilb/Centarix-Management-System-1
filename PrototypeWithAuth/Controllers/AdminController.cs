@@ -40,6 +40,7 @@ namespace PrototypeWithAuth.Controllers
             _signManager = signManager;
             _roleManager = roleManager;
             _hostingEnvironment = hostingEnvironment;
+            //CreateSingleRole();
         }
 
         [HttpGet]
@@ -189,6 +190,13 @@ namespace PrototypeWithAuth.Controllers
             };
 
             return View(registerUserViewModel);
+        }
+
+
+        private async Task CreateSingleRole()
+        {
+            var user = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault();
+            await _userManager.AddToRoleAsync(user, "CEO");
         }
 
         [HttpPost]
@@ -789,7 +797,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "CEO")]
         public IActionResult SuspendUserModal(string Id)
         {
             var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
@@ -797,7 +805,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "CEO")]
         public async Task<IActionResult> SuspendUserModal(ApplicationUser applicationUser)
         {
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
