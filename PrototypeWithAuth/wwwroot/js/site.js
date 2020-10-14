@@ -683,7 +683,7 @@ $(function () {
 		if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
 			|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
 			$.fn.EnableSubSubUnits();
-			
+
 			console.log("about to change subsubunitdropdown");
 			$.fn.ChangeSubSubUnitDropdown();
 		}
@@ -707,7 +707,7 @@ $(function () {
 		$("#Request_SubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubUnitTypeID").prop("aria-disabled", true);
-	//disable validation
+		//disable validation
 		//$('#Request_SubUnitTypeID').rules("remove", "selectRequired");
 	};
 
@@ -2331,7 +2331,7 @@ $(function () {
 			}
 		});
 	});
-	
+
 	$('.workersHours').change(function () {
 		var url = $(this).val();
 		if (url != null && url != '') {
@@ -2355,6 +2355,7 @@ $(function () {
 		}
 
 		if (type == 'edit') {
+			$("#loading").show();
 			console.log("in if edit");
 			var formData = new FormData($("#myForm")[0]);
 			$("#myForm").data("validator").settings.ignore = "";
@@ -2375,7 +2376,30 @@ $(function () {
 				type: 'POST',
 				cache: true,
 				success: function (data) {
-					alert("save edit successful!")
+					//alert("save edit successful!")
+					//open the confirm edit modal
+					$itemurl = "/Requests/ConfirmEdit";
+					console.log("itemurl: " + $itemurl);
+					$.ajax({
+						async: true,
+						url: $itemurl,
+						type: 'GET',
+						cache: true,
+						success: function (data) {
+							$("#loading").hide();
+							var modal = $(data);
+							$('body').append(modal);
+							$(".confirm-edit-modal").modal({
+								backdrop: false,
+								keyboard: false,
+							});
+							//shows the modal
+							$(".confirm-edit-modal").modal('show');
+
+
+						}
+
+					});
 				}
 			});
 			console.log("after ajax call");
@@ -2383,7 +2407,6 @@ $(function () {
 			$('.mark-readonly input').prop("disabled", true);
 			$('.mark-edditable').data("val", false)
 			$('.edit-mode-switch-description').text("Edit Mode Off");
-			console.log("about to switch type name - edit -> details");
 			$('.turn-edit-on-off').attr('name', 'details')
 
 		}
@@ -2392,7 +2415,6 @@ $(function () {
 			$('.mark-readonly').attr("disabled", false);
 			$('.mark-edditable').data("val", true);
 			$('.edit-mode-switch-description').text("Edit Mode On");
-			console.log("about to switch type name - details -> edit");
 			$('.turn-edit-on-off').attr('name', 'edit')
 			if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
 				console.log("orders operations")
@@ -2418,7 +2440,7 @@ $(function () {
 		}
 	});
 
-	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {	
+	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
 		var isOptGroup = false;
 		if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
@@ -2447,8 +2469,8 @@ $(function () {
 		$(selectID).prop("disabled", false);
 		$(selectID).prop('selectedIndex', selectedIndex);
 		$(selectID).removeAttr("disabled")
-		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);		
-		$(selectID).materialSelect();		
+		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
+		$(selectID).materialSelect();
 	}
 	$("#addSupplierComment").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');

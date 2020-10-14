@@ -3204,6 +3204,15 @@ namespace PrototypeWithAuth.Controllers
 
             return View(cartViewModel);
         }
+
+        [HttpGet]
+        [Authorize(Roles ="Admin, OrdersAndInventory")]
+        public async Task<IActionResult> ConfirmEdit()
+        {
+            return PartialView();
+        }
+
+
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> OrderLateModal(int id)
