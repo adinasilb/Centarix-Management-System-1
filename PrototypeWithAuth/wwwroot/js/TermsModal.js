@@ -8,7 +8,6 @@ $(function () {
 	});
 
 
-
 	$.fn.ChangePaymentsTable = function (installments) {
 		//var installments = $(this).val();
 		var countPrevInstallments = $(".type-1").length;
@@ -43,7 +42,7 @@ $(function () {
 
 				if (newmm < 10) { newmm = '0' + newmm }
 
-				var paymentDate = newyyyy + '-' + newmm + '-' + dd;
+				var paymentDate = newyyyy + '-' + newmm + '-' + prevdd;
 
 				prevyyyy = newyyyy;
 				prevmm = newmm;
