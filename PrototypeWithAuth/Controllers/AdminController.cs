@@ -201,16 +201,18 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, Users")]
-        public async Task<IActionResult> CreateUser(RegisterUserViewModel registerUserViewModel)
+        public async Task<IActionResult> CreateUser( RegisterUserViewModel registerUserViewModel)
         {
             var usernum = 1;
             if (_context.Users.Any())
             {
                 usernum = _context.Users.OrderByDescending(u => u.UserNum).FirstOrDefault().UserNum + 1;
             }
-            if (ModelState.IsValid)
-            {
-                var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
+            var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
+            //figure out what to do with validating model state
+            //if (ModelState.IsValid)
+            //{
+               
                 var user = new ApplicationUser();
                 if (UserType == 4)
                 {
@@ -453,14 +455,14 @@ namespace PrototypeWithAuth.Controllers
 
                         client.Disconnect(true);
                     }
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
+                //}
+                //else
+                //{
+                //    foreach (var error in result.Errors)
+                //    {
+                //        ModelState.AddModelError("", error.Description);
+                //    }
+                //}
 
             }
             return RedirectToAction("Index");
