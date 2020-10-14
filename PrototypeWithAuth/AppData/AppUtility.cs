@@ -31,8 +31,10 @@ namespace PrototypeWithAuth.AppData
         public enum OperationsSidebarEnum { LastItem, AddItem, Type, Vendors, Owner, Search }
         public enum TimeKeeperPageTypeEnum { None, Report, TimekeeperSummary }
         public enum TimeKeeperSidebarEnum { ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences }
-        public enum MenuItems { Admin, OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }
-        public enum AccountingNotificationsEnum {
+        public enum MenuItems { OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }
+        public enum RoleItems { Admin, CEO }
+        public enum AccountingNotificationsEnum
+        {
             [Display(Name = "No Invoice")]
             NoInvoice,
             [Display(Name = "Didnt Arrive")]
@@ -40,16 +42,19 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Partial Delivery")]
             PartialDelivery,
             [Display(Name = "For Clarification")]
-            ForClarification }
-        public enum AccountingPaymentsEnum {
+            ForClarification
+        }
+        public enum AccountingPaymentsEnum
+        {
             [Display(Name = "Monthly Payment")]
             MonthlyPayment,
-            [Display(Name = "Pay Now")] 
+            [Display(Name = "Pay Now")]
             PayNow,
             [Display(Name = "Pay Later")]
             PayLater, Installments,
             [Display(Name = "Standing Orders")]
-            StandingOrders }
+            StandingOrders
+        }
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }

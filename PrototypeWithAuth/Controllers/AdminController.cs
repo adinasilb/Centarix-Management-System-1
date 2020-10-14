@@ -53,11 +53,19 @@ namespace PrototypeWithAuth.Controllers
             users = _context.Users
                 .Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
                 .ToList();
-            if (User.IsInRole("Admin"))
+            bool IsCEO = false;
+            if (User.IsInRole("CEO")) 
             {
-                users = _context.Users.ToList();
+                users = _context.Users.ToList(); //The CEO can see all users even the ones that are suspended 
+                IsCEO = true;
             }
-            return View(users);
+
+            UserIndexViewModel userIndexViewModel = new UserIndexViewModel()
+            {
+                ApplicationUsers = users,
+                IsCEO = IsCEO
+            };
+            return View(userIndexViewModel);
         }
 
         [HttpGet]
