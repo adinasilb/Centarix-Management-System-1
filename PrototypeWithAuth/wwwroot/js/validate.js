@@ -160,24 +160,62 @@ $(function () {
 		console.log("$('#NewEmployee_EmployeeStatusID').val()" + $("#NewEmployee_EmployeeStatusID").val())
 		return $("#NewEmployee_EmployeeStatusID").val() != "4";
 	}
+
 	$('.usersForm').validate({
 		rules: {
 			"FirstName": "required",
 			"LastName": "required",
-			"CentarixID": "required",
-			"Email": "required",
-			"PhoneNumber": "required",
+			"CentarixID": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			"Email": {
+				email: true,
+				required: true
+			},
+			"PhoneNumber": {
+				required: true,
+				minlength: 9
+			},
 			"NewEmployee.JobTitle": {
 				required: isEmployee
 			},
 			"NewEmployee.DOB": {
-				required: isEmployee
+				required: isEmployee,
+				date: true
 			},
 			"NewEmployee.JobCategoryTypeID": {
 				selectRequired: isEmployee
 			},
 			"NewEmployee.DegreeID": {
 				selectRequired: isEmployee
+			},
+			"NewEmployee.MaritalStatusID": {
+				selectRequired: isEmployee
+			},
+			"NewEmployee.CitizenshipID": {
+				selectRequired: isEmployee
+			},
+			"PhoneNumber2": {
+				minlength: 9
+			},
+			"NewEmployee.StartedWorking": {
+				required: isEmployee,
+			},
+			"NewEmployee.TaxCredits": {
+				number: true,
+				integer : true
+			},
+			"NewEmployee.SalariedEmployee.WorkScope": {
+				atleastOneHoursField: isEmployee,
+			},
+			"NewEmployee.SalariedEmployee.HoursPerDay": {
+				atleastOneHoursField: isEmployee,
+			},
+			"NewEmployee.VacationDays": {
+				required: isEmployee,
 			},
 		},
 	});
@@ -191,6 +229,9 @@ $(function () {
 		console.log("in select required")
 		return  value != "";
 	}, 'Field is required');
+	$.validator.addMethod("atleastOneHoursField", function (value, element) {
+		return $("#NewEmployee_SalariedEmployee_WorkScope").val() != "" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "";
+	}, 'Either Job Scope or Hours Per day is required');
 	$.validator.addMethod("integer", function (value, element) {
 		return isInteger(value) || value=='';
 	}, 'Field must be an integer');

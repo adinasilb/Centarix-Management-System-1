@@ -9,6 +9,9 @@
 		var today = new Date();
 		age = Math.floor((today - DOB) / (365.25 * 24 * 60 * 60 * 1000));
 		console.log("age: " + age);
+		if (isNaN(age)) {
+			age = '';
+		}
 		$("input[name='Age']").val(age);
 	});
 

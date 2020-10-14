@@ -118,7 +118,7 @@
                                 <div class="row">
                                     <div class="col-6  p-0">
                                         <label asp-for="NewEmployee.DOB" class="control-label"></label>
-                                        <input asp-for="NewEmployee.DOB" class="form-control-plaintext border-bottom" />
+                                        <input asp-for="NewEmployee.DOB" class="form-control-plaintext border-bottom" value="" />
                                         <span asp-validation-for="NewEmployee.DOB" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-6 ">
@@ -186,7 +186,7 @@
                                             dataValueField: "MaritalStatusID",
                                             dataTextField: "Description"),
                                             optionLabel: "Select A Status",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "default value" }
                                             )
                                         <span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>
                                     </div>
@@ -199,7 +199,7 @@
                                             dataValueField: "CitizenshipID",
                                             dataTextField: "Description"),
                                             optionLabel: "Select A Country",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "default value" }
                                             )
                                         <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
                                     </div>
