@@ -24,7 +24,7 @@
                 <input type="password" class="hidden" />
                 <input type="hidden" class="hidden" asp-for="ApplicationUserID" />
 
-                <div class="new-modal-header border-bottom box-shadow" style="padding: 0.5em 6em">
+                <div class="new-modal-header modal-line-1-header-with-back modal-sides" style="padding: 0.5em 6em">
                     @if (TempData["ErrorMessage"] != null)
                     {
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
@@ -37,17 +37,9 @@
                     </div>
                     <div class="row modal-title-line">
                         <div class="col-7">
-                            @if (Model.UserImage != null)
-                            {
-                                <img src="@Model.UserImage" class="top-modal-image" alt="Alternate Text" width="75" />
-                            }
-                            else
-                            {
-                                <img src="" alt="Alternate Text" class="top-modal-image" width="75" /> 
-                            }
-                            @*</div>*@
+                       
                             <div class="modal-product-title" @*style="width: 80%;"*@>
-                                <input asp-for="FirstName" class="form-control-plaintext heading-1 border-bottom mark-readonly" disabled />
+                                <label class="heading-1 border-bottom" >Edit User</label>
                                 <span asp-validation-for="FirstName" class="text-danger-centarix"></span>
                             </div>
                         </div>
