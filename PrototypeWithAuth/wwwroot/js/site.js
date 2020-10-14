@@ -2357,57 +2357,29 @@ $(function () {
 		if (type == 'edit') {
 			$("#loading").show();
 			console.log("in if edit");
-			var formData = new FormData($("#myForm")[0]);
-			$("#myForm").data("validator").settings.ignore = "";
-			var valid = $("#myForm").valid();
-			console.log("valid form: " + valid)
-			if (!valid) {
-				$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-				$('.turn-edit-on-off').prop('checked', true);
-				return false;
-			}
-
+			$itemurl = "/Requests/ConfirmEdit";
+			console.log("itemurl: " + $itemurl);
 			$.ajax({
-				processData: false,
-				contentType: false,
-				data: formData,
 				async: true,
-				url: url,
-				type: 'POST',
+				url: $itemurl,
+				type: 'GET',
 				cache: true,
 				success: function (data) {
-					//alert("save edit successful!")
-					//open the confirm edit modal
-					$itemurl = "/Requests/ConfirmEdit";
-					console.log("itemurl: " + $itemurl);
-					$.ajax({
-						async: true,
-						url: $itemurl,
-						type: 'GET',
-						cache: true,
-						success: function (data) {
-							$("#loading").hide();
-							var modal = $(data);
-							$('body').append(modal);
-							$(".confirm-edit-modal").modal({
-								backdrop: false,
-								keyboard: false,
-							});
-							//shows the modal
-							$(".confirm-edit-modal").modal('show');
-
-
-						}
-
+					$("#loading").hide();
+					var modal = $(data);
+					$('body').append(modal);
+					$(".confirm-edit-modal").modal({
+						backdrop: false,
+						keyboard: false,
 					});
+					//shows the modal
+					$(".confirm-edit-modal").modal('show');
+
+
 				}
+
 			});
-			console.log("after ajax call");
-			$('.mark-readonly').prop("disabled", true);
-			$('.mark-readonly input').prop("disabled", true);
-			$('.mark-edditable').data("val", false)
-			$('.edit-mode-switch-description').text("Edit Mode Off");
-			$('.turn-edit-on-off').attr('name', 'details')
+			
 
 		}
 		else if (type == 'details') {

@@ -1,4 +1,13 @@
-﻿@model PrototypeWithAuth.AppData.AppUtility.MenuItems
+﻿@using PrototypeWithAuth.AppData;
+@model AppUtility.MenuItems
+@{
+    var backgroundColor = "order-inv-background-color";
+    if (Model == AppUtility.MenuItems.Operation)
+    {
+        backgroundColor = "oper-background-color";
+    }
+}
+<script src="~/js/confirmedit.js"></script>
 <div class="modal confirm-edit-modal modal-view  overflow-auto" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog no-box-shadow modal-lg" role="document" style="max-height:100%; max-width:60rem; ">
@@ -16,8 +25,9 @@
                     Are you sure you would like to save?
                 </div>
                 <div class="row text-center modal-sides">
-                    <button class="text order-inv-background-color custom-button custom-button-font between-button-margin">Save</button>
-                    <button class="text order-inv-background-color custom-button custom-button-font between-button-margin">Don't Save</button>
+
+                    <button class="text custom-button custom-button-font between-button-margin @backgroundColor save-request-edits">Save</button>
+                    <button class="text custom-button custom-button-font between-button-margin @backgroundColor dont-save-request-edits">Don't Save</button>
                     <button type="button" class="custom-button custom-cancel float-right text " data-dismiss="modal">Cancel</button>
                 </div>
             </div>

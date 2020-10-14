@@ -109,7 +109,6 @@
     filter: var(--operations-filter);
 }
 
-
 .order-inv-background-color {
     background-color: var(--order-inv-color) !important;
 }
