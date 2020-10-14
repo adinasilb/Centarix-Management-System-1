@@ -1022,7 +1022,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Details",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-perm_contact_calendar-24px"
+                IconName = "icon-assignment_ind-24px-1"
             });
             if (SidebarTitle == AppUtility.UserSideBarEnum.WorkersHours.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1052,19 +1052,9 @@ namespace PrototypeWithAuth.AppData
                 Action = "AwaitingApproval",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-notifications_border-24px"
+                IconName = "icon-pending-24px-1"
             });
-            if (SidebarTitle == AppUtility.UserSideBarEnum.AddWorker.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Add Worker",
-                Controller = "ApplicationUsers",
-                Action = "AddWorker",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                IconName = "icon-add_circle_outline-24px"
-            });
-
+           
             return SidebarMenuItems;
         }
 
