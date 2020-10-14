@@ -68,6 +68,7 @@ $(function () {
 
 
 	$.fn.AddNewPaymentLine = function (increment, date) {
+		var mdbSelect = "mdb-select-" + increment;
 		var htmlTR = "";
 		//htmlTR += "<tr class='payment-line m-0 p-0'>";
 		//htmlTR += "<td class='m-0 p-0'>";
@@ -80,7 +81,7 @@ $(function () {
 		//htmlTR += '</td>';
 		//htmlTR += '<td class="m-0 p-0">';
 		var htmlPT = "";
-		htmlPT += '<select class="form-control-plaintext border-bottom paymentType type-1" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
+		htmlPT += '<select class="mdb-select ' + mdbSelect + ' custom select-dropdown form-control-plaintext paymentType type-1" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
 		htmlPT += '<option value="1">Credit Card</option>';
 		htmlPT += '<option value="2">Bank Account</option>';
 		htmlPT += '</select>';
@@ -90,7 +91,7 @@ $(function () {
 		var htmlPA = "";
 		var newPaymentsId = "NewPayments_" + increment + "__CompanyAccountID";
 		var newPaymentsName = "NewPayments[" + increment + "].CompanyAccountID";
-		htmlPA += '<select class="form-control-plaintext border-bottom companyAccountNum account-1" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
+		htmlPA += '<select class="mdb-select  ' + mdbSelect + ' custom select-dropdown form-control-plaintext companyAccountNum account-1" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
 		htmlPA += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
 		//htmlTR += '</td>';
 		//htmlTR += '<td class="m-0 p-0">';
@@ -106,6 +107,9 @@ $(function () {
 		$(".payment-type").append(htmlPT);
 		$(".payment-account").append(htmlPA);
 		$(".payment-reference").append(htmlPR);
+
+
+		$('.' + mdbSelect).materialSelect();
 
 		$.fn.AdjustInputHeights();
 	};
