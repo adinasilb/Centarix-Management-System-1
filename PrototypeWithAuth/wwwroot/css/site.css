@@ -1597,9 +1597,8 @@ td .btn {
 }
 
 .radio-button.custom-control-label::after {
-    top: .33rem !important;
-    left: -1.45rem !important;
-    background: no-repeat 85%/85% 85% !important;
+    margin-left: .125rem;
+    margin-top: .125rem;
 }
 
 .radio-button.custom-control-label::before {
@@ -2107,7 +2106,7 @@ td .btn {
     border-color: var(--lab-man-color);
     background-color: var(--lab-man-color);
 }
-input.error, select.error {
+input[type=text].error, input[type=number].error {
     background-image: url('../images/info.png');
     background-repeat: no-repeat;
     background-position: 95% .5rem;

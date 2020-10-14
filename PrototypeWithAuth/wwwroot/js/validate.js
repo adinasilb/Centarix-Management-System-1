@@ -5,11 +5,12 @@ $(function () {
 		ignore: ':not(select:hidden, input:visible, textarea:visible)',
 		errorPlacement: function (error, element) {
 			if (element.hasClass('select-dropdown')) {
-				console.log("mdb error if");
 				error.insertAfter(element);
 			} else {
-				console.log("mdb error else");
 				error.insertAfter(element);
+			}
+			if (element.hasClass('employee-status')) {				
+				$("#validation-EmployeeStatus").removeClass("hidden");
 			}
 		}
 	});
@@ -157,8 +158,10 @@ $(function () {
 	});
 
 	var isEmployee = function () {
-		console.log("$('#NewEmployee_EmployeeStatusID').val()" + $("#NewEmployee_EmployeeStatusID").val())
 		return $("#NewEmployee_EmployeeStatusID").val() != "4";
+	}
+	var isUser = function () {
+		return $("#NewEmployee_EmployeeStatusID").val() == "4";
 	}
 
 	$('.usersForm').validate({
@@ -198,6 +201,12 @@ $(function () {
 			"NewEmployee.CitizenshipID": {
 				selectRequired: isEmployee
 			},
+			"NewEmployee.IDNumber": {
+				required: isEmployee,
+				number: true,
+				min: 1,
+				integer: true
+			},
 			"PhoneNumber2": {
 				minlength: 9
 			},
@@ -216,22 +225,37 @@ $(function () {
 			},
 			"NewEmployee.VacationDays": {
 				required: isEmployee,
-			},
-			"NewEmployee.VacationDays": {
-				required: isEmployee,
-			},
-			"NewEmployee.VacationDays": {
-				required: isEmployee,
+				number: true,
+				integer : true
 			},
 			"Password": {
-				required: isEmployee,
-				// validate format
+				required: isUser,				
+				nonAlphaNumeric: true,
+				uppercase: true,
+				lowercase: true,
+				containsNumber: true,
+				minlength: 8,
+				maxlength : 20
 			},
 			"ConfirmPassword": {
-				required: isEmployee,
+				required: isUser,
 				equalTo: "#Password"
+			},
+			"SecureAppPass": {
+				required: isUser
+				// validate format
+			},
+			"NewEmployee.EmployeeStatusID": {
+				required: true,
+				min : 1
 			}
 		},
+		messages: {
+			"NewEmployee.EmployeeStatusID": {
+				required: "",
+				min: "",
+			},
+		}
 	});
 
 
@@ -239,6 +263,27 @@ $(function () {
 		n = parseFloat(n)
 		return n === +n && n === (n | 0);
 	}
+	$.validator.addMethod("nonAlphaNumeric", function (value) {
+		return /^[a-zA-Z0-9]+$/.test(value)==false;
+	}, "Password must contain a non alphanumeric character ");
+	$.validator.addMethod("uppercase", function (value, element) {
+		if (this.optional(element)) {
+		return true;
+		}
+		return /[A-Z]/.test(value);
+	}, "Must contain uppercase");
+	$.validator.addMethod("lowercase", function (value, element) {
+		if (this.optional(element)) {
+			return true;
+		}
+		return /[a-z]/.test(value);
+	}, "Must contain lowercase");
+	$.validator.addMethod("containsNumber", function (value, element) {
+		if (this.optional(element)) {
+			return true;
+		}
+		return /[0-9]/.test(value);
+	}, "Password must contain at least one number ");
 	$.validator.addMethod("selectRequired", function (value, element) {
 		console.log("in select required")
 		return  value != "";
@@ -256,11 +301,25 @@ $(function () {
 		}
 	
 	});
-
-	$('.modal').on("change", "#myForm", function () {
-		$(this).valid();
-
+	$('#myForm input').focusout(function (e) {
+		$("#myForm").data("validator").settings.ignore = "";
+		$('.error').addClass("beforeCallValid")
+			if ($('#myForm').valid()) {
+				
+				$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+			} else {
+				$(".error:not(.beforeCallValid)").addClass("afterCallValid")
+				$(".error:not(.beforeCallValid)").removeClass("error")
+				$("label.afterCallValid").remove()
+				$(".error").removeClass('beforeCallValid')
+				$(".afterCallValid").removeClass('afterCallValid')
+				if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+					$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+				}
+		}
+		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
+
 	$('.next-tab').click(function () {
 		if ($(this).hasClass('request-price')) {
 			$('#Request_UnitTypeID').rules("remove", "selectRequired"); 
@@ -287,7 +346,10 @@ $(function () {
 		console.log("valid form: " + valid)
 		if (!valid) {
 			e.preventDefault();
-			$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+			}
+		
 		}
 		else {
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')

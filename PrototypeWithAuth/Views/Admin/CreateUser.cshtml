@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="col-4 modal-line-1-header">
-                        <input type="submit" id="addUser" value="Add User" asp-action="CreateUser" class="custom-button custom-button-font btn-block disabled-submit" style="float: right;" />
+                        <input type="submit" id="addUser" value="Add User" asp-action="CreateUser" class="custom-button custom-button-font btn-block disabled-submit users-background-color" style="float: right;" />
                     </div>
                 </div>
                 <div class="row">
@@ -74,13 +74,13 @@
                     <div class="tab-content">
                         <div id="details" class="tab-pane fade">
                             <div class="row modal-sides top-radio-buttons">
-                                <input type="hidden" asp-for="NewEmployee.EmployeeStatusID" />
+                                <input type="hidden" asp-for="NewEmployee.EmployeeStatusID" class="employee-status" />
                                 @*@{ var first = true; }*@
                                 @foreach (var status in Model.EmployeeStatuses)
                                 {
                                     var id = "EmployeeStatusID" + status.EmployeeStatusID + " custom-control-input";
                                     <div class="custom-control custom-radio mr-4 ml-4 employee-type">
-                                        <input class="custom-control-input  employee-status-radio" asp-for="NewEmployee.EmployeeStatusID" id="@id" type="radio" value="@status.EmployeeStatusID">
+                                        <input class="custom-control-input employee-status  employee-status-radio" asp-for="NewEmployee.EmployeeStatusID" id="@id" type="radio" value="@status.EmployeeStatusID">
                                         @*@Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id, @checked = "checked" })*@
                                         @*<input type="radio" asp-for="NewEmployee.EmployeeStatusID" value="@status.EmployeeStatusID" class="id" />*@
                                         @*@Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = id })*@
@@ -110,10 +110,11 @@
                                         <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-6 ">
-                                        <label asp-for="NewEmployee.JobTitle" class="control-label"></label>
-                                        <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" required />
-                                        <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>
+                                        <label asp-for="NewEmployee.IDNumber" class="control-label"></label>
+                                        <input asp-for="NewEmployee.IDNumber" class="form-control-plaintext border-bottom" value="" />
+                                        <span asp-validation-for="NewEmployee.IDNumber" class="text-danger-centarix"></span>
                                     </div>
+                             
                                 </div>
                                 <div class="row">
                                     <div class="col-6  p-0">
@@ -123,11 +124,11 @@
                                     </div>
                                     <div class="col-6 ">
                                         <label asp-for="NewEmployee.Age" class="control-label"></label>
-                                        <input id="Age" name="Age" class="form-control-plaintext border-bottom" />
+                                        <input id="Age" name="Age" class="form-control-plaintext border-bottom" disabled />
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-4  p-0">
+                                    <div class="col-6  p-0">
                                         <label class="control-label">Job Category</label>
                                         @Html.DropDownListFor(
                                             vm => vm.NewEmployee.JobCategoryTypeID,
@@ -140,12 +141,19 @@
                                             )
                                         <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-6 ">
+                                        <label asp-for="NewEmployee.JobTitle" class="control-label"></label>
+                                        <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" required />
+                                        <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>
+                                    </div>
+                                    </div>
+                                <div class="row">
+                                    <div class="col-6 p-0">
                                         <label asp-for="Email" class="control-label"></label>
                                         <input asp-for="Email" class="form-control-plaintext border-bottom" autocomplete="nope" type="text" />
                                         <span asp-validation-for="Email" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <label asp-for="PhoneNumber" class="control-label"></label>
                                         <input asp-for="PhoneNumber" class="form-control-plaintext border-bottom" required />
                                         <span asp-validation-for="PhoneNumber" class="text-danger-centarix"></span>
@@ -172,7 +180,7 @@
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.StartedWorking" class="control-label"></label>
-                                        <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom" />
+                                        <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom" value="" />
                                         <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
