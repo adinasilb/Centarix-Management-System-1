@@ -5,7 +5,7 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 
-<div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view fader on-form-modal order-inv-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered modal-xl mx-auto" role="document">
 
@@ -13,7 +13,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" id="reorderForm" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
+            <form action="" method="post" id="myForm" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
 
 
                 @*
@@ -67,7 +67,7 @@
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.Unit" class="control-label"></label>
-                                        <input asp-for="Request.Unit" class="form-control-plaintext border-bottom align-with-select" min="1" />
+                                        <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="1" />
                                         <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-6">
@@ -77,7 +77,7 @@
 vm => vm.Request.UnitTypeID,
 Model.UnitTypeList,
 "",
-htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary " }
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext" }
 )
                                             <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                         </div>
@@ -107,7 +107,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubUnit" class="control-label"></label>
-                                        <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom align-with-select" min="0" disabled />
+                                        <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom " min="0" disabled />
                                         <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-6 form-group">
@@ -116,7 +116,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 vm => vm.Request.SubUnitTypeID,
 Model.UnitTypeList,
 "",
-htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
 )
                                         <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                     </div>
@@ -145,7 +145,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                        <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom align-with-select" min="0" disabled />
+                                        <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom " min="0" disabled />
                                         <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-6 form-group">
@@ -154,7 +154,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 vm => vm.Request.SubSubUnitTypeID,
 Model.UnitTypeList,
 "",
-htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary ", @disabled = "disabled" }
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
 )
                                         <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
                                     </div>

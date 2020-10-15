@@ -14,6 +14,25 @@ $(function () {
 			}
 		}
 	});
+	$('.reorderForm').validate({
+		rules: {
+			
+			"Request.Unit": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			"Request.Cost": {
+				required: true,
+				number: true,
+				min: 1
+			},
+	
+			"Request.UnitTypeID": "selectRequired"
+		},
+
+	});
 	$('.ordersItemForm').validate({
 		rules: {
 			"Request.Product.ProductName": "required",
