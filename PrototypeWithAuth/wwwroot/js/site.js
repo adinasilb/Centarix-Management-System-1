@@ -68,13 +68,18 @@ $(function () {
 		$.fn.changeProject($(this).val());
 	});
 
-	$('.modal').off('change').on('change', ".Project", function () {
-		$.fn.changeProject($(this).val());
-	});
-
-	$.fn.changeProject = function (val) {
+	//$('.modal').off('change').on('change', ".Project", function () {
+	//	$.fn.changeProject($(this).val());
+	//});
+	//$(".Project").off("change").on("change", function () {
+	//	console.log("in on change before fx");
+	//	$.fn.changeProject($(this).val());
+	//});
+	$("body").off("change", ".Project").on("change", ".Project", function () {
+		console.log("in on change before fx");
+		//$.fn.changeProject($(this).val());
 		console.log("project was changed");
-		var projectId = val;
+		var projectId = $(this).val();
 		var url = "/Requests/GetSubProjectList";
 
 		alert("before getjson");
@@ -88,8 +93,29 @@ $(function () {
 				$("#SubProject").append(item);
 			});
 			$("#SubProject").materialSelect();
-			return false
+			return false;
 		});
+		return false;
+	});
+
+	$.fn.changeProject = function (val) {
+		//console.log("project was changed");
+		//var projectId = val;
+		//var url = "/Requests/GetSubProjectList";
+
+		//alert("before getjson");
+		//$.getJSON(url, { ProjectID: projectId }, function (data) {
+		//	alert("in getjson");
+		//	var item1 = "<option value=''>Select Sub Project</option>";
+		//	$("#SubProject").empty();
+		//	$("#SubProject").append(item1);
+		//	$.each(data, function (i, subproject) {
+		//		item = '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
+		//		$("#SubProject").append(item);
+		//	});
+		//	$("#SubProject").materialSelect();
+		//	return false
+		//});
 	};
 
 	//search forms- Redo js in newer versions
