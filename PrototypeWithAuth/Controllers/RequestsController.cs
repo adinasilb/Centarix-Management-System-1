@@ -2979,6 +2979,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public JsonResult GetSubProjectList(int ProjectID)
         {
+            //var projectName = _context.Projects.Where(pr => pr.ProjectID == ProjectID).FirstOrDefault().ProjectDescription;
             var subprojectList = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID).ToList();
             return Json(subprojectList);
         }

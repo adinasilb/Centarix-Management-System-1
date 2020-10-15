@@ -68,7 +68,7 @@ $(function () {
 		$.fn.changeProject($(this).val());
 	});
 
-	$('.modal').on('change', ".Project", function () {
+	$('.modal').off('change').on('change', ".Project", function () {
 		$.fn.changeProject($(this).val());
 	});
 
@@ -77,7 +77,9 @@ $(function () {
 		var projectId = val;
 		var url = "/Requests/GetSubProjectList";
 
+		alert("before getjson");
 		$.getJSON(url, { ProjectID: projectId }, function (data) {
+			alert("in getjson");
 			var item1 = "<option value=''>Select Sub Project</option>";
 			$("#SubProject").empty();
 			$("#SubProject").append(item1);
