@@ -17,7 +17,10 @@
 			url = "/Operations/EditModalView";
 		} else if ($('.turn-edit-on-off').hasClass('suppliers') || $(this).hasClass('accounting')) {
 			url = "/Vendors/Edit";
-		} else {
+		} else if ($(this).hasClass('users')) {
+			url = "/Admin/EditUser";
+
+		} else if ($(this).hasClass('orders')) {
 			url = "/Requests/EditModalView";
 
 		}
@@ -79,6 +82,12 @@
 		}
 		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+		}
+		if ($(this).hasClass('users')) {
+			$.fn.EnableMaterialSelect('#NewEmployee_JobCategoryTypeID', 'select-options-NewEmployee_JobCategoryTypeID');
+			$.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
+			$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
+			$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
 		}
 		$(".turn-edit-on-off").click();
 	});

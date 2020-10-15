@@ -70,6 +70,14 @@ $(function () {
 		},
 		
 	});
+	$('.reportHoursForm').validate({
+		rules: {
+			Entry1: {required: true},
+			Exit1: { required: true },
+			TotalHours: { required: true },
+		}
+	});
+
 	$('.operationsAddItemForm').validate({
 		rules: {
 			"Request.Product.ProductName": "required",
@@ -156,8 +164,11 @@ $(function () {
 			
 		},
 	});
-
+	var isUserAndIsNotEdit = function () {
+		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser')==false;
+	}
 	var isEmployee = function () {
+		console.log("employeestatus: " + ( $("#NewEmployee_EmployeeStatusID").val() != '4'));
 		return $("#NewEmployee_EmployeeStatusID").val() != "4";
 	}
 	var isUser = function () {
@@ -229,7 +240,7 @@ $(function () {
 				integer : true
 			},
 			"Password": {
-				required: isUser,				
+				required: isUserAndIsNotEdit,				
 				nonAlphaNumeric: true,
 				uppercase: true,
 				lowercase: true,
@@ -238,11 +249,12 @@ $(function () {
 				maxlength : 20
 			},
 			"ConfirmPassword": {
-				required: isUser,
+				required: isUserAndIsNotEdit,
 				equalTo: "#Password"
 			},
 			"SecureAppPass": {
-				required: isUser
+				required: isUserAndIsNotEdit
+				//todo: are we allowing edit of secure appp password
 				// validate format
 			},
 			"NewEmployee.EmployeeStatusID": {
@@ -312,6 +324,7 @@ $(function () {
 				$(".error:not(.beforeCallValid)").removeClass("error")
 				$("label.afterCallValid").remove()
 				$(".error").removeClass('beforeCallValid')
+				$(".afterCallValid").removeClass('error')
 				$(".afterCallValid").removeClass('afterCallValid')
 				if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
 					$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
@@ -326,7 +339,8 @@ $(function () {
 		}
 
 		var valid = $("#myForm").valid();
-	
+
+		console.log("valid tab" + valid)
 		if (!valid) {
 			$('.next-tab').prop("disabled", true);
 		}

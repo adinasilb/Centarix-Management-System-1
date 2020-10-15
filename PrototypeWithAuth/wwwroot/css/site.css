@@ -2035,6 +2035,16 @@ td .btn {
     border: .5px solid #f3f3f3 !important;
 }
 
+    .users-form .switch label input[type="checkbox"]:checked + .lever:after {
+        background-color: var(--user-color) !important;
+    }
+
+.users-form .switch label input[type="checkbox"]:checked + .lever {
+    background-color: var(--users-25) !important;
+    opacity: 50 !important;
+    border: .5px solid #f3f3f3 !important;
+}
+
 
 .select-wrapper input.select-dropdown:disabled {
     color: var(--black-87) !important;

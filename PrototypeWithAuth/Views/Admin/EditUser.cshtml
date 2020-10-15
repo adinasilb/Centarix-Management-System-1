@@ -10,7 +10,7 @@
     Layout = null;
 }
 
-<div class="modal modal-view on-form-modal right fader user-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view on-form-modal right fader users-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog modal-lg box-shadow" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
@@ -18,7 +18,7 @@
         <div class="modal-content d-inline-block">
             @*<div class="card col-8 offset-2 edit-user" style="width:100%; box-shadow: 0px 2px 6px #5656567A;">
                 <div class="card-body">*@
-            <form action="" id="myForm" method="post" class="usersForm" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <form action="" id="myForm" method="post" class="usersForm editUser" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
                 <input type="email" class="hidden" />
                 <input type="password" class="hidden" />
@@ -36,14 +36,7 @@
                         </button>
                     </div>
                     <div class="row modal-title-line">
-                        <div class="col-7">
-                       
-                            <div class="modal-product-title" @*style="width: 80%;"*@>
-                                <label class="heading-1 border-bottom" >Edit User</label>
-                                <span asp-validation-for="FirstName" class="text-danger-centarix"></span>
-                            </div>
-                        </div>
-
+                        <input class="modal-product-title heading-1 userName form-control-plaintext border-0" disabled value="@Model.FirstName @Model.LastName"/>               
                     </div>
 
                     <div class="row">
@@ -92,18 +85,21 @@
                 </div>
                 <div class="new-modal-body edit-modal-outer-body" style="background: #F6F7F8; padding: 1em">
                     <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
-                        <div class=" row text-right mb-0">
+                        <div class=" row text-right mb-6">
                             <div class="switch col-12 switch-margin">
                                 <label>
                                     <label class="edit-mode-switch-description">Edit Mode Off</label>
-                                    <input type="checkbox" class="turn-edit-on-off operations" value="@Model.ApplicationUserID" name="details">
+                                    <input type="checkbox" class="turn-edit-on-off users" value="@Model.ApplicationUserID" name="details">
                                     <span class="lever"></span>
                                 </label>
                             </div>
                         </div>
                             <div class="tab-content">
                                 <div id="details" class="tab-pane fade fade in active">
-                                    <div class="row ">
+                                    <div class="row border-bottom pb-5 px-5 text-center " style="
+    margin-right: -4rem;
+    margin-left: -4rem;
+">
                                         <input type="hidden" asp-for="NewEmployee.EmployeeStatusID" />
                                         @{ var first = true; }
                                         @foreach (var status in Model.EmployeeStatuses)
@@ -112,7 +108,7 @@
                                             if (first)
                                             {
                                                 <div class="custom-control custom-radio mr-4  employee-type">
-                                                    @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id, @checked = "checked" })
+                                                    @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input mark-readonly", @id = id, @checked = "checked", @disabled="disabled" })
                                                     <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
                                                 </div>
                                                 first = false;
@@ -120,148 +116,148 @@
                                             else
                                             {
                                                 <div class="custom-control custom-radio mr-4 ml-4 employee-type">
-                                                    @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input", @id = id })
+                                                    @Html.RadioButtonFor(model => model.NewEmployee.EmployeeStatusID, status.EmployeeStatusID, htmlAttributes: new { @class = "custom-control-input mark-readonly", @id = id , @disabled = "disabled" })
                                                     <label class="radio-button custom-control-label pt-1 pl-2" for="@id">@status.Description</label>
                                                 </div>
                                             }
                                         }
                                         <br /><span id="validation-EmployeeStatus" class="hidden text-danger-centarix">Please choose a valid Employee Status</span>
                                     </div>
-                                    <hr />
-                                        <div class="row">
-                                            <div class="col-6 p-0">
-                                                <label asp-for="FirstName" class="control-label"></label>
-                                                <input asp-for="FirstName" class="form-control-plaintext border-bottom" />
-                                                <span asp-validation-for="FirstName" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-6">
-                                                <label asp-for="LastName" class="control-label"></label>
-                                                <input asp-for="LastName" class="form-control-plaintext border-bottom" />
-                                                <span asp-validation-for="LastName" class="text-danger-centarix"></span>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-6 p-0">
+                                            <label asp-for="FirstName" class="control-label"></label>
+                                            <input asp-for="FirstName" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                                            <span asp-validation-for="FirstName" class="text-danger-centarix"></span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-6  p-0">
-                                                <label asp-for="CentarixID" class="control-label"></label>
-                                                <input asp-for="CentarixID" class="form-control-plaintext border-bottom" />
-                                                <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-6 ">
-                                                <label asp-for="NewEmployee.JobTitle" class="control-label"></label>
-                                                <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom" required />
-                                                <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>
-                                            </div>
+                                        <div class="col-6">
+                                            <label asp-for="LastName" class="control-label"></label>
+                                            <input asp-for="LastName" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                                            <span asp-validation-for="LastName" class="text-danger-centarix"></span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-6  p-0">
-                                                <label asp-for="NewEmployee.DOB" class="control-label"></label>
-                                                <input asp-for="NewEmployee.DOB" class="form-control-plaintext border-bottom" />
-                                                <span asp-validation-for="NewEmployee.DOB" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-6 ">
-                                                <label asp-for="NewEmployee.Age" class="control-label"></label>
-                                                <input id="Age" name="Age" class="form-control-plaintext border-bottom" required />
-                                            </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-6  p-0">
+                                            <label asp-for="CentarixID" class="control-label"></label>
+                                            <input asp-for="CentarixID" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                                            <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-4  p-0">
-                                                <label class="control-label">Job Category</label>
-                                                @Html.DropDownListFor(
-                                                    vm => vm.NewEmployee.JobCategoryTypeID,
-                                                    new SelectList(
-                                                    Model.JobCategoryTypes,
-                                                    dataValueField: "JobCategoryTypeID",
-                                                    dataTextField: "Description"),
-                                                    optionLabel: "Select A Category",
-                                                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
-                                                    )
-                                                <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-4">
-                                                <label asp-for="Email" class="control-label"></label>
-                                                <input asp-for="Email" class="form-control-plaintext border-bottom" autocomplete="nope" type="text" />
-                                                <span asp-validation-for="Email" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-4">
-                                                <label asp-for="PhoneNumber" class="control-label"></label>
-                                                <input asp-for="PhoneNumber" class="form-control-plaintext border-bottom" required />
-                                                <span asp-validation-for="PhoneNumber" class="text-danger-centarix"></span>
-                                            </div>
+                                        <div class="col-6 ">
+                                            <label asp-for="NewEmployee.JobTitle" class="control-label only-employee"></label>
+                                            <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom only-employee mark-readonly" disabled />
+                                            <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-4  p-0">
-                                                <label asp-for="PhoneNumber2" class="control-label"></label>
-                                                <input asp-for="PhoneNumber2" class="form-control-plaintext border-bottom" />
-                                                <span asp-validation-for="PhoneNumber2" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="control-label">Degree</label>
-                                                @Html.DropDownListFor(
-                                                    vm => vm.NewEmployee.DegreeID,
-                                                    new SelectList(
-                                                    Model.Degrees,
-                                                    dataValueField: "DegreeID",
-                                                    dataTextField: "Description"),
-                                                    optionLabel: "Select A Degree",
-                                                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
-                                                    )
-                                                <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-4">
-                                                <label asp-for="NewEmployee.StartedWorking" class="control-label"></label>
-                                                <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom" />
-                                                <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger-centarix"></span>
-                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6  p-0">
+                                            <label asp-for="NewEmployee.DOB" class="control-label only-employee"></label>
+                                            <input asp-for="NewEmployee.DOB" class="form-control-plaintext border-bottom only-employee mark-readonly" disabled />
+                                            <span asp-validation-for="NewEmployee.DOB" class="text-danger-centarix"></span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-4  p-0">
-                                                <label class="control-label">Relationship Status</label>
-                                                @Html.DropDownListFor(
-                                                    vm => vm.NewEmployee.MaritalStatusID,
-                                                    new SelectList(
-                                                    Model.MaritalStatuses,
-                                                    dataValueField: "MaritalStatusID",
-                                                    dataTextField: "Description"),
-                                                    optionLabel: "Select A Status",
-                                                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
-                                                    )
-                                                <span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="control-label">Citizenship</label>
-                                                @Html.DropDownListFor(
-                                                    vm => vm.NewEmployee.CitizenshipID,
-                                                    new SelectList(
-                                                    Model.Citizenships,
-                                                    dataValueField: "CitizenshipID",
-                                                    dataTextField: "Description"),
-                                                    optionLabel: "Select A Country",
-                                                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @required = "true", @searchable = "default value" }
-                                                    )
-                                                <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-4">
-                                                <label asp-for="NewEmployee.TaxCredits" class="control-label"></label>
-                                                <input asp-for="NewEmployee.TaxCredits" class="form-control-plaintext border-bottom" />
-                                                <span asp-validation-for="NewEmployee.TaxCredits" class="text-danger-centarix"></span>
-                                            </div>
+                                        <div class="col-6 ">
+                                            <label asp-for="NewEmployee.Age" class="control-label"></label>
+                                            <input id="Age" name="Age" class="form-control-plaintext border-bottom " disabled />
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4  p-0">
+                                            <label class="control-label only-employee">Job Category</label>
+                                            @Html.DropDownListFor(
+                                                vm => vm.NewEmployee.JobCategoryTypeID,
+                                                new SelectList(
+                                                Model.JobCategoryTypes,
+                                                dataValueField: "JobCategoryTypeID",
+                                                dataTextField: "Description"),
+                                                optionLabel: "Select A Category",
+                                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly", @searchable = "default value", @disabled = "disabled" }
+                                                )
+                                            <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger-centarix"></span>
+                                        </div>
+                                        <div class="col-4">
+                                            <label asp-for="Email" class="control-label "></label>
+                                            <input asp-for="Email" class="form-control-plaintext border-bottom mark-readonly" autocomplete="nope" type="text" disabled  />
+                                            <span asp-validation-for="Email" class="text-danger-centarix"></span>
+                                        </div>
+                                        <div class="col-4">
+                                            <label asp-for="PhoneNumber" class="control-label"></label>
+                                            <input asp-for="PhoneNumber" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                                            <span asp-validation-for="PhoneNumber" class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4  p-0">
+                                            <label asp-for="PhoneNumber2" class="control-label"></label>
+                                            <input asp-for="PhoneNumber2" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                                            <span asp-validation-for="PhoneNumber2" class="text-danger-centarix"></span>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="control-label only-employee">Degree</label>
+                                            @Html.DropDownListFor(
+                                                vm => vm.NewEmployee.DegreeID,
+                                                new SelectList(
+                                                Model.Degrees,
+                                                dataValueField: "DegreeID",
+                                                dataTextField: "Description"),
+                                                optionLabel: "Select A Degree",
+                                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly", @searchable = "default value", @disabled = "disabled" }
+                                                )
+                                            <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
+                                        </div>
+                                        <div class="col-4">
+                                            <label asp-for="NewEmployee.StartedWorking" class="control-label only-employee"></label>
+                                            <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom only-employee mark-readonly" disabled />
+                                            <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4  p-0">
+                                            <label class="control-label only-employee">Relationship Status</label>
+                                            @Html.DropDownListFor(
+                                                vm => vm.NewEmployee.MaritalStatusID,
+                                                new SelectList(
+                                                Model.MaritalStatuses,
+                                                dataValueField: "MaritalStatusID",
+                                                dataTextField: "Description"),
+                                                optionLabel: "Select A Status",
+                                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly", @searchable = "default value", @disabled = "disabled" }
+                                                )
+                                            <span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="control-label only-employee">Citizenship</label>
+                                            @Html.DropDownListFor(
+                                                vm => vm.NewEmployee.CitizenshipID,
+                                                new SelectList(
+                                                Model.Citizenships,
+                                                dataValueField: "CitizenshipID",
+                                                dataTextField: "Description"),
+                                                optionLabel: "Select A Country",
+                                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly", @searchable = "default value", @disabled = "disabled" }
+                                                )
+                                            <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
+                                        </div>
+                                        <div class="col-4">
+                                            <label asp-for="NewEmployee.TaxCredits" class="control-label only-employee"></label>
+                                            <input asp-for="NewEmployee.TaxCredits" class="form-control-plaintext border-bottom only-employee mark-readonly" disabled />
+                                            <span asp-validation-for="NewEmployee.TaxCredits" class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div id="salary" class="tab-pane fade">
                                         <div class="row">
                                             <div class="col-4  p-0">
                                                 <label class="control-label" asp-for="NewEmployee.SalariedEmployee.WorkScope"></label>
-                                                <input class="form-control-plaintext border-bottom" asp-for="NewEmployee.SalariedEmployee.WorkScope" />
+                                                <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployee.SalariedEmployee.WorkScope" disabled />
                                                 <span asp-validation-for="NewEmployee.SalariedEmployee.WorkScope" class="text-danger-centarix"></span>
                                             </div>
                                             <div class="col-4">
                                                 <label class="control-label" asp-for="NewEmployee.SalariedEmployee.HoursPerDay"></label>
-                                                <input class="form-control-plaintext border-bottom" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" />
+                                                <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" disabled/>
                                                 <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
                                             </div>
                                             <div class="col-4">
                                                 <label class="control-label" asp-for="NewEmployee.VacationDays"></label>
-                                                <input class="form-control-plaintext border-bottom" asp-for="NewEmployee.VacationDays" />
+                                                <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployee.VacationDays" disabled />
                                                 <span class="text-danger-centarix" asp-validation-for="NewEmployee.VacationDays"></span>
                                             </div>
                                         </div>
@@ -270,19 +266,19 @@
                                         <div class="row">
                                             <div class="col-6  p-0">
                                                 <label asp-for="Password" class="control-label"></label>
-                                                <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                                <input asp-for="Password" class="form-control-plaintext border-bottom mark-readonly" autocomplete="off" disabled />
                                                 <span asp-validation-for="Password" class="text-danger-centarix"></span>
                                             </div>
                                             <div class="col-6">
                                                 <label asp-for="ConfirmPassword" class="control-label"></label>
-                                                <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                                <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom mark-readonly" autocomplete="off" disabled />
                                                 <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-6 p-0">
                                                 <label asp-for="SecureAppPass" class="control-label"></label>
-                                                <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                                <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom mark-readonly" autocomplete="off" disabled />
                                                 <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
                                             </div>
                                         </div>
@@ -292,7 +288,7 @@
                                             <div class="col-12 text-center">
                                                 <div class="row ">
                                                     <div class="col-2 text-center p-0 mr-3">
-                                                        <a href="" class="open-orders-list text-center opac87">
+                                                        <a href="" class="open-orders-list text-center opac87 ">
                                                             <img src="~/images/css/main_menu_icons/inventory.png" class="orders-main" width="115" style="display: none;" />
                                                             <img src="~/images/css/main_menu_icons/inventory_grey.png" class="orders-grey" width="115" />
                                                             <br />
@@ -300,7 +296,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="col-2 text-center p-0 mx-3">
-                                                        <a href="" class="open-protocols-list opac87">
+                                                        <a href="" class="open-protocols-list opac87 ">
                                                             <img src="~/images/css/main_menu_icons/protocols.png" class="protocols-main" width="115" style="display: none;" />
                                                             <img src="~/images/css/main_menu_icons/protocols_grey.png" class="protocols-grey" width="115" />
                                                             <br />
@@ -316,7 +312,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="col-2 text-center p-0 mx-3">
-                                                        <a href="" class="open-biomarkers-list opac87">
+                                                        <a href="" class="open-biomarkers-list opac87 ">
                                                             <img src="~/images/css/main_menu_icons/biomarkers.png" class="biomarkers-main" width="115" style="display: none;" />
                                                             <img src="~/images/css/main_menu_icons/biomarkers_grey.png" class="biomarkers-grey" width="115" />
                                                             <br />
@@ -324,7 +320,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="col-2 text-center p-0 ml-3">
-                                                        <a href="" class="open-timekeepers-list opac87">
+                                                        <a href="" class="open-timekeepers-list opac87 ">
                                                             <img src="~/images/css/main_menu_icons/timekeeper.png" class="timekeeper-main" width="115" style="display: none;" />
                                                             <img src="~/images/css/main_menu_icons/timekeeper_grey.png" class="timekeeper-grey" width="115" />
                                                             <br />
@@ -336,7 +332,7 @@
                                             <div class="col-12 text-center">
                                                 <div class="row ">
                                                     <div class="col-2 text-center p-0 mr-3">
-                                                        <a href="" class="open-lab-list text-center opac87">
+                                                        <a href="" class="open-lab-list text-center opac87 ">
                                                             <img src="~/images/css/main_menu_icons/lab.png" class="lab-main" width="115" style="display: none;" />
                                                             <img src="~/images/css/main_menu_icons/lab_grey.png" class="lab-grey" width="115" />
                                                             <br />
@@ -344,7 +340,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="col-2 text-center p-0 mx-3">
-                                                        <a href="" class="open-accounting-list opac87">
+                                                        <a href="" class="open-accounting-list opac87 ">
                                                             <img src="~/images/css/main_menu_icons/accounting.png" class="accounting-main" width="115" style="display: none;" />
                                                             <img src="~/images/css/main_menu_icons/accounting_grey.png" class="accounting-grey" width="115" />
                                                             <br />
@@ -352,7 +348,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="col-2 text-center p-0 mx-3">
-                                                        <a href="" class="open-expenses-list opac87">
+                                                        <a href="" class="open-expenses-list opac87 ">
                                                             <img src="~/images/css/main_menu_icons/expenses.png" class="expenses-main" width="115" style="display: none;" />
                                                             <img src="~/images/css/main_menu_icons/expenses_grey.png" class="expenses-grey" width="115" />
                                                             <br />
@@ -360,7 +356,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="col-2 text-center p-0 mx-3">
-                                                        <a href="" class="open-income-list opac87">
+                                                        <a href="" class="open-income-list opac87 ">
                                                             <img src="~/images/css/main_menu_icons/income.png" class="income-main" width="115" style="display: none;" />
                                                             <img src="~/images/css/main_menu_icons/income_grey.png" class="income-grey" width="115" />
                                                             <br />
@@ -391,7 +387,7 @@
                                                         @Html.HiddenFor(model => model.OrderRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.OrderRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" asp-for="OrderRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input mark-readonly" asp-for="OrderRoles[i].Selected" disabled/>
                                                             <label class="form-check-label" asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -411,7 +407,7 @@
                                                         @Html.HiddenFor(model => model.ProtocolRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.ProtocolRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input filled-in" asp-for="ProtocolRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="ProtocolRoles[i].Selected" disabled />
                                                             <label class="form-check-label" asp-for="ProtocolRoles[i].Selected">@Model.ProtocolRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -431,7 +427,7 @@
                                                         @Html.HiddenFor(model => model.OperationRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.OperationRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input filled-in" asp-for="OperationRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="OperationRoles[i].Selected" disabled />
                                                             <label class="form-check-label" asp-for="OperationRoles[i].Selected">@Model.OperationRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -451,7 +447,7 @@
                                                         @Html.HiddenFor(model => model.BiomarkerRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.BiomarkerRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input filled-in" asp-for="BiomarkerRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="BiomarkerRoles[i].Selected" disabled />
                                                             <label class="form-check-label" asp-for="BiomarkerRoles[i].Selected">@Model.BiomarkerRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -471,7 +467,7 @@
                                                         @Html.HiddenFor(model => model.TimekeeperRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.TimekeeperRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input filled-in" asp-for="TimekeeperRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="TimekeeperRoles[i].Selected" disabled />
                                                             <label class="form-check-label" asp-for="TimekeeperRoles[i].Selected">@Model.TimekeeperRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -491,7 +487,7 @@
                                                         @Html.HiddenFor(model => model.LabManagementRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.LabManagementRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input filled-in" asp-for="LabManagementRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="LabManagementRoles[i].Selected" disabled/>
                                                             <label class="form-check-label" asp-for="LabManagementRoles[i].Selected">@Model.LabManagementRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -511,7 +507,7 @@
                                                         @Html.HiddenFor(model => model.AccountingRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.AccountingRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input filled-in" asp-for="AccountingRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="AccountingRoles[i].Selected" disabled />
                                                             <label class="form-check-label" asp-for="AccountingRoles[i].Selected">@Model.AccountingRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -531,7 +527,7 @@
                                                         @Html.HiddenFor(model => model.ExpenseesRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.ExpenseesRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input filled-in" asp-for="ExpenseesRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="ExpenseesRoles[i].Selected" disabled />
                                                             <label class="form-check-label" asp-for="ExpenseesRoles[i].Selected">@Model.ExpenseesRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -551,7 +547,7 @@
                                                         @Html.HiddenFor(model => model.IncomeRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.IncomeRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input filled-in" asp-for="IncomeRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="IncomeRoles[i].Selected" disabled />
                                                             <label class="form-check-label" asp-for="IncomeRoles[i].Selected">@Model.IncomeRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -571,7 +567,7 @@
                                                         @Html.HiddenFor(model => model.UserRoles[i].MenuItemsID)
                                                         @Html.HiddenFor(model => model.UserRoles[i].Name)
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input filled-in" asp-for="UserRoles[i].Selected" />
+                                                            <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="UserRoles[i].Selected" disabled />
                                                             <label class="form-check-label" asp-for="UserRoles[i].Selected">@Model.UserRoles[i].Name</label>
                                                         </div>
                                                     }
@@ -594,7 +590,7 @@
                                                 <label asp-for="LabUnitLimit" class="control-label"></label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input asp-for="LabUnitLimit" class="form-control-plaintext border-bottom " />
+                                                    <input asp-for="LabUnitLimit" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                                 </div>
                                                 <span asp-validation-for="LabUnitLimit" class="text-danger-centarix"></span>
                                             </div>
@@ -602,7 +598,7 @@
                                                 <label asp-for="LabOrderLimit" class="control-label"></label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input asp-for="LabOrderLimit" class="form-control-plaintext border-bottom " />
+                                                    <input asp-for="LabOrderLimit" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                                 </div>
                                                 <span asp-validation-for="LabOrderLimit" class="text-danger-centarix"></span>
                                             </div>
@@ -613,7 +609,7 @@
                                                 <label asp-for="OperationMonthlyLimit" class="control-label"></label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input asp-for="OperationMonthlyLimit" class="form-control-plaintext border-bottom " />
+                                                    <input asp-for="OperationMonthlyLimit" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                                 </div>
                                                 <span asp-validation-for="OperationMonthlyLimit" class="text-danger-centarix"></span>
                                             </div>
@@ -621,7 +617,7 @@
                                                 <label asp-for="OperationUnitLimit" class="control-label"></label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input asp-for="OperationUnitLimit" class="form-control-plaintext border-bottom " />
+                                                    <input asp-for="OperationUnitLimit" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                                 </div>
                                                 <span asp-validation-for="OperationUnitLimit" class="text-danger-centarix"></span>
                                             </div>
@@ -629,7 +625,7 @@
                                                 <label asp-for="OperaitonOrderLimit" class="control-label"></label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#x20aa;</span>
-                                                    <input asp-for="OperaitonOrderLimit" class="form-control-plaintext border-bottom " />
+                                                    <input asp-for="OperaitonOrderLimit" class="form-control-plaintext border-bottom mark-readonly" disabled />
                                                 </div>
                                                 <span asp-validation-for="OperaitonOrderLimit" class="text-danger-centarix"></span>
                                             </div>
@@ -648,7 +644,7 @@
                                                 <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img src="@src" id="user-image" alt="Default User Image" /></div>
                                                 <br />@*<br /><br />
                                 <label asp-for="UserImage" class="control-label"></label>*@
-                                                <input type="file" asp-for="UserImage" class="form-control-file pt-1" accept=".png, .jpg, .jpeg, .pdf">
+                                                <input type="file" asp-for="UserImage" class="form-control-file pt-1 mark-readonly" accept=".png, .jpg, .jpeg, .pdf" disabled>
                                                 <span asp-validation-for="UserImage" class="text-danger-centarix"></span>
 
                                             </div>

@@ -1164,14 +1164,6 @@ $(function () {
 		//});
 	});
 
-	$("input[type=text]").on("change", function (e) {
-		console.log("search was changed");
-	});
-
-	$("input[type=text]").on("click", function (e) {
-		console.log("search was clicked");
-	});
-
 	$(".open-document-modal").click(function (e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -1731,7 +1723,7 @@ $(function () {
 		$.fn.ChangeUserPermissionsButtons();
 	});
 
-	$(".edit-user .permissions-tab").on("click", function () {
+	$(".modal .permissions-tab").on("click", function () {
 		console.log("permissions tab opened");
 		$.fn.HideAllPermissionsDivs();
 		$.fn.ChangeUserPermissionsButtons();
@@ -2361,7 +2353,10 @@ $(function () {
 				url = "/Operations/EditModalView";
 			} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
 				url = "/Vendors/Edit";
-			} else {
+			} else if ($(this).hasClass('users')) {
+				url = "/Admin/EditUser";
+
+			} else if ($(this).hasClass('orders')) {
 				url = "/Requests/EditModalView";
 
 			}
@@ -2417,7 +2412,12 @@ $(function () {
 				if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
 					$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
 				}
-
+				if ($(this).hasClass('users')) {
+					$.fn.EnableMaterialSelect('#NewEmployee_JobCategoryTypeID', 'select-options-NewEmployee_JobCategoryTypeID');
+					$.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
+					$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
+					$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
+				}
 
 			}
 		}
@@ -2470,26 +2470,20 @@ $(function () {
 	});
 	$('.employee-status-radio').off("click").on("click", function () {
 		console.log('employee status')
-		$('#NewEmployee_EmployeeStatusID').val($(this).val())
+		var val = $(this).val();
+		$('#NewEmployee_EmployeeStatusID').val(val)
 		$("#validation-EmployeeStatus").addClass("hidden");
-
-
-
+		if (val == "4") {
+			$('.only-employee').removeClass("error");
+		}
+	
 	});
 
-	$(".search").on("input", function (e) {
-		console.log("1 typing....");
-		console.log($(this).val());
-	});
+});
 
-	$(".search").on("click", function (e) {
-		console.log("2 typing....");
-		console.log($(this).val());
-	});
-
-	$(".search").on("change", function (e) {
-		console.log("3 typing....");
-		console.log($(this).val());
-	});
-
+$('.modal #FirstName').change(function () {
+	$('.userName').val($(this).val() + " " + $('#LastName').val())
+});
+$('.modal #LastName').change(function () {
+	$('.userName').val($('#FirstName').val() + " " + $(this).val())
 });
