@@ -72,9 +72,21 @@ $(function () {
 	});
 	$('.reportHoursForm').validate({
 		rules: {
-			Entry1: {required: true},
-			Exit1: { required: true },
-			TotalHours: { required: true },
+			Entry1: {
+				eitherHoursOrTime: true,
+			},
+			Exit1: {
+				eitherHoursOrTime: true,
+			},
+			Entry2: {
+				eitherHoursOrTime: true,
+			},
+			Exit2: {
+				eitherHoursOrTime: true,
+			},
+			TotalHours: {
+				eitherHoursOrTime: true,
+			},
 		}
 	});
 
@@ -270,7 +282,6 @@ $(function () {
 		}
 	});
 
-
 	function isInteger(n) {
 		n = parseFloat(n)
 		return n === +n && n === (n | 0);
@@ -303,6 +314,9 @@ $(function () {
 	$.validator.addMethod("atleastOneHoursField", function (value, element) {
 		return $("#NewEmployee_SalariedEmployee_WorkScope").val() != "" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "";
 	}, 'Either Job Scope or Hours Per day is required');
+	$.validator.addMethod("eitherHoursOrTime", function (value, element) {
+		return ($("#Exit1").val() != "" && $("#Entry1").val() != "")|| $("#TotalHours").val() != "";
+	}, 'Either total hours or Entry1 and Entry 2 must be filled in');
 	$.validator.addMethod("integer", function (value, element) {
 		return isInteger(value) || value=='';
 	}, 'Field must be an integer');
@@ -364,6 +378,22 @@ $(function () {
 				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
 			}
 		
+		}
+		else {
+			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+		}
+		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+	});
+	$('.modal #myForm').submit(function (e) {
+		$(this).data("validator").settings.ignore = "";
+		var valid = $(this).valid();
+		console.log("valid form: " + valid)
+		if (!valid) {
+			e.preventDefault();
+			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+			}
+
 		}
 		else {
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
