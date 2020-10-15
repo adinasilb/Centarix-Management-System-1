@@ -4,7 +4,9 @@
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-<div class="modal modal-view fader" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<script src="~/js/validate.js" asp-append-version="true"></script>
+
+<div class="modal modal-view fader on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered  mx-auto  modal-xl " role="document">
 
@@ -15,15 +17,13 @@
             <form action="" method="post" id="myForm" enctype="multipart/form-data" style="height: 100%;" class="modal-padding editQuoteDetails">
 
                 @*
-                NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
-                    they need the hiddenfors that are right underneath it
+                    NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+                        they need the hiddenfors that are right underneath it
                 *@
                 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <!-- Modal Header -->
-                <div class="new-modal-header no-box-shadow" 
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
+                <div class="new-modal-header no-box-shadow"
+                     @if (TempData["ErrorMessage"] != null) { <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
 
@@ -32,7 +32,7 @@
                             <div class="col-3">
                                 <div class="heading-1">Update Quote</div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                                 <div class="top-menu">@Model.Vendor.VendorEnName</div>
                             </div>
                             <input type="hidden" asp-for="@Model.Vendor.VendorID" />
@@ -115,13 +115,13 @@
                                         </td>
                                         <td width="15%">
                                             <div class="form-group">
-                                                <input asp-for="@Model.Reorders[i].Cost" class="form-control-plaintext border-bottom align-with-select" min="1" />
+                                                <input asp-for="@Model.Reorders[i].Cost" class="form-control-plaintext border-bottom cost-validation" min="1" />
                                                 <span asp-validation-for="@Model.Reorders[i].Cost" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
                                         <td width="15%">
                                             <div class="form-group">
-                                                <input asp-for="@Model.Reorders[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom align-with-select   expected-supply-days" min="1" />
+                                                <input asp-for="@Model.Reorders[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days supply-days-validation" />
                                                 <span asp-validation-for="@Model.Reorders[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
@@ -152,7 +152,7 @@
             </form>
         </div>
     </div>
-    </div>
+</div>
 
 
 @*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@

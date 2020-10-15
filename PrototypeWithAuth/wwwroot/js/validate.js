@@ -45,15 +45,18 @@ $(function () {
 				min: 0,
 				integer: true
 			},
-
-			"Reorders.Cost": {
-				required: false,
-				number: true,
-				min: 1
-			},
 			"QuoteFileUpload" : "required"
 		},
 
+	});
+	$(".cost-validation").rules("add", {
+		required: false,
+		number: true,
+		min: 1
+	});
+	$(".supply-days-validation").rules("add", {
+		min: 0,
+		integer: true
 	});
 	$('.ordersItemForm').validate({
 		rules: {
