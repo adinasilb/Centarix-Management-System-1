@@ -54,4 +54,32 @@
 		$('.edit-mode-switch-description').text("Edit Mode Off");
 		$('.turn-edit-on-off').attr('name', 'details')
 	};
+
+	$(".cancel-request-edits").off("click").on("click", function (e) {
+		$(".confirm-edit-modal").remove();
+		console.log("cancel request edits");
+		$('.mark-readonly').attr("disabled", false);
+		$('.mark-edditable').data("val", true);
+		$('.edit-mode-switch-description').text("Edit Mode On");
+		$('.turn-edit-on-off').attr('name', 'edit')
+		if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
+			console.log("orders operations")
+			$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
+			$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
+			$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
+			$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
+		}
+		if ($('.turn-edit-on-off').hasClass('orders')) {
+			console.log("orders")
+			$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
+			$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
+			$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
+			$.fn.CheckUnitsFilled();
+			$.fn.CheckSubUnitsFilled();
+		}
+		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
+			$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+		}
+		$(".turn-edit-on-off").click();
+	});
 });

@@ -7,13 +7,14 @@
         backgroundColor = "oper-background-color";
     }
 }
+<script src="~/js/site.js"></script>
 <script src="~/js/confirmedit.js"></script>
 <div class="modal confirm-edit-modal modal-view  overflow-auto" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog no-box-shadow modal-lg" role="document" style="max-height:100%; max-width:60rem; ">
 
         <div class="modal-content d-inline-block  modal-border-radius modal-box-shadow" style="width:58.96rem;">
-
+            <input type="hidden" text="open" class="modal-open-state" />
             <div class="modal-header pb-0 border-bottom-0">
                 <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -28,7 +29,7 @@
 
                     <button class="text custom-button custom-button-font between-button-margin @backgroundColor save-request-edits">Save</button>
                     <button class="text custom-button custom-button-font between-button-margin @backgroundColor dont-save-request-edits">Don't Save</button>
-                    <button type="button" class="custom-button custom-cancel float-right text " data-dismiss="modal">Cancel</button>
+                    <button class="custom-button custom-cancel float-right text cancel-request-edits">Cancel</button>
                 </div>
             </div>
 

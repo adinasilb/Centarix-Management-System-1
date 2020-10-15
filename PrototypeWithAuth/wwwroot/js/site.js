@@ -2341,74 +2341,79 @@ $(function () {
 
 
 
-	$('.turn-edit-on-off').change(function () {
-		var type = $(this).attr('name');
-		console.log(type);
-		var url = '';
-		if ($(this).hasClass('operations')) {
-			url = "/Operations/EditModalView";
-		} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
-			url = "/Vendors/Edit";
-		} else {
-			url = "/Requests/EditModalView";
-
+	$('.turn-edit-on-off').off("click").on("click", function () {
+		if ($('.modal-open-state').attr("text") == "open") {
+			$(".modal-open-state").attr("text", "close");
+			$(".confirm-edit-modal").remove();
+			return false;
 		}
+		else {
+			var type = $(this).attr('name');
+			console.log(type);
+			var url = '';
+			if ($(this).hasClass('operations')) {
+				url = "/Operations/EditModalView";
+			} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
+				url = "/Vendors/Edit";
+			} else {
+				url = "/Requests/EditModalView";
 
-		if (type == 'edit') {
-			$("#loading").show();
-			console.log("in if edit");
-			$itemurl = "/Requests/ConfirmEdit";
-			console.log("itemurl: " + $itemurl);
-			$.ajax({
-				async: true,
-				url: $itemurl,
-				type: 'GET',
-				cache: true,
-				success: function (data) {
-					$("#loading").hide();
-					var modal = $(data);
-					$('body').append(modal);
-					$(".confirm-edit-modal").modal({
-						backdrop: false,
-						keyboard: false,
-					});
-					//shows the modal
-					$(".confirm-edit-modal").modal('show');
+			}
+
+			if (type == 'edit') {
+				$("#loading").show();
+				console.log("in if edit");
+				$itemurl = "/Requests/ConfirmEdit";
+				console.log("itemurl: " + $itemurl);
+				$.ajax({
+					async: true,
+					url: $itemurl,
+					type: 'GET',
+					cache: true,
+					success: function (data) {
+						$("#loading").hide();
+						var modal = $(data);
+						$('body').append(modal);
+						$(".confirm-edit-modal").modal({
+							backdrop: false,
+							keyboard: false,
+						});
+						//shows the modal
+						$(".confirm-edit-modal").modal('show');
+						$(".modal-open-state").attr("text", "open");
+					}
+
+				});
 
 
+			}
+			else if (type == 'details') {
+				console.log("in if details");
+				$('.mark-readonly').attr("disabled", false);
+				$('.mark-edditable').data("val", true);
+				$('.edit-mode-switch-description').text("Edit Mode On");
+				$('.turn-edit-on-off').attr('name', 'edit')
+				if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
+					console.log("orders operations")
+					$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
+					$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
+					$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
+					$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
+				}
+				if ($(this).hasClass('orders')) {
+					console.log("orders")
+					$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
+					$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
+					$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
+					$.fn.CheckUnitsFilled();
+					$.fn.CheckSubUnitsFilled();
+				}
+				if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
+					$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
 				}
 
-			});
-			
 
-		}
-		else if (type == 'details') {
-			console.log("in if details");
-			$('.mark-readonly').attr("disabled", false);
-			$('.mark-edditable').data("val", true);
-			$('.edit-mode-switch-description').text("Edit Mode On");
-			$('.turn-edit-on-off').attr('name', 'edit')
-			if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
-				console.log("orders operations")
-				$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
-				$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
-				$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
-				$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
 			}
-			if ($(this).hasClass('orders')) {
-				console.log("orders")
-				$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
-				$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
-				$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
-				$.fn.CheckUnitsFilled();
-				$.fn.CheckSubUnitsFilled();
-			}
-			if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
-				$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
-			}
-
-
-
 		}
 	});
 
