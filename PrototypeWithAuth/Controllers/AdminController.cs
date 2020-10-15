@@ -650,10 +650,25 @@ namespace PrototypeWithAuth.Controllers
             userEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
             userEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
             userEditted.OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit;
+
             _context.Update(userEditted);
             _context.SaveChanges();
 
-            //if password isn't blank - reset the password:
+            var employeeEditted = _context.Employees.Where(e => e.Id == userEditted.Id).FirstOrDefault();
+            var selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
+            if (employeeEditted != null) //The user has an employee status (is not a plain user)
+            {
+                //is employee
+            }
+            else //user is a plain user
+            {
+                if (selectedStatusID != 0)
+                {
+
+                }
+            }
+
+            //if password isn't blank - reset the password):
             if (registerUserViewModel.Password != null)
             {
                 ApplicationUser cUser = await _userManager.FindByIdAsync(registerUserViewModel.ApplicationUserID);

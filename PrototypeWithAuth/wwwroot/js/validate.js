@@ -224,7 +224,7 @@ $(function () {
 		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser')==false;
 	}
 	var isEmployee = function () {
-		console.log("employeestatus: " + ( $("#NewEmployee_EmployeeStatusID").val() != '4'));
+		//console.log("employeestatus: " + ( $("#NewEmployee_EmployeeStatusID").val() != '4'));
 		return $("#NewEmployee_EmployeeStatusID").val() != "4";
 	}
 	var isUser = function () {
@@ -412,7 +412,8 @@ $(function () {
 		}
 
 	});
-	$('#myForm').submit(function (e)  {
+	$('#myForm').submit(function (e) {
+		alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
 		console.log("valid form: " + valid)
@@ -429,6 +430,7 @@ $(function () {
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
 	$('.modal #myForm').submit(function (e) {
+		alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
 		console.log("valid form: " + valid)

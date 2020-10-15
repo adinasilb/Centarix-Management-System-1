@@ -82,9 +82,7 @@ $(function () {
 		var projectId = $(this).val();
 		var url = "/Requests/GetSubProjectList";
 
-		alert("before getjson");
 		$.getJSON(url, { ProjectID: projectId }, function (data) {
-			alert("in getjson");
 			var item1 = "<option value=''>Select Sub Project</option>";
 			$("#SubProject").empty();
 			$("#SubProject").append(item1);
@@ -2495,7 +2493,8 @@ $(function () {
 
 	});
 	$('.employee-status-radio').off("click").on("click", function () {
-		console.log('employee status')
+		//alert("changed employee status to: " + $(this).val());
+		//console.log('employee status')
 		var val = $(this).val();
 		$('#NewEmployee_EmployeeStatusID').val(val)
 		$("#validation-EmployeeStatus").addClass("hidden");
