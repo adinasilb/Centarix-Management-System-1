@@ -612,10 +612,13 @@ $(function () {
 	});
 
 	$("#Request_UnitTypeID").change(function () {
+		alert("request unit type id was changed");
 		$.fn.CheckUnitsFilled();
 	});
-	$("#select-options-Request_UnitTypeID").change(function () {
+
+	$("#unit-type-select").on("change", function () {
 		//console.log("unit type id changed");
+		alert("select options change was selected");
 		$.fn.CheckUnitsFilled();
 	});
 
@@ -886,6 +889,7 @@ $(function () {
 		theResult = isFinite(theResult) && theResult || "";
 		$inputBox.val(theResult);
 	}
+
 
 
 	//LOCATIONS:
