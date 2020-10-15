@@ -33,6 +33,28 @@ $(function () {
 		},
 
 	});
+	$('.editQuoteDetails').validate({
+		rules: {
+			"Request.ParentQuote.QuoteNumber": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			"Request.ExpectedSupplyDays": {
+				min: 0,
+				integer: true
+			},
+
+			"Reorders.Cost": {
+				required: false,
+				number: true,
+				min: 1
+			},
+			"QuoteFileUpload" : "required"
+		},
+
+	});
 	$('.ordersItemForm').validate({
 		rules: {
 			"Request.Product.ProductName": "required",

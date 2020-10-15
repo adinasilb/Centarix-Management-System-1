@@ -8,11 +8,11 @@
 
     <div class="modal-dialog-centered  mx-auto  modal-xl " role="document">
 
-        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow supplier-form ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" id="reorderForm" enctype="multipart/form-data" style="height: 100%;" class="modal-padding">
+            <form action="" method="post" id="myForm" enctype="multipart/form-data" style="height: 100%;" class="modal-padding editQuoteDetails">
 
                 @*
                 NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
@@ -37,7 +37,7 @@
                             </div>
                             <input type="hidden" asp-for="@Model.Vendor.VendorID" />
                             <input type="hidden" asp-for="@Model.ParentQuoteID" />
-                            <div class="col-3">
+                            <div class="col-4">
                                 <div class="form-group d-inline-flex">
                                     <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
                                     <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
