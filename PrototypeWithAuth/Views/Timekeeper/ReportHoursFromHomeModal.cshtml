@@ -6,7 +6,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
+            <form action="" method="post" id="myForm" enctype="multipart/form-data" class="reportHoursForm modal-padding" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(r => r.EmployeeHoursID)
                 @Html.HiddenFor(r => r.EmployeeID)
                 @Html.HiddenFor(r => r.EmployeeHoursAwaitingApprovalID)
