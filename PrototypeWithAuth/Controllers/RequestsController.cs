@@ -2029,7 +2029,11 @@ namespace PrototypeWithAuth.Controllers
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 1)
                          .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
-
+            if (requests.Count() == 0)
+            {
+                requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId &&  r.ParentQuote.QuoteStatusID == 2)
+                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+            }
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
             string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
@@ -2132,9 +2136,13 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 1)
-                          .Include(r => r.Product).ThenInclude(r => r.Vendor).ToList();
+                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
-
+            if (requests.Count() == 0)
+            {
+                requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 2)
+                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+            }
 
             ConfirmQuoteEmailViewModel confirmEmail = new ConfirmQuoteEmailViewModel
             {
