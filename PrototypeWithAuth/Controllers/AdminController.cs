@@ -216,7 +216,7 @@ namespace PrototypeWithAuth.Controllers
                 var user = new ApplicationUser();
                 if (UserType == 4)
                 {
-                    user = new ApplicationUser
+                    user = new Employee
                     {
                         /*User*/
                         UserName = registerUserViewModel.Email,
@@ -235,6 +235,7 @@ namespace PrototypeWithAuth.Controllers
                         OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
                         OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
                         DateCreated = DateTime.Now,
+                        EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID
                     };
                 }
                 else
@@ -662,9 +663,16 @@ namespace PrototypeWithAuth.Controllers
             }
             else //user is a plain user
             {
-                if (selectedStatusID != 0)
+                switch (selectedStatusID)
                 {
-
+                    //if it was changed
+                    case 1:
+                    case 2:
+                    case 3:
+                        //Employee newEmployee = new Employee(userEditted);
+                        //_context.Update();
+                        //await _context.SaveChangesAsync();
+                        break;
                 }
             }
 

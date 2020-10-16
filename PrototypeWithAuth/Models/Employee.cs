@@ -21,10 +21,13 @@ namespace PrototypeWithAuth.Models
             get
             {
                 int _age = 0;
-                _age = DateTime.Now.Year - DOB.Year;
-                if (DateTime.Now.DayOfYear > DOB.DayOfYear)
+                if (DOB != null)
                 {
-                    _age--;
+                    _age = DateTime.Now.Year - DOB.Year;
+                    if (DateTime.Now.DayOfYear > DOB.DayOfYear)
+                    {
+                        _age--;
+                    }
                 }
                 return _age;
             }
@@ -42,12 +45,12 @@ namespace PrototypeWithAuth.Models
         public string JobTitle { get; set; }
         [Display(Name = "ID Number")]
         public string IDNumber { get; set; }
-        public int DegreeID { get; set; }
+        public int? DegreeID { get; set; }
         [ForeignKey("DegreeID")]
         public Degree Degree { get; set; }
 
         [Display(Name = "Relationship Status")]    
-        public int MaritalStatusID { get; set; }
+        public int? MaritalStatusID { get; set; }
         [ForeignKey("MaritalStatusID")]
         public MaritalStatus MaritalStatus { get; set; }
         //public string RelationshipStatus {get; set;}
@@ -55,13 +58,13 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber2 { get; set; }
         //public string Citizenship { get; set; }
-        public int CitizenshipID { get; set; }
+        public int? CitizenshipID { get; set; }
         [ForeignKey("CitizenshipID")]
         public Citizenship Citizenship { get; set; }
         public IEnumerable<EmployeeHours> EmployeeHours { get; set; }
         public int EmployeeStatusID { get; set; }
         public EmployeeStatus EmployeeStatus { get; set; }
-        public int JobCategoryTypeID { get; set;}
+        public int? JobCategoryTypeID { get; set;}
         [ForeignKey("JobCategoryTypeID")]
         public JobCategoryType JobCategoryType { get; set; }
         public Freelancer Freelancer { get; set; }
