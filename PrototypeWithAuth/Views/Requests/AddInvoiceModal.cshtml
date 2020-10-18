@@ -2,14 +2,15 @@
 @using PrototypeWithAuth.AppData 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
 <link href="~/css/site.css" rel="stylesheet" />
-<div class="modal modal-view fader" id="myModal" data-backdrop="false">
+<div class="modal modal-view fader on-form-modal accounting-form"  id="myModal" data-backdrop="false">
     <div class="add-invoice-modal modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding">
+            <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding addInvoiceForm">
 
                 @{
                     var urlAction = Url.Action("DocumentsModal", "Requests");
@@ -87,7 +88,7 @@
                                         <td style="width:15%;">
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom" asp-for="Requests[x].Cost" />
+                                                <input class="form-control-plaintext border-bottom cost-validation" asp-for="Requests[x].Cost" />
                                             </div>
                                         </td>
                                         <td style="width:30%;">

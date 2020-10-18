@@ -14,6 +14,17 @@ $(function () {
 			}
 		}
 	});
+	$('.addInvoiceForm').validate({
+		rules: {
+			"InvoiceImage": "required",
+			"Invoice.InvoiceNumber": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+		}
+	});
 	$('.reorderForm').validate({
 		rules: {
 			
@@ -49,15 +60,20 @@ $(function () {
 		},
 
 	});
-	$(".cost-validation").rules("add", {
-		required: false,
-		number: true,
-		min: 1
+	$(".cost-validation").each(function () {
+		$(this).rules("add", {
+			required: true,
+			number: true,
+			min: 1
+		});
 	});
-	$(".supply-days-validation").rules("add", {
-		min: 0,
-		integer: true
+	$(".supply-days-validation").each(function () {
+		$(this).rules("add", {
+			min: 0,
+			integer: true
+		});
 	});
+
 	$('.ordersItemForm').validate({
 		rules: {
 			"Request.Product.ProductName": "required",
@@ -230,6 +246,7 @@ $(function () {
 	var isUser = function () {
 		return $("#NewEmployee_EmployeeStatusID").val() == "4";
 	}
+
 
 	$('.usersForm').validate({
 		rules: {
