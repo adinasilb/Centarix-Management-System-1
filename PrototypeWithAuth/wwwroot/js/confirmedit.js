@@ -97,6 +97,6 @@
 			$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
 			$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
 		}
-		$(".turn-edit-on-off").click();
+		$('.turn-edit-on-off').prop('checked', true);
 	});
 });
