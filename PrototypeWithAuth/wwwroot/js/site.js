@@ -639,20 +639,24 @@ $(function () {
 		$.fn.CheckUnitsFilled();
 	});
 
-	$(".modal").on("click", "#Request_UnitTypeID", function () {
-		alert("modal Request_UnitTypeID was clicked");
-		$.fn.CheckUnitsFilled();
-	});
-
-	//$(".modal").on("change", "#Request_UnitTypeID", function () {
-	//	//alert("modal Request_UnitTypeID was changed");
+	//$(".modal").on("click", "#Request_UnitTypeID", function () {
+	//	alert("modal Request_UnitTypeID was clicked");
 	//	$.fn.CheckUnitsFilled();
 	//});
 
-	$("#Request_UnitTypeID").change(function () {
-		//alert("request unit type id was changed");
+	$(".modal").on("change", "#Request_UnitTypeID", function () {
+		//alert("modal Request_UnitTypeID was changed");
 		$.fn.CheckUnitsFilled();
 	});
+	$(".modal").on("change", "#Request_SubUnitTypeID", function () {
+		//alert("modal Request_SubUnitTypeID was changed");
+		$.fn.CheckSubUnitsFilled();
+	});
+
+	//$("#Request_UnitTypeID").change(function () {
+	//	alert("request unit type id was changed");
+	//	$.fn.CheckUnitsFilled();
+	//});
 
 	//$("#select-options-Request_UnitTypeID").change(function () {
 	//	alert("select-options-Request_UnitTypeID was changed");
