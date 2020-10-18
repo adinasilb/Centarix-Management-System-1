@@ -371,7 +371,7 @@ $(function () {
 		}
 	
 	});
-	$('.modal .mdb-select').change(function () {
+	$('.modal').on('change', '.mdb-select', function () {
 		console.log("mdb chagne")
 		if ($(this).rules()) {
 			$(this).valid();
