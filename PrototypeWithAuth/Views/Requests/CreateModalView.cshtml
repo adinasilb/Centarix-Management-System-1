@@ -307,12 +307,12 @@
                                                 <div class="row">
                                                     <div class="col-md-4 form-group">
                                                         <label asp-for="Request.SubUnit" class="control-label"></label>
-                                                        <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" />
+                                                        <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
                                                         <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                                                     </div>
                                                     <div class="col-md-8 form-group dropdown-select-div">
                                                         <label asp-for="Request.SubUnitType" class="control-label"></label>
-                                                        <select asp-for="Request.SubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext">
+                                                        <select asp-for="Request.SubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext" disabled>
                                                             <option value=""></option>
                                                             @foreach (var unitparenttype in Model.UnitTypes)
                                                             {

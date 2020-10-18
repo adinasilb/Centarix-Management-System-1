@@ -10,6 +10,7 @@ $(function () {
 	var VatPercentage = .17;
 
 
+
 	function showmodal() {
 		$("#modal").modal('show');
 	};
@@ -358,10 +359,10 @@ $(function () {
 
 
 	$(".expected-supply-days").change(function () {
-		console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
+		//console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
 		var date;
 		if ($(".for-supply-date-calc").length > 0) {
-			console.log("in first of of check roder date")
+			//console.log("in first of of check roder date")
 			var date = $(".for-supply-date-calc").val().split("-");
 			var dd = parseInt(date[2]);
 			var mm = parseInt(date[1]);
@@ -599,7 +600,7 @@ $(function () {
 
 	//PRICE PAGE ON MODAL VIEW//
 	$("#price-tab").click(function () {
-		$.fn.CheckUnitsFilled();
+		//$.fn.CheckUnitsFilled();
 		$.fn.CheckSubUnitsFilled();
 		//I don't think that we need $.fn.CheckSubSubUnitsFilled over here b/c we don't need to enable or disable anything and the CalculateSubSubUnits should already run
 		$.fn.CalculateSumPlusVat();
@@ -634,11 +635,40 @@ $(function () {
 	});
 
 	$("#Request_Unit").change(function () {
+		alert("request unit changed");
+		$.fn.CheckUnitsFilled();
+	});
+
+	$(".modal").on("click", "#Request_UnitTypeID", function () {
+		alert("modal Request_UnitTypeID was clicked");
+		$.fn.CheckUnitsFilled();
+	});
+
+	$(".modal").on("change", "#Request_UnitTypeID", function () {
+		alert("modal Request_UnitTypeID was changed");
 		$.fn.CheckUnitsFilled();
 	});
 
 	$("#Request_UnitTypeID").change(function () {
 		alert("request unit type id was changed");
+		$.fn.CheckUnitsFilled();
+	});
+
+	$("#select-options-Request_UnitTypeID").change(function () {
+		alert("select-options-Request_UnitTypeID was changed");
+		$.fn.CheckUnitsFilled();
+	});
+	$("#select-options-Request_UnitTypeID").click(function () {
+		alert("select-options-Request_UnitTypeID was clicked");
+		$.fn.CheckUnitsFilled();
+	});
+
+	$(".select-dropdown.form-control").on('click', function () {
+		alert("select-dropdown form-control was clicked");
+		$.fn.CheckUnitsFilled();
+	});
+	$(".select-dropdown.form-control").on('change', function () {
+		alert("select-dropdown form-control was changed");
 		$.fn.CheckUnitsFilled();
 	});
 
@@ -2391,7 +2421,7 @@ $(function () {
 			if (type == 'edit') {
 				$("#loading").show();
 				console.log("in if edit");
-				$itemurl = "/Requests/ConfirmEdit/?MenuItem="+section;
+				$itemurl = "/Requests/ConfirmEdit/?MenuItem=" + section;
 				console.log("itemurl: " + $itemurl);
 				$.ajax({
 					async: true,
@@ -2418,6 +2448,10 @@ $(function () {
 			else if (type == 'details') {
 				console.log("in if details");
 				$('.mark-readonly').attr("disabled", false);
+				//TODO: add in mark-readonly fields for subunits
+				$.fn.CheckUnitsFilled();
+				$.fn.CheckSubUnitsFilled();
+
 				$('.mark-edditable').data("val", true);
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit')
@@ -2504,7 +2538,7 @@ $(function () {
 		if (val == "4") {
 			$('.only-employee').removeClass("error");
 		}
-	
+
 	});
 
 });

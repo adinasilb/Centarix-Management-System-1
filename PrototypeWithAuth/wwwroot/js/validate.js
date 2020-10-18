@@ -389,7 +389,7 @@ $(function () {
 	
 	});
 	$('.modal').on('change', '.mdb-select', function () {
-		console.log("mdb chagne")
+		console.log("mdb change .mdb-select")
 		if ($(this).rules()) {
 			$(this).valid();
 		}
