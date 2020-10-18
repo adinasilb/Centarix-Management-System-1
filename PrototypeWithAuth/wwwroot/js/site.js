@@ -2373,22 +2373,25 @@ $(function () {
 			var type = $(this).attr('name');
 			console.log(type);
 			var url = '';
+			var section = ""
 			if ($(this).hasClass('operations')) {
 				url = "/Operations/EditModalView";
+				section = "Operation";
 			} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
 				url = "/Vendors/Edit";
+				section = "Accounting";
 			} else if ($(this).hasClass('users')) {
 				url = "/Admin/EditUser";
-
+				section = "Users";
 			} else if ($(this).hasClass('orders')) {
 				url = "/Requests/EditModalView";
-
+				section = "OrdersAndInventory";
 			}
 
 			if (type == 'edit') {
 				$("#loading").show();
 				console.log("in if edit");
-				$itemurl = "/Requests/ConfirmEdit";
+				$itemurl = "/Requests/ConfirmEdit/?MenuItem="+section;
 				console.log("itemurl: " + $itemurl);
 				$.ajax({
 					async: true,
