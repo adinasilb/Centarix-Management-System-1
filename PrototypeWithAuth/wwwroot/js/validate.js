@@ -14,6 +14,17 @@ $(function () {
 			}
 		}
 	});
+	$('.addInvoiceForm').validate({
+		rules: {
+			"InvoiceImage": "required",
+			"Invoice.InvoiceNumber": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+		}
+	});
 	$('.reorderForm').validate({
 		rules: {
 			
@@ -49,15 +60,20 @@ $(function () {
 		},
 
 	});
-	$(".cost-validation").rules("add", {
-		required: false,
-		number: true,
-		min: 1
+	$(".cost-validation").each(function () {
+		$(this).rules("add", {
+			required: true,
+			number: true,
+			min: 1
+		});
 	});
-	$(".supply-days-validation").rules("add", {
-		min: 0,
-		integer: true
+	$(".supply-days-validation").each(function () {
+		$(this).rules("add", {
+			min: 0,
+			integer: true
+		});
 	});
+
 	$('.ordersItemForm').validate({
 		rules: {
 			"Request.Product.ProductName": "required",
@@ -231,6 +247,7 @@ $(function () {
 		return $("#NewEmployee_EmployeeStatusID").val() == "4";
 	}
 
+
 	$('.usersForm').validate({
 		rules: {
 			"FirstName": "required",
@@ -370,6 +387,13 @@ $(function () {
 			$(this).valid();
 		}
 	
+	});
+	$('.modal').on('change', '.mdb-select', function () {
+		console.log("mdb chagne")
+		if ($(this).rules()) {
+			$(this).valid();
+		}
+
 	});
 	$('#myForm input').focusout(function (e) {
 		$("#myForm").data("validator").settings.ignore = "";
