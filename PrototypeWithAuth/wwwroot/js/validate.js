@@ -371,6 +371,13 @@ $(function () {
 		}
 	
 	});
+	$('.modal .mdb-select').change(function () {
+		console.log("mdb chagne")
+		if ($(this).rules()) {
+			$(this).valid();
+		}
+
+	});
 	$('#myForm input').focusout(function (e) {
 		$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid")
