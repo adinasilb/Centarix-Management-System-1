@@ -635,7 +635,7 @@ $(function () {
 	});
 
 	$("#Request_Unit").change(function () {
-		alert("request unit changed");
+		//alert("request unit changed");
 		$.fn.CheckUnitsFilled();
 	});
 
@@ -644,33 +644,33 @@ $(function () {
 		$.fn.CheckUnitsFilled();
 	});
 
-	$(".modal").on("change", "#Request_UnitTypeID", function () {
-		alert("modal Request_UnitTypeID was changed");
-		$.fn.CheckUnitsFilled();
-	});
+	//$(".modal").on("change", "#Request_UnitTypeID", function () {
+	//	//alert("modal Request_UnitTypeID was changed");
+	//	$.fn.CheckUnitsFilled();
+	//});
 
 	$("#Request_UnitTypeID").change(function () {
-		alert("request unit type id was changed");
+		//alert("request unit type id was changed");
 		$.fn.CheckUnitsFilled();
 	});
 
-	$("#select-options-Request_UnitTypeID").change(function () {
-		alert("select-options-Request_UnitTypeID was changed");
-		$.fn.CheckUnitsFilled();
-	});
-	$("#select-options-Request_UnitTypeID").click(function () {
-		alert("select-options-Request_UnitTypeID was clicked");
-		$.fn.CheckUnitsFilled();
-	});
+	//$("#select-options-Request_UnitTypeID").change(function () {
+	//	alert("select-options-Request_UnitTypeID was changed");
+	//	$.fn.CheckUnitsFilled();
+	//});
+	//$("#select-options-Request_UnitTypeID").click(function () {
+	//	alert("select-options-Request_UnitTypeID was clicked");
+	//	$.fn.CheckUnitsFilled();
+	//});
 
-	$(".select-dropdown.form-control").on('click', function () {
-		alert("select-dropdown form-control was clicked");
-		$.fn.CheckUnitsFilled();
-	});
-	$(".select-dropdown.form-control").on('change', function () {
-		alert("select-dropdown form-control was changed");
-		$.fn.CheckUnitsFilled();
-	});
+	//$(".select-dropdown.form-control").on('click', function () {
+	//	alert("select-dropdown form-control was clicked");
+	//	$.fn.CheckUnitsFilled();
+	//});
+	//$(".select-dropdown.form-control").on('change', function () {
+	//	alert("select-dropdown form-control was changed");
+	//	$.fn.CheckUnitsFilled();
+	//});
 
 	$("#unit-type-select").on("change", function () {
 		//console.log("unit type id changed");
@@ -2530,7 +2530,6 @@ $(function () {
 
 	});
 	$('.employee-status-radio').off("click").on("click", function () {
-		//alert("changed employee status to: " + $(this).val());
 		//console.log('employee status')
 		var val = $(this).val();
 		$('#NewEmployee_EmployeeStatusID').val(val)

@@ -369,6 +369,7 @@
                                                     <div class="col-md-8 form-group dropdown-select-div">
                                                         <label asp-for="Request.SubSubUnitType" class="control-label"></label>
                                                         <select asp-for="Request.SubSubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext" disabled>
+                                                            <option value=""></option>
                                                             @foreach (var unitparenttype in Model.UnitTypes)
                                                             {
                                                                 //var unitparenttypedesc = unitparenttype.Key.un
