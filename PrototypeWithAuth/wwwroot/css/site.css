@@ -1561,9 +1561,9 @@ td .btn {
     border-bottom: 1px solid #dee2e6 !important;
 }
 
-.form-control-plaintext, .custom.select-wrapper input.select-dropdown {
+/*.form-control-plaintext, .custom.select-wrapper input.select-dropdown {
     padding-left: .875rem;
-}
+}*/
 .select-wrapper .select-dropdown li {
     padding-left: .375rem;
 }

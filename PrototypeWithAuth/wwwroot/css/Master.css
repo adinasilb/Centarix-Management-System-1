@@ -169,6 +169,7 @@ body{
     color: #000000;
     opacity: .87;
     text-transform:capitalize;
+    font-weight: var(--bold-regular)
 }
 
 /*fonts*/
@@ -190,7 +191,7 @@ body{
 }
 .text {
     font-size: var(--text-font-size);
-    font-weight: var(--text-font-size);
+    font-weight: var(--text-font-weight);
 }
 .text-field-explanation {
     font-size: 1rem;
@@ -246,7 +247,7 @@ input:not(input[type=button]) {
 
 table td, table td .btn, .text, table th {
     font-size: var(--text-font-size) !important;
-    font-weight: var(--text-font-size) !important;
+    font-weight: var(--text-font-weight) !important;
     text-transform: capitalize
 }
 

@@ -117,7 +117,7 @@
                             @Request.Product.ProductSubcategory.ProductSubcategoryDescription
                         </td>
                         <td style="width:11.1%">
-                            @Request.CreationDate
+                            @String.Format("{0:d}", @Request.CreationDate.Date)
                         </td>
                         <td style="width:17.1%">
                             <a href="">

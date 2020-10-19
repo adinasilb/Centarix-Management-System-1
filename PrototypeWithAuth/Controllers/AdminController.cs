@@ -52,12 +52,12 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersList;
             List<ApplicationUser> users = new List<ApplicationUser>();
             users = _context.Users
-                .Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
+                .Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).OrderBy(u => u.UserNum)
                 .ToList();
             bool IsCEO = false;
             if (User.IsInRole("CEO"))
             {
-                users = _context.Users.ToList(); //The CEO can see all users even the ones that are suspended 
+                users = _context.Users.OrderBy(u => u.UserNum).ToList(); //The CEO can see all users even the ones that are suspended 
                 IsCEO = true;
             }
 
