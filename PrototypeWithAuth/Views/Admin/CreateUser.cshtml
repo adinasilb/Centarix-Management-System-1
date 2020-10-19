@@ -358,7 +358,7 @@
                                 <div class="orders-list">
                                     <div class="row h-100 ">
                                         <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions orders mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions orders mr-5 my-auto opac87"> <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/inventory_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size: 1.2em;"> Orders &amp; Inventory</span>
                                         </div>
@@ -378,7 +378,7 @@
                                 <div class="protocols-list">
                                     <div class="row h-100">
                                         <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"> <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/protocols_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size: 1.2em;">Protocols</span>
                                         </div>
@@ -388,7 +388,7 @@
                                                 @Html.HiddenFor(model => model.ProtocolRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.ProtocolRoles[i].Name)
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="ProtocolRoles[i].Selected" />
+                                                    <input type="checkbox" class="form-check-input " asp-for="ProtocolRoles[i].Selected" />
                                                     <label class="form-check-label" asp-for="ProtocolRoles[i].Selected">@Model.ProtocolRoles[i].Name</label>
                                                 </div>
                                             }
@@ -398,7 +398,7 @@
                                 <div class="operations-list">
                                     <div class="row h-100">
                                         <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"> <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/operation_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size:1.2em;">Operations</span>
                                         </div>
@@ -408,7 +408,7 @@
                                                 @Html.HiddenFor(model => model.OperationRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.OperationRoles[i].Name)
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="OperationRoles[i].Selected" />
+                                                    <input type="checkbox" class="form-check-input " asp-for="OperationRoles[i].Selected" />
                                                     <label class="form-check-label" asp-for="OperationRoles[i].Selected">@Model.OperationRoles[i].Name</label>
                                                 </div>
                                             }
@@ -418,7 +418,7 @@
                                 <div class="biomarkers-list">
                                     <div class="row h-100">
                                         <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"> <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/biomarkers_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size:1.2em;">Biomarkers</span>
                                         </div>
@@ -428,7 +428,7 @@
                                                 @Html.HiddenFor(model => model.BiomarkerRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.BiomarkerRoles[i].Name)
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="BiomarkerRoles[i].Selected" />
+                                                    <input type="checkbox" class="form-check-input " asp-for="BiomarkerRoles[i].Selected" />
                                                     <label class="form-check-label" asp-for="BiomarkerRoles[i].Selected">@Model.BiomarkerRoles[i].Name</label>
                                                 </div>
                                             }
@@ -438,7 +438,7 @@
                                 <div class="timekeeper-list">
                                     <div class="row h-100">
                                         <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"> <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/timekeeper_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size:1.2em;">Timekeeper</span>
                                         </div>
@@ -448,7 +448,7 @@
                                                 @Html.HiddenFor(model => model.TimekeeperRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.TimekeeperRoles[i].Name)
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="TimekeeperRoles[i].Selected" />
+                                                    <input type="checkbox" class="form-check-input " asp-for="TimekeeperRoles[i].Selected" />
                                                     <label class="form-check-label" asp-for="TimekeeperRoles[i].Selected">@Model.TimekeeperRoles[i].Name</label>
                                                 </div>
                                             }
@@ -458,7 +458,7 @@
                                 <div class="lab-list">
                                     <div class="row h-100">
                                         <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"> <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/labmanagments_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size:1.2em;">Lab Management</span>
                                         </div>
@@ -468,7 +468,7 @@
                                                 @Html.HiddenFor(model => model.LabManagementRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.LabManagementRoles[i].Name)
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="LabManagementRoles[i].Selected" />
+                                                    <input type="checkbox" class="form-check-input " asp-for="LabManagementRoles[i].Selected" />
                                                     <label class="form-check-label" asp-for="LabManagementRoles[i].Selected">@Model.LabManagementRoles[i].Name</label>
                                                 </div>
                                             }
@@ -478,7 +478,7 @@
                                 <div class="accounting-list">
                                     <div class="row h-100">
                                         <div class="col-12 my-auto p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"> <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/accounting_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size:1.2em;">Accounting</span>
                                         </div>
@@ -488,7 +488,7 @@
                                                 @Html.HiddenFor(model => model.AccountingRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.AccountingRoles[i].Name)
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="AccountingRoles[i].Selected" />
+                                                    <input type="checkbox" class="form-check-input " asp-for="AccountingRoles[i].Selected" />
                                                     <label class="form-check-label" asp-for="AccountingRoles[i].Selected">@Model.AccountingRoles[i].Name</label>
                                                 </div>
                                             }
@@ -498,7 +498,7 @@
                                 <div class="expenses-list">
                                     <div class="row h-100">
                                         <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"> <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/expenses_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size: 1.2em;">Expenses</span>
                                         </div>
@@ -508,7 +508,7 @@
                                                 @Html.HiddenFor(model => model.ExpenseesRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.ExpenseesRoles[i].Name)
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="ExpenseesRoles[i].Selected" />
+                                                    <input type="checkbox" class="form-check-input " asp-for="ExpenseesRoles[i].Selected" />
                                                     <label class="form-check-label" asp-for="ExpenseesRoles[i].Selected">@Model.ExpenseesRoles[i].Name</label>
                                                 </div>
                                             }
@@ -518,7 +518,7 @@
                                 <div class="income-list">
                                     <div class="row h-100">
                                         <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87"> <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/income_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size: 1.2em;">Income</span>
                                         </div>
@@ -528,7 +528,7 @@
                                                 @Html.HiddenFor(model => model.IncomeRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.IncomeRoles[i].Name)
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="IncomeRoles[i].Selected" />
+                                                    <input type="checkbox" class="form-check-input " asp-for="IncomeRoles[i].Selected" />
                                                     <label class="form-check-label" asp-for="IncomeRoles[i].Selected">@Model.IncomeRoles[i].Name</label>
                                                 </div>
                                             }
@@ -538,7 +538,7 @@
                                 <div class="users-list">
                                     <div class="row h-100">
                                         <div class="col-12 my-auto  p-0">
-                                            <a href="" class="back-to-main-permissions mr-5 my-auto">@*<img src="" alt="<" />*@<span style="font-size:1.5em;"><</span></a>
+                                            <a href="" class="back-to-main-permissions mr-5 my-auto opac87">  <i class="icon-arrow_back_ios-24px-1"></i></a>
                                             <img src="~/images/css/usericons/users_dropdown@2x.png" class="my-auto" width="40" />
                                             <span class="my-auto" style="font-size: 1.2em;">Users</span>
                                         </div>
@@ -548,7 +548,7 @@
                                                 @Html.HiddenFor(model => model.UserRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.UserRoles[i].Name)
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input filled-in" asp-for="UserRoles[i].Selected" />
+                                                    <input type="checkbox" class="form-check-input" asp-for="UserRoles[i].Selected" />
                                                     <label class="form-check-label" asp-for="UserRoles[i].Selected">@Model.UserRoles[i].Name</label>
                                                 </div>
                                             }
