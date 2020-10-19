@@ -653,29 +653,6 @@ $(function () {
 		$.fn.CheckSubUnitsFilled();
 	});
 
-	//$("#Request_UnitTypeID").change(function () {
-	//	alert("request unit type id was changed");
-	//	$.fn.CheckUnitsFilled();
-	//});
-
-	//$("#select-options-Request_UnitTypeID").change(function () {
-	//	alert("select-options-Request_UnitTypeID was changed");
-	//	$.fn.CheckUnitsFilled();
-	//});
-	//$("#select-options-Request_UnitTypeID").click(function () {
-	//	alert("select-options-Request_UnitTypeID was clicked");
-	//	$.fn.CheckUnitsFilled();
-	//});
-
-	//$(".select-dropdown.form-control").on('click', function () {
-	//	alert("select-dropdown form-control was clicked");
-	//	$.fn.CheckUnitsFilled();
-	//});
-	//$(".select-dropdown.form-control").on('change', function () {
-	//	alert("select-dropdown form-control was changed");
-	//	$.fn.CheckUnitsFilled();
-	//});
-
 	$("#unit-type-select").on("change", function () {
 		//console.log("unit type id changed");
 		alert("select options change was selected");
@@ -844,6 +821,7 @@ $(function () {
 	};
 
 	$.fn.ChangeSubUnitDropdown = function () {
+		console.log("change subunit dropdown");
 		var selected = $(':selected', $("#Request_UnitTypeID"));
 		var selected2 = $(':selected', $("#select-options-Request_UnitTypeID"));
 		//console.log("u selected: " + selected);
@@ -861,20 +839,21 @@ $(function () {
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").show();
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").css("display", "none");
+				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").css("display", "none");
 				//$("#Request_SubUnitTypeID optgroup[label='Units'] li").show();
 				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
 				break;
 			case "Weight/Volume":
-				console.log("inside optgroup weight/volume");
-				//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', true).prop('hidden', true);
-				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
-				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-				//$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+				console.log("inside optgroup weight/volume TESTING");
+				$("#select-options-Request_SubUnitTypeID option").prop('hidden', true);
+				$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+				$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', true).prop('hidden', true);
+				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
+				$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+				$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
 				break;
 			case "Test":
 				console.log("inside optgroup test");
@@ -957,8 +936,10 @@ $(function () {
 
 	//AJAX load full partial view for modalview manage locations
 	$("#locationTypeDepthZero").change(function () {
+		//alert("changed location type in site.js");
 		var myDiv = $(".divSublocations");
 		var selectedId = $(this).children("option:selected").val();
+		//alert("selectedid: " + selectedId);
 		$.ajax({
 			//IMPORTANT: ADD IN THE ID
 			url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + selectedId,
@@ -967,15 +948,29 @@ $(function () {
 			context: myDiv,
 			success: function (result) {
 				this.html(result);
+				$(".mdb-select").materialSelect();
 			}
 		});
-		//$(document).ajaxStart(function () {
-		//	$("#loading").show();
-		//});
+		//$.fn.parentListChange = function () {
+		//	console.log("in parent list");
+		//	var parentCategoryId = $("#parentlist").val();
+		//	console.log("parentcategoryid: " + parentCategoryId);
+		//	var url = "/Requests/GetSubCategoryList";
+		//	console.log("url: " + url);
 
-		//$(document).ajaxComplete(function () {
-		//	$("#loading").hide();
-		//});
+		//	$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+		//		var firstitem1 = '<option value=""> Select Subcategory</option>';
+		//		$("#sublist").empty();
+		//		$("#sublist").append(firstitem1);
+
+		//		$.each(data, function (i, subCategory) {
+		//			var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
+		//			$("#sublist").append(newitem1);
+		//		});
+		//		$("#sublist").materialSelect();
+		//		return false;
+		//	});
+		//};
 	});
 
 	//Received Modal => fill up the next selectLocationInstance with the right selections
