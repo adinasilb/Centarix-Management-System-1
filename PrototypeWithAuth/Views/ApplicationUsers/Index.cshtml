@@ -16,15 +16,21 @@
 
 @*<<<<<<<<<<<< This is the Owner page >>>>>>>>>>>>>>>*@
 
-<div class="m-4 text-center">
+<div class=" text-center">
     <div class="row">
+    @{ var owners = "";}
         @for (int i = 0; i < Model.Count(); i++)
         {
-            if (i > 0 && i % 7 == 0)
+            if (i >= 0 && i % 8 == 0)
             {
-            @:</div><div class="row">
+            @:</div><div class="row owners-mb ">
+                owners = "";
             }
-                        <div class="col-auto">
+            else
+            {
+                owners = "owners-ml";
+            }
+                        <div class="col-auto @owners p-0">
                             @*<fieldset class="border">*@
                             @*@Html.ActionLink(Model.ElementAt(i).FirstName + " " + Model.ElementAt(i).LastName, "Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)*@
                            @if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
@@ -38,9 +44,9 @@
                                         src = Model.ElementAt(i).UserImage;
                                     }
                                 }
-                                <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="user-image" src="@src" /></div>
+                                <div class="btn btn-link p-0 circular-profile-img circular-profile-img-141 m-0"><img id="user-image" src="@src" /></div>
                                 <br />
-                                @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
+                                <label class="owner-label mb-0">@Model.ElementAt(i).FirstName<br />@Model.ElementAt(i).LastName</label>
                             </a>
                             }
                             else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
@@ -54,9 +60,9 @@
                                     src = Model.ElementAt(i).UserImage;
                                 }
                             }
-                             <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="user-image" src="@src"/></div>
+                            <div class="btn btn-link p-0 circular-profile-img circular-profile-img-141 m-0"><img id="user-image" src="@src" /></div>
                             <br />
-                            @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
+                            <label class="owner-label mb-0">@Model.ElementAt(i).FirstName<br />@Model.ElementAt(i).LastName</label>
                         </a>
                             }
                             
