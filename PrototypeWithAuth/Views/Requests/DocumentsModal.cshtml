@@ -3,7 +3,7 @@
 @{
     Layout = null;
     int requestid;
-    if (Model.Requests.Count == 1)
+    if (Model.Requests[0] != null && Model.Requests.Count == 1 )
     {
         requestid = Model.Requests[0].RequestID;
     }
