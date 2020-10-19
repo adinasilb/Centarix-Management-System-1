@@ -948,8 +948,8 @@ $(function () {
 			context: myDiv,
 			success: function (result) {
 				this.html(result);
-				alert("reached success of ajax function");
-				alert(result);
+				//alert("reached success of ajax function");
+				//alert(result);
 				//$(".mdb-select.SLI").materialSelect();
 			}
 		});
