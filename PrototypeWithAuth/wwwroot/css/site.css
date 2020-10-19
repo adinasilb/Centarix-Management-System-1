@@ -1766,7 +1766,10 @@ td .btn {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
 }
-
+.supplier-form .select.form-control-plaintext:focus {
+    border-bottom: none !important;
+    border: 2px solid var(--lab-man-color) !important;
+}
 
 .supplier-form .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
