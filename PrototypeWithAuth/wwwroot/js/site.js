@@ -2516,6 +2516,7 @@ $(function () {
 		$(selectID).removeAttr("disabled")
 		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
 		$(selectID).materialSelect();
+		$('.open-document-modal').attr("data-val", true);
 	}
 	$("#addSupplierComment").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');

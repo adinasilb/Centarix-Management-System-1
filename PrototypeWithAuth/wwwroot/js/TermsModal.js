@@ -111,7 +111,7 @@ $(function () {
 
 		$('.' + mdbSelect).materialSelect();
 
-		$.fn.AdjustInputHeights();
+		//$.fn.AdjustInputHeights();
 	};
 
 	$.fn.AdjustInputHeights = function () {

@@ -4,23 +4,27 @@
 @{
     Layout = null;
     var bcColor = "order-inv-background-color";
+    string form = "";
     if (Model.SectionType == AppUtility.MenuItems.Operation)
     {
+        form = "oper-form";
         bcColor = "oper-background-color";
     }
     else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
         bcColor = "lab-man-background-color";
+        form = "supplier-form";
     }
     else if (Model.SectionType == AppUtility.MenuItems.OrdersAndInventory)
     {
         bcColor = "order-inv-background-color";
+        form = "order-inv-form";
     }
 }
 
 <script src="~/js/TermsModal.js"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog-centered modal-xl mx-auto " role="document" style="max-height:100%; max-width:60rem; ">
+    <div class="modal-dialog-centered modal-xl mx-auto @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>

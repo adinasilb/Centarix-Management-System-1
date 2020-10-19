@@ -64,6 +64,7 @@
 		$('.mark-edditable').data("val", false)
 		$('.edit-mode-switch-description').text("Edit Mode Off");
 		$('.turn-edit-on-off').attr('name', 'details')
+		$('.open-document-modal').data("val", false);
 	};
 
 	$(".cancel-request-edits").off("click").on("click", function (e) {
@@ -98,5 +99,6 @@
 			$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
 		}
 		$('.turn-edit-on-off').prop('checked', true);
+		$('.open-document-modal').attr("data-val", true);
 	});
 });
