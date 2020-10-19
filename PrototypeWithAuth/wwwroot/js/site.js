@@ -1158,6 +1158,14 @@ $(function () {
 		//});
 	});
 
+	$("input[type=text]").on("change", function (e) {
+		console.log("search was changed");
+	});
+
+	$("input[type=text]").on("click", function (e) {
+		console.log("search was clicked");
+	});
+
 	$(".open-document-modal").click(function (e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -2347,6 +2355,7 @@ $(function () {
 		}
 
 		if (type == 'edit') {
+			console.log("in if edit");
 			var formData = new FormData($("#myForm")[0]);
 			$("#myForm").data("validator").settings.ignore = "";
 			var valid = $("#myForm").valid();
@@ -2369,18 +2378,21 @@ $(function () {
 					alert("save edit successful!")
 				}
 			});
-
+			console.log("after ajax call");
 			$('.mark-readonly').prop("disabled", true);
 			$('.mark-readonly input').prop("disabled", true);
 			$('.mark-edditable').data("val", false)
 			$('.edit-mode-switch-description').text("Edit Mode Off");
+			console.log("about to switch type name - edit -> details");
 			$('.turn-edit-on-off').attr('name', 'details')
 
 		}
 		else if (type == 'details') {
+			console.log("in if details");
 			$('.mark-readonly').attr("disabled", false);
 			$('.mark-edditable').data("val", true);
 			$('.edit-mode-switch-description').text("Edit Mode On");
+			console.log("about to switch type name - details -> edit");
 			$('.turn-edit-on-off').attr('name', 'edit')
 			if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
 				console.log("orders operations")

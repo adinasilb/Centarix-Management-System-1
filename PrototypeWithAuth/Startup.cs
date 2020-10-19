@@ -121,6 +121,8 @@ namespace PrototypeWithAuth
 
             //CreateRoles(serviceProvider).Wait();
 
+            //CreateSingleRole(serviceProvider).Wait(); ;
+
 
         }
 
@@ -130,7 +132,11 @@ namespace PrototypeWithAuth
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            string[] roleNames = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
+            string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
+            string[] roleNames2 = Enum.GetNames(typeof(AppUtility.RoleItems)).Cast<string>().Select(x => x.ToString()).ToArray();
+            string[] roleNames = new string[roleNames1.Length + roleNames2.Length];
+            roleNames1.CopyTo(roleNames, 0);
+            roleNames2.CopyTo(roleNames, roleNames1.Length);
 
             IdentityResult roleResult;
             var roleCheck = await RoleManager.RoleExistsAsync("Admin");

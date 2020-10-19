@@ -1,4 +1,5 @@
-﻿@model IEnumerable<PrototypeWithAuth.Data.ApplicationUser>
+﻿@*@model IEnumerable<PrototypeWithAuth.Data.ApplicationUser>*@
+@model PrototypeWithAuth.ViewModels.UserIndexViewModel
 @using PrototypeWithAuth.Data
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
@@ -12,20 +13,20 @@
     <tbody>
         <tr class="text-center" style="border-color:transparent; border-bottom: 2px solid lightgrey;">
             <td>
-                @Html.DisplayNameFor(vm => vm.UserNum)
+                @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().UserNum)
             </td>
             <td>
-                @Html.DisplayNameFor(vm => vm.UserName)
+                @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().UserName)
             </td>
             <td>
-                @Html.DisplayNameFor(vm => vm.Email)
+                @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().Email)
             </td>
             <td>
-                @Html.DisplayNameFor(vm => vm.DateCreated)
+                @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().DateCreated)
             </td>
             <td></td>
         </tr>
-        @foreach (var user in Model)
+        @foreach (var user in Model.ApplicationUsers)
         {
     <tr class="text-center users-tr">
         <td>
@@ -57,7 +58,7 @@
         @{
             var userid = user.Id;
 
-            if (userid != UserManager.GetUserId(User))
+            if (userid != UserManager.GetUserId(User) && Model.IsCEO)
             {
                 if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now)
                 {
