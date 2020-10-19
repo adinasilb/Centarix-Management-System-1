@@ -2396,6 +2396,11 @@ $(function () {
 	});
 
 
+	function ChangeEdits() {
+		alert("sitejs change edits");
+	};
+
+
 
 	$('.turn-edit-on-off').off("click").on("click", function () {
 		if ($('.modal-open-state').attr("text") == "open") {
