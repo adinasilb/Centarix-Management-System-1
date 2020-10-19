@@ -373,7 +373,7 @@
                                                             <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
                                                             <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
 
-                                                            <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0 mark-readonly" disabled />
+                                                            <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0 " disabled />
                                                             <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger-centarix"></span>
                                                         </div>
 
