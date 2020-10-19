@@ -2396,9 +2396,9 @@ $(function () {
 	});
 
 
-	function ChangeEdits() {
-		alert("sitejs change edits");
-	};
+	//function ChangeEdits() {
+	//	alert("sitejs change edits");
+	//};
 
 
 

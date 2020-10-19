@@ -97,27 +97,31 @@
 		}
 	};
 
-	$("#delete-file-document").on("click", function (e) {
+	$(".delete-document").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("delete doc clicked");
-		var link = $("#deleteUrl").attr("href");
-		console.log("link: " + link);
-		$.ajax({
-			async: true,
-			url: link,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				var modal = data;
-				$('body').append(modal);
-				$("#DeleteDocumentsModal").modal({
-					backdrop: false,
-					keyboard: true,
-				});
-				$(".modal").modal('show');
-			}
-		});
+		var id = $(this).attr("id");
+		//alert("id: " + id);
+		if (id != "") {
+			console.log("delete doc clicked");
+			var link = $("#deleteUrl").attr("href");
+			console.log("link: " + link);
+			$.ajax({
+				async: true,
+				url: link,
+				type: 'GET',
+				cache: false,
+				success: function (data) {
+					var modal = data;
+					$('body').append(modal);
+					$("#DeleteDocumentsModal").modal({
+						backdrop: false,
+						keyboard: true,
+					});
+					$(".modal").modal('show');
+				}
+			});
+		}
 		return false;
 	});
 
@@ -139,21 +143,54 @@
 		}
 	});
 
-	$(".modal").on("click", ".turn-edit-doc-on-off", function () {
-		alert("djs modal turned on or off!");
-	});
+	//$(".modal").on("click", ".turn-edit-doc-on-off", function () {
+	//	alert("djs modal turned on or off!");
+	//});
 	$(".turn-edit-doc-on-off").off("click").on("click", function () {
-		alert("djs turned on or off!");
-	});
-	$(".modal").on("change", ".turn-edit-doc-on-off", function () {
-		alert("djs modal turned on or off!");
-	});
-	$(".turn-edit-doc-on-off").off("change").on("change", function () {
-		alert("djs turned on or off!");
-	});
 
-	function ChangeEdits() {
-		alert("djs change edits");
-	};
+		var detailsBool = $("#isEdittable").hasClass("details");
+		var editBool = $("#isEdittable").hasClass("edit");
+
+
+		var bcColor = $("#bcColor").attr("class");
+		var color = $("#color").attr("class");
+
+
+		//alert("classes: " + detailsBool + " ; " + editBool);
+		if (detailsBool) {
+			$("#isEdittable").removeClass("details");
+			$("#isEdittable").addClass("edit");
+
+			$(".upload-file").removeClass("disabled-color");
+			//$(".upload-file").addClass(@bcColor);
+			$(".file-select").attr("disabled", false);
+			$(".icon-delete-24px").removeClass("disabled-filter");
+			//$(".icon-delete-24px").addClass(@color);
+
+			$(".delete-document").attr("id", "delete-file-document");
+		}
+		else if (editBool) {
+			$("#isEdittable").addClass("details");
+			$("#isEdittable").removeClass("edit");
+
+			$(".upload-file").addClass("disabled-color");
+			//$(".upload-file").removeClass(@bcColor);
+			$(".file-select").attr("disabled", true);
+			$(".icon-delete-24px").addClass("disabled-filter");
+			//$(".icon-delete-24px").removeClass(@color);
+
+			$(".delete-document").attr("id", "");
+		}
+	});
+	//$(".modal").on("change", ".turn-edit-doc-on-off", function () {
+	//	alert("djs modal turned on or off!");
+	//});
+	//$(".turn-edit-doc-on-off").off("change").on("change", function () {
+	//	alert("djs turned on or off!");
+	//});
+
+	//function ChangeEdits() {
+	//	alert("djs change edits");
+	//};
 
 });

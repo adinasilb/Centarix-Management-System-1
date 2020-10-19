@@ -99,6 +99,10 @@
     background-color: #B3B3B3;
 }
 
+.disabled-filter {
+    filter: invert(69%) sepia(13%) saturate(0%) hue-rotate(166deg) brightness(100%) contrast(94%);
+}
+
 .order-inv-color {
     color: var(--order-inv-color);
 }
