@@ -10,6 +10,7 @@ $(function () {
 	var VatPercentage = .17;
 
 
+
 	function showmodal() {
 		$("#modal").modal('show');
 	};
@@ -68,18 +69,21 @@ $(function () {
 		$.fn.changeProject($(this).val());
 	});
 
-	$('.modal').off('change').on('change', ".Project", function () {
-		$.fn.changeProject($(this).val());
-	});
-
-	$.fn.changeProject = function (val) {
+	//$('.modal').off('change').on('change', ".Project", function () {
+	//	$.fn.changeProject($(this).val());
+	//});
+	//$(".Project").off("change").on("change", function () {
+	//	console.log("in on change before fx");
+	//	$.fn.changeProject($(this).val());
+	//});
+	$("body").off("change", ".Project").on("change", ".Project", function () {
+		console.log("in on change before fx");
+		//$.fn.changeProject($(this).val());
 		console.log("project was changed");
-		var projectId = val;
+		var projectId = $(this).val();
 		var url = "/Requests/GetSubProjectList";
 
-		alert("before getjson");
 		$.getJSON(url, { ProjectID: projectId }, function (data) {
-			alert("in getjson");
 			var item1 = "<option value=''>Select Sub Project</option>";
 			$("#SubProject").empty();
 			$("#SubProject").append(item1);
@@ -88,8 +92,29 @@ $(function () {
 				$("#SubProject").append(item);
 			});
 			$("#SubProject").materialSelect();
-			return false
+			return false;
 		});
+		return false;
+	});
+
+	$.fn.changeProject = function (val) {
+		//console.log("project was changed");
+		//var projectId = val;
+		//var url = "/Requests/GetSubProjectList";
+
+		//alert("before getjson");
+		//$.getJSON(url, { ProjectID: projectId }, function (data) {
+		//	alert("in getjson");
+		//	var item1 = "<option value=''>Select Sub Project</option>";
+		//	$("#SubProject").empty();
+		//	$("#SubProject").append(item1);
+		//	$.each(data, function (i, subproject) {
+		//		item = '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
+		//		$("#SubProject").append(item);
+		//	});
+		//	$("#SubProject").materialSelect();
+		//	return false
+		//});
 	};
 
 	//search forms- Redo js in newer versions
@@ -334,10 +359,10 @@ $(function () {
 
 
 	$(".expected-supply-days").change(function () {
-		console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
+		//console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
 		var date;
 		if ($(".for-supply-date-calc").length > 0) {
-			console.log("in first of of check roder date")
+			//console.log("in first of of check roder date")
 			var date = $(".for-supply-date-calc").val().split("-");
 			var dd = parseInt(date[2]);
 			var mm = parseInt(date[1]);
@@ -575,7 +600,7 @@ $(function () {
 
 	//PRICE PAGE ON MODAL VIEW//
 	$("#price-tab").click(function () {
-		$.fn.CheckUnitsFilled();
+		//$.fn.CheckUnitsFilled();
 		$.fn.CheckSubUnitsFilled();
 		//I don't think that we need $.fn.CheckSubSubUnitsFilled over here b/c we don't need to enable or disable anything and the CalculateSubSubUnits should already run
 		$.fn.CalculateSumPlusVat();
@@ -610,12 +635,22 @@ $(function () {
 	});
 
 	$("#Request_Unit").change(function () {
+		//alert("request unit changed");
 		$.fn.CheckUnitsFilled();
 	});
 
-	$("#Request_UnitTypeID").change(function () {
-		alert("request unit type id was changed");
+	//$(".modal").on("click", "#Request_UnitTypeID", function () {
+	//	alert("modal Request_UnitTypeID was clicked");
+	//	$.fn.CheckUnitsFilled();
+	//});
+
+	$(".modal").on("change", "#Request_UnitTypeID", function () {
+		//alert("modal Request_UnitTypeID was changed");
 		$.fn.CheckUnitsFilled();
+	});
+	$(".modal").on("change", "#Request_SubUnitTypeID", function () {
+		//alert("modal Request_SubUnitTypeID was changed");
+		$.fn.CheckSubUnitsFilled();
 	});
 
 	$("#unit-type-select").on("change", function () {
@@ -786,6 +821,7 @@ $(function () {
 	};
 
 	$.fn.ChangeSubUnitDropdown = function () {
+		console.log("change subunit dropdown");
 		var selected = $(':selected', $("#Request_UnitTypeID"));
 		var selected2 = $(':selected', $("#select-options-Request_UnitTypeID"));
 		//console.log("u selected: " + selected);
@@ -803,20 +839,21 @@ $(function () {
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").show();
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").css("display", "none");
+				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").css("display", "none");
 				//$("#Request_SubUnitTypeID optgroup[label='Units'] li").show();
 				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
 				break;
 			case "Weight/Volume":
-				console.log("inside optgroup weight/volume");
-				//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', true).prop('hidden', true);
-				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
-				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-				//$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+				console.log("inside optgroup weight/volume TESTING");
+				$("#select-options-Request_SubUnitTypeID option").prop('hidden', true);
+				$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+				$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', true).prop('hidden', true);
+				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
+				$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+				$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
 				break;
 			case "Test":
 				console.log("inside optgroup test");
@@ -899,8 +936,10 @@ $(function () {
 
 	//AJAX load full partial view for modalview manage locations
 	$("#locationTypeDepthZero").change(function () {
+		//alert("changed location type in site.js");
 		var myDiv = $(".divSublocations");
 		var selectedId = $(this).children("option:selected").val();
+		//alert("selectedid: " + selectedId);
 		$.ajax({
 			//IMPORTANT: ADD IN THE ID
 			url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + selectedId,
@@ -909,15 +948,31 @@ $(function () {
 			context: myDiv,
 			success: function (result) {
 				this.html(result);
+				alert("reached success of ajax function");
+				alert(result);
+				//$(".mdb-select.SLI").materialSelect();
 			}
 		});
-		//$(document).ajaxStart(function () {
-		//	$("#loading").show();
-		//});
+		//$.fn.parentListChange = function () {
+		//	console.log("in parent list");
+		//	var parentCategoryId = $("#parentlist").val();
+		//	console.log("parentcategoryid: " + parentCategoryId);
+		//	var url = "/Requests/GetSubCategoryList";
+		//	console.log("url: " + url);
 
-		//$(document).ajaxComplete(function () {
-		//	$("#loading").hide();
-		//});
+		//	$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+		//		var firstitem1 = '<option value=""> Select Subcategory</option>';
+		//		$("#sublist").empty();
+		//		$("#sublist").append(firstitem1);
+
+		//		$.each(data, function (i, subCategory) {
+		//			var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
+		//			$("#sublist").append(newitem1);
+		//		});
+		//		$("#sublist").materialSelect();
+		//		return false;
+		//	});
+		//};
 	});
 
 	//Received Modal => fill up the next selectLocationInstance with the right selections
@@ -2349,22 +2404,25 @@ $(function () {
 			var type = $(this).attr('name');
 			console.log(type);
 			var url = '';
+			var section = ""
 			if ($(this).hasClass('operations')) {
 				url = "/Operations/EditModalView";
+				section = "Operation";
 			} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
 				url = "/Vendors/Edit";
+				section = "Accounting";
 			} else if ($(this).hasClass('users')) {
 				url = "/Admin/EditUser";
-
+				section = "Users";
 			} else if ($(this).hasClass('orders')) {
 				url = "/Requests/EditModalView";
-
+				section = "OrdersAndInventory";
 			}
 
 			if (type == 'edit') {
 				$("#loading").show();
 				console.log("in if edit");
-				$itemurl = "/Requests/ConfirmEdit";
+				$itemurl = "/Requests/ConfirmEdit/?MenuItem=" + section;
 				console.log("itemurl: " + $itemurl);
 				$.ajax({
 					async: true,
@@ -2391,6 +2449,10 @@ $(function () {
 			else if (type == 'details') {
 				console.log("in if details");
 				$('.mark-readonly').attr("disabled", false);
+				//TODO: add in mark-readonly fields for subunits
+				$.fn.CheckUnitsFilled();
+				$.fn.CheckSubUnitsFilled();
+
 				$('.mark-edditable').data("val", true);
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit')
@@ -2469,14 +2531,14 @@ $(function () {
 
 	});
 	$('.employee-status-radio').off("click").on("click", function () {
-		console.log('employee status')
+		//console.log('employee status')
 		var val = $(this).val();
 		$('#NewEmployee_EmployeeStatusID').val(val)
 		$("#validation-EmployeeStatus").addClass("hidden");
 		if (val == "4") {
 			$('.only-employee').removeClass("error");
 		}
-	
+
 	});
 
 });

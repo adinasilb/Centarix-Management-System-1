@@ -14,16 +14,24 @@
 
 		var url = '';
 		if ($('.turn-edit-on-off').hasClass('operations')) {
+			console.log("has class operations");
 			url = "/Operations/EditModalView";
-		} else if ($('.turn-edit-on-off').hasClass('suppliers') || $(this).hasClass('accounting')) {
+		} else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
+			console.log("has class suppliers or accounting");
 			url = "/Vendors/Edit";
-		} else if ($(this).hasClass('users')) {
+		} else if ($('.turn-edit-on-off').hasClass('users')) {
+			console.log("has class users");
 			url = "/Admin/EditUser";
 
-		} else if ($(this).hasClass('orders')) {
+		} else if ($('.turn-edit-on-off').hasClass('orders')) {
+			console.log("has class orders");
 			url = "/Requests/EditModalView";
 
 		}
+		else {
+			alert("didn't go into any edits");
+		}
+		console.log("url: " + url);
 
 		$.ajax({
 			processData: false,
@@ -89,6 +97,6 @@
 			$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
 			$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
 		}
-		$(".turn-edit-on-off").click();
+		$('.turn-edit-on-off').prop('checked', true);
 	});
 });

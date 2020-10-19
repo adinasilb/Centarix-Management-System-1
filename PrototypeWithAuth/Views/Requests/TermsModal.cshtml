@@ -1,10 +1,20 @@
 ﻿@model PrototypeWithAuth.ViewModels.TermsViewModel;
 @using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.AppData
 @{
+    Layout = null;
     var bcColor = "order-inv-background-color";
     if (Model.SectionType == AppUtility.MenuItems.Operation)
     {
         bcColor = "oper-background-color";
+    }
+    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+        bcColor = "lab-man-background-color";
+    }
+    else if (Model.SectionType == AppUtility.MenuItems.OrdersAndInventory)
+    {
+        bcColor = "order-inv-background-color";
     }
 }
 
@@ -28,7 +38,7 @@
                         <div class="row">
                             <div class="col-2">
                                 <label class="control-label">Paid</label>
-                                <select asp-for="Paid" class="mdb-select custom select-dropdown form-control-plaintext" searchable = "default value">
+                                <select asp-for="Paid" class="mdb-select custom select-dropdown form-control-plaintext" searchable="default value">
                                     <option value=false>Select</option>
                                     <option value=true>Yes</option>
                                     <option value=false>No</option>
@@ -45,7 +55,7 @@
                                 @Html.DropDownListFor(m => m.Terms,
                                     Model.TermsList,
                                     "Select",
-                                    new { @class="mdb-select custom select-dropdown form-control-plaintext", @searchable = "default value" }
+                                    new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "default value" }
                                 )
                                 @*<select asp-for="Terms" asp-items="@Model.TermsList" class="form-control-plaintext border-bottom">
                                         <option value="selected" selected="selected">Select</option>

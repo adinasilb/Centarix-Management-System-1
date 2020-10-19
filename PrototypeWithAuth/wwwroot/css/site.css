@@ -1835,6 +1835,11 @@ td .btn {
     color: var( --user-color) !important;
 }
 
+.users.select-wrapper.active span.caret,
+.users.select-wrapper.active label.mdb-main-label {
+    color: var( --user-color) !important;
+}
+
 
 .users.select-wrapper input.select-dropdown:active {
     border: 0.063rem solid var(--user-color);

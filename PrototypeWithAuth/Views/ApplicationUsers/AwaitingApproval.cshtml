@@ -89,12 +89,20 @@
                                     @hours.EmployeeHoursAwaitingApproval.Date.ToLongDateString()
                                 </td>
                                 <td width="9%">
-                                    <label class="@Entry1">@hours.EmployeeHoursAwaitingApproval.Entry1?.ToShortTimeString()</label>  <br />
-                                    <label class="@Entry2">@hours.EmployeeHoursAwaitingApproval.Entry2?.ToShortTimeString() </label>
+                                    <label class="@Entry1 m-0">@hours.EmployeeHoursAwaitingApproval.Entry1?.ToShortTimeString()</label>
+                                    @if (hours.EmployeeHoursAwaitingApproval.Entry2 != null)
+                                    {
+                                        <br/>
+                                    }
+                                    <label class="@Entry2 m-0">@hours.EmployeeHoursAwaitingApproval.Entry2?.ToShortTimeString() </label>
                                 </td>
                                 <td width="9%">
-                                    <label class="@Exit1">@hours.EmployeeHoursAwaitingApproval.Exit1?.ToShortTimeString() </label><br />
-                                    <label class="@Exit2">@hours.EmployeeHoursAwaitingApproval.Exit2?.ToShortTimeString()</label>
+                                    <label class="@Exit1 m-0">@hours.EmployeeHoursAwaitingApproval.Exit1?.ToShortTimeString() </label>
+                                    @if (hours.EmployeeHoursAwaitingApproval.Exit2?.ToShortTimeString() != null)
+                                    {
+                                        <br />
+                                    }
+                                    <label class="@Exit2 m-0">@hours.EmployeeHoursAwaitingApproval.Exit2?.ToShortTimeString()</label>
                                 </td>
                                 <td width="9%" class="@TotalHours">
                                     @hours.EmployeeHoursAwaitingApproval.TotalHours?.ToString(@"h\:mm")

@@ -14,6 +14,17 @@ $(function () {
 			}
 		}
 	});
+	$('.addInvoiceForm').validate({
+		rules: {
+			"InvoiceImage": "required",
+			"Invoice.InvoiceNumber": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+		}
+	});
 	$('.reorderForm').validate({
 		rules: {
 			
@@ -49,15 +60,20 @@ $(function () {
 		},
 
 	});
-	$(".cost-validation").rules("add", {
-		required: false,
-		number: true,
-		min: 1
+	$(".cost-validation").each(function () {
+		$(this).rules("add", {
+			required: true,
+			number: true,
+			min: 1
+		});
 	});
-	$(".supply-days-validation").rules("add", {
-		min: 0,
-		integer: true
+	$(".supply-days-validation").each(function () {
+		$(this).rules("add", {
+			min: 0,
+			integer: true
+		});
 	});
+
 	$('.ordersItemForm').validate({
 		rules: {
 			"Request.Product.ProductName": "required",
@@ -224,12 +240,13 @@ $(function () {
 		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser')==false;
 	}
 	var isEmployee = function () {
-		console.log("employeestatus: " + ( $("#NewEmployee_EmployeeStatusID").val() != '4'));
+		//console.log("employeestatus: " + ( $("#NewEmployee_EmployeeStatusID").val() != '4'));
 		return $("#NewEmployee_EmployeeStatusID").val() != "4";
 	}
 	var isUser = function () {
 		return $("#NewEmployee_EmployeeStatusID").val() == "4";
 	}
+
 
 	$('.usersForm').validate({
 		rules: {
@@ -371,6 +388,13 @@ $(function () {
 		}
 	
 	});
+	$('.modal').on('change', '.mdb-select', function () {
+		console.log("mdb change .mdb-select")
+		if ($(this).rules()) {
+			$(this).valid();
+		}
+
+	});
 	$('#myForm input').focusout(function (e) {
 		$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid")
@@ -412,7 +436,8 @@ $(function () {
 		}
 
 	});
-	$('#myForm').submit(function (e)  {
+	$('#myForm').submit(function (e) {
+		alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
 		console.log("valid form: " + valid)
@@ -429,6 +454,7 @@ $(function () {
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
 	$('.modal #myForm').submit(function (e) {
+		alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
 		console.log("valid form: " + valid)
