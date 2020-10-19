@@ -131,6 +131,7 @@ $(function () {
 	});
 
 	$("#search-form #sublist").change(function () {
+		alert("changed sublist");
 		if ($(this).val() == 'Please select a subcategory') {
 			$("#search-form #parentlist").attr("disabled", false);
 		}
@@ -2458,6 +2459,11 @@ $(function () {
 				$('.mark-edditable').data("val", true);
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit')
+
+//turn off document modals
+
+
+
 				if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
 					console.log("orders operations")
 					$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
