@@ -1776,12 +1776,14 @@ $(function () {
 		console.log("permissions tab opened");
 		$.fn.HideAllPermissionsDivs();
 		$.fn.ChangeUserPermissionsButtons();
+		$(".main-permissions").show();
 	});
 
 	$(".modal .permissions-tab").on("click", function () {
 		console.log("permissions tab opened");
 		$.fn.HideAllPermissionsDivs();
 		$.fn.ChangeUserPermissionsButtons();
+		$(".main-permissions").show();
 	});
 
 
