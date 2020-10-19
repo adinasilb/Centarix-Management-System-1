@@ -948,7 +948,9 @@ $(function () {
 			context: myDiv,
 			success: function (result) {
 				this.html(result);
-				$(".mdb-select").materialSelect();
+				alert("reached success of ajax function");
+				alert(result);
+				//$(".mdb-select.SLI").materialSelect();
 			}
 		});
 		//$.fn.parentListChange = function () {

@@ -13,7 +13,7 @@
             {
                 @Html.DropDownListFor(m => m.locationInstancesSelected[i],
                 new SelectList(Model.locationInstancesDepthZero, "LocationInstanceID", "LocationInstanceName"),
-        "Select " + Model.locationTypeNames[i], new { @class = "mdb-select custom select-dropdown form-control-plaintext SLI", @id = id })
+        "Select " + Model.locationTypeNames[i], new { @class = "mdb-select custom select-dropdown form-control-plaintext SLI open-mdb-select", @id = id })
             }
             else
             {
@@ -26,5 +26,6 @@
     }
 </div>
 <script>
-    $('.SLI.mdb-select').materialSelect();
+    alert("in script to mdbselect on receivedmodalsublocations");
+    $('.open-mdb-select').materialSelect();
 </script>
