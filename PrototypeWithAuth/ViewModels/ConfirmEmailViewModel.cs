@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Models;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,6 @@ namespace PrototypeWithAuth.ViewModels
         public string ApplicationUserID { get; set; }
         //public bool Cart { get; set; }
         public int /*AppUtility.RequestPageTypeEnum*/ PageType { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
     }
 }

@@ -1835,17 +1835,19 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEmailModal(int id)
         {
-            ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
-            {
-                ParentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == id)
+            var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == id)
                     .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
                     .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                    .FirstOrDefault(),
+                    .FirstOrDefault();
+            ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
+            {
+                ParentRequest = parentRequest,
                 //Requests = parentRequest.Requests.ToList(),
                 VendorId = id,
                 RequestID = id,
                 //IsSingleOrder = isSingleOrder,
                 //Cart = cart
+                SectionType=parentRequest.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID==1? AppUtility.MenuItems.OrdersAndInventory : AppUtility.MenuItems.Operation
             };
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -1985,6 +1987,11 @@ namespace PrototypeWithAuth.Controllers
                     //    PageType = AppUtility.RequestPageTypeEnum.Request
                     //});
                     return RedirectToAction("Index"); //temp: todo: must add Tempdata
+                }
+                else if (firstRequest.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
+                {
+                    //redirect to operations
+                    return RedirectToAction("Index","Operation"); //temp: todo: must add Tempdata
                 }
                 else
                 {

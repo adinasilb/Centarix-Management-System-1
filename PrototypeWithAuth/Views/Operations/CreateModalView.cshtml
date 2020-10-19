@@ -445,11 +445,11 @@
                                     <br />
                                     <div class="form-group">
                                         @*you can only add to cart if you are creating a new one*@
-                                        <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="text custom-button custom-button-font oper-button create-modal-submit  shortened-padding" />
+                                        <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="text custom-button custom-button-font oper-button operations create-modal-submit  shortened-padding" />
 
-                                        <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="custom-button oper-button custom-button-font create-modal-submit text shortened-padding" />
+                                        <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="custom-button oper-button operations custom-button-font create-modal-submit text shortened-padding" />
 
-                                        <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="custom-button custom-button-font  oper-button text shortened-padding" />
+                                        <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="custom-button custom-button-font operations oper-button text shortened-padding" />
                                         <button type="button" class="custom-cancel custom-button float-right text shortened-padding" data-dismiss="modal">Cancel</button>
                                         @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                     </div>
