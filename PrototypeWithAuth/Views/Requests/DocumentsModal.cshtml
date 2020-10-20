@@ -3,7 +3,7 @@
 @{
     Layout = null;
     int requestid;
-    if (Model.Requests[0] != null && Model.Requests.Count == 1 )
+    if (Model.Requests[0] != null && Model.Requests.Count == 1)
     {
         requestid = Model.Requests[0].RequestID;
     }
@@ -21,6 +21,7 @@
 }
 <script src="~/js/DocumentModalJS.js">
 </script>
+<script src="~/js/site.js"></script>
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
 <div class="modal modal-document fader" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
@@ -32,7 +33,7 @@
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding" id="documentModalForm">
                 @*<a style="display: none;" id="ReopenDocModal" href="@Url.ActionLink("DocumentsModal","Requests", new { id = @Model.Request.RequestID, RequestFolderNameEnum = @Model.RequestFolderName})"></a>*@
                 @*<input type="hidden" asp-for="Request.RequestID" />*@
-                @for (int x = 0; x< Model.Requests.Count; x++)
+                @for (int x = 0; x < Model.Requests.Count; x++)
                 {
                     <input type="hidden" asp-for="Requests[x].RequestID" />
                 }
@@ -74,22 +75,22 @@
                         <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
 
                             @*@if (Model.FileStrings.Count > 3)
-                    {
-                        <div class="controls-top">
-                            <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                            <a class="btn-floating" href="#carousel-example-multi" data-slide="next">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </div>
+                                {
+                                    <div class="controls-top">
+                                        <a class="btn-floating" href="#carousel-example-multi" data-slide="prev">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                        <a class="btn-floating" href="#carousel-example-multi" data-slide="next">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </div>
 
 
-                        <ol class="carousel-indicators">
-                                <li data-target="#carousel-example-multi" data-slide-to="0" class="active"></li>
-                                <li data-target="#carousel-example-multi" data-slide-to="1"></li>
-                            </ol>
-                    }*@
+                                    <ol class="carousel-indicators">
+                                            <li data-target="#carousel-example-multi" data-slide-to="0" class="active"></li>
+                                            <li data-target="#carousel-example-multi" data-slide-to="1"></li>
+                                        </ol>
+                                }*@
 
 
                             <div class="row">
@@ -133,7 +134,7 @@
                                                                     @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
                                                                     @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
-                                                            <div class="blocker"></div>*@
+                                                                        <div class="blocker"></div>*@
                                                                     <iframe src="\@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
                                                                     @*</a>*@
@@ -163,32 +164,32 @@
 
                                         }
                                         @*<div class="carousel-item active">
-                                    <div class="col-12 col-md-4">
-                                        <div class="card mb-2">
-                                            <img class="card-img-top" src="@Model.FileStrings[0]"
-                                                 alt="Card image cap">
-                                            <div class="card-body">
-                                                <h4 class="card-title font-weight-bold">@Model.FileStrings[0]</h4>
+                                                <div class="col-12 col-md-4">
+                                                    <div class="card mb-2">
+                                                        <img class="card-img-top" src="@Model.FileStrings[0]"
+                                                             alt="Card image cap">
+                                                        <div class="card-body">
+                                                            <h4 class="card-title font-weight-bold">@Model.FileStrings[0]</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="col-12 col-md-4">
-                                        <div class="card mb-2">
-                                            <img class="card-img-top" src="@Model.FileStrings[1]"
-                                                 alt="Card image cap">
-                                            <div class="card-body">
-                                                <h4 class="card-title font-weight-bold">@Model.FileStrings[1]</h4>
+                                            <div class="carousel-item">
+                                                <div class="col-12 col-md-4">
+                                                    <div class="card mb-2">
+                                                        <img class="card-img-top" src="@Model.FileStrings[1]"
+                                                             alt="Card image cap">
+                                                        <div class="card-body">
+                                                            <h4 class="card-title font-weight-bold">@Model.FileStrings[1]</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="col-12 col-md-4">
+                                            <div class="carousel-item">
+                                                <div class="col-12 col-md-4">
 
-                                    </div>
-                                </div>*@
+                                                </div>
+                                            </div>*@
                                     </div>
                                 </div>
 

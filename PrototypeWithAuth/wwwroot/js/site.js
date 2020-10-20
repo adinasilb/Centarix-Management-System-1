@@ -9,7 +9,11 @@ $(function () {
 
 	var VatPercentage = .17;
 
+	$('.modal').on('click', '.close', function () {
+		$('.modal').remove();
+		$('.modal-backdrop').remove();
 
+	})
 
 	function showmodal() {
 		$("#modal").modal('show');
@@ -1265,6 +1269,7 @@ $(function () {
 		$cardDiv = $(this).closest("div.card");
 		console.log("cardDiv: " + JSON.stringify($cardDiv));
 		$cardDiv.addClass("document-border");
+	
 	});
 
 
