@@ -36,6 +36,13 @@ $("#LocationInstances_0__Height").on("change", function (e) {
 	}
 });
 
+$(".empty-shelf-check").on("click", function () {
+	alert("empty shelf clicked!");
+});
+
+$(".empty-shelf-check").on("change", function () {
+	alert("empty shelf changed!");
+});
 
 
 //DROPDOWN MENU

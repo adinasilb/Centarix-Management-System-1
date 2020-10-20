@@ -2310,6 +2310,7 @@ $(function () {
 	$('.dropdown-multiple .dropdown-menu div .form-check-input').click(function () {
 		//$(this).parents('.dropdown').find('span').text($(this).text());
 		console.log("in multiple")
+		alert("in multiple");
 		$(this).parents('.dropdown-multiple').find('span:not(.caret)').append($(this).find('label').text());
 	});
 	/*End Dropdown Menu*/
