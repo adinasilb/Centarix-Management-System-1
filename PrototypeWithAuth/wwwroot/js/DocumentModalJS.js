@@ -152,8 +152,8 @@
 		var editBool = $("#isEdittable").hasClass("edit");
 
 
-		var bcColor = $("#bcColor").attr("class");
-		var color = $("#color").attr("class");
+		var $bcColor = $("#bcColor").attr("class");
+		var $color = $("#color").attr("class");
 
 
 		//alert("classes: " + detailsBool + " ; " + editBool);
@@ -162,10 +162,10 @@
 			$("#isEdittable").addClass("edit");
 
 			$(".upload-file").removeClass("disabled-color");
-			//$(".upload-file").addClass(@bcColor);
+			$(".upload-file").addClass($bcColor);
 			$(".file-select").attr("disabled", false);
 			$(".icon-delete-24px").removeClass("disabled-filter");
-			//$(".icon-delete-24px").addClass(@color);
+			$(".icon-delete-24px").addClass($color);
 
 			$(".delete-document").attr("id", "delete-file-document");
 		}
@@ -174,10 +174,10 @@
 			$("#isEdittable").removeClass("edit");
 
 			$(".upload-file").addClass("disabled-color");
-			//$(".upload-file").removeClass(@bcColor);
+			$(".upload-file").removeClass($bcColor);
 			$(".file-select").attr("disabled", true);
 			$(".icon-delete-24px").addClass("disabled-filter");
-			//$(".icon-delete-24px").removeClass(@color);
+			$(".icon-delete-24px").removeClass($color);
 
 			$(".delete-document").attr("id", "");
 		}
