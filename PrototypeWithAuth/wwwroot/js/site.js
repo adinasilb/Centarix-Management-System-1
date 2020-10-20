@@ -2557,3 +2557,15 @@ $('.modal #FirstName').change(function () {
 $('.modal #LastName').change(function () {
 	$('.userName').val($('#FirstName').val() + " " + $(this).val())
 });
+$('.exitModal').on('click', '.close', function (e) {
+	console.log("close edit modal");
+	$.ajax({
+		async: true,
+		url:'/Timekeeper/ReportHours' ,
+		type: 'GET',
+		cache: true,
+		success: function (data) {
+			$('body').html(data);
+		}
+	});
+})
