@@ -2271,7 +2271,7 @@ $(function () {
 		$(this).find('.dropdown-menu').slideUp(300);
 	});
 	$('.dropdown-main .dropdown-menu li').click(function () {
-		$(this).parents('.dropdown-main').find('span').text($(this).text());
+		$(this).parents('.dropdown-main').find('span:not(.caret)').text($(this).text());
 		$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
 	});
 	/*End Dropdown Menu*/
@@ -2298,6 +2298,11 @@ $(function () {
 		//$(this).parents('.dropdown').find('span').text($(this).text());
 		$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
 		$(this).parents('.dropdown-multiple').addClass('active');
+	});
+	$('.dropdown-multiple .dropdown-menu div .form-check-input').click(function () {
+		//$(this).parents('.dropdown').find('span').text($(this).text());
+		console.log("in multiple")
+		$(this).parents('.dropdown-multiple').find('span:not(.caret)').append($(this).find('label').text());
 	});
 	/*End Dropdown Menu*/
 

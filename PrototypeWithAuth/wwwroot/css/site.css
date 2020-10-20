@@ -82,7 +82,7 @@ span.choose {
     .dropdown .select {
         cursor: pointer;
         display: block;
-        padding: 1rem 0;
+      /*  padding: 1rem 0;*/
         font-size: 1rem;
     }
 
@@ -126,24 +126,29 @@ span.choose {
         background-color: #fff;
         width: 100%;
         left: 0;
-        margin-top: 1px;
-        box-shadow: 0 1px 2px rgb(204, 204, 204);
+        margin-top: 2px;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
         border-radius: 0 1px 2px 2px;
         border: none !important;
         overflow: hidden;
         display: none;
-        max-height: 144px;
+        min-width: 6.25rem;
+        max-height: 40.625rem;
         overflow-y: auto;
-        /*z-index: 9;*/
+        z-index: 1021;
         padding: 0px;
     }
 
         .dropdown-multiple .dropdown-menu li,
         .dropdown .dropdown-menu li {
-            padding: 10px;
+            padding: .5rem;
+            line-height : 1.3rem;
+            font-size:.9rem;
             transition: all .2s ease-in-out;
             cursor: pointer;
             margin: 0px;
+            padding-left:.875rem;
+
         }
 
     .dropdown-multiple .dropdown-menu,
@@ -152,7 +157,7 @@ span.choose {
         list-style: none
     }
 
-        .dropdown-multiple .dropdown-menu li:hover
+        .dropdown-multiple .dropdown-menu li:hover,
         .dropdown .dropdown-menu li:hover {
             background-color: #f2f2f2;
             z-index: 1000;
@@ -1561,9 +1566,9 @@ td .btn {
     border-bottom: 1px solid #dee2e6 !important;
 }
 
-/*.form-control-plaintext, .custom.select-wrapper input.select-dropdown {
+.custom.select-wrapper input.select-dropdown, .dropdown .select, .dropdown-multiple .select {
     padding-left: .875rem;
-}*/
+}
 .select-wrapper .select-dropdown li {
     padding-left: .375rem;
 }
@@ -1749,19 +1754,41 @@ td .btn {
     box-shadow: 0 2px 0 0 var(--user-color) !important;
 }
 
-.supplier-form .select-wrapper.active span.caret,
+.supplier-form span.caret,
 .supplier-form .select-wrapper.active label.mdb-main-label {
     color: var(--lab-man-color) !important;
 }
 .select-wrapper span.caret{
     padding-right:.625rem;
 }
+.dropdown span.caret, .dropdown-multiple span.caret {
+    padding-right: .625rem;
+    top: 0;
+}
+span.caret {
+    position: absolute;
+    top: .8rem;
+    right: 0;
+    font-size: .63rem;
+    color: #495057;
+}
 .supplier-form .form-control-plaintext:focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
 }
-
+.dropdown .select, .dropdown-multiple .select {
+    z-index: 2;
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 2.9rem;
+    text-overflow: ellipsis;
+    padding-left: .875rem;
+}
+.dropdown, .dropdown-multiple {
+    line-height: 2.9rem;
+}
 .supplier-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
@@ -1769,6 +1796,13 @@ td .btn {
 .supplier-form .select.form-control-plaintext:focus {
     border-bottom: none !important;
     border: 2px solid var(--lab-man-color) !important;
+}
+
+.supplier-form .dropdown:focus, .supplier-form .dropdown-multiple:focus {
+    outline: none;
+    border-bottom: none !important;
+    border: 2px solid var(--lab-man-color) !important;
+    border-radius: .25rem !important
 }
 
 .supplier-form .input-group:focus-within > .input-group-text {
@@ -1893,7 +1927,10 @@ td .btn {
     border-bottom: none !important;
     border: 2px solid var(--timekeeper-color) !important;
 }
-
+.addLocationFont {
+    line-height: 2.5rem;
+    font-size: 1.2rem;
+}
 
 .input-group-text {
     padding: 0 !important;
