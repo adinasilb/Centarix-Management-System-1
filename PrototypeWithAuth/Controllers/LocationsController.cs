@@ -454,9 +454,9 @@ namespace PrototypeWithAuth.Controllers
                                         };
                                         _context.Add(newSublocationInstance);
                                         _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
-                                        if (b == 0) //Testing Shelves
+                                        if (b == 0 ) //Testing Shelves
                                         {
-                                            if (subLocationViewModel.EmptyShelves80.ContainsKey(x) && subLocationViewModel.EmptyShelves80[x])
+                                            if (subLocationViewModel.EmptyShelves80?.ContainsKey(x) == true && subLocationViewModel.EmptyShelves80[x])
                                             {
                                                 newSublocationInstance.IsEmpty = true;
                                                 _context.Update(newSublocationInstance);
