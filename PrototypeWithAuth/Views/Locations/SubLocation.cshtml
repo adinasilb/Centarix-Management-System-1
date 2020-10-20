@@ -13,24 +13,24 @@
         case 100: //-196 <input style="display: none;" asp-for="LocationTypeParentID" value="@parentType" />
             <div class="row mx-0 px-0">
                 <div class="col-4 pl-0 pr-2">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[0].LocationTypePluralName):</span>
+                    <span class="addLocationFont">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[0].LocationTypePluralName):</span>
                     <input asp-for="LocationInstances[0].Height" min="0" class="form-control-plaintext border-bottom" />
                     <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" style="display: none;" />
                 </div>
                 <div class="col-4 px-2">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">
+                    <span class="addLocationFont">
                         @Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[1].LocationTypePluralName):
                     </span>
                     <input asp-for="LocationInstances[1].Height" min="0" class="form-control-plaintext border-bottom" />
                     <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />
                 </div>
                 <div class="col-4 pl-2 pr-0">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[2].LocationTypePluralName):</span>
+                    <span class="addLocationFont">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[2].LocationTypePluralName):</span>
                     @Html.DropDownListFor(
                         m => m.LocationInstances[2].Height,
                         Model.BoxTypes,
                         "",
-                        new { @class = "mdb-select form-control-plaintext" }
+                        new { @class = "mdb-select custom select-dropdown form-control-plaintext " }
                     )
                     <input asp-for="LocationInstances[2].LocationTypeID" value="@Model.LocationTypes.ToList()[2].LocationTypeID" style="display: none;" />
                 </div>
@@ -39,24 +39,29 @@
         case 200: //-80
             <div class="row">
                 <div class="col-6">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">
+                    <span class="addLocationFont">
                         @Model.LocationTypes.ToList()[0].LocationTypePluralName
                         <input asp-for="LocationInstances[0].Height" min="0" class="form-control-plaintext border-bottom" />
                         <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" style="display: none;" />
                     </span>
                 </div>
                 <div class="col-6">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">
+                    <span class="addLocationFont">
                         Empty @Model.LocationTypes.ToList()[0].LocationTypePluralName
                     </span>
-                    <div class=" form-control-plaintext border-bottom p-0">
-                        <span class="choose"></span>
-                        <div class="dropdown-multiple pr-2 pb-2">
-                            <div class="select">
-                                <span></span>
-                                <i class="fa fa-chevron-left"></i>
-                            </div>
-                            <div class="locationinstances dropdown-menu dropdown-menu-multiple">
+                    <div class="form-group">
+                        <div class=" form-control-plaintext border-bottom p-0 " style="max-height: 3rem;">
+                            <span class="choose p-0"></span>
+                            <div class="dropdown-multiple pr-2 ">
+                                <div class="select">
+
+                                    <span class="caret py-0">
+                                        ▼
+                                    </span>
+                                    <span class="addLocationFont"></span>
+                                </div>
+                                <div class="locationinstances dropdown-menu dropdown-menu-multiple">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -64,14 +69,14 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">
+                    <span class="addLocationFont">
                         @Model.LocationTypes.ToList()[1].LocationTypePluralName
                         <input asp-for="LocationInstances[1].Height" min="0" class="form-control-plaintext border-bottom" />
                         <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />
                     </span>
                 </div>
                 <div class="col-6">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">
+                    <span class="addLocationFont">
                         @Model.LocationTypes.ToList()[2].LocationTypePluralName
                         <input asp-for="LocationInstances[2].Height" min="0" class="form-control-plaintext border-bottom" />
                         <input asp-for="LocationInstances[2].LocationTypeID" value="@Model.LocationTypes.ToList()[2].LocationTypeID" style="display: none;" />
@@ -80,12 +85,12 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[3].LocationTypePluralName)</span>
+                    <span class="addLocationFont">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[3].LocationTypePluralName)</span>
                     @Html.DropDownListFor(
                         m => m.LocationInstances[3].Height,
                         Model.BoxTypes,
                         "",
-                        new { @class = "mdb-select form-control-plaintext" }
+                        new { @class = "mdb-select custom select-dropdown form-control-plaintext " }
                     )
                     <input asp-for="LocationInstances[3].LocationTypeID" value="@Model.LocationTypes.ToList()[3].LocationTypeID" style="display: none;" />
                 </div>
@@ -127,7 +132,7 @@
                 {
                     <div @*style="background-color: rgba(48, 188, 201, 0.06)"*@>
                         <div>
-                            <span style="line-height:2.5rem; font-size:1.2rem;">@Html.DisplayFor(modelItem => item.LocationTypeName):</span>
+                            <span class="addLocationFont">@Html.DisplayFor(modelItem => item.LocationTypeName):</span>
                         </div>
                         <div class="form-inline" style="justify-content:center;">
                             <input asp-for="LocationInstances[i].Height" min="0" class="form-control-plaintext border-bottom" style="width:3rem;" /> &nbsp; x &nbsp;

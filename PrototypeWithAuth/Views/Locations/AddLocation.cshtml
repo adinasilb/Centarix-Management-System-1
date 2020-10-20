@@ -1,47 +1,59 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddLocationViewModel
 <script src="~/js/LocationType.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
-<div class="modal modal-view fader supplier-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog-centered mx-auto  modal-dialog-scrollable modal-lg" role="document" style="        max-height: 100%;
-        overflow-y: auto;
-        max-width: 40rem;">
-        
+<script src="~/js/validate.js" asp-append-version="true"></script>
+<div class="modal supplier-form modal-view  overflow-auto" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+
+    <div class="modal-dialog no-box-shadow modal-lg on-form-modal" role="document" style="max-height:100%; max-width:40rem; ">
+
+        <div class="modal-content d-inline-block  modal-border-radius modal-box-shadow" style="width:40rem;">
+
+
             @*<div class="spinner-border center" role="status"
-                   style="display:none;">
-                    <span class="sr-only">Loading...</span>
-                </div>*@
+           style="display:none;">
+            <span class="sr-only">Loading...</span>
+        </div>*@
             <div class="center" role="status" id="loading" style="display:none;">
                 <img src="~/images/css/Loading/centarix_loading3.gif" />
             </div>
-            <div class="modal-content d-inline-block modal-border-radius modal-box-shadow" style="width:40rem;">
-                <!--HERE!-->
 
-                <form id="AddLocationForm" action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <!--HERE!-->
 
-                    <div style="overflow: hidden;">
-                        <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
+            <form id="myForm" action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding addLocationForm">
 
-                        <div class="no-modal-header p-0">
-                        </div>
+                <div style="overflow: hidden;">
+                    <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
 
-                        <div class="modal-body" style=" min-height:500px;">
+                    <div class="no-modal-header p-0">
+                    </div>
 
-                            <div class="md-form">
+                    <div class="modal-body" style=" min-height:500px;">
+
+                        <div class="row">
+                            <div class="form-group col-12 ">
+                                <label asp-for="LocationInstance.LocationInstanceName" class="addLocationFont mb-0"> </label> @*"Name"*@
                                 <input asp-for="LocationInstance.LocationInstanceName" type="text" class="form-control-plaintext border-bottom" />
-                                <label asp-for="LocationInstance.LocationInstanceName" class="control-label"> </label> @*"Name"*@
 
                             </div>
-                            <div class="form-group">
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-12">
                                 @*<label asp-for="LocationTypesDepthOfZero" class="control-label">Type of storage</label>*@
                                 <div class=" form-control-plaintext border-bottom p-0">
-                                    <span class="choose"></span>
+                                    <span class="choose p-0"></span>
                                     <div class="dropdown dropdown-main">
-                                        <div class="select">
-                                            <span>Select Type:</span>
-                                            <i class="fa fa-chevron-left"></i>
+                                        <div class="select ">
+                                            <span class="caret py-0">
+                                                ▼
+                                            </span>
+                                            <span class="addLocationFont">Select Type:</span>
+
                                         </div>
-                                        <input type="hidden" asp-for="LocationInstance.LocationTypeID">
-                                        <ul class="locationinstance dropdown-menu">
+
+                                        <ul class="p-0 locationinstance dropdown-menu ">
                                             @foreach (var locationType in Model.LocationTypesDepthOfZero)
                                             {
                                                 <li onclick="LoadSublocations(this.id)" id="@locationType.LocationTypeID">
@@ -49,55 +61,59 @@
                                                 </li>
                                             }
                                         </ul>
+
                                     </div>
                                 </div>
                                 <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger-centarix"></span>
+                                <input type="hidden" asp-for="LocationInstance.LocationTypeID"/>
                             </div>
-
-                            <div class="col-md-12 divSublocations mx-0 px-0">
-                            </div>
-                            <br />
+                    
                         </div>
-
-                        <div class="modal-footer-no">
-                            <div class="text-center modal-footer-mt">
-                                <input id="submitAddLocation" type="submit" value="Save" asp-action="AddLocation" class="lab-man-background-color custom-button custom-button-font open-loading between-button-margin" />@*style="margin-right:11rem;"*@
-                                @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
-        {
-            <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
-        }*@
-                                <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button " />
-                            </div>
-                            <br />
+                       
+                        <div class="col-md-12 divSublocations mx-0 px-0">
                         </div>
+                        <br />
                     </div>
-                </form>
-            </div>
+
+                    <div class="modal-footer-no">
+                        <div class="text-center modal-footer-mt">
+                            <input id="submitAddLocation" type="submit" value="Save" asp-action="AddLocation" class="lab-man-background-color custom-button custom-button-font open-loading between-button-margin" />@*style="margin-right:11rem;"*@
+                            @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
+                        {
+                            <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
+                        }*@
+                            <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button " />
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </form>
         </div>
-    </div>
+                </div>
+            </div>
 
-<script>
+            <script>
 
-    function LoadSublocations(str) {
-        //$("#loading-content").load("dataSearch.php?" + str, hideLoader);
-        console.log("load sublocations, str: " + str);
-        var id = parseInt(str);
-        var myDiv = $(".divSublocations");
-        //var selectedId = $(this).children("option:selected").val();
-        //console.log("selectedId: " + selectedId);
-        $.ajax({
-            //IMPORTANT: ADD IN THE ID
-            async: true,
-            url: "/Locations/SubLocation/?ParentLocationTypeID=" + str + "",
-            type: 'GET',
-            cache: true,
-            context: myDiv,
-            success: function (result) {
-                this.html(result);
-                $('.mdb-select').materialSelect();
-                $("input[type='hidden']").remove();
-                //$(".mdb-select-empty").materialSelect();
-            }
-        });
-    }
-</script>
+                function LoadSublocations(str) {
+                    //$("#loading-content").load("dataSearch.php?" + str, hideLoader);
+                    console.log("load sublocations, str: " + str);
+                    var id = parseInt(str);
+                    var myDiv = $(".divSublocations");
+                    //var selectedId = $(this).children("option:selected").val();
+                    //console.log("selectedId: " + selectedId);
+                    $.ajax({
+                        //IMPORTANT: ADD IN THE ID
+                        async: true,
+                        url: "/Locations/SubLocation/?ParentLocationTypeID=" + str + "",
+                        type: 'GET',
+                        cache: true,
+                        context: myDiv,
+                        success: function (result) {
+                            this.html(result);
+                            $('.mdb-select').materialSelect();
+                            $("input[type='hidden']").remove();
+                            //$(".mdb-select-empty").materialSelect();
+                        }
+                    });
+                }
+            </script>

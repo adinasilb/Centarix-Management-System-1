@@ -29,6 +29,7 @@
 }
 <script src="~/js/DocumentModalJS.js">
 </script>
+<script src="~/js/site.js"></script>
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
 <div class="modal modal-document fader" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
@@ -137,7 +138,7 @@
                                                                     @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
                                                                     @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
-                                                            <div class="blocker"></div>*@
+                                                                        <div class="blocker"></div>*@
                                                                     <iframe src="\@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
                                                                     @*</a>*@
