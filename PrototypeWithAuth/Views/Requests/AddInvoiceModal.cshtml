@@ -104,12 +104,12 @@
                                 <label asp-for="InvoiceImage" class="control-label"></label>
                                 <input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1" accept=".png, .jpg, .jpeg, .pdf">
                                 <span asp-validation-for="InvoiceImage" class="text-danger"></span>
-                                <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
+                                @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
                                 <button class="accounting-background-color custom-button-font custom-button open-invoice-doc-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()"
-                                        @*data-ids="@Model.Request.RequestID"   ---> Get all the ids when in javascript*@
+                                        data-ids="@Model.Request.RequestID"   ---> Get all the ids when in javascript
                                         id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
                                     Select File
-                                </button>
+                                </button>*@
                             </div>
                             <div class="col-2 offset-5">
                                 <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" id="SaveInvoiceModal" value="Save" />
