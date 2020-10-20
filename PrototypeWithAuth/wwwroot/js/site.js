@@ -646,11 +646,11 @@ $(function () {
 	//});
 
 	$(".modal").on("change", "#Request_UnitTypeID", function () {
-		//alert("modal Request_UnitTypeID was changed");
+		alert("modal Request_UnitTypeID was changed");
 		$.fn.CheckUnitsFilled();
 	});
 	$(".modal").on("change", "#Request_SubUnitTypeID", function () {
-		//alert("modal Request_SubUnitTypeID was changed");
+		alert("modal Request_SubUnitTypeID was changed");
 		$.fn.CheckSubUnitsFilled();
 	});
 
@@ -845,16 +845,18 @@ $(function () {
 				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
 				break;
 			case "Weight/Volume":
-				console.log("inside optgroup weight/volume TESTING");
-				$("#select-options-Request_SubUnitTypeID option").prop('hidden', true);
-				$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', true).prop('hidden', true);
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-				$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
-				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+				alert("inside optgroup weight/volume TESTING");
+				$(".subunit-subunit").hide();
+				//$("#select-options-Request_SubUnitTypeID option").prop('hidden', true);
+				//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', true).prop('hidden', true);
+				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
+				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+				////$("#Request_SubUnitTypeID optgroup[label='Units'] li").hide();
+				////$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
+				////$("#Request_SubUnitTypeID").hide();
 				break;
 			case "Test":
 				console.log("inside optgroup test");
