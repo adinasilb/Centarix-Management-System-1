@@ -281,6 +281,8 @@ namespace PrototypeWithAuth.Controllers
                         addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
                         _context.Add(addLocationViewModel.LocationInstance);
                         await _context.SaveChangesAsync();
+                        //placeholderInstanceIds.Add(new List<int>());
+                        //placeholderInstanceIds[0].Add(addLocationViewModel.LocationInstance.LocationInstanceID);
 
                         int lastCompanyLocNo = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo;
                         string nameAbbrev = addLocationViewModel.LocationInstance.LocationInstanceName;
@@ -364,7 +366,7 @@ namespace PrototypeWithAuth.Controllers
                                         }
                                         catch(Exception e)
                                         {
-                                            DeleteLocationsIfFailed();
+                                            DeleteLocationsIfFailed(placeholderInstanceIds);
                                             return RedirectToAction("Index");
                                         }
                                         placeholderInstanceIds[a].Add(newSublocationInstance.LocationInstanceID);
@@ -373,6 +375,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                         }
+                        DeleteLocationsIfFailed(placeholderInstanceIds);
                         break;
                     case 200://save parent
                         addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
@@ -389,7 +392,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception e)
                         {
-                            DeleteLocationsIfFailed();
+                            DeleteLocationsIfFailed(placeholderInstanceIds);
                             return RedirectToAction("Index");
                         }
 
@@ -475,7 +478,7 @@ namespace PrototypeWithAuth.Controllers
                                         }
                                         catch (Exception e)
                                         {
-                                            DeleteLocationsIfFailed();
+                                            DeleteLocationsIfFailed(placeholderInstanceIds);
                                             return RedirectToAction("Index");
                                         }
                                         if (b == 0 ) //Testing Shelves
@@ -490,7 +493,7 @@ namespace PrototypeWithAuth.Controllers
                                                 }
                                                 catch (Exception e)
                                                 {
-                                                    DeleteLocationsIfFailed();
+                                                    DeleteLocationsIfFailed(placeholderInstanceIds);
                                                     return RedirectToAction("Index");
                                                 }
                                             }
@@ -510,6 +513,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                         }
+                        DeleteLocationsIfFailed(placeholderInstanceIds);
                         break;
                     case 300:
                     case 400: //for now the same as 300
@@ -528,7 +532,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception e)
                         {
-                            DeleteLocationsIfFailed();
+                            DeleteLocationsIfFailed(placeholderInstanceIds);
                             return RedirectToAction("Index");
                         }
 
@@ -545,6 +549,8 @@ namespace PrototypeWithAuth.Controllers
                         int typeNumber1 = 1;
 
                         int sublocationHeight1 = subLocationViewModel.LocationInstances[0].Height;
+
+                        placeholderInstanceIds.Add(new List<int>());
                         for (int x = 0; x < sublocationHeight1; x++)
                         {
                             //add letter to place
@@ -573,11 +579,13 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 catch (Exception e)
                                 {
-                                    DeleteLocationsIfFailed();
+                                    DeleteLocationsIfFailed(placeholderInstanceIds);
                                     return RedirectToAction("Index");
                                 }
+                                placeholderInstanceIds[x].Add(newSublocationInstance.LocationInstanceID);
                             }
                         }
+                        DeleteLocationsIfFailed(placeholderInstanceIds);
                         break;
                     case 500:
                         addLocationViewModel.LocationInstance.Height = subLocationViewModel.LocationInstances[0].Height;
@@ -595,7 +603,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception e)
                         {
-                            DeleteLocationsIfFailed();
+                            DeleteLocationsIfFailed(placeholderInstanceIds);
                             return RedirectToAction("Index");
                         }
 
@@ -612,6 +620,7 @@ namespace PrototypeWithAuth.Controllers
                         int typeNumber2 = 1;
 
                         int sublocationHeight2 = subLocationViewModel.LocationInstances[0].Height;
+                        placeholderInstanceIds.Add(new List<int>());
                         for (int x = 0; x < sublocationHeight2; x++)
                         {
                             //add letter to place
@@ -640,11 +649,13 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 catch (Exception e)
                                 {
-                                    DeleteLocationsIfFailed();
+                                    DeleteLocationsIfFailed(placeholderInstanceIds);
                                     return RedirectToAction("Index");
                                 }
+                                placeholderInstanceIds[x].Add(newSublocationInstance.LocationInstanceID);
                             }
                         }
+                        DeleteLocationsIfFailed(placeholderInstanceIds);
                         break;
                     default:
                         //add reference to parent
@@ -659,7 +670,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         catch (Exception e)
                         {
-                            DeleteLocationsIfFailed();
+                            DeleteLocationsIfFailed(placeholderInstanceIds);
                             return RedirectToAction("Index");
                         }
 
@@ -742,7 +753,7 @@ namespace PrototypeWithAuth.Controllers
                                         }
                                         catch (Exception e)
                                         {
-                                            DeleteLocationsIfFailed();
+                                            DeleteLocationsIfFailed(placeholderInstanceIds);
                                             return RedirectToAction("Index");
                                         }
                                         placeholderInstanceIds[z].Add(newSublocationInstance.LocationInstanceID);
@@ -752,15 +763,17 @@ namespace PrototypeWithAuth.Controllers
                             }
 
                         }
+                        DeleteLocationsIfFailed(placeholderInstanceIds);
                         break;
                 }
-
             }
+            //DeleteLocationsIfFailed(placeholderInstanceIds);
             return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.LabManagement });
         }
 
-        public void DeleteLocationsIfFailed()
-        {
+        public void DeleteLocationsIfFailed(List<List<int>> placeholderIds)
+          {
+            
         }
 
 
