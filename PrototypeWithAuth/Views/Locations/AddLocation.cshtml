@@ -1,9 +1,10 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddLocationViewModel
 <script src="~/js/LocationType.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
 <div class="modal supplier-form modal-view  overflow-auto" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog no-box-shadow modal-lg" role="document" style="max-height:100%; max-width:40rem; ">
+    <div class="modal-dialog no-box-shadow modal-lg on-form-modal" role="document" style="max-height:100%; max-width:40rem; ">
 
         <div class="modal-content d-inline-block  modal-border-radius modal-box-shadow" style="width:40rem;">
 
@@ -51,7 +52,7 @@
                                             <span class="addLocationFont">Select Type:</span>
 
                                         </div>
-                                        <input type="hidden" asp-for="LocationInstance.LocationTypeID">
+
                                         <ul class="p-0 locationinstance dropdown-menu ">
                                             @foreach (var locationType in Model.LocationTypesDepthOfZero)
                                             {
@@ -60,12 +61,15 @@
                                                 </li>
                                             }
                                         </ul>
+
                                     </div>
                                 </div>
                                 <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger-centarix"></span>
+                                <input type="hidden" asp-for="LocationInstance.LocationTypeID"/>
                             </div>
+                    
                         </div>
-
+                       
                         <div class="col-md-12 divSublocations mx-0 px-0">
                         </div>
                         <br />
