@@ -1,6 +1,5 @@
 ﻿$(function () {
 	$(".form-check.accounting-select").on("change", function (e) {
-		console.log("checked box");
 		var addToSelectedButton = $("#add-to-selected");
 		var paySelectedButton = $("#pay-selected");
 		var selectedButton;
