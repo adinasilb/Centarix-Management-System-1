@@ -9,11 +9,11 @@ $(function () {
 
 	var VatPercentage = .17;
 
-	$('.modal').on('click', '.close', function () {
-		$('.modal').remove();
-		$('.modal-backdrop').remove();
+	//$('.modal').on('click', '.close', function () {
+	//	$('.modal').remove();
+	//	$('.modal-backdrop').remove();
 
-	})
+	//})
 
 	function showmodal() {
 		$("#modal").modal('show');
