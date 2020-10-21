@@ -1057,14 +1057,6 @@ $(function () {
 		}
 	}
 
-	$(".documents-tab").click(function (e) {
-
-		$.fn.HideAllDocs();
-		//$.fn.CheckIfFileSelectsAreFull();
-
-
-	});
-
 	$(".open-invoice-doc-modal").click(function (e) {
 		e.preventDefault();
 		e.stopPropagation();
