@@ -941,142 +941,9 @@ $(function () {
 	//LOCATIONS:
 
 
-	//AJAX load full partial view for modalview manage locations
-	$("#locationTypeDepthZero").change(function () {
-		//alert("changed location type in site.js");
-		var myDiv = $(".divSublocations");
-		var selectedId = $(this).children("option:selected").val();
-		//alert("selectedid: " + selectedId);
-		$.ajax({
-			//IMPORTANT: ADD IN THE ID
-			url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + selectedId,
-			type: 'GET',
-			cache: false,
-			context: myDiv,
-			success: function (result) {
-				this.html(result);
-				//alert("reached success of ajax function");
-				//alert(result);
-				//$(".mdb-select.SLI").materialSelect();
-			}
-		});
-		//$.fn.parentListChange = function () {
-		//	console.log("in parent list");
-		//	var parentCategoryId = $("#parentlist").val();
-		//	console.log("parentcategoryid: " + parentCategoryId);
-		//	var url = "/Requests/GetSubCategoryList";
-		//	console.log("url: " + url);
-
-		//	$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-		//		var firstitem1 = '<option value=""> Select Subcategory</option>';
-		//		$("#sublist").empty();
-		//		$("#sublist").append(firstitem1);
-
-		//		$.each(data, function (i, subCategory) {
-		//			var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
-		//			$("#sublist").append(newitem1);
-		//		});
-		//		$("#sublist").materialSelect();
-		//		return false;
-		//	});
-		//};
-	});
-
+	
 	//Received Modal => fill up the next selectLocationInstance with the right selections
-	$(".SLI").change(function () {
-
-
-		//ONE ---> GET THE NEXT DROPDOWNLIST
-
-		var name = $(this).attr('name');
-		var number = name.charAt(name.length - 2);
-		var place = parseInt(number);
-
-		console.log("")
-		var nextSelectClass = name.replace(place.toString(), (place + 1).toString());
-		var nextSelect = $("select[name='" + nextSelectClass + "']");
-
-		var locationInstanceParentId = $(this).children("option:selected").val();
-		var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
-
-		if (nextSelect.length) { //if there is another one
-
-
-			var NotFinished = true;
-			var placeCounter = place + 1; //adding one to skip the select that we will fill in below
-			var newNextSelect = nextSelect;
-
-			//if the same one was selected jquery automatically deals with it
-			while (NotFinished) {
-				//var incrementedPlaceCounter = placeCounter + 1);
-				nextSelectClass = nextSelectClass.replace(placeCounter.toString(), (placeCounter + 1).toString());
-				newNextSelect = $("select[name='" + nextSelectClass + "']");
-				if (newNextSelect.length) {
-					newNextSelect.html("");
-				}
-				else {
-					NotFinished = false;
-				}
-				placeCounter++;
-			}
-
-
-			$.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
-				var item = "<option>Select Location Instance</option>";
-				$.each(result, function (i, field) {
-					item += '<option value="' + field.locationInstanceID + '">' + field.locationInstanceName + '</option>'
-				});
-				nextSelect.html(item);
-			});
-
-		}
-		//else {
-		//	console.log("in the else unfortunately... :( ");
-		//}
-
-
-		//TWO ---> FILL VISUAL VIEW
-		var myDiv = $(".visualView");
-		if (locationInstanceParentId == 0) { //if zero was selected
-			console.log("selected was 0");
-			//check if there is a previous select box
-			var oldSelectClass = name.replace(place.toString(), (place - 1).toString());
-			var oldSelect = $("select[name='" + oldSelectClass + "']");
-			if (oldSelect.length) {
-				console.log("oldSelectClass " + oldSelectClass + " exists and refilling with that");
-				var oldSelected = $("." + oldSelect).children("option:selected").val();
-				console.log("oldSelected: " + oldSelected);
-				$.ajax({
-					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected,
-					type: 'GET',
-					cache: false,
-					context: myDiv,
-					success: function (result) {
-						this.html(result);
-					}
-				});
-			}
-			else {
-				console.log("oldSelectClass " + oldSelectClass + " does not exist and clearing");
-				myDiv.html("");
-			}
-		}
-		else {
-			console.log("regular visual");
-			$.ajax({
-				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
-				type: 'GET',
-				cache: false,
-				context: myDiv,
-				success: function (result) {
-					this.html(result);
-				}
-			});
-		}
-
-
-	});
-
+	
 	//$.fn.CallAjax() = function ($url, $div) {
 
 	//	$.ajax({
@@ -2279,6 +2146,7 @@ $(function () {
 		$(this).find('.dropdown-menu').slideUp(300);
 	});
 	$('.dropdown-main .dropdown-menu li').click(function () {
+		console.log($(this).text())
 		$(this).parents('.dropdown-main').find('span:not(.caret)').text($(this).text());
 		$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
 	});

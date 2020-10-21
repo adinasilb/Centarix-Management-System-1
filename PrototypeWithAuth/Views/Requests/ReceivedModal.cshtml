@@ -119,16 +119,36 @@
                             @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                             {
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-2">
                                         <div class="form-group">
                                             <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
-                                            @Html.DropDownListFor(m => m.LocationTypeID,
-                                     new SelectList(Model.locationTypesDepthZero, "LocationTypeID", "LocationTypeName"),
-                                     "Select Type", new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "locationTypeDepthZero" })
+                                            <div class=" form-control-plaintext border-bottom p-0">
+                                                <span class="choose p-0"></span>
+                                                <div class="dropdown dropdown-main">
+                                                    <div class="select d-inline-flex">
+                                                        <span class="caret py-0">
+                                                            ▼
+                                                        </span>
+                                                        <span class="overflow-hidden">Select Type:</span>
+
+                                                    </div>
+
+                                                    <ul class="p-0 locationinstance dropdown-menu ">
+                                                        @foreach (var locationType in Model.locationTypesDepthZero)
+                                                        {
+                                                            <li  id="@locationType.LocationTypeID" onclick="loadReceivedModalSubLocations(this.id)" >
+                                                                @locationType.LocationTypeName
+                                                            </li>
+                                                        }
+                                                    </ul>
+
+                                                </div>
+                                            </div>
                                         </div>
+
                                     </div>
-                                    <div class="col-8">
-                                        <div class="divSublocations">
+                                    <div class="col-10">
+                                        <div class="divSublocations container-fluid">
 
                                         </div>
                                     </div>
@@ -203,6 +223,20 @@
             $box.prop("checked", false);
         }
     });
- 
+    //AJAX load full partial view for modalview manage locations
+    function loadReceivedModalSubLocations(val) {
+        var myDiv = $(".divSublocations");
+        $.ajax({
+            //IMPORTANT: ADD IN THE ID
+            url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + val,
+            type: 'GET',
+            cache: false,
+            context: myDiv,
+            success: function (result) {
+                $(this).html(result);
+            }
+        });
+    };
+
 
 </script>

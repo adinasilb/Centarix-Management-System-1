@@ -19,7 +19,7 @@
 
                     if (Model.ChildrenLocationInstances[z].IsFull)
                     {
-                        backgroundClass += " bg-secondary";
+                        backgroundClass += " order-inv-background-color";
                         <td class="@backgroundClass" style="padding:0px; width:42px; height:42px;">
                             @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled" })
                         </td>
