@@ -1277,97 +1277,97 @@ $(function () {
 
 
 
-	$.fn.HideAllDocs = function () {
-		//$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-	};
+	//$.fn.HideAllDocs = function () {
+	//	//$(".orders-view").hide();
+	//	$(".invoices-view").hide();
+	//	$(".shipments-view").hide();
+	//	$(".quotes-view").hide();
+	//	$(".info-view").hide();
+	//	$(".pictures-view").hide();
+	//	$(".returns-view").hide();
+	//	$(".credits-view").hide();
+	//};
 
-	$(".show-orders-view").click(function () {
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".orders-view").toggle();
-	});
-	$(".show-invoices-view").click(function () {
-		$(".orders-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".invoices-view").toggle();
-	});
-	$(".show-shipments-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".shipments-view").toggle();
-	});
-	$(".show-quotes-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".quotes-view").toggle();
-	});
-	$(".show-info-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".info-view").toggle();
-	});
-	$(".show-pictures-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").hide();
-		$(".pictures-view").toggle();
-	});
-	$(".show-returns-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".credits-view").hide();
-		$(".returns-view").toggle();
-	});
-	$(".show-credits-view").click(function () {
-		$(".orders-view").hide();
-		$(".invoices-view").hide();
-		$(".shipments-view").hide();
-		$(".quotes-view").hide();
-		$(".info-view").hide();
-		$(".pictures-view").hide();
-		$(".returns-view").hide();
-		$(".credits-view").toggle();
-	});
+	//$(".show-orders-view").click(function () {
+	//	$(".invoices-view").hide();
+	//	$(".shipments-view").hide();
+	//	$(".quotes-view").hide();
+	//	$(".info-view").hide();
+	//	$(".pictures-view").hide();
+	//	$(".returns-view").hide();
+	//	$(".credits-view").hide();
+	//	$(".orders-view").toggle();
+	//});
+	//$(".show-invoices-view").click(function () {
+	//	$(".orders-view").hide();
+	//	$(".shipments-view").hide();
+	//	$(".quotes-view").hide();
+	//	$(".info-view").hide();
+	//	$(".pictures-view").hide();
+	//	$(".returns-view").hide();
+	//	$(".credits-view").hide();
+	//	$(".invoices-view").toggle();
+	//});
+	//$(".show-shipments-view").click(function () {
+	//	$(".orders-view").hide();
+	//	$(".invoices-view").hide();
+	//	$(".quotes-view").hide();
+	//	$(".info-view").hide();
+	//	$(".pictures-view").hide();
+	//	$(".returns-view").hide();
+	//	$(".credits-view").hide();
+	//	$(".shipments-view").toggle();
+	//});
+	//$(".show-quotes-view").click(function () {
+	//	$(".orders-view").hide();
+	//	$(".invoices-view").hide();
+	//	$(".shipments-view").hide();
+	//	$(".info-view").hide();
+	//	$(".pictures-view").hide();
+	//	$(".returns-view").hide();
+	//	$(".credits-view").hide();
+	//	$(".quotes-view").toggle();
+	//});
+	//$(".show-info-view").click(function () {
+	//	$(".orders-view").hide();
+	//	$(".invoices-view").hide();
+	//	$(".shipments-view").hide();
+	//	$(".quotes-view").hide();
+	//	$(".pictures-view").hide();
+	//	$(".returns-view").hide();
+	//	$(".credits-view").hide();
+	//	$(".info-view").toggle();
+	//});
+	//$(".show-pictures-view").click(function () {
+	//	$(".orders-view").hide();
+	//	$(".invoices-view").hide();
+	//	$(".shipments-view").hide();
+	//	$(".quotes-view").hide();
+	//	$(".info-view").hide();
+	//	$(".returns-view").hide();
+	//	$(".credits-view").hide();
+	//	$(".pictures-view").toggle();
+	//});
+	//$(".show-returns-view").click(function () {
+	//	$(".orders-view").hide();
+	//	$(".invoices-view").hide();
+	//	$(".shipments-view").hide();
+	//	$(".quotes-view").hide();
+	//	$(".info-view").hide();
+	//	$(".pictures-view").hide();
+	//	$(".credits-view").hide();
+	//	$(".returns-view").toggle();
+	//});
+	//$(".show-credits-view").click(function () {
+	//	$(".orders-view").hide();
+	//	$(".invoices-view").hide();
+	//	$(".shipments-view").hide();
+	//	$(".quotes-view").hide();
+	//	$(".info-view").hide();
+	//	$(".pictures-view").hide();
+	//	$(".returns-view").hide();
+	//	$(".credits-view").toggle();
+	//});
 
 
 	//$(".close").click(function () {
