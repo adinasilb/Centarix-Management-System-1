@@ -364,6 +364,12 @@
                                                                             </div>
 
                                                                             <ul class="p-0 locationinstance dropdown-menu ">
+                                                                                @foreach (var location in Model.ChildrenLocationInstances[depth - (i + 1)])
+                                                                                {
+                                                                                    <li id="@location.LocationInstanceID" onclick="SLI(this)" value="@location.LocationInstanceID">
+                                                                                        @location.LocationInstanceName
+                                                                                    </li>
+                                                                                }
                                                                             </ul>
 
                                                                         </div>
