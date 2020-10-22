@@ -74,6 +74,7 @@ namespace PrototypeWithAuth.ViewModels
         public int /*AppUtility.RequestPageTypeEnum*/ PageType { get; set; }
         public ReceivedLocationViewModel ReceivedLocationViewModel { get; set; }
         public ReceivedModalSublocationsViewModel ReceivedModalSublocationsViewModel { get; set; }
+        public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
         public LocationType ParentDepthZeroOfSelected { get; set; }
     }
 }

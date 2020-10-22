@@ -1096,6 +1096,8 @@ namespace PrototypeWithAuth.Controllers
             var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
             var requestLocationInstances = request1.RequestLocationInstances.ToList();
             //if it has => (which it should once its in a details view)
+            requestItemViewModel.LocationInstances = new List<LocationInstance>();
+            requestLocationInstances.ForEach(rli => requestItemViewModel.LocationInstances.Add(rli.LocationInstance));
             if(request1.RequestStatusID==3 || request1.RequestStatusID==5 || request1.RequestStatusID == 4)
             {
                 ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
@@ -1165,6 +1167,20 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                     requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
+                    ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
+                    {
+                        ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == parentLocationInstance.LocationInstanceID).FirstOrDefault()
+                    };
+
+                    if (receivedModalVisualViewModel.ParentLocationInstance != null)
+                    {
+                        receivedModalVisualViewModel.ChildrenLocationInstances =
+                            _context.LocationInstances.Where(m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID)
+                            .Include(m => m.RequestLocationInstances).ToList();
+
+                        //return NotFound();
+                    }
+                    requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
                 }
                 
               
