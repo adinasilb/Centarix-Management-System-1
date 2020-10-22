@@ -19,6 +19,8 @@ $(function () {
 		$("#modal").modal('show');
 	};
 
+
+
 	jQuery.fn.extend({
 		destroyMaterialSelect: function () {
 			return this.each(function () {
@@ -2446,4 +2448,7 @@ $('.exitModal').on('click', '.close', function (e) {
 			$('body').html(data);
 		}
 	});
+
+
+
 })

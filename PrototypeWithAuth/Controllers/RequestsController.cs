@@ -1323,35 +1323,97 @@ namespace PrototypeWithAuth.Controllers
             var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
             var requestLocationInstances = request1.RequestLocationInstances.ToList();
             //if it has => (which it should once its in a details view)
-            if (requestLocationInstances.Any())
+            if(request1.RequestStatusID==3 || request1.RequestStatusID==5 || request1.RequestStatusID == 4)
             {
-                //get the parent location instances of the first one
-                //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
-                //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
-                requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
-                //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
-                //need to test b/c the model is int? which is nullable
-                if (requestItemViewModel.ParentLocationInstance != null)
+                ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
                 {
-                    //inserting list of childrenslocationinstances to show on the frontend
-                    requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
-                        .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
-                        .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
-                    //var x = 0; //place in cli
-                    //requestItemViewModel.ChildrenLocationInstancesRequests = new List<Request>();
-                    //foreach (var cli in requestItemViewModel.ChildrenLocationInstances)
-                    //{
-                    //    var req = _context.Requests
-                    //        .Include(r => r.RequestLocationInstances.Select(rli => rli.LocationInstanceID == cli.LocationInstanceID)).Include(r => r.Product)
-                    //        .FirstOrDefault();
-                    //    if (req != null)
-                    //    {
-                    //        requestItemViewModel.ChildrenLocationInstancesRequests.Add(req);
-                    //    }
-                    //}
+                    Request = _context.Requests.Where(r => r.RequestID == request1.RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                   .FirstOrDefault(),
+                    locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
+                    locationInstancesSelected = new List<LocationInstance>(),
+                };
 
+
+                if (requestLocationInstances.Any())
+                {
+                    //get the parent location instances of the first one
+                    //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
+                    //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
+                    LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li=>li.LocationType).FirstOrDefault();
+                    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    //need to test b/c the model is int? which is nullable
+                    if (requestItemViewModel.ParentLocationInstance != null)
+                    {
+                        //inserting list of childrenslocationinstances to show on the frontend
+                        requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
+                            .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
+                            .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+                        //var x = 0; //place in cli
+                        //requestItemViewModel.ChildrenLocationInstancesRequests = new List<Request>();
+                        //foreach (var cli in requestItemViewModel.ChildrenLocationInstances)
+                        //{
+                        //    var req = _context.Requests
+                        //        .Include(r => r.RequestLocationInstances.Select(rli => rli.LocationInstanceID == cli.LocationInstanceID)).Include(r => r.Product)
+                        //        .FirstOrDefault();
+                        //    if (req != null)
+                        //    {
+                        //        requestItemViewModel.ChildrenLocationInstancesRequests.Add(req);
+                        //    }
+                        //}
+
+                    }
+                    receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
+                    var locationType = parentLocationInstance.LocationType;
+                    while(locationType.Depth != 0)
+                    {
+                         locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
+                    }
+                    requestItemViewModel.ParentDepthZeroOfSelected = locationType;
+                    requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
+
+                    ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
+                    {
+                        locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == locationType.LocationTypeID),
+                        locationTypeNames = new List<string>(),
+                        locationInstancesSelected = new List<LocationInstance>()
+                    };
+                    bool finished = false;
+                    int locationTypeIDLoop = locationType.LocationTypeID;
+                    var parent = parentLocationInstance;
+                    receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
+                    while (parent.LocationInstanceParentID != null)
+                    {
+                        parent = _context.LocationInstances.Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
+                        receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
+                    }
+                    while (!finished)
+                    {
+                        //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
+                        var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
+                        string nextTYpeName = nextType.LocationTypeName;
+                        int? tryNewLocationType = nextType.LocationTypeChildID;
+                        //add it to the list in the viewmodel
+                        receivedModalSublocationsViewModel.locationTypeNames.Add(nextTYpeName);
+
+                        //while we're still looping through we'll instantiate the locationInstancesSelected so we can have dropdownlistfors on the view
+                        //receivedModalSublocationsViewModel.locationInstancesSelected.Add(new LocationInstance());
+
+                        if (tryNewLocationType == null)
+                        {
+                            //if its not null we can convert it and pass it in
+                            finished = true;
+                        }
+                        else
+                        {
+                            locationTypeIDLoop = (Int32)tryNewLocationType;
+                        }
+                    }
+                    requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
                 }
+                
+              
             }
+
 
             if (requestItemViewModel.Request == null)
             {

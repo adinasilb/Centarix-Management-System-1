@@ -47,11 +47,12 @@
                     <span class="caret py-0">
                         ▼
                     </span>
-                    <span class="overflow-hidden overflow-left"></span>
+                    <span class="overflow-hidden overflow-left"> &ensp;</span>
 
                 </div>
 
-                <ul class="p-0 locationinstance dropdown-menu ">
+                <ul class="p-0 locationinstance dropdown-menu " style="display:none">
+                    <li>&ensp;</li>
                 </ul>
 
             </div>
@@ -72,8 +73,7 @@
 
         if (nextSelect != undefined) { //if there is another one
 
-            $(nextSelect).html('');
-            $(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text('');
+            $(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text(' ');
             $.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
                 var item = "<li>Select Location Instance</li>";
                 $.each(result, function (i, field) {

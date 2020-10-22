@@ -280,57 +280,110 @@
                                 <div class="row modal-tab-name">
                                     <span class="heading-1 col-12 modal-tab-name">Location</span>
                                 </div>
-
-                                @if (Model.ChildrenLocationInstances != null && Model.ChildrenLocationInstances.Any())
+                                @if (Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
                                 {
-                                    <h4>@Model.ParentLocationInstance.LocationInstanceName</h4> //this should be a link to the manage page for admins only
-                                    <table class="table table-sm border">
-                                        @{
-                                            int z = -1; //initiated to -1 b/c it didn't let me put the z++ on the bottom of the fx. Really should be 0.
-                                        }
-                                        @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
-                                        {
-                                            <tr>
-                                                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-                                                {
-                                                    z++;
-                                                    var backgroundClass = "border";
-                                                    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label class="control-label" asp-for="ReceivedLocationViewModel.locationTypesDepthZero">Location Type</label>
+                                                <div class=" form-control-plaintext border-bottom p-0">
+                                                    <span class="choose p-0"></span>
+                                                    <div class="dropdown dropdown-main">
+                                                        <div class="select d-inline-flex">
+                                                            <span class="caret py-0">
+                                                                ▼
+                                                            </span>
+                                                            <span class="overflow-hidden">@Model.ParentDepthZeroOfSelected.LocationTypeName</span>
+
+                                                        </div>
+
+                                                        <ul class="p-0 locationinstance dropdown-menu ">
+                                                            @foreach (var locationType in Model.ReceivedLocationViewModel.locationTypesDepthZero)
+                                                            {
+                                                                <li id="@locationType.LocationTypeID" onclick="loadReceivedModalSubLocations(this.id)">
+                                                                    @locationType.LocationTypeName
+                                                                </li>
+                                                            }
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-10">
+                                            <div class="divSublocations container-fluid">
+                                                <div class="row">
+                                                    @for (int i = 0; i < Model.ReceivedModalSublocationsViewModel.locationTypeNames.Count - 1; i++) //do count - 1 because we don't want them to select the smallest instances
                                                     {
-                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
-                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
-
-                                                        if (Model.ChildrenLocationInstances[z].IsFull)
-                                                        {
-                                                            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
+                                                        var id = "locationInstancesSelected[" + i + "]";
+                                                        var depth = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected.Count;
+                                                        <div class="form-group col-3 ">
+                                                            <label class="control-label">@Model.ReceivedModalSublocationsViewModel.locationTypeNames[i]</label>
+                                                            @if (i == 0)
                                                             {
-                                                                backgroundClass += " bg-info text-light text-center";
-                                                            }
-                                                            else //why is this else here? it doesn't seem to ever get used.
-                                                            {
-                                                                backgroundClass += " bg-secondary";
-                                                            }
-                                                            <td class="@backgroundClass">
-                                                                @Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName
-                                                            </td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td class="@backgroundClass"><span style="font-size:x-small">empty</span></td>
-                                                        }
+                                                                <div class="">
+                                                                    <div class=" form-control-plaintext border-bottom p-0">
+                                                                        <span class="choose p-0"></span>
+                                                                        <div class="dropdown dropdown-main">
+                                                                            <div class="select d-inline-flex">
+                                                                                <span class="caret py-0">
+                                                                                    ▼
+                                                                                </span>
+                                                                                <span class="overflow-hidden">@Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth-(i+1)].LocationInstanceName</span>
 
+                                                                            </div>
+
+                                                                            <ul class="p-0 locationinstance dropdown-menu ">
+                                                                                @foreach (var locationType in Model.ReceivedModalSublocationsViewModel.locationInstancesDepthZero)
+                                                                                {
+                                                                                    <li id="@locationType.LocationInstanceID" onclick="SLI(this)" value="@locationType.LocationInstanceID">
+                                                                                        @locationType.LocationInstanceName
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+
+                                                            else
+                                                            {
+                                                                <div class="">
+                                                                    <div class=" form-control-plaintext border-bottom p-0">
+                                                                        <span class="choose p-0"></span>
+                                                                        <div class="dropdown dropdown-main">
+                                                                            <div class="select d-inline-flex " style="padding-right:1.25rem;">
+                                                                                <span class="caret py-0">
+                                                                                    ▼
+                                                                                </span>
+                                                                                <span class="overflow-hidden overflow-left">@Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth-(i+1)].LocationInstanceName</span>
+
+                                                                            </div>
+
+                                                                            <ul class="p-0 locationinstance dropdown-menu ">
+                                                                            </ul>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        </div>
                                                     }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="visualView col-6 m-auto text-center">
 
-                                                }
-                                            </tr>
-                                        }
-                                    </table>
+                                        </div>
+                                    </div>
+
                                 }
-                                else
-                                {
-                                    <span>No Locations yet</span>
-                                    @*<button>Add Locations</button>*@
-                                }
+
                             </div>
                             <div id="price" class="tab-pane fade">
                                 <div class="row modal-tab-name">
@@ -844,3 +897,87 @@
 </div>
 
 }
+<script>
+    //AJAX load full partial view for modalview manage locations
+    function loadReceivedModalSubLocations(val) {
+        var myDiv = $(".divSublocations");
+        $.ajax({
+            //IMPORTANT: ADD IN THE ID
+            url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + val,
+            type: 'GET',
+            cache: false,
+            context: myDiv,
+            success: function (result) {
+                $(this).html(result);
+                $('visualView').html('');
+            }
+        });
+    };
+
+
+</script>
+<script>
+    function SLI(el) {
+        //ONE ---> GET THE NEXT DROPDOWNLIST
+
+        var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
+        console.log(nextSelect)
+        var locationInstanceParentId = $(el).val();;
+        var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
+
+        if (nextSelect != undefined) { //if there is another one
+
+            $(nextSelect).html('');
+            $(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text('');
+            $.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
+                var item = "<li>Select Location Instance</li>";
+                $.each(result, function (i, field) {
+                    item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' " onclick="SLI(this)">' + field.locationInstanceName + '</li>'
+                });
+                $(nextSelect).append(item);
+            });
+
+        }
+        //TWO ---> FILL VISUAL VIEW
+        var myDiv = $(".visualView");
+        if (locationInstanceParentId == 0) { //if zero was selected
+            console.log("selected was 0");
+            //check if there is a previous select box
+            var oldSelectClass = name.replace(place.toString(), (place - 1).toString());
+            var oldSelect = $("select[name='" + oldSelectClass + "']");
+            if (oldSelect.length) {
+                console.log("oldSelectClass " + oldSelectClass + " exists and refilling with that");
+                var oldSelected = $("." + oldSelect).children("option:selected").val();
+                console.log("oldSelected: " + oldSelected);
+                $.ajax({
+                    url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected,
+                    type: 'GET',
+                    cache: false,
+                    context: myDiv,
+                    success: function (result) {
+                        $(this).html(result);
+                    }
+                });
+            }
+            else {
+                console.log("oldSelectClass " + oldSelectClass + " does not exist and clearing");
+                myDiv.html("");
+            }
+        }
+        else {
+            console.log("regular visual");
+            $.ajax({
+                url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
+                type: 'GET',
+                cache: false,
+                context: myDiv,
+                success: function (result) {
+                    $(this).html(result);
+                }
+            });
+        }
+
+        $(el).parents('.dropdown-main').find('span:not(.caret)').text($(el).text());
+    };
+
+</script>
