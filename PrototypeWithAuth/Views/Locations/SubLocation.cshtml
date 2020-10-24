@@ -41,7 +41,7 @@
                 <div class="col-6">
                     <span class="addLocationFont">
                         @Model.LocationTypes.ToList()[0].LocationTypePluralName
-                        <input asp-for="LocationInstances[0].Height" min="0" class="form-control-plaintext border-bottom" />
+                        <input asp-for="LocationInstances[0].Height" min="0"  type="text" class="form-control-plaintext border-bottom" />
                         <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" style="display: none;" />
                     </span>
                 </div>
@@ -53,12 +53,12 @@
                         <div class=" form-control-plaintext border-bottom p-0 " style="max-height: 3rem;">
                             <span class="choose p-0"></span>
                             <div class="dropdown-multiple pr-2 ">
-                                <div class="select">
+                                <div class="select overflow-auto">
 
                                     <span class="caret py-0">
                                         ▼
                                     </span>
-                                    <span class="addLocationFont"></span>
+                                  
                                 </div>
                                 <div class="locationinstances dropdown-menu dropdown-menu-multiple">
                                 </div>
@@ -71,14 +71,14 @@
                 <div class="col-6">
                     <span class="addLocationFont">
                         @Model.LocationTypes.ToList()[1].LocationTypePluralName
-                        <input asp-for="LocationInstances[1].Height" min="0" class="form-control-plaintext border-bottom" />
+                        <input asp-for="LocationInstances[1].Height" min="0"  type="text" class="form-control-plaintext border-bottom" />
                         <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />
                     </span>
                 </div>
                 <div class="col-6">
                     <span class="addLocationFont">
                         @Model.LocationTypes.ToList()[2].LocationTypePluralName
-                        <input asp-for="LocationInstances[2].Height" min="0" class="form-control-plaintext border-bottom" />
+                        <input asp-for="LocationInstances[2].Height" min="0" type="text" class="form-control-plaintext border-bottom" />
                         <input asp-for="LocationInstances[2].LocationTypeID" value="@Model.LocationTypes.ToList()[2].LocationTypeID" style="display: none;" />
                     </span>
                 </div>
@@ -114,13 +114,13 @@
                 <div class="col-6">
                     <span style="line-height:2.5rem; font-size:1.2rem;">
                         Height
-                        <input asp-for="LocationInstances[0].Height" min="0" class="form-control-plaintext border-bottom" />
+                        <input asp-for="LocationInstances[0].Height" min="0"  type="text" class="form-control-plaintext border-bottom" />
                     </span>
                 </div>
                 <div class="col-6">
                     <span style="line-height:2.5rem; font-size:1.2rem;">
                         Width
-                        <input asp-for="LocationInstances[0].Width" min="0" class="form-control-plaintext border-bottom" />
+                        <input asp-for="LocationInstances[0].Width"  type="text" min="0" class="form-control-plaintext border-bottom" />
                     </span>
                 </div>
             </div>
@@ -135,8 +135,8 @@
                             <span class="addLocationFont">@Html.DisplayFor(modelItem => item.LocationTypeName):</span>
                         </div>
                         <div class="form-inline" style="justify-content:center;">
-                            <input asp-for="LocationInstances[i].Height" min="0" class="form-control-plaintext border-bottom" style="width:3rem;" /> &nbsp; x &nbsp;
-                            <input asp-for="LocationInstances[i].Width" min="0" class="form-control-plaintext border-bottom" style="width:3rem;" />
+                            <input asp-for="LocationInstances[i].Height" min="0"  type="text" class="form-control-plaintext border-bottom" style="width:3rem;" /> &nbsp; x &nbsp;
+                            <input asp-for="LocationInstances[i].Width" min="0"  type="text" class="form-control-plaintext border-bottom" style="width:3rem;" />
                         </div>
                         <div style="justify-content:center;">
                             <div>

@@ -441,6 +441,6 @@
 
 <div class="row">
     <div class="col-6 offset-6 text-center">
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page=page, RequestStatusID = requestStatusID,  }))
     </div>
 </div>

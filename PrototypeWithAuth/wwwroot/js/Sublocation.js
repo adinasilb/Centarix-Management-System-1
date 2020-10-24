@@ -15,7 +15,7 @@ $("#LocationInstances_0__Height").on("change", function (e) {
 				var optName = "EmptyShelves80[" + idNum + "]";
 				var optId = "EmptyShelves80_" + idNum + "_";
 				var newOption = "<div class='form-check locations'>";
-				newOption += "<input type='checkbox' class='form-check-input empty-shelf-check' data-val='false' id='" + optId + "' name='" + optName + "' value='true'>";
+				newOption += "<input type='checkbox' class='form-check-input empty-shelf-check emptyShelf' data-val='false' data-num='" + idNum + "' id='" + optId + "' name='" + optName + "' value='true'>";
 				newOption += "<label class='form-check-label' for='" + optId + "'>";
 				newOption += "Shelf " + x;
 				newOption += "</label></div>";
@@ -48,3 +48,20 @@ $(".empty-shelf-check").on("change", function () {
 //DROPDOWN MENU
 
 
+$('.modal').on('change', '.emptyShelf', function () {
+	console.log('emptyShelf change')
+	var val = $(this).prop('checked');
+	var id = $(this).attr('id');
+	var num = parseInt( $(this).attr('data-num'))+1;
+	if (val == false) {
+		//remove from
+		$('.' + id).remove()
+	} else {
+		//add to label
+		var span = "<span class='addLocationFont " + id + "'>" + num +", &nbsp</span>"
+		$('.custom-multipleSpan').show();
+		$('.select').append(span)
+	}
+
+
+});

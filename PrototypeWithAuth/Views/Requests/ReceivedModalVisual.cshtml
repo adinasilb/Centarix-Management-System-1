@@ -10,7 +10,6 @@
             @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
             {
                 z++;
-                var backgroundClass = " border";
                 @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                 {
                     @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
@@ -19,14 +18,16 @@
 
                     if (Model.ChildrenLocationInstances[z].IsFull)
                     {
-                        backgroundClass += " bg-secondary";
-                        <td class="@backgroundClass" style="padding:0px; width:42px; height:42px;">
-                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled" })
-                        </td>
-                    }
+                        var backgroundClass= " order-inv-filter ";
+            <td class="border " style="padding:0px; width:42px; height:42px;">
+                @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @class =  "css-checkbox" })
+
+                @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = backgroundClass + "css-label" })
+            </td>
+                       }
                     else
-                    {
-                        <td class="@backgroundClass" style="padding:0px;">
+                            {
+                        <td class="border" style="padding:0px;">
                             @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = "css-checkbox" })
                             @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
                         </td>

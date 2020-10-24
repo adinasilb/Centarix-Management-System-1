@@ -200,57 +200,7 @@
                                     <span class="heading-1 col-12 modal-tab-name">Location</span>
                                 </div>
 
-                                @if (Model.ChildrenLocationInstances != null && Model.ChildrenLocationInstances.Any())
-                                {
-                                    <h4>@Model.ParentLocationInstance.LocationInstanceName</h4> //this should be a link to the manage page for admins only
-                                    <table class="table table-sm border">
-                                        @{
-                                            int z = -1; //initiated to -1 b/c it didn't let me put the z++ on the bottom of the fx. Really should be 0.
-                                        }
-                                        @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
-                                        {
-                                            <tr>
-                                                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-                                                {
-                                                    z++;
-                                                    var backgroundClass = "border";
-                                                    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
-                                                    {
-                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
-                                                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
-
-                                                        if (Model.ChildrenLocationInstances[z].IsFull)
-                                                        {
-                                                            if (Model.Request.RequestID == Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID)
-                                                            {
-                                                                backgroundClass += " bg-info text-light text-center";
-                                                            }
-                                                            else //why is this else here? it doesn't seem to ever get used.
-                                                            {
-                                                                backgroundClass += " bg-secondary";
-                                                            }
-                                                            <td class="@backgroundClass">
-                                                                @Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName
-                                                            </td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td class="@backgroundClass"><span style="font-size:xx-small">empty</span></td>
-                                                        }
-
-                                                    }
-
-                                                }
-                                            </tr>
-                                        }
-                                    </table>
-                                }
-                                else
-                                {
-                                    <span>No Locations yet</span>
-                                    <br />
-                                    @*<button>Add Locations</button>*@
-                                }
+                             
                             </div>
 
                             <div id="price" class="tab-pane fade">

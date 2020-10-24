@@ -680,234 +680,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> DetailsModalView(int? id, bool NewRequestFromProduct = false)
-        {
-            //string ModalViewType = "";
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
-            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
-
-            var projects = await _context.Projects.ToListAsync();
-            var subprojects = await _context.SubProjects.ToListAsync();
-            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
-            //redo the unit types when seeded
-            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            var paymenttypes = await _context.PaymentTypes.ToListAsync();
-            var companyaccounts = await _context.CompanyAccounts.ToListAsync();
-
-            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
-            {
-                ParentCategories = parentcategories,
-                ProductSubcategories = productsubactegories,
-                Projects = projects,
-                SubProjects = subprojects,
-                Vendors = vendors,
-                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
-                PaymentTypes = paymenttypes,
-                CompanyAccounts = companyaccounts
-            };
-
-            if (id == 0)
-            {
-                return RedirectToAction("CreateModalView");
-            }
-
-            else
-            {
-
-                requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
-                    .Include(r => r.ParentRequest)
-                    .Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.Product.ProductSubcategory.ParentCategory)
-                    .Include(r => r.RequestStatus)
-                    .Include(r => r.ApplicationUserCreator)
-                    .Include(r => r.ParentQuote)
-                    //.Include(r => r.Payments) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
-                    .Include(r => r.SubProject)
-                    .ThenInclude(sp => sp.Project)
-                    .SingleOrDefault(x => x.RequestID == id);
-
-                //check if this works once there are commments
-                var comments = Enumerable.Empty<Comment>();
-                comments = _context.Comments
-                    .Include(c => c.ApplicationUser)
-                    .Where(c => c.Request.RequestID == id);
-                //needs to be instantiated here so it doesn't throw an error if nothing is in it
-                /*
-                 *I think it should be an ienumerable and look like
-                 *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
-                 *ike before but it's not recognizing the syntax
-                */
-                requestItemViewModel.OldComments = comments.ToList();
-
-                //may be able to do this together - combining the path for the orders folders
-                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
-                string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-                string uploadFolderInvoices = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
-                string uploadFolderShipments = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
-                string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                string uploadFolderInfo = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Info.ToString());
-                string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
-                string uploadFolderReturns = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Returns.ToString());
-                string uploadFolderCredits = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Credits.ToString());
-                //the partial file name that we will search for (1- because we want the first one)
-                //creating the directory from the path made earlier
-
-                if (Directory.Exists(uploadFolderOrders))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
-                    //searching for the partial file name in the directory
-                    FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                    requestItemViewModel.OrderFileStrings = new List<String>();
-                    foreach (var orderfile in orderfilesfound)
-                    {
-                        string newFileString = AppUtility.GetLastFourFiles(orderfile.FullName);
-                        requestItemViewModel.OrderFileStrings.Add(newFileString);
-                    }
-                }
-                if (Directory.Exists(uploadFolderInvoices))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInvoices);
-                    FileInfo[] invoicefilesfound = DirectoryToSearch.GetFiles("*.*");
-                    requestItemViewModel.InvoiceFileStrings = new List<string>();
-                    foreach (var invoicefile in invoicefilesfound)
-                    {
-                        string newFileString = AppUtility.GetLastFourFiles(invoicefile.FullName);
-                        requestItemViewModel.InvoiceFileStrings.Add(newFileString);
-                    }
-                }
-                if (Directory.Exists(uploadFolderShipments))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderShipments);
-                    FileInfo[] shipmentfilesfound = DirectoryToSearch.GetFiles("*.*");
-                    requestItemViewModel.ShipmentFileStrings = new List<string>();
-                    foreach (var shipmentfile in shipmentfilesfound)
-                    {
-                        string newFileString = AppUtility.GetLastFourFiles(shipmentfile.FullName);
-                        requestItemViewModel.ShipmentFileStrings.Add(newFileString);
-                    }
-                }
-                if (Directory.Exists(uploadFolderQuotes))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
-                    FileInfo[] quotefilesfound = DirectoryToSearch.GetFiles("*.*");
-                    requestItemViewModel.QuoteFileStrings = new List<string>();
-                    foreach (var quotefile in quotefilesfound)
-                    {
-                        string newFileString = AppUtility.GetLastFourFiles(quotefile.FullName);
-                        requestItemViewModel.QuoteFileStrings.Add(newFileString);
-                    }
-                }
-                if (Directory.Exists(uploadFolderInfo))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInfo);
-                    FileInfo[] infofilesfound = DirectoryToSearch.GetFiles("*.*");
-                    requestItemViewModel.InfoFileStrings = new List<string>();
-                    foreach (var infofile in infofilesfound)
-                    {
-                        string newFileString = AppUtility.GetLastFourFiles(infofile.FullName);
-                        requestItemViewModel.InfoFileStrings.Add(newFileString);
-                    }
-                }
-                if (Directory.Exists(uploadFolderPictures))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderPictures);
-                    FileInfo[] picturefilesfound = DirectoryToSearch.GetFiles("*.*");
-                    requestItemViewModel.PictureFileStrings = new List<string>();
-                    foreach (var picturefile in picturefilesfound)
-                    {
-                        string newFileString = AppUtility.GetLastFourFiles(picturefile.FullName);
-                        requestItemViewModel.PictureFileStrings.Add(newFileString);
-                    }
-                }
-                if (Directory.Exists(uploadFolderReturns))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderReturns);
-                    FileInfo[] returnfilesfound = DirectoryToSearch.GetFiles("*.*");
-                    requestItemViewModel.ReturnFileStrings = new List<string>();
-                    foreach (var returnfile in returnfilesfound)
-                    {
-                        string newFileString = AppUtility.GetLastFourFiles(returnfile.FullName);
-                        requestItemViewModel.ReturnFileStrings.Add(newFileString);
-                    }
-                }
-                if (Directory.Exists(uploadFolderCredits))
-                {
-                    DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderCredits);
-                    FileInfo[] creditfilesfound = DirectoryToSearch.GetFiles("*.*");
-                    requestItemViewModel.CreditFileStrings = new List<string>();
-                    foreach (var creditfile in creditfilesfound)
-                    {
-                        string newFileString = AppUtility.GetLastFourFiles(creditfile.FullName);
-                        requestItemViewModel.CreditFileStrings.Add(newFileString);
-                    }
-                }
-
-                //GET PAYMENTS HERE
-                
-
-                //locations:
-                var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
-                var requestLocationInstances = request1.RequestLocationInstances.ToList();
-                if (requestLocationInstances.Any())
-                {
-                    requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
-                    
-                    if (requestItemViewModel.ParentLocationInstance != null)
-                    {
-                        //inserting list of childrenslocationinstances to show on the frontend
-                        requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
-                            .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
-                            .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
-                        bool finished = false;
-                        var pli = requestItemViewModel.ParentLocationInstance;
-                        requestItemViewModel.LocationInstances = new List<LocationInstance>();
-                        while (!finished)
-                        {
-                            requestItemViewModel.LocationInstances.Add(pli);
-                            if (pli.LocationInstanceParentID != null)
-                            {
-                                pli = _context.LocationInstances.Where(li => li.LocationInstanceID == pli.LocationInstanceParentID)
-                                    .Include(li => li.LocationType).FirstOrDefault();
-                            }
-                            else
-                            {
-                                requestItemViewModel.LocationType = _context.LocationTypes
-                                    .Where(lt => lt.LocationTypeID == pli.LocationTypeID).FirstOrDefault();
-                                finished = true;
-                            }
-                        }
-                    }
-                }
-
-                if (requestItemViewModel.Request == null)
-                {
-                    TempData["InnerMessage"] = "The request sent in was null";
-                }
-            }
-
-            //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
-            //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
-            //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
-            if (AppUtility.IsAjaxRequest(this.Request))
-            {
-                TempData["IsFull"] = false;
-                return PartialView(requestItemViewModel);
-            }
-            else
-            {
-                TempData["IsFull"] = true;
-                return View(requestItemViewModel);
-            }
-
-        }
-
+      
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> DetailsSummaryModalView(int? id, bool NewRequestFromProduct = false)
         {
@@ -1040,41 +813,41 @@ namespace PrototypeWithAuth.Controllers
                 //}
 
 
-                //locations:
-                //get the list of requestLocationInstances in this request
-                //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
-                var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
-                var requestLocationInstances = request1.RequestLocationInstances.ToList();
-                //if it has => (which it should once its in a details view)
-                if (requestLocationInstances.Any())
-                {
-                    //get the parent location instances of the first one
-                    //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
-                    //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
-                    requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
-                    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
-                    //need to test b/c the model is int? which is nullable
-                    if (requestItemViewModel.ParentLocationInstance != null)
-                    {
-                        //inserting list of childrenslocationinstances to show on the frontend
-                        requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
-                            .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
-                            .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
-                        //var x = 0; //place in cli
-                        //requestItemViewModel.ChildrenLocationInstancesRequests = new List<Request>();
-                        //foreach (var cli in requestItemViewModel.ChildrenLocationInstances)
-                        //{
-                        //    var req = _context.Requests
-                        //        .Include(r => r.RequestLocationInstances.Select(rli => rli.LocationInstanceID == cli.LocationInstanceID)).Include(r => r.Product)
-                        //        .FirstOrDefault();
-                        //    if (req != null)
-                        //    {
-                        //        requestItemViewModel.ChildrenLocationInstancesRequests.Add(req);
-                        //    }
-                        //}
+                ////locations:
+                ////get the list of requestLocationInstances in this request
+                ////can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
+                //var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
+                //var requestLocationInstances = request1.RequestLocationInstances.ToList();
+                ////if it has => (which it should once its in a details view)
+                //if (requestLocationInstances.Any())
+                //{
+                //    //get the parent location instances of the first one
+                //    //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
+                //    //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
+                //    requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                //    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                //    //need to test b/c the model is int? which is nullable
+                //    if (requestItemViewModel.ParentLocationInstance != null)
+                //    {
+                //        //inserting list of childrenslocationinstances to show on the frontend
+                //        requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
+                //            .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
+                //            .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
+                //        //var x = 0; //place in cli
+                //        //requestItemViewModel.ChildrenLocationInstancesRequests = new List<Request>();
+                //        //foreach (var cli in requestItemViewModel.ChildrenLocationInstances)
+                //        //{
+                //        //    var req = _context.Requests
+                //        //        .Include(r => r.RequestLocationInstances.Select(rli => rli.LocationInstanceID == cli.LocationInstanceID)).Include(r => r.Product)
+                //        //        .FirstOrDefault();
+                //        //    if (req != null)
+                //        //    {
+                //        //        requestItemViewModel.ChildrenLocationInstancesRequests.Add(req);
+                //        //    }
+                //        //}
 
-                    }
-                }
+                //    }
+                //}
 
                 if (requestItemViewModel.Request == null)
                 {
@@ -1323,35 +1096,96 @@ namespace PrototypeWithAuth.Controllers
             var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
             var requestLocationInstances = request1.RequestLocationInstances.ToList();
             //if it has => (which it should once its in a details view)
-            if (requestLocationInstances.Any())
+            requestItemViewModel.LocationInstances = new List<LocationInstance>();
+            requestLocationInstances.ForEach(rli => requestItemViewModel.LocationInstances.Add(rli.LocationInstance));
+            if(request1.RequestStatusID==3 || request1.RequestStatusID==5 || request1.RequestStatusID == 4)
             {
-                //get the parent location instances of the first one
-                //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
-                //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
-                requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
-                //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
-                //need to test b/c the model is int? which is nullable
-                if (requestItemViewModel.ParentLocationInstance != null)
+                ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
                 {
-                    //inserting list of childrenslocationinstances to show on the frontend
-                    requestItemViewModel.ChildrenLocationInstances = _context.LocationInstances
-                        .Where(li => li.LocationInstanceParentID == requestItemViewModel.ParentLocationInstance.LocationInstanceID)
-                        .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
-                    //var x = 0; //place in cli
-                    //requestItemViewModel.ChildrenLocationInstancesRequests = new List<Request>();
-                    //foreach (var cli in requestItemViewModel.ChildrenLocationInstances)
-                    //{
-                    //    var req = _context.Requests
-                    //        .Include(r => r.RequestLocationInstances.Select(rli => rli.LocationInstanceID == cli.LocationInstanceID)).Include(r => r.Product)
-                    //        .FirstOrDefault();
-                    //    if (req != null)
-                    //    {
-                    //        requestItemViewModel.ChildrenLocationInstancesRequests.Add(req);
-                    //    }
-                    //}
+                    Request = _context.Requests.Where(r => r.RequestID == request1.RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                   .FirstOrDefault(),
+                    locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
+                    locationInstancesSelected = new List<LocationInstance>(),
+                };
 
+
+                if (requestLocationInstances.Any())
+                {
+                    //get the parent location instances of the first one
+                    //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
+                    //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
+                    LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li=>li.LocationType).FirstOrDefault();
+                    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    //need to test b/c the model is int? which is nullable
+                    receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
+                    var locationType = parentLocationInstance.LocationType;
+                    while(locationType.Depth != 0)
+                    {
+                         locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
+                    }
+                    requestItemViewModel.ParentDepthZeroOfSelected = locationType;
+                    requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
+
+                    ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
+                    {
+                        locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == locationType.LocationTypeID),
+                        locationTypeNames = new List<string>(),
+                        locationInstancesSelected = new List<LocationInstance>()
+                    };
+                    bool finished = false;
+                    int locationTypeIDLoop = locationType.LocationTypeID;
+                    var parent = parentLocationInstance;
+                    receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
+                    requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
+                    requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.Where(l => l.LocationInstanceParentID==parent.LocationInstanceParentID).ToList());
+                    while (parent.LocationInstanceParentID != null)
+                    {
+                        parent = _context.LocationInstances.Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
+                        requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
+                        receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
+                    }
+                    while (!finished)
+                    {
+                        //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
+                        var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
+                        string nextTYpeName = nextType.LocationTypeName;
+                        int? tryNewLocationType = nextType.LocationTypeChildID;
+                        //add it to the list in the viewmodel
+                        receivedModalSublocationsViewModel.locationTypeNames.Add(nextTYpeName);
+
+                        //while we're still looping through we'll instantiate the locationInstancesSelected so we can have dropdownlistfors on the view
+                        //receivedModalSublocationsViewModel.locationInstancesSelected.Add(new LocationInstance());
+
+                        if (tryNewLocationType == null)
+                        {
+                            //if its not null we can convert it and pass it in
+                            finished = true;
+                        }
+                        else
+                        {
+                            locationTypeIDLoop = (Int32)tryNewLocationType;
+                        }
+                    }
+                    requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
+                    ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
+                    {
+                        ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == parentLocationInstance.LocationInstanceID).FirstOrDefault()
+                    };
+
+                    if (receivedModalVisualViewModel.ParentLocationInstance != null)
+                    {
+                        receivedModalVisualViewModel.ChildrenLocationInstances =
+                            _context.LocationInstances.Where(m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID)
+                            .Include(m => m.RequestLocationInstances).ToList();
+
+                        //return NotFound();
+                    }
+                    requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
                 }
+                
+              
             }
+
 
             if (requestItemViewModel.Request == null)
             {

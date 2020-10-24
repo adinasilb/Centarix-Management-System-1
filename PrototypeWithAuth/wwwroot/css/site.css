@@ -1804,6 +1804,12 @@ span.caret {
     border: 2px solid var(--lab-man-color) !important;
     border-radius: .25rem !important
 }
+.order-inv-form .dropdown:focus, .supplier-form .dropdown-multiple:focus {
+    outline: none;
+    border-bottom: none !important;
+    border: 2px solid var(--lab-man-color) !important;
+    border-radius: .25rem !important
+}
 
 .supplier-form .input-group:focus-within > .input-group-text {
     box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
@@ -2181,4 +2187,9 @@ input[type=text].error, input[type=number].error {
     margin-top: 1rem;
     font-size: 1.25rem;
     line-height: 1.5625rem;
+}
+.overflow-left {
+    display: inline-block;
+    white-space: nowrap;
+    direction: rtl;
 }
