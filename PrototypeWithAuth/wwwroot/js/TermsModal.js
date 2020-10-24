@@ -154,11 +154,15 @@ $(function () {
 		if (val == 'true') {
 			console.log("true");
 			$("#Terms").attr("disabled", true);
+			$("#select-options-Terms").attr("disabled", true);
+			$("#select-options-Terms").hide();
 			$("#Installments").attr("disabled", true);
 		}
 		else {
 			console.log("false");
 			$("#Terms").attr("disabled", false);
+			$("#select-options-Terms").attr("disabled", false);
+			$("#select-options-Terms").show();
 			$("#Installments").attr("disabled", false);
 		};
 	});
@@ -183,10 +187,14 @@ $(function () {
 		if (val > 0) {
 			$("#Paid").attr("disabled", true);
 			$("#Terms").attr("disabled", true);
+			$("#select-options-Terms").attr("disabled", true);
+			$("#select-options-Terms").hide();
 		}
 		else {
 			$("#Paid").attr("disabled", false);
 			$("#Terms").attr("disabled", false);
+			$("#select-options-Terms").attr("disabled", false);
+			$("#select-options-Terms").show();
 		};
 	});
 
