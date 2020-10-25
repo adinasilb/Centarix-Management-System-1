@@ -13,15 +13,16 @@
     }
 }
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
+    <div class="modal-dialog-centered mx-auto  modal-lg on-form-modal" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding @form">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding @form receivedModalForm">
                 @*the following hidden fors are here so i can do a request.save in for the info that is being given here.
                     in the future might want to change it to loading the request from this request id and then adding in the values
                     given here (done in the controller)*@
@@ -97,7 +98,7 @@
                                 <br />
          
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" asp-for="Clarify" onclick="changePartialDelivery()" />
+                                    <input type="checkbox" class="custom-control-input" asp-for="Clarify"/>
                                     <label class="custom-control-label text-white" style="font-size: 0;" asp-for="Clarify"></label>
                                 </div>
                             </div>
@@ -105,7 +106,7 @@
                                     <label asp-for="PartialDelivery">Partial Delivery</label>
                                     <br />
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" asp-for="PartialDelivery" onclick="changeClarify()" />
+                                        <input type="checkbox" class="custom-control-input" asp-for="PartialDelivery"  />
                                         <label class="custom-control-label text-white" style="font-size: 0;" asp-for="PartialDelivery"></label>
                                     </div>
                                 </div>
@@ -210,17 +211,22 @@
     $("input:checkbox").on('click', function () {
         // in the handler, 'this' refers to the box clicked on
         var $box = $(this);
-        if ($box.is(":checked")) {
-            // the name of the box is retrieved using the .attr() method
-            // as it is assumed and expected to be immutable
-            var group = "input:checkbox[name='" + $box.attr("name") + "']";
-            // the checked state of the group/box on the other hand will change
-            // and the current value is retrieved using .prop() method
-            console.log(group)
-            $(group).prop("checked", false);
-            $box.prop("checked", true);
-        } else {
+        if (!$box.is(":checked")) {
+            console.log('in box checked')
             $box.prop("checked", false);
+        } else {
+            switch ($box.attr('name')) {
+                case "PartialDelivery":
+                    console.log('in partial')
+                    $("#PartialDelivery").prop("checked", true);
+                    $("#Clarify").prop("checked", false);
+                    break;
+                case "Clarify":
+                    console.log('in clarify')
+                     $("#PartialDelivery").prop("checked", false);
+                    $("#Clarify").prop("checked", true);
+                    break;
+            }
         }
     });
     //AJAX load full partial view for modalview manage locations

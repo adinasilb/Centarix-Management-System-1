@@ -1,7 +1,6 @@
 ﻿@using PrototypeWithAuth.AppData;
 @model AppUtility.MenuItems
 @{
-    @using PrototypeWithAuth.AppData
     Layout = null;
     var bcColor = "order-inv-background-color";
     switch (Model)
@@ -26,31 +25,34 @@
 }
 <script src="~/js/site.js"></script>
 <script src="~/js/confirmedit.js"></script>
-<div class="modal confirm-edit-modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view confirm-edit-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
+    <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; width:32rem;" >
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <div class="modal-header" style="border-bottom: 0;">
-                <input type="hidden" text="open" class="modal-open-state" />
-                <div class="row modal-sides heading-1">
-                    Save Changes
+            <div class="modal-padding">
+                <div class="modal-header pt-0" style="border-bottom: 0;">
+                    <input type="hidden" text="open" class="modal-open-state" />
+                    <div class="row heading-1">
+                        Save Changes
+                    </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <div class="row modal-sides">
-                    Are you sure you would like to exit the edit modal and save all changes?
-                </div>
-                <div class="row text-center modal-sides">
-                    <button class="text custom-button custom-button-font @bcColor save-request-edits">Save</button>
-                    <button class="custom-button custom-cancel float-right text dont-save-request-edits">Cancel</button>
-                    @*<button class="custom-button custom-cancel float-right text cancel-request-edits">Cancel</button>*@
-                </div>
-            </div>
 
+                <div class="modal-body">
+                    <div class="row">
+                        Are you sure you would like to exit the edit modal and save all changes?
+                    </div>
+                    <div class="row text-center">
+                        <button class="custom-button custom-cancel text dont-save-request-edits  between-button-margin">Cancel</button>
+                        <button class="text custom-button custom-button-font @bcColor save-request-edits">Save</button>
+
+                        @*<button class="custom-button custom-cancel float-right text cancel-request-edits">Cancel</button>*@
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

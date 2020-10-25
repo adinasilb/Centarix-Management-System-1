@@ -71,7 +71,7 @@
         var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
 
         if (nextSelect != undefined) { //if there is another one
-
+            $(nextSelect).html('');
             $(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text('select');
             $.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
                 var item = "<li>Select Location Instance</li>";
