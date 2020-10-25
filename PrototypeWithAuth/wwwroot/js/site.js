@@ -2291,10 +2291,14 @@ $(function () {
 			if ($(this).hasClass('operations')) {
 				url = "/Operations/EditModalView";
 				section = "Operation";
-			} else if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
+			} else if ($(this).hasClass('suppliers') ) {
+				url = "/Vendors/Edit";
+				section = "LabManagement";
+			} else if ( $(this).hasClass('accounting')) {
 				url = "/Vendors/Edit";
 				section = "Accounting";
-			} else if ($(this).hasClass('users')) {
+			}
+			else if ($(this).hasClass('users')) {
 				url = "/Admin/EditUser";
 				section = "Users";
 			} else if ($(this).hasClass('orders')) {
