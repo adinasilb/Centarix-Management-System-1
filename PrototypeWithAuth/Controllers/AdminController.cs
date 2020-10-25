@@ -209,10 +209,7 @@ namespace PrototypeWithAuth.Controllers
                 usernum = _context.Users.OrderByDescending(u => u.UserNum).FirstOrDefault().UserNum + 1;
             }
             var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
-            //figure out what to do with validating model state
-            //if (ModelState.IsValid)
-            //{
-
+            
             var user = new ApplicationUser();
             if (UserType == 4)
             {
@@ -850,9 +847,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (DbUpdateException ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
+                
             }
             catch (Exception e) {
 

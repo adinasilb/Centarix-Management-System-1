@@ -40,7 +40,6 @@ namespace PrototypeWithAuth
                 loggingBuilder.AddDebug();
             });
 
-
             ////Set database Connection from application json file
 
             //services.AddDbContext<ApplicationDbContext>(options =>
@@ -49,10 +48,9 @@ namespace PrototypeWithAuth
 
             services.AddDbContext<ApplicationDbContext>(options => {
                 options.UseSqlServer(
-                        Configuration.GetConnectionString("DefaultConnection"));
+                    Configuration.GetConnectionString("DefaultConnection"));
                 options.EnableSensitiveDataLogging(true);
-            }
-                );
+            });
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(

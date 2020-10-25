@@ -376,7 +376,12 @@
                                                                             <ul class="p-0 locationinstance dropdown-menu ">
                                                                                 @if (i < depth)
                                                                                 {
-
+                                                                                    @*@for (int w=0; w<=Model.ChildrenLocationInstances.Count; w++)
+                                                                                    {
+                                                                                        <li id="@Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceID" onclick="SLI(this)" value="@Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceID">
+                                                                                            @Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceName
+                                                                                        </li>
+                                                                                    }*@
                                                                                     @foreach (var location in Model.ChildrenLocationInstances[depth -1- ((i + (count - (count - depth))) - depth)])
                                                                                     {
                                                                                         <li id="@location.LocationInstanceID" onclick="SLI(this)" value="@location.LocationInstanceID">

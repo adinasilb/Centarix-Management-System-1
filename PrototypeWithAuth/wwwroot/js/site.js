@@ -50,6 +50,27 @@ $(function () {
 		$.fn.parentListChange();
 	});
 
+	//$("body").on("change", ".mdb-select", function () {
+	//	alert("body on change mdb select");
+	//});
+
+	//$("body").on("click", ".mdb-select ul", function () {
+	//	alert("body on click mdb select ul");
+	//});
+
+	//$("body").on("change", ".mdb-select ul", function () {
+	//	alert("body on change mdb select ul");
+	//});
+
+	//$("body").on("click", ".mdb-select ul li", function () {
+	//	alert("body on click mdb select ul li");
+	//});
+
+	//$("body").on("change", ".mdb-select ul li", function () {
+	//	alert("body on change mdb select ul li");
+	//});
+
+
 	$.fn.parentListChange = function () {
 		console.log("in parent list");
 		var parentCategoryId = $("#parentlist").val();
@@ -851,7 +872,7 @@ $(function () {
 				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
 				break;
 			case "Weight/Volume":
-				alert("inside optgroup weight/volume TESTING");
+				//alert("inside optgroup weight/volume TESTING");
 				$(".subunit-subunit").hide();
 				//$("#select-options-Request_SubUnitTypeID option").prop('hidden', true);
 				//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
@@ -943,9 +964,9 @@ $(function () {
 	//LOCATIONS:
 
 
-	
+
 	//Received Modal => fill up the next selectLocationInstance with the right selections
-	
+
 	//$.fn.CallAjax() = function ($url, $div) {
 
 	//	$.ajax({
@@ -1133,7 +1154,7 @@ $(function () {
 		$cardDiv = $(this).closest("div.card");
 		console.log("cardDiv: " + JSON.stringify($cardDiv));
 		$cardDiv.addClass("document-border");
-	
+
 	});
 
 
@@ -2344,7 +2365,7 @@ $(function () {
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit')
 
-//turn off document modals
+				//turn off document modals
 
 
 
@@ -2434,6 +2455,40 @@ $(function () {
 
 	});
 
+
+	//$(".mdb-select ul").off("click").on("click", function () {
+	//	alert("select ul clicked!");
+	//});
+
+	//$(".mdb-select ul").off("change").on("change", function () {
+	//	alert("select ul changed!");
+	//});
+
+	//$(".mdb-select ul li").off("click").on("click", function () {
+	//	alert("select ul li clicked!");
+	//});
+
+	//$(".mdb-select ul li").off("change").on("change", function () {
+	//	alert("select ul li changed!");
+	//});
+
+	//$(".select-dropdown").off("click").on("click", function () {
+	//	alert("select dropdown clicked");
+	//});
+
+	//$(".select-dropdown").off("change").on("change", function () {
+	//	alert("select dropdown changed");
+	//});
+
+	//$(".mdb-select").off("click").on("click", function () {
+	//	alert("select clicked!");
+	//});
+
+	//$(".mdb-select").off("change").on("change", function () {
+	//	alert("select changed!");
+	//});
+
+
 });
 
 $('.modal #FirstName').change(function () {
@@ -2446,7 +2501,7 @@ $('.exitModal').on('click', '.close', function (e) {
 	console.log("close edit modal");
 	$.ajax({
 		async: true,
-		url:'/Timekeeper/ReportHours' ,
+		url: '/Timekeeper/ReportHours',
 		type: 'GET',
 		cache: true,
 		success: function (data) {
