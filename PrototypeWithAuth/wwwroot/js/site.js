@@ -872,7 +872,7 @@ $(function () {
 				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
 				break;
 			case "Weight/Volume":
-				alert("inside optgroup weight/volume TESTING");
+				//alert("inside optgroup weight/volume TESTING");
 				$(".subunit-subunit").hide();
 				//$("#select-options-Request_SubUnitTypeID option").prop('hidden', true);
 				//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
