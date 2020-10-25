@@ -64,8 +64,8 @@
 <script>
     function SLI(el) {
         //ONE ---> GET THE NEXT DROPDOWNLIST
-
         var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
+        $(nextSelect).html('');
         console.log(nextSelect)
         var locationInstanceParentId = $(el).val();;
         var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
