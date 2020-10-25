@@ -943,9 +943,9 @@ $(function () {
 	//LOCATIONS:
 
 
-	
+
 	//Received Modal => fill up the next selectLocationInstance with the right selections
-	
+
 	//$.fn.CallAjax() = function ($url, $div) {
 
 	//	$.ajax({
@@ -1133,7 +1133,7 @@ $(function () {
 		$cardDiv = $(this).closest("div.card");
 		console.log("cardDiv: " + JSON.stringify($cardDiv));
 		$cardDiv.addClass("document-border");
-	
+
 	});
 
 
@@ -2340,7 +2340,7 @@ $(function () {
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit')
 
-//turn off document modals
+				//turn off document modals
 
 
 
@@ -2430,6 +2430,40 @@ $(function () {
 
 	});
 
+
+	//$(".mdb-select ul").off("click").on("click", function () {
+	//	alert("select ul clicked!");
+	//});
+
+	//$(".mdb-select ul").off("change").on("change", function () {
+	//	alert("select ul changed!");
+	//});
+
+	//$(".mdb-select ul li").off("click").on("click", function () {
+	//	alert("select ul li clicked!");
+	//});
+
+	//$(".mdb-select ul li").off("change").on("change", function () {
+	//	alert("select ul li changed!");
+	//});
+
+	//$(".select-dropdown").off("click").on("click", function () {
+	//	alert("select dropdown clicked");
+	//});
+
+	//$(".select-dropdown").off("change").on("change", function () {
+	//	alert("select dropdown changed");
+	//});
+
+	//$(".mdb-select").off("click").on("click", function () {
+	//	alert("select clicked!");
+	//});
+
+	//$(".mdb-select").off("change").on("change", function () {
+	//	alert("select changed!");
+	//});
+
+
 });
 
 $('.modal #FirstName').change(function () {
@@ -2442,7 +2476,7 @@ $('.exitModal').on('click', '.close', function (e) {
 	console.log("close edit modal");
 	$.ajax({
 		async: true,
-		url:'/Timekeeper/ReportHours' ,
+		url: '/Timekeeper/ReportHours',
 		type: 'GET',
 		cache: true,
 		success: function (data) {
