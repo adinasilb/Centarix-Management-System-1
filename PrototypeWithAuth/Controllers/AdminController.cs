@@ -498,7 +498,7 @@ namespace PrototypeWithAuth.Controllers
 
                 registerUserViewModel.NewEmployee = new Employee(); //this may be able to be taken out but it might cause errors with users if taken out. so check first
 
-                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).FirstOrDefault();
+                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).Include(s=>s.SalariedEmployee).FirstOrDefault();
                 registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
                 registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
                 registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
@@ -637,13 +637,13 @@ namespace PrototypeWithAuth.Controllers
 
             try
             {
-                ApplicationUser userEditted = null;
+                Employee userEditted = userEditted = await _context.Employees.Where(u => u.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
                 var selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
                 Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
-                if (employeeEditted == null && selectedStatusID == 4)
+                var oldSelectedStatus = employeeEditted.EmployeeStatusID;
+                if (selectedStatusID == 4)
                 {
-                    //never was an employee only was a user and wants to update info
-                    userEditted = await _context.Users.Where(u => u.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
+                    //never was an employee only was a user and wants to update info                 
                     userEditted.UserName = registerUserViewModel.Email;
                     userEditted.CentarixID = registerUserViewModel.CentarixID;
                     userEditted.FirstName = registerUserViewModel.FirstName;
@@ -662,169 +662,68 @@ namespace PrototypeWithAuth.Controllers
                     userEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
                     userEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
                     userEditted.OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit;
-
+                    userEditted.EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
                     _context.Update(userEditted);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                 }
-                else if (employeeEditted != null) //The user has an employee status  but might be changing it and wants to update the information
-                {
-                    if (selectedStatusID != 4)
-                    {
-                        // still wants to remain an employee
-                        employeeEditted.UserName = registerUserViewModel.Email;
-                        employeeEditted.CentarixID = registerUserViewModel.CentarixID;
-                        employeeEditted.FirstName = registerUserViewModel.FirstName;
-                        employeeEditted.LastName = registerUserViewModel.LastName;
-                        employeeEditted.Email = registerUserViewModel.Email;
-                        employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
-                        employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
-                        //are users allowed to update their password
-                        //if (registerUserViewModel.SecureAppPass != null)
-                        //{
-                        //    userEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
-                        //}
-                        employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
-                        employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
-                        employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
-                        employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
-                        employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
-                        employeeEditted.OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit;
-                        employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
-                        employeeEditted.DOB = registerUserViewModel.NewEmployee.DOB;
-                        employeeEditted.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
-                        employeeEditted.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
-                        employeeEditted.IncomeTax = registerUserViewModel.NewEmployee.IncomeTax;
-                        employeeEditted.TaxCredits = registerUserViewModel.NewEmployee.TaxCredits;
-                        employeeEditted.VacationDays = registerUserViewModel.NewEmployee.VacationDays;
-                        employeeEditted.JobTitle = registerUserViewModel.NewEmployee.JobTitle;
-                        employeeEditted.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
-                        employeeEditted.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
-                        employeeEditted.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
-                        employeeEditted.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
-                        employeeEditted.EmployeeStatusID = selectedStatusID;
-                        employeeEditted.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
-
-                        _context.Update(employeeEditted);
-                        //  _context.SaveChangesAsync();
-                        //user is chnageing his status
-                        if (employeeEditted.EmployeeStatusID != selectedStatusID)
-                        {
-                            switch (selectedStatusID)
-                            {
-                                case 1: /*Salaried Employee*/
-                                    var salariedEmployee = new SalariedEmployee()
-                                    {
-                                        EmployeeId = employeeEditted.Id,
-                                        HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay
-                                    };
-                                    _context.Add(salariedEmployee);
-                                    break;
-                                case 2: /*Freelancer*/
-                                    var freelancer = new Freelancer()
-                                    {
-                                        EmployeeId = employeeEditted.Id
-                                    };
-                                    _context.Add(freelancer);
-                                    break;
-                                case 3: /*Advisor*/
-                                    break;
-                            }
-                        }
-                        //user might have changed information in existant statuses
-                        else
-                        {
-                            switch (selectedStatusID)
-                            {
-                                case 1: /*Salaried Employee*/
-                                    var salariedEmployee = _context.SalariedEmployees.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
-                                    salariedEmployee.HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay;
-                                    _context.Update(salariedEmployee);
-                                    break;
-                                case 2: /*Freelancer*/
-                                    //eventually when we add extra to the frelancer
-                                    break;
-                                case 3: /*Advisor*/
-                                    //eventually when we add extra to the advisor
-                                    break;
-                            }
-                        }
-                        // _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        //wants to turn employee into user
-                    }
-
-                }
-                //user was never an employee and wants to become one
                 else
                 {
-                    userEditted = await _userManager.FindByIdAsync(registerUserViewModel.ApplicationUserID);
-                    string id = userEditted.Id;
-                    int usernum = userEditted.UserNum;                   
-                    employeeEditted = new Employee
-                    {
-                        /*User*/
-                        Id = id,
-                        UserName = registerUserViewModel.Email,
-                        Email = registerUserViewModel.Email,
-                        NormalizedEmail = registerUserViewModel.Email.ToUpper(),
-                        FirstName = registerUserViewModel.FirstName,
-                        LastName = registerUserViewModel.LastName,
-                        SecureAppPass = registerUserViewModel.SecureAppPass,
-                        CentarixID = registerUserViewModel.CentarixID,
-                        PhoneNumber = registerUserViewModel.PhoneNumber,
-                        PhoneNumber2 = registerUserViewModel.PhoneNumber2,
-                        UserNum = usernum,
-                        LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
-                        LabUnitLimit = registerUserViewModel.LabUnitLimit,
-                        LabOrderLimit = registerUserViewModel.LabOrderLimit,
-                        OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
-                        OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
-                        OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
-                        /*Employee*/
-                        StartedWorking = registerUserViewModel.NewEmployee.StartedWorking,
-                        DOB = registerUserViewModel.NewEmployee.DOB,
-                        GrossSalary = registerUserViewModel.NewEmployee.GrossSalary,
-                        EmployerTax = registerUserViewModel.NewEmployee.EmployerTax,
-                        IncomeTax = registerUserViewModel.NewEmployee.IncomeTax,
-                        TaxCredits = registerUserViewModel.NewEmployee.TaxCredits,
-                        VacationDays = registerUserViewModel.NewEmployee.VacationDays,
-                        JobTitle = registerUserViewModel.NewEmployee.JobTitle,
-                        DegreeID = registerUserViewModel.NewEmployee.DegreeID,
-                        IDNumber = registerUserViewModel.NewEmployee.IDNumber,
-                        MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID,
-                        CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID,
-                        EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
-                        JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID
+                    // still wants to remain an employee
+                    employeeEditted.UserName = registerUserViewModel.Email;
+                    employeeEditted.CentarixID = registerUserViewModel.CentarixID;
+                    employeeEditted.FirstName = registerUserViewModel.FirstName;
+                    employeeEditted.LastName = registerUserViewModel.LastName;
+                    employeeEditted.Email = registerUserViewModel.Email;
+                    employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
+                    employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
+                    //are users allowed to update their password
+                    //if (registerUserViewModel.SecureAppPass != null)
+                    //{
+                    //    userEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
+                    //}
+                    employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
+                    employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
+                    employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
+                    employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
+                    employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
+                    employeeEditted.OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit;
+                    employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
+                    employeeEditted.DOB = registerUserViewModel.NewEmployee.DOB;
+                    employeeEditted.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
+                    employeeEditted.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
+                    employeeEditted.IncomeTax = registerUserViewModel.NewEmployee.IncomeTax;
+                    employeeEditted.TaxCredits = registerUserViewModel.NewEmployee.TaxCredits;
+                    employeeEditted.VacationDays = registerUserViewModel.NewEmployee.VacationDays;
+                    employeeEditted.JobTitle = registerUserViewModel.NewEmployee.JobTitle;
+                    employeeEditted.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
+                    employeeEditted.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
+                    employeeEditted.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
+                    employeeEditted.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
+                    employeeEditted.EmployeeStatusID = selectedStatusID;
+                    employeeEditted.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
 
-                    };
-                    //add employee type
+                    _context.Update(employeeEditted);
+
                     switch (selectedStatusID)
                     {
                         case 1: /*Salaried Employee*/
-                            var salariedEmployee = new SalariedEmployee()
-                            {
-                                EmployeeId = id,
-                                HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay
-                            };
+                            var salariedEmployee = _context.SalariedEmployees.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
+                            salariedEmployee.EmployeeId = employeeEditted.Id;
+                            salariedEmployee.HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay;
                             employeeEditted.SalariedEmployee = salariedEmployee;
                             break;
                         case 2: /*Freelancer*/
-                            var freelancer = new Freelancer()
-                            {
-                                EmployeeId = id
-                            };
+                            var freelancer = _context.Freelancers.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
+                            freelancer.EmployeeId = employeeEditted.Id;
                             employeeEditted.Freelancer = freelancer;
                             break;
                         case 3: /*Advisor*/
                             break;
                     }
-                    await _userManager.UpdateAsync(employeeEditted);
-                   // await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
-             
+                    
 
                 //if password isn't blank - reset the password):
                 if (registerUserViewModel.Password != null)
