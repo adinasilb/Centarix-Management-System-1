@@ -209,10 +209,7 @@ namespace PrototypeWithAuth.Controllers
                 usernum = _context.Users.OrderByDescending(u => u.UserNum).FirstOrDefault().UserNum + 1;
             }
             var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
-            //figure out what to do with validating model state
-            //if (ModelState.IsValid)
-            //{
-
+            
             var user = new ApplicationUser();
             if (UserType == 4)
             {
@@ -640,6 +637,7 @@ namespace PrototypeWithAuth.Controllers
                 ApplicationUser userEditted = null;
                 var selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
                 Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
+                var oldStatusID = employeeEditted.EmployeeStatusID;
                 if (employeeEditted == null && selectedStatusID == 4)
                 {
                     //never was an employee only was a user and wants to update info
@@ -708,7 +706,7 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(employeeEditted);
                         //  _context.SaveChangesAsync();
                         //user is chnageing his status
-                        if (employeeEditted.EmployeeStatusID != selectedStatusID)
+                        if (oldStatusID != selectedStatusID)
                         {
                             switch (selectedStatusID)
                             {

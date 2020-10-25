@@ -9,7 +9,7 @@ $(function () {
 			} else {
 				error.insertAfter(element);
 			}
-			if (element.hasClass('employee-status')) {				
+			if (element.hasClass('employee-status')) {
 				$("#validation-EmployeeStatus").removeClass("hidden");
 			}
 		}
@@ -30,9 +30,9 @@ $(function () {
 			"LocationInstance.LocationInstanceName": "required",
 			"LocationInstance.LocationTypeID": {
 				required: true,
-				min:1,
+				min: 1,
 			},
-			"LocationInstances[0].Height" : {
+			"LocationInstances[0].Height": {
 				required: true,
 				number: true,
 				min: 1,
@@ -61,7 +61,7 @@ $(function () {
 	});
 	$('.reorderForm').validate({
 		rules: {
-			
+
 			"Request.Unit": {
 				required: true,
 				number: true,
@@ -73,7 +73,7 @@ $(function () {
 				number: true,
 				min: 1
 			},
-	
+
 			"Request.UnitTypeID": "selectRequired"
 		},
 
@@ -90,7 +90,7 @@ $(function () {
 				min: 0,
 				integer: true
 			},
-			"QuoteFileUpload" : "required"
+			"QuoteFileUpload": "required"
 		},
 
 	});
@@ -162,7 +162,7 @@ $(function () {
 			},
 			"Request.UnitTypeID": "selectRequired"
 		},
-		
+
 	});
 	$('.reportHoursForm').validate({
 		rules: {
@@ -242,8 +242,8 @@ $(function () {
 			"Vendor.VendorCity": "required",
 			"Vendor.VendorStreet": "required",
 			"Vendor.VendorTelephone": {
-				required : true,
-				minlength : 9
+				required: true,
+				minlength: 9
 			},
 			"Vendor.VendorCellPhone": {
 				minlength: 9
@@ -266,12 +266,12 @@ $(function () {
 				min: 1,
 				integer: true
 			},
-			
-			
+
+
 		},
 	});
 	var isUserAndIsNotEdit = function () {
-		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser')==false;
+		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
 	}
 	var isEmployee = function () {
 		//console.log("employeestatus: " + ( $("#NewEmployee_EmployeeStatusID").val() != '4'));
@@ -281,7 +281,7 @@ $(function () {
 		return $("#NewEmployee_EmployeeStatusID").val() == "4";
 	}
 	var isDollars = function () {
-		console.log("isdollars: "+$("#currency").val())
+		console.log("isdollars: " + $("#currency").val())
 		return $("[name='Request.Currency']").val() == "dollar";
 	}
 
@@ -337,27 +337,28 @@ $(function () {
 			},
 			"NewEmployee.TaxCredits": {
 				number: true,
-				integer : true
+				integer: true
 			},
 			"NewEmployee.SalariedEmployee.WorkScope": {
 				atleastOneHoursField: isEmployee,
 			},
 			"NewEmployee.SalariedEmployee.HoursPerDay": {
 				atleastOneHoursField: isEmployee,
+				integer: true
 			},
 			"NewEmployee.VacationDays": {
 				required: isEmployee,
 				number: true,
-				integer : true
+				integer: true
 			},
 			"Password": {
-				required: isUserAndIsNotEdit,				
+				required: isUserAndIsNotEdit,
 				nonAlphaNumeric: true,
 				uppercase: true,
 				lowercase: true,
 				containsNumber: true,
 				minlength: 8,
-				maxlength : 20
+				maxlength: 20
 			},
 			"ConfirmPassword": {
 				required: isUserAndIsNotEdit,
@@ -370,7 +371,7 @@ $(function () {
 			},
 			"NewEmployee.EmployeeStatusID": {
 				required: true,
-				min : 1
+				min: 1
 			}
 		},
 		messages: {
@@ -386,11 +387,11 @@ $(function () {
 		return n === +n && n === (n | 0);
 	}
 	$.validator.addMethod("nonAlphaNumeric", function (value) {
-		return /^[a-zA-Z0-9]+$/.test(value)==false;
+		return /^[a-zA-Z0-9]+$/.test(value) == false;
 	}, "Password must contain a non alphanumeric character ");
 	$.validator.addMethod("uppercase", function (value, element) {
 		if (this.optional(element)) {
-		return true;
+			return true;
 		}
 		return /[A-Z]/.test(value);
 	}, "Must contain uppercase");
@@ -408,23 +409,23 @@ $(function () {
 	}, "Password must contain at least one number ");
 	$.validator.addMethod("selectRequired", function (value, element) {
 		console.log("in select required")
-		return  value != "";
+		return value != "";
 	}, 'Field is required');
 	$.validator.addMethod("atleastOneHoursField", function (value, element) {
 		return $("#NewEmployee_SalariedEmployee_WorkScope").val() != "" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "";
 	}, 'Either Job Scope or Hours Per day is required');
 	$.validator.addMethod("eitherHoursOrTime", function (value, element) {
-		return ($("#Exit1").val() != "" && $("#Entry1").val() != "")|| $("#TotalHours").val() != "";
+		return ($("#Exit1").val() != "" && $("#Entry1").val() != "") || $("#TotalHours").val() != "";
 	}, 'Either total hours or Entry1 and Entry 2 must be filled in');
 	$.validator.addMethod("integer", function (value, element) {
-		return isInteger(value) || value=='';
+		return isInteger(value) || value == '';
 	}, 'Field must be an integer');
 
 	$('.mdb-select').change(function () {
 		if ($(this).rules()) {
 			$(this).valid();
 		}
-	
+
 	});
 	$('.modal').on('change', '.mdb-select', function () {
 		console.log("mdb change .mdb-select")
@@ -436,26 +437,26 @@ $(function () {
 	$('#myForm input').focusout(function (e) {
 		$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid")
-			if ($('#myForm').valid()) {
-				
-				$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
-			} else {
-				$(".error:not(.beforeCallValid)").addClass("afterCallValid")
-				$(".error:not(.beforeCallValid)").removeClass("error")
-				$("label.afterCallValid").remove()
-				$(".error").removeClass('beforeCallValid')
-				$(".afterCallValid").removeClass('error')
-				$(".afterCallValid").removeClass('afterCallValid')
-				if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-					$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
-				}
+		if ($('#myForm').valid()) {
+
+			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+		} else {
+			$(".error:not(.beforeCallValid)").addClass("afterCallValid")
+			$(".error:not(.beforeCallValid)").removeClass("error")
+			$("label.afterCallValid").remove()
+			$(".error").removeClass('beforeCallValid')
+			$(".afterCallValid").removeClass('error')
+			$(".afterCallValid").removeClass('afterCallValid')
+			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+			}
 		}
 		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
 
 	$('.next-tab').click(function () {
 		if ($(this).hasClass('request-price')) {
-			$('#Request_UnitTypeID').rules("remove", "selectRequired"); 
+			$('#Request_UnitTypeID').rules("remove", "selectRequired");
 		}
 
 		var valid = $("#myForm").valid();
@@ -465,12 +466,12 @@ $(function () {
 			$('.next-tab').prop("disabled", true);
 		}
 		else {
-			$('.next-tab').prop("disabled", false);	
-			
+			$('.next-tab').prop("disabled", false);
+
 		}
 		//work around for now - because select hidden are ignored
 		if ($(this).hasClass('request-price')) {
-			$('#Request_UnitTypeID').rules("add", "selectRequired"); 
+			$('#Request_UnitTypeID').rules("add", "selectRequired");
 		}
 
 	});
@@ -484,7 +485,7 @@ $(function () {
 			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
 				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
 			}
-		
+
 		}
 		else {
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
@@ -509,9 +510,9 @@ $(function () {
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
 
-	
 
-			
+
+
 });
 
 
