@@ -951,9 +951,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (DbUpdateException ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
+                
             }
             catch (Exception e) {
 

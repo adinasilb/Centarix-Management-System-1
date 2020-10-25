@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization; //in order to allow for authirization 
 using Microsoft.AspNetCore.Mvc.Authorization; // in order to allow for authorize filter
 using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
+using Microsoft.Extensions.Logging;
 
 namespace PrototypeWithAuth
 {
@@ -33,7 +34,11 @@ namespace PrototypeWithAuth
         public void ConfigureServices(IServiceCollection services)
         {
 
-
+            services.AddLogging(loggingBuilder => {
+                loggingBuilder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+                loggingBuilder.AddDebug();
+            });
 
             ////Set database Connection from application json file
 
@@ -41,9 +46,11 @@ namespace PrototypeWithAuth
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("AzureConnection")));
 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options => {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection"));
+                options.EnableSensitiveDataLogging(true);
+            });
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
