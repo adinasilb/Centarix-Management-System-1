@@ -50,6 +50,27 @@ $(function () {
 		$.fn.parentListChange();
 	});
 
+	//$("body").on("change", ".mdb-select", function () {
+	//	alert("body on change mdb select");
+	//});
+
+	//$("body").on("click", ".mdb-select ul", function () {
+	//	alert("body on click mdb select ul");
+	//});
+
+	//$("body").on("change", ".mdb-select ul", function () {
+	//	alert("body on change mdb select ul");
+	//});
+
+	//$("body").on("click", ".mdb-select ul li", function () {
+	//	alert("body on click mdb select ul li");
+	//});
+
+	//$("body").on("change", ".mdb-select ul li", function () {
+	//	alert("body on change mdb select ul li");
+	//});
+
+
 	$.fn.parentListChange = function () {
 		console.log("in parent list");
 		var parentCategoryId = $("#parentlist").val();
