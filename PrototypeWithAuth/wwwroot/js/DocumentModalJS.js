@@ -43,7 +43,7 @@
 				var $requestId = $(".open-document-modal.active-document-modal").data("id");
 
 				console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
-				var isOperations = $(".open-document-modal.active-document-modal").hasClass('operations')
+				var isOperations = $(".open-document-modal.active-document-modal").hasClass('operations');
 				$.fn.ChangeColorsOfModal($enumString, isOperations);
 				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, isOperations);
 				return false;
@@ -82,8 +82,8 @@
 		var numCards = $(".card.document-border").length;
 		console.log("numcards: " + numCards);
 
-		var div = $("#" + $foldername + " img");
-		console.log("div: " + div);
+		var div = $("#" + $foldername + " i");
+		
 		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter")) {
 			console.log("has class already");
 		} else {
@@ -164,8 +164,8 @@
 			$(".upload-file").removeClass("disabled-color");
 			$(".upload-file").addClass($bcColor);
 			$(".file-select").attr("disabled", false);
-			$(".icon-delete-24px").removeClass("disabled-filter");
-			$(".icon-delete-24px").addClass($color);
+			$(".documents-delete-icon.icon-delete-24px").removeClass("disabled-filter");
+			$(".documents-delete-icon.icon-delete-24px").addClass($color);
 
 			$(".delete-document").attr("id", "delete-file-document");
 		}
@@ -176,8 +176,8 @@
 			$(".upload-file").addClass("disabled-color");
 			$(".upload-file").removeClass($bcColor);
 			$(".file-select").attr("disabled", true);
-			$(".icon-delete-24px").addClass("disabled-filter");
-			$(".icon-delete-24px").removeClass($color);
+			$(".documents-delete-icon.icon-delete-24px").addClass("disabled-filter");
+			$(".documents-delete-icon.icon-delete-24px").removeClass($color);
 
 			$(".delete-document").attr("id", "");
 		}

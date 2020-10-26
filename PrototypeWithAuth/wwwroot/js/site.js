@@ -1154,7 +1154,6 @@ $(function () {
 		$cardDiv = $(this).closest("div.card");
 		console.log("cardDiv: " + JSON.stringify($cardDiv));
 		$cardDiv.addClass("document-border");
-
 	});
 
 
@@ -1600,7 +1599,7 @@ $(function () {
 		var imageHolder = $("#invoice-image");
 		imageHolder.empty();
 
-		if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+		if (extn == "pdf" || extn == "png" || extn == "jpg" || extn == "jpeg") {
 			console.log("inside the if statement");
 			if (typeof (FileReader) != "undefined") {
 				console.log("file reader does not equal undefined");
@@ -1617,9 +1616,7 @@ $(function () {
 				reader.readAsDataURL($(this)[0].files[0]);
 			}
 		}
-		else {
-			alert("Please only select images");
-		}
+
 	});
 
 	$.fn.validateDateisGreaterThanOrEqualToToday = function (date) {

@@ -600,7 +600,7 @@ input.select-dropdown {
     border: 1px solid var(--operations-color);
 }
 
-.form-control-file::-webkit-file-upload-button {
+ .form-control-file::-webkit-file-upload-button {
     background-color: var(--user-color);
     border: 1px solid var(--user-color);
     border-radius: 3rem;
@@ -612,6 +612,15 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 
+.users-form .form-control-file::-webkit-file-upload-button {
+    background-color: var(--user-color);
+    border: 1px solid var(--user-color);
+
+}
+.accounting-form .form-control-file::-webkit-file-upload-button {
+    background-color: var(--acc-color);
+    border: 1px solid var(--acc-color);
+}
     .form-control-file::-webkit-file-upload-button:hover {
         background-color: rgba(219, 102, 157, .5);
         border: 1px solid var(--user-color);
@@ -2192,4 +2201,7 @@ input[type=text].error, input[type=number].error {
     display: inline-block;
     white-space: nowrap;
     direction: rtl;
+}
+.disable-custom-mdbselect{
+    pointer-events:none;
 }

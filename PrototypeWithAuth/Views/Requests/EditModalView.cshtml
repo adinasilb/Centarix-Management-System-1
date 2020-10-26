@@ -288,7 +288,7 @@
                                                 <label class="control-label" asp-for="ReceivedLocationViewModel.locationTypesDepthZero">Location Type</label>
                                                 <div class=" form-control-plaintext border-bottom p-0">
                                                     <span class="choose p-0"></span>
-                                                    <div class="dropdown dropdown-main">
+                                                    <div class="dropdown dropdown-main disable-custom-mdbselect">
                                                         <div class="select d-inline-flex">
                                                             <span class="caret py-0">
                                                                 ▼
@@ -327,7 +327,7 @@
                                                                 <div class="">
                                                                     <div class=" form-control-plaintext border-bottom p-0">
                                                                         <span class="choose p-0"></span>
-                                                                        <div class="dropdown dropdown-main">
+                                                                        <div class="dropdown dropdown-main disable-custom-mdbselect">
                                                                             <div class="select d-inline-flex">
                                                                                 <span class="caret py-0">
                                                                                     ▼
@@ -360,7 +360,7 @@
                                                                 <div class="">
                                                                     <div class=" form-control-plaintext border-bottom p-0">
                                                                         <span class="choose p-0"></span>
-                                                                        <div class="dropdown dropdown-main">
+                                                                        <div class="dropdown dropdown-main disable-custom-mdbselect">
                                                                             <div class="select d-inline-flex " style="padding-right:1.25rem;">
                                                                                 <span class="caret py-0">
                                                                                     ▼
@@ -424,7 +424,7 @@
                                                                 @if (Model.LocationInstances.Contains(Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z]))
                                                                 {
                                                                     <td class="border" style="padding:0px;">
-                                                                        @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @class = "css-checkbox" })
+                                                                        @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @class = "css-checkbox", @disabled = "disabled" })
                                                                         @Html.LabelFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
                                                                     </td>
                                                                 }
@@ -443,7 +443,7 @@
                                                             else
                                                             {
                                                                 <td class="border" style="padding:0px;">
-                                                                    @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = "css-checkbox" })
+                                                                    @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = "css-checkbox", @disabled = "disabled" })
                                                                     @Html.LabelFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
                                                                 </td>
                                                             }
