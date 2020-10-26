@@ -3364,6 +3364,30 @@ namespace PrototypeWithAuth.Controllers
             }
             await _context.SaveChangesAsync();
 
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string requestFolder = Path.Combine(uploadFolder, addInvoiceViewModel.Requests[0].RequestID.ToString());
+            Directory.CreateDirectory(requestFolder);
+            if (addInvoiceViewModel.InvoiceImage != null) 
+            {
+                int x = 1;
+                //create file
+                string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                if (Directory.Exists(folderPath))
+                {
+                    var filesInDirectory = Directory.GetFiles(folderPath);
+                     x= filesInDirectory.Length + 1;
+                }
+                else
+                {
+                    Directory.CreateDirectory(folderPath);
+                }                
+                string uniqueFileName = x+addInvoiceViewModel.InvoiceImage.FileName;
+                string filePath = Path.Combine(folderPath, uniqueFileName);
+                FileStream filestream = new FileStream(filePath, FileMode.Create);
+                addInvoiceViewModel.InvoiceImage.CopyTo(filestream);
+                filestream.Close();
+            }
+
             return RedirectToAction("AccountingNotifications");
         }
 

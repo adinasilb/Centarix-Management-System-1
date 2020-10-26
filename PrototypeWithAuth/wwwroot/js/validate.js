@@ -16,7 +16,7 @@ $(function () {
 	});
 	$('.addInvoiceForm').validate({
 		rules: {
-			"InvoiceImage": "required",
+			"InvoiceImage": { required: true,  extension: "jpg|jpeg|png|pdf"},
 			"Invoice.InvoiceNumber": {
 				required: true,
 				number: true,
@@ -383,7 +383,8 @@ $(function () {
 			"NewEmployee.EmployeeStatusID": {
 				required: true,
 				min: 1
-			}
+			},
+			UserImage: { extension: "jpg|jpeg|png" }
 		},
 		messages: {
 			"NewEmployee.EmployeeStatusID": {
