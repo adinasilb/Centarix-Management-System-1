@@ -34,27 +34,19 @@ namespace PrototypeWithAuth
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //services.AddLogging(loggingBuilder => {
-            //    loggingBuilder.AddConsole()
-            //        .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
-            //    loggingBuilder.AddDebug();
-            //});
+            services.AddLogging(loggingBuilder => {
+                loggingBuilder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+                loggingBuilder.AddDebug();
+            });
 
             ////Set database Connection from application json file
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("AzureConnection")));
-
-            //services.AddDbContext<ApplicationDbContext>(options => {
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("DefaultConnection"));
-            //    options.EnableSensitiveDataLogging(true);
-            //});
-
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options => {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("CentarixConnection")));
+                    Configuration.GetConnectionString("DefaultConnection"));
+                options.EnableSensitiveDataLogging(true);
+            });
 
 
             //add identity

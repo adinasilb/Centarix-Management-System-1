@@ -153,21 +153,15 @@ $(function () {
 		console.log("in paid fx " + val);
 		if (val == 'true') {
 			console.log("true");
-			//$("#Terms").attr("disabled", true);
-			//$("#select-options-Terms").attr("disabled", true);
-			//$("#select-options-Terms").hide();
-			$(".mdb-select.Terms").attr("disabled", "disabled");
-			$("#select-options-Terms").attr("disabled", "disabled");
-			$(".mdb-select.Terms").disOptionsSelect[0].disabled = true;
+			$(".Terms").materialSelect({ destroy: true });
+			//$(".Terms").materialSelect();
+			$(".terms-disabled").show();
 			$("#Installments").attr("disabled", true);
 		}
 		else {
 			console.log("false");
-			//$("#Terms").attr("disabled", false);
-			//$("#select-options-Terms").attr("disabled", false);
-			//$("#select-options-Terms").show();
-			$(".mdb-select.Terms").attr("disabled", "");
-			$("#select-options-Terms").attr("disabled", "");
+			$(".terms-disabled").hide();
+			$(".Terms").show();
 			$("#Installments").attr("disabled", false);
 		};
 	});
@@ -190,20 +184,20 @@ $(function () {
 	$("#Installments").on('change', function () {
 		var val = $(this).val();
 		if (val > 0) {
-			//$("#Paid").attr("disabled", true);
+			$("#Paid").attr("disabled", true);
 			//$("#Terms").attr("disabled", true);
-			//$("#select-options-Terms").attr("disabled", true);
-			$(".mdb-select.Terms").attr("disabled", "disabled");
-			$("#select-options-Terms").attr("disabled", "disabled");
-			$("#select-options-Terms").hide();
+			////$("#select-options-Terms").attr("disabled", true);
+			//$(".mdb-select.Terms").attr("disabled", "disabled");
+			//$("#select-options-Terms").attr("disabled", "disabled");
+			//$("#select-options-Terms").hide();
 		}
 		else {
-		//	$("#Paid").attr("disabled", false);
+			$("#Paid").attr("disabled", false);
 		//	$("#Terms").attr("disabled", false);
 		//	$("#select-options-Terms").attr("disabled", false);
-			$(".mdb-select.Terms").attr("disabled", "");
-			$("#select-options-Terms").attr("disabled", "");
-			$("#select-options-Terms").show();
+			//$(".mdb-select.Terms").attr("disabled", "");
+			//$("#select-options-Terms").attr("disabled", "");
+			//$("#select-options-Terms").show();
 		};
 	});
 
