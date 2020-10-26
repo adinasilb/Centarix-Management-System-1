@@ -141,6 +141,9 @@ namespace PrototypeWithAuth.Controllers
         private void fillInTimekeeperMissingDays(ApplicationUser user)
         {
             DateTime nextDay = user.LastLogin.AddDays(1);
+            if (user.LastLogin == new DateTime()) {
+                return;
+            }
             while (nextDay.Date <= DateTime.Today)
             {
                 if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
@@ -165,6 +168,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
+
                 var lateOrders = _context.Requests.Where(r => r.ApplicationUserCreatorID == user.Id).Where(r => r.RequestStatusID == 2)
                     .Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date >= user.LastLogin.Date && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.ParentRequest);
@@ -190,6 +194,10 @@ namespace PrototypeWithAuth.Controllers
         }
         private void fillInTimekeeperNotifications(ApplicationUser user)
         {
+            if (user.LastLogin == new DateTime())
+            {
+                return;
+            }
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
                 var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null) || (r.Entry2 != null && r.Exit2 == null))
