@@ -54,6 +54,20 @@ namespace PrototypeWithAuth
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("AzureConnection")));
+
+            services.AddDbContext<ApplicationDbContext>(options => {
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection"));
+                options.EnableSensitiveDataLogging(true);
+            });
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("CentarixConnection")));
+
 
 
 
