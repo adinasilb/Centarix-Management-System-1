@@ -1,41 +1,44 @@
 ﻿@model PrototypeWithAuth.ViewModels.ReceivedModalVisualViewModel
 
-<table class="table table-sm border">
-    @{
-        int z = -1;
-    }
-    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
-    {
-        <tr>
-            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-            {
-                z++;
-                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+@if (Model.DeleteTable == false)
+{
+    <table class="table table-sm border">
+        @{
+            int z = -1;
+        }
+        @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+        {
+            <tr>
+                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                 {
-                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
-                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID);
-                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
-
-                    if (Model.ChildrenLocationInstances[z].IsFull)
+                    z++;
+                    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                     {
-                        var backgroundClass= " order-inv-filter ";
-            <td class="border " style="padding:0px; width:42px; height:42px;">
-                @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @class =  "css-checkbox" })
+                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
+                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID);
+                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
 
-                @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = backgroundClass + "css-label" })
-            </td>
-                       }
-                    else
-                            {
-                        <td class="border" style="padding:0px;">
-                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = "css-checkbox" })
-                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
-                        </td>
+                        if (Model.ChildrenLocationInstances[z].IsFull)
+                        {
+                            var backgroundClass = " order-inv-filter ";
+                            <td class="border " style="padding:0px; width:42px; height:42px;">
+                                @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @class = "css-checkbox" })
+
+                                @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = backgroundClass + "css-label" })
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="border" style="padding:0px;">
+                                @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = "css-checkbox" })
+                                @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
+                            </td>
+                        }
+
                     }
 
                 }
-
-            }
-        </tr>
-    }
-</table>
+            </tr>
+        }
+    </table>
+}

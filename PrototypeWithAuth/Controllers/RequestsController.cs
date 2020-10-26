@@ -74,7 +74,7 @@ namespace PrototypeWithAuth.Controllers
         //ALSO when changing defaults -> change the defaults on the index page for paged list 
 
 
-        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0, 
+        public async Task<IActionResult> Index(int? page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
             AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.OrdersAndInventory,
             RequestsSearchViewModel? requestsSearchViewModel = null)
         {
@@ -82,7 +82,7 @@ namespace PrototypeWithAuth.Controllers
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Include(x=>x.ParentRequest)
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Include(x => x.ParentRequest)
                 .OrderBy(r => r.CreationDate);
             //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
 
@@ -680,7 +680,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-      
+
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> DetailsSummaryModalView(int? id, bool NewRequestFromProduct = false)
         {
@@ -891,8 +891,8 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
 
-            var parentcategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID==1).ToListAsync();
-            var productsubactegories = await _context.ProductSubcategories.Where(ps=>ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             //redo the unit types when seeded
@@ -1098,7 +1098,7 @@ namespace PrototypeWithAuth.Controllers
             //if it has => (which it should once its in a details view)
             requestItemViewModel.LocationInstances = new List<LocationInstance>();
             requestLocationInstances.ForEach(rli => requestItemViewModel.LocationInstances.Add(rli.LocationInstance));
-            if(request1.RequestStatusID==3 || request1.RequestStatusID==5 || request1.RequestStatusID == 4)
+            if (request1.RequestStatusID == 3 || request1.RequestStatusID == 5 || request1.RequestStatusID == 4)
             {
                 ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
                 {
@@ -1114,14 +1114,14 @@ namespace PrototypeWithAuth.Controllers
                     //get the parent location instances of the first one
                     //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
                     //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
-                    LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li=>li.LocationType).FirstOrDefault();
+                    LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li => li.LocationType).FirstOrDefault();
                     //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
                     //need to test b/c the model is int? which is nullable
                     receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
                     var locationType = parentLocationInstance.LocationType;
-                    while(locationType.Depth != 0)
+                    while (locationType.Depth != 0)
                     {
-                         locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
+                        locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
                     }
                     requestItemViewModel.ParentDepthZeroOfSelected = locationType;
                     requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
@@ -1137,7 +1137,7 @@ namespace PrototypeWithAuth.Controllers
                     var parent = parentLocationInstance;
                     receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                     requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
-                    requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.Where(l => l.LocationInstanceParentID==parent.LocationInstanceParentID).ToList());
+                    requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
                     while (parent.LocationInstanceParentID != null)
                     {
                         parent = _context.LocationInstances.Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
@@ -1182,8 +1182,8 @@ namespace PrototypeWithAuth.Controllers
                     }
                     requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
                 }
-                
-              
+
+
             }
 
 
@@ -1217,12 +1217,12 @@ namespace PrototypeWithAuth.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
-      {
+        {
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
             requestItemViewModel.Request.ParentRequest = null;
             //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
             var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
-            if(parentQuote != null)
+            if (parentQuote != null)
             {
 
                 parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
@@ -1241,7 +1241,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 requestItemViewModel.Request.ParentQuote = null;
             }
-            var product = _context.Products.Include(p=>p.Vendor).Include(p=>p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Request.ProductID);
+            var product = _context.Products.Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Request.ProductID);
             product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
             product.VendorID = requestItemViewModel.Request.Product.VendorID;
             //in case we need to return to the modal view
@@ -1305,9 +1305,9 @@ namespace PrototypeWithAuth.Controllers
                             }
                         }
                     }
-               
 
-                 
+
+
                     ////Saving the Payments - each one should come in with a 1) date 2) companyAccountID
                     //if (requestItemViewModel.NewPayments != null)
                     //{
@@ -1582,11 +1582,11 @@ namespace PrototypeWithAuth.Controllers
                     new SelectListItem{ Text="+30", Value="30"},
                     new SelectListItem{ Text="+45", Value="45"}
                 }
-                 };
+            };
             bool IsOperations = false;
             if (isSingleRequest)
             {
-                var request = _context.Requests.Where(r => r.RequestID == id).Include(r=>r.Product.ProductSubcategory.ParentCategory).FirstOrDefault();
+                var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product.ProductSubcategory.ParentCategory).FirstOrDefault();
                 IsOperations = request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2;
                 request.ParentRequestID = termsViewModel.ParentRequest.ParentRequestID;
                 _context.Update(request);
@@ -1681,7 +1681,7 @@ namespace PrototypeWithAuth.Controllers
                 RequestID = id,
                 //IsSingleOrder = isSingleOrder,
                 //Cart = cart
-                SectionType=parentRequest.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID==1? AppUtility.MenuItems.OrdersAndInventory : AppUtility.MenuItems.Operation
+                SectionType = parentRequest.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1 ? AppUtility.MenuItems.OrdersAndInventory : AppUtility.MenuItems.Operation
             };
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -1825,7 +1825,7 @@ namespace PrototypeWithAuth.Controllers
                 else if (firstRequest.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
                 {
                     //redirect to operations
-                    return RedirectToAction("Index","Operation"); //temp: todo: must add Tempdata
+                    return RedirectToAction("Index", "Operation"); //temp: todo: must add Tempdata
                 }
                 else
                 {
@@ -1872,7 +1872,7 @@ namespace PrototypeWithAuth.Controllers
             }
             if (requests.Count() == 0)
             {
-                requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId &&  r.ParentQuote.QuoteStatusID == 2)
+                requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 2)
                          .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
             string uploadFolder1 = Path.Combine("~", "files");
@@ -2266,8 +2266,8 @@ namespace PrototypeWithAuth.Controllers
 
             RequestsSearchViewModel requestsSearchViewModel = new RequestsSearchViewModel
             {
-                ParentCategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID!=categoryID).ToListAsync(),
-                ProductSubcategories = await _context.ProductSubcategories.Where(ps=>ps.ParentCategory.CategoryTypeID!=categoryID).ToListAsync(),
+                ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID != categoryID).ToListAsync(),
+                ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID != categoryID).ToListAsync(),
                 Projects = await _context.Projects.ToListAsync(),
                 SubProjects = await _context.SubProjects.ToListAsync(),
                 Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID != categoryID).Count() > 0).ToListAsync(),
@@ -2523,18 +2523,27 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public IActionResult ReceivedModalVisual(int LocationInstanceID)
         {
-            ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
-            {
-                ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault()
-            };
+            ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel();
 
-            if (receivedModalVisualViewModel.ParentLocationInstance != null)
-            {
-                receivedModalVisualViewModel.ChildrenLocationInstances =
-                    _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
-                    .Include(m => m.RequestLocationInstances).ToList();
+            var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
+            var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == LocationInstanceID).FirstOrDefault();
 
-                //return NotFound();
+            if (parentLocationInstance.IsEmpty == true || firstChildLI == null)
+            {
+                receivedModalVisualViewModel.DeleteTable = true;
+            }
+            else
+            {
+                receivedModalVisualViewModel.ParentLocationInstance = parentLocationInstance;
+
+                if (receivedModalVisualViewModel.ParentLocationInstance != null)
+                {
+                    receivedModalVisualViewModel.ChildrenLocationInstances =
+                        _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
+                        .Include(m => m.RequestLocationInstances).ToList();
+
+                    //return NotFound();
+                }
             }
             return PartialView(receivedModalVisualViewModel);
         }
@@ -2717,7 +2726,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (ids != null)
             {
-                foreach(int requestID in ids)
+                foreach (int requestID in ids)
                 {
                     documentsModalViewModel.Requests.Add(_context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault());
                 }
@@ -2773,7 +2782,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations =false)
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations = false)
         {
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
@@ -3056,7 +3065,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles ="Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> ConfirmEdit(AppUtility.MenuItems MenuItem = AppUtility.MenuItems.OrdersAndInventory)
         {
             return PartialView(MenuItem);
@@ -3298,7 +3307,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> PaymentsPayModal(PaymentsPayModalViewModel paymentsPayModalViewModel)
         {
-            foreach(Request request in paymentsPayModalViewModel.Requests)
+            foreach (Request request in paymentsPayModalViewModel.Requests)
             {
                 var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
                 requestToUpdate.PaymentStatusID = 6;
@@ -3332,7 +3341,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIds != null)
             {
-                foreach(int rId in requestIds)
+                foreach (int rId in requestIds)
                 {
                     Requests.Add(queryableRequests.Where(r => r.RequestID == rId).FirstOrDefault());
                 }
@@ -3355,7 +3364,7 @@ namespace PrototypeWithAuth.Controllers
             _context.Add(addInvoiceViewModel.Invoice); //TODO Return To Modal if Not filled in
             await _context.SaveChangesAsync();
 
-            foreach(var request in addInvoiceViewModel.Requests)
+            foreach (var request in addInvoiceViewModel.Requests)
             {
                 var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
                 RequestToSave.Cost = request.Cost;
@@ -3367,7 +3376,7 @@ namespace PrototypeWithAuth.Controllers
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
             string requestFolder = Path.Combine(uploadFolder, addInvoiceViewModel.Requests[0].RequestID.ToString());
             Directory.CreateDirectory(requestFolder);
-            if (addInvoiceViewModel.InvoiceImage != null) 
+            if (addInvoiceViewModel.InvoiceImage != null)
             {
                 int x = 1;
                 //create file
@@ -3375,13 +3384,13 @@ namespace PrototypeWithAuth.Controllers
                 if (Directory.Exists(folderPath))
                 {
                     var filesInDirectory = Directory.GetFiles(folderPath);
-                     x= filesInDirectory.Length + 1;
+                    x = filesInDirectory.Length + 1;
                 }
                 else
                 {
                     Directory.CreateDirectory(folderPath);
-                }                
-                string uniqueFileName = x+addInvoiceViewModel.InvoiceImage.FileName;
+                }
+                string uniqueFileName = x + addInvoiceViewModel.InvoiceImage.FileName;
                 string filePath = Path.Combine(folderPath, uniqueFileName);
                 FileStream filestream = new FileStream(filePath, FileMode.Create);
                 addInvoiceViewModel.InvoiceImage.CopyTo(filestream);
