@@ -442,7 +442,7 @@ namespace PrototypeWithAuth.Controllers
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate("elixir@centarix.com", "ghdl736y4&");
+                    client.Authenticate("elixir@centarix.com", "cdbmhjidnzoghqvt");
                     try
                     {
                         client.Send(message);

@@ -288,7 +288,7 @@ $(function () {
 		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
 	}
 	var isEmployee = function () {
-		//console.log("employeestatus: " + ( $("#NewEmployee_EmployeeStatusID").val() != '4'));
+		console.log("employeestatus: " + ( $("#NewEmployee_EmployeeStatusID").val() != '4'));
 		return $("#NewEmployee_EmployeeStatusID").val() != "4";
 	}
 	var isUser = function () {
