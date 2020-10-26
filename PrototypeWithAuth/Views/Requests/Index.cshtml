@@ -192,7 +192,7 @@
 {
     <input type="text" id="tdprconfirmemail" class="hidden" value="@TempData["ParentRequestID"]" />
 }
-@if (TempData["OpenTermsModal"] != null)
+@if (TempData["Open"] != null)
 {
     var termsType = TempData["OpenTermsModal"].ToString();
     switch (termsType)
