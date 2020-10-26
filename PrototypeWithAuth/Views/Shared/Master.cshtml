@@ -555,7 +555,9 @@
             $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
             $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
             $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
-            $("#ApplicationUserID").val(@TempData["TempApplicationUserID"]);
+
+            $("#ApplicationUserID").val("@TempData["TempApplicationUserID"]?.ToString()");
+
             //console.log("PageType:" + @TempData["TempPageType"]);
             $("#PageType").val(@TempData["TempPageType"]);
         };

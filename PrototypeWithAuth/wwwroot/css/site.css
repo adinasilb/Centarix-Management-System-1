@@ -2196,6 +2196,7 @@ input[type=text].error, input[type=number].error {
     margin-top: 1rem;
     font-size: 1.25rem;
     line-height: 1.5625rem;
+    max-width:fit-content;
 }
 .overflow-left {
     display: inline-block;
