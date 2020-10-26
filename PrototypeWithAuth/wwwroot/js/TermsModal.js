@@ -154,7 +154,6 @@ $(function () {
 		if (val == 'true') {
 			console.log("true");
 			$(".Terms").materialSelect({ destroy: true });
-			//$(".Terms").materialSelect();
 			$(".terms-disabled").show();
 			$("#Installments").attr("disabled", true);
 		}
@@ -171,12 +170,16 @@ $(function () {
 		console.log("in terms fx: " + val);
 		if (val == '') {
 			console.log("true");
-			$("#Paid").attr("disabled", false);
+			//$("#Paid").attr("disabled", false);
+			$("#Paid:last").materialSelect();
+			$(".paid-disabled").hide();
 			$("#Installments").attr("disabled", false);
 		}
 		else {
 			console.log("false");
-			$("#Paid").attr("disabled", true);
+			//$("#Paid").attr("disabled", true);
+			$("#Paid").materialSelect({ destroy: true });
+			$(".paid-disabled").show();
 			$("#Installments").attr("disabled", true);
 		}
 	});
@@ -184,20 +187,16 @@ $(function () {
 	$("#Installments").on('change', function () {
 		var val = $(this).val();
 		if (val > 0) {
-			$("#Paid").attr("disabled", true);
-			//$("#Terms").attr("disabled", true);
-			////$("#select-options-Terms").attr("disabled", true);
-			//$(".mdb-select.Terms").attr("disabled", "disabled");
-			//$("#select-options-Terms").attr("disabled", "disabled");
-			//$("#select-options-Terms").hide();
+			$("#Paid").materialSelect({ destroy: true });
+			$(".paid-disabled").show();
+			$(".Terms").materialSelect({ destroy: true });
+			$(".terms-disabled").show();
 		}
 		else {
-			$("#Paid").attr("disabled", false);
-		//	$("#Terms").attr("disabled", false);
-		//	$("#select-options-Terms").attr("disabled", false);
-			//$(".mdb-select.Terms").attr("disabled", "");
-			//$("#select-options-Terms").attr("disabled", "");
-			//$("#select-options-Terms").show();
+			$(".terms-disabled").hide();
+			$(".Terms:last").materialSelect();
+			$("#Paid:last").materialSelect();
+			$(".paid-disabled").hide();
 		};
 	});
 
