@@ -292,7 +292,7 @@ namespace PrototypeWithAuth.Controllers
                     user.LockoutEnabled = true;
                     user.LockoutEnd = new DateTime(2999, 01, 01);
                     _context.Update(user);
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
 
                 switch (UserType)
@@ -315,7 +315,7 @@ namespace PrototypeWithAuth.Controllers
                     case 3: /*Advisor*/
                         break;
                 }
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
 
                 foreach (var orderRole in registerUserViewModel.OrderRoles)
@@ -402,7 +402,7 @@ namespace PrototypeWithAuth.Controllers
 
                     user.UserImage = filePath;
                     _context.Update(user);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
 
                 var userId = await _userManager.GetUserIdAsync(user);

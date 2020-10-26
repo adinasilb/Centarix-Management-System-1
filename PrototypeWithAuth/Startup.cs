@@ -42,9 +42,9 @@ namespace PrototypeWithAuth
 
             ////Set database Connection from application json file
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("AzureConnection")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("AzureConnection")));
 
             //services.AddDbContext<ApplicationDbContext>(options => {
             //    options.UseSqlServer(
@@ -52,9 +52,9 @@ namespace PrototypeWithAuth
             //    options.EnableSensitiveDataLogging(true);
             //});
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("CentarixConnection")));
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("CentarixConnection")));
 
 
             //add identity
@@ -126,7 +126,7 @@ namespace PrototypeWithAuth
             });
 
 
-            //CreateRoles(serviceProvider).Wait();
+            CreateRoles(serviceProvider).Wait();
 
             //CreateSingleRole(serviceProvider).Wait(); ;
 
