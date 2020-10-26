@@ -23,6 +23,7 @@
 }
 
 <script src="~/js/TermsModal.js"></script>
+<script src="~/js/site.js"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
     <div class="modal-dialog-centered modal-xl mx-auto @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
@@ -47,6 +48,7 @@
                                     <option value=true>Yes</option>
                                     <option value=false>No</option>
                                 </select>
+                                <select class="form-control-plaintext paid-disabled border-bottom" disabled></select>
                                 <span asp-validation-for="Paid" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-2">
@@ -59,9 +61,9 @@
                                 @Html.DropDownListFor(m => m.Terms,
                                     Model.TermsList,
                                     "Select",
-                                    new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @searchable = "default value" }
+                                    new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id="Terms", @searchable = "default value" }
                                 )
-                                <select class="form-control-plaintext terms-disabled border-bottom" disabled></select> 
+                                <select class="form-control-plaintext terms-disabled border-bottom" disabled></select>
                                 @*<select asp-for="Terms" asp-items="@Model.TermsList" class="form-control-plaintext border-bottom">
                                         <option value="selected" selected="selected">Select</option>
                                         <option value="0">Pay Now</option>

@@ -161,7 +161,7 @@ $(function () {
 		else {
 			console.log("false");
 			$(".terms-disabled").hide();
-			$(".Terms").show();
+			$(".Terms:last").materialSelect();
 			$("#Installments").attr("disabled", false);
 		};
 	});
