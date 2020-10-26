@@ -140,7 +140,9 @@ $(function () {
 				//url: true
 			},
 			"Request.ExchangeRate": {
-				required: isDollars,
+				required: function () {
+					return $("#currency").val() == "dollar" || $("#currency").val() == null;
+				},
 				number: true,
 				min: 1
 			},
@@ -221,7 +223,9 @@ $(function () {
 				integer: true
 			},
 			"Request.ExchangeRate": {
-				required: isDollars,
+				required: function () {
+					return $("#currency").val() == "dollar" || $("#currency").val() == null;
+				},
 				number: true,
 				min: 1
 			},
@@ -290,10 +294,7 @@ $(function () {
 	var isUser = function () {
 		return $("#NewEmployee_EmployeeStatusID").val() == "4";
 	}
-	var isDollars = function () {
-		console.log("isdollars: " + $("#currency").val())
-		return $("[name='Request.Currency']").val() == "dollar";
-	}
+	
 
 
 	$('.usersForm').validate({
