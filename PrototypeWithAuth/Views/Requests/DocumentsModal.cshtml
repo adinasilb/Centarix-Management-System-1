@@ -82,7 +82,7 @@
                                         <div class="switch col-12 switch-margin">
                                             <label>
                                                 <label class="edit-mode-switch-description">Edit Mode Off</label>
-                                                <input type="checkbox" class="turn-edit-doc-on-off operations" @*value="@Model.Request.RequestID"*@ onclick="ChangeEdits()">
+                                                <input type="checkbox" class="turn-edit-doc-on-off operations" @*value="@Model.Request.RequestID"*@ >
                                                 <span class="lever"></span>
                                             </label>
                                         </div>
@@ -158,7 +158,7 @@
                                                                 link = " ";
                                                             }*@
                                                                     <a href=" " class="delete-document @Model.SectionType.ToString() mx-3" id="">
-                                                                        <i style="font-size:2rem;" class="icon-delete-24px hover-bold @colorToUse"></i>
+                                                                        <i style="font-size:2rem;" class="icon-delete-24px documents-delete-icon hover-bold @colorToUse"></i>
                                                                     </a>
                                                                     @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@
                                                                     @*<p class="align-to-bottom w-100">@Model.FileStrings[i]</p>*@
