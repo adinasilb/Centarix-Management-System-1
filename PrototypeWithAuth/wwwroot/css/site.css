@@ -2193,3 +2193,6 @@ input[type=text].error, input[type=number].error {
     white-space: nowrap;
     direction: rtl;
 }
+.disable-custom-mdbselect{
+    pointer-events:none;
+}
