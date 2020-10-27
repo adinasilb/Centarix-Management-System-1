@@ -2256,6 +2256,8 @@ $(function () {
 			cache: false,
 			success: function (data) {
 				$(".modal").modal('hide');
+				$(".render-body").html(data);
+				
 			}
 		});
 	}
@@ -2496,16 +2498,16 @@ $('.modal #LastName').change(function () {
 });
 $('.exitModal').on('click', '.close', function (e) {
 	console.log("close edit modal");
+	$.fn.CallPage('/Timekeeper/ReportHours');
+})
+$.fn.CallPage = function (url) {
 	$.ajax({
 		async: true,
-		url: '/Timekeeper/ReportHours',
+		url: url,
 		type: 'GET',
 		cache: true,
 		success: function (data) {
-			$('body').html(data);
+			$('.render-body').html(data);
 		}
 	});
-
-
-
-})
+}

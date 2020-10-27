@@ -118,7 +118,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
-            return View(entryExitViewModel);
+            return PartialView(entryExitViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
@@ -262,6 +262,7 @@ namespace PrototypeWithAuth.Controllers
                     daysOffByYear.Add(summaryOfDaysOff);
                     year = year - 1;
                 }
+               
                 return View(daysOffByYear);
             }
 
@@ -420,16 +421,18 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public bool SaveVacation(DateTime dateFrom, DateTime dateTo)
+        public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo)
         {
-            return SaveOffDay(dateFrom, dateTo, 2);
+            SaveOffDay(dateFrom, dateTo, 2);
+            return RedirectToAction("ReportDaysOff");
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public bool SaveSick(DateTime dateFrom, DateTime dateTo)
+        public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo)
         {
-            return SaveOffDay(dateFrom, dateTo, 1);
+             SaveOffDay(dateFrom, dateTo, 1);
+            return RedirectToAction("ReportDaysOff");
         }
 
         private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, int offDayTypeID)

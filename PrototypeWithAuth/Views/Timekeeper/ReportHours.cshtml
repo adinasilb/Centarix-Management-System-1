@@ -3,11 +3,20 @@
 @using PrototypeWithAuth.Data
 @using System.Globalization;
 @using System.Threading;
+@using PrototypeWithAuth.AppData;
+@using Microsoft.AspNetCore.Http;
 @inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Report Hours";
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (AppUtility.IsAjaxRequest(Context.Request))
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
 
     <div class="container-fluid" >
         <div class="row mb-4">

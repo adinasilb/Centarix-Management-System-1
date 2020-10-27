@@ -1,11 +1,23 @@
 ﻿@model List<PrototypeWithAuth.ViewModels.SummaryOfDaysOffViewModel>
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Report Days Off";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (AppUtility.IsAjaxRequest(Context.Request))
+    {
+        Layout = null;
+
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    }
+    else
+    {
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
+
 }
 <div class="container-fluid">
 
@@ -75,7 +87,7 @@
 "></i>
                 </div>
                 <div class="col-3 my-3 text-center">
-                    <button class="custom-button-font custom-button timekeeper-color report-sick-days"  type="button">Sick Leave</button>
+                    <button class="custom-button-font custom-button timekeeper-color report-sick-days" type="button">Sick Leave</button>
                 </div>
 
 
