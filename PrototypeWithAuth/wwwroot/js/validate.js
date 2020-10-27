@@ -285,7 +285,7 @@ $(function () {
 		},
 	});
 	
-
+	var isEmployee = $("#NewEmployee_EmployeeStatusID").val() != "4";
 	$('.usersForm').validate({
 		rules: {
 			"FirstName": "required",
@@ -426,7 +426,8 @@ $(function () {
 		return value != "";
 	}, 'Field is required');
 	$.validator.addMethod("atleastOneHoursField", function (value, element) {
-		return $("#NewEmployee_SalariedEmployee_WorkScope").val() != "" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "";
+		console.log("salary: "+$("#NewEmployee_SalariedEmployee_WorkScope").val() != "" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "");
+		return ($("#NewEmployee_SalariedEmployee_WorkScope").val() != "") || ($("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "");
 	}, 'Either Job Scope or Hours Per day is required');
 	$.validator.addMethod("eitherHoursOrTime", function (value, element) {
 		return ($("#Exit1").val() != "" && $("#Entry1").val() != "") || $("#TotalHours").val() != "";
