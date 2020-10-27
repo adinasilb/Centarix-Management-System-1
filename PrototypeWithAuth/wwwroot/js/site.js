@@ -860,7 +860,8 @@ $(function () {
 		//the following is based on the fact that the unit types and parents are seeded with primary key values
 		var selectedIndex = $('#select-options-Request_SubUnitTypeID').find(".active").index();
 		console.log("select index" + selectedIndex)
-		switch (optgroup) {
+		var subOptgroup = $(':selected', $("#Request_SubUnitTypeID")).closest('optgroup').attr('label');
+		switch (subOptgroup) {
 			case "Units":
 				console.log("Units")
 				selectedIndex = selectedIndex - 1;
@@ -872,6 +873,7 @@ $(function () {
 			case "Test":
 				console.log("Test")
 				selectedIndex = selectedIndex - 3;
+				console.log("select index test" + selectedIndex)
 				break;
 		}
 			
@@ -889,7 +891,7 @@ $(function () {
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").css("display", "none");
 				$("#Request_SubUnitTypeID optgroup[label='Units'] option").prop('disabled', false);
 				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
-				$("#Request_SubUnitTypeID").materialSelect();
+
 
 				break;
 			case "Weight/Volume":
@@ -904,7 +906,7 @@ $(function () {
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
 				$("#Request_SubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
 				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
-				$("#Request_SubUnitTypeID").materialSelect();
+
 			//	$("#Request_SubUnitTypeID").hide();
 				break;
 			case "Test":
@@ -918,9 +920,10 @@ $(function () {
 				$("#Request_SubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
 				$('#select-options-Request_SubUnitTypeID li.optgroup:nth-child(3)').addClass('.active');
 				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', true);
-				$("#Request_SubUnitTypeID").materialSelect();
+
 				break;
 		}
+		$("#Request_SubUnitTypeID").materialSelect();
 		switch (optgroup2) {
 			case "Units":
 				console.log("inside optgroup2 units");
@@ -946,32 +949,48 @@ $(function () {
 		var selected2 = $(':selected', $("#select-options-Request_SubUnitTypeID"));
 		var optgroup = selected.closest('optgroup').attr('label');
 		var optgroup2 = selected.closest('optgroup').attr('label');
+		var selectedIndex = $('#select-options-Request_SubSubUnitTypeID').find(".active").index();
+		console.log("select index" + selectedIndex)
+		var subOptgroup = $(':selected', $("#Request_SubSubUnitTypeID")).closest('optgroup').attr('label');
+		switch (subOptgroup) {
+			case "Units":
+				console.log("Units")
+				selectedIndex = selectedIndex - 1;
+				break;
+			case "Weight/Volume":
+				console.log("Volume")
+				selectedIndex = selectedIndex - 2;
+				break;
+			case "Test":
+				console.log("Test")
+				selectedIndex = selectedIndex - 3;
+				console.log("select index test" + selectedIndex)
+				break;
+		}
+
+		$('#Request_SubSubUnitTypeID').destroyMaterialSelect();
+		$('#Request_SubSubUnitTypeID').prop('selectedIndex', selectedIndex);
 		switch (optgroup) {
 			case "Units":
 				//$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
 				//$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-				$("#Request_SubSubUnitTypeID").destroyMaterialSelect();
 				$("#Request_SubSubUnitTypeID optgroup[label='Units'] option").prop('disabled', false);
 				$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
-				$("#Request_SubSubUnitTypeID").materialSelect();
 				break;
 			case "Weight/Volume":
 				//$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
 				//$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-				$("#Request_SubSubUnitTypeID").destroyMaterialSelect();
 				$("#Request_SubSubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
 				$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
-				$("#Request_SubSubUnitTypeID").materialSelect();
 				break;
 			case "Test":
 				//$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
 				//$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-				$("#Request_SubSubUnitTypeID").destroyMaterialSelect();
 				$("#Request_SubSubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
 				$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', true);
-				$("#Request_SubSubUnitTypeID").materialSelect();
 				break;
 		}
+		$("#Request_SubSubUnitTypeID").materialSelect();
 		switch (optgroup2) {
 			case "Units":
 				$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
