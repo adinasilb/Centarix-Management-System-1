@@ -2526,9 +2526,32 @@ namespace PrototypeWithAuth.Controllers
             ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel();
 
             var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
-            var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == LocationInstanceID).FirstOrDefault();
 
-            if (parentLocationInstance.IsEmpty == true || firstChildLI == null)
+            //if it's an empty shelf- reset the location to the parent location instance id:
+            if (parentLocationInstance.LocationTypeID == 201 && parentLocationInstance.IsEmpty)
+            {
+                parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+            }
+
+            var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == LocationInstanceID).FirstOrDefault();
+            LocationInstance secondChildLi = null;
+            bool Is80Freezer = false;
+            var hasEmptyShelves = false;
+            if (firstChildLI != null)
+            {
+                secondChildLi = _context.LocationInstances.Where(li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID).FirstOrDefault(); //second child is to ensure it doesn't have any box units
+            }
+            if (parentLocationInstance.LocationTypeID == 200) //check if it containes empty shelves ONLY IF -80
+            {
+                Is80Freezer = true;
+                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == LocationInstanceID && li.IsEmpty == true).ToList();
+                if (shelves.Any())
+                {
+                    hasEmptyShelves = true;
+                }
+            }
+
+            if (parentLocationInstance.IsEmpty == true || (secondChildLi != null && !Is80Freezer) || (Is80Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
