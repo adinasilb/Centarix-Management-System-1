@@ -121,7 +121,15 @@
 
 //RECEIVED MODAL VISUAL
     $(".open-new-visual").on("click", function () {
-        alert("clicked a shelf that isn't empty! with id: " + $(this).attr("id"));
+        var childlocationinstanceid = $(this).parent().attr("id");
+        var parentlocationinstanceid = $("#ParentLocationInstance_LocationInstanceID").val();
+
+        $(".select#1").val(parentlocationinstanceid);
+        var name = $(this).closest(".LocationInstanceName");
+        alert("name: " + JSON.stringify(name));
+
+        $("#1").parents('.dropdown-main').find('span:not(.caret)').text(name);
+        $("#1").parents('.dropdown-main').find('input').attr('value', childlocationinstanceid);
     });
 
 });
