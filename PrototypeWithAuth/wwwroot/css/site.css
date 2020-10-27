@@ -48,7 +48,9 @@ html.wf-loading * {
 /*body {
     background-color: #fafafa
 }*/
-
+body.body{
+    font-weight:400;
+}
 span.msg,
 span.choose {
     color: #555;
