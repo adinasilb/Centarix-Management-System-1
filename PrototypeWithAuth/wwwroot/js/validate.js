@@ -284,122 +284,6 @@ $(function () {
 
 		},
 	});
-	
-	var isEmployee = $("#NewEmployee_EmployeeStatusID").val() != "4";
-	$('.usersForm').validate({
-		rules: {
-			"FirstName": "required",
-			"LastName": "required",
-			"CentarixID": {
-				required: true,
-				number: true,
-				min: 1,
-				integer: true
-			},
-			"Email": {
-				email: true,
-				required: true
-			},
-			"PhoneNumber": {
-				required: true,
-				minlength: 9
-			},
-			"NewEmployee.JobTitle": {
-				required: isEmployee
-			},
-			"NewEmployee.DOB": {
-				required: isEmployee,
-				date: true
-			},
-			"NewEmployee.JobCategoryTypeID": {
-				selectRequired: isEmployee
-			},
-			"NewEmployee.DegreeID": {
-				selectRequired: isEmployee
-			},
-			"NewEmployee.MaritalStatusID": {
-				selectRequired: isEmployee
-			},
-			"NewEmployee.CitizenshipID": {
-				selectRequired: isEmployee
-			},
-			"NewEmployee.IDNumber": {
-				required: isEmployee,
-				number: true,
-				min: 1,
-				integer: true
-			},
-			"PhoneNumber2": {
-				minlength: 9
-			},
-			"NewEmployee.StartedWorking": {
-				required: isEmployee,
-			},
-			"NewEmployee.TaxCredits": {
-				number: true,
-				integer: true
-			},
-			"NewEmployee.SalariedEmployee.WorkScope": {
-				atleastOneHoursField: isEmployee,
-			},
-			"NewEmployee.SalariedEmployee.HoursPerDay": {
-				atleastOneHoursField: isEmployee,
-				integer: true
-			},
-			"NewEmployee.VacationDays": {
-				required: isEmployee,
-				number: true,
-				integer: true
-			},
-			"Password": {
-				required: isUserAndIsNotEdit,
-				nonAlphaNumeric: true,
-				uppercase: true,
-				lowercase: true,
-				containsNumber: true,
-				minlength: 8,
-				maxlength: 20
-			},
-			"ConfirmPassword": {
-				required: isUserAndIsNotEdit,
-				equalTo: "#Password"
-			},
-			"SecureAppPass": {
-				required: function () {
-					console.log($('#Password').val())
-					return $('#Password').val() != '';
-				}
-				//todo: are we allowing edit of secure appp password
-				// validate format
-			},
-			"NewEmployee.EmployeeStatusID": {
-				required: true,
-				min: 1
-			},
-			UserImage: { extension: "jpg|jpeg|png" }
-		},
-		messages: {
-			"NewEmployee.EmployeeStatusID": {
-				required: "",
-				min: "",
-			},
-		}
-	});
-	var isUserAndIsNotEdit = function () {
-		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
-	}
-	var isEmployee = function () {
-		console.log("employeestatus: " + ($("#NewEmployee_EmployeeStatusID").val() != '4'));
-		return $("#NewEmployee_EmployeeStatusID").val() != "4";
-	}
-	var isUser = function () {
-		return $("#NewEmployee_EmployeeStatusID").val() == "4";
-	}
-
-	function isInteger(n) {
-		n = parseFloat(n)
-		return n === +n && n === (n | 0);
-	}
 	$.validator.addMethod("nonAlphaNumeric", function (value) {
 		return /^[a-zA-Z0-9]+$/.test(value) == false;
 	}, "Password must contain a non alphanumeric character ");
@@ -426,8 +310,8 @@ $(function () {
 		return value != "";
 	}, 'Field is required');
 	$.validator.addMethod("atleastOneHoursField", function (value, element) {
-		console.log("salary: "+$("#NewEmployee_SalariedEmployee_WorkScope").val() != "" || $("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "");
-		return ($("#NewEmployee_SalariedEmployee_WorkScope").val() != "") || ($("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "");
+		console.log("salary: " + ($("#NewEmployee_SalariedEmployee_WorkScope").val() != "") || ($("#NewEmployee_SalariedEmployee_HoursPerDay").val() != ""));
+		return ($("#NewEmployee_SalariedEmployee_WorkScope").val() != "") || ($("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "") || $("#NewEmployee_EmployeeStatusID").val() == "4";
 	}, 'Either Job Scope or Hours Per day is required');
 	$.validator.addMethod("eitherHoursOrTime", function (value, element) {
 		return ($("#Exit1").val() != "" && $("#Entry1").val() != "") || $("#TotalHours").val() != "";
@@ -442,6 +326,122 @@ $(function () {
 		}
 
 	});
+	var isEmployee = function () {
+		console.log("employeestatus: " + ($("#NewEmployee_EmployeeStatusID").val() != '4'));
+		return $("#NewEmployee_EmployeeStatusID").val() != "4";
+	}
+	var isUserAndIsNotEdit = function () {
+		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
+	}
+
+	var isUser = function () {
+		return $("#NewEmployee_EmployeeStatusID").val() == "4";
+	}
+	$('.usersForm').validate({
+		rules: {
+			"FirstName": "required",
+			"LastName": "required",
+			"CentarixID": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			"Email": {
+				email: true,
+				required: true
+			},
+			"PhoneNumber": {
+				required: true,
+				minlength: 9
+			},
+			"NewEmployee.JobTitle": {
+				required: isEmployee,
+			},
+			"NewEmployee.DOB": {
+				required: isEmployee,
+				date: true
+			},
+			"NewEmployee.JobCategoryTypeID": {
+				selectRequired: isEmployee,
+			},
+			"NewEmployee.DegreeID": {
+				selectRequired: isEmployee,
+			},
+			"NewEmployee.MaritalStatusID": {
+				selectRequired: isEmployee,
+			},
+			"NewEmployee.CitizenshipID": {
+				selectRequired: isEmployee,
+			},
+			"NewEmployee.IDNumber": {
+				required: isEmployee,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			"PhoneNumber2": {
+				minlength: 9
+			},
+			"NewEmployee.StartedWorking": {
+				required: isEmployee,
+			},
+			"NewEmployee.TaxCredits": {
+				number: true,
+				integer: true
+			},
+			"NewEmployee.SalariedEmployee.WorkScope": {
+				atleastOneHoursField: true,
+			},
+			"NewEmployee.SalariedEmployee.HoursPerDay": {
+				atleastOneHoursField: true,
+				integer: true
+			},
+			"NewEmployee.VacationDays": {
+				required: isEmployee,
+				number: true,
+				integer: true
+			},
+			"Password": {
+				required: isUserAndIsNotEdit,
+				nonAlphaNumeric: true,
+				uppercase: true,
+				lowercase: true,
+				containsNumber: true,
+				minlength: 8,
+				maxlength: 20
+			},
+			"ConfirmPassword": {
+				required: isUserAndIsNotEdit,
+				equalTo: "#Password"
+			},
+			"SecureAppPass": {
+				required: function () {
+					return $('#Password').val() != '';
+				}
+				//todo: are we allowing edit of secure appp password
+				// validate format
+			},
+			"NewEmployee.EmployeeStatusID": {
+				required: true,
+				min: 1
+			},
+			UserImage: { extension: "jpg|jpeg|png" }
+		},
+		messages: {
+			"NewEmployee.EmployeeStatusID": {
+				required: "",
+				min: "",
+			},
+		}
+	});
+
+
+	function isInteger(n) {
+		n = parseFloat(n)
+		return n === +n && n === (n | 0);
+	}
+	
 	$('.modal').on('change', '.mdb-select', function () {
 		console.log("mdb change .mdb-select")
 		if ($(this).rules()) {
