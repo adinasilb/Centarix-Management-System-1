@@ -2533,7 +2533,7 @@ namespace PrototypeWithAuth.Controllers
                 parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
             }
 
-            var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == LocationInstanceID).FirstOrDefault();
+            var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
             LocationInstance secondChildLi = null;
             bool Is80Freezer = false;
             var hasEmptyShelves = false;
@@ -2544,7 +2544,7 @@ namespace PrototypeWithAuth.Controllers
             if (parentLocationInstance.LocationTypeID == 200) //check if it containes empty shelves ONLY IF -80
             {
                 Is80Freezer = true;
-                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == LocationInstanceID && li.IsEmpty == true).ToList();
+                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmpty == true).ToList();
                 if (shelves.Any())
                 {
                     hasEmptyShelves = true;
