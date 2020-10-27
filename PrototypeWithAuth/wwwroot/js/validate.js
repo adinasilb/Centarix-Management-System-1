@@ -284,18 +284,7 @@ $(function () {
 
 		},
 	});
-	var isUserAndIsNotEdit = function () {
-		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
-	}
-	var isEmployee = function () {
-		console.log("employeestatus: " + ( $("#NewEmployee_EmployeeStatusID").val() != '4'));
-		return $("#NewEmployee_EmployeeStatusID").val() != "4";
-	}
-	var isUser = function () {
-		return $("#NewEmployee_EmployeeStatusID").val() == "4";
-	}
 	
-
 
 	$('.usersForm').validate({
 		rules: {
@@ -376,7 +365,10 @@ $(function () {
 				equalTo: "#Password"
 			},
 			"SecureAppPass": {
-				required: isUserAndIsNotEdit
+				required: function () {
+					console.log($('#Password').val())
+					return $('#Password').val() != '';
+				}
 				//todo: are we allowing edit of secure appp password
 				// validate format
 			},
@@ -393,6 +385,16 @@ $(function () {
 			},
 		}
 	});
+	var isUserAndIsNotEdit = function () {
+		return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
+	}
+	var isEmployee = function () {
+		console.log("employeestatus: " + ($("#NewEmployee_EmployeeStatusID").val() != '4'));
+		return $("#NewEmployee_EmployeeStatusID").val() != "4";
+	}
+	var isUser = function () {
+		return $("#NewEmployee_EmployeeStatusID").val() == "4";
+	}
 
 	function isInteger(n) {
 		n = parseFloat(n)
