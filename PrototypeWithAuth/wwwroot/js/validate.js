@@ -426,7 +426,25 @@ $(function () {
 				required: true,
 				min: 1
 			},
-			UserImage: { extension: "jpg|jpeg|png" }
+			UserImage: { extension: "jpg|jpeg|png" },
+			LabMonthlyLimit: {
+				integer:true
+			},
+			LabUnitLimit: {
+				integer: true
+			},
+			LabOrderLimit: {
+				integer: true
+			},
+			OperationMonthlyLimit: {
+				integer: true
+			},
+			OperationUnitLimit: {
+				integer: true
+			},
+			OperaitonOrderLimit: {
+				integer: true
+			},
 		},
 		messages: {
 			"NewEmployee.EmployeeStatusID": {
