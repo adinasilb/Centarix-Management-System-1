@@ -1,19 +1,30 @@
 ﻿@model List<EmployeeHours>
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Summary Hours";
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (AppUtility.IsAjaxRequest(Context.Request))
+    {
+        Layout = null;
+
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    }
+    else
+    {
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
+
 }
 <div class=" container-fluid">
 
     <div class="row mb-6">
         <div class="col-8">
-       
+
             <div class="row">
-                <div  class="col-7 heading-1 p-0"><label class="m-0 p-0">Monthly Summary</label></div>
+                <div class="col-7 heading-1 p-0"><label class="m-0 p-0">Monthly Summary</label></div>
                 <div class="col-3 offset-2  p-0 monthsHours">
 
                     @{
@@ -28,9 +39,9 @@
                             Value = x.ToString(),
                             Selected = (x == curMonth)
                         }
-                    ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })                 
+                    ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })
                 </div>
-      
+
             </div>
         </div>
     </div>
@@ -63,9 +74,9 @@
                         @eh.OffDayType?.Description
                     </div>
                     <div class="col-2 p-0">
-                        @if (eh.Entry1 == null && eh.OffDayType == null && (eh.TotalHours==null || eh.TotalHours == TimeSpan.Zero))
+                        @if (eh.Entry1 == null && eh.OffDayType == null && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
                         {
-                            <button type="button" class="custom-clear-button-table table-button timekeeper-font-color report-sick-days" style="background: transparent; border: .125rem solid var(--timekeeper-color);" value="@eh.Date.ToString("yyyy-MM-dd")">Report Sick</button>
+                            <button type="button" class="custom-clear-button-table table-button timekeeper-font-color report-sick-days @AppUtility.TimeKeeperSidebarEnum.SummaryHours" style="background: transparent; border: .125rem solid var(--timekeeper-color);" value="@eh.Date.ToString("yyyy-MM-dd")">Report Sick</button>
                         }
                         @eh.Entry1?.ToShortTimeString()
                         <br />
@@ -74,11 +85,11 @@
                     <div class="col-2 p-0">
                         @if ((eh.OffDayType == null && eh.Exit1 == null || (eh.Entry2 != null && eh.Exit2 == null)) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
                         {
-                            <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                            <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
                         }
                         else if ((eh.OffDayType != null && ((eh.Entry1 != null && eh.Exit1 == null) || (eh.Entry2 != null && eh.Exit2 == null))) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
                         {
-                            <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                            <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
                         }
                         @eh.Exit1?.ToShortTimeString()
                         <br />
@@ -94,31 +105,33 @@
                 </div>
 
             }
-            <div class="row mt-6 py-4 pl-3 text-center">
-                <div class="col-2">
-                    Work Days
-                </div>
-                <div class="col-2">
+            <div class="row mt-6 py-4  text-center">
+
+                <div class="col-3">
                     Sick Days
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     Vacation Days
                 </div>
-                <div class="col-6  text-right pr-5">
+                <div class="col-3">
+                    Work Days
+                </div>
+                <div class="col-3">
                     Total Hours
                 </div>
             </div>
-            <div class="row mt-2 p-4  border  text-center" style="border-color: var(--timekeeper-color) !important;">
-                <div class="col-2">
-                    @Model.Where(eh => eh.OffDayTypeID == null).Count()
-                </div>
-                <div class="col-2">
+            <div class="row mt-2 py-4  border  text-center" style="border-color: var(--timekeeper-color) !important;">
+
+                <div class="col-3">
                     @Model.Where(eh => eh.OffDayTypeID == 1).Count()
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     @Model.Where(eh => eh.OffDayTypeID == 2).Count()
                 </div>
-                <div class="col-6 text-right pr-5 timekeeper-font-color font-weight-bold">
+                <div class="col-3 timekeeper-font-color font-weight-bold">
+                    @Model.Where(eh => eh.OffDayTypeID == null).Count()
+                </div>
+                <div class="col-3  timekeeper-font-color font-weight-bold">
                     @{ var sum = new TimeSpan(Model.Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
                     @{var totalHours = sum.Days * 24 + sum.Hours;
                     }

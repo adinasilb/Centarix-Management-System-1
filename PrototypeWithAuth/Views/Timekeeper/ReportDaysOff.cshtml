@@ -35,17 +35,17 @@
     </div>
     <div class="row">
         <div class="col-9">
-            <div class="row p-3 ">
-                <div class="col-2 pl-5">
+            <div class="row p-3 text-center ">
+                <div class="col-3 pl-5 text-left">
                     Year
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     Total Vacation Days
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     Vacation Days Taken
                 </div>
-                <div class="col-5 text-right">
+                <div class="col-3">
                     Sick Days Taken
                 </div>
             </div>
@@ -53,16 +53,16 @@
             {
                 <div class="row border p-3 text-center">
 
-                    <div class="col-2 pl-5 text-left">
+                    <div class="col-3 pl-5 text-left">
                         @year.Year
                     </div>
-                    <div class="col-2">
+                    <div class="col-3">
                         @year.TotalVacationDays
                     </div>
-                    <div class="col-2">
+                    <div class="col-3">
                         @year.VacationDaysTaken
                     </div>
-                    <div class="col-4  text-right">
+                    <div class="col-3">
                         @year.SickDaysTaken
                     </div>
 
@@ -78,7 +78,7 @@
                 </div>
 
                 <div class="col-3  my-3 text-center">
-                    <button class="custom-button-font custom-button timekeeper-color report-vacation-days" type="button">Vacaton</button>
+                    <button class="custom-button-font custom-button timekeeper-color report-vacation-days @AppUtility.TimeKeeperSidebarEnum.ReportDaysOff" type="button">Vacaton</button>
                 </div>
                 <div class="col-2 my-3 text-center pt-3">
                     <label class="font-weight-bolder text"> Sick Days</label>
@@ -87,7 +87,7 @@
 "></i>
                 </div>
                 <div class="col-3 my-3 text-center">
-                    <button class="custom-button-font custom-button timekeeper-color report-sick-days" type="button">Sick Leave</button>
+                    <button class="custom-button-font custom-button timekeeper-color report-sick-days @AppUtility.TimeKeeperSidebarEnum.ReportDaysOff"  type="button">Sick Leave</button>
                 </div>
 
 

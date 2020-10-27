@@ -387,16 +387,15 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> Vacation()
+        public async Task<IActionResult> Vacation(String PageType)
         {
-
-            return PartialView();
+            return PartialView(PageType);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public async Task<IActionResult> SickDay()
+        public async Task<IActionResult> SickDay(String PageType)
         {
-            return PartialView();
+            return PartialView(PageType);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
@@ -421,18 +420,18 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo)
+        public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo, String PageType)
         {
             SaveOffDay(dateFrom, dateTo, 2);
-            return RedirectToAction("ReportDaysOff");
+            return RedirectToAction(PageType);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin, TimeKeeper")]
-        public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo)
+        public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo,  String PageType)
         {
              SaveOffDay(dateFrom, dateTo, 1);
-            return RedirectToAction("ReportDaysOff");
+            return RedirectToAction(PageType);
         }
 
         private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, int offDayTypeID)

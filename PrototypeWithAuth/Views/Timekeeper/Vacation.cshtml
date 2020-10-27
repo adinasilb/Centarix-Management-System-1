@@ -1,4 +1,5 @@
-﻿<script src="~/js/validate.js" asp-append-version="true"></script>
+﻿@model String
+<script src="~/js/validate.js" asp-append-version="true"></script>
 <div class="modal modal-document fader on-form-modal timekeeper-form vacationModal" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered modal-sm  mx-auto work-from-home-modal">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
@@ -20,7 +21,7 @@
                      data-multiple-dates-separator=" - " data-language='en'></div>
                 <div class="modal-footer mt-4 border-0">
                     <div class="text-center m-auto">
-                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin" id="saveVacation" value="Save" />
+                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin @Model" id="saveVacation" value="Save" />
                         <button class="custom-button custom-cancel cancel-email" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>

@@ -2145,14 +2145,29 @@ $(function () {
 	});
 
 	$(".report-vacation-days").click(function (e) {
-		var itemurl = "Vacation"
+		var pageType = "";
+		if ($(this).hasClass("SummaryHours")) {
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportDaysOff")) {
+			pageType = "ReportDaysOff";
+		}
+		var itemurl = "Vacation?PageType=" + pageType;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
 
 	$(".report-sick-days").click(function (e) {
-		var itemurl = "SickDay"
+	
 		$("#loading").show();
+		var pageType = "";
+		if ($(this).hasClass("SummaryHours")) {
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportDaysOff")) {
+			pageType = "ReportDaysOff";
+		}
+		var itemurl = "SickDay?PageType=" + pageType;
 		$.fn.CallModal(itemurl);
 	});
 
@@ -2285,7 +2300,7 @@ $(function () {
 	//		msg = '<span class="msg">Hidden input value: ';
 	//	$('.msg').html(msg + input + '</span>');
 	//}); 
-	$.fn.SaveOffDays = function (url) {
+	$.fn.SaveOffDays = function (url, pageType) {
 		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
 		var dateRangeFromDay = rangeFrom.attr('data-date');
@@ -2306,7 +2321,7 @@ $(function () {
 		console.log(dateFrom + "-" + dateTo);
 		$.ajax({
 			async: false,
-			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo,
+			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType,
 			type: 'POST',
 			cache: false,
 			success: function (data) {
@@ -2319,11 +2334,25 @@ $(function () {
 
 	$("body").on("click", "#saveVacation", function (e) {
 		e.preventDefault();
-		$.fn.SaveOffDays("SaveVacation");
+		var pageType = "";
+		if ($(this).hasClass("SummaryHours")) {
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportDaysOff")) {
+			pageType = "ReportDaysOff";
+		}
+		$.fn.SaveOffDays("SaveVacation", pageType);
 	});
 	$("body").on("click", "#saveSick", function (e) {
 		e.preventDefault();
-		$.fn.SaveOffDays("SaveSick");
+		var pageType = "";
+		if ($(this).hasClass("SummaryHours")) {
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportDaysOff")) {
+			pageType = "ReportDaysOff";
+		}
+		$.fn.SaveOffDays("SaveSick", pageType);
 	});
 
 	$(".approve-hours").click(function (e) {
