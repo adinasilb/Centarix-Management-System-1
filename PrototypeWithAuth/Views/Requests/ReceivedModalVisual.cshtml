@@ -18,6 +18,14 @@
                         @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID);
                         @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
 
+                        var link = "";
+                        var classes = "css-checkbox";
+
+                        if (Model.ChildrenLocationInstances[z].IsEmpty)
+                        {
+                            link = "";
+                            classes += " open-new-visual";
+                        }
                         if (Model.ChildrenLocationInstances[z].IsFull)
                         {
                             var backgroundClass = " order-inv-filter ";
