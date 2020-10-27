@@ -118,4 +118,10 @@
         $(el).parents('.dropdown-main').find('span:not(.caret)').text($(el).text());
     };
 
+
+//RECEIVED MODAL VISUAL
+    $(".open-new-visual").on("click", function () {
+        alert("clicked a shelf that isn't empty! with id: " + $(this).attr("id"));
+    });
+
 });
