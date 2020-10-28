@@ -116,5 +116,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<MaritalStatus> MaritalStatuses { get; set; }
         public List<Degree> Degrees { get; set; }
         public List<Citizenship> Citizenships { get; set; }
+        public int Tab { get; set; }
     }
 }

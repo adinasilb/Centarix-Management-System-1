@@ -627,6 +627,167 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> EditUserPartial(string id, int? Tab)
+        {
+            var userSelected = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            if (userSelected != null)
+            {
+                var registerUserViewModel = new RegisterUserViewModel
+                {
+                    ApplicationUserID = userSelected.Id,
+                    FirstName = userSelected.FirstName,
+                    LastName = userSelected.LastName,
+                    Email = userSelected.Email,
+                    PhoneNumber = userSelected.PhoneNumber,
+                    CentarixID = userSelected.CentarixID,
+                    UserImageSaved = userSelected.UserImage,
+                    //TODO: do we want to show the secure app pass??
+                    LabMonthlyLimit = userSelected.LabMonthlyLimit,
+                    LabUnitLimit = userSelected.LabUnitLimit,
+                    LabOrderLimit = userSelected.LabOrderLimit,
+                    OperationMonthlyLimit = userSelected.OperationMonthlyLimit,
+                    OperationUnitLimit = userSelected.OperationUnitLimit,
+                    OperaitonOrderLimit = userSelected.OperaitonOrderLimit,
+                    Tab = Tab??1
+                };
+
+
+                registerUserViewModel.NewEmployee = new Employee(); //this may be able to be taken out but it might cause errors with users if taken out. so check first
+
+                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).Include(s => s.SalariedEmployee).FirstOrDefault();
+                registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+                registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
+                registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
+                registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
+                registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
+                if (registerUserViewModel.NewEmployee == null)
+                {
+                    registerUserViewModel.NewEmployee = new Employee();
+                    registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
+                }
+
+                //var userToShow = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+                var rolesList = await _userManager.GetRolesAsync(userSelected).ConfigureAwait(false);
+
+                registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.OrdersAndInventory, Name="General", Selected=false }
+            };
+                registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Protocols, Name="General", Selected=false }
+            };
+                registerUserViewModel.OperationRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Operation, Name="General", Selected=false }
+            };
+                registerUserViewModel.BiomarkerRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Biomarkers, Name="General", Selected=false }
+            };
+                registerUserViewModel.TimekeeperRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.TimeKeeper, Name="General", Selected=false }
+            };
+                registerUserViewModel.LabManagementRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.LabManagement, Name="General", Selected=false }
+            };
+                registerUserViewModel.AccountingRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Accounting, Name="General", Selected=false }
+            };
+                registerUserViewModel.ExpenseesRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Expenses, Name="General", Selected=false }
+            };
+                registerUserViewModel.IncomeRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Income, Name="General", Selected=false }
+            };
+                registerUserViewModel.UserRoles = new List<UserRoleViewModel>()
+            {
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Users, Name="General", Selected=false }
+            };
+                foreach (var role in rolesList)
+                {
+                    if (role == AppUtility.MenuItems.OrdersAndInventory.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.OrderRoles[0].Selected = true;
+                    }
+                    else if (role == AppUtility.MenuItems.Protocols.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.ProtocolRoles[0].Selected = true;
+                    }
+                    else if (role == AppUtility.MenuItems.LabManagement.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.LabManagementRoles[0].Selected = true;
+                    }
+                    else if (role == AppUtility.MenuItems.Accounting.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.AccountingRoles[0].Selected = true;
+                    }
+                    else if (role == AppUtility.MenuItems.Operation.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.OperationRoles[0].Selected = true;
+                    }
+                    else if (role == AppUtility.MenuItems.Expenses.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.ExpenseesRoles[0].Selected = true;
+                    }
+                    else if (role == AppUtility.MenuItems.Biomarkers.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.BiomarkerRoles[0].Selected = true;
+                    }
+                    else if (role == AppUtility.MenuItems.Income.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.IncomeRoles[0].Selected = true;
+                    }
+                    else if (role == AppUtility.MenuItems.TimeKeeper.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.TimekeeperRoles[0].Selected = true;
+                    }
+                    else if (role == AppUtility.MenuItems.Users.ToString()) //this was giving me an error in a switch case
+                    {
+                        registerUserViewModel.UserRoles[0].Selected = true;
+                    }
+                }
+
+                if (registerUserViewModel.NewEmployee.UserImage == null)
+                {
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                    string filePath = Path.Combine(uploadFolder, "profile_circle_big.png");
+                    registerUserViewModel.NewEmployee.UserImage = filePath;
+                }
+
+                //FileStreamResult fs;
+                //using (var img = System.Drawing.Image.FromStream(file.OpenReadStream()))
+                //{
+                //    Stream ms = new MemoryStream(img.Resize(100, 100).ToByteArray());
+
+                //    return new FileStreamResult(ms, "image/jpg");
+                //}
+
+                //                using(var stream = File.OpenRead(registerUserViewModel.NewEmployee.UserImage))
+                //{
+                //                    var file = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name))
+                //                    {
+                //                        Headers = new HeaderDictionary(),
+                //                        ContentType = "application/pdf"
+                //                    };
+                //                }
+
+                return PartialView(registerUserViewModel);
+
+            }
+            else
+            {
+                return RedirectToAction("Index", "ApplicationUsers");
+            }
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin , Users")]
         public async Task<IActionResult> EditUser(RegisterUserViewModel registerUserViewModel)
