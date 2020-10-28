@@ -4,7 +4,7 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
 @{
-    @{ string showDetails = "";
+    string showDetails = "";
         string showCategories = "";
         string showPayment = "";
         string showComments = "";
@@ -28,16 +28,19 @@
                 break;
 
         }
-    }
-            string switchClass = "";
-            if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-            {
-                switchClass = "suppliers";
-            }
-            else
-            {
-                switchClass = "accounting";
-            }
+
+        string backgroundColor = "";
+        string switchClass = "";
+        if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
+        {
+            backgroundColor = "var(--lab-man-color)";
+            switchClass = "suppliers";
+        }
+        else
+        {
+            backgroundColor = " var(--acc-color)";
+            switchClass = "accounting";
+        }
         }
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/validate.js" asp-append-version="true"></script>
@@ -431,3 +434,6 @@
             </div>
         </div>
     </div>
+    <script>
+        $('.mdb-select').materialSelect();
+    </script>

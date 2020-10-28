@@ -56,15 +56,16 @@
 		$("body").remove(".confirm-edit-modal");
 		var selectedTab = $('.nav-tabs .active').parent().index()+1;
 		var url = '';
-		var section=""
+		var section = "";
 		var id = $('.turn-edit-on-off').val();
 		if ($('.turn-edit-on-off').hasClass('operations')) {
 			console.log("has class operations");
 			url = "/Operations/EditModalViewPartial?id=" + id + "&Tab=" + selectedTab;
-		} else if ($(this).hasClass('suppliers')) {
-			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
+		} else if ($('.turn-edit-on-off').hasClass('suppliers')) {
 			section = "LabManagement";
-		} else if ($(this).hasClass('accounting')) {
+			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
+			
+		} else if ($('.turn-edit-on-off').hasClass('accounting')) {
 			section = "Accounting";
 			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section+ "&Tab=" + selectedTab;
 			

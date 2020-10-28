@@ -1577,9 +1577,9 @@ td .btn {
     border-bottom: 1px solid #dee2e6 !important;
 }
 
-.custom.select-wrapper input.select-dropdown, .dropdown .select, .dropdown-multiple .select {
+/*.custom.select-wrapper input.select-dropdown, .dropdown .select, .dropdown-multiple .select {
     padding-left: .875rem;
-}
+}*/
 .select-wrapper .select-dropdown li {
     padding-left: .375rem;
 }
