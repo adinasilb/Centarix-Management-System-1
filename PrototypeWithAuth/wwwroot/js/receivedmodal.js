@@ -125,8 +125,10 @@
         var parentlocationinstanceid = $("#ParentLocationInstance_LocationInstanceID").val();
 
         $(".select#1").val(parentlocationinstanceid);
-        var name = $(this).closest(".LocationInstanceName");
-        alert("name: " + JSON.stringify(name));
+        //var name = $(this).closest(".LocationInstanceName");
+        var name = $(this).parents().parents().children(".LocationInstanceName").val();
+        //alert("name: " + JSON.stringify(name));
+        alert("name: " + name);
 
         $("#1").parents('.dropdown-main').find('span:not(.caret)').text(name);
         $("#1").parents('.dropdown-main').find('input').attr('value', childlocationinstanceid);
