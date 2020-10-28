@@ -728,7 +728,12 @@ namespace PrototypeWithAuth.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> UserImageModal()
+        {
+            return PartialView();
+        }
 
         [HttpGet]
         [Authorize(Roles = "CEO")]

@@ -2293,7 +2293,9 @@ $(function () {
 	});
 	//});
 	/*End Dropdown Menu*/
-
+	$("body").on("click", ".upload-image", function (e) {
+		$.fn.CallModal("/Admin/UserImageModal");
+	});
 
 	//$('.dropdown-menu li').click(function () {
 	//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
@@ -2579,6 +2581,12 @@ $('.modal #FirstName').change(function () {
 	$('.userName').val($(this).val() + " " + $('#LastName').val())
 });
 $('.modal #LastName').change(function () {
+	$('.userName').val($('#FirstName').val() + " " + $(this).val())
+});
+$('#FirstName').change(function () {
+	$('.userName').val($(this).val() + " " + $('#LastName').val())
+});
+$('#LastName').change(function () {
 	$('.userName').val($('#FirstName').val() + " " + $(this).val())
 });
 $('.exitModal').on('click', '.close', function (e) {
