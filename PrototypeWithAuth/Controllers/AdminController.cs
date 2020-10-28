@@ -210,7 +210,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
             
-            var user = new ApplicationUser();
+            var user = new Employee();
             if (UserType == 4)
             {
                 user = new Employee
@@ -268,6 +268,7 @@ namespace PrototypeWithAuth.Controllers
                     DegreeID = registerUserViewModel.NewEmployee.DegreeID,
                     IDNumber = registerUserViewModel.NewEmployee.IDNumber,
                     MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID,
+                    IsUser = true,
                     /*phonenumber2 is not working --> talk to Debbie*/
                     CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID,
                     EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
@@ -291,6 +292,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     user.LockoutEnabled = true;
                     user.LockoutEnd = new DateTime(2999, 01, 01);
+                    user.IsUser = false;
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }

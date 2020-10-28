@@ -70,6 +70,8 @@ namespace PrototypeWithAuth.Models
         public Freelancer Freelancer { get; set; }
         public SalariedEmployee SalariedEmployee { get; set; }
         public Advisor Advisor { get; set; }
+
+        public bool IsUser { get; set; }
         //todo add job category
     }
 }
