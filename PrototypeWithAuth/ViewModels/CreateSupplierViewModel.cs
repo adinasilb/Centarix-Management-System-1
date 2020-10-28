@@ -16,7 +16,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.MenuItems SectionType {get; set;}
         public List<CategoryType> CategoryTypes { get; set; }
         public List<int> VendorCategoryTypes { get; set; }
-
+        public int Tab { get; set; }
 
     }
 }
