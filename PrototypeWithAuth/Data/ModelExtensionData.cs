@@ -1194,6 +1194,16 @@ namespace PrototypeWithAuth.Data
                  {
                      JobCategoryTypeID = 9,
                      Description = "Software Developer"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 10,
+                     Description = "Administration"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 11,
+                     Description = "General"
                  }
               );
             modelBuilder.Entity<Degree>().HasData(
