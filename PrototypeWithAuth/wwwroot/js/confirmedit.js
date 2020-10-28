@@ -89,9 +89,10 @@
 			type: 'GET',
 			cache: true,
 			success: function (data) {
-				console.log("cance; edit successful!")
+				console.log("cancel edit successful!")
 				//open the confirm edit modal
 				$('.partial-div').html(data);
+				$('.name').val($('.old-name').val())
 			}
 		});
 	});

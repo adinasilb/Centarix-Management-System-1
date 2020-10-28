@@ -30,7 +30,7 @@
 
     }
 }
-
+<input type="hidden" class="old-name" value="@Model.Request.Product.ProductName" />
 <div class="container-fluid edit-modal-body box-shadow orders" style="background: #FFF; border: 2px solid #EAEAEB;">
     @if (User.IsInRole("Admin"))
     {
@@ -121,7 +121,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="form-group">
                         @* IN MIDDLE *@
                         <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                        <label class="vendorBusinessId form-control-plaintext border-bottom -plaintext" />
+                        <label class="vendorBusinessId form-control-plaintext border-bottom -plaintext">@Model.Request.Product.Vendor.VendorBuisnessID</label>
                         @*don't need a validation here because you it's not saving*@
                     </div>
                 </div>
@@ -213,7 +213,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">Expected supply date</label>
-                            <input value="00-00-0000" class="form-control-plaintext border-bottom mark-readonly" disabled type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                            <input value="@DateTime.Now.Date.AddDays(Model.Request.ExpectedSupplyDays??0)" class="form-control-plaintext border-bottom mark-readonly" disabled type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
                         </div>
                     </div>
                 }
