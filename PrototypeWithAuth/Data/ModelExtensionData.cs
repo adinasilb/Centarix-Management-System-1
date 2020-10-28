@@ -1131,7 +1131,7 @@ namespace PrototypeWithAuth.Data
            new EmployeeStatus
            {
                EmployeeStatusID = 1,
-               Description = "Salaried Employee"
+               Description = "Employee"
            },
            new EmployeeStatus
            {

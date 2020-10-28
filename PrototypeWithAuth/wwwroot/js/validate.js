@@ -343,9 +343,9 @@ $(function () {
 			"LastName": "required",
 			"CentarixID": {
 				required: true,
-				number: true,
-				min: 1,
-				integer: true
+				//number: true,
+				minlength: 1,
+				//integer: true
 			},
 			"Email": {
 				email: true,
