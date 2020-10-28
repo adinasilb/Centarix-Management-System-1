@@ -56,16 +56,16 @@
 		$("body").remove(".confirm-edit-modal");
 		var selectedTab = $('.nav-tabs .active').parent().index()+1;
 		var url = '';
-		var id = $('#Request_RequestID').val();
+		var id = $('.turn-edit-on-off').val();
 		if ($('.turn-edit-on-off').hasClass('operations')) {
 			console.log("has class operations");
-			url = "/Operations/EditModalViewPartial";
+			url = "/Operations/EditModalViewPartial?id=" + id + "&Tab=" + selectedTab;
 		} else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			console.log("has class suppliers or accounting");
-			url = "/Vendors/EditPartial";
+			url = "/Vendors/EditPartial?id=" + id + "&Tab=" + selectedTab;
 		} else if ($('.turn-edit-on-off').hasClass('users')) {
 			console.log("has class users");
-			url = "/Admin/EditUserPartial";
+			url = "/Admin/EditUserPartial?id=" + id + "&Tab=" + selectedTab;
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
 			console.log("has class orders");
