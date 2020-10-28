@@ -28,58 +28,65 @@
         </tr>
         @foreach (var user in Model.ApplicationUsers)
         {
-    <tr class="text-center users-tr">
-        <td>
-            @*<a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
-                @Html.DisplayFor(modelItem => user.UserNum)
-            </a>*@
-            <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
-                @Html.DisplayFor(modelItem => user.UserNum)
-            </a>
-        </td>
-        <td>
-            <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
-                @Html.DisplayFor(modelItem => user.UserName)
-            </a>
-        </td>
-        <td>
-            <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
-                @Html.DisplayFor(modelItem => user.Email)
-            </a>
-        </td>
-        <td>
-            <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
-                @Html.DisplayFor(modelItem => user.DateCreated)
-            </a>
-        </td>
-        @if (User.IsInRole("Admin"))
-        {
-    <td>
-        @{
-            var userid = user.Id;
-
-            if (userid != UserManager.GetUserId(User) && Model.IsCEO)
-            {
-                if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now)
-                {
-                    <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
-                        Unsuspend
+            <tr class="text-center users-tr">
+                <td>
+                    @*<a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
+                            @Html.DisplayFor(modelItem => user.UserNum)
+                        </a>*@
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                        @Html.DisplayFor(modelItem => user.UserNum)
                     </a>
-                }
-                else
-                {
-                    <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
-                        <i class="icon-block-24px text-danger-centarix"></i>
+                </td>
+                <td>
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                        @Html.DisplayFor(modelItem => user.UserName)
                     </a>
+                </td>
+                <td>
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                        @Html.DisplayFor(modelItem => user.Email)
+                    </a>
+                </td>
+                <td>
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                        @Html.DisplayFor(modelItem => user.DateCreated)
+                    </a>
+                </td>
+                @if (User.IsInRole("CEO"))
+                {
+                    <td>
+                        @{
+                            var userid = user.Id;
+
+                            if (userid != UserManager.GetUserId(User) && Model.IsCEO)
+                            {
+                                if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now && !user.IsUser)
+                                {
+                                    <a href="" class="prevent-js-reload">
+                                        <i class="icon-block-24px text-danger-centarix disabled-filter"></i>
+                                    </a>
+                                }
+
+                                else if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now)
+                                {
+                                    <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
+                                        Unsuspend
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
+                                        <i class="icon-block-24px text-danger-centarix"></i>
+                                    </a>
+                                }
+                            }
+
+
+                        }
+
+                    </td>
                 }
-            }
-
-
-        }
-
-    </td>
-    }
-    </tr>
+            </tr>
         }
     </tbody>
 </table>

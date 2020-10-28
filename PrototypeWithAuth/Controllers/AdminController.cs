@@ -50,14 +50,14 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersList;
-            List<ApplicationUser> users = new List<ApplicationUser>();
-            users = _context.Users
+            List<Employee> users = new List<Employee>();
+            users = _context.Employees
                 .Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).OrderBy(u => u.UserNum)
                 .ToList();
             bool IsCEO = false;
             if (User.IsInRole("CEO"))
             {
-                users = _context.Users.OrderBy(u => u.UserNum).ToList(); //The CEO can see all users even the ones that are suspended 
+                users = _context.Employees.OrderBy(u => u.UserNum).ToList(); //The CEO can see all users even the ones that are suspended 
                 IsCEO = true;
             }
 
@@ -873,7 +873,7 @@ namespace PrototypeWithAuth.Controllers
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
             applicationUser.IsDeleted = true;
             _context.Update(applicationUser);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
