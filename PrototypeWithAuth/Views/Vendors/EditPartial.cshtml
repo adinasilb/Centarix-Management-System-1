@@ -4,7 +4,7 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
 @{
-    string showDetails = "";
+        string showDetails = "";
         string showCategories = "";
         string showPayment = "";
         string showComments = "";
@@ -50,7 +50,7 @@
             <div class="switch col-12 switch-margin">
                 <label>
                     <label class="edit-mode-switch-description">Edit Mode Off</label>
-                    <input type="checkbox" class="turn-edit-on-off @switchClass" name="details">
+                    <input type="checkbox" class="turn-edit-on-off @switchClass" name="details" value="@Model.Vendor.VendorID">
                     <span class="lever"></span>
                 </label>
             </div>

@@ -390,61 +390,17 @@ namespace PrototypeWithAuth.Controllers
             return View(createSupplierViewModel);
         }
 
-        // GET: Vendors/Edit/5
-        [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Edit(int? id, AppUtility.MenuItems SectionType)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
-            createSupplierViewModel.Vendor = await _context.Vendors.Include(v=>v.VendorCategoryTypes).Where(v=>v.VendorID == id).FirstOrDefaultAsync();
-            createSupplierViewModel.SectionType = SectionType;
-            createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
-            createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc=>vc.CategoryTypeID).ToList();
-            //var count = createSupplierViewModel.Vendor.VendorCategoryTypes.Count();
-            //if (count == 2)
-            //{
-
-            //}
-            // createSupplierViewModel.CategoryTypeID = createSupplierViewModel.Vendor.VendorCategoryTypes
-            if (createSupplierViewModel.Vendor == null)
-            {
-                return NotFound();
-            }
-            createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-            List<AddContactViewModel> vendorContacts = new List<AddContactViewModel>();
-            List<AddCommentViewModel> vendorComments = new List<AddCommentViewModel>();
-            _context.VendorContacts.Where(c => c.VendorID == id).ToList().ForEach(c => vendorContacts.Add(new AddContactViewModel { VendorContact = c, IsActive = true }));
-            _context.VendorComments.Where(c => c.VendorID == id).ToList().ForEach(c => vendorComments.Add(new AddCommentViewModel { VendorComment = c, IsActive = true }));
-           int count = vendorContacts.Count;
-            for (int i = count-1; i < 10; i++)
-            {
-                vendorContacts.Add(new AddContactViewModel());
-                vendorComments.Add(new AddCommentViewModel());
-            }
-            createSupplierViewModel.VendorContacts = vendorContacts;
-            createSupplierViewModel.VendorComments = vendorComments;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
-            //tempdata page type for active tab link
-            if (SectionType == AppUtility.MenuItems.LabManagement)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
-            }
-            else if (SectionType == AppUtility.MenuItems.Accounting)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
-                TempData["Action"] = AppUtility.SuppliersEnum.All;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
-            }
-            return PartialView(createSupplierViewModel);
+            return await editFunction(id, SectionType);
         }
         // GET: Vendors/Edit/5
         [Authorize(Roles = "Admin, Accounting")]
-        public async Task<IActionResult> EditPartial(int? id, AppUtility.MenuItems SectionType, int ? Tab)
+        public async Task<IActionResult> EditPartial(int? id, AppUtility.MenuItems SectionType, int? Tab)
+        {
+            return await editFunction(id, SectionType, Tab);
+        }
+        public async Task<IActionResult> editFunction(int? id, AppUtility.MenuItems SectionType, int? Tab=0)
         {
             if (id == null)
             {
@@ -495,7 +451,6 @@ namespace PrototypeWithAuth.Controllers
             }
             return PartialView(createSupplierViewModel);
         }
-
         // POST: Vendors/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
