@@ -941,6 +941,222 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin, Operation")]
+        public async Task<IActionResult> EditModalViewPartial(int? id, int? Tab )
+        {
+            string ModalViewType = "";
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 2).ToListAsync();
+            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 2).Count() > 0).ToListAsync();
+            var paymenttypes = await _context.PaymentTypes.ToListAsync();
+            var companyaccounts = await _context.CompanyAccounts.ToListAsync();
+
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
+            {
+                ParentCategories = parentcategories,
+                ProductSubcategories = productsubactegories,
+                Vendors = vendors,
+                PaymentTypes = paymenttypes,
+                CompanyAccounts = companyaccounts, 
+                Tab = Tab??0
+            };
+
+            ModalViewType = "Edit";
+
+            requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
+                .Include(r => r.ParentQuote)
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product.ProductSubcategory)
+                .Include(r => r.Product.ProductSubcategory.ParentCategory)
+                .Include(r => r.RequestStatus)
+                .Include(r => r.ApplicationUserCreator)
+                //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
+                .SingleOrDefault(r => r.RequestID == id);
+
+            //load the correct list of subprojects
+
+            var comments = Enumerable.Empty<Comment>();
+            comments = _context.Comments
+                .Include(r => r.ApplicationUser)
+                .Where(r => r.Request.RequestID == id);
+            //needs to be instantiated here so it doesn't throw an error if nothing is in it
+            /*
+             *I think it should be an ienumerable and look like
+             *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
+             *ike before but it's not recognizing the syntax
+            */
+            requestItemViewModel.OldComments = comments.ToList();
+
+            //may be able to do this together - combining the path for the orders folders
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
+            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+            string uploadFolderInvoices = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+            string uploadFolderShipments = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
+            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+            string uploadFolderInfo = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Info.ToString());
+            string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
+            string uploadFolderReturns = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Returns.ToString());
+            string uploadFolderCredits = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Credits.ToString());
+            //the partial file name that we will search for (1- because we want the first one)
+            //creating the directory from the path made earlier
+
+            if (Directory.Exists(uploadFolderOrders))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.OrderFileStrings = new List<String>();
+                foreach (var orderfile in orderfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(orderfile.FullName);
+                    requestItemViewModel.OrderFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderInvoices))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInvoices);
+                FileInfo[] invoicefilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.InvoiceFileStrings = new List<string>();
+                foreach (var invoicefile in invoicefilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(invoicefile.FullName);
+                    requestItemViewModel.InvoiceFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderShipments))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderShipments);
+                FileInfo[] shipmentfilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.ShipmentFileStrings = new List<string>();
+                foreach (var shipmentfile in shipmentfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(shipmentfile.FullName);
+                    requestItemViewModel.ShipmentFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderQuotes))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
+                FileInfo[] quotefilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.QuoteFileStrings = new List<string>();
+                foreach (var quotefile in quotefilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(quotefile.FullName);
+                    requestItemViewModel.QuoteFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderInfo))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInfo);
+                FileInfo[] infofilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.InfoFileStrings = new List<string>();
+                foreach (var infofile in infofilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(infofile.FullName);
+                    requestItemViewModel.InfoFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderPictures))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderPictures);
+                FileInfo[] picturefilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.PictureFileStrings = new List<string>();
+                foreach (var picturefile in picturefilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(picturefile.FullName);
+                    requestItemViewModel.PictureFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderReturns))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderReturns);
+                FileInfo[] returnfilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.ReturnFileStrings = new List<string>();
+                foreach (var returnfile in returnfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(returnfile.FullName);
+                    requestItemViewModel.ReturnFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderCredits))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderCredits);
+                FileInfo[] creditfilesfound = DirectoryToSearch.GetFiles("*.*");
+                requestItemViewModel.CreditFileStrings = new List<string>();
+                foreach (var creditfile in creditfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFourFiles(creditfile.FullName);
+                    requestItemViewModel.CreditFileStrings.Add(newFileString);
+                }
+            }
+
+            //GET PAYMENTS HERE
+            //var payments = _context.Payments
+            //    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
+            //    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
+            //requestItemViewModel.NewPayments = payments;
+
+            //if (payments.Count > 0)
+            //{
+            //    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
+            //    var totalPaymentsToDate = 0;
+            //    foreach (var payment in payments)
+            //    {
+            //        if (payment.PaymentDate <= DateTime.Now)
+            //        {
+            //            totalPaymentsToDate++;
+            //        }
+            //        else
+            //        {
+            //            break;
+            //        }
+            //    }
+            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
+            //}
+            //else
+            //{
+            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
+            //}
+
+            //setting the lists of companyaccounts by payment type id (so easy filtering on the frontend)
+
+            //first get the list of payment types there are
+            var paymentTypeIds = _context.CompanyAccounts.Select(ca => ca.PaymentTypeID).Distinct().ToList();
+            //initialize the dictionary
+            requestItemViewModel.CompanyAccountListsByPaymentTypeID = new Dictionary<int, IEnumerable<CompanyAccount>>();
+            //foreach paymenttype
+            foreach (var paymentTypeID in paymentTypeIds)
+            {
+                var caList = _context.CompanyAccounts.Where(ca => ca.PaymentTypeID == paymentTypeID);
+                requestItemViewModel.CompanyAccountListsByPaymentTypeID.Add(paymentTypeID, caList);
+            }
+
+
+
+            //locations:
+            //get the list of requestLocationInstances in this request
+
+            if (requestItemViewModel.Request == null)
+            {
+                TempData["InnerMessage"] = "The request sent in was null";
+            }
+
+            ViewData["ModalViewType"] = ModalViewType;
+            //ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", addNewItemViewModel.Request.ParentRequest.ApplicationUserID);
+            //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
+            //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
+
+            return PartialView(requestItemViewModel);
+
+        }
+
         //[Authorize(Roles = "Admin, Operation")]
         //public async Task<IActionResult> EditSummaryModalView(int? id, bool NewRequestFromProduct = false)
         //{

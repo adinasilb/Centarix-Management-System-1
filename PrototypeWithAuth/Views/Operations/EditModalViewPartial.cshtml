@@ -6,7 +6,6 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 @{ string showItem = "";
-    string showLocation = "";
     string showPrice = "";
     string showDocuments = "";
     string showComments = "";
@@ -16,15 +15,12 @@
             showItem = " active show ";
             break;
         case 2:
-            showLocation = " active show ";
-            break;
-        case 3:
             showPrice = " active show ";
             break;
-        case 4:
+        case 3:
             showDocuments = " active show ";
             break;
-        case 5:
+        case 4:
             showComments = " active show ";
             break;
 
@@ -45,7 +41,7 @@
         </div>
     }
     <div class="tab-content">
-        <div id="item" class="tab-pane fade in active">
+        <div id="item" class="tab-pane fade in @showItem">
             <div class="row modal-tab-name">
                 <span class="heading-1 col-12 modal-tab-name">Item</span>
             </div>
@@ -203,7 +199,7 @@ new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubca
         </div>
 
 
-        <div id="price" class="tab-pane fade">
+        <div id="price" class="tab-pane fade @showPrice">
 
             <div class="row modal-tab-name">
                 <span class="heading-1 col-12 modal-tab-name">Price</span>
@@ -373,7 +369,7 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
         </div>
 
 
-        <div id="documents" class="tab-pane fade">
+        <div id="documents" class="tab-pane fade @showDocuments">
             <div class="row modal-tab-name">
                 <span class="heading-1 col-12 modal-tab-name">Documents</span>
             </div>
@@ -576,7 +572,6 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 
 
         </div>
-
 
     </div>
 </div>
