@@ -389,13 +389,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> Vacation(String PageType)
         {
-            return PartialView(PageType);
+            return PartialView("Vacation", PageType);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> SickDay(String PageType)
         {
-            return PartialView(PageType);
+            return PartialView("SickDay", PageType);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
