@@ -1131,7 +1131,7 @@ namespace PrototypeWithAuth.Data
            new EmployeeStatus
            {
                EmployeeStatusID = 1,
-               Description = "Salaried Employee"
+               Description = "Employee"
            },
            new EmployeeStatus
            {
@@ -1194,6 +1194,16 @@ namespace PrototypeWithAuth.Data
                  {
                      JobCategoryTypeID = 9,
                      Description = "Software Developer"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 10,
+                     Description = "Administration"
+                 },
+                 new JobCategoryType
+                 {
+                     JobCategoryTypeID = 11,
+                     Description = "General"
                  }
               );
             modelBuilder.Entity<Degree>().HasData(
@@ -1216,6 +1226,16 @@ namespace PrototypeWithAuth.Data
                 {
                     DegreeID = 4,
                     Description = "Post P.hd"
+                },
+                new Degree
+                {
+                    DegreeID = 5,
+                    Description = "No Degree"
+                },
+                new Degree
+                {
+                    DegreeID = 6,
+                    Description = "Certificate"
                 }
             );
             modelBuilder.Entity<Citizenship>().HasData(

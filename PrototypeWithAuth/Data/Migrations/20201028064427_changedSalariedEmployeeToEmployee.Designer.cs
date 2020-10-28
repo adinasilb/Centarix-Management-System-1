@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201028064427_changedSalariedEmployeeToEmployee")]
+    partial class changedSalariedEmployeeToEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -439,16 +441,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             DegreeID = 4,
                             Description = "Post P.hd"
-                        },
-                        new
-                        {
-                            DegreeID = 5,
-                            Description = "No Degree"
-                        },
-                        new
-                        {
-                            DegreeID = 6,
-                            Description = "Certificate"
                         });
                 });
 
@@ -2755,9 +2747,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<double>("IncomeTax")
                         .HasColumnType("float");
-
-                    b.Property<bool>("IsUser")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("JobCategoryTypeID")
                         .HasColumnType("int");
