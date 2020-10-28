@@ -209,7 +209,7 @@ namespace PrototypeWithAuth.Controllers
                 usernum = _context.Users.OrderByDescending(u => u.UserNum).FirstOrDefault().UserNum + 1;
             }
             var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
-            
+
             var user = new Employee();
             if (UserType == 4)
             {
@@ -281,7 +281,9 @@ namespace PrototypeWithAuth.Controllers
             if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
             {
                 IsUser = false;
-                registerUserViewModel.Password = "ABC12345*centarix";
+                //registerUserViewModel.Password = "ABC12345*centarix";
+                var newPassword = GeneratePassword(true, true, true, true, false, 10);
+                registerUserViewModel.Password = newPassword;
             }
             var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
             //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
@@ -497,7 +499,7 @@ namespace PrototypeWithAuth.Controllers
 
                 registerUserViewModel.NewEmployee = new Employee(); //this may be able to be taken out but it might cause errors with users if taken out. so check first
 
-                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).Include(s=>s.SalariedEmployee).FirstOrDefault();
+                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).Include(s => s.SalariedEmployee).FirstOrDefault();
                 registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
                 registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
                 registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
@@ -722,7 +724,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await _context.SaveChangesAsync();
                 }
-                    
+
 
                 //if password isn't blank - reset the password):
                 if (registerUserViewModel.Password != null)
@@ -849,9 +851,10 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (DbUpdateException ex)
             {
-                
+
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
 
             }
 
@@ -914,6 +917,73 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", "Home");
             //Faige's original code below:
             //return View("~/Views/Home/IndexAdmin.cshtml");
+        }
+
+
+
+        public static string GeneratePassword(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, bool includeSpaces, int lengthOfPassword)
+        {
+            const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
+            const string LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
+            const string UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string NUMERIC_CHARACTERS = "0123456789";
+            const string SPECIAL_CHARACTERS = @"!#$%&*@\";
+            const string SPACE_CHARACTER = " ";
+            const int PASSWORD_LENGTH_MIN = 8;
+            const int PASSWORD_LENGTH_MAX = 128;
+
+            if (lengthOfPassword < PASSWORD_LENGTH_MIN || lengthOfPassword > PASSWORD_LENGTH_MAX)
+            {
+                return "Password length must be between 8 and 128.";
+            }
+
+            string characterSet = "";
+
+            if (includeLowercase)
+            {
+                characterSet += LOWERCASE_CHARACTERS;
+            }
+
+            if (includeUppercase)
+            {
+                characterSet += UPPERCASE_CHARACTERS;
+            }
+
+            if (includeNumeric)
+            {
+                characterSet += NUMERIC_CHARACTERS;
+            }
+
+            if (includeSpecial)
+            {
+                characterSet += SPECIAL_CHARACTERS;
+            }
+
+            if (includeSpaces)
+            {
+                characterSet += SPACE_CHARACTER;
+            }
+
+            char[] password = new char[lengthOfPassword];
+            int characterSetLength = characterSet.Length;
+
+            System.Random random = new System.Random();
+            for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
+            {
+                password[characterPosition] = characterSet[random.Next(characterSetLength - 1)];
+
+                bool moreThanTwoIdenticalInARow =
+                    characterPosition > MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS
+                    && password[characterPosition] == password[characterPosition - 1]
+                    && password[characterPosition - 1] == password[characterPosition - 2];
+
+                if (moreThanTwoIdenticalInARow)
+                {
+                    characterPosition--;
+                }
+            }
+
+            return string.Join(null, password);
         }
     }
 }
