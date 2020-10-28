@@ -14,6 +14,7 @@
 }
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
+<script src="~/js/receivedmodal.js"></script>
 <div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered mx-auto  modal-lg on-form-modal" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
@@ -93,20 +94,20 @@
                                         <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
                                         <label asp-for="Arrival">Arrival</label>
                                     </div>*@
-                            <div class="col-2 text-center">
-                                <label asp-for="Clarify">Clarify</label>
-                                <br />
-         
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" asp-for="Clarify"/>
-                                    <label class="custom-control-label text-white" style="font-size: 0;" asp-for="Clarify"></label>
+                                <div class="col-2 text-center">
+                                    <label asp-for="Clarify">Clarify</label>
+                                    <br />
+
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input p-c" asp-for="Clarify" />
+                                        <label class="custom-control-label text-white" style="font-size: 0;" asp-for="Clarify"></label>
+                                    </div>
                                 </div>
-                            </div>
                                 <div class="col-2 text-center">
                                     <label asp-for="PartialDelivery">Partial Delivery</label>
                                     <br />
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" asp-for="PartialDelivery"  />
+                                        <input type="checkbox" class="custom-control-input p-c" asp-for="PartialDelivery" />
                                         <label class="custom-control-label text-white" style="font-size: 0;" asp-for="PartialDelivery"></label>
                                     </div>
                                 </div>
@@ -137,7 +138,7 @@
                                                     <ul class="p-0 locationinstance dropdown-menu ">
                                                         @foreach (var locationType in Model.locationTypesDepthZero)
                                                         {
-                                                            <li  id="@locationType.LocationTypeID" onclick="loadReceivedModalSubLocations(this.id)" >
+                                                            <li id="@locationType.LocationTypeID" class="open-sublocations-types" @*onclick="loadReceivedModalSubLocations(this.id)"*@>
                                                                 @locationType.LocationTypeName
                                                             </li>
                                                         }
@@ -154,7 +155,7 @@
                                         </div>
                                     </div>
                                 </div>
-                         
+
                                 @*<div class="row">
                                         <div class="col-12">
                                             <div class="form-group">
@@ -208,42 +209,9 @@
 </div>
 
 <script>
-    $("input:checkbox").on('click', function () {
-        // in the handler, 'this' refers to the box clicked on
-        var $box = $(this);
-        if (!$box.is(":checked")) {
-            console.log('in box checked')
-            $box.prop("checked", false);
-        } else {
-            switch ($box.attr('name')) {
-                case "PartialDelivery":
-                    console.log('in partial')
-                    $("#PartialDelivery").prop("checked", true);
-                    $("#Clarify").prop("checked", false);
-                    break;
-                case "Clarify":
-                    console.log('in clarify')
-                     $("#PartialDelivery").prop("checked", false);
-                    $("#Clarify").prop("checked", true);
-                    break;
-            }
-        }
-    });
-    //AJAX load full partial view for modalview manage locations
-    function loadReceivedModalSubLocations(val) {
-        var myDiv = $(".divSublocations");
-        $.ajax({
-            //IMPORTANT: ADD IN THE ID
-            url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + val,
-            type: 'GET',
-            cache: false,
-            context: myDiv,
-            success: function (result) {
-                $(this).html(result);
-                $('.visualView').html('');
-            }
-        });
-    };
 
+    //function loadReceivedModalSubLocations(id) {
+    //    alert("id: " + id);
+    //};
 
 </script>
