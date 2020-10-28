@@ -54,7 +54,39 @@
 		$(".confirm-edit-modal").remove();
 		console.log("don't save request edits");
 		$("body").remove(".confirm-edit-modal");
-		$.fn.TurnToDetails();
+		var selectedTab = $('.nav-tabs .active').parent().index()+1;
+		var url = '';
+		var id = $('#Request_RequestID').val();
+		if ($('.turn-edit-on-off').hasClass('operations')) {
+			console.log("has class operations");
+			url = "/Operations/EditModalViewPartial";
+		} else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
+			console.log("has class suppliers or accounting");
+			url = "/Vendors/EditPartial";
+		} else if ($('.turn-edit-on-off').hasClass('users')) {
+			console.log("has class users");
+			url = "/Admin/EditUserPartial";
+
+		} else if ($('.turn-edit-on-off').hasClass('orders')) {
+			console.log("has class orders");
+			url = "/Requests/EditModalViewPartial?id=" + id +"&Tab="+ selectedTab;
+
+		}
+		else {
+			alert("didn't go into any edits");
+		}
+		console.log("url: " + url);
+
+		$.ajax({
+			url: url,
+			type: 'GET',
+			cache: true,
+			success: function (data) {
+				console.log("cance; edit successful!")
+				//open the confirm edit modal
+				$('.partial-div').html(data);
+			}
+		});
 	});
 
 	$.fn.TurnToDetails = function () {

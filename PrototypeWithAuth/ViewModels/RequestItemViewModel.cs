@@ -76,5 +76,6 @@ namespace PrototypeWithAuth.ViewModels
         public ReceivedModalSublocationsViewModel ReceivedModalSublocationsViewModel { get; set; }
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
         public LocationType ParentDepthZeroOfSelected { get; set; }
+        public int Tab { get; set; }
     }
 }
