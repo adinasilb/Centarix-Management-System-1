@@ -67,7 +67,7 @@
 		if (nextSelect != undefined) { //if there is another one
 			$(nextSelect).html('');
 			$(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text('select');
-			items[] = FillNextSelect(nextSelect, locationInstanceParentId);
+			var items = FillNextSelect(nextSelect, locationInstanceParentId);
 			alert("items: " + items);
 		}
 		//TWO ---> FILL VISUAL VIEW
@@ -114,7 +114,7 @@
 
 	function FillNextSelect(locationInstanceParentId) {
 		//alert("in fill next select " + JSON.stringify(nextSelect));
-		var items[];
+		var items = new Array();
 		$.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
 			var item = "<li>Select Location Instance</li>";
 			$.each(result, function (i, field) {
