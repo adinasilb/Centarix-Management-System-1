@@ -1226,6 +1226,16 @@ namespace PrototypeWithAuth.Data
                 {
                     DegreeID = 4,
                     Description = "Post P.hd"
+                },
+                new Degree
+                {
+                    DegreeID = 5,
+                    Description = "No Degree"
+                },
+                new Degree
+                {
+                    DegreeID = 6,
+                    Description = "Certificate"
                 }
             );
             modelBuilder.Entity<Citizenship>().HasData(
