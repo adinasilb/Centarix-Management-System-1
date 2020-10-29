@@ -352,7 +352,12 @@ table td, table td .btn, .text, table th {
 .circular-profile-img-65 {
     height: 65px;
     width: 65px;
-    clip-path: circle(32.5 px at center);
+    clip-path: circle(32.5px at center);
+}
+.circular-profile-img-89 {
+    height: 89px;
+    width: 89px;
+    clip-path: circle(44.5px at center);
 }
 .circular-profile-img-150 {
     height: 150px;
@@ -373,6 +378,11 @@ table td, table td .btn, .text, table th {
     height: 225px;
     width: 225px;
     clip-path: circle(112.5px at center);
+}
+.circular-profile-img-197 {
+    height: 197px;
+    width: 197px;
+    clip-path: circle(98.5px at center);
 }
 .circular-profile-img img {
     position: relative;

@@ -426,7 +426,7 @@ $(function () {
 				required: true,
 				min: 1
 			},
-			UserImage: { extension: "jpg|jpeg|png" },
+			//UserImage: { extension: "jpg|jpeg|png" },
 			LabMonthlyLimit: {
 				integer:true
 			},
