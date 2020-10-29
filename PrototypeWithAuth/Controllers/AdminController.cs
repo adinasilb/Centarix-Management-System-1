@@ -210,7 +210,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
 
-            var user = new Employee();
+            var user = new ApplicationUser();
             if (UserType == 4)
             {
                 user = new Employee
@@ -268,7 +268,6 @@ namespace PrototypeWithAuth.Controllers
                     DegreeID = registerUserViewModel.NewEmployee.DegreeID,
                     IDNumber = registerUserViewModel.NewEmployee.IDNumber,
                     MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID,
-                    IsUser = true,
                     /*phonenumber2 is not working --> talk to Debbie*/
                     CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID,
                     EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
@@ -281,9 +280,7 @@ namespace PrototypeWithAuth.Controllers
             if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
             {
                 IsUser = false;
-                //registerUserViewModel.Password = "ABC12345*centarix";
-                var newPassword = GeneratePassword(true, true, true, true, false, 10);
-                registerUserViewModel.Password = newPassword;
+                registerUserViewModel.Password = "ABC12345*centarix";
             }
             var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
             //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
@@ -294,7 +291,6 @@ namespace PrototypeWithAuth.Controllers
                 {
                     user.LockoutEnabled = true;
                     user.LockoutEnd = new DateTime(2999, 01, 01);
-                    user.IsUser = false;
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -475,41 +471,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> EditUser(string id)
         {
-            var userSelected = _context.Users.Where(u => u.Id == id).FirstOrDefault();
-            if (userSelected != null)
-            {
-                var registerUserViewModel = new RegisterUserViewModel
-                {
-                    ApplicationUserID = userSelected.Id,
-                    FirstName = userSelected.FirstName,
-                    LastName = userSelected.LastName,
-                    Email = userSelected.Email,
-                    PhoneNumber = userSelected.PhoneNumber,
-                    CentarixID = userSelected.CentarixID,
-                    UserImageSaved = userSelected.UserImage,
-                    //TODO: do we want to show the secure app pass??
-                    LabMonthlyLimit = userSelected.LabMonthlyLimit,
-                    LabUnitLimit = userSelected.LabUnitLimit,
-                    LabOrderLimit = userSelected.LabOrderLimit,
-                    OperationMonthlyLimit = userSelected.OperationMonthlyLimit,
-                    OperationUnitLimit = userSelected.OperationUnitLimit,
-                    OperaitonOrderLimit = userSelected.OperaitonOrderLimit
-                };
-
-
-                registerUserViewModel.NewEmployee = new Employee(); //this may be able to be taken out but it might cause errors with users if taken out. so check first
-
-                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).Include(s => s.SalariedEmployee).FirstOrDefault();
-                registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
-                registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
-                registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
-                registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
-                registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
-                if (registerUserViewModel.NewEmployee == null)
-                {
-                    registerUserViewModel.NewEmployee = new Employee();
-                    registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
-                }
+            return await editUserFunction(id);
+        }
 
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
@@ -763,10 +726,15 @@ namespace PrototypeWithAuth.Controllers
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
             applicationUser.IsDeleted = true;
             _context.Update(applicationUser);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> UserImageModal()
+        {
+            return PartialView();
+        }
 
         [HttpGet]
         [Authorize(Roles = "CEO")]
@@ -965,73 +933,5 @@ namespace PrototypeWithAuth.Controllers
         }
     }
 
-    
 
-
-
-        public static string GeneratePassword(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, bool includeSpaces, int lengthOfPassword)
-        {
-            const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
-            const string LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
-            const string UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            const string NUMERIC_CHARACTERS = "0123456789";
-            const string SPECIAL_CHARACTERS = @"!#$%&*@\";
-            const string SPACE_CHARACTER = " ";
-            const int PASSWORD_LENGTH_MIN = 8;
-            const int PASSWORD_LENGTH_MAX = 128;
-
-            if (lengthOfPassword < PASSWORD_LENGTH_MIN || lengthOfPassword > PASSWORD_LENGTH_MAX)
-            {
-                return "Password length must be between 8 and 128.";
-            }
-
-            string characterSet = "";
-
-            if (includeLowercase)
-            {
-                characterSet += LOWERCASE_CHARACTERS;
-            }
-
-            if (includeUppercase)
-            {
-                characterSet += UPPERCASE_CHARACTERS;
-            }
-
-            if (includeNumeric)
-            {
-                characterSet += NUMERIC_CHARACTERS;
-            }
-
-            if (includeSpecial)
-            {
-                characterSet += SPECIAL_CHARACTERS;
-            }
-
-            if (includeSpaces)
-            {
-                characterSet += SPACE_CHARACTER;
-            }
-
-            char[] password = new char[lengthOfPassword];
-            int characterSetLength = characterSet.Length;
-
-            System.Random random = new System.Random();
-            for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
-            {
-                password[characterPosition] = characterSet[random.Next(characterSetLength - 1)];
-
-                bool moreThanTwoIdenticalInARow =
-                    characterPosition > MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS
-                    && password[characterPosition] == password[characterPosition - 1]
-                    && password[characterPosition - 1] == password[characterPosition - 2];
-
-                if (moreThanTwoIdenticalInARow)
-                {
-                    characterPosition--;
-                }
-            }
-
-            return string.Join(null, password);
-        }
-    }
 }
