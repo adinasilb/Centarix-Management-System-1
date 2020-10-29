@@ -1752,7 +1752,7 @@ $(function () {
 
 	$(".request-price-tab").click(function () {
 		console.log("in onclick price tab");
-		//$("#myForm").validate();
+		//$("#myForm").valiD);
 		//$.fn.validateItemTab();
 		//$.fn.validateItemTab();
 
@@ -2123,25 +2123,20 @@ $(function () {
 	};
 	$.fn.CallModal2 = function (url) {
 		console.log("in call modal2, url: " + url);
+		$("#userImageModal").replaceWith('');
 		$.ajax({
-			async: false,
+			async: true,
 			url: url,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				$("#loading").hide();
 				var modal = $(data);
 				$('body').append(modal);
-				//replaces the modal-view class with the ModalView view
-				//$(".modal-view").html(data);
-				//turn off data dismiss by clicking out of the box and by pressing esc
-				$(".modal-view").modal({
+				$("#userImageModal").modal({
 					backdrop: false,
 					keyboard: true,
 				});
-				//shows the modal
 				$(".modal").modal('show');
-				return false;
 			}
 		});
 	};
@@ -2369,7 +2364,7 @@ $(function () {
 	});
 	//});
 	/*End Dropdown Menu*/
-	$("body").on("click", ".upload-image", function (e) {
+	$("body").off('click').on("click", ".upload-image", function (e) {
 		$.fn.CallModal2("/Admin/UserImageModal");
 	});
 
