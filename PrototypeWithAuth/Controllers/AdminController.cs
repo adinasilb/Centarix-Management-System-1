@@ -210,7 +210,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
 
-            var user = new ApplicationUser();
+            var user = new Employee();
             if (UserType == 4)
             {
                 user = new Employee
@@ -232,7 +232,8 @@ namespace PrototypeWithAuth.Controllers
                     OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
                     OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
                     DateCreated = DateTime.Now,
-                    EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID
+                    EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
+                    IsUser = true
                 };
             }
             else
@@ -256,7 +257,8 @@ namespace PrototypeWithAuth.Controllers
                     OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
                     OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
                     DateCreated = DateTime.Now,
-                    /*Employee*/
+                    /*Employee
+                    IsUser = true,
                     StartedWorking = registerUserViewModel.NewEmployee.StartedWorking,
                     DOB = registerUserViewModel.NewEmployee.DOB,
                     GrossSalary = registerUserViewModel.NewEmployee.GrossSalary,
@@ -280,7 +282,8 @@ namespace PrototypeWithAuth.Controllers
             if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
             {
                 IsUser = false;
-                registerUserViewModel.Password = "ABC12345*centarix";
+                var newPassword = GeneratePassword(true, true, true, true, false, 10);
+                registerUserViewModel.Password = newPassword;
             }
             var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
             //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
@@ -291,6 +294,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     user.LockoutEnabled = true;
                     user.LockoutEnd = new DateTime(2999, 01, 01);
+                    user.IsUser = false;
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -930,6 +934,71 @@ namespace PrototypeWithAuth.Controllers
             {
                 return RedirectToAction("Index", "ApplicationUsers");
             }
+        }
+
+        public static string GeneratePassword(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, bool includeSpaces, int lengthOfPassword)
+        {
+            const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
+            const string LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
+            const string UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string NUMERIC_CHARACTERS = "0123456789";
+            const string SPECIAL_CHARACTERS = @"!#$%&*@\";
+            const string SPACE_CHARACTER = " ";
+            const int PASSWORD_LENGTH_MIN = 8;
+            const int PASSWORD_LENGTH_MAX = 128;
+
+            if (lengthOfPassword < PASSWORD_LENGTH_MIN || lengthOfPassword > PASSWORD_LENGTH_MAX)
+            {
+                return "Password length must be between 8 and 128.";
+            }
+
+            string characterSet = "";
+
+            if (includeLowercase)
+            {
+                characterSet += LOWERCASE_CHARACTERS;
+            }
+
+            if (includeUppercase)
+            {
+                characterSet += UPPERCASE_CHARACTERS;
+            }
+
+            if (includeNumeric)
+            {
+                characterSet += NUMERIC_CHARACTERS;
+            }
+
+            if (includeSpecial)
+            {
+                characterSet += SPECIAL_CHARACTERS;
+            }
+
+            if (includeSpaces)
+            {
+                characterSet += SPACE_CHARACTER;
+            }
+
+            char[] password = new char[lengthOfPassword];
+            int characterSetLength = characterSet.Length;
+
+            System.Random random = new System.Random();
+            for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
+            {
+                password[characterPosition] = characterSet[random.Next(characterSetLength - 1)];
+
+                bool moreThanTwoIdenticalInARow =
+                    characterPosition > MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS
+                    && password[characterPosition] == password[characterPosition - 1]
+                    && password[characterPosition - 1] == password[characterPosition - 2];
+
+                if (moreThanTwoIdenticalInARow)
+                {
+                    characterPosition--;
+                }
+            }
+
+            return string.Join(null, password);
         }
     }
 
