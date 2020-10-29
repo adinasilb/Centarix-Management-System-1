@@ -247,7 +247,12 @@
            // $('form').attr('autocomplete', 'off');
            
             $("#alertCount").hide();
-            console.log("in doc ready!");
+
+
+            //Try to disable autocomplete on all inputs --> but chrome may ignore it
+            $("input:text,form").attr("autocomplete", "off");
+
+
            /* $('input[data-val-required]').each(function () {
                 $(this).prev('label').first().append('*');
             });
