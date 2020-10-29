@@ -560,6 +560,12 @@ namespace PrototypeWithAuth.Controllers
 
                     _context.Update(employeeEditted);
 
+                    if (registerUserViewModel.Password != "")
+                    {
+                        string resetToken = await _userManager.GeneratePasswordResetTokenAsync(employeeEditted);
+                        IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(employeeEditted, resetToken, registerUserViewModel.Password);
+                    }
+
                     switch (selectedStatusID)
                     {
                         case 1: /*Salaried Employee*/
@@ -818,9 +824,12 @@ namespace PrototypeWithAuth.Controllers
                     registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
                 }
 
+
                 //round job scope
                 string WorkScope = registerUserViewModel.NewEmployee?.SalariedEmployee?.WorkScope.ToString("0.00") ?? "0";
                 registerUserViewModel.NewEmployeeWorkScope = Decimal.Parse(WorkScope) ;
+
+
 
                 //var userToShow = _context.Users.Where(u => u.Id == id).FirstOrDefault();
                 var rolesList = await _userManager.GetRolesAsync(userSelected).ConfigureAwait(false);
