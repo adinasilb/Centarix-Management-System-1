@@ -673,11 +673,11 @@ $(function () {
 	//});
 
 	$(".modal").on("change", "#Request_UnitTypeID", function () {
-	//	alert("modal Request_UnitTypeID was changed");
+		//	alert("modal Request_UnitTypeID was changed");
 		$.fn.CheckUnitsFilled();
 	});
 	$(".modal").on("change", "#Request_SubUnitTypeID", function () {
-	//	alert("modal Request_SubUnitTypeID was changed");
+		//	alert("modal Request_SubUnitTypeID was changed");
 		$.fn.CheckSubUnitsFilled();
 	});
 
@@ -876,7 +876,7 @@ $(function () {
 				console.log("select index test" + selectedIndex)
 				break;
 		}
-			
+
 		$('#Request_SubUnitTypeID').destroyMaterialSelect();
 		$('#Request_SubUnitTypeID').prop('selectedIndex', selectedIndex);
 		switch (optgroup) {
@@ -884,7 +884,7 @@ $(function () {
 				console.log("inside optgroup units");
 				//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
 				//$("#Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-			//	$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', false).prop('hidden', false);
+				//	$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").prop('disabled', false).prop('hidden', false);
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").show();
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
@@ -907,7 +907,7 @@ $(function () {
 				$("#Request_SubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
 				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
 
-			//	$("#Request_SubUnitTypeID").hide();
+				//	$("#Request_SubUnitTypeID").hide();
 				break;
 			case "Test":
 				//console.log("inside optgroup test");
@@ -1616,7 +1616,7 @@ $(function () {
 		});
 	};
 
-	$(".modal").on("change",'#UserImageModal', function () {
+	$(".modal").on("change", '#UserImageModal', function () {
 		var imgPath = $("#UserImageModal")[0].value;
 		console.log("imgPath: " + imgPath);
 		var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
@@ -1626,41 +1626,75 @@ $(function () {
 
 		//if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
 		//	console.log("inside the if statement");
-			if (typeof (FileReader) != "undefined") {
-				console.log("file reader does not equal undefined");
-				var reader = new FileReader();
-				reader.onload = function (e) {
-					console.log(e.target.result);
-					//$("<img />", {
-					//	"src": e.target.result,
-					//	"class": "thumb-image"
-					//}).appendTo(imageHolder);
-					$("#user-image-modal").attr("src", e.target.result);
-				}
-				imageHolder.show();
-				reader.readAsDataURL($(this)[0].files[0]);
-				$('.file-name').text(this.files[0].name);
+		if (typeof (FileReader) != "undefined") {
+			console.log("file reader does not equal undefined");
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				console.log(e.target.result);
+				//$("<img />", {
+				//	"src": e.target.result,
+				//	"class": "thumb-image"
+				//}).appendTo(imageHolder);
+				$("#user-image-modal").attr("src", e.target.result);
 			}
+			imageHolder.show();
+			reader.readAsDataURL($(this)[0].files[0]);
+			$('.file-name').text(this.files[0].name);
+		}
 		//}
 		//else {
 		//	alert("Please only select images");
 		//}
+
+		//Saving the user image here with a val of Saved = Temp
+
+
 	});
 	$('#saveUserImage').click(function () {
-		if (typeof (FileReader) != "undefined") {
-			console.log("file reader does not equal undefined");
-			//var imageHolder = $("#user-image-modal");
-			//imageHolder.empty();
-			var reader = new FileReader();
-			reader.onload = function (e) {
-				console.log(e.target.result);
+		//Save the user image under a temp file name
+		//console.log("user image file submitted");
+		//var url = "Admin/SaveUserImage";
+		//console.log("url : " + url);
+		//var formData = new FormData($("#userImageForm")[0]);
+		//var data = $("#userImageForm").serialize();
+		////var formData = new FormData($(this));
+		////console.log("data : " + data);
+		//console.log("formData : " + formData);
+		////console.log("data : " + model);
 
-				$("#user-image").attr("src", e.target.result);
-				$('.temp-image').hide();
-			}
-			$('#UserImage').val($("#UserImageModal").files);
-			reader.readAsDataURL($("#UserImageModal")[0].files[0]);
-		}
+
+		//$.ajax({
+		//	url: url,
+		//	method: 'POST',
+		//	data: formData,
+		//	success: (partialResult) => {
+		//	},
+		//	processData: false,
+		//	contentType: false
+		//});
+
+
+		//Set a hiddenfor that it has an image
+
+		var $formFileToSave = $("#UserImageModal"), $clone = $("#UserImageModal").clone();
+		$formFileToSave.attr("id") = "";
+		$formFileToSave.after($clone).appendTo($("#UserImageModal"));
+
+
+		//if (typeof (FileReader) != "undefined") {
+		//	console.log("file reader does not equal undefined");
+		//	//var imageHolder = $("#user-image-modal");
+		//	//imageHolder.empty();
+		//	var reader = new FileReader();
+		//	reader.onload = function (e) {
+		//		console.log(e.target.result);
+
+		//		$("#user-image").attr("src", e.target.result);
+		//		$('.temp-image').hide();
+		//	}
+		//	$('#UserImage').val($("#UserImageModal").files);
+		//	reader.readAsDataURL($("#UserImageModal")[0].files[0]);
+		//}
 
 		$('.modal.userImageModal').remove();
 		$('.modal-backdrop').remove();
@@ -2200,7 +2234,7 @@ $(function () {
 	});
 
 	$(".report-sick-days").click(function (e) {
-	
+
 		$("#loading").show();
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
@@ -2371,7 +2405,7 @@ $(function () {
 			success: function (data) {
 				$(".modal").modal('hide');
 				$(".render-body").html(data);
-				
+
 			}
 		});
 	}
@@ -2439,10 +2473,10 @@ $(function () {
 			if ($(this).hasClass('operations')) {
 				url = "/Operations/EditModalView";
 				section = "Operation";
-			} else if ($(this).hasClass('suppliers') ) {
+			} else if ($(this).hasClass('suppliers')) {
 				url = "/Vendors/Edit";
 				section = "LabManagement";
-			} else if ( $(this).hasClass('accounting')) {
+			} else if ($(this).hasClass('accounting')) {
 				url = "/Vendors/Edit";
 				section = "Accounting";
 			}
@@ -2531,7 +2565,7 @@ $(function () {
 		if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
 		if (isOptGroup) {
 			var selected = $(':selected', $(selectID));
-			console.log(selectID+"  "+selectedIndex);
+			console.log(selectID + "  " + selectedIndex);
 			var optgroup = selected.closest('optgroup').attr('label');
 			switch (optgroup) {
 				case "Units":

@@ -746,6 +746,13 @@ namespace PrototypeWithAuth.Controllers
             return PartialView();
         }
 
+        //[HttpPost]
+        //[Authorize(Roles = "Admin, Users")]
+        //public async Task<IActionResult> SaveUserImage()
+        //{
+        //    return View(); //See what this should be doing...
+        //}
+
         [HttpGet]
         [Authorize(Roles = "CEO")]
         public IActionResult SuspendUserModal(string Id)

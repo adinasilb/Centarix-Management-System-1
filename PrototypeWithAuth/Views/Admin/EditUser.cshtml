@@ -26,6 +26,7 @@
                 <input type="hidden" class="hidden" asp-for="ApplicationUserID" />
 
                 <input type="hidden" text="close" class="modal-open-state" />
+                <input type="hidden" asp-for="NewEmployee.UserImage" />
 
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides" style="padding: 0.5em 6em">
                     @if (TempData["ErrorMessage"] != null)
