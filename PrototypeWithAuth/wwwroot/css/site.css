@@ -2181,6 +2181,10 @@ span.caret {
     border-color: var(--lab-man-color);
     background-color: var(--lab-man-color);
 }
+.users-form .custom-control-input:checked ~ .custom-control-label::before {
+    border-color: var(--user-color);
+    background-color: var(--user-color);
+}
 input[type=text].error, input[type=number].error {
     background-image: url('../images/info.png');
     background-repeat: no-repeat;
@@ -2209,6 +2213,6 @@ input[type=text].error, input[type=number].error {
     pointer-events:none;
 }
 .upload-image-icon{
-    height:90px;
+    height:91px;
     width: 91px;
 }

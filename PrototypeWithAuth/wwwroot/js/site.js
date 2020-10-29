@@ -6,7 +6,7 @@
 //global Exchange Rate variable (usd --> nis)
 
 $(function () {
-
+	//$('.modal form').attr('autocomplete', 'off');
 	var VatPercentage = .17;
 
 	//$('.modal').on('click', '.close', function () {
@@ -1616,16 +1616,16 @@ $(function () {
 		});
 	};
 
-	$("#UserImage").on("change", function () {
-		var imgPath = $("#UserImage")[0].value;
+	$(".modal").on("change",'#UserImageModal', function () {
+		var imgPath = $("#UserImageModal")[0].value;
 		console.log("imgPath: " + imgPath);
 		var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
 		console.log("extn: " + extn);
-		var imageHolder = $("#user-image");
+		var imageHolder = $("#user-image-modal");
 		imageHolder.empty();
 
-		if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
-			console.log("inside the if statement");
+		//if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+		//	console.log("inside the if statement");
 			if (typeof (FileReader) != "undefined") {
 				console.log("file reader does not equal undefined");
 				var reader = new FileReader();
@@ -1635,15 +1635,35 @@ $(function () {
 					//	"src": e.target.result,
 					//	"class": "thumb-image"
 					//}).appendTo(imageHolder);
-					$("#user-image").attr("src", e.target.result);
+					$("#user-image-modal").attr("src", e.target.result);
 				}
 				imageHolder.show();
 				reader.readAsDataURL($(this)[0].files[0]);
+				$('.file-name').text(this.files[0].name);
 			}
+		//}
+		//else {
+		//	alert("Please only select images");
+		//}
+	});
+	$('#saveUserImage').click(function () {
+		if (typeof (FileReader) != "undefined") {
+			console.log("file reader does not equal undefined");
+			//var imageHolder = $("#user-image-modal");
+			//imageHolder.empty();
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				console.log(e.target.result);
+
+				$("#user-image").attr("src", e.target.result);
+				$('.temp-image').hide();
+			}
+			$('#UserImage').val($("#UserImageModal").files);
+			reader.readAsDataURL($("#UserImageModal")[0].files[0]);
 		}
-		else {
-			alert("Please only select images");
-		}
+
+		$('.modal.userImageModal').remove();
+		$('.modal-backdrop').remove();
 	});
 
 	$("#InvoiceImage").on("change", function () {
@@ -2052,7 +2072,6 @@ $(function () {
 			cache: false,
 			success: function (data) {
 				$("#loading").hide();
-				$("#loading").hide();
 				var modal = $(data);
 				$('body').append(modal);
 				//replaces the modal-view class with the ModalView view
@@ -2068,7 +2087,30 @@ $(function () {
 			}
 		});
 	};
-
+	$.fn.CallModal2 = function (url) {
+		console.log("in call modal2, url: " + url);
+		$.ajax({
+			async: false,
+			url: url,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("#loading").hide();
+				var modal = $(data);
+				$('body').append(modal);
+				//replaces the modal-view class with the ModalView view
+				//$(".modal-view").html(data);
+				//turn off data dismiss by clicking out of the box and by pressing esc
+				$(".modal-view").modal({
+					backdrop: false,
+					keyboard: true,
+				});
+				//shows the modal
+				$(".modal").modal('show');
+				return false;
+			}
+		});
+	};
 
 
 	$(".remove-invoice-item").off("click").on("click", function (e) {
@@ -2294,7 +2336,7 @@ $(function () {
 	//});
 	/*End Dropdown Menu*/
 	$("body").on("click", ".upload-image", function (e) {
-		$.fn.CallModal("/Admin/UserImageModal");
+		$.fn.CallModal2("/Admin/UserImageModal");
 	});
 
 	//$('.dropdown-menu li').click(function () {
