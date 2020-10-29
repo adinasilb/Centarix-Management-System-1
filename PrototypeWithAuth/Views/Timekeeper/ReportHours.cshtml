@@ -38,6 +38,7 @@
                 <div style="font-size:3.25rem;">@user.FirstName&nbsp;@user.LastName</div>
             </div>
             <input type="hidden" value="@user.Id" id="userid" />
+            <input  class="d-none" id="entry" value="@Model.Entry"/>
             <div class="col-6 text-right">
                 <div id="time" style="font-size: 8.8125rem;">@DateTime.Now.ToShortTimeString()</div>
                 <div style="font-size:2.125rem;">@DateTime.Now.ToLongDateString()</div>
@@ -52,7 +53,7 @@
        Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit2))
         {
             <div class=" text-center timekeeper-font-color font-weight-bolder">
-                <label style="font-size:2.0625rem;">Entered @Model.Entry?.ToString("HH:mm"), Working @((DateTime.Now - Model.Entry)?.ToString(@"hh\:mm\:ss"))</label>
+                <label style="font-size:2.0625rem;">Entered @Model.Entry?.ToString("HH:mm"), Working <span id="working">@((DateTime.Now - Model.Entry)?.ToString(@"hh\:mm\:ss"))</span></label>
             </div>
         }
 
@@ -60,7 +61,7 @@
         @{
             var entryClasses = "";
             var exitClasses = "";
-            var isExitDisabled = "";
+            var isExitDisabled = ""; 
             var isEntryDisabled = "";
             var entryDescription = "Entry";
             var exitDescription = "Exit";
@@ -151,6 +152,9 @@
         s = checkTime(s);
         document.getElementById('time').innerHTML =
             h + ":" + m + ":" + s;
+        var diff = new Date((today.getTime() - parseInt($('#entry').val())));
+
+        $('#working').html(diff.getHours() + ":" + diff.getMinutes() + ":"+diff.getSeconds());
         var t = setTimeout(startTime, 500);
     }
     function checkTime(i) {
