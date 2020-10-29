@@ -110,6 +110,7 @@ namespace PrototypeWithAuth.ViewModels
 
         //Added For Employees
         public Employee? NewEmployee { get; set; }
+        public decimal NewEmployeeWorkScope { get; set; }
         public int NewEmployeeStatus { get; set; }
         public List<JobCategoryType> JobCategoryTypes { get; set; }
         public List<EmployeeStatus> EmployeeStatuses { get; set; }

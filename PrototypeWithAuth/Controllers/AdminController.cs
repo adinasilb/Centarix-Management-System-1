@@ -777,6 +777,8 @@ namespace PrototypeWithAuth.Controllers
             //Faige's original code below:
             //return View("~/Views/Home/IndexAdmin.cshtml");
         }
+
+
         public async Task<IActionResult> editUserFunction(string id, int? Tab = 0)
         {
             var userSelected = _context.Users.Where(u => u.Id == id).FirstOrDefault();
@@ -815,6 +817,10 @@ namespace PrototypeWithAuth.Controllers
                     registerUserViewModel.NewEmployee = new Employee();
                     registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
                 }
+
+                //round job scope
+                string WorkScope = registerUserViewModel.NewEmployee?.SalariedEmployee?.WorkScope.ToString("0.00") ?? "0";
+                registerUserViewModel.NewEmployeeWorkScope = Decimal.Parse(WorkScope) ;
 
                 //var userToShow = _context.Users.Where(u => u.Id == id).FirstOrDefault();
                 var rolesList = await _userManager.GetRolesAsync(userSelected).ConfigureAwait(false);

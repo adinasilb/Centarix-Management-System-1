@@ -249,13 +249,13 @@
                             <div id="salary" class="tab-pane fade">
                                 <div class="row">
                                     <div class="col-4  p-0">
-                                        <label class="control-label" asp-for="NewEmployee.SalariedEmployee.WorkScope"></label>
-                                        <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployee.SalariedEmployee.WorkScope" disabled />
-                                        <span asp-validation-for="NewEmployee.SalariedEmployee.WorkScope" class="text-danger-centarix"></span>
+                                        <label class="control-label" asp-for="NewEmployeeWorkScope"></label>
+                                        <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployeeWorkScope" disabled />
+                                        <span asp-validation-for="NewEmployeeWorkScope" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
                                         <label class="control-label" asp-for="NewEmployee.SalariedEmployee.HoursPerDay"></label>
-                                        <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" disabled />
+                                        <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" disabled type="hidden" />
                                         <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
