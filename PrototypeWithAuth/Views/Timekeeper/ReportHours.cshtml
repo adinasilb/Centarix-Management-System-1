@@ -38,7 +38,7 @@
                 <div style="font-size:3.25rem;">@user.FirstName&nbsp;@user.LastName</div>
             </div>
             <input type="hidden" value="@user.Id" id="userid" />
-            <input  class="d-none" id="entry" value="@Model.Entry"/>
+            <input  class="d-none" id="entry" value="@Model.Entry?.ToString("MMMM") @Model.Entry?.Day, @Model.Entry?.Year @Model.Entry?.Hour:@Model.Entry?.Minute:@Model.Entry?.Second"/>
             <div class="col-6 text-right">
                 <div id="time" style="font-size: 8.8125rem;">@DateTime.Now.ToShortTimeString()</div>
                 <div style="font-size:2.125rem;">@DateTime.Now.ToLongDateString()</div>
@@ -140,6 +140,7 @@
 
 }
 <script>
+
     window.onload = function (e) {
         this.startTime();
     }
@@ -152,9 +153,23 @@
         s = checkTime(s);
         document.getElementById('time').innerHTML =
             h + ":" + m + ":" + s;
-        var diff = new Date((today.getTime() - parseInt($('#entry').val())));
+        var entry = new Date($('#entry').val())
+        var diff = today.getTime() - entry.getTime();
 
-        $('#working').html(diff.getHours() + ":" + diff.getMinutes() + ":"+diff.getSeconds());
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        diff -= days * (1000 * 60 * 60 * 24);
+
+        var hours = Math.floor(diff / (1000 * 60 * 60));
+        diff -= hours * (1000 * 60 * 60);
+
+        var mins = Math.floor(diff / (1000 * 60));
+        diff -= mins * (1000 * 60);
+
+        var seconds = Math.floor(diff / (1000));
+        diff -= seconds * (1000);
+
+        console.log(entry)
+        $('#working').html(hours + ":" + mins + ":"+seconds);
         var t = setTimeout(startTime, 500);
     }
     function checkTime(i) {
