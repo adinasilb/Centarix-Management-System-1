@@ -250,7 +250,7 @@
                                         <input type="button" id="GeneratePassword" class="custom-button custom-button-small-font users-background-color py-0 px-1" value="Generate Password" />
 
                                         <div class="input-group">
-                                            <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                            <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
                                             <span class="input-group-text">
                                                 <i type="button" class="icon-remove_red_eye-24px float-right users-filter"  style="color: var(--users-color); padding-top: .55rem; font-size: 1.25rem;" id="ViewPassword"></i>
                                                 @*<input type="button" class="custom-button custom-button-small-font users-background-color px-1 py-0" id="ViewPassword" value="View" />*@
@@ -261,7 +261,7 @@
                                     </div>
                                     <div class="col-6">
                                         <label asp-for="ConfirmPassword" class="control-label"></label>
-                                        <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                        <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
                                         <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
