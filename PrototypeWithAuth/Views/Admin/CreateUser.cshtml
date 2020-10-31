@@ -14,7 +14,7 @@
             @* HIDDEN INPUTS TO DISABLE AUTOFILLS *@
             <input type="email" class="hidden" />
             <input type="password" class="hidden" />
-            <input type ="hidden" asp-for="UserImage"/>
+            <input type="hidden" asp-for="UserImage" />
             <input type="hidden" id="UpdatedUserImage" value="false" />
             <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
                 <div class="row modal-sides">
@@ -116,7 +116,7 @@
                                         <input asp-for="NewEmployee.IDNumber" class="form-control-plaintext border-bottom only-employee" value="" />
                                         <span asp-validation-for="NewEmployee.IDNumber" class="text-danger-centarix"></span>
                                     </div>
-                             
+
                                 </div>
                                 <div class="row">
                                     <div class="col-6  p-0">
@@ -148,7 +148,7 @@
                                         <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom only-employee" required />
                                         <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix only-employee"></span>
                                     </div>
-                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-6 p-0">
                                         <label asp-for="Email" class="control-label"></label>
@@ -246,8 +246,17 @@
                             <div class="div-tabs modal-sides">
                                 <div class="row">
                                     <div class="col-6  p-0">
-                                        <label asp-for="Password" class="control-label"></label>
-                                        <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                        <label asp-for="Password" class="control-label"></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="button" id="GeneratePassword" class="custom-button custom-button-small-font users-background-color py-0 px-1" value="Generate Password" />
+
+                                        <div class="input-group">
+                                            <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />
+                                            <span class="input-group-text">
+                                                <i type="button" class="icon-remove_red_eye-24px float-right users-filter"  style="color: var(--users-color); padding-top: .55rem; font-size: 1.25rem;" id="ViewPassword"></i>
+                                                @*<input type="button" class="custom-button custom-button-small-font users-background-color px-1 py-0" id="ViewPassword" value="View" />*@
+                                            </span>
+                                        </div>
+                                        @*<input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" />*@
                                         <span asp-validation-for="Password" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-6">
@@ -370,7 +379,7 @@
                                                 @Html.HiddenFor(model => model.OrderRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.OrderRoles[i].Name)
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input " asp-for="OrderRoles[i].Selected"  />
+                                                    <input type="checkbox" class="custom-control-input " asp-for="OrderRoles[i].Selected" />
                                                     <label class="custom-control-label" asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
                                                 </div>
                                             }
@@ -390,7 +399,7 @@
                                                 @Html.HiddenFor(model => model.ProtocolRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.ProtocolRoles[i].Name)
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" asp-for="ProtocolRoles[i].Selected"  />
+                                                    <input type="checkbox" class="custom-control-input" asp-for="ProtocolRoles[i].Selected" />
                                                     <label class="custom-control-label" asp-for="ProtocolRoles[i].Selected">@Model.ProtocolRoles[i].Name</label>
                                                 </div>
                                             }
@@ -410,7 +419,7 @@
                                                 @Html.HiddenFor(model => model.OperationRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.OperationRoles[i].Name)
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input " asp-for="OperationRoles[i].Selected"  />
+                                                    <input type="checkbox" class="custom-control-input " asp-for="OperationRoles[i].Selected" />
                                                     <label class="custom-control-label" asp-for="OperationRoles[i].Selected">@Model.OperationRoles[i].Name</label>
                                                 </div>
                                             }
@@ -430,7 +439,7 @@
                                                 @Html.HiddenFor(model => model.BiomarkerRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.BiomarkerRoles[i].Name)
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" asp-for="BiomarkerRoles[i].Selected"  />
+                                                    <input type="checkbox" class="custom-control-input" asp-for="BiomarkerRoles[i].Selected" />
                                                     <label class="custom-control-label" asp-for="BiomarkerRoles[i].Selected">@Model.BiomarkerRoles[i].Name</label>
                                                 </div>
                                             }
@@ -450,7 +459,7 @@
                                                 @Html.HiddenFor(model => model.TimekeeperRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.TimekeeperRoles[i].Name)
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input " asp-for="TimekeeperRoles[i].Selected"  />
+                                                    <input type="checkbox" class="custom-control-input " asp-for="TimekeeperRoles[i].Selected" />
                                                     <label class="custom-control-label" asp-for="TimekeeperRoles[i].Selected">@Model.TimekeeperRoles[i].Name</label>
                                                 </div>
                                             }
@@ -470,7 +479,7 @@
                                                 @Html.HiddenFor(model => model.LabManagementRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.LabManagementRoles[i].Name)
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input " asp-for="LabManagementRoles[i].Selected"  />
+                                                    <input type="checkbox" class="custom-control-input " asp-for="LabManagementRoles[i].Selected" />
                                                     <label class="custom-control-label" asp-for="LabManagementRoles[i].Selected">@Model.LabManagementRoles[i].Name</label>
                                                 </div>
                                             }
@@ -490,7 +499,7 @@
                                                 @Html.HiddenFor(model => model.AccountingRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.AccountingRoles[i].Name)
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input " asp-for="AccountingRoles[i].Selected"  />
+                                                    <input type="checkbox" class="custom-control-input " asp-for="AccountingRoles[i].Selected" />
                                                     <label class="custom-control-label" asp-for="AccountingRoles[i].Selected">@Model.AccountingRoles[i].Name</label>
                                                 </div>
                                             }
@@ -530,7 +539,7 @@
                                                 @Html.HiddenFor(model => model.IncomeRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.IncomeRoles[i].Name)
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" asp-for="IncomeRoles[i].Selected"/>
+                                                    <input type="checkbox" class="custom-control-input" asp-for="IncomeRoles[i].Selected" />
                                                     <label class="custom-control-label" asp-for="IncomeRoles[i].Selected">@Model.IncomeRoles[i].Name</label>
                                                 </div>
                                             }
@@ -550,7 +559,7 @@
                                                 @Html.HiddenFor(model => model.UserRoles[i].MenuItemsID)
                                                 @Html.HiddenFor(model => model.UserRoles[i].Name)
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input " asp-for="UserRoles[i].Selected"  />
+                                                    <input type="checkbox" class="custom-control-input " asp-for="UserRoles[i].Selected" />
                                                     <label class="custom-control-label" asp-for="UserRoles[i].Selected">@Model.UserRoles[i].Name</label>
                                                 </div>
                                             }
@@ -617,7 +626,7 @@
                                 </div>
                             </div>
                         </div>
-                  
+
                         <div id="more" class="tab-pane fade">
                             <div class="div-tabs modal-sides">
                                 More
