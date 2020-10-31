@@ -1677,9 +1677,9 @@ $(function () {
 		//Set a hiddenfor that it has an image
 
 		var $formFileToSave = $("#UserImageModal"), $clone = $("#UserImageModal").clone();
-		$formFileToSave.attr("id") = "";
-		$formFileToSave.after($clone).appendTo($("#UserImageModal"));
-
+		//$formFileToSave.attr("id") = "";
+		$formFileToSave.after($clone).appendTo($("#NewEmployeeImage"));
+		console.log("formfiletosave: " + JSON.stringify($formFileToSave));
 
 		//if (typeof (FileReader) != "undefined") {
 		//	console.log("file reader does not equal undefined");
