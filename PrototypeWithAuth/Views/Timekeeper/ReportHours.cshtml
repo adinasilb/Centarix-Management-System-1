@@ -148,11 +148,11 @@
         var today = new Date();
         var h = today.getHours();
         var m = today.getMinutes();
-        var s = today.getSeconds();
+        //var s = today.getSeconds();
         m = checkTime(m);
-        s = checkTime(s);
+      //  s = checkTime(s);
         document.getElementById('time').innerHTML =
-            h + ":" + m + ":" + s;
+            h + ":" + m ;
         var entry = new Date($('#entry').val())
         var diff = today.getTime() - entry.getTime();
 
@@ -164,11 +164,10 @@
 
         var mins = Math.floor(diff / (1000 * 60));
         diff -= mins * (1000 * 60);
-
+        mins = checkTime(mins);
         var seconds = Math.floor(diff / (1000));
         diff -= seconds * (1000);
-
-        console.log(entry)
+        seconds = checkTime(seconds);
         $('#working').html(hours + ":" + mins + ":"+seconds);
         var t = setTimeout(startTime, 500);
     }

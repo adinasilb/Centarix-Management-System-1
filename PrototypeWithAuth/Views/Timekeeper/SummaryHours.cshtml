@@ -83,15 +83,31 @@
                         @eh.Entry2?.ToShortTimeString()
                     </div>
                     <div class="col-2 p-0">
-                        @if ((eh.OffDayType == null && eh.Exit1 == null || (eh.Entry2 != null && eh.Exit2 == null)) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
+                        @if (eh.Entry2 != null && eh.Exit2 == null)
                         {
-                            <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                            @eh.Exit1?.ToShortTimeString() <br/>
+                            <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString(" yyyy-MM-dd")">
+                                Update Hours
+                            </button>
+
+                        }
+                        else if ((eh.OffDayType == null && eh.Exit1 == null || (eh.Entry2 != null && eh.Exit2 == null)) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
+                        {
+                            <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString(" yyyy-MM-dd")">
+                                Update Hours
+                            </button>
+                            @eh.Exit1?.ToShortTimeString()
                         }
                         else if ((eh.OffDayType != null && ((eh.Entry1 != null && eh.Exit1 == null) || (eh.Entry2 != null && eh.Exit2 == null))) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
                         {
                             <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                            @eh.Exit1?.ToShortTimeString()
                         }
-                        @eh.Exit1?.ToShortTimeString()
+                        else
+                        {
+                            @eh.Exit1?.ToShortTimeString()
+                        }
+
                         <br />
                         @eh.Exit2?.ToShortTimeString()
 
