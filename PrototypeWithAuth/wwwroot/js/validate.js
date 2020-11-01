@@ -16,7 +16,7 @@ $(function () {
 	});
 	$('.addInvoiceForm').validate({
 		rules: {
-			"InvoiceImage": { required: true,  extension: "jpg|jpeg|png|pdf"},
+			"InvoiceImage": { required: true, extension: "jpg|jpeg|png|pdf" },
 			"Invoice.InvoiceNumber": {
 				required: true,
 				number: true,
@@ -191,7 +191,7 @@ $(function () {
 				required: true,
 			},
 			"Request.ApplicationUserReceiverID": {
-				required:true,
+				required: true,
 			},
 		}
 	});
@@ -395,7 +395,7 @@ $(function () {
 			},
 			"NewEmployee.SalariedEmployee.HoursPerDay": {
 				atleastOneHoursField: true,
-				integer: true
+				number: true
 			},
 			"NewEmployee.VacationDays": {
 				required: isEmployee,
@@ -416,7 +416,7 @@ $(function () {
 				equalTo: "#Password"
 			},
 			"SecureAppPass": {
-				required: isUserAndIsNotEdit || function() {
+				required: isUserAndIsNotEdit || function () {
 					return $('#Password').val() != '';
 				}
 				//todo: are we allowing edit of secure appp password
@@ -428,7 +428,7 @@ $(function () {
 			},
 			//UserImage: { extension: "jpg|jpeg|png" },
 			LabMonthlyLimit: {
-				integer:true
+				integer: true
 			},
 			LabUnitLimit: {
 				integer: true
@@ -459,7 +459,7 @@ $(function () {
 		n = parseFloat(n)
 		return n === +n && n === (n | 0);
 	}
-	
+
 	$('.modal').on('change', '.mdb-select', function () {
 		console.log("mdb change .mdb-select")
 		if ($(this).rules()) {
