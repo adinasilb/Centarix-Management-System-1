@@ -56,6 +56,10 @@
 		console.log("hoursPercentage: " + hoursPercentage);
 
 		$("#NewEmployee_SalariedEmployee_HoursPerDay").val(hoursPercentage);
+
+		var percentageWorked = 100 * (hoursPercentage / 8.4);
+		console.log("percentage worked: " + percentageWorked);
+		$("#NewEmployeeWorkScope").val(percentageWorked);
 	});
 
 });
