@@ -24,9 +24,9 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: ProductSubcategories
         [Authorize(Roles = "Admin, OrdersAndInventory, Operation")]
-        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType=1)
+        public async Task<IActionResult> Index(String PageType = "", int categoryType=1)
         {
-            if(PageType.ToString().Equals( AppUtility.LabManagementPageTypeEnum.Equipment.ToString()))
+            if(PageType.Equals( AppUtility.LabManagementPageTypeEnum.Equipment.ToString()))
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.EquipmentCategories;
@@ -45,11 +45,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Type;
-                if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
+                if (PageType.ToString() == AppUtility.RequestPageTypeEnum.Inventory.ToString())
                 {
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
                 }
-                else if (PageType == AppUtility.RequestPageTypeEnum.Request)
+                else if (PageType.ToString() == AppUtility.RequestPageTypeEnum.Request.ToString())
                 {
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
 

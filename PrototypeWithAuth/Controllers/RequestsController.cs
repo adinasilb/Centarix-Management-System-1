@@ -86,11 +86,23 @@ namespace PrototypeWithAuth.Controllers
                     TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
                     TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.EquipmentList;
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Equipment;
-                    var equipments = await _context.Requests.Where(r=>r.RequestStatusID==3).Where(r=>r.Product.ProductSubcategory.ParentCategoryID==5).Include(r => r.Product.ProductSubcategory)
-                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r=>r.RequestLocationInstances).ThenInclude(rli=>rli.LocationInstance)
-                        .Include(r=>r.ParentRequest).ToPagedListAsync(page, 25);
-
+                    IPagedList<Request> equipments = null;
+                    if (subcategoryID > 0 )
+                    {
+                        equipments = await _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
+                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
+                        .Include(r => r.ParentRequest).Where(r => r.Product.ProductSubcategoryID == subcategoryID).Include(r => r.ParentRequest).ToPagedListAsync(page, 25);
+                        //pass the subcategoryID into the temp data to use if you'd like to sort from there
+                        TempData["SubcategoryID"] = subcategoryID;
+                    }
+                    else 
+                    {
+                        equipments = await _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
+                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
+                        .Include(r => r.ParentRequest).ToPagedListAsync(page, 25);
+                    }   
                     equipments.OrderByDescending(e => e.ParentRequest.OrderDate);
+
                     return View(equipments);
                 }
                 catch (Exception ex)
