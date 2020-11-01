@@ -23,11 +23,23 @@
     }
     var bcColorToUse = bcColor;
     var colorToUse = color;
+    var disabled = "";
+    var isChecked = "";
+    if (!Model.IsEdittable)
+    {
+        disabled = " disabled ";
+    }
+    else
+    {
+        markDisabled = "";
+        isChecked= "checked";
+    }
     if (markDisabled == "details")
     {
         bcColorToUse = "disabled-color";
         colorToUse = "disabled-filter";
     }
+
 }
 <script src="~/js/DocumentModalJS.js">
 </script>
@@ -67,7 +79,7 @@
                             <div class="col-3 offset-7">
                                 <div class="upload-btn-wrapper float-right">
                                     <button class="custom-button custom-button-font @bcColorToUse  float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
-                                    <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple disabled>
+                                    <input @disabled type="file" asp-for="FilesToSave"  class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple >
                                 </div>
                                 <input type="submit" value="Save" id="save-documents" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
 
@@ -76,13 +88,13 @@
                         </div>
                         <div class="row">
                             <div class="col-3 offset-9">
-                                @if (User.IsInRole("Admin"))
+                                @if (User.IsInRole("Admin") && requestid !=0)
                                 {
                                     <div class=" row text-right mb-0">
                                         <div class="switch col-12 switch-margin">
                                             <label>
                                                 <label class="edit-mode-switch-description">Edit Mode Off</label>
-                                                <input type="checkbox" class="turn-edit-doc-on-off operations" @*value="@Model.Request.RequestID"*@ >
+                                                <input type="checkbox" class="turn-edit-doc-on-off operations" @isChecked @*value="@Model.Request.RequestID"*@ >
                                                 <span class="lever"></span>
                                             </label>
                                         </div>
