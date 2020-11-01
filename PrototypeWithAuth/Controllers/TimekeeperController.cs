@@ -382,7 +382,7 @@ namespace PrototypeWithAuth.Controllers
            
             _context.Update(employeeHoursAwaitingApproval);
             _context.SaveChanges();
-            return Redirect("ReportHours");
+            return Redirect("");
         }
 
         [HttpGet]
