@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult Index()
         {
             var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
-                
+            
             //Adina added in 3 lines
             if (User.IsInRole("Admin"))
             {
@@ -219,5 +219,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
         }
+
+
     }
 }
