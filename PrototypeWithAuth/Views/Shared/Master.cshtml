@@ -303,6 +303,7 @@
 
             if ($("#tdterms").val()) {
                 $("#tdterms").hide();
+                alert("in tdterms.val()");
                 var $itemurl = "/Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true";
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "terms");
