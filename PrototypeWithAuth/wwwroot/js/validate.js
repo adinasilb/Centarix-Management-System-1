@@ -509,7 +509,7 @@ $(function () {
 
 	});
 	$('#myForm').submit(function (e) {
-		alert("validate form");
+		//alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
 		console.log("valid form: " + valid)
@@ -526,7 +526,7 @@ $(function () {
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
 	$('.modal #myForm').submit(function (e) {
-		alert("validate form");
+		//alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
 		console.log("valid form: " + valid)

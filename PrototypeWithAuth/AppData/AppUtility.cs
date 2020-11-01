@@ -22,7 +22,7 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, SuppliersAC, Payments } //these are all going to the ParentRequestIndex
         public enum AccountingSidebarEnum { General, AllSuppliersAC, NewSupplierAC, SearchSupplierAC }
         public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, SearchLM }
-        public enum LabManagementSidebarEnum { None, Orders, Quotes, AllSuppliers, NewSupplier, SearchSupplier, LocationsList, SearchRequests }
+        public enum LabManagementSidebarEnum { None, Orders, Quotes, AllSuppliers, NewSupplier, SearchSupplier, LocationsList, SearchRequests, SearchEquipment, Calibrate, EquipmentList, EquipmentCategories }
         public enum OrdersAndInventorySidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits } //Listed in the site.js (if you change here must change there)
         public enum UserPageTypeEnum { None, User, Workers }

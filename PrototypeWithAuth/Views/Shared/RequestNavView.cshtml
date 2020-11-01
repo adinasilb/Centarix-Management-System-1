@@ -130,6 +130,10 @@
     {
         SidebarMenuItems = CreateMenus.CreateLabManageSearchSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
+    else if (pageType == AppUtility.LabManagementPageTypeEnum.Equipment.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateLabManageEquipmentSidebar(sidebarType, originalNavClasses, "lab-man-filter");
+    }
     else if (pageType == AppUtility.PaymentPageTypeEnum.Payments.ToString())
     {
         SidebarMenuItems = CreateMenus.CreateAccountingPaymentsSidebar(sidebarType, originalNavClasses, "accounting-filter");

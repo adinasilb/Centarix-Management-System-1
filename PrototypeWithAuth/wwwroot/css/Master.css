@@ -422,7 +422,7 @@ table td, table td .btn, .text, table th {
     padding-bottom: 3.25rem !important;
 }
 
-.item-table tr{
+.item-table {
     height:8.125rem;
 }
 .table-icon-div {

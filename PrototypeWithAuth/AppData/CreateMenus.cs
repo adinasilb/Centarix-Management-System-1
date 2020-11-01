@@ -128,13 +128,13 @@ namespace PrototypeWithAuth.AppData
             });
             if (MainMenu == AppUtility.LabManagementPageTypeEnum.Equipment.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
-            { //TODO : MUST BE CHANGED!!!!!!!!!!
+            {
                 Description = "Equipment",
-                Controller = "Locations",
+                Controller = "Calibrations",
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                     {
-                        {"SectionType", AppUtility.MenuItems.LabManagement }
+                       
                     },
                 Classes = AllClasses
             });
@@ -603,6 +603,66 @@ namespace PrototypeWithAuth.AppData
                 Description = "Search",
                 Controller = "Vendors",
                 Action = "Search",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                IconName = "icon-zoom_in-24px-01",
+                Classes = Classes
+            });
+
+            return SidebarMenuItems;
+        }
+        public static List<MenuItems> CreateLabManageEquipmentSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+
+            var Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.Calibrate.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Calibrate",
+                Controller = "Calibrations",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                IconName = "icon-assignment-24px1",
+                Classes = Classes
+            });
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.EquipmentList.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "List",
+                Controller = "Requests",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                },
+                IconName = "icon-format_list_bulleted-24px-01",
+                Classes = Classes
+            });
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.EquipmentCategories.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Categories",
+                Controller = "ProductSubcategories",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {AppUtility.TempDataTypes.PageType.ToString(), AppUtility.LabManagementPageTypeEnum.Equipment}
+                },
+                IconName = "icon-category-24px1",
+                Classes = Classes
+            });
+            if (SidebarTitle == AppUtility.LabManagementSidebarEnum.SearchEquipment.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Search",
+                Controller = "",
+                Action = "",
                 RouteValues = new RouteValueDictionary()
                 {
                     {"SectionType", AppUtility.MenuItems.LabManagement }

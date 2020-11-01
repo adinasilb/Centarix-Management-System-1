@@ -1,0 +1,79 @@
+﻿@model IPagedList<PrototypeWithAuth.Models.Calibration>
+@using PrototypeWithAuth.AppData;
+
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@using X.PagedList.Mvc.Core; @* import this so we get our HTML Helper *@
+@using X.PagedList; @* import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)*@
+
+<!-- import the included stylesheet for some (very basic) default styling -->
+@*<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+
+
+@{
+    ViewData["Title"] = "Index";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+    <div class="">
+        <table class="table table-headerspaced table-noheaderlines table-hover ">
+            <thead>
+                <tr class="text-center">
+                    <th></th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Code</th>
+                    <th>Calibration Type</th>
+                    <th>Calibration Date</th>
+                    <th>Calibration Days</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr class="text-center ">
+                    <td>
+                        @if (item.Request.Product.ProductSubcategory.ImageURL != null)
+                        {
+                            var imageurl = item.Request.Product.ProductSubcategory.ImageURL;
+                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                        }
+                        else
+                        {
+                            <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                        }
+                    </td>
+                    <td>@item.Request.Product.ProductName</td>
+                    <td>@item.Request.Product.ProductSubcategory.ProductSubcategoryDescription</td>
+                    <td></td>
+                    <td></td>
+                    <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                    <td></td>
+
+                    <td width="9%">
+                        <div class="d-inline-flex">
+                            <div class="table-icon-div">
+                                <a class="btn p-0 m-0 no-box-shadow" data-title="Approve" href="#">
+                                    <i style="font-size:2rem; " class="icon-centarix-icons-03 hover-bold"></i>
+                                </a>
+                            </div>
+                            <div class="table-icon-div">
+                                <a class="btn p-0 m-0 no-box-shadow" data-title="Approve" href="#">
+                                    <i style="font-size:2rem; " class="icon-centarix-icons-03 hover-bold"></i>
+                                </a>
+                            </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-6 offset-6 text-center">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+        </div>
+    </div>

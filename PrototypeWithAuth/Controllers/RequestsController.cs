@@ -78,7 +78,28 @@ namespace PrototypeWithAuth.Controllers
             AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.OrdersAndInventory,
             RequestsSearchViewModel? requestsSearchViewModel = null)
         {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                try
+                {
+                    TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+                    TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.EquipmentList;
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Equipment;
+                    var equipments = await _context.Requests.Where(r=>r.RequestStatusID==3).Where(r=>r.Product.ProductSubcategory.ParentCategoryID==5).Include(r => r.Product.ProductSubcategory)
+                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r=>r.RequestLocationInstances).ThenInclude(rli=>rli.LocationInstance)
+                        .Include(r=>r.ParentRequest).ToPagedListAsync(page, 25);
 
+                    equipments.OrderByDescending(e => e.ParentRequest.OrderDate);
+                    return View(equipments);
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = ex.Message;
+                    TempData["InnerMessage"] = ex.InnerException;
+                    return View("~/Views/Shared/RequestError.cshtml");
+                }
+            }
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
@@ -100,7 +121,7 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             //use an enum to determine which page type you are using and fill the data accordingly, 
             //also pass the data through tempdata to the page so you can 
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+         
             //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
 

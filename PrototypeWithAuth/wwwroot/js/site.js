@@ -158,7 +158,7 @@ $(function () {
 	});
 
 	$("#search-form #sublist").change(function () {
-		alert("changed sublist");
+		//alert("changed sublist");
 		if ($(this).val() == 'Please select a subcategory') {
 			$("#search-form #parentlist").attr("disabled", false);
 		}
@@ -2331,7 +2331,7 @@ $(function () {
 	$('.dropdown-multiple .dropdown-menu div .form-check-input').click(function () {
 		//$(this).parents('.dropdown').find('span').text($(this).text());
 		console.log("in multiple")
-		alert("in multiple");
+		//alert("in multiple");
 		$(this).parents('.dropdown-multiple').find('span:not(.caret)').append($(this).find('label').text());
 	});
 	/*End Dropdown Menu*/

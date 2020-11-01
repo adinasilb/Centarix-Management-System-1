@@ -26,7 +26,16 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory, Operation")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType=1)
         {
-            if (categoryType == 1)
+            if(PageType.ToString().Equals( AppUtility.LabManagementPageTypeEnum.Equipment.ToString()))
+            {
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.EquipmentCategories;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Equipment;
+                var equipmentCategories = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
+              .Where(ps => ps.ParentCategoryID ==5);
+                return View(await equipmentCategories.ToListAsync());
+            }
+            else if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
                 TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Type;
