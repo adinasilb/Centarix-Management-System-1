@@ -416,7 +416,7 @@ $(function () {
 				equalTo: "#Password"
 			},
 			"SecureAppPass": {
-				required: function () {
+				required: isUserAndIsNotEdit || function() {
 					return $('#Password').val() != '';
 				}
 				//todo: are we allowing edit of secure appp password
