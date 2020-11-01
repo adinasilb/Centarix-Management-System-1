@@ -58,7 +58,7 @@
 
 
 	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations) {
-		$("#documentsModal").replaceWith('');
+		$(".documentsModal").replaceWith('');
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
@@ -68,7 +68,7 @@
 			success: function (data) {
 				var modal = $(data);
 				$('body').append(modal);
-				$("#documentsModal").modal({
+				$(".documentsModal").modal({
 					backdrop: false,
 					keyboard: true,
 				});

@@ -1181,7 +1181,7 @@ $(function () {
 
 	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations) {
 		console.log("in open doc modal");
-		$("#documentsModal").replaceWith('');
+		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
 		console.log("urltogo: " + urltogo);
@@ -1195,7 +1195,7 @@ $(function () {
 			success: function (data) {
 				var modal = $(data);
 				$('body').append(modal);
-				$("#documentsModal").modal({
+				$(".documentsModal").modal({
 					backdrop: false,
 					keyboard: true,
 				});
@@ -2123,7 +2123,7 @@ $(function () {
 	};
 	$.fn.CallModal2 = function (url) {
 		console.log("in call modal2, url: " + url);
-		$("#userImageModal").replaceWith('');
+		$(".userImageModal").replaceWith('');
 		$.ajax({
 			async: true,
 			url: url,
@@ -2132,7 +2132,7 @@ $(function () {
 			success: function (data) {
 				var modal = $(data);
 				$('body').append(modal);
-				$("#userImageModal").modal({
+				$(".userImageModal").modal({
 					backdrop: false,
 					keyboard: true,
 				});
