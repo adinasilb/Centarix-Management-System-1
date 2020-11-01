@@ -157,6 +157,8 @@
     <Compile Remove="Data\Migrations\20200921174444_AddedPhoneNumber2ToUser.Designer.cs" />
     <Compile Remove="Data\Migrations\20200922231856_addedEmployeesIenumerables.cs" />
     <Compile Remove="Data\Migrations\20200922231856_addedEmployeesIenumerables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201029101427_changedFuullTimeTo8.4Hours.cs" />
+    <Compile Remove="Data\Migrations\20201029101427_changedFuullTimeTo8.4Hours.Designer.cs" />
   </ItemGroup>
 
 

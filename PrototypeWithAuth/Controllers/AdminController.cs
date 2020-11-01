@@ -210,73 +210,53 @@ namespace PrototypeWithAuth.Controllers
             }
             var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
 
-            var user = new Employee();
+            var user = new Employee()
+            {
+                /*User*/
+                UserName = registerUserViewModel.Email,
+                Email = registerUserViewModel.Email,
+                FirstName = registerUserViewModel.FirstName,
+                LastName = registerUserViewModel.LastName,
+                SecureAppPass = registerUserViewModel.SecureAppPass,
+                CentarixID = registerUserViewModel.CentarixID,
+                PhoneNumber = registerUserViewModel.PhoneNumber,
+                PhoneNumber2 = registerUserViewModel.PhoneNumber2,
+                UserNum = usernum,
+                LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
+                LabUnitLimit = registerUserViewModel.LabUnitLimit,
+                LabOrderLimit = registerUserViewModel.LabOrderLimit,
+                OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
+                OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
+                OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
+                DateCreated = DateTime.Now,
+                EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
+                IsUser = true,
+                NeedsToResetPassword = true
+            };
             if (UserType == 4)
             {
-                user = new Employee
-                {
-                    /*User*/
-                    UserName = registerUserViewModel.Email,
-                    Email = registerUserViewModel.Email,
-                    FirstName = registerUserViewModel.FirstName,
-                    LastName = registerUserViewModel.LastName,
-                    SecureAppPass = registerUserViewModel.SecureAppPass,
-                    CentarixID = registerUserViewModel.CentarixID,
-                    PhoneNumber = registerUserViewModel.PhoneNumber,
-                    PhoneNumber2 = registerUserViewModel.PhoneNumber2,
-                    UserNum = usernum,
-                    LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
-                    LabUnitLimit = registerUserViewModel.LabUnitLimit,
-                    LabOrderLimit = registerUserViewModel.LabOrderLimit,
-                    OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
-                    OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
-                    OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
-                    DateCreated = DateTime.Now,
-                    EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
-                    IsUser = true
-                };
+
             }
             else
             {
-                user = new Employee
-                {
-                    /*User*/
-                    UserName = registerUserViewModel.Email,
-                    Email = registerUserViewModel.Email,
-                    FirstName = registerUserViewModel.FirstName,
-                    LastName = registerUserViewModel.LastName,
-                    SecureAppPass = registerUserViewModel.SecureAppPass,
-                    CentarixID = registerUserViewModel.CentarixID,
-                    PhoneNumber = registerUserViewModel.PhoneNumber,
-                    PhoneNumber2 = registerUserViewModel.PhoneNumber2,
-                    UserNum = usernum,
-                    LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit,
-                    LabUnitLimit = registerUserViewModel.LabUnitLimit,
-                    LabOrderLimit = registerUserViewModel.LabOrderLimit,
-                    OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
-                    OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
-                    OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
-                    DateCreated = DateTime.Now,
-                    /*Employee
-                    IsUser = true,
-                    StartedWorking = registerUserViewModel.NewEmployee.StartedWorking,
-                    DOB = registerUserViewModel.NewEmployee.DOB,
-                    GrossSalary = registerUserViewModel.NewEmployee.GrossSalary,
-                    EmployerTax = registerUserViewModel.NewEmployee.EmployerTax,
-                    IncomeTax = registerUserViewModel.NewEmployee.IncomeTax,
-                    TaxCredits = registerUserViewModel.NewEmployee.TaxCredits,
-                    VacationDays = registerUserViewModel.NewEmployee.VacationDays,
-                    JobTitle = registerUserViewModel.NewEmployee.JobTitle,
-                    DegreeID = registerUserViewModel.NewEmployee.DegreeID,
-                    IDNumber = registerUserViewModel.NewEmployee.IDNumber,
-                    MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID,
-                    /*phonenumber2 is not working --> talk to Debbie*/
-                    CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID,
-                    EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
-                    JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID,
+                /*User*/
+                /*Employee*/
+                user.IsUser = true;
+                user.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
+                user.DOB = registerUserViewModel.NewEmployee.DOB;
+                user.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
+                user.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
+                user.IncomeTax = registerUserViewModel.NewEmployee.IncomeTax;
+                user.TaxCredits = registerUserViewModel.NewEmployee.TaxCredits;
+                user.VacationDays = registerUserViewModel.NewEmployee.VacationDays;
+                user.JobTitle = registerUserViewModel.NewEmployee.JobTitle;
+                user.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
+                user.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
+                user.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
+                /*phonenumber2 is not working --> talk to Debbie*/
+                user.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
+                user.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
                     /*Salaried Employee*/
-
-                };
             }
             var IsUser = true;
             if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
@@ -289,7 +269,6 @@ namespace PrototypeWithAuth.Controllers
             //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
             if (result.Succeeded)
             {
-
                 if (!IsUser)
                 {
                     user.LockoutEnabled = true;
@@ -560,6 +539,12 @@ namespace PrototypeWithAuth.Controllers
 
                     _context.Update(employeeEditted);
 
+                    if (registerUserViewModel.Password != "")
+                    {
+                        string resetToken = await _userManager.GeneratePasswordResetTokenAsync(employeeEditted);
+                        IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(employeeEditted, resetToken, registerUserViewModel.Password);
+                    }
+
                     switch (selectedStatusID)
                     {
                         case 1: /*Salaried Employee*/
@@ -740,6 +725,13 @@ namespace PrototypeWithAuth.Controllers
             return PartialView();
         }
 
+        //[HttpPost]
+        //[Authorize(Roles = "Admin, Users")]
+        //public async Task<IActionResult> SaveUserImage()
+        //{
+        //    return View(); //See what this should be doing...
+        //}
+
         [HttpGet]
         [Authorize(Roles = "CEO")]
         public IActionResult SuspendUserModal(string Id)
@@ -777,6 +769,8 @@ namespace PrototypeWithAuth.Controllers
             //Faige's original code below:
             //return View("~/Views/Home/IndexAdmin.cshtml");
         }
+
+
         public async Task<IActionResult> editUserFunction(string id, int? Tab = 0)
         {
             var userSelected = _context.Users.Where(u => u.Id == id).FirstOrDefault();
@@ -815,6 +809,13 @@ namespace PrototypeWithAuth.Controllers
                     registerUserViewModel.NewEmployee = new Employee();
                     registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
                 }
+
+
+                //round job scope
+                string WorkScope = registerUserViewModel.NewEmployee?.SalariedEmployee?.WorkScope.ToString("0.00") ?? "0";
+                registerUserViewModel.NewEmployeeWorkScope = Decimal.Parse(WorkScope);
+
+
 
                 //var userToShow = _context.Users.Where(u => u.Id == id).FirstOrDefault();
                 var rolesList = await _userManager.GetRolesAsync(userSelected).ConfigureAwait(false);
@@ -936,7 +937,12 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public static string GeneratePassword(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, bool includeSpaces, int lengthOfPassword)
+        public JsonResult GetGeneratedPassword()
+        {
+            var password = GeneratePassword();
+            return Json(password);
+        }
+        public static string GeneratePassword(bool includeLowercase = true, bool includeUppercase = true, bool includeNumeric = true, bool includeSpecial = true, bool includeSpaces = false, int lengthOfPassword = 12)
         {
             const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
             const string LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";

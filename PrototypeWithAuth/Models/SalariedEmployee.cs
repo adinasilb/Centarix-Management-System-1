@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.Models
         public string EmployeeId { get; set; }
         public Employee Employee { get; set; }
         [Display(Name = "Job Scope")]
-        public double WorkScope { get { return 100*(HoursPerDay/8.5); } private set {; } }
+        public double WorkScope { get { return 100*(HoursPerDay/8.4); } private set {; } } //8.4 is 8 hours and 24 minutes
         [Display(Name = "Hours Per Day")]
         public double HoursPerDay { get; set; }
     }

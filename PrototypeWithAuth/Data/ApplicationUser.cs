@@ -42,6 +42,7 @@ namespace PrototypeWithAuth.Data
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "Phone Number 2")]
         public string PhoneNumber2 { get; set; }
+        public bool NeedsToResetPassword { get; set; }
         public DateTime DateLastReadNotifications { get; set; }
         public DateTime LastLogin { get; set; }
         public IEnumerable<Request> RequestsReceived { get; set; }

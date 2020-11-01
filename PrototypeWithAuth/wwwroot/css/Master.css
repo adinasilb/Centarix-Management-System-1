@@ -223,6 +223,11 @@ input:not(input[type=button]) {
     color: var(--white);
     
 }
+.custom-button-small-font {
+    font-size: .8rem;
+    font-weight: var(--bold-medium);
+    color: var(--white);
+}
 .custom-button-table-font {
     font-size: 1rem;
     font-weight: var(--bold-medium);
