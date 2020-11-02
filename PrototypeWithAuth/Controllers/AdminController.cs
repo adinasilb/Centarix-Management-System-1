@@ -375,6 +375,19 @@ namespace PrototypeWithAuth.Controllers
 
                 if (registerUserViewModel.UserImageSaved == "true")
                 {
+                    //delete old photo
+                    string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                    DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
+                    FileInfo[] files1 = dir1.GetFiles(user.UserNum + ".*");
+                    if (files1.Length > 0)
+                    {
+                        foreach (FileInfo file in files1)
+                        {
+                            System.IO.File.Delete(file.FullName);
+                        }
+                    }
+
+                    //add new photo
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages"); 
                     DirectoryInfo dir = new DirectoryInfo(uploadFolder);
                     FileInfo[] files = dir.GetFiles("TempUserImage" + ".*");
