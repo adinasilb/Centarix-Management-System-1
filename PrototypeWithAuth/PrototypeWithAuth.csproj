@@ -165,6 +165,7 @@
   <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.1" />
     <PackageReference Include="bootstrap" Version="4.5.0" />
+    <PackageReference Include="GoogleAuthenticator" Version="2.0.1" />
     <PackageReference Include="jQuery.Fullcalendar" Version="3.9.0" />
     <PackageReference Include="jQuery.Validation" Version="1.19.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
