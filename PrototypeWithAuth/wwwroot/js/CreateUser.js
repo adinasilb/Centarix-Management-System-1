@@ -1,4 +1,5 @@
-﻿$(function () {
+﻿
+$(function () {
 	$("#NewEmployee_DOB").on("change", function () {
 		var age = 0;
 		console.log("age: " + age);
@@ -45,9 +46,7 @@
 
 	$("#TimeSpan-HoursPerDay").on("change", function () {
 		var newTimespan = $(this).val();
-		console.log("newTimespan: " + newTimespan);
 		var hours = parseInt(newTimespan.substr(0, 2));
-		console.log("hours: " + hours);
 		var minutes = newTimespan.substr(3, 2);
 		console.log("minutes: " + minutes);
 		var minutesFloat = parseFloat(minutes) / 60;
@@ -55,11 +54,35 @@
 		var hoursPercentage = hours + minutesFloat;
 		console.log("hoursPercentage: " + hoursPercentage);
 
-		$("#NewEmployee_SalariedEmployee_HoursPerDay").val(hoursPercentage);
+		SetHiddenHoursPerDay(hoursPercentage);
 
-		var percentageWorked = 100 * (hoursPercentage / 8.4);
+		var percentageWorked = 100 * (hoursPercentage / 8.4).toFixed(4);
 		console.log("percentage worked: " + percentageWorked);
 		$("#NewEmployeeWorkScope").val(percentageWorked);
 	});
+
+	$("#NewEmployeeWorkScope").on("change", function () {
+		var workScope = $(this).val();
+		console.log("workScope: " + workScope);
+
+		var hoursPerDay = (workScope / 100) * 8.4;
+		console.log("hoursPerDay: " + hoursPerDay);
+
+		SetHiddenHoursPerDay(hoursPerDay);
+
+		var hours = Math.floor(hoursPerDay);
+		if (hours < 10) { hours = '0' + hours }
+		var mins = Math.floor(60 * (hoursPerDay - hours));
+
+		//var timespanHours = (`${hours}:${mins}`);
+		var timespanHours = hours + ":" + mins;
+		console.log("timespanHours: " + timespanHours);
+
+		$("#TimeSpan-HoursPerDay").val(timespanHours);
+	});
+
+	function SetHiddenHoursPerDay(hoursPercentage) {
+		$("#NewEmployee_SalariedEmployee_HoursPerDay").val(hoursPercentage);
+	};
 
 });
