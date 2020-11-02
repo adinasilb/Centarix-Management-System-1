@@ -322,7 +322,8 @@
                                         <div class="form-group">
                                             <label asp-for="Code" class="control-label">Verification Code</label>
                                             <input asp-for="Code" class="form-control" autocomplete="off" />
-                                            <span asp-validation-for="Code" class="text-danger-centarix"></span>
+                                            <span asp-validation-for="Code" id="errorCode" class="text-danger-centarix"></span>
+                                            <span  id="validCode" class="users-font-color"></span>
                                         </div>
                                         <button type="button" class="btn btn-primary submit-2faCode">Verify</button>
                                     </div>

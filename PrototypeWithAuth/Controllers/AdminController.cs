@@ -1084,6 +1084,24 @@ namespace PrototypeWithAuth.Controllers
 
             return lowerCaseIsValid && upperCaseIsValid && numericIsValid && symbolsAreValid && spacesAreValid;
         }
+
+        public async Task<bool> Verify2FA(String code)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            // Strip spaces and hypens
+            var verificationCode = code.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
+                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+
+            if (!is2faTokenValid)
+            {
+                return false;
+            }
+
+            await _userManager.SetTwoFactorEnabledAsync(user, true);
+            return true;          
+        }
     }
 
 }
