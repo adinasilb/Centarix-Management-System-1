@@ -12,29 +12,35 @@
     var monthStyle = "";
     var yearStyle = " ";
     var header = "";
+    var col1 = "";
+    var col2 = "";
     switch (Model.YearlyMonthlyEnum)
     {
         case AppUtility.YearlyMonthlyEnum.Monthly:
             monthStyle = "yearly-monthly ";
             header = date.ToString("MMMM") + " ";
+            col1 = " col-2 ";
+            col2 = " col-6 ";
             break;
         case AppUtility.YearlyMonthlyEnum.Yearly:
             yearStyle = "yearly-monthly ";
+            col1 = " col-1 ";
+            col2 = " col-7 ";
             break;
     }
 
  }
-
+ 
 
     <div class="container-fluid m-0">
         <div class="row">
-            <div class="col-3 heading-1">
+            <div class="@col1 heading-1">
                 @header@date.Year
             </div>
-            <div class="col-5  ">
-                <a class="black-text py-2 mr-6  rounded-pill @monthStyle text-center  px-5 font-weight-bolder border border-dark black-text" asp-action="Hours" asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Monthly" style="font-size:1.4375rem; " asp-route-month="@Model.Month" asp-route-year="@Model.Year">Monthly</a>
+            <div class="@col2 ">
+                <a class="black-text py-2 mr-6  rounded-pill @monthStyle text-center  px-5  border border-dark black-text" asp-action="Hours" asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Monthly" style="font-size:1.4375rem; " asp-route-month="@Model.Month" asp-route-year="@Model.Year">Monthly</a>
 
-                <a class="@yearStyle  px-5  py-2 rounded-pill text-center  font-weight-bolder border border-dark black-text" asp-action="Hours"
+                <a class="@yearStyle  px-5  py-2 rounded-pill text-center  border border-dark black-text" asp-action="Hours"
                    asp-route-yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Yearly" style="font-size:1.4375rem " asp-route-month="@Model.Month" asp-route-year="@Model.Year">Yearly</a>
             </div>
             @{ var yearDropDown = "offset-3"; }
@@ -72,7 +78,7 @@
         <div class="row ">
             <table class="table table-headerspaced  col-12 ">
                 <tbody>
-                    <tr class="text-center " style="border-color:transparent; border-bottom: 2px solid lightgrey;">
+                    <tr class="text-center " style="border-color:transparent; border-bottom: 1px solid lightgrey;">
                         <td width="11%"></td>
                         <td width="11%">Name</td>
                         <td width="11%">
