@@ -12,13 +12,14 @@
     if (AppUtility.IsAjaxRequest(Context.Request))
     {
         Layout = null;
+        <script src="~/js/site.js" asp-append-version="true"></script>
     }
     else
     {
         Layout = "~/Views/Shared/RequestNavView.cshtml";
     }
 
-    <div class="container-fluid" >
+    <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-2 mt-2 text-left">
                 <button type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-225">
@@ -38,19 +39,19 @@
                 <div style="font-size:3.25rem;">@user.FirstName&nbsp;@user.LastName</div>
             </div>
             <input type="hidden" value="@user.Id" id="userid" />
-            <input  class="d-none" id="entry" value="@Model.Entry?.ToString("MMMM") @Model.Entry?.Day, @Model.Entry?.Year @Model.Entry?.Hour:@Model.Entry?.Minute:@Model.Entry?.Second"/>
+            <input class="d-none" id="entry" value="@Model.Entry?.ToString("MMMM") @Model.Entry?.Day, @Model.Entry?.Year @Model.Entry?.Hour:@Model.Entry?.Minute:@Model.Entry?.Second" />
             <div class="col-6 text-right">
                 <div id="time" style="font-size: 8.8125rem;">@DateTime.Now.ToShortTimeString()</div>
                 <div style="font-size:2.125rem;">@DateTime.Now.ToLongDateString()</div>
-                @{  var ci = CultureInfo.CreateSpecificCulture("he-IL");
+                @{ var ci = CultureInfo.CreateSpecificCulture("he-IL");
                     ci.DateTimeFormat.Calendar = new HebrewCalendar();
                     var hebrewDate = DateTime.Now.Date.ToString("dd MMM yyyy", ci); }
-            <div style="font-size:2.125rem;">@hebrewDate</div>
+                <div style="font-size:2.125rem;">@hebrewDate</div>
             </div>
 
         </div>
         @if (Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit1) ||
-       Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit2))
+      Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit2))
         {
             <div class=" text-center timekeeper-font-color font-weight-bolder">
                 <label style="font-size:2.0625rem;">Entered @Model.Entry?.ToString("HH:mm"), Working <span id="working">@((DateTime.Now - Model.Entry)?.ToString(@"hh\:mm\:ss"))</span></label>
@@ -61,7 +62,7 @@
         @{
             var entryClasses = "";
             var exitClasses = "";
-            var isExitDisabled = ""; 
+            var isExitDisabled = "";
             var isEntryDisabled = "";
             var entryDescription = "Entry";
             var exitDescription = "Exit";
@@ -113,30 +114,32 @@
             @Html.HiddenFor(e => e.EntryExitEnum)
             <div class="row entry-exit-background p-5  mt-5">
                 <div class="col-6 pr-5  my-3 text-right">
-                    <button id="entry" class="no-box-shadow border-0 rounded-pill @entryClasses text-white entry-exit-button" @isEntryDisabled type="submit" asp-action="ReportHours"><span>
-    <i class="icon-entry-24px" style=" font-size: 4rem; top:.25rem; position:relative;  margin-right: 2rem;
-"></i>@entryDescription
-</span></button>
-                </div>
-                <div class="col-6 pl-5 my-3 text-left">
-                    <button id="exit" class="no-box-shadow border-0 rounded-pill @exitClasses text-white entry-exit-button" @isExitDisabled type="submit" asp-action="ReportHours">
+                    <button id="entry" class="no-box-shadow border-0 rounded-pill @entryClasses text-white entry-exit-button" @isEntryDisabled type="submit" asp-action="ReportHours">
                         <span>
-                            @exitDescription<i class="icon-exit-24px" style="        font-size: 4rem; top:.25rem; position:relative;  margin-left: 2rem;
+                            <i class="icon-entry-24px" style=" font-size: 4rem; top:.25rem; position:relative;  margin-right: 2rem;
+"></i>@entryDescription
+</span>
+</button>
+</div>
+<div class="col-6 pl-5 my-3 text-left">
+    <button id="exit" class="no-box-shadow border-0 rounded-pill @exitClasses text-white entry-exit-button" @isExitDisabled type="submit" asp-action="ReportHours">
+        <span>
+            @exitDescription<i class="icon-exit-24px" style="        font-size: 4rem; top:.25rem; position:relative;  margin-left: 2rem;
 "></i>
-                    </span>
-                    </button>
-                </div>
-            </div>
-        </form>
-        <div class="row mt-5 ">
-            <div class=" text-center col-12">
-                <button class="timekeeper-color custom-button custom-button-font open-work-from-home-modal between-button-margin" type="button">Work From Home</button>
-                <button class=" timekeeper-color custom-button custom-button-font open-update-hours-modal" type="button">Update Hours</button>
-            </div>
-
-
-        </div>
+        </span>
+    </button>
+</div>
+</div>
+</form>
+<div class="row mt-5 ">
+    <div class=" text-center col-12">
+        <button class="timekeeper-color custom-button custom-button-font open-work-from-home-modal between-button-margin" type="button">Work From Home</button>
+        <button class=" timekeeper-color custom-button custom-button-font open-update-hours-modal" type="button">Update Hours</button>
     </div>
+
+
+</div>
+</div>
 
 }
 <script>
@@ -150,9 +153,9 @@
         var m = today.getMinutes();
         //var s = today.getSeconds();
         m = checkTime(m);
-      //  s = checkTime(s);
+        //  s = checkTime(s);
         document.getElementById('time').innerHTML =
-            h + ":" + m ;
+            h + ":" + m;
         var entry = new Date($('#entry').val())
         var diff = today.getTime() - entry.getTime();
 
@@ -168,7 +171,7 @@
         var seconds = Math.floor(diff / (1000));
         diff -= seconds * (1000);
         seconds = checkTime(seconds);
-        $('#working').html(hours + ":" + mins + ":"+seconds);
+        $('#working').html(hours + ":" + mins + ":" + seconds);
         var t = setTimeout(startTime, 500);
     }
     function checkTime(i) {

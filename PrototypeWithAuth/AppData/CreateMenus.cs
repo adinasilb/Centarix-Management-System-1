@@ -628,7 +628,7 @@ namespace PrototypeWithAuth.AppData
                 {
                     {"SectionType", AppUtility.MenuItems.LabManagement }
                 },
-                IconName = "icon-assignment-24px1",
+                IconName = "icon-calibrate-24px",
                 Classes = Classes
             });
             if (SidebarTitle == AppUtility.LabManagementSidebarEnum.EquipmentList.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }

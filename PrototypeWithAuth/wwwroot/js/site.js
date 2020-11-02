@@ -2666,3 +2666,25 @@ $.fn.CallPage = function (url) {
 		}
 	});
 }
+$('.submit-2faCode').click(function () {
+	var code = $('#Code').val();
+	$.ajax({
+		async: false,
+		url: '/Admin/Verify2FA?code='+code,
+		type: 'POST',
+		cache: false,
+		success: function (data) {
+			if (data == true) {
+				$('#validCode').html("valid code!")
+				$('#errorCode').html('')
+			}
+			else {
+				$('#errorCode').html("invalid code")
+				$('#validCode').html('')
+			}
+		
+
+		}
+	});
+
+})

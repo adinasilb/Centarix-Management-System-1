@@ -615,15 +615,6 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.RequestStatusID = 1;
-
-                            requestItemViewModel.Request.ParentRequest = new ParentRequest();
-                            int lastParentRequestOrderNum = 0;
-                            requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
-                            if (_context.ParentRequests.Any())
-                            {
-                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-                            }
-
                             _context.Add(requestItemViewModel.Request);
                             _context.SaveChanges();
 
@@ -1603,7 +1594,7 @@ namespace PrototypeWithAuth.Controllers
             var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
             {
-                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber??0;
             }
             ParentRequest pr = new ParentRequest()
             {

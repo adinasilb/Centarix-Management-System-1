@@ -316,7 +316,7 @@
                     @if (!Summary)
                     {
                         <td >
-                            <ul style="list-style: none; padding-left:0px;">
+                            <ul style="list-style: none; padding-left:0px;" class="mb-0">
 
                                 @if (item.Unit != null)
                                 {
@@ -430,7 +430,7 @@
                     <div class="table-icon-div">
                         <a class="btn p-0 m-0 no-box-shadow" data-title="Create" href="@Url.Action("CreateCalibration","Calibrations", new { id = item.RequestID })">
                             <i style="        font-size: 2rem;
-        color: var(--lab-man-color);" class="icon-storefront-24px"></i>
+        color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
                         </a>
                     </div>
                         }

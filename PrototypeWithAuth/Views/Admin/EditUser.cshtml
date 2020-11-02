@@ -81,7 +81,7 @@
                                     </li>
                                     <li class="nav-item icon">
                                         <a data-toggle="tab" href="#security" id="user-security-tab" class="nav-link user-nav-link security-tab next-tab">
-                                            <i class="icon-https-24px" style="font-size: 2rem;"></i><br />Security
+                                            <i class="icon-security-24px" style="font-size: 2rem;"></i><br />Security
                                         </a>
                                     </li>
                                     <li class="nav-item icon">
@@ -94,16 +94,7 @@
                                             <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Budget
                                         </a>
                                     </li>
-                                    <li class="nav-item icon">
-                                        <a data-toggle="tab" href="#images" id="user-images-tab" class="nav-link user-nav-link  next-tab">
-                                            <i class="icon-account_box-24px-1" style="font-size: 2rem;"></i><br />Image
-                                        </a>
-                                    </li>
-                                    <li class="nav-item icon">
-                                        <a data-toggle="tab" href="#more" id="user-more-tab" class="nav-link user-nav-link  next-tab">
-                                            <i class="icon-more-24px" style="font-size: 2rem;"></i><br />More
-                                        </a>
-                                    </li>
+
                                 </ul>
                             </div>
                         </div>
@@ -323,6 +314,22 @@
                                         <label asp-for="SecureAppPass" class="control-label"></label>
                                         <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom mark-readonly" autocomplete="off" disabled />
                                         <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div id="qrCode"></div>
+                                        <div id="qrCodeData" data-url="@Html.Raw(@Model.AuthenticatorUri)"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Code" class="control-label">Verification Code</label>
+                                            <input asp-for="Code" class="form-control" autocomplete="off" />
+                                            <span asp-validation-for="Code" id="errorCode" class="text-danger-centarix"></span>
+                                            <span  id="validCode" class="users-font-color"></span>
+                                        </div>
+                                        <button type="button" class="btn btn-primary submit-2faCode">Verify</button>
                                     </div>
                                 </div>
                             </div>
@@ -678,23 +685,18 @@
                                 <div class="row">
                                     <div class="col-6">
                                         @{
-                                            var srcFile = "/UserImages/profile_circle_big.png";
+                                            var src = "/UserImages/profile_circle_big.png";
                                             if (Model.UserImageSaved != null)
                                             {
                                                 src = Model.UserImageSaved;
                                             }
                                         }
-                                        <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img src="@srcFile" id="user-image" alt="Default User Image" /></div>
+                                        <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img src="@src" id="user-image" alt="Default User Image" /></div>
                                         <br />@*<br /><br />
-                                <label asp-for="UserImage" class="control-label"></label>*@
+                                            <label asp-for="UserImage" class="control-label"></label>*@
                                         <input type="file" asp-for="UserImage" class="form-control-file pt-1 mark-readonly" accept=".png, .jpg, .jpeg, .pdf" disabled>
                                         <span asp-validation-for="UserImage" class="text-danger-centarix"></span>
 
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="more" class="tab-pane fade">
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -706,5 +708,12 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript" src="~/lib/qrcode.js"></script>
+<script type="text/javascript">
+        new QRCode(document.getElementById("qrCode"),
+            {
+                text: "@Html.Raw(Model.AuthenticatorUri)",
+                width: 150,
+                height: 150
+            });
 </script>
