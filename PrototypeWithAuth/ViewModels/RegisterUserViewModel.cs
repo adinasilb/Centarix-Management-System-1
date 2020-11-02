@@ -16,6 +16,7 @@ namespace PrototypeWithAuth.ViewModels
     public class RegisterUserViewModel
     {
         public string ApplicationUserID { get; set; } //this is used for the Edit form
+        public int UserNum { get; set; }
 
         //[Required]
         //[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]

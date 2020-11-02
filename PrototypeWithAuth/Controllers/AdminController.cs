@@ -400,21 +400,9 @@ namespace PrototypeWithAuth.Controllers
                             file.MoveTo(Path.Combine(uploadFolder, user.UserNum.ToString() + file.Extension));
                         }
                     }
-                    //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
-                    //Directory.CreateDirectory(uploadFolder);
-                    //if (registerUserViewModel.UserImage != null) //test for more than one???
-                    //{
-                    //    //create file
-                    //    var indexOfDot = registerUserViewModel.UserImage.FileName.IndexOf(".");
-                    //    var extension = registerUserViewModel.UserImage.FileName.Substring(indexOfDot, registerUserViewModel.UserImage.FileName.Length - indexOfDot);
-                    //    string uniqueFileName = user.UserNum.ToString() + extension;
-                    //    string filePath = Path.Combine(uploadFolder, uniqueFileName);
-                    //    registerUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
 
-                    //    user.UserImage = filePath;
-                    //    _context.Update(user);
-                    //    await _context.SaveChangesAsync();
-                    //}
+                    //should we move the delete here and test for the extension just in case it breaks over there
+                    
                 }
                 
 
@@ -707,25 +695,59 @@ namespace PrototypeWithAuth.Controllers
                     await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Users.ToString());
                 }
 
-                var folderName = "UserImages";
-                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, folderName);
-                var directory = Directory.CreateDirectory(uploadFolder);
-                if (registerUserViewModel.UserImage != null) //test for more than one???
-                {
-                    //create file
-                    var indexOfDot = registerUserViewModel.UserImage.FileName.IndexOf(".");
-                    var extension = registerUserViewModel.UserImage.FileName.Substring(indexOfDot, registerUserViewModel.UserImage.FileName.Length - indexOfDot);
-                    string uniqueFileName = userEditted.UserNum.ToString() + extension;
-                    string filePath = Path.Combine(uploadFolder, uniqueFileName);
-                    var stream = new FileStream(filePath, FileMode.Create);
-                    registerUserViewModel.UserImage.CopyTo(stream);
+            
 
-                    var pathToSave = Path.Combine(folderName, uniqueFileName);
-                    userEditted.UserImage = "/" + pathToSave;
-                    _context.Update(employeeEditted);
-                    await _context.SaveChangesAsync();
-                    stream.Close();
+                if (registerUserViewModel.UserImageSaved == "true")
+                {
+                    //delete old photo
+                    string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                    DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
+                    FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.UserNum + ".*");
+                    if (files1.Length > 0)
+                    {
+                        foreach (FileInfo file in files1)
+                        {
+                            System.IO.File.Delete(file.FullName);
+                        }
+                    }
+
+                    //add new photo
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                    DirectoryInfo dir = new DirectoryInfo(uploadFolder);
+                    FileInfo[] files = dir.GetFiles("TempUserImage" + ".*");
+                    if (files.Length > 0)
+                    {
+                        //File exists
+                        foreach (FileInfo file in files)
+                        {
+                            //System.IO.File.Move(file., user.UserNum.ToString());
+                            file.MoveTo(Path.Combine(uploadFolder, registerUserViewModel.UserNum.ToString() + file.Extension));
+                        }
+                    }
+
+                    //should we move the delete here and test for the extension just in case it breaks over there
+
                 }
+
+                //var folderName = "UserImages";
+                //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, folderName);
+                //var directory = Directory.CreateDirectory(uploadFolder);
+                //if (registerUserViewModel.UserImage != null) //test for more than one???
+                //{
+                //    //create file
+                //    var indexOfDot = registerUserViewModel.UserImage.FileName.IndexOf(".");
+                //    var extension = registerUserViewModel.UserImage.FileName.Substring(indexOfDot, registerUserViewModel.UserImage.FileName.Length - indexOfDot);
+                //    string uniqueFileName = userEditted.UserNum.ToString() + extension;
+                //    string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                //    var stream = new FileStream(filePath, FileMode.Create);
+                //    registerUserViewModel.UserImage.CopyTo(stream);
+
+                //    var pathToSave = Path.Combine(folderName, uniqueFileName);
+                //    userEditted.UserImage = "/" + pathToSave;
+                //    _context.Update(employeeEditted);
+                //    await _context.SaveChangesAsync();
+                //    stream.Close();
+                //}
 
             }
             catch (DbUpdateException ex)
@@ -819,6 +841,7 @@ namespace PrototypeWithAuth.Controllers
                 var registerUserViewModel = new RegisterUserViewModel
                 {
                     ApplicationUserID = userSelected.Id,
+                    UserNum = userSelected.UserNum,
                     FirstName = userSelected.FirstName,
                     LastName = userSelected.LastName,
                     Email = userSelected.Email,
