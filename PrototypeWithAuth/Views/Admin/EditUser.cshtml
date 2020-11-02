@@ -251,7 +251,10 @@
                                 <div class="row">
                                     <div class="col-4  p-0">
                                         <label class="control-label" asp-for="NewEmployeeWorkScope"></label>
-                                        <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployeeWorkScope" disabled />
+                                        <div class="input-group">
+                                            <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployeeWorkScope" disabled />
+                                            <div class="input-group-text">%</div>
+                                        </div>
                                         <span asp-validation-for="NewEmployeeWorkScope" class="text-danger-centarix"></span>
                                     </div>
 
@@ -259,12 +262,9 @@
                                         <label class="control-label" asp-for="NewEmployee.SalariedEmployee.HoursPerDay"></label>
                                         <input type="hidden" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" />
                                         @{
-                                            var hoursWorked = Model.NewEmployee.SalariedEmployee?.HoursPerDay;
-                                            var hours = Math.Truncate((decimal)hoursWorked);
-                                            var minutes = Math.Truncate((decimal)hoursWorked - hours) * 60;
-                                            var hoursInTimespan = hours + ":" + minutes;
+                                            double hoursWorked = Model.NewEmployee.SalariedEmployee?.HoursPerDay ?? 0;
                                         }
-                                        <input class="form-control-plaintext border-bottom mark-readonly" id="TimeSpan-HoursPerDay" type="time" value="@string.Format("{0:hh\\:mm}", hoursInTimespan)" disabled />
+                                        <input class="form-control-plaintext border-bottom mark-readonly" id="TimeSpan-HoursPerDay" type="time" value="@TimeSpan.FromHours(hoursWorked)" disabled />
                                         <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
