@@ -1642,7 +1642,8 @@ $(function () {
 			success: (result) => {
 				console.log("result: " + result);
 				if (result) {
-					if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+					if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg")
+					{
 						console.log("inside the if statement");
 						if (typeof (FileReader) != "undefined") {
 							console.log("file reader does not equal undefined");
@@ -1678,7 +1679,7 @@ $(function () {
 	});
 	$('#saveUserImage').click(function () {
 		//Save the user image under a temp file name
-		$("#UpdatedUserImage").val(true);
+		$("#UserImageSaved").val(true);
 
 		//var imgPath = $("#UserImageModal")[0].value;
 		var imgPath = $("#UserImagePath").val();

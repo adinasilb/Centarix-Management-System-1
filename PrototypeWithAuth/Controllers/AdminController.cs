@@ -203,6 +203,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> CreateUser(RegisterUserViewModel registerUserViewModel)
         {
+            var userid = 0;
             var usernum = 1;
             if (_context.Users.Any())
             {
@@ -372,21 +373,37 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
 
-                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
-                Directory.CreateDirectory(uploadFolder);
-                if (registerUserViewModel.UserImage != null) //test for more than one???
+                if (registerUserViewModel.UserImageSaved == "true")
                 {
-                    //create file
-                    var indexOfDot = registerUserViewModel.UserImage.FileName.IndexOf(".");
-                    var extension = registerUserViewModel.UserImage.FileName.Substring(indexOfDot, registerUserViewModel.UserImage.FileName.Length - indexOfDot);
-                    string uniqueFileName = user.UserNum.ToString() + extension;
-                    string filePath = Path.Combine(uploadFolder, uniqueFileName);
-                    registerUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages"); 
+                    DirectoryInfo dir = new DirectoryInfo(uploadFolder);
+                    FileInfo[] files = dir.GetFiles("TempUserImage" + ".*");
+                    if (files.Length > 0)
+                    {
+                        //File exists
+                        foreach (FileInfo file in files)
+                        {
+                            //System.IO.File.Move(file., user.UserNum.ToString());
+                            file.MoveTo(Path.Combine(uploadFolder, user.UserNum.ToString() + file.Extension));
+                        }
+                    }
+                    //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                    //Directory.CreateDirectory(uploadFolder);
+                    //if (registerUserViewModel.UserImage != null) //test for more than one???
+                    //{
+                    //    //create file
+                    //    var indexOfDot = registerUserViewModel.UserImage.FileName.IndexOf(".");
+                    //    var extension = registerUserViewModel.UserImage.FileName.Substring(indexOfDot, registerUserViewModel.UserImage.FileName.Length - indexOfDot);
+                    //    string uniqueFileName = user.UserNum.ToString() + extension;
+                    //    string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                    //    registerUserViewModel.UserImage.CopyTo(new FileStream(filePath, FileMode.Create));
 
-                    user.UserImage = filePath;
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    //    user.UserImage = filePath;
+                    //    _context.Update(user);
+                    //    await _context.SaveChangesAsync();
+                    //}
                 }
+                
 
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
