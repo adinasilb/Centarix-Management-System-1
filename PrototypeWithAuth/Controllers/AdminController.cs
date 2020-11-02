@@ -256,7 +256,7 @@ namespace PrototypeWithAuth.Controllers
                 /*phonenumber2 is not working --> talk to Debbie*/
                 user.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
                 user.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
-                    /*Salaried Employee*/
+                /*Salaried Employee*/
             }
             var IsUser = true;
             if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
@@ -1018,8 +1018,10 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        public void SaveTempUserImage(UserImageViewModel userImageViewModel)
+        public string SaveTempUserImage(UserImageViewModel userImageViewModel)
         {
+            var SavedUserImagePath = "";
+
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
             Directory.CreateDirectory(uploadFolder);
             if (userImageViewModel.FileToSave != null) //test for more than one???
@@ -1044,15 +1046,23 @@ namespace PrototypeWithAuth.Controllers
 
                 using (var FileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    userImageViewModel.FileToSave.CopyTo(FileStream);
+                    try
+                    {
+                        userImageViewModel.FileToSave.CopyTo(FileStream);
+                        SavedUserImagePath = AppUtility.GetLastFourFiles(filePath);
+                    }
+                    catch(Exception e)
+                    {
+                    }
                 }
-
-
             }
+
+            return SavedUserImagePath;
+
         }
-    
-    
-    
+
+
+
     }
 
 

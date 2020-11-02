@@ -1639,7 +1639,38 @@ $(function () {
 			url: url,
 			method: 'POST',
 			data: formData,
-			success: (partialResult) => {
+			success: (result) => {
+				console.log("result: " + result);
+				if (result) {
+					if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+						console.log("inside the if statement");
+						if (typeof (FileReader) != "undefined") {
+							console.log("file reader does not equal undefined");
+							var reader = new FileReader();
+							reader.onload = function (e) {
+								console.log(e.target.result);
+								//$("<img />", {
+								//	"src": e.target.result,
+								//	"class": "thumb-image"
+								//}).appendTo(imageHolder);
+								$("#user-image-modal").attr("src", e.target.result);
+							}
+							imageHolder.show();
+							reader.readAsDataURL($(this)[0].files[0]);
+							$('.file-name').text(this.files[0].name);
+						}
+
+						$("#UserImagePath").val(result);
+					}
+					else {
+						alert("Please only select images");
+					}
+
+					//TODO: set saveuserimage = true
+
+				}
+
+
 				//this.options.noteModalElement.modal('hide');
 				//$(".carousel-item").remove();
 				//$("#documentsModal").replaceWith('');
@@ -1657,27 +1688,7 @@ $(function () {
 			contentType: false
 		});
 
-		//if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
-		//	console.log("inside the if statement");
-		//if (typeof (FileReader) != "undefined") {
-		//	console.log("file reader does not equal undefined");
-		//	var reader = new FileReader();
-		//	reader.onload = function (e) {
-		//		console.log(e.target.result);
-		//		//$("<img />", {
-		//		//	"src": e.target.result,
-		//		//	"class": "thumb-image"
-		//		//}).appendTo(imageHolder);
-		//		$("#user-image-modal").attr("src", e.target.result);
-		//	}
-		//	imageHolder.show();
-		//	reader.readAsDataURL($(this)[0].files[0]);
-		//	$('.file-name').text(this.files[0].name);
-		//}
-		//}
-		//else {
-		//	alert("Please only select images");
-		//}
+
 
 		//Saving the user image here with a val of Saved = Temp
 
@@ -1685,6 +1696,36 @@ $(function () {
 	});
 	$('#saveUserImage').click(function () {
 		//Save the user image under a temp file name
+		$("#UpdatedUserImage").val(true);
+
+		//var imgPath = $("#UserImageModal")[0].value;
+		var imgPath = $("#UserImagePath").val();
+		$(".user-image").html('<img src="' + imgPath + '" class="user-image" />');
+		$(".userImage i").hide();
+		//console.log("imgPath: " + imgPath);
+		//var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+		//console.log("extn: " + extn);
+		//var imageHolder = $(".userImage");
+		//imageHolder.empty();
+
+		//if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+		//	console.log("inside the if statement");
+		//	if (typeof (FileReader) != "undefined") {
+		//		console.log("file reader does not equal undefined");
+		//		var reader = new FileReader();
+		//		reader.onload = function (e) {
+		//			console.log(e.target.result);
+		//			//$("<img />", {
+		//			//	"src": e.target.result,
+		//			//	"class": "thumb-image"
+		//			//}).appendTo(imageHolder);
+		//			$("#user-image-modal").attr("src", e.target.result);
+		//		}
+		//		imageHolder.show();
+		//		reader.readAsDataURL($("#UserImageModal")[0].files[0]);
+		//		$('.file-name').text($("#UserImagePath").val());
+		//	}
+		//}
 		//console.log("user image file submitted");
 		//var url = "Admin/SaveUserImage";
 		//console.log("url : " + url);
@@ -1709,10 +1750,10 @@ $(function () {
 
 		//Set a hiddenfor that it has an image
 
-		var $formFileToSave = $("#UserImageModal"), $clone = $("#UserImageModal").clone();
-		//$formFileToSave.attr("id") = "";
-		$formFileToSave.after($clone).appendTo($("#NewEmployeeImage"));
-		console.log("formfiletosave: " + JSON.stringify($formFileToSave));
+		//var $formFileToSave = $("#UserImageModal"), $clone = $("#UserImageModal").clone();
+		////$formFileToSave.attr("id") = "";
+		//$formFileToSave.after($clone).appendTo($("#NewEmployeeImage"));
+		//console.log("formfiletosave: " + JSON.stringify($formFileToSave));
 
 		//if (typeof (FileReader) != "undefined") {
 		//	console.log("file reader does not equal undefined");
