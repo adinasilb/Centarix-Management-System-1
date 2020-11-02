@@ -1016,6 +1016,43 @@ namespace PrototypeWithAuth.Controllers
 
             return string.Join(null, password);
         }
+
+
+        public void SaveTempUserImage(UserImageViewModel userImageViewModel)
+        {
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+            Directory.CreateDirectory(uploadFolder);
+            if (userImageViewModel.FileToSave != null) //test for more than one???
+            {
+                var FileName = "TempUserImage";
+
+                DirectoryInfo dir = new DirectoryInfo(uploadFolder);
+                FileInfo[] files = dir.GetFiles(FileName + ".*");
+                if (files.Length > 0)
+                {
+                    //File exists
+                    foreach (FileInfo file in files)
+                    {
+                        System.IO.File.Delete(file.FullName);
+                    }
+                }
+
+                var indexOfDot = userImageViewModel.FileToSave.FileName.IndexOf(".");
+                var extension = userImageViewModel.FileToSave.FileName.Substring(indexOfDot, userImageViewModel.FileToSave.FileName.Length - indexOfDot);
+                string uniqueFileName = FileName + extension;
+                string filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                using (var FileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    userImageViewModel.FileToSave.CopyTo(FileStream);
+                }
+
+
+            }
+        }
+    
+    
+    
     }
 
 

@@ -1,6 +1,10 @@
-﻿<script src="~/js/site.js" asp-append-version="true"></script>
+﻿
+@using Microsoft.AspNetCore.Http;
+@model PrototypeWithAuth.ViewModels.UserImageViewModel
+
+<script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
-<div class="modal modal-document fader on-form-modal users-form  userImageModal"  @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
+<div class="modal modal-document fader on-form-modal users-form  userImageModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered modal-sm  mx-auto  " style=" min-width: 32%;">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
@@ -16,7 +20,8 @@
                                     <div class="">
                                         <div class="custom-button custom-button-font users-color overflow-hidden position-relative text-center mt-4">
                                             <p class="position-absolute m-0 py-1" style="height:100%">Select image</p>
-                                            <input type="file" class="form-control-file  ta pt-1" style="
+                                            <input type="file" asp-for="FileToSave"
+                                           class="form-control-file  ta pt-1" style="
                                            filter: alpha(opacity=0);
                                            opacity: 0;
                                            position: absolute;
@@ -38,7 +43,7 @@
                 <div class="modal-footer mt-4 border-0">
                     <div class="text-center m-auto">
                         <input type="button" class="custom-button custom-button-font users-color between-button-margin " value="Save" id="saveUserImage" />
-                        <button class="custom-button custom-cancel cancel-email" id="cancelUserImage"  data-dismiss="modal">Cancel</button>
+                        <button class="custom-button custom-cancel cancel-email" id="cancelUserImage" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </form>
