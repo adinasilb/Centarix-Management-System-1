@@ -1594,7 +1594,7 @@ namespace PrototypeWithAuth.Controllers
             var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
             {
-                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber??0;
             }
             ParentRequest pr = new ParentRequest()
             {
