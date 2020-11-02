@@ -226,7 +226,8 @@
                                     </div>
                                     <div class="col-4">
                                         <label class="control-label" asp-for="NewEmployee.SalariedEmployee.HoursPerDay"></label>
-                                        <input class="form-control-plaintext border-bottom" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" />
+                                        <input type="hidden" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" />
+                                        <input class="form-control-plaintext border-bottom" id="TimeSpan-HoursPerDay" type="time" value="@string.Format("{0:hh\\:mm}", "0" @*Model.NewEmployee.SalariedEmployee.HoursPerDay*@)" />
                                         <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
@@ -255,13 +256,13 @@
                                         <span asp-validation-for="Password" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-6">
-                                        <label asp-for="ConfirmPassword" class="control-label"></label>
+                                        @*<label asp-for="ConfirmPassword" class="control-label"></label>
                                         <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
                                         <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-6 p-0">
+                                    <div class="col-6 p-0">*@
                                         <label asp-for="SecureAppPass" class="control-label"></label>
                                         <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom" autocomplete="off" />
                                         <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
