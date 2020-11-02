@@ -1163,7 +1163,8 @@ $(function () {
 		//});
 	});
 
-	$(".open-document-modal").click(function (e) {
+
+	$(".open-document-modal").off('click').on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal");
@@ -1180,7 +1181,7 @@ $(function () {
 	});
 
 	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations) {
-		console.log("in open doc modal");
+		alert("in open doc modal");
 		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
