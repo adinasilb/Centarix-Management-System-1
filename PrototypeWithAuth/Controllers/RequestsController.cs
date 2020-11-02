@@ -800,7 +800,7 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.InfoFileStrings = new List<string>();
                     foreach (var infofile in infofilesfound)
                     {
-                        string newFileString = AppUtility.GetLastFourFiles(infofile.FullName);
+                        string newFileString = AppUtility.GetLastFiles(infofile.FullName, 4);
                         requestItemViewModel.InfoFileStrings.Add(newFileString);
                     }
                 }
@@ -811,7 +811,7 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.PictureFileStrings = new List<string>();
                     foreach (var picturefile in picturefilesfound)
                     {
-                        string newFileString = AppUtility.GetLastFourFiles(picturefile.FullName);
+                        string newFileString = AppUtility.GetLastFiles(picturefile.FullName, 4);
                         requestItemViewModel.PictureFileStrings.Add(newFileString);
                     }
                 }
@@ -1011,7 +1011,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.OrderFileStrings = new List<String>();
                 foreach (var orderfile in orderfilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFourFiles(orderfile.FullName);
+                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
                     requestItemViewModel.OrderFileStrings.Add(newFileString);
                 }
             }
@@ -1022,7 +1022,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.InvoiceFileStrings = new List<string>();
                 foreach (var invoicefile in invoicefilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFourFiles(invoicefile.FullName);
+                    string newFileString = AppUtility.GetLastFiles(invoicefile.FullName, 4);
                     requestItemViewModel.InvoiceFileStrings.Add(newFileString);
                 }
             }
@@ -1033,7 +1033,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.ShipmentFileStrings = new List<string>();
                 foreach (var shipmentfile in shipmentfilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFourFiles(shipmentfile.FullName);
+                    string newFileString = AppUtility.GetLastFiles(shipmentfile.FullName, 4);
                     requestItemViewModel.ShipmentFileStrings.Add(newFileString);
                 }
             }
@@ -1044,7 +1044,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.QuoteFileStrings = new List<string>();
                 foreach (var quotefile in quotefilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFourFiles(quotefile.FullName);
+                    string newFileString = AppUtility.GetLastFiles(quotefile.FullName, 4);
                     requestItemViewModel.QuoteFileStrings.Add(newFileString);
                 }
             }
@@ -1055,7 +1055,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.InfoFileStrings = new List<string>();
                 foreach (var infofile in infofilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFourFiles(infofile.FullName);
+                    string newFileString = AppUtility.GetLastFiles(infofile.FullName, 4);
                     requestItemViewModel.InfoFileStrings.Add(newFileString);
                 }
             }
@@ -1066,7 +1066,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.PictureFileStrings = new List<string>();
                 foreach (var picturefile in picturefilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFourFiles(picturefile.FullName);
+                    string newFileString = AppUtility.GetLastFiles(picturefile.FullName, 4);
                     requestItemViewModel.PictureFileStrings.Add(newFileString);
                 }
             }
@@ -1077,7 +1077,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.ReturnFileStrings = new List<string>();
                 foreach (var returnfile in returnfilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFourFiles(returnfile.FullName);
+                    string newFileString = AppUtility.GetLastFiles(returnfile.FullName, 4);
                     requestItemViewModel.ReturnFileStrings.Add(newFileString);
                 }
             }
@@ -1088,7 +1088,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.CreditFileStrings = new List<string>();
                 foreach (var creditfile in creditfilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFourFiles(creditfile.FullName);
+                    string newFileString = AppUtility.GetLastFiles(creditfile.FullName, 4);
                     requestItemViewModel.CreditFileStrings.Add(newFileString);
                 }
             }
@@ -2810,7 +2810,7 @@ namespace PrototypeWithAuth.Controllers
                     documentsModalViewModel.FileStrings = new List<String>();
                     foreach (var docfile in docfilesfound)
                     {
-                        string newFileString = AppUtility.GetLastFourFiles(docfile.FullName);
+                        string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);
                         documentsModalViewModel.FileStrings.Add(newFileString);
                         //documentsModalViewModel.Files.Add(docfile);
                     }

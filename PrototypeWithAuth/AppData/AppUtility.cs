@@ -186,20 +186,20 @@ namespace PrototypeWithAuth.AppData
             return termsSelectList;
         }
 
-        public static string GetLastFourFiles(string longFileName)
+        public static string GetLastFiles(string longFileName, int amountOfFiles)
         {
-            bool fourthFound = false;
+            bool lastfound = false;
             int counter = 0;
             int place = longFileName.Length - 1;
-            while (!fourthFound)
+            while (!lastfound)
             {
                 string ch = longFileName.Substring(place, 1);
                 if (ch == "\\")
                 {
                     counter++;
-                    if (counter == 4)
+                    if (counter == amountOfFiles)
                     {
-                        fourthFound = true;
+                        lastfound = true;
                     }
                 }
                 place--;

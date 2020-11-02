@@ -1649,10 +1649,6 @@ $(function () {
 							var reader = new FileReader();
 							reader.onload = function (e) {
 								console.log(e.target.result);
-								//$("<img />", {
-								//	"src": e.target.result,
-								//	"class": "thumb-image"
-								//}).appendTo(imageHolder);
 								$("#user-image-modal").attr("src", e.target.result);
 							}
 							imageHolder.show();
@@ -1666,22 +1662,8 @@ $(function () {
 						alert("Please only select images");
 					}
 
-					//TODO: set saveuserimage = true
-
 				}
 
-
-				//this.options.noteModalElement.modal('hide');
-				//$(".carousel-item").remove();
-				//$("#documentsModal").replaceWith('');
-
-				//var $enumString = $(".open-document-modal.active-document-modal").data("string");
-				//var $requestId = $(".open-document-modal.active-document-modal").data("id");
-
-				//console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
-				//var isOperations = $(".open-document-modal.active-document-modal").hasClass('operations');
-				//$.fn.ChangeColorsOfModal($enumString, isOperations);
-				//$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, isOperations);
 				//return false;
 			},
 			processData: false,
@@ -1700,75 +1682,9 @@ $(function () {
 
 		//var imgPath = $("#UserImageModal")[0].value;
 		var imgPath = $("#UserImagePath").val();
-		$(".user-image").html('<img src="' + imgPath + '" class="user-image" />');
+		//$(".user-image").html('<img src="~/' + imgPath + '" class="user-image" />');
+		$("#user-image").attr("src", imgPath);
 		$(".userImage i").hide();
-		//console.log("imgPath: " + imgPath);
-		//var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
-		//console.log("extn: " + extn);
-		//var imageHolder = $(".userImage");
-		//imageHolder.empty();
-
-		//if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
-		//	console.log("inside the if statement");
-		//	if (typeof (FileReader) != "undefined") {
-		//		console.log("file reader does not equal undefined");
-		//		var reader = new FileReader();
-		//		reader.onload = function (e) {
-		//			console.log(e.target.result);
-		//			//$("<img />", {
-		//			//	"src": e.target.result,
-		//			//	"class": "thumb-image"
-		//			//}).appendTo(imageHolder);
-		//			$("#user-image-modal").attr("src", e.target.result);
-		//		}
-		//		imageHolder.show();
-		//		reader.readAsDataURL($("#UserImageModal")[0].files[0]);
-		//		$('.file-name').text($("#UserImagePath").val());
-		//	}
-		//}
-		//console.log("user image file submitted");
-		//var url = "Admin/SaveUserImage";
-		//console.log("url : " + url);
-		//var formData = new FormData($("#userImageForm")[0]);
-		//var data = $("#userImageForm").serialize();
-		////var formData = new FormData($(this));
-		////console.log("data : " + data);
-		//console.log("formData : " + formData);
-		////console.log("data : " + model);
-
-
-		//$.ajax({
-		//	url: url,
-		//	method: 'POST',
-		//	data: formData,
-		//	success: (partialResult) => {
-		//	},
-		//	processData: false,
-		//	contentType: false
-		//});
-
-
-		//Set a hiddenfor that it has an image
-
-		//var $formFileToSave = $("#UserImageModal"), $clone = $("#UserImageModal").clone();
-		////$formFileToSave.attr("id") = "";
-		//$formFileToSave.after($clone).appendTo($("#NewEmployeeImage"));
-		//console.log("formfiletosave: " + JSON.stringify($formFileToSave));
-
-		//if (typeof (FileReader) != "undefined") {
-		//	console.log("file reader does not equal undefined");
-		//	//var imageHolder = $("#user-image-modal");
-		//	//imageHolder.empty();
-		//	var reader = new FileReader();
-		//	reader.onload = function (e) {
-		//		console.log(e.target.result);
-
-		//		$("#user-image").attr("src", e.target.result);
-		//		$('.temp-image').hide();
-		//	}
-		//	$('#UserImage').val($("#UserImageModal").files);
-		//	reader.readAsDataURL($("#UserImageModal")[0].files[0]);
-		//}
 
 		$('.modal.userImageModal').remove();
 		$('.modal-backdrop').remove();

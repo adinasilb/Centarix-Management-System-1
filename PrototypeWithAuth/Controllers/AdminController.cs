@@ -1049,7 +1049,7 @@ namespace PrototypeWithAuth.Controllers
                     try
                     {
                         userImageViewModel.FileToSave.CopyTo(FileStream);
-                        SavedUserImagePath = AppUtility.GetLastFourFiles(filePath);
+                        SavedUserImagePath = AppUtility.GetLastFiles(filePath, 2);
                     }
                     catch(Exception e)
                     {
