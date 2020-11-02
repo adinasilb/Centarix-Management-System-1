@@ -25,16 +25,16 @@
         <div class="col-7">
 
             <div class="row">
-                <div class="col-6 heading-1 p-0"><label class="m-0 p-0">Summary Of Days Off</label></div>
-                <div class="col-4 mt-4 ">
-                    <label class="font-weight-bolder text"> Vacation Days Left: @Model.Select(d => d.VacationDaysLeft).Sum(vd => vd)</label>
+                <div class="col-4 heading-1 p-0"><label class="m-0 p-0">Summary Of Days Off</label></div>
+                <div class="col-4 heading-1 ">
+                    <label class="font-weight-bolder text m-0 p-0"> Vacation Days Left: @Model.Select(d => d.VacationDaysLeft).Sum(vd => vd)</label>
                 </div>
 
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-9">
+        <div class="col-7">
             <div class="row p-3 text-center ">
                 <div class="col-3 pl-5 text-left">
                     Year
@@ -70,23 +70,19 @@
             }
 
 
-            <div class="row mt-6 ">
-                <div class="col-2  my-3 ml-5 text-center pt-3">
+            <div class="row mt-6 text-center ">
+                <div class="col-6 ">
                     <label class="font-weight-bolder text "> Vacation Days</label>
-                    <i class="icon-info-24px-2 ml-2" style="font-size: 1.25rem; top: .24rem;
+                    <i class="icon-info-24px-2 mx-2" style="font-size: 1.25rem; top: .24rem;
         position: relative;"></i>
-                </div>
 
-                <div class="col-3  my-3 text-center">
                     <button class="custom-button-font custom-button timekeeper-color report-vacation-days @AppUtility.TimeKeeperSidebarEnum.ReportDaysOff" type="button">Vacaton</button>
                 </div>
-                <div class="col-2 my-3 text-center pt-3">
+                <div class="col-6  ">
                     <label class="font-weight-bolder text"> Sick Days</label>
-                    <i class="icon-info-24px-2 ml-2" style="font-size: 1.25rem; top: .24rem;
+                    <i class="icon-info-24px-2 mx-2" style="font-size: 1.25rem; top: .24rem;
         position: relative;
 "></i>
-                </div>
-                <div class="col-3 my-3 text-center">
                     <button class="custom-button-font custom-button timekeeper-color report-sick-days @AppUtility.TimeKeeperSidebarEnum.ReportDaysOff"  type="button">Sick Leave</button>
                 </div>
 

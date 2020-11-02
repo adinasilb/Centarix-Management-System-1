@@ -51,16 +51,16 @@
                 <div class="col-4 pl-5 text-left">
                     Date
                 </div>
-                <div class="col-2">
+                <div class="col-1">
 
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     Entry Time
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     Exit Time
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     Total
                 </div>
             </div>
@@ -70,10 +70,10 @@
                     <div class="col-4 pl-5 text-left">
                         @eh.Date.ToLongDateString()
                     </div>
-                    <div class="col-2  timekeeper-font-color">
+                    <div class="col-1  timekeeper-font-color">
                         @eh.OffDayType?.Description
                     </div>
-                    <div class="col-2 p-0">
+                    <div class="col-3 p-0">
                         @if (eh.Entry1 == null && eh.OffDayType == null && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
                         {
                             <button type="button" class="custom-clear-button-table table-button timekeeper-font-color report-sick-days @AppUtility.TimeKeeperSidebarEnum.SummaryHours" style="background: transparent; border: .125rem solid var(--timekeeper-color);" value="@eh.Date.ToString("yyyy-MM-dd")">Report Sick</button>
@@ -82,7 +82,7 @@
                         <br />
                         @eh.Entry2?.ToShortTimeString()
                     </div>
-                    <div class="col-2 p-0">
+                    <div class="col-3 p-0">
                         @if (eh.Entry2 != null && eh.Exit2 == null)
                         {
                             @eh.Exit1?.ToShortTimeString() <br/>
@@ -113,7 +113,7 @@
 
                     </div>
 
-                    <div class="col-2  timekeeper-font-color font-weight-bold">
+                    <div class="col-1  timekeeper-font-color font-weight-bold">
                         @{var hours = eh.TotalHours == TimeSpan.Zero ? "" : eh.TotalHours?.ToString(@"h\:mm"); }
                         @hours
                     </div>
