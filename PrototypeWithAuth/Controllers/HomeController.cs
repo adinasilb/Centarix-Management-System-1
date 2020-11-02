@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.ViewModels;
 using SQLitePCL;
 
 namespace PrototypeWithAuth.Controllers
@@ -28,10 +29,40 @@ namespace PrototypeWithAuth.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
+        public IActionResult ResetPassword(string errorMsg = "")
+        {
+            var user = _userManager.GetUserAsync(User);
+            ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel()
+            {
+                User = user.Result,
+                ErrorMessage = errorMsg
+            };
+            return View("ResetPassword", resetPasswordViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+        {
+            var user = _context.Users.Where(u => u.Id == resetPasswordViewModel.User.Id).FirstOrDefault();
+            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordViewModel.Password);
+            if (passwordChangeResult.Succeeded)
+            {
+                user.NeedsToResetPassword = false;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("ResetPassword", passwordChangeResult.ToString());
+            }
+        }
         public IActionResult Index()
         {
             var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
-                
+
             //Adina added in 3 lines
             if (User.IsInRole("Admin"))
             {
@@ -47,7 +78,7 @@ namespace PrototypeWithAuth.Controllers
                 _context.SaveChanges();
             }
             IEnumerable<Menu> menu = _context.Menus.Select(x => x);
-       
+
             return View(menu);
         }
 
@@ -84,11 +115,11 @@ namespace PrototypeWithAuth.Controllers
         public int GetNotficationCount()
         {
             var currentUserID = _userManager.GetUserId(User);
-            DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id ==currentUserID).DateLastReadNotifications;
-            int count1 = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID==currentUserID).Count();
+            DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id == currentUserID).DateLastReadNotifications;
+            int count1 = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID).Count();
             var tk = _context.TimekeeperNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID);
-            int count2 = tk.Count();            
-            return count1+count2;
+            int count2 = tk.Count();
+            return count1 + count2;
         }
         [HttpGet]
         public JsonResult GetLatestNotifications()
@@ -123,7 +154,7 @@ namespace PrototypeWithAuth.Controllers
                    controller = n.Controller,
                    action = n.Action,
                    isRead = n.IsRead
-               });           
+               });
             //var notificationsCombined = notification.Concat(rnotification).OrderByDescending(n=>n.timeStamp).ToList();
             return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
         }
@@ -134,14 +165,15 @@ namespace PrototypeWithAuth.Controllers
             DateTime lastReadNotfication = currentUser.DateLastReadNotifications;
             currentUser.DateLastReadNotifications = DateTime.Now;
             _context.Update(currentUser);
-            _context.SaveChanges();          
+            _context.SaveChanges();
             return true;
         }
 
         private void fillInTimekeeperMissingDays(ApplicationUser user)
         {
             DateTime nextDay = user.LastLogin.AddDays(1);
-            if (user.LastLogin == new DateTime()) {
+            if (user.LastLogin == new DateTime())
+            {
                 return;
             }
             while (nextDay.Date <= DateTime.Today)
@@ -219,5 +251,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
         }
+
+
     }
 }

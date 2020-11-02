@@ -43,4 +43,23 @@
 		}
 	});
 
+	$("#TimeSpan-HoursPerDay").on("change", function () {
+		var newTimespan = $(this).val();
+		console.log("newTimespan: " + newTimespan);
+		var hours = parseInt(newTimespan.substr(0, 2));
+		console.log("hours: " + hours);
+		var minutes = newTimespan.substr(3, 2);
+		console.log("minutes: " + minutes);
+		var minutesFloat = parseFloat(minutes) / 60;
+		console.log("minutesFloat: " + minutesFloat);
+		var hoursPercentage = hours + minutesFloat;
+		console.log("hoursPercentage: " + hoursPercentage);
+
+		$("#NewEmployee_SalariedEmployee_HoursPerDay").val(hoursPercentage);
+
+		var percentageWorked = 100 * (hoursPercentage / 8.4);
+		console.log("percentage worked: " + percentageWorked);
+		$("#NewEmployeeWorkScope").val(percentageWorked);
+	});
+
 });

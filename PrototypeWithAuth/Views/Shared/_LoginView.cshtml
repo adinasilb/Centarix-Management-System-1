@@ -29,9 +29,9 @@
 
 </head>
 <body>
-    @if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
+    @*@if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
     {
-        @*<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })"> </form>*@
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })"> </form>
         <header class="sticky-top">
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
 
@@ -145,7 +145,7 @@
         </div>
     </nav>
 </header>
-            }
+            }*@
 
             <div class="text-center container col-md-7 center-horizontally" style="min-width:560px">
                 <div class="row h-100">

@@ -88,7 +88,13 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user.NeedsToResetPassword)
+                    {
+                        returnUrl = Url.Action("ResetPassword", "Home");
+                    }
                     return LocalRedirect(returnUrl);
+
                 }
                 if (result.RequiresTwoFactor)
                 { 
@@ -109,6 +115,14 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> ResetPassword()
+        //{
+        //    var user = _userManager.GetUserAsync(User);
+        //    return Page(user);
+        //}
+
 
 
     }

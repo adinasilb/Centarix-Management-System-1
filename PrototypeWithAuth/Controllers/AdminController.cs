@@ -486,10 +486,10 @@ namespace PrototypeWithAuth.Controllers
                     userEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
                     userEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
                     //are users allowed to update their password
-                    //if (registerUserViewModel.SecureAppPass != null)
-                    //{
-                    //    userEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
-                    //}
+                    if (registerUserViewModel.SecureAppPass != null)
+                    {
+                        userEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
+                    }
                     userEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
                     userEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
                     userEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
@@ -512,10 +512,10 @@ namespace PrototypeWithAuth.Controllers
                     employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
                     employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
                     //are users allowed to update their password
-                    //if (registerUserViewModel.SecureAppPass != null)
-                    //{
-                    //    userEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
-                    //}
+                    if (registerUserViewModel.SecureAppPass != null)
+                    {
+                        userEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
+                    }
                     employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
                     employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
                     employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
@@ -539,11 +539,6 @@ namespace PrototypeWithAuth.Controllers
 
                     _context.Update(employeeEditted);
 
-                    if (registerUserViewModel.Password != "")
-                    {
-                        string resetToken = await _userManager.GeneratePasswordResetTokenAsync(employeeEditted);
-                        IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(employeeEditted, resetToken, registerUserViewModel.Password);
-                    }
 
                     switch (selectedStatusID)
                     {
@@ -564,15 +559,30 @@ namespace PrototypeWithAuth.Controllers
                     await _context.SaveChangesAsync();
                 }
 
+                if (!String.IsNullOrEmpty(registerUserViewModel.Password))
+                {
+                    string resetToken = await _userManager.GeneratePasswordResetTokenAsync(employeeEditted);
+                    IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(employeeEditted, resetToken, registerUserViewModel.Password);
+                    if (passwordChangeResult.Succeeded)
+                    {
+                        employeeEditted.NeedsToResetPassword = true;
+                        _context.Update(employeeEditted);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        //TODO: alert the user that it didn't succeed!!!
+                    }
+                }
 
                 //if password isn't blank - reset the password):
-                if (registerUserViewModel.Password != null)
-                {
-                    ApplicationUser cUser = await _userManager.FindByIdAsync(registerUserViewModel.ApplicationUserID);
-                    string hashpassword = _userManager.PasswordHasher.HashPassword(cUser, registerUserViewModel.Password);
-                    cUser.PasswordHash = hashpassword;
-                    await _userManager.UpdateAsync(cUser);
-                }
+                //if (registerUserViewModel.Password != null)
+                //{
+                //    ApplicationUser cUser = await _userManager.FindByIdAsync(registerUserViewModel.ApplicationUserID);
+                //    string hashpassword = _userManager.PasswordHasher.HashPassword(cUser, registerUserViewModel.Password);
+                //    cUser.PasswordHash = hashpassword;
+                //    await _userManager.UpdateAsync(cUser);
+                //}
 
 
                 var rolesList = await _userManager.GetRolesAsync(userEditted).ConfigureAwait(false);
