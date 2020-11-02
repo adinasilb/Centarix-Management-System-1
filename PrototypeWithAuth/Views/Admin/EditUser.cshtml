@@ -311,6 +311,21 @@
                                         <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom mark-readonly" autocomplete="off" disabled />
                                         <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
                                     </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div id="qrCode"></div>
+                                        <div id="qrCodeData" data-url="@Html.Raw(@Model.AuthenticatorUri)"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Code" class="control-label">Verification Code</label>
+                                            <input asp-for="Code" class="form-control" autocomplete="off" />
+                                            <span asp-validation-for="Code" class="text-danger-centarix"></span>
+                                        </div>
+                                        <button type="button" class="btn btn-primary submit-2faCode">Verify</button>
+                                    </div>
                                 </div>
                             </div>
                             <div id="permissions" class="tab-pane fade">
@@ -680,8 +695,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="more" class="tab-pane fade">
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -693,5 +707,12 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript" src="~/lib/qrcode.js"></script>
+<script type="text/javascript">
+        new QRCode(document.getElementById("qrCode"),
+            {
+                text: "@Html.Raw(Model.AuthenticatorUri)",
+                width: 150,
+                height: 150
+            });
 </script>

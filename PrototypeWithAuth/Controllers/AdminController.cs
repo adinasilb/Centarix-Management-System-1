@@ -22,6 +22,8 @@ using PrototypeWithAuth.ViewModels;
 using MimeKit;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -32,14 +34,18 @@ namespace PrototypeWithAuth.Controllers
         private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly UrlEncoder _urlEncoder;
+
+        private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment)
+            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder)
         {
             _context = context;
             _userManager = userManager;
             _signManager = signManager;
             _roleManager = roleManager;
             _hostingEnvironment = hostingEnvironment;
+            _urlEncoder = urlEncoder;
             //CreateSingleRole();
         }
 
@@ -938,6 +944,21 @@ namespace PrototypeWithAuth.Controllers
                 //                    };
                 //                }
 
+                //2fa
+                var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(userSelected);
+                if (string.IsNullOrEmpty(unformattedKey))
+                {
+                    await _userManager.ResetAuthenticatorKeyAsync(userSelected);
+                    unformattedKey = await _userManager.GetAuthenticatorKeyAsync(userSelected);
+                }
+
+                registerUserViewModel.SharedKey = FormatKey(unformattedKey);
+
+                var email = await _userManager.GetEmailAsync(userSelected);
+                registerUserViewModel.AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey);
+
+
+
                 return PartialView(registerUserViewModel);
 
             }
@@ -949,10 +970,15 @@ namespace PrototypeWithAuth.Controllers
 
         public JsonResult GetGeneratedPassword()
         {
-            var password = GeneratePassword();
+            var password = "";
+            while (!PasswordIsValid(password))
+            {
+                password = GeneratePassword();
+            }
+     
             return Json(password);
         }
-        public static string GeneratePassword(bool includeLowercase = true, bool includeUppercase = true, bool includeNumeric = true, bool includeSpecial = true, bool includeSpaces = false, int lengthOfPassword = 12)
+        private static string GeneratePassword(bool includeLowercase = true, bool includeUppercase = true, bool includeNumeric = true, bool includeSpecial = true, bool includeSpaces = false, int lengthOfPassword = 12)
         {
             const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
             const string LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
@@ -1016,7 +1042,48 @@ namespace PrototypeWithAuth.Controllers
 
             return string.Join(null, password);
         }
-    }
 
+ private string FormatKey(string unformattedKey)
+        {
+            var result = new StringBuilder();
+            int currentPosition = 0;
+            while (currentPosition + 4 < unformattedKey.Length)
+            {
+                result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
+                currentPosition += 4;
+            }
+            if (currentPosition < unformattedKey.Length)
+            {
+                result.Append(unformattedKey.Substring(currentPosition));
+            }
+
+            return result.ToString().ToLowerInvariant();
+        }
+
+        private string GenerateQrCodeUri(string email, string unformattedKey)
+        {
+            return string.Format(
+                AuthenticatorUriFormat,
+                _urlEncoder.Encode("PrototypeWithAuth"),
+                _urlEncoder.Encode(email),
+                unformattedKey);
+        }
+        private static bool PasswordIsValid(string password, bool includeLowercase = true, bool includeUppercase = true, bool includeNumeric = true, bool includeSpecial = true, bool includeSpaces = false)
+        {
+            const string REGEX_LOWERCASE = @"[a-z]";
+            const string REGEX_UPPERCASE = @"[A-Z]";
+            const string REGEX_NUMERIC = @"[\d]";
+            const string REGEX_SPECIAL = @"([!#$%&*@\\])+";
+            const string REGEX_SPACE = @"([ ])+";
+
+            bool lowerCaseIsValid = !includeLowercase || (includeLowercase && Regex.IsMatch(password, REGEX_LOWERCASE));
+            bool upperCaseIsValid = !includeUppercase || (includeUppercase && Regex.IsMatch(password, REGEX_UPPERCASE));
+            bool numericIsValid = !includeNumeric || (includeNumeric && Regex.IsMatch(password, REGEX_NUMERIC));
+            bool symbolsAreValid = !includeSpecial || (includeSpecial && Regex.IsMatch(password, REGEX_SPECIAL));
+            bool spacesAreValid = !includeSpaces || (includeSpaces && Regex.IsMatch(password, REGEX_SPACE));
+
+            return lowerCaseIsValid && upperCaseIsValid && numericIsValid && symbolsAreValid && spacesAreValid;
+        }
+    }
 
 }

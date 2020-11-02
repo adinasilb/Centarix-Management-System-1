@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using PrototypeWithAuth.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -119,5 +120,20 @@ namespace PrototypeWithAuth.ViewModels
         public List<Degree> Degrees { get; set; }
         public List<Citizenship> Citizenships { get; set; }
         public int Tab { get; set; }
+        //this for the 2fa
+        [Required]
+        [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Verification Code")]
+        public string Code { get; set; }
+        public string SharedKey { get; set; }
+
+        public string AuthenticatorUri { get; set; }
+
+        [TempData]
+        public string[] RecoveryCodes { get; set; }
+
+        [TempData]
+        public string StatusMessage { get; set; }
     }
 }
