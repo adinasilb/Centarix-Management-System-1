@@ -104,7 +104,8 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Order Limit")]
         public double OperaitonOrderLimit { get; set; }
 
-        public IFormFile UserImage { get; set; }
+        //public IFormFile UserImage { get; set; }
+        public string UserImage { get; set; }
 
         public string UserImageSaved { get; set; }
 

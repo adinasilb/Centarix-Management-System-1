@@ -858,6 +858,17 @@ namespace PrototypeWithAuth.Controllers
                     Tab = Tab ?? 1
                 };
 
+                string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
+                FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.UserNum + ".*");
+                if (files1.Length > 0)
+                {
+                    foreach (FileInfo file in files1)
+                    {
+                        registerUserViewModel.UserImage = file.FullName;
+                    }
+                }
+
 
                 registerUserViewModel.NewEmployee = new Employee(); //this may be able to be taken out but it might cause errors with users if taken out. so check first
 
