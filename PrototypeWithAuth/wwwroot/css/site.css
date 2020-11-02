@@ -2047,6 +2047,9 @@ span.caret {
         color: var(--black-87) !important;
     }
 
+.datepicker--content {
+    min-height: 20rem;
+}
 .inner-modal-tabs {
     background: #FFF;
     padding-top: 3.25rem;
