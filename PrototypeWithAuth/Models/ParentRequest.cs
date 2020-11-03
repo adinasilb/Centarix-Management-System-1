@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Order Number")]
         public int? OrderNumber { get; set; }
 
-        [Range(1, 2147483647, ErrorMessage = "Field must be a number")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         [Display(Name = "Invoice Number")]
         public string InvoiceNumber { get; set; }
 

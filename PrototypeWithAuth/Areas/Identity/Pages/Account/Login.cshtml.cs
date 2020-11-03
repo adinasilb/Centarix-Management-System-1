@@ -122,6 +122,12 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         }
 
         //[HttpGet]
+        //public async Task<IActionResult> ResetPasswordWith2FA()
+        //{
+
+        //}
+
+        //[HttpGet]
         //public async Task<IActionResult> ResetPassword()
         //{
         //    var user = _userManager.GetUserAsync(User);
