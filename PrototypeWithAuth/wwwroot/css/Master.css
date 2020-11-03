@@ -143,7 +143,7 @@
     /*opacity: .5;*/
 }
 
-a.yearly-monthly {
+a.yearly-monthly, input[type=button].yearly-monthly {
     border: .125rem solid var(--user-color) !important;
     color: var(--user-color) !important;
 }

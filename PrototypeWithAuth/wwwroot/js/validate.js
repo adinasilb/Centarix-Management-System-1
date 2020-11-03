@@ -410,7 +410,7 @@ $(function () {
 				containsNumber: true,
 				minlength: 8,
 				maxlength: 20
-			}
+			},
 			"SecureAppPass": {
 				required: isUserAndIsNotEdit || function () {
 					return $('#Password').val() != '';

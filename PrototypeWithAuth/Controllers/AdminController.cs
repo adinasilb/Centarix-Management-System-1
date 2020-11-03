@@ -590,6 +590,7 @@ namespace PrototypeWithAuth.Controllers
                     if (passwordChangeResult.Succeeded)
                     {
                         employeeEditted.NeedsToResetPassword = true;
+                        await _userManager.ResetAuthenticatorKeyAsync(employeeEditted);
                         _context.Update(employeeEditted);
                         await _context.SaveChangesAsync();
                     }
