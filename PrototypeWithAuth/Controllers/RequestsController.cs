@@ -585,7 +585,7 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
                             if (_context.ParentRequests.Any())
                             {
-                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber??0;
                             }
                             requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
                             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;

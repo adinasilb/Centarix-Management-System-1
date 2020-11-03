@@ -2635,56 +2635,34 @@ $(function () {
 	//$(".mdb-select").off("change").on("change", function () {
 	//	alert("select changed!");
 	//});
-
-
-});
-
-$('.modal #FirstName').change(function () {
-	$('.userName').val($(this).val() + " " + $('#LastName').val())
-});
-$('.modal #LastName').change(function () {
-	$('.userName').val($('#FirstName').val() + " " + $(this).val())
-});
-$('#FirstName').change(function () {
-	$('.userName').val($(this).val() + " " + $('#LastName').val())
-});
-$('#LastName').change(function () {
-	$('.userName').val($('#FirstName').val() + " " + $(this).val())
-});
-$('.exitModal').on('click', '.close', function (e) {
-	console.log("close edit modal");
-	$.fn.CallPage('/Timekeeper/ReportHours');
-})
-$.fn.CallPage = function (url) {
-	$.ajax({
-		async: true,
-		url: url,
-		type: 'GET',
-		cache: true,
-		success: function (data) {
-			$('.render-body').html(data);
-		}
+	$('.modal #FirstName').change(function () {
+		$('.userName').val($(this).val() + " " + $('#LastName').val())
 	});
-}
-$('.submit-2faCode').click(function () {
-	var code = $('#Code').val();
-	$.ajax({
-		async: false,
-		url: '/Admin/Verify2FA?code='+code,
-		type: 'POST',
-		cache: false,
-		success: function (data) {
-			if (data == true) {
-				$('#validCode').html("valid code!")
-				$('#errorCode').html('')
-			}
-			else {
-				$('#errorCode').html("invalid code")
-				$('#validCode').html('')
-			}
-		
-
-		}
+	$('.modal #LastName').change(function () {
+		$('.userName').val($('#FirstName').val() + " " + $(this).val())
 	});
+	$('#FirstName').change(function () {
+		$('.userName').val($(this).val() + " " + $('#LastName').val())
+	});
+	$('#LastName').change(function () {
+		$('.userName').val($('#FirstName').val() + " " + $(this).val())
+	});
+	$('.exitModal').on('click', '.close', function (e) {
+		console.log("close edit modal");
+		$.fn.CallPage('/Timekeeper/ReportHours');
+	})
+	$.fn.CallPage = function (url) {
+		$.ajax({
+			async: true,
+			url: url,
+			type: 'GET',
+			cache: true,
+			success: function (data) {
+				$('.render-body').html(data);
+			}
+		});
+	}
 
-})
+
+});
+
