@@ -394,7 +394,7 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     //add new photo
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages"); 
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                     DirectoryInfo dir = new DirectoryInfo(uploadFolder);
                     FileInfo[] files = dir.GetFiles("TempUserImage" + ".*");
                     if (files.Length > 0)
@@ -408,9 +408,9 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     //should we move the delete here and test for the extension just in case it breaks over there
-                    
+
                 }
-                
+
 
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -701,7 +701,7 @@ namespace PrototypeWithAuth.Controllers
                     await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Users.ToString());
                 }
 
-            
+
 
                 if (registerUserViewModel.UserImageSaved == "true")
                 {
@@ -1039,7 +1039,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 password = GeneratePassword();
             }
-     
+
             return Json(password);
         }
         private static string GeneratePassword(bool includeLowercase = true, bool includeUppercase = true, bool includeNumeric = true, bool includeSpecial = true, bool includeSpaces = false, int lengthOfPassword = 12)
@@ -1141,7 +1141,7 @@ namespace PrototypeWithAuth.Controllers
                         userImageViewModel.FileToSave.CopyTo(FileStream);
                         SavedUserImagePath = AppUtility.GetLastFiles(filePath, 2);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                     }
                 }
@@ -1152,10 +1152,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-
-    }
-
- private string FormatKey(string unformattedKey)
+        private string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
             int currentPosition = 0;
@@ -1212,8 +1209,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             await _userManager.SetTwoFactorEnabledAsync(user, true);
-            return true;          
+            return true;
         }
     }
-
 }
