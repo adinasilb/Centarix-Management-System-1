@@ -20,8 +20,7 @@ $(function () {
 			"Invoice.InvoiceNumber": {
 				required: true,
 				number: true,
-				min: 1,
-				integer: true
+				min: 1
 			},
 		}
 	});
@@ -83,8 +82,7 @@ $(function () {
 			"Request.ParentQuote.QuoteNumber": {
 				required: true,
 				number: true,
-				min: 1,
-				integer: true
+				min: 1
 			},
 			"Request.ExpectedSupplyDays": {
 				min: 0,
@@ -114,8 +112,7 @@ $(function () {
 			"Request.CatalogNumber": {
 				required: true,
 				number: true,
-				min: 1,
-				integer: true
+				min: 1
 			},
 			"Request.Product.ProductSubcategory.ParentCategoryID": "selectRequired",
 			"Request.Product.ProductSubcategoryID": "selectRequired",
@@ -249,8 +246,7 @@ $(function () {
 			"Vendor.VendorBuisnessID": {
 				required: true,
 				number: true,
-				min: 1,
-				integer: true
+				min: 1
 			},
 			"Vendor.VendorCountry": "required",
 			"Vendor.VendorCity": "required",

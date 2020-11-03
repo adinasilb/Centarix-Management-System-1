@@ -3055,7 +3055,7 @@ namespace PrototypeWithAuth.Controllers
 
                     request.ParentQuote.QuoteStatusID = 4;
                     request.ParentQuote.QuoteDate = quoteDate;
-                    request.ParentQuote.QuoteNumber = quoteNumber;
+                    request.ParentQuote.QuoteNumber = quoteNumber.ToString(); ;
                     request.Cost = quote.Cost;
                     request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
                     _context.Update(request);

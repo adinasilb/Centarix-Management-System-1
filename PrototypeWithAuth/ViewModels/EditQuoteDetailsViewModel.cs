@@ -18,7 +18,8 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "Quote Date")]
         public DateTime QuoteDate { get; set; }
         [Display(Name = "Quote Number")]
-        public int QuoteNumber { get; set; }
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
+        public string QuoteNumber { get; set; }
         public IFormFile QuoteFileUpload { get; set; }
         public int? ParentQuoteID { get; set; }
 
