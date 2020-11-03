@@ -407,10 +407,6 @@ $(function () {
 				minlength: 8,
 				maxlength: 20
 			},
-			"ConfirmPassword": {
-				required: isUserAndIsNotEdit,
-				equalTo: "#Password"
-			},
 			"SecureAppPass": {
 				required: isUserAndIsNotEdit || function () {
 					return $('#Password').val() != '';
@@ -450,6 +446,28 @@ $(function () {
 		}
 	});
 
+	$('.resetPasswordForm').validate({
+		rules: {
+			"Password": {
+				required: true,
+				nonAlphaNumeric: true,
+				uppercase: true,
+				lowercase: true,
+				containsNumber: true,
+				minlength: 8,
+				maxlength: 20
+			},
+			"ConfirmPassword": {
+				required: true,
+				equalTo: "#Password"
+			},
+			"TwoFactorAuthenticationViewModel.Code": {
+				required: true,
+				integer: true,
+				number: true
+			}
+		}
+	});
 
 	function isInteger(n) {
 		n = parseFloat(n)

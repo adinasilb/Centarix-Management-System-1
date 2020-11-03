@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,22 +23,36 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UrlEncoder _urlEncoder;
+        private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, UrlEncoder urlEncoder)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
+            _urlEncoder = urlEncoder;
         }
 
         [HttpGet]
-        public IActionResult ResetPassword(string errorMsg = "")
+        public async Task<IActionResult> ResetPassword(string errorMsg = "")
         {
-            var user = _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
+            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            if (string.IsNullOrEmpty(unformattedKey))
+            {
+                await _userManager.ResetAuthenticatorKeyAsync(user);
+                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            }
+
+            var email = user.Email;
+
             ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel()
             {
-                User = user.Result,
-                ErrorMessage = errorMsg
+                User = user,
+                ErrorMessage = errorMsg,
+                AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey),
+                TwoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel ()
             };
             return View("ResetPassword", resetPasswordViewModel);
         }
@@ -46,12 +62,26 @@ namespace PrototypeWithAuth.Controllers
         {
             var user = _context.Users.Where(u => u.Id == resetPasswordViewModel.User.Id).FirstOrDefault();
             string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+       
             IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordViewModel.Password);
             if (passwordChangeResult.Succeeded)
             {
+                var verificationCode = resetPasswordViewModel.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+                var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
+                    user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+
+                if (!is2faTokenValid)
+                {
+                    var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+                    resetPasswordViewModel.ErrorMessage = "Invalid Authentication Code";
+                    resetPasswordViewModel.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
+                    return View(resetPasswordViewModel);
+                }
                 user.NeedsToResetPassword = false;
                 _context.Update(user);
                 await _context.SaveChangesAsync();
+               
                 return RedirectToAction("Index");
             }
             else
@@ -169,6 +199,31 @@ namespace PrototypeWithAuth.Controllers
             return true;
         }
 
+        [HttpGet]
+        public  IActionResult Login2FA()
+        {
+            TwoFactorAuthenticationViewModel twoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel {  };
+            return View(twoFactorAuthenticationViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Login2FA(TwoFactorAuthenticationViewModel twoFactorAuthenticationViewModel)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            // Strip spaces and hypens
+            var verificationCode = twoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
+                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+
+            if (!is2faTokenValid)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid authentication code.");
+                return View(twoFactorAuthenticationViewModel);
+            }
+
+            //await _userManager.SetTwoFactorEnabledAsync(user, true);
+            return RedirectToAction("Index");
+        }
         private void fillInTimekeeperMissingDays(ApplicationUser user)
         {
             DateTime nextDay = user.LastLogin.AddDays(1);
@@ -252,6 +307,31 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        private string FormatKey(string unformattedKey)
+        {
+            var result = new StringBuilder();
+            int currentPosition = 0;
+            while (currentPosition + 4 < unformattedKey.Length)
+            {
+                result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
+                currentPosition += 4;
+            }
+            if (currentPosition < unformattedKey.Length)
+            {
+                result.Append(unformattedKey.Substring(currentPosition));
+            }
+
+            return result.ToString().ToLowerInvariant();
+        }
+
+        private string GenerateQrCodeUri(string email, string unformattedKey)
+        {
+            return string.Format(
+                AuthenticatorUriFormat,
+                _urlEncoder.Encode("PrototypeWithAuth"),
+                _urlEncoder.Encode(email),
+                unformattedKey);
+        }
 
     }
 }

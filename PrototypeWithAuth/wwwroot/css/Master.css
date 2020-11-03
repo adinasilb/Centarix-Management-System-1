@@ -66,7 +66,9 @@
 .danger-color {
     background-color: var(--danger-color);
 }
-
+.border-danger-centarix {
+    border-color: var(--danger-color) !important;
+}
 .operations-filter {
     filter: var(--operations-filter);
 }
@@ -141,7 +143,7 @@
     /*opacity: .5;*/
 }
 
-a.yearly-monthly {
+a.yearly-monthly, input[type=button].yearly-monthly {
     border: .125rem solid var(--user-color) !important;
     color: var(--user-color) !important;
 }
@@ -170,8 +172,7 @@ a.yearly-monthly {
 
 
 body{
-    color: #000000;
-    opacity: .87;
+    color: var(--black-87);
     text-transform:capitalize;
     font-weight: var(--bold-regular)
 }
