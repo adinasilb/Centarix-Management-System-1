@@ -91,6 +91,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     if (user.NeedsToResetPassword)
                     {
+                        //await _signInManager.SignOutAsync();
                         returnUrl = Url.Action("ResetPassword", "Home");
                     }
                     else
