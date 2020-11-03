@@ -95,7 +95,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        returnUrl = Url.Action("Index", "Home");
+                        returnUrl = Url.Action("Login2FA", "Home");
+                        //returnUrl = Url.Action("Index", "Home");
                     }
                     return LocalRedirect(returnUrl);
 

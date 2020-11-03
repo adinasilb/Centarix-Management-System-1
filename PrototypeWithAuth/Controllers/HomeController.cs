@@ -74,7 +74,7 @@ namespace PrototypeWithAuth.Controllers
                 if (!is2faTokenValid)
                 {
                     var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-                    ModelState.AddModelError(string.Empty, "Invalid authentication code.");
+                    resetPasswordViewModel.ErrorMessage = "Invalid Authentication Code";
                     resetPasswordViewModel.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
                     return View(resetPasswordViewModel);
                 }
