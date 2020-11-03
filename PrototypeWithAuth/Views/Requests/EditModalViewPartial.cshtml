@@ -877,13 +877,12 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
                                 <div class="col-9">
                                     <div class="form-group">
                                         <label class="font-weight-bold small-text">
-                                            @_userManager.GetUserAsync(User).Result.FirstName
-                                            @_userManager.GetUserAsync(User).Result.LastName
-                                            @DateTime.Now.ToLongDateString()
-                                            @DateTime.Now.ToLongTimeString()
+                                            @comment.ApplicationUser.FirstName
+                                            @comment.ApplicationUser.LastName
+                                            @comment.CommentTimeStamp.ToLongDateString()
+                                            @comment.CommentTimeStamp.ToLongTimeString()
                                         </label>
-                                        <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " disabled />
-                                        <span asp-validation-for="NewComment.CommentText" class="text-danger-centarix"></span>
+                                        <input disabled class="form-control-plaintext border-bottom" value="@comment.CommentText" />
                                     </div>
                                 </div>
                             </div>
