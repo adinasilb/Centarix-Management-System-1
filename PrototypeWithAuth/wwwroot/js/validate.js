@@ -506,20 +506,26 @@ $(function () {
 			$('#Request_UnitTypeID').rules("remove", "selectRequired");
 		}
 
-		var valid = $("#myForm").valid();
+		//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
+		$(this).parent().prev().find(".next-tab").addClass("prev-tab");
 
-		console.log("valid tab" + valid)
-		if (!valid) {
-			$('.next-tab').prop("disabled", true);
-		}
-		else {
-			$('.next-tab').prop("disabled", false);
+		if (!$(this).hasClass("prev-tab")) {
+			var valid = $("#myForm").valid();
 
+			console.log("valid tab" + valid)
+			if (!valid) {
+				$('.next-tab').prop("disabled", true);
+			}
+			else {
+				$('.next-tab').prop("disabled", false);
+
+			}
+			//work around for now - because select hidden are ignored
+			if ($(this).hasClass('request-price')) {
+				$('#Request_UnitTypeID').rules("add", "selectRequired");
+			}
 		}
-		//work around for now - because select hidden are ignored
-		if ($(this).hasClass('request-price')) {
-			$('#Request_UnitTypeID').rules("add", "selectRequired");
-		}
+
 
 	});
 	$('#myForm').submit(function (e) {
