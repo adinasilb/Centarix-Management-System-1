@@ -291,12 +291,11 @@
                                 <div class="row">
                                     <div class="col-6  p-0">
                                         <label asp-for="Password" class="control-label"></label> &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="button" id="GeneratePassword" class="custom-button custom-button-small-font users-background-color py-0 px-1 mark-readonly" value="Generate Password" disabled />
-
+                                 
                                         <div class="input-group">
-                                            <input asp-for="Password" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
+                                            <input asp-for="Password" class="form-control-plaintext border-bottom " autocomplete="off" readonly />
                                             <span class="input-group-text">
-                                                <i type="button" class="icon-remove_red_eye-24px float-right" style="color: var(--users-color); padding-top: .55rem; font-size: 1.25rem;" id="ViewPassword"></i>
+                                                <i type="button" class="icon-remove_red_eye-24px float-right " style="color: var(--users-color); padding-top: .55rem; font-size: 1.25rem;" id="ViewPassword"></i>
                                                 @*<input type="button" class="custom-button custom-button-small-font users-background-color px-1 py-0" id="ViewPassword" value="View" />*@
                                             </span>
                                         </div>
@@ -305,12 +304,12 @@
                                     </div>
                                     <div class="col-6">
                                         @*<label asp-for="ConfirmPassword" class="control-label"></label>
-                                        <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
-                                        <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 p-0">*@
+                        <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 p-0">*@
                                         <label asp-for="SecureAppPass" class="control-label"></label>
                                         <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom mark-readonly" autocomplete="off" disabled />
                                         <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>
@@ -318,18 +317,8 @@
 
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div id="qrCode"></div>
-                                        <div id="qrCodeData" data-url="@Html.Raw(@Model.AuthenticatorUri)"></div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label asp-for="Code" class="control-label">Verification Code</label>
-                                            <input asp-for="Code" class="form-control" autocomplete="off" />
-                                            <span asp-validation-for="Code" id="errorCode" class="text-danger-centarix"></span>
-                                            <span  id="validCode" class="users-font-color"></span>
-                                        </div>
-                                        <button type="button" class="btn btn-primary submit-2faCode">Verify</button>
+                                    <div class="col-6">
+                                        <input type="button" id="GeneratePassword" class="black-text py-2 mr-6 btn text rounded-pill yearly-monthly  text-center  px-5  border border-dark black-text mark-readonly" disabled value="Generate Password" />
                                     </div>
                                 </div>
                             </div>
@@ -681,23 +670,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="images" class="tab-pane fade">
-                                <div class="row">
-                                    <div class="col-6">
-                                        @{
-                                            var src = "/UserImages/profile_circle_big.png";
-                                            if (Model.UserImageSaved != null)
-                                            {
-                                                src = Model.UserImageSaved;
-                                            }
-                                        }
-                                        <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img src="@src" id="user-image" alt="Default User Image" /></div>
-                                        <br />@*<br /><br />
-                                            <label asp-for="UserImage" class="control-label"></label>*@
-                                        <input type="file" asp-for="UserImage" class="form-control-file pt-1 mark-readonly" accept=".png, .jpg, .jpeg, .pdf" disabled>
-                                        <span asp-validation-for="UserImage" class="text-danger-centarix"></span>
-
-                        </div>
+                           
                     </div>
                 </div>
 
@@ -707,13 +680,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript" src="~/lib/qrcode.js"></script>
-<script type="text/javascript">
-        new QRCode(document.getElementById("qrCode"),
-            {
-                text: "@Html.Raw(Model.AuthenticatorUri)",
-                width: 150,
-                height: 150
-            });
-</script>

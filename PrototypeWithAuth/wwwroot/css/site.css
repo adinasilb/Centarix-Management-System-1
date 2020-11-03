@@ -2219,3 +2219,6 @@ input[type=text].error, input[type=number].error {
     height:91px;
     width: 91px;
 }
+#qrCode img{
+    margin:auto;
+}
