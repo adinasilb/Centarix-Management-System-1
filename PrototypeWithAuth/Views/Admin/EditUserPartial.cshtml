@@ -35,6 +35,7 @@
 <script src="~/js/confirmedit.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
+<script src="~/js/CreateUser.js"></script>
 <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
     <div class=" row text-right mb-6">
         <div class="switch col-12 switch-margin">
@@ -46,7 +47,7 @@
         </div>
     </div>
     <div class="tab-content">
-        <div id="details" class="tab-pane fade fade in active">
+        <div id="details" class="tab-pane fade fade in @showDetails">
             <div class="row border-bottom pb-5 px-5 text-center " style="
     margin-right: -4rem;
     margin-left: -4rem;
@@ -194,7 +195,7 @@
                 </div>
             </div>
         </div>
-        <div id="salary" class="tab-pane fade">
+        <div id="salary" class="tab-pane fade @showSalary">
             <div class="row">
                 <div class="col-4  p-0">
                     <label class="control-label" asp-for="NewEmployeeWorkScope"></label>
@@ -221,7 +222,7 @@
                 </div>
             </div>
         </div>
-        <div id="security" class="tab-pane fade">
+        <div id="security" class="tab-pane fade @showSecurity">
             <div class="row">
                 <div class="col-6  p-0">
                     <label asp-for="Password" class="control-label"></label> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -256,7 +257,7 @@
                 </div>
             </div>
         </div>
-        <div id="permissions" class="tab-pane fade">
+        <div id="permissions" class="tab-pane fade @showPermissions">
             <div class="main-permissions row">
                 <div class="col-12 text-center">
                     <div class="row ">
@@ -548,7 +549,7 @@
                 </div>
             </div>
         </div>
-        <div id="budget" class="tab-pane fade">
+        <div id="budget" class="tab-pane fade @showBudget">
             <div class="row pb-3"><strong>Lab</strong></div>
             <div class="row pb-5">
                 <div class="col-4 pl-0 pr-5">

@@ -15,7 +15,7 @@ $(function () {
 		$("input[name='Age']").val(age);
 	});
 
-	$("#GeneratePassword").on("click", function () {
+	$("#GeneratePassword").off('click').on("click", function () {
 		var url = "/Admin/GetGeneratedPassword";
 		var password = "";
 		$.getJSON(url, function (data) {
