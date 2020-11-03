@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -96,7 +97,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        returnUrl = Url.Action("Login2FA", "Home");
+                        returnUrl = Debugger.IsAttached ? Url.Action("Index", "Home") : Url.Action("Login2FA", "Home");
+
                         //returnUrl = Url.Action("Index", "Home");
                     }
                     return LocalRedirect(returnUrl);

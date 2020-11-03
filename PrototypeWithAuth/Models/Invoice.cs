@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int InvoiceID { get; set; }
 
-        [Range(1, 2147483647, ErrorMessage = "Field must be a number")]
+       // [Range(1, 2147483647, ErrorMessage = "Field must be a number")]
         [Display(Name = "Invoice Number")]
         public string InvoiceNumber { get; set; }
 
