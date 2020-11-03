@@ -416,7 +416,7 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
                             if (_context.ParentRequests.Any())
                             {
-                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
+                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber??0;
                             }
                             requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
                             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
@@ -433,12 +433,8 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.RequestStatusID = 1;
                             requestItemViewModel.Request.ParentRequest = new ParentRequest();
-                            int lastParentRequestOrderNum = 0;
                             requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
-                            if (_context.ParentRequests.Any())
-                            {
-                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-                            }
+                           
                             _context.Update(requestItemViewModel.Request);
                             _context.SaveChanges();
                             TempData["OpenTermsModal"] = "Single";
