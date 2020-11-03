@@ -2059,8 +2059,8 @@ $(function () {
 			cache: true,
 			success: function (data) {
 				$("#loading").hide();
-				console.log("data:");
-				console.log(data);
+				//console.log("data:");
+				//console.log(data);
 				var modal = $(data);
 				$('body').append(modal);
 				//replaces the modal-view class with the ModalView view

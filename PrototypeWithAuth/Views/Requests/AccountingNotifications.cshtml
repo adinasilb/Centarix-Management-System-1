@@ -88,8 +88,8 @@
                 {
                     <tr class="text-center">
                         <td class="text-center" style="width:5%;">
-                            <div class="form-check accounting-select">
-                                <input type="checkbox" class="form-check-input filled-in" id="@Request.RequestID">
+                            <div class="form-check accounting-select" vendorid="@Vendor.Key.VendorID" >
+                                <input type="checkbox" class="form-check-input filled-in" id="@Request.RequestID" vendorid="@Vendor.Key.VendorID">
                                 <label class="form-check-label" for="@Request.RequestID">@Request.RequestID</label>
                             </div>
                             @*<div class="form-check text-center">

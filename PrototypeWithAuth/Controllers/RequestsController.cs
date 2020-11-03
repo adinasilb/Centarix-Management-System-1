@@ -3368,7 +3368,7 @@ namespace PrototypeWithAuth.Controllers
                 requestToUpdate.PaymentStatusID = 6;
                 _context.Update(requestToUpdate);
             }
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingPaymentsEnum });
         }
