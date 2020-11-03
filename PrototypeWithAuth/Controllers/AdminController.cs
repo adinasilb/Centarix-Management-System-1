@@ -1008,19 +1008,6 @@ namespace PrototypeWithAuth.Controllers
                 //                    };
                 //                }
 
-                //2fa
-                var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(userSelected);
-                if (string.IsNullOrEmpty(unformattedKey))
-                {
-                    await _userManager.ResetAuthenticatorKeyAsync(userSelected);
-                    unformattedKey = await _userManager.GetAuthenticatorKeyAsync(userSelected);
-                }
-
-                registerUserViewModel.SharedKey = FormatKey(unformattedKey);
-
-                var email = await _userManager.GetEmailAsync(userSelected);
-                registerUserViewModel.AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey);
-
 
 
                 return PartialView(registerUserViewModel);
@@ -1152,31 +1139,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        private string FormatKey(string unformattedKey)
-        {
-            var result = new StringBuilder();
-            int currentPosition = 0;
-            while (currentPosition + 4 < unformattedKey.Length)
-            {
-                result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
-                currentPosition += 4;
-            }
-            if (currentPosition < unformattedKey.Length)
-            {
-                result.Append(unformattedKey.Substring(currentPosition));
-            }
-
-            return result.ToString().ToLowerInvariant();
-        }
-
-        private string GenerateQrCodeUri(string email, string unformattedKey)
-        {
-            return string.Format(
-                AuthenticatorUriFormat,
-                _urlEncoder.Encode("PrototypeWithAuth"),
-                _urlEncoder.Encode(email),
-                unformattedKey);
-        }
+       
         private static bool PasswordIsValid(string password, bool includeLowercase = true, bool includeUppercase = true, bool includeNumeric = true, bool includeSpecial = true, bool includeSpaces = false)
         {
             const string REGEX_LOWERCASE = @"[a-z]";
@@ -1194,22 +1157,5 @@ namespace PrototypeWithAuth.Controllers
             return lowerCaseIsValid && upperCaseIsValid && numericIsValid && symbolsAreValid && spacesAreValid;
         }
 
-        public async Task<bool> Verify2FA(String code)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            // Strip spaces and hypens
-            var verificationCode = code.Replace(" ", string.Empty).Replace("-", string.Empty);
-
-            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
-
-            if (!is2faTokenValid)
-            {
-                return false;
-            }
-
-            await _userManager.SetTwoFactorEnabledAsync(user, true);
-            return true;
-        }
     }
 }
