@@ -3055,7 +3055,7 @@ namespace PrototypeWithAuth.Controllers
 
                     request.ParentQuote.QuoteStatusID = 4;
                     request.ParentQuote.QuoteDate = quoteDate;
-                    request.ParentQuote.QuoteNumber = quoteNumber;
+                    request.ParentQuote.QuoteNumber = quoteNumber.ToString(); ;
                     request.Cost = quote.Cost;
                     request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
                     _context.Update(request);
@@ -3368,7 +3368,7 @@ namespace PrototypeWithAuth.Controllers
                 requestToUpdate.PaymentStatusID = 6;
                 _context.Update(requestToUpdate);
             }
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingPaymentsEnum });
         }

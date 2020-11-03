@@ -24,7 +24,9 @@ namespace PrototypeWithAuth.Models
         public DateTime QuoteDate { get; set; }
         [Display(Name = "Quote Number")]
         public bool IsDeleted { get; set; } //will be set to true if all requests under parent are delted
-        public int QuoteNumber { get; set; }
+
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
+        public string QuoteNumber { get; set; }
         public int QuoteStatusID { get; set; }
         [ForeignKey("QuoteStatusID")]
         public QuoteStatus QuoteStatus { get; set; }
