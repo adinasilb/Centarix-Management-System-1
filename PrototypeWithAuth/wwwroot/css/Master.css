@@ -324,8 +324,10 @@ table td, table td .btn, .text, table th {
 }
 
 .new-modal-body .row,
-.modal-body .row{
-    margin-bottom: 2.063rem ;
+.modal-body .row,
+.new-modal-body .comment-row,
+.modal-body .comment-row {
+    margin-bottom: 2.063rem;
 }
 
 .top-radio-buttons {
