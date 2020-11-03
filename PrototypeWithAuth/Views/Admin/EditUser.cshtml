@@ -685,13 +685,13 @@
                                 <div class="row">
                                     <div class="col-6">
                                         @{
-                                            var src = "/UserImages/profile_circle_big.png";
+                                            var srcImg = "/UserImages/profile_circle_big.png";
                                             if (Model.UserImageSaved != null)
                                             {
                                                 src = Model.UserImageSaved;
                                             }
                                         }
-                                        <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img src="@src" id="user-image" alt="Default User Image" /></div>
+                                        <div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img src="@srcImg" id="user-image" alt="Default User Image" /></div>
                                         <br />@*<br /><br />
                                             <label asp-for="UserImage" class="control-label"></label>*@
                                         <input type="file" asp-for="UserImage" class="form-control-file pt-1 mark-readonly" accept=".png, .jpg, .jpeg, .pdf" disabled>
