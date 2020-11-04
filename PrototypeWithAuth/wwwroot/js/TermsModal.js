@@ -27,7 +27,7 @@ $(function () {
 			console.log("in add");
 			var newIncrementNumber = countPrevInstallments;
 			for (x = difference; x > 0; x--) {
-
+				console.log("in for")
 				var newmm = 0;
 				var newyyyy = 0;
 				if (prevmm < 12) {
@@ -46,6 +46,7 @@ $(function () {
 
 				prevyyyy = newyyyy;
 				prevmm = newmm;
+				console.log('before paymentline')
 				$.fn.AddNewPaymentLine(newIncrementNumber, paymentDate);
 				newIncrementNumber++;
 			};
@@ -72,11 +73,13 @@ $(function () {
 		var htmlTR = "";
 		//htmlTR += "<tr class='payment-line m-0 p-0'>";
 		//htmlTR += "<td class='m-0 p-0'>";
+
 		var htmlPS = "";
-		htmlPS += '<input class="form-control-plaintext border-bottom sum-1" type="text" data-val="true" data-val-required="The Sum is required." id="NewPayments_' + increment + '__Sum" name="NewPayments[' + increment + '].Sum" value="" />';
-		htmlPS += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].Sum" data-valmsg-replace="true"></span>';
+		htmlPS += '<input class="form-control-plaintext border-bottom sum-1" type="text" data-val="true" data-val-required="The Sum is required." id="NewPayments_' + increment + '__Sum" name="NewPayments[' + increment + '].Sum" value=""><input/>';
+		htmlPS += ' <span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].Sum" data-valmsg-replace="true"></span>';
+		console.log(htmlPS);
 		var htmlPD = "";
-		htmlPD += '<input class="form-control-plaintext border-bottom date-1" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
+		htmlPD += '<input class="form-control-plaintext border-bottom date-1" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '"><input/>';
 		htmlPD += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
 		//htmlTR += '</td>';
 		//htmlTR += '<td class="m-0 p-0">';
@@ -96,7 +99,7 @@ $(function () {
 		//htmlTR += '</td>';
 		//htmlTR += '<td class="m-0 p-0">';
 		var htmlPR = "";
-		htmlPR += '<input class="form-control-plaintext border-bottom reference-1" type="text" data-val="true" data-val-required="The Reference Number is required." id="NewPayments_' + increment + '__Reference" name="NewPayments[' + increment + '].Reference" value="" />';
+		htmlPR += '<input class="form-control-plaintext border-bottom reference-1" type="text" data-val="true" data-val-required="The Reference Number is required." id="NewPayments_' + increment + '__Reference" name="NewPayments[' + increment + '].Reference" value="" ><input/>';
 		htmlPR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].Reference" data-valmsg-replace="true"></span>';
 		//htmlTR += '</td>';
 		//htmlTR += '</tr >';

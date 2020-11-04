@@ -1,6 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.TermsViewModel;
 @using PrototypeWithAuth.AppData
-@using PrototypeWithAuth.AppData
 @{
     Layout = null;
     var bcColor = "order-inv-background-color";
@@ -24,7 +23,7 @@
 
 <script src="~/js/TermsModal.js"></script>
 <script src="~/js/site.js"></script>
-<div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view termsModal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
     <div class="modal-dialog-centered modal-xl mx-auto @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">

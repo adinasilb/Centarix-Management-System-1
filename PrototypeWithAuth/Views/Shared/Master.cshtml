@@ -292,11 +292,11 @@
             $("#user-budget-tab").prop("disabled", true);
             $("#user-images-tab").prop("disabled", true);
             $("#user-more-tab").prop("disabled", true);
-
+            var $itemurl = "";
             if ($("#tdprconfirmemail").val()) {
                 console.log("tdprconfirmemail");
                 $("#tdprconfirmemail").hide();
-                var $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["ParentRequestID"] + "";
+                $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["ParentRequestID"] + "";
                 $("#loading").show();
                 $.fn.CallPage($itemurl, "confirmemail");
             }
@@ -304,7 +304,8 @@
             if ($("#tdterms").val()) {
                 $("#tdterms").hide();
                 alert("in tdterms.val()");
-                var $itemurl = "/Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true";
+                $itemurl = "/Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true";
+                console.log("url " + $itemurl)
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "terms");
                 }
@@ -312,7 +313,7 @@
             if ($("#tdconfirmemail").val()) {
                 console.log("tdconfirmemail");
                 $("#tdconfirmemail").hide();
-                var $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
+                $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "confirmemail");
 
@@ -325,14 +326,14 @@
         });
 
 
-        $.fn.CallPage = function ($itemurl, $type) {
+        $.fn.CallPage = function (itemurl, $type) {
             console.log("in call page function");
             //delete existing modals
             $('.modal').replaceWith('');
             $(".modal-backdrop").remove();
             $.ajax({
                 async: true,
-                url: $itemurl,
+                url: itemurl,
                 type: 'GET',
                 cache: true,
                 success: function (data) {
@@ -353,6 +354,7 @@
                     $('#tdconfirmemail').val('');
                     $('#tdprconfirmemail').val('');
                     $.fn.OnOpenModalView();
+                    $(".termsModal").modal('show');
                     AddTempDataMemory();
 
 

@@ -241,36 +241,7 @@ $(function () {
 
 
 
-	$.fn.AddNewPaymentLine = function (increment, date) {
-		var htmlTR = "";
-		htmlTR += "<tr class='payment-line'>";
-		htmlTR += "<td>";
-		htmlTR += '<input class="form-control-plaintext border-bottom payment-date" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '" />';
-		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
-		htmlTR += '</td>';
-		htmlTR += '<td>';
-		htmlTR += '<select class="form-control-plaintext border-bottom paymentType" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
-		htmlTR += '<option value="1">Credit Card</option>';
-		htmlTR += '<option value="2">Bank Account</option>';
-		htmlTR += '</select>';
-		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
-		htmlTR += '</td>';
-		htmlTR += '<td>';
-		var newPaymentsId = "NewPayments_" + increment + "__CompanyAccountID";
-		var newPaymentsName = "NewPayments[" + increment + "].CompanyAccountID";
-		htmlTR += '<select class="form-control-plaintext border-bottom companyAccountNum" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
-		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
-		htmlTR += '</td>';
-		htmlTR += '<td>';
-		htmlTR += '<input class="form-control-plaintext border-bottom" type="number" data-val="true" data-val-required="The PaymentID field is required." id="NewPayments_' + increment + '__PaymentID" name="NewPayments[' + increment + '].PaymentID" value="" />';
-		htmlTR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentID" data-valmsg-replace="true"></span>';
-		htmlTR += '</td>';
-		htmlTR += '</tr >';
-		//$("body").append(htmlTR);
-		$(".payments-table tr:last").after(htmlTR);
-
-
-	};
+	
 
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
 	$(".payments-table").on("change", ".paymentType", function (e) {
@@ -290,9 +261,6 @@ $(function () {
 	});
 
 
-	$.fn.AdjustPaymentDates = function () {
-
-	};
 	//$('input[type=text]').on('blur', function () {
 	//		$(this).prev().prev().css('border-bottom', '1px solid black');
 	//		$(this).prev().prev().css('box-shadow', '0 1px 0 0 black');
