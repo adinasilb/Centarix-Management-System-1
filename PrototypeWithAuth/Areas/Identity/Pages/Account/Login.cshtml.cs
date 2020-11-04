@@ -102,10 +102,10 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     return LocalRedirect(returnUrl);
 
                 }
-                //if (result.RequiresTwoFactor)
-                //{ 
-                //    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                //}
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                }
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
