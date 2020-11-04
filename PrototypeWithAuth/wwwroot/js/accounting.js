@@ -29,6 +29,12 @@
 					selectedButton.removeClass("hidden");
 			}
 
+			$(".form-check.accounting-select .form-check-input").each(function () {
+//				if ($(this).attr("vendorid") != 0) {
+////get better code for this if
+//				};
+			});
+
 			var arrayOfOtherVendorsCheckboxes = [];
 			$(".form-check.accounting-select .form-check-input").map(function () {
 				arrayOfOtherVendorsCheckboxes.push($(this));
