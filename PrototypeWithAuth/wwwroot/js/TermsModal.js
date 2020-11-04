@@ -84,7 +84,7 @@ $(function () {
 		//htmlTR += '</td>';
 		//htmlTR += '<td class="m-0 p-0">';
 		var htmlPT = "";
-		htmlPT += '<select class="mdb-select ' + mdbSelect + ' custom select-dropdown form-control-plaintext paymentType type-1" id="NewPayments_' + increment + '__CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
+		htmlPT += '<select class="mdb-select ' + mdbSelect + ' custom select-dropdown form-control-plaintext paymentType type-1" id="NewPayments_' + increment + '_CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
 		htmlPT += '<option value="1">Credit Card</option>';
 		htmlPT += '<option value="2">Bank Account</option>';
 		htmlPT += '</select>';
@@ -130,7 +130,8 @@ $(function () {
 	};
 
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
-	$("body").on("change", ".paymentType", function (e) {
+	$(".modal").on("change", ".paymentType", function (e) {
+		console.log("changepayment type")
 		var paymentTypeID = $(this).val();
 		var url = "/CompanyAccounts/GetAccountsByPaymentType";
 		var id = "" + $(this).attr('id');
