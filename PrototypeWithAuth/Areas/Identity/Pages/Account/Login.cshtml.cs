@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -109,12 +111,29 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
                 if (result.IsLockedOut)
-                {
+                {_logger.LogInformation("User logged in.");
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user.NeedsToResetPassword)
+                    {
+                        //await _signInManager.SignOutAsync();
+                        var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        return RedirectToPage ("./ResetPassword", new { code = code });
+                    }
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
+                    _logger.LogInformation("User logged in.");
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user.NeedsToResetPassword)
+                    {
+                        //await _signInManager.SignOutAsync();
+                        var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        return RedirectToPage ("./ResetPassword", new { code = code });
+                    }
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }

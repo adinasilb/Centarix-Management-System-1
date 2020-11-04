@@ -285,6 +285,14 @@ namespace PrototypeWithAuth.Controllers
                     await _context.SaveChangesAsync();
                 }
 
+                if (user.NeedsToResetPassword)
+                {
+                    user.LockoutEnabled = true;
+                    user.LockoutEnd = new DateTime(2999, 01, 01);
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+
                 switch (UserType)
                 {
                     case 1: /*Salaried Employee*/
@@ -592,6 +600,8 @@ namespace PrototypeWithAuth.Controllers
                         employeeEditted.NeedsToResetPassword = true;
                         await _userManager.ResetAuthenticatorKeyAsync(employeeEditted); 
                         await _userManager.UpdateSecurityStampAsync(employeeEditted);
+                        employeeEditted.LockoutEnabled = true;
+                        employeeEditted.LockoutEnd = new DateTime(2999, 01, 01);
                         _context.Update(employeeEditted);
                         await _context.SaveChangesAsync();
                     }
