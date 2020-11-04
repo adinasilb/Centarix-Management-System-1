@@ -50,5 +50,29 @@ namespace PrototypeWithAuth.Controllers
             return View(onePageOfProducts);
         }
 
+        // GET: ProductSubcategories
+        [Authorize(Roles = "Admin, LabManagment")]
+        [HttpGet]
+
+        public async Task<IActionResult> CreateCalibration (int requestid)
+        {
+            var request = await _context.Requests.Where(r => r.RequestID == requestid).Include(r => r.Product).FirstOrDefaultAsync();
+            List<ExternalCalibration> externalCalibrations = new List<ExternalCalibration>();
+            List<InternalCalibration> internalCalibrations = new List<InternalCalibration>();
+            for(int i=0; i<3; i++)
+            {
+                externalCalibrations.Add(new ExternalCalibration());
+                internalCalibrations.Add(new InternalCalibration());
+            }
+            CreateCalibrationViewModel createCalibrationViewModel = new CreateCalibrationViewModel
+            {
+                ProductDescription = request.Product.ProductName,
+                PastCalibrations = _context.Calibrations.Where(c => c.RequestID == requestid).Where(c=>c.Date < DateTime.Now).ToList(),
+                Repair = new Repair(),
+                ExternalCalibrations = externalCalibrations,
+                InternalCalibration = internalCalibrations
+            };
+            return View(createCalibrationViewModel);
+        }
     }
 }

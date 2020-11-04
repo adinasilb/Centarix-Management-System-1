@@ -14,12 +14,12 @@ namespace PrototypeWithAuth.Data
     {
         internal readonly object AspNetUsers;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+        public DbSet<CalibrationType> CalibrationTypes { get; set; }
         public DbSet<InternalCalibration> InternalCalibrations { get; set; }
         public DbSet<ExternalCalibration> ExternalCalibrations { get; set; }
         public DbSet<Repair> Repairs { get; set; }

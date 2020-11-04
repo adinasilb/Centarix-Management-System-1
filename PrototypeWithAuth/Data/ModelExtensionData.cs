@@ -1267,6 +1267,24 @@ namespace PrototypeWithAuth.Data
                     Description = "Divorced"
                 }
             );
+            modelBuilder.Entity<CalibrationType>().HasData(
+             new CalibrationType
+             {
+                 CalibrationTypeID = 1,
+                 Description = "Repair"
+             }
+             ,
+             new CalibrationType
+             {
+                 CalibrationTypeID = 2,
+                 Description = "External Calibration"
+             },
+             new CalibrationType
+             {
+                 CalibrationTypeID = 3,
+                 Description = "In House Maintainance"
+             }
+         );
 
         }
     }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201104074056_AddedCalibrationTypeModel")]
+    partial class AddedCalibrationTypeModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,9 +316,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -348,23 +347,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("CalibrationTypeID");
 
                     b.ToTable("CalibrationTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            CalibrationTypeID = 1,
-                            Description = "Repair"
-                        },
-                        new
-                        {
-                            CalibrationTypeID = 2,
-                            Description = "External Calibration"
-                        },
-                        new
-                        {
-                            CalibrationTypeID = 3,
-                            Description = "In House Maintainance"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.CategoryType", b =>
