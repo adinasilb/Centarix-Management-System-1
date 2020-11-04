@@ -590,6 +590,7 @@ namespace PrototypeWithAuth.Controllers
                     if (passwordChangeResult.Succeeded)
                     {
                         employeeEditted.NeedsToResetPassword = true;
+                        employeeEditted.IsUser = true;
                         await _userManager.ResetAuthenticatorKeyAsync(employeeEditted); 
                         await _userManager.UpdateSecurityStampAsync(employeeEditted);
                         _context.Update(employeeEditted);
@@ -894,8 +895,8 @@ namespace PrototypeWithAuth.Controllers
 
 
                 //round job scope
-                string WorkScope = registerUserViewModel.NewEmployee?.SalariedEmployee?.WorkScope.ToString("0.00") ?? "0";
-                registerUserViewModel.NewEmployeeWorkScope = Decimal.Parse(WorkScope);
+                string WorkScope = registerUserViewModel.NewEmployee?.SalariedEmployee?.WorkScope.ToString("0") ?? "0";
+                registerUserViewModel.NewEmployeeWorkScope = Convert.ToInt32(WorkScope);
 
 
 
