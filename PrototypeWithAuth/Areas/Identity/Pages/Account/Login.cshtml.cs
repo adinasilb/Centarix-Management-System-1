@@ -99,6 +99,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                         returnUrl = Url.Action("Login2FA", "Home");
                         //returnUrl = Url.Action("Index", "Home");
                     }
+
+                    //Redirect to the 2FA page!!!
                     return LocalRedirect(returnUrl);
 
                 }
