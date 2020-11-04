@@ -22,8 +22,9 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Quote Date")]
         //should not really be null just waiting till figure out how else to do the parentquote in create modal
         public DateTime QuoteDate { get; set; }
-        [Display(Name = "Quote Number")]
         public bool IsDeleted { get; set; } //will be set to true if all requests under parent are delted
+
+        [Display(Name = "Quote Number")]
 
         [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         public string QuoteNumber { get; set; }
