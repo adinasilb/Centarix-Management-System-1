@@ -2571,6 +2571,12 @@ $(function () {
 
 	});
 
+	$('.isRepeat').off("click").on("click", function () {
+		//console.log('employee status')
+		var val = $(this).val();
+		$('#ExternalCalibrations_0__IsRepeat').val(val)
+	});
+
 
 	//$(".mdb-select ul").off("click").on("click", function () {
 	//	alert("select ul clicked!");

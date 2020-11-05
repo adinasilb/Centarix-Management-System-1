@@ -163,13 +163,23 @@
                                                 <span asp-validation-for="ExternalCalibrations[i].Months" class="text-danger-centarix"></span>
                                             </div>
                                             <div class="col-1 offset-1">
-                                                <div class="custom-control custom-radio ">
-                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, true, new { @class = "custom-control-input", id="once" })  <label class="radio-button custom-control-label pt-1 pl-2" asp-for="@Model.ExternalCalibrations[i].IsRepeat">Once</label>
-                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, false, new { @class = "custom-control-input", id = "repeat" })  <label class="radio-button custom-control-label pt-1 pl-2" asp-for="@Model.ExternalCalibrations[i].IsRepeat">Repeat</label>
+                                                <input type="hidden" asp-for="ExternalCalibrations[i].IsRepeat"  />                                              <div class="custom-control custom-radio mr-4  employee-type">
+                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, false, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "once", })
+                                                    <label class="radio-button custom-control-label pt-1 pl-2" for="once">Once</label>
                                                 </div>
+                                                <div class="custom-control custom-radio mr-4  employee-type">
+                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, true, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "repeat", })
+                                                    <label class="radio-button custom-control-label pt-1 pl-2" for="repeat">Repeat</label>
                                                 </div>
+                                               
+                                            </div>
 
                                             </div>
+                                        <div class="row">
+                                            <div class="col-12 border rounded" style="min-height:8rem">
+                                                <input asp-for="ExternalCalibrations[i].Description" placeholder="short explanation..." class="form-control-plaintext" />
+                                            </div>
+                                        </div>
                                     }
                                     <div class="row mt-3 text-center">
                                         <div class="col-12">

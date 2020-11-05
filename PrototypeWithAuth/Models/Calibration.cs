@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.Models
         public int CalibrationID { get; set; }
         public int RequestID { get; set; }
         public Request Request { get; set; }
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         public int CalibrationTypeID {get; set;}
         public CalibrationType CalibrationType {get; set;}
