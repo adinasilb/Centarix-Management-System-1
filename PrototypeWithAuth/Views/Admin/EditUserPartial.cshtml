@@ -608,7 +608,13 @@
 
     </div>
 </div>
+@if (Model.Tab != 0)
+{
+    <script>
+        $('.mdb-select').materialSelect();
+    </script>
+}
+
 <script>
-    $('.mdb-select').materialSelect();
     $('#FirstName').trigger('change');
 </script>

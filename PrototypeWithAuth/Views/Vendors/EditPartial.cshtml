@@ -4,437 +4,440 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
 @{
-        string showDetails = "";
-        string showCategories = "";
-        string showPayment = "";
-        string showComments = "";
-        string showContact = "";
-        switch (Model.Tab)
-        {
-            case 1:
-                showDetails = " active show ";
-                break;
-            case 2:
-                showCategories = " active show ";
-                break;
-            case 3:
-                showPayment = " active show ";
-                break;
-            case 4:
-                showComments = " active show ";
-                break;
-            case 5:
-                showContact = " active show ";
-                break;
+    string showDetails = "";
+    string showCategories = "";
+    string showPayment = "";
+    string showComments = "";
+    string showContact = "";
+    switch (Model.Tab)
+    {
+        case 1:
+            showDetails = " active show ";
+            break;
+        case 2:
+            showCategories = " active show ";
+            break;
+        case 3:
+            showPayment = " active show ";
+            break;
+        case 4:
+            showComments = " active show ";
+            break;
+        case 5:
+            showContact = " active show ";
+            break;
 
-        }
+    }
 
-        string backgroundColor = "";
-        string switchClass = "";
-        if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-        {
-            backgroundColor = "var(--lab-man-color)";
-            switchClass = "suppliers";
-        }
-        else
-        {
-            backgroundColor = " var(--acc-color)";
-            switchClass = "accounting";
-        }
-        }
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/validate.js" asp-append-version="true"></script>
-    <input type="hidden" class="old-name" value="@Model.Vendor.VendorEnName" />
-    <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; border: 2px solid #EAEAEB;">
-        <div class=" row text-right mb-0">
-            <div class="switch col-12 switch-margin">
-                <label>
-                    <label class="edit-mode-switch-description">Edit Mode Off</label>
-                    <input type="checkbox" class="turn-edit-on-off @switchClass" name="details" value="@Model.Vendor.VendorID">
-                    <span class="lever"></span>
-                </label>
+    string backgroundColor = "";
+    string switchClass = "";
+    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
+    {
+        backgroundColor = "var(--lab-man-color)";
+        switchClass = "suppliers";
+    }
+    else
+    {
+        backgroundColor = " var(--acc-color)";
+        switchClass = "accounting";
+    }
+}
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
+<input type="hidden" class="old-name" value="@Model.Vendor.VendorEnName" />
+<div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; border: 2px solid #EAEAEB;">
+    <div class=" row text-right mb-0">
+        <div class="switch col-12 switch-margin">
+            <label>
+                <label class="edit-mode-switch-description">Edit Mode Off</label>
+                <input type="checkbox" class="turn-edit-on-off @switchClass" name="details" value="@Model.Vendor.VendorID">
+                <span class="lever"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="tab-content">
+        <div id="details" class="tab-pane fade  @showDetails">
+            <div class="row modal-tab-name">
+                <span class="heading-1 col-12 modal-tab-name">Vendor Details</span>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorHeName" class="control-label"></label>
+                        <input asp-for="Vendor.VendorHeName" class="form-control-plaintext border-bottom  mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorHeName" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label">Category Type</label>
+                        <select class=" mdb-select custom select-dropdown form-control-plaintext mark-readonly" asp-for="VendorCategoryTypes" multiple disabled>
+                            @foreach (var categoryType in Model.CategoryTypes)
+                            {
+                                <option value="@categoryType.CategoryTypeID">
+                                    @categoryType.CategoryTypeDescription
+                                </option>
+
+                            }
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorBuisnessID" class="control-label"></label>
+                        <input asp-for="Vendor.VendorBuisnessID" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorBuisnessID" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorCountry" class="control-label"></label>
+                        <input asp-for="Vendor.VendorCountry" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorCountry" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorCity" class="control-label"></label>
+                        <input asp-for="Vendor.VendorCity" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorCity" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorStreet" class="control-label"></label>
+                        <input asp-for="Vendor.VendorStreet" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorStreet" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorZip" class="control-label"></label>
+                        <input asp-for="Vendor.VendorZip" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorZip" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorTelephone" class="control-label"></label>
+                        <input asp-for="Vendor.VendorTelephone" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorTelephone" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorCellPhone" class="control-label"></label>
+                        <input asp-for="Vendor.VendorCellPhone" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorCellPhone" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorFax" class="control-label"></label>
+                        <input asp-for="Vendor.VendorFax" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorFax" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Vendor.OrdersEmail" class="control-label"></label>
+                        <input asp-for="Vendor.OrdersEmail" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.OrdersEmail" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Vendor.InfoEmail" class="control-label"></label>
+                        <input asp-for="Vendor.InfoEmail" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.InfoEmail" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorWebsite" class="control-label"></label>
+                        <input asp-for="Vendor.VendorWebsite" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorWebsite" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="categories" class="tab-pane fade @showCategories">
+            <div class="row modal-tab-name">
+                <span class="heading-1 col-12 modal-tab-name">Categories</span>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="control-label">Sub category 1</label>
+                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="control-label">Sub category 2</label>
+                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="control-label">Sub category 3</label>
+                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="control-label">Sub category 4</label>
+                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="control-label">Sub category 5</label>
+                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="payment" class="tab-pane fade @showPayment">
+            <div class="row modal-tab-name">
+                <span class="heading-1 col-12 modal-tab-name">Payment</span>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorBank" class="control-label"></label>
+                        <input asp-for="Vendor.VendorBank" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorBank" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorBankBranch" class="control-label"></label>
+                        <input asp-for="Vendor.VendorBankBranch" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorBankBranch" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorAccountNum" class="control-label"></label>
+                        <input asp-for="Vendor.VendorAccountNum" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorAccountNum" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorSwift" class="control-label"></label>
+                        <input asp-for="Vendor.VendorSwift" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorSwift" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorBIC" class="control-label"></label>
+                        <input asp-for="Vendor.VendorBIC" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorBIC" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Vendor.VendorGoldAccount" class="control-label"></label>
+                        <input asp-for="Vendor.VendorGoldAccount" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Vendor.VendorGoldAccount" class="text-danger-centarix"></span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="tab-content">
-            <div id="details" class="tab-pane fade  @showDetails">
-                <div class="row modal-tab-name">
-                    <span class="heading-1 col-12 modal-tab-name">Vendor Details</span>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorHeName" class="control-label"></label>
-                            <input asp-for="Vendor.VendorHeName" class="form-control-plaintext border-bottom  mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorHeName" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class="control-label">Category Type</label>
-                            <select class=" mdb-select custom select-dropdown form-control-plaintext mark-readonly" asp-for="VendorCategoryTypes" multiple disabled>
-                                @foreach (var categoryType in Model.CategoryTypes)
-                                {
-                                    <option value="@categoryType.CategoryTypeID">
-                                        @categoryType.CategoryTypeDescription
-                                    </option>
+        <div id="comments" class="tab-pane fade @showComments">
+            <div class="row modal-tab-name">
 
-                                }
-
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorBuisnessID" class="control-label"></label>
-                            <input asp-for="Vendor.VendorBuisnessID" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorBuisnessID" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorCountry" class="control-label"></label>
-                            <input asp-for="Vendor.VendorCountry" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorCountry" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorCity" class="control-label"></label>
-                            <input asp-for="Vendor.VendorCity" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorCity" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorStreet" class="control-label"></label>
-                            <input asp-for="Vendor.VendorStreet" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorStreet" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorZip" class="control-label"></label>
-                            <input asp-for="Vendor.VendorZip" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorZip" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorTelephone" class="control-label"></label>
-                            <input asp-for="Vendor.VendorTelephone" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorTelephone" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorCellPhone" class="control-label"></label>
-                            <input asp-for="Vendor.VendorCellPhone" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorCellPhone" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorFax" class="control-label"></label>
-                            <input asp-for="Vendor.VendorFax" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorFax" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Vendor.OrdersEmail" class="control-label"></label>
-                            <input asp-for="Vendor.OrdersEmail" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.OrdersEmail" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Vendor.InfoEmail" class="control-label"></label>
-                            <input asp-for="Vendor.InfoEmail" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.InfoEmail" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorWebsite" class="control-label"></label>
-                            <input asp-for="Vendor.VendorWebsite" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorWebsite" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div id="categories" class="tab-pane fade @showCategories">
-                <div class="row modal-tab-name">
-                    <span class="heading-1 col-12 modal-tab-name">Categories</span>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label class="control-label">Sub category 1</label>
-                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label class="control-label">Sub category 2</label>
-                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label class="control-label">Sub category 3</label>
-                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label class="control-label">Sub category 4</label>
-                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label class="control-label">Sub category 5</label>
-                            <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="payment" class="tab-pane fade @showPayment">
-                <div class="row modal-tab-name">
-                    <span class="heading-1 col-12 modal-tab-name">Payment</span>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorBank" class="control-label"></label>
-                            <input asp-for="Vendor.VendorBank" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorBank" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorBankBranch" class="control-label"></label>
-                            <input asp-for="Vendor.VendorBankBranch" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorBankBranch" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorAccountNum" class="control-label"></label>
-                            <input asp-for="Vendor.VendorAccountNum" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorAccountNum" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorSwift" class="control-label"></label>
-                            <input asp-for="Vendor.VendorSwift" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorSwift" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorBIC" class="control-label"></label>
-                            <input asp-for="Vendor.VendorBIC" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorBIC" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label asp-for="Vendor.VendorGoldAccount" class="control-label"></label>
-                            <input asp-for="Vendor.VendorGoldAccount" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="Vendor.VendorGoldAccount" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="p-2 row popover-div">
+                <span class="heading-1 col-10 modal-tab-name">Comments, Warnings, and Discounts</span>
+                <div class=" col-2 pr-0 text-right">
 
-            <div id="comments" class="tab-pane fade @showComments">
-                <div class="row modal-tab-name">
-
-                </div>
-                <div class="p-2 row popover-div">
-                    <span class="heading-1 col-10 modal-tab-name">Comments, Warnings, and Discounts</span>
-                    <div class=" col-2 pr-0 text-right">
-
-                        <ul class="list-unstyled m-0">
-                            <li>
-                                <button href="#" id="addSupplierComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl mark-readonly" disabled style="        background-color: @backgroundColor;
+                    <ul class="list-unstyled m-0">
+                        <li>
+                            <button href="#" id="addSupplierComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl mark-readonly" disabled style="        background-color: @backgroundColor;
         height: 45px;
         width: 45px;
 ">
-                                    <span style="        color: white;
+                                <span style="        color: white;
         font-size: 3rem;
         margin: auto;
         position: absolute;
         bottom: 22%;
         right: 10.5%;
 "> +</span>
-                                </button>
-                            </li>
+                            </button>
+                        </li>
 
-                            <div style="display:none;" id="popover-content">
-                                @foreach (var item in Model.CommentTypes)
-                                {<div class="row px-3">
-                                        @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
-                                        {
-                                            <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
-                                        }
-                                        else
-                                        {
-                                            <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
-                                        }
-                                        <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addComment('@item')">@item</button><hr class="m-0" />
-
-                                    </div>
-                                }
-
-                            </div>
-                        </ul>
-                    </div>
-                </div>
-                <div id="comment-info">
-                    @for (int i = 0; i < Model.VendorComments.Count(); i++)
-                    {
-                        var display = "";
-                        @if (!Model.VendorComments[i].IsActive)
-                        {
-                            display = "display: none";
-
-                        }
-                        else
-                        {
-                            <input type="hidden" asp-for="VendorComments[i].VendorComment.VendorCommentID" />
-                        }
-                        <div class="table comment-info border p-2 mb-3" style="@display">
-                            @Html.HiddenFor(x => x.VendorComments[i].IsActive, htmlAttributes: new { @class = "comment-active" })
-                            @Html.HiddenFor(x => x.VendorComments[i].VendorComment.CommentType, htmlAttributes: new { @class = "comment-type" })
-
-                            <div class="row ml-2  border-bottom-0 mb-0">
-                                <div class="col-1 mt-auto mb-auto ">
-                                    <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50 ">
-                                        @{
-                                            var src = "/UserImages/profile_circle_big.png";
-                                            if (UserManager.GetUserAsync(User).Result.UserImage != null)
-                                            {
-                                                src = UserManager.GetUserAsync(User).Result.UserImage;
-                                            }
-                                        }
-                                        <img src="@src" class=" ml-0" alt="default User image" />
-                                    </button>
-                                </div>
-                                <div class="col-9 ">
-                                    <div class=" p-3 ">
-                                        <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
-                                        <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
-                                        <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
-
-                                        <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0 " disabled />
-                                        <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger-centarix"></span>
-                                    </div>
-
-                                </div>
-
-                                <div class=" col-2 ">
-                                    @if (Model.VendorComments[i].IsActive)
+                        <div style="display:none;" id="popover-content">
+                            @foreach (var item in Model.CommentTypes)
+                            {<div class="row px-3">
+                                    @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
                                     {
-                                        @if (Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
-                                        {
-                                            <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
-                                        }
-                                        else if (Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
-                                        {
-                                            <i class="icon-report_problem-24px-2 float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
-                                        }
-
+                                        <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
                                     }
                                     else
                                     {
-                                        <i class=" float-right m-4" style="padding-top: .55rem; font-size: 1.25rem;"></i>
+                                        <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
                                     }
-                                </div>
+                                    <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addComment('@item')">@item</button><hr class="m-0" />
 
-                            </div>
+                                </div>
+                            }
 
                         </div>
-                    }
+                    </ul>
                 </div>
-
-
             </div>
-            <div id="contact" class="tab-pane fade @showContact">
-                <div id="contact-info">
-                    <div class="row modal-tab-name">
-                        <span class="heading-1 col-12 modal-tab-name">Contact Info</span>
-                    </div>
-                    @for (int i = 0; i < Model.VendorContacts.Count(); i++)
+            <div id="comment-info">
+                @for (int i = 0; i < Model.VendorComments.Count(); i++)
+                {
+                    var display = "";
+                    @if (!Model.VendorComments[i].IsActive)
                     {
-                        var display = "";
-                        @if (!Model.VendorContacts[i].IsActive)
-                        {
-                            display = "display: none";
-                        }
-                        else
-                        {
-                            <input type="hidden" asp-for="VendorContacts[i].VendorContact.VendorContactID" />
-                        }
-                        <div class=" contact-info" style="@display">
-                            @Html.HiddenFor(x => x.VendorContacts[i].IsActive, htmlAttributes: new { @class = "contact-active" })
+                        display = "display: none";
 
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="control-label"></label>
-                                        <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="form-control-plaintext border-bottom vendor-contact mark-readonly" disabled />
-                                        <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="text-danger-centarix"></span>
-                                    </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="VendorComments[i].VendorComment.VendorCommentID" />
+                    }
+                    <div class="table comment-info border p-2 mb-3" style="@display">
+                        @Html.HiddenFor(x => x.VendorComments[i].IsActive, htmlAttributes: new { @class = "comment-active" })
+                        @Html.HiddenFor(x => x.VendorComments[i].VendorComment.CommentType, htmlAttributes: new { @class = "comment-type" })
+
+                        <div class="row ml-2  border-bottom-0 mb-0">
+                            <div class="col-1 mt-auto mb-auto ">
+                                <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50 ">
+                                    @{
+                                        var src = "/UserImages/profile_circle_big.png";
+                                        if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                                        {
+                                            src = UserManager.GetUserAsync(User).Result.UserImage;
+                                        }
+                                    }
+                                    <img src="@src" class=" ml-0" alt="default User image" />
+                                </button>
+                            </div>
+                            <div class="col-9 ">
+                                <div class=" p-3 ">
+                                    <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
+                                    <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
+                                    <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
+
+                                    <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0 " disabled />
+                                    <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger-centarix"></span>
                                 </div>
-                                <div class="col-6  ">
-                                    <div class="form-group">
-                                        <label class="control-label">Category</label>
-                                        <input class="form-control-plaintext border-bottom mark-readonly" disabled />
-                                    </div>
+
+                            </div>
+
+                            <div class=" col-2 ">
+                                @if (Model.VendorComments[i].IsActive)
+                                {
+                                    @if (Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
+                                    {
+                                        <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
+                                    }
+                                    else if (Model.VendorComments[i].VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
+                                    {
+                                        <i class="icon-report_problem-24px-2 float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <i class=" float-right m-4" style="padding-top: .55rem; font-size: 1.25rem;"></i>
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            </div>
+
+
+        </div>
+        <div id="contact" class="tab-pane fade @showContact">
+            <div id="contact-info">
+                <div class="row modal-tab-name">
+                    <span class="heading-1 col-12 modal-tab-name">Contact Info</span>
+                </div>
+                @for (int i = 0; i < Model.VendorContacts.Count(); i++)
+                {
+                    var display = "";
+                    @if (!Model.VendorContacts[i].IsActive)
+                    {
+                        display = "display: none";
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="VendorContacts[i].VendorContact.VendorContactID" />
+                    }
+                    <div class=" contact-info" style="@display">
+                        @Html.HiddenFor(x => x.VendorContacts[i].IsActive, htmlAttributes: new { @class = "contact-active" })
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="control-label"></label>
+                                    <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="form-control-plaintext border-bottom vendor-contact mark-readonly" disabled />
+                                    <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="text-danger-centarix"></span>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="control-label"></label>
-                                        <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="form-control-plaintext border-bottom  vendor-contact mark-readonly" disabled />
-                                        <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="control-label"></label>
-                                        <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="form-control-plaintext border-bottom  vendor-contact mark-readonly" disabled />
-                                        <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="text-danger-centarix"></span>
-                                    </div>
+                            <div class="col-6  ">
+                                <div class="form-group">
+                                    <label class="control-label">Category</label>
+                                    <input class="form-control-plaintext border-bottom mark-readonly" disabled />
                                 </div>
                             </div>
                         </div>
-                    }
-                </div>
-                <div class="text-center">
-                    <input id="addSuplierContact" type="button" value="+ Add contact name" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize mark-readonly" disabled style="font-size:1rem;" />
-                </div>
-
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="control-label"></label>
+                                    <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="form-control-plaintext border-bottom  vendor-contact mark-readonly" disabled />
+                                    <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="text-danger-centarix"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="control-label"></label>
+                                    <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="form-control-plaintext border-bottom  vendor-contact mark-readonly" disabled />
+                                    <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="text-danger-centarix"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
+            <div class="text-center">
+                <input id="addSuplierContact" type="button" value="+ Add contact name" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize mark-readonly" disabled style="font-size:1rem;" />
+            </div>
+
         </div>
     </div>
+</div>
+@if (Model.Tab != 0)
+{
     <script>
         $('.mdb-select').materialSelect();
     </script>
+}
