@@ -238,7 +238,8 @@ namespace PrototypeWithAuth.Controllers
                 DateCreated = DateTime.Now,
                 EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
                 IsUser = true,
-                NeedsToResetPassword = true
+                NeedsToResetPassword = true,
+                TwoFactorEnabled = true
             };
             if (UserType == 4)
             {
@@ -281,6 +282,14 @@ namespace PrototypeWithAuth.Controllers
                     user.LockoutEnabled = true;
                     user.LockoutEnd = new DateTime(2999, 01, 01);
                     user.IsUser = false;
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+
+                if (user.NeedsToResetPassword)
+                {
+                    user.LockoutEnabled = true;
+                    user.LockoutEnd = new DateTime(2999, 01, 01);
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -592,6 +601,8 @@ namespace PrototypeWithAuth.Controllers
                         employeeEditted.NeedsToResetPassword = true;
                         await _userManager.ResetAuthenticatorKeyAsync(employeeEditted); 
                         await _userManager.UpdateSecurityStampAsync(employeeEditted);
+                        employeeEditted.LockoutEnabled = true;
+                        employeeEditted.LockoutEnd = new DateTime(2999, 01, 01);
                         _context.Update(employeeEditted);
                         await _context.SaveChangesAsync();
                     }

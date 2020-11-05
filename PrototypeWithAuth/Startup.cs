@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.Authorization; // in order to allow for authorize
 using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
 using Microsoft.Extensions.Logging;
+using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth
 {
@@ -172,13 +173,14 @@ namespace PrototypeWithAuth
 
             //await UserManager.AddToRoleAsync(poweruser, "Admin");
 
-            var adminuser = new ApplicationUser()
+            var adminuser = new Employee()
             {
                 UserName = "adina@centarix.com",
                 Email = "adina@centarix.com",
                 FirstName = "Adina",
                 LastName = "Gayer",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                TwoFactorEnabled = true
             };
             var createAdminUser = await UserManager.CreateAsync(adminuser, "adinabCE2063*");
             adminuser.EmailConfirmed = true;
