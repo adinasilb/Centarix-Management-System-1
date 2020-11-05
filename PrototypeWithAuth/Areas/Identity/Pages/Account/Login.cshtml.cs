@@ -27,7 +27,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         private readonly ILogger<LoginModel> _logger;
         private readonly ApplicationDbContext _context;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, 
+        public LoginModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LoginModel> logger,
             UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
@@ -87,7 +87,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded )
+                if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
                     var user = await _userManager.FindByEmailAsync(Input.Email);
@@ -98,41 +98,46 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        returnUrl = Url.Action("Login2FA", "Home");
+                        //return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
+
+                        return LocalRedirect(returnUrl);
                         //returnUrl = Url.Action("Index", "Home");
                     }
 
                     //Redirect to the 2FA page!!!
                     return LocalRedirect(returnUrl);
+                    //return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
+
 
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
                 }
                 if (result.IsLockedOut)
-                {_logger.LogInformation("User logged in.");
+                {
+                    _logger.LogInformation("User locked out.");
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     if (user.NeedsToResetPassword)
                     {
                         //await _signInManager.SignOutAsync();
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        return RedirectToPage ("./ResetPassword", new { code = code });
+                        return RedirectToPage("./ResetPassword", new { code = code, userId = user.Id });
                     }
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation("User login failed.");
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     if (user.NeedsToResetPassword)
                     {
                         //await _signInManager.SignOutAsync();
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        return RedirectToPage ("./ResetPassword", new { code = code });
+                        return RedirectToPage("./ResetPassword", new { code = code });
                     }
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
