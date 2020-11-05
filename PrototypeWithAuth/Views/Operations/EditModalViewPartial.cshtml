@@ -26,7 +26,7 @@
 
     }
 }
-<input type="hidden" class="old-name" value="@Model.Request.Product.ProductName"/>
+<input type="hidden" class="old-name" value="@Model.Request.Product.ProductName" />
 <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
     @if (User.IsInRole("Admin"))
     {
@@ -575,6 +575,11 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 
     </div>
 </div>
+@if (Model.Tab != 0)
+{
 <script>
+
     $('.mdb-select').materialSelect();
 </script>
+}
+

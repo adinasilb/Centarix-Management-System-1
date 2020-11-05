@@ -925,6 +925,9 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 
     </div>
 </div>
-<script>
-    $('.mdb-select').materialSelect();
-</script>
+@if (Model.Tab != 0)
+{
+    <script>
+        $('.mdb-select').materialSelect();
+    </script>
+}
