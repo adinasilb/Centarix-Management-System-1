@@ -122,10 +122,24 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 await _context.SaveChangesAsync();
 
                 var signInResult = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, false, lockoutOnFailure: false);
-                if (signInResult.Succeeded || signInResult.RequiresTwoFactor)
+                if (signInResult.Succeeded)
                 {
-                    return RedirectToAction("Index");
-                }]
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (signInResult.RequiresTwoFactor)
+                {
+                    var authenticatorCode = Input.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+                    var result2fa = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, false);
+                    
+                    if (result2fa.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    //TODO: Add errors for 2fa
+
+                }
+                //TODO: Add errors for signing
             }
 
             foreach (var error in result.Errors)
