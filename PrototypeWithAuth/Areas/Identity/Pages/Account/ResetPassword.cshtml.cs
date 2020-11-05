@@ -43,6 +43,9 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             public string Code { get; set; }
+            public string ErrorMessage { get; set; }
+            public string AuthenticatorUri { get; set; }
+            public PrototypeWithAuth.ViewModels.TwoFactorAuthenticationViewModel TwoFactorAuthenticationViewModel { get; set; }
         }
 
         public IActionResult OnGet(string code = null)
