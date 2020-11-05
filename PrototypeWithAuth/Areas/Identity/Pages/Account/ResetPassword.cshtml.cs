@@ -125,7 +125,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 if (signInResult.Succeeded || signInResult.RequiresTwoFactor)
                 {
                     return RedirectToAction("Index");
-                }
+                }]
             }
 
             foreach (var error in result.Errors)
