@@ -238,7 +238,8 @@ namespace PrototypeWithAuth.Controllers
                 DateCreated = DateTime.Now,
                 EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
                 IsUser = true,
-                NeedsToResetPassword = true
+                NeedsToResetPassword = true,
+                TwoFactorEnabled = true
             };
             if (UserType == 4)
             {
