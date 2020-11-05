@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201104123404_AddedCalibrationTypeIcons")]
+    partial class AddedCalibrationTypeIcons
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,24 +316,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Days")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Done")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRepeat")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Months")
-                        .HasColumnType("int");
 
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
@@ -2884,12 +2874,40 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.Calibration");
 
+                    b.Property<int>("Days")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Done")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRepeat")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Months")
+                        .HasColumnType("int");
+
                     b.HasDiscriminator().HasValue("ExternalCalibration");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.InternalCalibration", b =>
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.Calibration");
+
+                    b.Property<int>("Days")
+                        .HasColumnName("InternalCalibration_Days")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Done")
+                        .HasColumnName("InternalCalibration_Done")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRepeat")
+                        .HasColumnName("InternalCalibration_IsRepeat")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Months")
+                        .HasColumnName("InternalCalibration_Months")
+                        .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("InternalCalibration");
                 });

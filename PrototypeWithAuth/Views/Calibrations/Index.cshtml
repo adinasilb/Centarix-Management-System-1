@@ -48,23 +48,35 @@
                     </td>
                     <td>@item.Request.Product.ProductName</td>
                     <td>@item.Request.Product.ProductSubcategory.ProductSubcategoryDescription</td>
-                    <td></td>
-                    <td></td>
-                    <td>@item.Date.ToString("yyyy-MM-dd")</td>
-                    <td></td>
+                    <td>@item.Code</td>
+                    <td>@item.CalibrationType.Description</td>
+                    <td>@item.Date.ToLongDateString()</td>
+                    @{var days = (DateTime.Now - item.Date).Days;
+                        var dangerColor = "";
+                        if (DateTime.Now >item.Date)
+                        {
+                            days *= -1;
+                            dangerColor = "color: var(--danger-color) !important;";
+                        }
+                    }
+                    <td style="@dangerColor">@days</td>
+
 
                     <td width="9%">
+
                         <div class="d-inline-flex">
                             <div class="table-icon-div">
-                                <a class="btn p-0 m-0 no-box-shadow" data-title="Approve" href="#">
-                                    <i style="font-size:2rem; " class="icon-centarix-icons-03 hover-bold"></i>
+                                <a class="btn p-0 m-0 no-box-shadow" href="#">
+                                    <i style="font-size:1.75rem; @dangerColor color: var(--lab-man-color);" class="@item.CalibrationType.Icon  "></i>
                                 </a>
                             </div>
                             <div class="table-icon-div">
-                                <a class="btn p-0 m-0 no-box-shadow" data-title="Approve" href="#">
-                                    <i style="font-size:2rem; " class="icon-centarix-icons-03 hover-bold"></i>
+                                <a class="btn p-0 m-0 no-box-shadow" data-title="Create" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = item.RequestID })">
+                                    <i style="        font-size: 2rem;
+        color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
                                 </a>
                             </div>
+                        </div>
                     </td>
                 </tr>
                 }

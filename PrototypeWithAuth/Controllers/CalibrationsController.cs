@@ -38,7 +38,7 @@ namespace PrototypeWithAuth.Controllers
 
             try
             {
-               onePageOfProducts = await _context.Calibrations.Include(c => c.Request).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor).Include(c => c.Request.Product.ProductSubcategory).ToPagedListAsync(page, 25);
+               onePageOfProducts = await _context.Calibrations.Include(c => c.Request).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor).Include(c => c.Request.Product.ProductSubcategory).Include(c=>c.CalibrationType).ToPagedListAsync(page, 25);
             }
             catch (Exception ex)
             {
@@ -57,18 +57,14 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> CreateCalibration (int requestid)
         {
             var request = await _context.Requests.Where(r => r.RequestID == requestid).Include(r => r.Product).FirstOrDefaultAsync();
-            List<ExternalCalibration> externalCalibrations = new List<ExternalCalibration>();
-            List<InternalCalibration> internalCalibrations = new List<InternalCalibration>();
-            for(int i=0; i<3; i++)
-            {
-                externalCalibrations.Add(new ExternalCalibration());
-                internalCalibrations.Add(new InternalCalibration());
-            }
+            var calibrations = await _context.Calibrations.Where(c => c.RequestID == requestid).ToListAsync();
+            List<ExternalCalibration> externalCalibrations = await _context.ExternalCalibrations.Where(c => c.RequestID == requestid).ToListAsync();
+            List<InternalCalibration> internalCalibrations = await _context.InternalCalibrations.Where(c => c.RequestID == requestid).ToListAsync();
             CreateCalibrationViewModel createCalibrationViewModel = new CreateCalibrationViewModel
             {
                 ProductDescription = request.Product.ProductName,
-                PastCalibrations = _context.Calibrations.Where(c => c.RequestID == requestid).Where(c=>c.Date < DateTime.Now).ToList(),
-                Repair = new Repair(),
+                PastCalibrations = _context.Calibrations.Where(c => c.RequestID == requestid).Where(c => c.Date < DateTime.Now).Include(c => c.CalibrationType).ToList(),
+                Repair = await _context.Repairs.Where(r => r.RequestID == requestid).FirstOrDefaultAsync(),
                 ExternalCalibrations = externalCalibrations,
                 InternalCalibration = internalCalibrations
             };

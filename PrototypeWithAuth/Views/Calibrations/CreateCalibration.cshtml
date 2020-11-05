@@ -129,7 +129,8 @@
                             </div>
                             <div id="repairs" class="tab-pane fade">
                                 <div class="modal-sides modal-body-top-p">
-                                    <div class="row"><span class="heading-1 modal-tab-name">External Calibration</span></div>
+
+                                    <div class="row"><span class="heading-1 modal-tab-name">Repairs</span></div>
                                     <div class="row mt-3 text-center">
                                         <div class="col-12">
                                             <button class="text custom-button custom-button-font lab-man-background-color saveRepairs between-button-margin">Save</button>
@@ -140,7 +141,36 @@
                             </div>
                             <div id="externalCalibration" class="tab-pane fade">
                                 <div class="modal-sides modal-body-top-p">
-                                    <div class="row"><span class="heading-1 modal-tab-name">In House Maintainace</span></div>
+                                    <div class="row"><span class="heading-1 modal-tab-name">External Calibration</span></div>
+                                    @for (int i = 0; i < Model.ExternalCalibrations.Count; i++)
+                                    {
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label class="control-label" asp-for="ExternalCalibrations[i].Date"></label>
+                                                <input asp-for="ExternalCalibrations[i].Date" class="border-bottom form-control-plaintext" />
+                                                <span asp-validation-for="ExternalCalibrations[i].Date" class="text-danger-centarix"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-1">
+                                                <label class="control-label" asp-for="ExternalCalibrations[i].Days"></label>
+                                                <input asp-for="ExternalCalibrations[i].Days" class="border-bottom form-control-plaintext" />
+                                                <span asp-validation-for="ExternalCalibrations[i].Days" class="text-danger-centarix"></span>
+                                            </div>
+                                            <div class="col-1">
+                                                <label class="control-label" asp-for="ExternalCalibrations[i].Months"></label>
+                                                <input asp-for="ExternalCalibrations[i].Months" class="border-bottom form-control-plaintext" />
+                                                <span asp-validation-for="ExternalCalibrations[i].Months" class="text-danger-centarix"></span>
+                                            </div>
+                                            <div class="col-1 offset-1">
+                                                <div class="custom-control custom-radio ">
+                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, true, new { @class = "custom-control-input", id="once" })  <label class="radio-button custom-control-label pt-1 pl-2" asp-for="@Model.ExternalCalibrations[i].IsRepeat">Once</label>
+                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, false, new { @class = "custom-control-input", id = "repeat" })  <label class="radio-button custom-control-label pt-1 pl-2" asp-for="@Model.ExternalCalibrations[i].IsRepeat">Repeat</label>
+                                                </div>
+                                                </div>
+
+                                            </div>
+                                    }
                                     <div class="row mt-3 text-center">
                                         <div class="col-12">
                                             <button class="text custom-button custom-button-font lab-man-background-color saveExternalCalibration  between-button-margin">Save</button>
@@ -153,7 +183,7 @@
 
                             <div id="internalCalibration" class="tab-pane fade">
                                 <div class="modal-sides modal-body-top-p">
-                                    <div class="row"><span class="heading-1 modal-tab-name">History</span></div>
+                                    <div class="row"><span class="heading-1 modal-tab-name">In House Maintainace</span></div>
                                     <div class="row mt-3 text-center">
                                         <div class="col-12">
                                             <button class="text custom-button custom-button-font lab-man-background-color saveInternalCalibration between-button-margin">Save</button>
@@ -190,7 +220,7 @@
                                             {
                                                 <tr class="inv-list-item">
                                                     <td>
-                                                        @Html.DisplayFor(modelItem => item.Date.ToShortDateString())
+                                                       @item.Date.ToShortDateString()
                                                     </td>
                                                     <td>
                                                     </td>

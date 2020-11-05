@@ -1271,20 +1271,23 @@ namespace PrototypeWithAuth.Data
              new CalibrationType
              {
                  CalibrationTypeID = 1,
-                 Description = "Repair"
+                 Description = "Repair",
+                 Icon = "icon-build-24px"
              }
              ,
              new CalibrationType
              {
                  CalibrationTypeID = 2,
-                 Description = "External Calibration"
+                 Description = "External Calibration",
+                 Icon = "icon-miscellaneous_services-24px-1"
              },
              new CalibrationType
              {
                  CalibrationTypeID = 3,
-                 Description = "In House Maintainance"
+                 Description = "In House Maintainance",
+                 Icon = "icon-inhouse-maintainance-24px"
              }
-         );
+         ); ;
 
         }
     }

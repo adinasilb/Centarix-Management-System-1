@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int CalibrationTypeID { get; set; }
         public String Description { get; set; }
+        public string Icon { get; set; }
     }
 }
