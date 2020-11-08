@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using PrototypeWithAuth.Models;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Index = Microsoft.EntityFrameworkCore.Metadata.Internal.Index;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Data
 {
@@ -20,6 +23,7 @@ namespace PrototypeWithAuth.Data
         [Display(Name = "Google Secure App Password")]
         public string SecureAppPass { get; set; }
         public IEnumerable<ParentRequest> ParentRequests { get; set;}
+        [Index(IsUnique = true)]
         public int UserNum { get; set; }
 
         [Display(Name = "ID")]
