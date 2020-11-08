@@ -24,15 +24,18 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
+       //private readonly UserManager<TUser> _identityUserManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ApplicationDbContext _context;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LoginModel> logger,
-            UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+            UserManager<ApplicationUser> userManager, ApplicationDbContext context
+          )
         {
             _userManager = userManager;
+           // _identityUserManager = identityuserManager;
             _signInManager = signInManager;
             _logger = logger;
             _context = context;
@@ -88,22 +91,26 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+                //var user = await _userManager.FindByEmailAsync(Input.Email);
+                var passwordValidator = new PasswordValidator<ApplicationUser>();
+                //var identityUserManager = new UserManager<IdentityUser>(user);
+                var validPassword = await passwordValidator.ValidateAsync(_userManager, user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
                     if (user.NeedsToResetPassword)
                     {
                         //await _signInManager.SignOutAsync();
                         returnUrl = Url.Action("ResetPassword", "Home");
                     }
-                    else
-                    {
-                        //return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
+                    //else
+                    //{
+                    //    //return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
 
-                        return LocalRedirect(returnUrl);
-                        //returnUrl = Url.Action("Index", "Home");
-                    }
+                    //    return LocalRedirect(returnUrl);
+                    //    //returnUrl = Url.Action("Index", "Home");
+                    //}
 
                     //Redirect to the 2FA page!!!
                     return LocalRedirect(returnUrl);
@@ -111,14 +118,19 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
 
                 }
-                if (result.RequiresTwoFactor)
+                else if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
                 }
-                if (result.IsLockedOut)
+                else if (!validPassword.Succeeded)
                 {
                     _logger.LogInformation("User locked out.");
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    //Add error
+                    return Page();
+                }
+                else if (result.IsLockedOut)
+                {
+                    _logger.LogInformation("User locked out.");
                     if (user.NeedsToResetPassword)
                     {
                         //await _signInManager.SignOutAsync();
