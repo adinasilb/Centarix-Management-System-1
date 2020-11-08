@@ -448,7 +448,7 @@ $(function () {
 
 	$('.resetPasswordForm').validate({
 		rules: {
-			"Password": {
+			"Input.Password": {
 				required: true,
 				nonAlphaNumeric: true,
 				uppercase: true,
@@ -457,11 +457,11 @@ $(function () {
 				minlength: 8,
 				maxlength: 20
 			},
-			"ConfirmPassword": {
+			"Input.ConfirmPassword": {
 				required: true,
-				equalTo: "#Password"
+				equalTo: "#Input_Password"
 			},
-			"TwoFactorAuthenticationViewModel.Code": {
+			"Input.TwoFactorAuthenticationViewModel.Code": {
 				required: true,
 				integer: true,
 				number: true

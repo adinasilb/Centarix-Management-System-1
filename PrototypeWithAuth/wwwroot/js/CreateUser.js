@@ -22,11 +22,11 @@ $(function () {
 			password = data;
 			$("#Password").val(password);
 			$("#ConfirmPassword").val(password);
-			console.log("password: " + password);
 		});
 	});
 
-	$("#ViewPassword").on("click", function () {
+	$("#ViewPassword").off('click').on("click", function () {
+		console.log("view password")
 		var passwordField = $("#Password");
 		var type = passwordField.attr("type");
 		switch (type) {

@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             public PrototypeWithAuth.ViewModels.TwoFactorAuthenticationViewModel TwoFactorAuthenticationViewModel { get; set; }
         }
 
-        public async Task<IActionResult> OnGet(string code = null, string userID = null)
+        public async Task<IActionResult> OnGet(string code = null, string userID = null, string errorMessage=null)
         {
             if (code == null)
             {
@@ -79,7 +79,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 Input = new InputModel
                 {
                     Email = user.Email,
-                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
+                    Code = code,
                     AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey)
                 };
                 return Page();
@@ -88,6 +88,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
+            string errorMessage = "";
             //if (!ModelState.IsValid)
             //{
             //    return Page();
@@ -99,8 +100,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 // Don't reveal that the user does not exist
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
-
-            var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
+           ;
+            var result = await _userManager.ResetPasswordAsync(user, Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Input.Code)), Input.Password);
             if (result.Succeeded)
             {
                 var verificationCode = Input.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
@@ -114,8 +115,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     Input.ErrorMessage = "Invalid Authentication Code";
                     Input.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
                     //return View(resetPasswordViewModel);
-                }
-                user.NeedsToResetPassword = false;
+
+                }                
                 user.LockoutEnabled = false;
                 user.LockoutEnd = DateTime.Now;
                 _context.Update(user);
@@ -134,9 +135,20 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     
                     if (result2fa.Succeeded)
                     {
+                        user.NeedsToResetPassword = false;
+                        _context.Update(user);
+                        await _context.SaveChangesAsync();
                         return RedirectToAction("Index", "Home");
                     }
                     //TODO: Add errors for 2fa
+                    else
+                    {
+                        user.LockoutEnabled = true;
+                        user.LockoutEnd = new DateTime(2999,01 , 01);
+                        _context.Update(user);
+                        await _context.SaveChangesAsync();
+                        errorMessage += "Invalid Authentication Code";
+                    }
 
                 }
                 //TODO: Add errors for signing
@@ -145,8 +157,18 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
+                errorMessage += "\n" + error.Description;
             }
-
+         
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            Input = new InputModel
+            {
+                Email = user.Email,
+                Code = code,
+                AuthenticatorUri = Input.AuthenticatorUri,
+                ErrorMessage = errorMessage
+            };
             return Page();
         }
 

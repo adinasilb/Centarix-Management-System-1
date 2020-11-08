@@ -71,9 +71,7 @@ namespace PrototypeWithAuth
 
 
 
-
-
-            services.AddControllersWithViews();
+                services.AddControllersWithViews();
 
 
             // Enable Razor pages, but in the Debug configuration, compile the views at runtime, for ease of development
