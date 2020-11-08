@@ -73,9 +73,14 @@ namespace PrototypeWithAuth.Controllers
 
         [Authorize(Roles = "Admin, LabManagment")]
         [HttpGet]
-        public async Task<IActionResult> _Repairs(int? CalibrationID = null)
+        public async Task<IActionResult> _Repairs(int requestId, int? calibrationId = null)
         {
-            return PartialView();
+            _RepairsViewModel repairsViewModel = new _RepairsViewModel()
+            {
+                RequestID = requestId,
+                Repair = new Repair()
+            };
+            return PartialView(repairsViewModel);
         }
 
         [Authorize(Roles = "Admin, LabManagment")]

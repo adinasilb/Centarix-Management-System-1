@@ -8,235 +8,245 @@
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-    <div class="col-12  mx-auto on-form-modal supplier-form" style="width: 60%">
-        <div class="on-form-modal-border">
-            <form action="" id="myForm" class="createCalibration" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-                <input type="hidden" asp-for="RequestID" />
-                <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
-                    <div class="row">
-                        <div class="col-7 form-group modal-line-1-header modal-sides">
-                            <div class="mt-1 heading-1">@Model.ProductDescription</div>
+<div class="col-12  mx-auto on-form-modal supplier-form" style="width: 60%">
+    <div class="on-form-modal-border">
+        <form action="" id="myForm" class="createCalibration" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+            <input type="hidden" asp-for="RequestID" />
+            <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
+                <div class="row">
+                    <div class="col-7 form-group modal-line-1-header modal-sides">
+                        <div class="mt-1 heading-1">@Model.ProductDescription</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 px-0">
+                        <div class="container-fluid div-tabs text-center modal-sides">
+                            <ul class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
+                                <li class="nav-item"><a data-toggle="tab" href="#instructions" class="nav-link next-tab  lab-man-nav-link "><i class="icon-assignment-24px" style="font-size: 2rem;"></i><br />Instructions</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#repairs" class="nav-link next-tab  lab-man-nav-link" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Repairs</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#externalCalibration" class="nav-link next-tab  lab-man-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />External Calibration</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#internalCalibration" class="nav-link next-tab  lab-man-nav-link "><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />In House Maintainance</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#history" class="nav-link next-tab   lab-man-nav-link"><i class="icon-history-24px" e.css style="font-size: 2rem;"></i><br />History</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 px-0">
-                            <div class="container-fluid div-tabs text-center modal-sides">
-                                <ul class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
-                                    <li class="nav-item"><a data-toggle="tab" href="#instructions" class="nav-link next-tab  lab-man-nav-link "><i class="icon-assignment-24px" style="font-size: 2rem;"></i><br />Instructions</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#repairs" class="nav-link next-tab  lab-man-nav-link" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Repairs</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#externalCalibration" class="nav-link next-tab  lab-man-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />External Calibration</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#internalCalibration" class="nav-link next-tab  lab-man-nav-link "><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />In House Maintainance</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#history" class="nav-link next-tab   lab-man-nav-link"><i class="icon-history-24px" e.css style="font-size: 2rem;"></i><br />History</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="new-modal-body">
-                    <div class="container-fluid div-tabs no-box-shadow p-0">
-                        <div class="tab-content">
-                            <div id="instructions" class="tab-pane fade">
-                                <div class="modal-sides modal-body-top-p">
-                                    <div class="row"><span class="heading-1 modal-tab-name">Instructions</span></div>
-
-                                    @{
-                                        var urlAction = Url.Action("DocumentsModal", "Requests");
-                                        var fontSize = "2rem";
-                                    }
-
-                                    <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-
-                                    <div class="row document-margin-bottom">
-                                        <div class=" document-margin ">
-                                            @{
-                                                var filterClass = "opac87";
-                                                if (Model.ManualFileStrings != null && Model.ManualFileStrings.Count > 0)
-                                                {
-                                                    filterClass = "lab-man-filter";
-                                                }
-                                            }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Manual.ToString()" data-id="@Model.RequestID" id="@AppUtility.RequestFolderNamesEnum.Manual.ToString()" data-val="@true">
-                                                <div class="card document-border ">
-                                                    <div class="document-card text-center">
-                                                        <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                                                    </div>
-
-                                                </div>
-                                            </a>
-                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Manual</label>
-                                        </div>
-                                        <div class=" document-margin ">
-                                            @{
-                                                filterClass = "opac87";
-                                                if (Model.WarrantyFileStrings != null && Model.WarrantyFileStrings.Count > 0)
-                                                {
-                                                    filterClass = "lab-man-filter";
-                                                }
-                                            }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Warranty.ToString()" data-id="@Model.RequestID" id="@AppUtility.RequestFolderNamesEnum.Warranty.ToString()" data-val="@true">
-                                                <div class="card document-border">
-                                                    <div class=" document-card text-center">
-                                                        <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
-                                                    </div>
-
-                                                </div>
-                                            </a>
-                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Warranty</label>
-                                        </div>
-                                        <div class=" document-margin">
-                                            @{
-                                                filterClass = "opac87";
-                                                if (Model.PicturesFileStrings != null && Model.PicturesFileStrings.Count > 0)
-                                                {
-                                                    filterClass = "lab-man-filter";
-                                                }
-                                            }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
-                                                <div class="card document-border">
-                                                    <div class="document-card text-center">
-                                                        <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                                                    </div>
-
-                                                </div>
-                                            </a>
-                                            <label class="control-label text-center text document-text-margin" style="width:100%;">Pictures</label>
-                                        </div>
-                                        <div class="">
-                                            @{
-                                                filterClass = "opac87";
-                                                if (Model.MoreFileStrings != null && Model.MoreFileStrings.Count > 0)
-                                                {
-                                                    filterClass = "lab-man-filter";
-                                                }
-                                            }
-                                            <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.More.ToString()" data-id="@Model.RequestID" id="@AppUtility.RequestFolderNamesEnum.More.ToString()" data-val="@true">
-                                                <div class="card document-border">
-                                                    <div class="document-card text-center">
-                                                        <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <label class="control-label text-center text document-text-margin" style="width:100%;">More</label>
-                                        </div>
-                                    </div>
-                                    <div  class="row mt-3 text-center">
-                                        <div class="col-12">
-                                            <button class="text custom-button custom-button-font lab-man-background-color saveInstructions between-button-margin">Save</button>
-                                            <button class="custom-button custom-cancel text dont-save-request-edits  ">Cancel</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="repairs" class="tab-pane fade">
-                                <div class="modal-sides modal-body-top-p">
-
-                                    @{ await Html.RenderPartialAsync("_Repairs"); }
-                                </div>
-                            </div>
-                            <div id="externalCalibration" class="tab-pane fade">
-                                <div class="modal-sides modal-body-top-p">
-                                    @{ await Html.RenderPartialAsync("_ExternalCalibration"); }
-                                    @*@for (int i = 0; i < Model.ExternalCalibrations.Count; i++)
-        {
-            <div class="row">
-                <div class="col-3">
-                    <label class="control-label" asp-for="ExternalCalibrations[i].Date"></label>
-                    <input asp-for="ExternalCalibrations[i].Date" class="border-bottom form-control-plaintext" />
-                    <span asp-validation-for="ExternalCalibrations[i].Date" class="text-danger-centarix"></span>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-1">
-                    <label class="control-label" asp-for="ExternalCalibrations[i].Days"></label>
-                    <input asp-for="ExternalCalibrations[i].Days" class="border-bottom form-control-plaintext" />
-                    <span asp-validation-for="ExternalCalibrations[i].Days" class="text-danger-centarix"></span>
-                </div>
-                <div class="col-1">
-                    <label class="control-label" asp-for="ExternalCalibrations[i].Months"></label>
-                    <input asp-for="ExternalCalibrations[i].Months" class="border-bottom form-control-plaintext" />
-                    <span asp-validation-for="ExternalCalibrations[i].Months" class="text-danger-centarix"></span>
-                </div>
-                <div class="col-1 offset-1">
-                    <input type="hidden" asp-for="ExternalCalibrations[i].IsRepeat"  />                                              <div class="custom-control custom-radio mr-4  employee-type">
-                        @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, false, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "once", })
-                        <label class="radio-button custom-control-label pt-1 pl-2" for="once">Once</label>
-                    </div>
-                    <div class="custom-control custom-radio mr-4  employee-type">
-                        @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, true, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "repeat", })
-                        <label class="radio-button custom-control-label pt-1 pl-2" for="repeat">Repeat</label>
-                    </div>
+            <div class="new-modal-body">
+                <div class="container-fluid div-tabs no-box-shadow p-0">
+                    <div class="tab-content">
+                        <div id="instructions" class="tab-pane fade">
+                            <div class="modal-sides modal-body-top-p">
+                                <div class="row"><span class="heading-1 modal-tab-name">Instructions</span></div>
 
-                </div>
+                                @{
+                                    var urlAction = Url.Action("DocumentsModal", "Requests");
+                                    var fontSize = "2rem";
+                                }
 
-                </div>
-            <div class="row">
-                <div class="col-12 border rounded" style="min-height:8rem">
-                    <input asp-for="ExternalCalibrations[i].Description" placeholder="short explanation..." class="form-control-plaintext" />
-                </div>
-            </div>
-        }
-        <div class="row mt-3 text-center">
-            <div class="col-12">
-                <button class="text custom-button custom-button-font lab-man-background-color saveExternalCalibration  between-button-margin">Save</button>
-                <button class="custom-button custom-cancel text dont-save-request-edits ">Cancel</button>
-            </div>
-        </div>*@
+                                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
 
-                                </div>
-                            </div>
-
-                            <div id="internalCalibration" class="tab-pane fade">
-                                <div class="modal-sides modal-body-top-p">
-                                    @{ await Html.RenderPartialAsync("_InHouseMaintenance"); }
-                                </div>
-                            </div>
-                            <div id="history" class="tab-pane fade">
-                                <div class="modal-sides modal-body-top-p">
-                                    <div class="row modal-tab-name">
-                                        <span class="heading-1 col-12 modal-tab-name">History</span>
-                                    </div>
-                                    <table class="table table-headerspaced table-noheaderlines table-hover text-center">
-                                        <thead>
-                                            <tr>
-                                                <td>
-                                                    Date
-                                                </td>
-                                                <td>
-                                                    Name
-                                                </td>
-                                                <td>
-                                                    Description
-                                                </td>
-
-                                                <td>
-                                                    Type
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var item in Model.PastCalibrations)
+                                <div class="row document-margin-bottom">
+                                    <div class=" document-margin ">
+                                        @{
+                                            var filterClass = "opac87";
+                                            if (Model.ManualFileStrings != null && Model.ManualFileStrings.Count > 0)
                                             {
-                                                <tr class="inv-list-item">
-                                                    <td>
-                                                       @item.Date.ToShortDateString()
-                                                    </td>
-                                                    <td>
-                                                    </td>
-                                                    <td>
-                                                    </td>
-                                                    <td>
-                                                    </td>
-
-                                                </tr>
-
+                                                filterClass = "lab-man-filter";
                                             }
-                                        </tbody>
-                                    </table>
+                                        }
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Manual.ToString()" data-id="@Model.RequestID" id="@AppUtility.RequestFolderNamesEnum.Manual.ToString()" data-val="@true">
+                                            <div class="card document-border ">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                </div>
+
+                                            </div>
+                                        </a>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Manual</label>
+                                    </div>
+                                    <div class=" document-margin ">
+                                        @{
+                                            filterClass = "opac87";
+                                            if (Model.WarrantyFileStrings != null && Model.WarrantyFileStrings.Count > 0)
+                                            {
+                                                filterClass = "lab-man-filter";
+                                            }
+                                        }
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Warranty.ToString()" data-id="@Model.RequestID" id="@AppUtility.RequestFolderNamesEnum.Warranty.ToString()" data-val="@true">
+                                            <div class="card document-border">
+                                                <div class=" document-card text-center">
+                                                    <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
+                                                </div>
+
+                                            </div>
+                                        </a>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Warranty</label>
+                                    </div>
+                                    <div class=" document-margin">
+                                        @{
+                                            filterClass = "opac87";
+                                            if (Model.PicturesFileStrings != null && Model.PicturesFileStrings.Count > 0)
+                                            {
+                                                filterClass = "lab-man-filter";
+                                            }
+                                        }
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
+                                            <div class="card document-border">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                </div>
+
+                                            </div>
+                                        </a>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Pictures</label>
+                                    </div>
+                                    <div class="">
+                                        @{
+                                            filterClass = "opac87";
+                                            if (Model.MoreFileStrings != null && Model.MoreFileStrings.Count > 0)
+                                            {
+                                                filterClass = "lab-man-filter";
+                                            }
+                                        }
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.More.ToString()" data-id="@Model.RequestID" id="@AppUtility.RequestFolderNamesEnum.More.ToString()" data-val="@true">
+                                            <div class="card document-border">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">More</label>
+                                    </div>
+                                </div>
+                                <div class="row mt-3 text-center">
+                                    <div class="col-12">
+                                        <button class="text custom-button custom-button-font lab-man-background-color saveInstructions between-button-margin">Save</button>
+                                        <button class="custom-button custom-cancel text dont-save-request-edits  ">Cancel</button>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        <div id="repairs" class="tab-pane fade">
+                            <div class="modal-sides modal-body-top-p">
+
+                                @{ await Html.RenderPartialAsync("_Repairs",
+                                        new PrototypeWithAuth.ViewModels._RepairsViewModel()
+                                        {
+                                            RequestID = Model.RequestID,
+                                            Repair = new Repair()
+                                        }); }
+                            </div>
+                        </div>
+                        <div id="externalCalibration" class="tab-pane fade">
+                            <div class="modal-sides modal-body-top-p">
+                                @{ await Html.RenderPartialAsync("_ExternalCalibration",
+                                          new PrototypeWithAuth.ViewModels._ExternalCalibrationViewModel()
+                                          {
+                                              RequestID = Model.RequestID,
+                                              ExternalCalibration = new ExternalCalibration()
+                                          }) ; }
+                                @*@for (int i = 0; i < Model.ExternalCalibrations.Count; i++)
+                                    {
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label class="control-label" asp-for="ExternalCalibrations[i].Date"></label>
+                                                <input asp-for="ExternalCalibrations[i].Date" class="border-bottom form-control-plaintext" />
+                                                <span asp-validation-for="ExternalCalibrations[i].Date" class="text-danger-centarix"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-1">
+                                                <label class="control-label" asp-for="ExternalCalibrations[i].Days"></label>
+                                                <input asp-for="ExternalCalibrations[i].Days" class="border-bottom form-control-plaintext" />
+                                                <span asp-validation-for="ExternalCalibrations[i].Days" class="text-danger-centarix"></span>
+                                            </div>
+                                            <div class="col-1">
+                                                <label class="control-label" asp-for="ExternalCalibrations[i].Months"></label>
+                                                <input asp-for="ExternalCalibrations[i].Months" class="border-bottom form-control-plaintext" />
+                                                <span asp-validation-for="ExternalCalibrations[i].Months" class="text-danger-centarix"></span>
+                                            </div>
+                                            <div class="col-1 offset-1">
+                                                <input type="hidden" asp-for="ExternalCalibrations[i].IsRepeat"  />                                              <div class="custom-control custom-radio mr-4  employee-type">
+                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, false, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "once", })
+                                                    <label class="radio-button custom-control-label pt-1 pl-2" for="once">Once</label>
+                                                </div>
+                                                <div class="custom-control custom-radio mr-4  employee-type">
+                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, true, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "repeat", })
+                                                    <label class="radio-button custom-control-label pt-1 pl-2" for="repeat">Repeat</label>
+                                                </div>
+
+                                            </div>
+
+                                            </div>
+                                        <div class="row">
+                                            <div class="col-12 border rounded" style="min-height:8rem">
+                                                <input asp-for="ExternalCalibrations[i].Description" placeholder="short explanation..." class="form-control-plaintext" />
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="row mt-3 text-center">
+                                        <div class="col-12">
+                                            <button class="text custom-button custom-button-font lab-man-background-color saveExternalCalibration  between-button-margin">Save</button>
+                                            <button class="custom-button custom-cancel text dont-save-request-edits ">Cancel</button>
+                                        </div>
+                                    </div>*@
+
+                            </div>
+                        </div>
+
+                        <div id="internalCalibration" class="tab-pane fade">
+                            <div class="modal-sides modal-body-top-p">
+                                @{ await Html.RenderPartialAsync("_InHouseMaintenance"); }
+                            </div>
+                        </div>
+                        <div id="history" class="tab-pane fade">
+                            <div class="modal-sides modal-body-top-p">
+                                <div class="row modal-tab-name">
+                                    <span class="heading-1 col-12 modal-tab-name">History</span>
+                                </div>
+                                <table class="table table-headerspaced table-noheaderlines table-hover text-center">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                Date
+                                            </td>
+                                            <td>
+                                                Name
+                                            </td>
+                                            <td>
+                                                Description
+                                            </td>
+
+                                            <td>
+                                                Type
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.PastCalibrations)
+                                        {
+                                            <tr class="inv-list-item">
+                                                <td>
+                                                    @item.Date.ToShortDateString()
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+
+                                            </tr>
+
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-            </form>
-        </div>
+        </form>
     </div>
+</div>
