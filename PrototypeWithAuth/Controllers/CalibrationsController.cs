@@ -70,5 +70,26 @@ namespace PrototypeWithAuth.Controllers
             };
             return View(createCalibrationViewModel);
         }
+
+        [Authorize(Roles = "Admin, LabManagment")]
+        [HttpGet]
+        public async Task<IActionResult> _Repairs(int? CalibrationID = null)
+        {
+            return PartialView();
+        }
+
+        [Authorize(Roles = "Admin, LabManagment")]
+        [HttpGet]
+        public async Task<IActionResult> _ExternalCalibration(int? CalibrationID = null)
+        {
+            return PartialView();
+        }
+
+        [Authorize(Roles = "Admin, LabManagment")]
+        [HttpGet]
+        public async Task<IActionResult> _InHouseMaintenance(int? CalibrationID = null)
+        {
+            return PartialView();
+        }
     }
 }

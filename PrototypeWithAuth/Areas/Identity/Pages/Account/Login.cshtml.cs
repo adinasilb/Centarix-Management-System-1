@@ -97,13 +97,13 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                         //await _signInManager.SignOutAsync();
                         returnUrl = Url.Action("ResetPassword", "Home");
                     }
-                    else
-                    {
-                        //return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
+                    //else
+                    //{
+                    //    //return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
 
-                        return LocalRedirect(returnUrl);
-                        //returnUrl = Url.Action("Index", "Home");
-                    }
+                    //    return LocalRedirect(returnUrl);
+                    //    //returnUrl = Url.Action("Index", "Home");
+                    //}
 
                     //Redirect to the 2FA page!!!
                     return LocalRedirect(returnUrl);
@@ -132,14 +132,14 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 else
                 {
                     _logger.LogInformation("User login failed.");
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-                    if (user.NeedsToResetPassword)
-                    {
-                        //await _signInManager.SignOutAsync();
-                        var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        return RedirectToPage("./ResetPassword", new { code = code });
-                    }
+                    //var user = await _userManager.FindByEmailAsync(Input.Email);
+                    //if (user.NeedsToResetPassword)
+                    //{
+                    //    //await _signInManager.SignOutAsync();
+                    //    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    //    return RedirectToPage("./ResetPassword", new { code = code });
+                    //}
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
