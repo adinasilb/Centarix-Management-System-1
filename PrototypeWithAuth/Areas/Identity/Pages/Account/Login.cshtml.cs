@@ -132,14 +132,14 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 else
                 {
                     _logger.LogInformation("User login failed.");
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-                    if (user.NeedsToResetPassword)
-                    {
-                        //await _signInManager.SignOutAsync();
-                        var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        return RedirectToPage("./ResetPassword", new { code = code });
-                    }
+                    //var user = await _userManager.FindByEmailAsync(Input.Email);
+                    //if (user.NeedsToResetPassword)
+                    //{
+                    //    //await _signInManager.SignOutAsync();
+                    //    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    //    return RedirectToPage("./ResetPassword", new { code = code });
+                    //}
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
