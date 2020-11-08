@@ -175,7 +175,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
             modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
-
+            modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

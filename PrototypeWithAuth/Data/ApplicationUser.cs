@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using PrototypeWithAuth.Models;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Index = Microsoft.EntityFrameworkCore.Metadata.Internal.Index;
 
 namespace PrototypeWithAuth.Data
 {
@@ -31,7 +33,7 @@ namespace PrototypeWithAuth.Data
         public double LabOrderLimit { get; set; }
         public double OperationMonthlyLimit { get; set; }
         public double OperationUnitLimit { get; set; }
-        public double OperaitonOrderLimit { get; set; }
+        public double OperationOrderLimit { get; set; }
         public bool IsDeleted { get; set; }
         public string UserImage { get; set; }
 

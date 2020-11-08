@@ -43,13 +43,6 @@ namespace PrototypeWithAuth
 
             ////Set database Connection from application json file
 
-            services.AddDbContext<ApplicationDbContext>(options => {
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
-                options.EnableSensitiveDataLogging(true);
-            });
-
-
             //add identity
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
