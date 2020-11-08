@@ -52,19 +52,19 @@ namespace PrototypeWithAuth
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("AzureConnection")));
 
-            services.AddDbContext<ApplicationDbContext>(options => {
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
-                options.EnableSensitiveDataLogging(true);
-            });
-
-            //services.AddDbContext<ApplicationDbContext>(options =>
+            //services.AddDbContext<ApplicationDbContext>(options => {
             //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("CentarixConnection")));
+            //        Configuration.GetConnectionString("DefaultConnection"));
+            //    options.EnableSensitiveDataLogging(true);
+            //});
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("CentarixConnection")));
 
 
 
-                services.AddControllersWithViews();
+            services.AddControllersWithViews();
 
 
             // Enable Razor pages, but in the Debug configuration, compile the views at runtime, for ease of development
