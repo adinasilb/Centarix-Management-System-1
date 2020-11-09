@@ -3,6 +3,15 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> _userManager
+@{
+
+    var disabled = "";
+    if (Model.IsEdit)
+    {
+        disabled = "disabled";
+    }
+}
+
 
 <div class="table comment-info border p-2 mb-3">
     @{
@@ -10,7 +19,7 @@
         var commentTypeName = "Comments[" + Model.Index + "].CommentType";
 
     }
-    <input type="hidden" id="@commentTypeID" name="@commentTypeName"  value="@Model.Comment.CommentType" class="comment-type" />
+    <input type="hidden" id="@commentTypeID" name="@commentTypeName" value="@Model.Comment.CommentType" class="comment-type" />
     <div class="row ml-2  border-bottom-0 mb-0">
         <div class="col-1 mt-auto mb-auto ">
             <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
@@ -34,8 +43,8 @@
                     var commentTextName = "Comments[" + Model.Index + "].CommentText";
                     var commentTextValue = Model.Comment.CommentText;
                 }
-                <input name="@commentTextName" id="@commentTextID" value="@commentTextValue" class="form-control-plaintext border-bottom m-0 p-0 comment-text" />
-               
+                <input name="@commentTextName" id="@commentTextID" value="@commentTextValue" class="form-control-plaintext border-bottom m-0 p-0 comment-text mark-readonly" @disabled />
+
             </div>
 
         </div>

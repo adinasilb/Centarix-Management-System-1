@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+@using PrototypeWithAuth.ViewModels
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
@@ -479,7 +480,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label asp-for="Request.SubUnit" class="control-label"></label>
-                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom"  disabled />
+                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" disabled />
                                 <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-md-6 form-group">
@@ -881,46 +882,9 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 
             <div id="comment-info">
                 <input type="hidden" value="@Model.Comments.Count" id="index" />
-                @for(int i=0; i < Model.Comments.Count; i++)
+                @for (int i = 0; i < Model.Comments.Count; i++)
                 {
-                    <div class="table comment-info border p-2 mb-3">
-                        <input type="hidden" asp-for="Comments[i].CommentType" class="comment-type" />
-                        <div class="row ml-2  border-bottom-0 mb-0">
-                            <div class="col-1 mt-auto mb-auto ">
-                                <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50 "  >
-                                    @{
-                                        var src = "/UserImages/profile_circle_big.png";
-                                        if (_userManager.GetUserAsync(User).Result.UserImage != null)
-                                        {
-                                            src = _userManager.GetUserAsync(User).Result.UserImage;
-                                        }
-                                    }
-                                    <img src="@src" class=" ml-0" alt="default User image" />
-                                </button>
-                            </div>
-                            <div class="col-9 ">
-                                <div class=" p-3 ">
-                                    <label class="m-0"> @_userManager.GetUserAsync(User).Result.FirstName</label>
-                                    <label class="m-0">@_userManager.GetUserAsync(User).Result.LastName</label>
-                                    <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
-                                    <input asp-for="Comments[i].CommentText" class="form-control-plaintext border-bottom m-0 p-0 comment-text mark-readonly" disabled />
-                                    <input type="hidden" asp-for="Comments[i].CommentID"/>
-                                </div>
-
-                            </div>
-                            <div class=" col-2 ">
-                                @if (Model.Comments[i].CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
-                                {
-                                    <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
-                                }
-                                else if (Model.Comments[i].CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
-                                {
-                                    <i class="icon-report_problem-24px-2 float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
-                                }
-                            </div>
-
-                        </div>
-                    </div>
+                    await Html.RenderPartialAsync("CommentInfoPartialView", new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
                 }
 
             </div>

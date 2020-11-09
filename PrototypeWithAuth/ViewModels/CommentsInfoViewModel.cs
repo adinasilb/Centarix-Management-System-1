@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public int Index { get; set; }
         public Comment Comment { get; set; }
+        public bool IsEdit { get; set; }
     }
 }
