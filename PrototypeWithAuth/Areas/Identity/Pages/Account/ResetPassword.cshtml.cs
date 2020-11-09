@@ -176,7 +176,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("PrototypeWithAuth"),
+                _urlEncoder.Encode("Elixir"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }

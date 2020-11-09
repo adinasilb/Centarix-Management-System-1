@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     public class CreateCalibrationViewModel
     {
         public String ProductDescription { get; set; }
-        public Repair Repair { get; set; }
+        public List<Repair> Repairs { get; set; }
         public List<InternalCalibration> InternalCalibration {get; set;}
         public List<ExternalCalibration> ExternalCalibrations { get; set; }
         public List<Calibration> PastCalibrations { get; set; }

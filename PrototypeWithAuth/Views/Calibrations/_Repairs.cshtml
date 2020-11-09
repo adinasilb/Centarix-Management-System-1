@@ -2,11 +2,49 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model PrototypeWithAuth.ViewModels._RepairsViewModel
+<script src="~/js/calibrationpartials.js"></script>
 
-<div class="row"><span class="heading-1 modal-tab-name">Repairs</span></div>
-<div class="row mt-3 text-center">
-    <div class="col-12">
-        <button class="text custom-button custom-button-font lab-man-background-color saveRepairs between-button-margin">Save</button>
-        <button class="custom-button custom-cancel text dont-save-request-edits  ">Cancel</button>
+@*<form action="" method="post" id="myForm" class="RepairsPartialViews"  enctype="multipart/form-data">*@
+    <input type="hidden" asp-for="RequestID" />
+    @*@for (int i = 0; i < Model.Repair.Count; i++)
+        {*@
+    <div class="row">
+        <div class="col-3">
+            <label class="control-label" asp-for="Repair.Date"></label>
+            <input asp-for="Repair.Date" class="border-bottom form-control-plaintext" />
+            <span asp-validation-for="Repair.Date" class="text-danger-centarix"></span>
+        </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-1">
+            <label class="control-label" asp-for="Repair.Days"></label>
+            <input asp-for="Repair.Days" class="border-bottom form-control-plaintext" min="0" />
+            <span asp-validation-for="Repair.Days" class="text-danger-centarix"></span>
+        </div>
+        <div class="col-1">
+            <label class="control-label" asp-for="Repair.Months"></label>
+            <input asp-for="Repair.Months" class="border-bottom form-control-plaintext" min="0" />
+            <span asp-validation-for="Repair.Months" class="text-danger-centarix"></span>
+        </div>
+        <div class="col-1 offset-1">
+            <input type="hidden" asp-for="Repair.IsRepeat" />
+            <div class="custom-control custom-radio mr-4  employee-type">
+                @Html.RadioButtonFor(model => model.Repair.IsRepeat, false, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "once", })
+                <label class="radio-button custom-control-label pt-1 pl-2" for="once">Once</label>
+            </div>
+            <div class="custom-control custom-radio mr-4  employee-type">
+                @Html.RadioButtonFor(model => model.Repair.IsRepeat, true, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "repeat", })
+                <label class="radio-button custom-control-label pt-1 pl-2" for="repeat">Repeat</label>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-12 border rounded" style="min-height:8rem">
+            <input asp-for="Repair.Description" placeholder="short explanation..." class="form-control-plaintext" />
+        </div>
+    </div>
+    @*  }*@
+
+@*</form>*@

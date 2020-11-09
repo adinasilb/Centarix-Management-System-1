@@ -1,15 +1,14 @@
-﻿using PrototypeWithAuth.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class _RepairsViewModel
+    public class _InternalCalibrationViewModel
     {
         public int RequestID { get; set; }
-        public Repair Repair { get; set; }
-        public int RepairIndex { get; set; }
+        public InternalCalibration InternalCalibration { get; set; }
     }
 }
