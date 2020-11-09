@@ -2601,6 +2601,19 @@ $(function () {
 		$('#addRequestComment').popover('toggle');
 
 	});
+	$("#more").click(function () {
+		$('[data-toggle="popover"]').popover('dispose');
+		$('#more').popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#popover-content').html();
+			}
+		});
+		$('#more').popover('toggle');
+
+	});
 	$('.employee-status-radio').off("click").on("click", function () {
 		//console.log('employee status')
 		var val = $(this).val();
