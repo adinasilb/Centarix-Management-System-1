@@ -75,12 +75,20 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public async Task<IActionResult> _Repairs(int requestId, int? calibrationId = null)
         {
-            _RepairsViewModel repairsViewModel = new _RepairsViewModel()
+            return PartialView(GetRepairsViewModel(requestId, calibrationId));
+        }
+
+        //writing this in a function because it's also called from the RenderPartialAsync in the view
+        [Authorize(Roles = "Admin, LabManagment")]
+        public _RepairsViewModel GetRepairsViewModel(int requestId, int? calibrationId = null)
+        {
+            _RepairsViewModel repairsViewModel = new _RepairsViewModel();
+            if (calibrationId != null)
             {
-                RequestID = requestId,
-                Repair = new Repair()
-            };
-            return PartialView(repairsViewModel);
+                repairsViewModel.RequestID = requestId;
+                repairsViewModel.Repair = new Repair();
+            }
+            return repairsViewModel;
         }
 
         [Authorize(Roles = "Admin, LabManagment")]
