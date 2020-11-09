@@ -27,6 +27,8 @@ namespace PrototypeWithAuth.Models
             get => commentTimeStamp;
             set { } 
         }
+
+        public string CommentType { get; set; }
     }
 }
 

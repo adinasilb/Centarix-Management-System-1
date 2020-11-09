@@ -1984,7 +1984,20 @@ $(function () {
 		$(".comment-info:hidden:first").show();
 	}
 
-
+	$.fn.addRequestComment = function (type) {
+		console.log(type);
+		var index = $('#index').val();
+		$.ajax({
+			async: false,
+			url: '/Requests/CommentInfoPartialView?type='+type+'&index='+index,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("#comment-info").append(data);
+				$('#index').val(++index);
+			}
+		});
+	}
 
 	/*--------------------------------Accounting Payment Notifications--------------------------------*/
 	$(".payments-pay-now").off("click").on("click", function (e) {
@@ -2558,6 +2571,19 @@ $(function () {
 			}
 		});
 		$('#addSupplierComment').popover('toggle');
+
+	});
+	$("#addRequestComment").click(function () {
+		$('[data-toggle="popover"]').popover('dispose');
+		$('#addRequestComment').popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#popover-content').html();
+			}
+		});
+		$('#addRequestComment').popover('toggle');
 
 	});
 	$('.employee-status-radio').off("click").on("click", function () {

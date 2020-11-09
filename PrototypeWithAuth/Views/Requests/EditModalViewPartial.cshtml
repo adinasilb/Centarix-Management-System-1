@@ -479,7 +479,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label asp-for="Request.SubUnit" class="control-label"></label>
-                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom"  disabled />
                                 <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-md-6 form-group">
@@ -852,76 +852,80 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
         </div>
         <div id="comments" class="tab-pane fade @showComments">
             <div class="row modal-tab-name">
-                <span class="heading-1 col-12 modal-tab-name">Comments</span>
+                <span class="heading-1 col-12 modal-tab-name float-left">Comments and Ratings</span>
             </div>
-            <div class="border document-border p-3 comment-row">
-                <div class="row mb-0">
-                    <div class="col-1 mr-3">
-                        <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
-                            @{
-                                var imgsrc = "/UserImages/profile_circle_big.png";
-                                if (_userManager.GetUserAsync(User).Result.UserImage != null)
+            <div class=" container text-right">
+                <ul class="list-unstyled">
+                    <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--order-inv-color);">   +</button></li>
+
+                    <div style="display:none;" id="popover-content">
+
+                        @foreach (var item in Model.CommentTypes)
+                        {<div class="row px-3">
+                                @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
                                 {
-                                    imgsrc = _userManager.GetUserAsync(User).Result.UserImage;
+                                    <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
                                 }
-                            }
-                            <img src="@imgsrc" class=" ml-0" alt="default User image" />
-                        </button>
-                    </div>
-                    <div class="col-9">
-                        <div class="form-group">
-                            <label class="font-weight-bold small-text">
-                                @_userManager.GetUserAsync(User).Result.FirstName
-                                @_userManager.GetUserAsync(User).Result.LastName
-                                @DateTime.Now.ToLongDateString()
-                                @DateTime.Now.ToLongTimeString()
-                            </label>
-                            <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span asp-validation-for="NewComment.CommentText" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @{
-                if (Model.OldComments != null)
-                {
-                    foreach (Comment comment in Model.OldComments)
-                    {
+                                else
+                                {
+                                    <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                                }
+                                <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark mark-readonly" disabled style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
 
-                        <div class="border document-border p-3 comment-row">
-                            <div class="row mb-0">
-                                <div class="col-1 mr-3">
-                                    <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
-                                        @{
-                                            var src = "/UserImages/profile_circle_big.png";
-                                            if (_userManager.GetUserAsync(User).Result.UserImage != null)
-                                            {
-                                                src = _userManager.GetUserAsync(User).Result.UserImage;
-                                            }
-                                        }
-                                        <img src="@src" class=" ml-0" alt="default User image" />
-                                    </button>
-                                </div>
-                                <div class="col-9">
-                                    <div class="form-group">
-                                        <label class="font-weight-bold small-text">
-                                            @comment.ApplicationUser.FirstName
-                                            @comment.ApplicationUser.LastName
-                                            @comment.CommentTimeStamp.ToLongDateString()
-                                            @comment.CommentTimeStamp.ToLongTimeString()
-                                        </label>
-                                        <input disabled class="form-control-plaintext border-bottom" value="@comment.CommentText" />
-                                    </div>
-                                </div>
                             </div>
+                        }
+                    </div>
+
+                </ul>
+            </div>
+
+            <div id="comment-info">
+                <input type="hidden" value="@Model.Comments.Count" id="index" />
+                @for(int i=0; i < Model.Comments.Count; i++)
+                {
+                    <div class="table comment-info border p-2 mb-3">
+                        <input type="hidden" asp-for="Comments[i].CommentType" class="comment-type" />
+                        <div class="row ml-2  border-bottom-0 mb-0">
+                            <div class="col-1 mt-auto mb-auto ">
+                                <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50 "  >
+                                    @{
+                                        var src = "/UserImages/profile_circle_big.png";
+                                        if (_userManager.GetUserAsync(User).Result.UserImage != null)
+                                        {
+                                            src = _userManager.GetUserAsync(User).Result.UserImage;
+                                        }
+                                    }
+                                    <img src="@src" class=" ml-0" alt="default User image" />
+                                </button>
+                            </div>
+                            <div class="col-9 ">
+                                <div class=" p-3 ">
+                                    <label class="m-0"> @_userManager.GetUserAsync(User).Result.FirstName</label>
+                                    <label class="m-0">@_userManager.GetUserAsync(User).Result.LastName</label>
+                                    <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
+                                    <input asp-for="Comments[i].CommentText" class="form-control-plaintext border-bottom m-0 p-0 comment-text mark-readonly" disabled />
+                                    <input type="hidden" asp-for="Comments[i].CommentID"/>
+                                </div>
+
+                            </div>
+                            <div class=" col-2 ">
+                                @if (Model.Comments[i].CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
+                                {
+                                    <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
+                                }
+                                else if (Model.Comments[i].CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
+                                {
+                                    <i class="icon-report_problem-24px-2 float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
+                                }
+                            </div>
+
                         </div>
-                    }
+                    </div>
                 }
-            }
-            @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
 
-
+            </div>
         </div>
+
 
     </div>
 </div>
