@@ -1945,43 +1945,58 @@ $(function () {
 
 
 	$.fn.AddContactValidation = function () {
-		$(".contact-info:hidden:first .contact-name").rules("add", "required");
-		$(".contact-info:hidden:first .contact-email").rules("add", {
-			required: true,
-			email: true
-		});
-		$(".contact-info:hidden:first .contact-phone").rules("add", {
-			required: true,
-			minlength: 9
-		});
+		$(".contact-name").each(
+			function () { $(this).rules("add", "required") });
+
+		$(".contact-email").each(
+			function () {
+				$(this).rules("add", {
+					required: true,
+					email: true
+				});
+			});
+		$(".contact-phone").each(
+			function () {
+				$(this).rules("add", {
+					required: true,
+					minlength: 9
+				});
+			});
 	};
 
-	$("#addSuplierContact").click(function () {
-		console.log("in onclick addSuplierContact");
-		$(".contact-info:hidden:first").find(".contact-active").val(true);
-		$.fn.AddContactValidation();
-		$(".contact-info:hidden:first").show();
 
+	$("#addSuplierContact").off('click').click(function () {
+		var index = $('#contact-index').val();
+		$.ajax({
+			async: false,
+			url: '/Vendors/ContactInfoPartial?index=' + index,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("#contact-info").append(data);
+				$('#contact-index').val(++index);
+				$.fn.AddContactValidation();
+			}
+		});
+	
 	});
 
 
 
 
-	$.fn.addComment = function (type) {
-		console.log("$('#Comment').click");
-		$(".comment-info:hidden:first").find(".comment-active").val(true);
-		$(".comment-info:hidden:first").find(".comment-type").val(type);
+	$.fn.addSupplierComment = function (type) {
 		console.log(type);
-		if (type === "Comment") {
-			$(".comment-info:hidden:first i").addClass("icon-comment-24px ");
-			$(".comment-info:hidden:first i").css("color", "#30BCC9");
-		} else if (type === "Warning") {
-			$(".comment-info:hidden:first i").addClass("icon-report_problem-24px-2");
-			$(".comment-info:hidden:first i").css("color", "var(--danger-color)");
-		}
-		$(".comment-info:hidden:first .comment-text").rules("add", "required");
-
-		$(".comment-info:hidden:first").show();
+		var index = $('#comment-index').val();
+		$.ajax({
+			async: false,
+			url: '/Vendors/CommentInfoPartialView?type=' + type + '&index=' + index,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("#comment-info").append(data);
+				$('#comment-index').val(++index);
+			}
+		});
 	}
 
 	$.fn.addRequestComment = function (type) {

@@ -24,6 +24,7 @@ $(function () {
 			},
 		}
 	});
+
 	$('.addLocationForm').validate({
 		rules: {
 			"LocationInstance.LocationInstanceName": "required",
@@ -279,6 +280,15 @@ $(function () {
 
 
 		},
+	});
+	$(".contact-name").rules("add", "required");
+	$(".contact-email").rules("add", {
+		required: true,
+		email: true
+	});
+	$(".contact-phone").rules("add", {
+		required: true,
+		minlength: 9
 	});
 	$.validator.addMethod("nonAlphaNumeric", function (value) {
 		return /^[a-zA-Z0-9]+$/.test(value) == false;

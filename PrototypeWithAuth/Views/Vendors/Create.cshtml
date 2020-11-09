@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateSupplierViewModel;
+@using PrototypeWithAuth.ViewModels;
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
@@ -174,7 +175,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                </div>
+                            </div>
                             <div id="payment" class="tab-pane fade">
                                 <div class="modal-sides modal-body-top-p">
                                     <div class="row ">
@@ -214,118 +215,56 @@
                                         </div>
                                     </div>
                                 </div>
-                                </div>
+                            </div>
 
                             <div id="comments" class="tab-pane fade">
                                 <div class="modal-sides modal-body-top-p">
-                                    <div class="m-0 row popover-div">
-                                        <div class="col-9"> <div class="top-menu">Comments, Warnings, and Discounts</div></div>
+                                    <span class="heading-1 modal-tab-name float-left">Comments</span>
+                                    <div class=" container text-right">
+                                        <ul class="list-unstyled">
+                                            <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--lab-man-color);">   +</button></li>
 
-                                        <div class=" container col-2">
-                                            <ul class="list-unstyled">
-                                                <li><button href="#" id="addSupplierComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:@backgroundColor;">   +</button></li>
+                                            <div style="display:none;" id="popover-content">
 
-                                                <div style="display:none;" id="popover-content">
-
-                                                    @foreach (var item in Model.CommentTypes)
-                                                    {<div class="row px-3">
-                                                            @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
-                                                            {
-                                                                <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
-                                                            }
-                                                            else
-                                                            {
-                                                                <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
-                                                            }
-                                                            <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addComment('@item')">@item</button><hr class="m-0" />
-
-                                                        </div>
-                                                    }
-                                                </div>
-
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div id="comment-info">
-                                        @for (int i = 0; i < Model.VendorComments.Count(); i++)
-                                        {
-                                            <div class="table comment-info border p-2 mb-3" style="display:none">
-                                                @Html.HiddenFor(x => x.VendorComments[i].IsActive, htmlAttributes: new { @class = "comment-active" })
-                                                @Html.HiddenFor(x => x.VendorComments[i].VendorComment.CommentType, htmlAttributes: new { @class = "comment-type" })
-
-                                                <div class="row ml-2  border-bottom-0 mb-0">
-                                                    <div class="col-1 mt-auto mb-auto ">
-                                                        <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
-                                                            @{
-                                                                var src = "/UserImages/profile_circle_big.png";
-                                                                if (UserManager.GetUserAsync(User).Result.UserImage != null)
-                                                                {
-                                                                    src = UserManager.GetUserAsync(User).Result.UserImage;
-                                                                }
-                                                            }
-                                                            <img src="@src" class=" ml-0" alt="default User image" />
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-9 ">
-                                                        <div class=" p-3 ">
-                                                            <label class="m-0"> @UserManager.GetUserAsync(User).Result.FirstName</label>
-                                                            <label class="m-0">@UserManager.GetUserAsync(User).Result.LastName</label>
-                                                            <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
-
-                                                            <input asp-for="@Model.VendorComments[i].VendorComment.CommentText" class="form-control-plaintext border-bottom m-0 p-0 comment-text" />
-                                                            <span asp-validation-for="@Model.VendorComments[i].VendorComment.CommentText" class="text-danger-centarix"></span>
-                                                        </div>
+                                                @foreach (var item in Model.CommentTypes)
+                                                {<div class="row px-3">
+                                                        @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
+                                                        {
+                                                            <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                        }
+                                                        <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addSupplierComment('@item')">@item</button><hr class="m-0" />
 
                                                     </div>
-                                                    <div class=" col-2 ">  <i class=" float-right m-4" style="padding-top: .55rem; font-size: 1.25rem;"></i></div>
-
-                                                </div>
+                                                }
                                             </div>
-                                        }
+
+                                        </ul>
                                     </div>
 
+                                    <div id="comment-info">
+                                        <input type="hidden" value="0" id="comment-index" />
+
+                                    </div>
 
                                 </div>
-                                </div>
-                                <div id="contact" class="tab-pane fade">
+                            </div>
+                            <div id="contact" class="tab-pane fade">
+                               
+                                <div class="modal-sides modal-body-top-p">
                                     <div id="contact-info">
-                                        <div class="modal-sides modal-body-top-p">
-                                            @for (int i = 0; i < Model.VendorContacts.Count(); i++)
-                                            {
-                                                <div class=" contact-info" style="display:none">
-                                                    @Html.HiddenFor(x => x.VendorContacts[i].IsActive, htmlAttributes: new { @class = "contact-active" })
-                                                    <div class="row mb-3 ">
-                                                        <div class="col-6 mr-4  ">
-                                                            <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="control-label "></label>
-                                                            <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="form-control-plaintext border-bottom vendor-contact contact-name" />
-                                                            <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactName" class="text-danger-centarix"></span>
-                                                        </div>
-                                                        <div class="col-5  ">
-                                                            <label class="control-label">Category</label>
-                                                            <input class="form-control-plaintext border-bottom" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-3">
-                                                        <div class="col-6 mr-4">
-                                                            <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="control-label"></label>
-                                                            <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="form-control-plaintext border-bottom contact-email vendor-contact" />
-                                                            <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactEmail" class="text-danger-centarix"></span>
-                                                        </div>
-                                                        <div class="col-5 mb-5 ">
-                                                            <label asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="control-label "></label>
-                                                            <input asp-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="form-control-plaintext border-bottom contact-phone  vendor-contact" />
-                                                            <span asp-validation-for="@Model.VendorContacts[i].VendorContact.VendorContactPhone" class="text-danger-centarix"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                        </div>
-                                        <div class="text-center">
-                                            <input id="addSuplierContact" type="button" value="+ Add contact name" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize " style="font-size:1rem;" />
-                                        </div>
+                                        <input type="hidden" value="1" id="contact-index" />
+                                        @{await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = new VendorContact(), Index = 0 });}
                                     </div>
-                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <input id="addSuplierContact" type="button" value="+ Add contact name"  class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize " style="font-size:1rem;" />
+                                </div>
+                            </div>
+                        </div>
                             </div>
                     </div>
 
