@@ -1118,7 +1118,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     return false;
                 }
-                if (request.Cost > request.ApplicationUserCreator.OperaitonOrderLimit)
+                if (request.Cost > request.ApplicationUserCreator.OperationOrderLimit)
                 {
                     return false;
                 }

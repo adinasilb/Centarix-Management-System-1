@@ -234,7 +234,7 @@ namespace PrototypeWithAuth.Controllers
                 LabOrderLimit = registerUserViewModel.LabOrderLimit,
                 OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
                 OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
-                OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit,
+                OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit,
                 DateCreated = DateTime.Now,
                 EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
                 IsUser = true,
@@ -528,7 +528,7 @@ namespace PrototypeWithAuth.Controllers
                     userEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
                     userEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
                     userEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
-                    userEditted.OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit;
+                    userEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
                     userEditted.EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
                     _context.Update(userEditted);
                     await _context.SaveChangesAsync();
@@ -554,7 +554,7 @@ namespace PrototypeWithAuth.Controllers
                     employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
                     employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
                     employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
-                    employeeEditted.OperaitonOrderLimit = registerUserViewModel.OperaitonOrderLimit;
+                    employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
                     employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
                     employeeEditted.DOB = registerUserViewModel.NewEmployee.DOB;
                     employeeEditted.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
@@ -873,7 +873,7 @@ namespace PrototypeWithAuth.Controllers
                     LabOrderLimit = userSelected.LabOrderLimit,
                     OperationMonthlyLimit = userSelected.OperationMonthlyLimit,
                     OperationUnitLimit = userSelected.OperationUnitLimit,
-                    OperaitonOrderLimit = userSelected.OperaitonOrderLimit,
+                    OperaitonOrderLimit = userSelected.OperationOrderLimit,
                     Tab = Tab ?? 1
                 };
 
