@@ -48,15 +48,15 @@ namespace PrototypeWithAuth
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("AzureConnection")));
-
-            services.AddDbContext<ApplicationDbContext>(options => {
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
-                options.EnableSensitiveDataLogging(true);
-            });
+                    Configuration.GetConnectionString("ElixirAzureConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options => {
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection"));
+            //    options.EnableSensitiveDataLogging(true);
+            //});
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
@@ -125,7 +125,7 @@ namespace PrototypeWithAuth
             });
 
 
-            //CreateRoles(serviceProvider).Wait();
+            CreateRoles(serviceProvider).Wait();
 
             //CreateSingleRole(serviceProvider).Wait(); ;
 
@@ -171,14 +171,18 @@ namespace PrototypeWithAuth
                 FirstName = "Adina",
                 LastName = "Gayer",
                 EmailConfirmed = true,
-                TwoFactorEnabled = true
+                TwoFactorEnabled = true,
+                EmployeeStatusID = 4,
+                LockoutEnabled = true,
+                LockoutEnd = new DateTime(2999, 01, 01)
             };
-            var createAdminUser = await UserManager.CreateAsync(adminuser, "adinabCE2063*");
+            var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
             adminuser.EmailConfirmed = true;
             var result = await UserManager.UpdateAsync(adminuser);
             if (createAdminUser.Succeeded)
             {
                 await UserManager.AddToRoleAsync(adminuser, "Admin");
+                await UserManager.AddToRoleAsync(adminuser, "CEO");
             }
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
