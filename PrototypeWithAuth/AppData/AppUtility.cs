@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
@@ -54,6 +55,19 @@ namespace PrototypeWithAuth.AppData
             PayLater, Installments,
             [Display(Name = "Standing Orders")]
             StandingOrders
+        }
+        public enum PaymentsPopoverEnum
+        {
+            //Share,
+           // Order,
+            [Display(Name = "Monthly Payment")]
+            MonthlyPayment =1,
+            [Display(Name = "Pay Now")]
+            PayNow = 3,
+            [Display(Name = "Pay Later")]
+            PayLater =4, 
+            Installments =5,
+           // Clarification
         }
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
@@ -215,6 +229,70 @@ namespace PrototypeWithAuth.AppData
               value.Hour, value.Minute, 0);
         }
 
+        public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(String CurrentEnum)
+        {
+            List<AccountingPopoverLink> list = new List<AccountingPopoverLink>();
+            var enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
+
+            foreach (var e in enums)
+            {
+
+                if (CurrentEnum != e.ToString())
+                {
+                    AccountingPopoverLink accountingPopoverLink = new AccountingPopoverLink();
+                    accountingPopoverLink.CurrentLocation = (PaymentsPopoverEnum)Enum.Parse(typeof(PaymentsPopoverEnum), CurrentEnum);
+                    accountingPopoverLink.Description = e;
+                    switch (e)
+                    {
+                        //case PaymentsPopoverEnum.Share:
+                        //    accountingPopoverLink.Action = "AccountingPayments";
+                        //    accountingPopoverLink.Controller = "Requests";
+                        //    accountingPopoverLink.Color = "#30BCC9";
+                        //    accountingPopoverLink.Icon = "icon-share-24px-1";
+                        //    break;
+                        //case PaymentsPopoverEnum.Order:
+                        //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                        //    accountingPopoverLink.Controller = "Requests";
+                        //    accountingPopoverLink.Color = "#00CA72";
+                        //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px";
+                        //    break;
+                        case PaymentsPopoverEnum.MonthlyPayment:
+                            accountingPopoverLink.Action = "ChangePaymentStatus";
+                            accountingPopoverLink.Controller = "Requests";
+                            accountingPopoverLink.Color = "#90C939";
+                            accountingPopoverLink.Icon = "icon-monetization_on-24px1";
+                            break;
+                        case PaymentsPopoverEnum.PayNow:
+                            accountingPopoverLink.Action = "ChangePaymentStatus";
+                            accountingPopoverLink.Controller = "Requests";
+                            accountingPopoverLink.Color = "#D5A522";
+                            accountingPopoverLink.Icon = "icon-credit_card-24px";
+                            break;
+                        case PaymentsPopoverEnum.PayLater:
+                            accountingPopoverLink.Action = "ChangePaymentStatus";
+                            accountingPopoverLink.Controller = "Requests";
+                            accountingPopoverLink.Color = "#5F79E2";
+                            accountingPopoverLink.Icon = "icon-centarix-icons-19";
+                            break;
+                        case PaymentsPopoverEnum.Installments:
+                            accountingPopoverLink.Action = "ChangePaymentStatus";
+                            accountingPopoverLink.Controller = "Requests";
+                            accountingPopoverLink.Color = "#7D9BAA";
+                            accountingPopoverLink.Icon = "icon-centarix-icons-20";
+                            break;
+                        //case PaymentsPopoverEnum.Clarification:
+                        //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                        //    accountingPopoverLink.Controller = "Requests";
+                        //    accountingPopoverLink.Color = "#E27933";
+                        //    accountingPopoverLink.Icon = "icon-report_problem-24px-2";
+                        //    break;
+                    }
+                    list.Add(accountingPopoverLink);
+                }
+            }
+
+            return list;
+        }
     }
 
 }

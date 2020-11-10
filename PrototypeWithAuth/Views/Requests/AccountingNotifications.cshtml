@@ -33,7 +33,16 @@
                     <div class="text pt-2">
                         [@count]
                         @{
-                            var totalCost = 0;
+                            double totalCost = 0;
+                            if (Model.Requests != null)
+                            {
+                                var vendorsCount = Model.Requests.Count();
+                                for (int x = 0; x < vendorsCount; x++)
+                                {
+                                    totalCost += Model.Requests.ElementAt(x).Select(r => r.Cost).Sum(c => c);
+                                }
+                            }
+
                             var decCost = (decimal)totalCost;
                             var formattedTotalCost = decCost.ToString("C02");
                         }

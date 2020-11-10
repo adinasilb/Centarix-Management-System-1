@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.AccountingPaymentsViewModel
+@using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "AccountingPayments";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
@@ -27,7 +28,16 @@
                     <div class="text pt-2">
                         [@count]
                         @{
-                            var totalCost = 0;
+                            double totalCost = 0;
+                            if (Model.Requests != null)
+                            {
+                                var vendorsCount = Model.Requests.Count();
+                                for (int x = 0; x < vendorsCount; x++)
+                                {
+                                    totalCost += Model.Requests.ElementAt(x).Select(r=>r.Cost).Sum(c=>c);
+                                }
+                            }
+
                             var decCost = (decimal)totalCost;
                             var formattedTotalCost = decCost.ToString("C02");
                         }
@@ -134,17 +144,25 @@
                                 </div>
                             @*<a href="">
             <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
-
+                                
         </a>*@
+                                @{ String popoverID = Request.RequestID + "more";}
+
                             <div class="table-icon-div">
                                 <ul class="list-unstyled p-0 m-0">
-                                    <li><button href="#" id="more" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow "><i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i></button></li>
+                                    <li><button href="#"  type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@popoverID"><i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i></button></li>
 
-                                    <div style="display:none;" id="popover-content">
-                                        <div class="row px-3">                                        
-                                            <button id="share-payment" class='share-payment stop-event btn ' onclick="SharePayment()" value='@Request.RequestID'>Share</button><hr />
+                                    <div style="display:none;" id="@popoverID">
+                                        @{ var links = AppUtility.GetPaymentsPopoverLinks(Model.AccountingPaymentsEnum.ToString());}
+                                        @foreach (var link in links)
+                                        {
+                                            <div class="row px-3">
+                                                <a  asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation"  asp-route-requestID="@Request.RequestID" asp-route-newStatus="@link.Description" class="btn-link text no-hover"><i class="@link.Icon " style="color:@link.Color"></i><label class="m-2">@link.Description.ToString() </label></a>
+</div>
+                                           
+                                            <hr class="m-0" />
+                                        }
 
-                                        </div>
                                     </div>
 
                                 </ul>
@@ -176,15 +194,6 @@
 }
 
 <script>
-    $(".share-payment").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("in share payments accounting payments");
-    });
-    $("body").on("click", ".share-payment"), function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("in share payments accounting payments - body click");
-    });
+
 </script>
 
