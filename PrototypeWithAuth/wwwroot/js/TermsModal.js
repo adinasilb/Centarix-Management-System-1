@@ -46,88 +46,32 @@ $(function () {
 
 				prevyyyy = newyyyy;
 				prevmm = newmm;
-				console.log('before paymentline')
-				$.fn.AddNewPaymentLine(newIncrementNumber, paymentDate);
-				newIncrementNumber++;
+				var index = $('#index').val();
+				$.ajax({
+					async: false,
+					url: '/Requests/InstallmentsPartial?index='+ index,
+					type: 'GET',
+					cache: false,
+					success: function (data) {
+						$(".terms-modal").append(data);
+						$('#index').val(++index);
+						newIncrementNumber++;
+
+						
+					}
+				});
+			
 			};
 
-			$.fn.AdjustPaymentDates();
 		}
 		else if (difference < 0) { //TODO: rework the remove
 			for (x = difference; x < 0; x++) {
-				console.log("x: " + x);
-				$(".payment-sum input").last().remove();
-				$(".payment-date input").last().remove();
-				console.log($(".payment-date input").last().val());
-				$(".payment-type select").last().remove();
-				$(".payment-account select").last().remove();
-				$(".payment-reference input").last().remove();
+				$(".terms-modal").last().remove();
 			}
 		}
 	};
 
 
-
-	$.fn.AddNewPaymentLine = function (increment, date) {
-		var mdbSelect = "mdb-select-" + increment;
-		var htmlTR = "";
-		//htmlTR += "<tr class='payment-line m-0 p-0'>";
-		//htmlTR += "<td class='m-0 p-0'>";
-
-		var htmlPS = "";
-		htmlPS += '<input class="form-control-plaintext border-bottom sum-1" type="text" data-val="true" data-val-required="The Sum is required." id="NewPayments_' + increment + '__Sum" name="NewPayments[' + increment + '].Sum" value=""><input/>';
-		htmlPS += ' <span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].Sum" data-valmsg-replace="true"></span>';
-		console.log(htmlPS);
-		var htmlPD = "";
-		htmlPD += '<input class="form-control-plaintext border-bottom date-1" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '"><input/>';
-		htmlPD += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
-		//htmlTR += '</td>';
-		//htmlTR += '<td class="m-0 p-0">';
-		var htmlPT = "";
-		htmlPT += '<select class="mdb-select ' + mdbSelect + ' custom select-dropdown form-control-plaintext paymentType type-1" id="NewPayments_' + increment + '_CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
-		htmlPT += '<option value="1">Credit Card</option>';
-		htmlPT += '<option value="2">Bank Account</option>';
-		htmlPT += '</select>';
-		htmlPT += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
-		//htmlTR += '</td>';
-		//htmlTR += '<td class="m-0 p-0">';
-		var htmlPA = "";
-		var newPaymentsId = "NewPayments_" + increment + "__CompanyAccountID";
-		var newPaymentsName = "NewPayments[" + increment + "].CompanyAccountID";
-		htmlPA += '<select class="mdb-select  ' + mdbSelect + ' custom select-dropdown form-control-plaintext companyAccountNum account-1" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
-		htmlPA += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
-		//htmlTR += '</td>';
-		//htmlTR += '<td class="m-0 p-0">';
-		var htmlPR = "";
-		htmlPR += '<input class="form-control-plaintext border-bottom reference-1" type="text" data-val="true" data-val-required="The Reference Number is required." id="NewPayments_' + increment + '__Reference" name="NewPayments[' + increment + '].Reference" value="" ><input/>';
-		htmlPR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].Reference" data-valmsg-replace="true"></span>';
-		//htmlTR += '</td>';
-		//htmlTR += '</tr >';
-		//$("body").append(htmlTR);
-		//$(".payments-table tr:last").after(htmlTR);
-		$(".payment-sum").append(htmlPS);
-		$(".payment-date").append(htmlPD);
-		$(".payment-type").append(htmlPT);
-		$(".payment-account").append(htmlPA);
-		$(".payment-reference").append(htmlPR);
-
-
-		$('.' + mdbSelect).materialSelect();
-
-		//$.fn.AdjustInputHeights();
-	};
-
-	$.fn.AdjustInputHeights = function () {
-		var input = $("#Installments");
-		var height = input.height();
-		console.log("height: " + height);
-		$(".date-1").height(height);
-		console.log("height date 1: " + $(".date-1").height());
-		$(".type-1").height(height);
-		console.log("height type 1: " + $(".type-1").height());
-		$(".account-1").height(height);
-		$(".reference-1").height(height);
-	};
 
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
 	$(".modal").on("change", ".paymentType", function (e) {
@@ -146,11 +90,6 @@ $(function () {
 			$("#" + newid).html(item);
 		});
 	});
-
-
-	$.fn.AdjustPaymentDates = function () {
-
-	};
 
 	$("#Paid").on('change', function () {
 		var val = $(this).val();
@@ -203,10 +142,6 @@ $(function () {
 			$(".paid-disabled").hide();
 		};
 	});
-
-	$.fn.HideAndShowFields = function (type) {
-
-	};
 
 
 })
