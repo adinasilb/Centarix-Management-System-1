@@ -80,20 +80,47 @@ namespace PrototypeWithAuth.Controllers
 
         [Authorize(Roles = "Admin, LabManagment")]
         [HttpGet]
-        public async Task<IActionResult> _Repairs(int requestId, int? calibrationId = null)
+        public async Task<IActionResult> _Repairs(int RepairIndex)
         {
-            var repair = _context.Repairs.Where(c => c.CalibrationID == calibrationId).FirstOrDefault();
-            return PartialView(GetRepairsViewModel(requestId, repair));
+            //var repair = _context.Repairs.Where(c => c.CalibrationID == calibrationId).FirstOrDefault();
+            _RepairsViewModel repairsViewModel = new _RepairsViewModel()
+            {
+                Repair = new Repair()
+                {
+                    Date = DateTime.Now
+                },
+                RepairIndex = RepairIndex + 1,
+                IsNew = true
+            };
+
+            return PartialView(repairsViewModel);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin, LabManagment")]
-        public async Task<IActionResult> _Repairs(_RepairsViewModel repairsViewModel)
+        public async Task<IActionResult> SaveRepairs(CreateCalibrationViewModel vm)
         {
-            repairsViewModel.Repair.RequestID = repairsViewModel.RequestID;
-            repairsViewModel.Repair.CalibrationTypeID = 1;
-            _context.Update(repairsViewModel.Repair);
-            await _context.SaveChangesAsync();
+            foreach (var repair in vm.Repairs)
+            {
+                if (repair.CalibrationID > 0) //an old repair
+                {
+                    var updatedRepair = _context.Repairs.Where(c => c.CalibrationID == repair.CalibrationID).FirstOrDefault();
+                    updatedRepair.Date = repair.Date;
+                    updatedRepair.Days = repair.Days;
+                    updatedRepair.Months = repair.Months;
+                    updatedRepair.IsRepeat = repair.IsRepeat;
+                    updatedRepair.Description = repair.Description;
+                    _context.Update(updatedRepair);
+                    await _context.SaveChangesAsync();
+                }
+                else // a new repair
+                {
+                    repair.RequestID = vm.RequestID;
+                    repair.CalibrationTypeID = 1;
+                    _context.Add(repair);
+                    await _context.SaveChangesAsync();
+                }
+            }
             return RedirectToAction("Index");
         }
 
