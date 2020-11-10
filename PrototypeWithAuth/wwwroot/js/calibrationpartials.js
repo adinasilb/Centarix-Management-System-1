@@ -19,16 +19,27 @@
     //    }
     //});
 
-	$(".isRepeat").off("click").on("click", function () {
-		console.log("is repeat clicked");
-	});
-
-	$("body").off("click").on("click", ".repeat-type input", function () {
-		console.log("clicked");
-		var value = $(this).children("input").attr("id");
-		console.log("value: " + value);
+	$(".repeat-type label").off("click").on("click", function () {
+		var value = $(this).attr("for");
 		var index = value.substr(value.length - 1, 1);
 		console.log("value: " + value + ", index: " + index);
+		var first2Letters = value.substr(0, 2);
+		console.log("first2Letters: " + first2Letters);
+		var repairDays = $("#Repairs_" + index + "__Days");
+		var repairMonths = $("#Repairs_" + index + "__Months");
+		var hiddenInput = $("#Repairs_" + index + "__IsRepeat");
+		switch (first2Letters) {
+			case "on":
+				repairDays.attr("disabled", true);
+				repairMonths.attr("disabled", true);
+				hiddenInput.val("false");
+				break;
+			case "re":
+				repairDays.attr("disabled", false);
+				repairMonths.attr("disabled", false);
+				hiddenInput.val("true");
+				break;
+        }
 	});
 
 	$(".removeNewRepair").off("click").on("click", function (e) {
@@ -37,7 +48,21 @@
 		var newDivClass = "RepairDiv" + $(this).attr("index");
 		console.log("newDivClass: " + newDivClass);
 		$("." + newDivClass).remove();
+
+		$.fn.UpdateIds($(this).attr("index"));
 	});
+
+	$.fn.UpdateIds = function (deletedIndex) {
+		console.log("update ids. deleted div: " + deletedIndex);
+		$(".repair-outer-div").each(function (i, obj) {
+			var divIndex = $(this).attr("repairIndex");
+			console.log("DivIndex: " + divIndex);
+			if (parseInt(divIndex) > parseInt(deletedIndex)) {
+				console.log("change ids with #" + divIndex);
+				$("#Repairs_" + divIndex + "__Date")
+            }
+		});
+	};
 
     $(".addRepair").off("click").on("click", function (e) {
         e.preventDefault();

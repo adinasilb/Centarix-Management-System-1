@@ -106,9 +106,17 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var updatedRepair = _context.Repairs.Where(c => c.CalibrationID == repair.CalibrationID).FirstOrDefault();
                     updatedRepair.Date = repair.Date;
-                    updatedRepair.Days = repair.Days;
-                    updatedRepair.Months = repair.Months;
                     updatedRepair.IsRepeat = repair.IsRepeat;
+                    if (repair.IsRepeat)
+                    {
+                        updatedRepair.Months = repair.Months;
+                        updatedRepair.Days = repair.Days;
+                    }
+                    else
+                    {
+                        updatedRepair.Months = 0;
+                        updatedRepair.Days = 0;
+                    }
                     updatedRepair.Description = repair.Description;
                     _context.Update(updatedRepair);
                     await _context.SaveChangesAsync();
