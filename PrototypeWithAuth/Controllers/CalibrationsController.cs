@@ -39,7 +39,8 @@ namespace PrototypeWithAuth.Controllers
 
             try
             {
-                onePageOfProducts = await _context.Calibrations.Include(c => c.Request).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor).Include(c => c.Request.Product.ProductSubcategory).Include(c => c.CalibrationType).ToPagedListAsync(page, 25);
+                onePageOfProducts = await _context.Calibrations.Include(c => c.Request).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
+                    .Include(c => c.Request.Product.ProductSubcategory).Include(c => c.CalibrationType).ToPagedListAsync(page, 25);
             }
             catch (Exception ex)
             {
@@ -105,6 +106,7 @@ namespace PrototypeWithAuth.Controllers
                 if (repair.CalibrationID > 0) //an old repair
                 {
                     var updatedRepair = _context.Repairs.Where(c => c.CalibrationID == repair.CalibrationID).FirstOrDefault();
+                    updatedRepair.CalibrationName = repair.CalibrationName;
                     updatedRepair.Date = repair.Date;
                     updatedRepair.IsRepeat = repair.IsRepeat;
                     if (repair.IsRepeat)

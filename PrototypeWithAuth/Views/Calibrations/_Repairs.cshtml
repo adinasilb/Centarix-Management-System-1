@@ -5,6 +5,9 @@
 <script src="~/js/calibrationpartials.js"></script>
 
 @{
+    var NameID = "Repairs_" + Model.RepairIndex + "__CalibrationName";
+    var NameName = "Repairs[" + Model.RepairIndex + "].CalibrationName";
+
     var DateID = "Repairs_" + Model.RepairIndex + "__Date";
     var DateName = "Repairs[" + Model.RepairIndex + "].Date";
 
@@ -48,7 +51,9 @@
         {*@
     <div class="row">
         <div class="col-12">
-            <span class="heading-1 modal-tab-name">Repairs</span>
+            <span class="heading-1 modal-tab-name">
+                <input id="@NameID" name="@NameName" class="border-bottom form-control-plaintext" value="@Model.Repair.CalibrationName" />
+            </span>
             @if (Model.IsNew)
             {
                 <button class="removeNewRepair close modal-close-padding modal-close-style" index="@Model.RepairIndex">X</button>
