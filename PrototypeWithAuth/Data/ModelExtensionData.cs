@@ -963,7 +963,7 @@ namespace PrototypeWithAuth.Data
                 new RequestNotificationStatus
                 {
                     NotificationStatusID = 5,
-                    Icon = "icon-access_time-24px",
+                    Icon = "icon-notification_timekeeper-24px",
                     Color = "--timekeeper-color",
                     Description = "UpdateHours"
                 }
