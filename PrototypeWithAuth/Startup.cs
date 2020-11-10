@@ -35,11 +35,11 @@ namespace PrototypeWithAuth
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddLogging(loggingBuilder => {
-                loggingBuilder.AddConsole()
-                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
-                loggingBuilder.AddDebug();
-            });
+            //services.AddLogging(loggingBuilder => {
+            //    loggingBuilder.AddConsole()
+            //        .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+            //    loggingBuilder.AddDebug();
+            //});
 
             ////Set database Connection from application json file
 
@@ -48,16 +48,16 @@ namespace PrototypeWithAuth
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("ElixirAzureConnection")));
-
             services.AddDbContext<ApplicationDbContext>(options =>
-            {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
-                options.EnableSensitiveDataLogging(true);
-            });
+                    Configuration.GetConnectionString("ElixirAzureConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //{
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection"));
+            //    options.EnableSensitiveDataLogging(true);
+            //});
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
@@ -126,7 +126,7 @@ namespace PrototypeWithAuth
             });
 
 
-            CreateRoles(serviceProvider).Wait();
+            //CreateRoles(serviceProvider).Wait();
 
 
         }
