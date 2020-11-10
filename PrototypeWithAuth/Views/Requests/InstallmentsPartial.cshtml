@@ -1,0 +1,20 @@
+﻿@*@model PrototypeWithAuth.ViewModels.InstallmentsPartialViewModel
+<input class="form-control-plaintext border-bottom sum-1" type="text" data-val="true" data-val-required="The Sum is required." id="NewPayments_'@Model.Index'__Sum" name="NewPayments['@Model.Index'].Sum" value="">
+<input />
+<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].Sum" data-valmsg-replace="true"></span>
+<input class="form-control-plaintext border-bottom date-1" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_'@Model.Index'__PaymentDate" name="NewPayments['@Model.Index'].PaymentDate" value="' + date + '">
+<input />
+<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments['@Model.Index'].PaymentDate" data-valmsg-replace="true"></span>
+</td>
+<td class="m-0 p-0">
+<select class="mdb-select ' + mdbSelect + ' custom select-dropdown form-control-plaintext paymentType type-1" id="NewPayments_' + increment + '_CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType">
+        <option value="">Select A Payment Type </option>
+        <option value="1">Credit Card</option>
+        <option value="2">Bank Account</option>
+    </select>';<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>
+</td>
+<td class="m-0 p-0">
+<select class="mdb-select  ' + mdbSelect + ' custom select-dropdown form-control-plaintext companyAccountNum account-1" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>
+</td><td class="m-0 p-0">
+<input class="form-control-plaintext border-bottom reference-1" type="text" data-val="true" data-val-required="The Reference Number is required." id="NewPayments_'@Model.Index'__Reference" name="NewPayments['@Model.Index'].Reference" value=""><input />';
+<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments['@Model.Index'].Reference" data-valmsg-replace="true"></span>*@

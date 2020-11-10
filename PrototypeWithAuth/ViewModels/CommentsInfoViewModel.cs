@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class AddCommentViewModel
+    public class CommentsInfoViewModel
     {
-        public VendorComment VendorComment { get; set; }
         public int Index { get; set; }
+        public Comment Comment { get; set; }
         public bool IsEdit { get; set; }
     }
 }

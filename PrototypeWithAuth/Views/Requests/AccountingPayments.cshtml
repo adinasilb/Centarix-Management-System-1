@@ -120,38 +120,36 @@
                             @String.Format("{0:d}", @Request.CreationDate.Date)
                         </td>
                         <td style="width:17.1%">
-                            <a href="">
-                                <i class="icon-monetization_on-24px green-overlay px-1" style="font-size:1.6rem;"></i>
-                            </a>
-                            <a href="">
-                                <i class="icon-favorite_border-24px accounting-filter px-1" style="font-size:1.6rem;"></i>
-                            </a>
+                            <div class="d-inline-flex">
+                                <div class="table-icon-div">
+                                    <a href="" class="p-0 m-0">
+                                        <i class="icon-monetization_on-24px green-overlay px-1" style="font-size:1.6rem;"></i>
+                                    </a>
+                                </div>
+                        
+                                <div class="table-icon-div">
+                                    <a href="" class="p-0 m-0">
+                                        <i class="icon-favorite_border-24px accounting-filter px-1" style="font-size:1.6rem;"></i>
+                                    </a>
+                                </div>
                             @*<a href="">
-                                    <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
+            <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
 
-                                </a>*@
-                            <a href="" type="button" class="stop-event" data-popover-content="#mypop" data-placement="bottom" data-toggle="popover" data-trigger="focus" @*title="Popover title"*@
-                               @*data-content="#popover-content"*@>
-                                <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
-                            </a>
-                            <div class="hidden" id="mypop">
-                                <div class="popover-heading">
+        </a>*@
+                            <div class="table-icon-div">
+                                <ul class="list-unstyled p-0 m-0">
+                                    <li><button href="#" id="more" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow "><i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i></button></li>
 
-                                </div>
-                                <div class="popover-body">
-                                    This is the body
-                                    <a href='' class='share-payment' value='@Request.RequestID'>Share</a><hr />
-                                </div>
+                                    <div style="display:none;" id="popover-content">
+                                        <div class="row px-3">                                        
+                                            <button id="share-payment" class='share-payment stop-event btn ' onclick="SharePayment()" value='@Request.RequestID'>Share</button><hr />
+
+                                        </div>
+                                    </div>
+
+                                </ul>
                             </div>
-                            <div class="popover-body" id="popover-body" style="display: none;">
-                                <script src="~/js/site.js"></script>
-                                <button id="share-payment" class='share-payment stop-event btn btn-black' onclick="SharePayment()" value='@Request.RequestID'>Share</button><hr />
-                            </div>
-                            @*</div>*@
-                            @{
-                                //var dataToggle
-                            }
-
+                      </div>
                         </td>
                     </tr>
                 }

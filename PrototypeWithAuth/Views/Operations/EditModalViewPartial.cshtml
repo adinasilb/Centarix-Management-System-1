@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+@using PrototypeWithAuth.ViewModels
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
@@ -50,8 +51,8 @@
                     <div class="form-group">
                         <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
                         @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"), "Select Category",
-new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist", @disabled = "disabled", @searchable = "Select Category" })
+    new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"), "Select Category",
+    new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist", @disabled = "disabled", @searchable = "Select Category" })
                         <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -59,8 +60,8 @@ new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-re
                     <div class="form-group sublist">
                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
-"Select Subcategory", new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "sublist", @disabled = "disabled", @searchable = "Select SubCategory" })
+    new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubcategoryDescription"),
+    "Select Subcategory", new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "sublist", @disabled = "disabled", @searchable = "Select SubCategory" })
                         <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -284,7 +285,7 @@ new SelectList(Model.ProductSubcategories, "ProductSubcategoryID", "ProductSubca
                         @Html.DropDownListFor(
                                                 model => model.Request.Terms,
                                                 new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
+    htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
                                             )
                     </div>
                 </div>
@@ -529,57 +530,51 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
 
         <div id="comments" class="tab-pane fade @showComments">
             <div class="row modal-tab-name">
-                <span class="heading-1 col-12 modal-tab-name">Comments</span>
+                <span class="heading-1 col-12 modal-tab-name float-left">Comments and Ratings</span>
             </div>
-            @{
-                if (Model.OldComments != null)
-                {
-                    foreach (Comment comment in Model.OldComments)
-                    {
+            <div class=" container text-right">
+                <ul class="list-unstyled">
+                    <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--operations-color);">   +</button></li>
 
-                        <div class="border document-border p-3">
-                            <div class="row mb-0">
-                                <div class="col-1 mr-3">
-                                    <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
-                                        @{
-                                            var src = "/UserImages/profile_circle_big.png";
-                                            if (_userManager.GetUserAsync(User).Result.UserImage != null)
-                                            {
-                                                src = _userManager.GetUserAsync(User).Result.UserImage;
-                                            }
-                                        }
-                                        <img src="@src" class=" ml-0" alt="default User image" />
-                                    </button>
-                                </div>
-                                <div class="col-9">
-                                    <div class="form-group">
-                                        <label class="font-weight-bold small-text">
-                                            @_userManager.GetUserAsync(User).Result.FirstName
-                                            @_userManager.GetUserAsync(User).Result.LastName
-                                            @DateTime.Now.ToLongDateString()
-                                            @DateTime.Now.ToLongTimeString()
-                                        </label>
-                                        <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " disabled />
-                                        <span asp-validation-for="NewComment.CommentText" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>
+                    <div style="display:none;" id="popover-content">
+
+                        @foreach (var item in Model.CommentTypes)
+                        {<div class="row px-3">
+                                @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
+                                {
+                                    <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
+                                }
+                                else
+                                {
+                                    <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                                }
+                                <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark mark-readonly" disabled style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
+
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
+
+                </ul>
+            </div>
+
+            <div id="comment-info">
+                <input type="hidden" value="@Model.Comments.Count" id="index" />
+                @for (int i = 0; i < Model.Comments.Count; i++)
+                {
+                    await Html.RenderPartialAsync(Url.Content("../Requests/CommentInfoPartialView"), new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
                 }
-            }
-            @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
 
-
+            </div>
         </div>
+
 
     </div>
 </div>
 @if (Model.Tab != 0)
 {
-<script>
+    <script>
 
-    $('.mdb-select').materialSelect();
-</script>
+        $('.mdb-select').materialSelect();
+    </script>
 }
 

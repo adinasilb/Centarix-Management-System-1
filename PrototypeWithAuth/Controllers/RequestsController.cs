@@ -435,6 +435,7 @@ namespace PrototypeWithAuth.Controllers
             var unittypeslookup = _context.UnitTypes.Include(u => u.UnitParentType).ToLookup(u => u.UnitParentType);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
+            List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
@@ -447,6 +448,8 @@ namespace PrototypeWithAuth.Controllers
                 UnitTypes = unittypeslookup,
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts,
+                CommentTypes = commentTypes,
+                Comments = new List<Comment>(),
                 //CurrentUser = 
             };
 
@@ -636,23 +639,29 @@ namespace PrototypeWithAuth.Controllers
                     //var subprojectid = requestItemViewModel.Request.Product.SubProjectID;
                     //var subproject = requestItemViewModel.Request.Product.SubProject;
                     requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
-                    if (!String.IsNullOrEmpty(requestItemViewModel.NewComment.CommentText))
-                    {
-                        try
-                        {
-                            //save the new comment
-                            requestItemViewModel.NewComment.ApplicationUserID = currentUser.Id;
-                            requestItemViewModel.NewComment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
-                            requestItemViewModel.NewComment.RequestID = requestItemViewModel.Request.RequestID;
-                            _context.Add(requestItemViewModel.NewComment);
-                            await _context.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            //do something here. comment didn't save
-                        }
-                    }
 
+                    try
+                    {
+                        foreach (var comment in requestItemViewModel.Comments)
+                        {
+                            if (comment.CommentText.Length != 0)
+                            {
+                                //save the new comment
+                                comment.ApplicationUserID = currentUser.Id;
+                                comment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                                comment.RequestID = requestItemViewModel.Request.RequestID;
+                                _context.Add(comment);
+                            }
+                           
+                            
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        //do something here. comment didn't save
+                    }
+                   
                     //rename temp folder to the request id
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolderFrom = Path.Combine(uploadFolder, "0");
@@ -723,7 +732,7 @@ namespace PrototypeWithAuth.Controllers
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
-
+            List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
                 ParentCategories = parentcategories,
@@ -733,8 +742,12 @@ namespace PrototypeWithAuth.Controllers
                 Vendors = vendors,
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
-                CompanyAccounts = companyaccounts
-            };
+                CompanyAccounts = companyaccounts,
+                Comments = await _context.Comments
+                    .Include(c => c.ApplicationUser)
+                    .Where(c => c.Request.RequestID == id).ToListAsync(),
+                CommentTypes = commentTypes
+        };
 
             if (id == 0)
             {
@@ -761,18 +774,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     .ToList();
-                //check if this works once there are commments
-                var comments = Enumerable.Empty<Comment>();
-                comments = _context.Comments
-                    .Include(c => c.ApplicationUser)
-                    .Where(c => c.Request.RequestID == id);
-                //needs to be instantiated here so it doesn't throw an error if nothing is in it
-                /*
-                 *I think it should be an ienumerable and look like
-                 *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
-                 *ike before but it's not recognizing the syntax
-                */
-                requestItemViewModel.OldComments = comments.ToList();
+        
 
                 //may be able to do this together - combining the path for the orders folders
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -934,7 +936,7 @@ namespace PrototypeWithAuth.Controllers
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
-
+            List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
                 ParentCategories = parentcategories,
@@ -944,8 +946,12 @@ namespace PrototypeWithAuth.Controllers
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts,
-                Tab = Tab ?? 0
-            };
+                Tab = Tab ?? 0,
+                Comments = await _context.Comments
+                .Include(r => r.ApplicationUser)
+                .Where(r => r.Request.RequestID == id).ToListAsync(),
+                CommentTypes = commentTypes
+        };
 
             ModalViewType = "Edit";
 
@@ -967,18 +973,6 @@ namespace PrototypeWithAuth.Controllers
                 .Where(sp => sp.ProjectID == requestItemViewModel.Request.SubProject.ProjectID)
                 .ToListAsync();
             requestItemViewModel.SubProjects = subprojects;
-
-            var comments = Enumerable.Empty<Comment>();
-            comments = _context.Comments
-                .Include(r => r.ApplicationUser)
-                .Where(r => r.Request.RequestID == id);
-            //needs to be instantiated here so it doesn't throw an error if nothing is in it
-            /*
-             *I think it should be an ienumerable and look like
-             *requestItemViewModel.Comments = new Enumerable.Empty<Comment>(); 
-             *ike before but it's not recognizing the syntax
-            */
-            requestItemViewModel.OldComments = comments.ToList();
 
             //may be able to do this together - combining the path for the orders folders
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -1277,7 +1271,7 @@ namespace PrototypeWithAuth.Controllers
             product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
             product.VendorID = requestItemViewModel.Request.Product.VendorID;
             //in case we need to return to the modal view
-
+            product.ProductName = requestItemViewModel.Request.Product.ProductName;
             requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
@@ -1318,25 +1312,28 @@ namespace PrototypeWithAuth.Controllers
                     //_context.Update(requestItemViewModel.Request.Product);
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
-                    if (requestItemViewModel.NewComment != null)
-                    {
-                        if (!String.IsNullOrEmpty(requestItemViewModel.NewComment?.CommentText))
+
+                  
+                        try
                         {
-                            try
+                            foreach (var comment in requestItemViewModel.Comments)
                             {
-                                //save the new comment
-                                requestItemViewModel.NewComment.ApplicationUserID = currentUser.Id;
-                                requestItemViewModel.NewComment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
-                                requestItemViewModel.NewComment.RequestID = requestItemViewModel.Request.RequestID;
-                                _context.Add(requestItemViewModel.NewComment);
-                                await _context.SaveChangesAsync();
+                                if (!String.IsNullOrEmpty(comment.CommentText))
+                                {
+                                    //save the new comment
+                                    comment.ApplicationUserID = currentUser.Id;
+                                    comment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                                    comment.RequestID = requestItemViewModel.Request.RequestID;
+                                    _context.Update(comment);
+                                }
                             }
-                            catch (Exception ex)
-                            {
-                                //Tell the user that the comment didn't save here
-                            }
+                            await _context.SaveChangesAsync();
                         }
-                    }
+                        catch (Exception ex)
+                        {
+                            //Tell the user that the comment didn't save here
+                        }
+
 
 
 
@@ -3125,6 +3122,17 @@ namespace PrototypeWithAuth.Controllers
         {
             return PartialView(MenuItem);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> CommentInfoPartialView(String type, int index)
+        {
+            Comment comment = new Comment();
+            comment.CommentType = type;
+            CommentsInfoViewModel commentsInfoViewModel = new CommentsInfoViewModel { Comment = comment, Index = index };
+            return PartialView(commentsInfoViewModel);
+        }
+
 
 
         [HttpGet]

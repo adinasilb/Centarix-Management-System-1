@@ -9,6 +9,7 @@ namespace PrototypeWithAuth.ViewModels
     public class AddContactViewModel
     {
         public VendorContact VendorContact{get; set;}
-        public bool IsActive { get; set; }
+        public int Index { get; set; }
+        public bool IsEdit { get; set; }
     }
 }

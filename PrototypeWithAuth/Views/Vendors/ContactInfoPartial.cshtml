@@ -1,0 +1,41 @@
+﻿@model PrototypeWithAuth.ViewModels.AddContactViewModel
+@{
+
+    var disabled = "";
+    if (Model.IsEdit)
+    {
+        disabled = "disabled";
+    }
+}
+
+@{
+    var contactNameID = "VendorContacts_" + Model.Index + "__VendorContactName";
+    var contactNameName = "VendorContacts[" + Model.Index + "].VendorContactName";
+    var contactEmailID = "VendorContacts_" + Model.Index + "__VendorContactEmail";
+    var contactEmailName = "VendorContacts[" + Model.Index + "].VendorContactEmail";
+    var contactPhoneID = "VendorContacts_" + Model.Index + "__VendorContactPhone";
+    var contactPhoneName = "VendorContacts[" + Model.Index + "].VendorContactPhone";
+
+}
+<div class=" contact-info">
+    <div class="row mb-3 ">
+        <div class="col-6 mr-4  ">
+            <label id="@contactNameID" name="@contactNameName" class="control-label ">Name</label>
+            <input id="@contactNameID" name="@contactNameName" value="@Model.VendorContact.VendorContactName" class="form-control-plaintext border-bottom vendor-contact contact-name mark-readonly" @disabled />
+        </div>
+        <div class="col-5  ">
+            <label class="control-label">Category</label>
+            <input class="form-control-plaintext border-bottom mark-readonly" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-6 mr-4">
+            <label id="@contactEmailID" name="@contactEmailName" class="control-label ">Email</label>
+            <input id="@contactEmailID" name="@contactEmailName" value="@Model.VendorContact.VendorContactEmail" class="form-control-plaintext border-bottom contact-email vendor-contact mark-readonly" @disabled />
+        </div>
+        <div class="col-5 mb-5 ">
+            <label id="@contactPhoneID" name="@contactPhoneName" class="control-label ">Phone</label>
+            <input id="@contactPhoneID" name="@contactPhoneName" value="@Model.VendorContact.VendorContactPhone" class="form-control-plaintext border-bottom contact-phone  vendor-contact mark-readonly" @disabled />
+        </div>
+    </div>
+</div>

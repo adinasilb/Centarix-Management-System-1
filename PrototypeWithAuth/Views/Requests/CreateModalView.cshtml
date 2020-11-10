@@ -614,39 +614,37 @@
 
                         <div id="comments" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                <span class="heading-1 modal-tab-name">Comments and ratings</span>
-                                <br />
-                                <br />
+                                <span class="heading-1 modal-tab-name float-left">Comments and ratings</span>
+                                <div class=" container text-right">
+                                    <ul class="list-unstyled">
+                                        <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--order-inv-color);">   +</button></li>
 
-                                @*in the future maybe make this into a partial view so it can be called multiple times in one form*@
-                                <div class="border document-border p-3 comment-row">
-                                    <div class="row mb-0">
-                                        <div class="col-1 mr-3">
-                                            <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
-                                                @{
-                                                    var src = "/UserImages/profile_circle_big.png";
-                                                    if (_userManager.GetUserAsync(User).Result.UserImage != null)
+                                        <div style="display:none;" id="popover-content">
+
+                                            @foreach (var item in Model.CommentTypes)
+                                            {<div class="row px-3">
+                                                    @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
                                                     {
-                                                        src = _userManager.GetUserAsync(User).Result.UserImage;
+                                                        <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
                                                     }
-                                                }
-                                                <img src="@src" class=" ml-0" alt="default User image" />
-                                            </button>
+                                                    else
+                                                    {
+                                                        <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                    }
+                                                    <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
+
+                                                </div>
+                                            }
                                         </div>
-                                        <div class="col-9">
-                                            <div class="form-group">
-                                                <label class="font-weight-bold small-text">
-                                                    @_userManager.GetUserAsync(User).Result.FirstName
-                                                    @_userManager.GetUserAsync(User).Result.LastName
-                                                    @DateTime.Now.ToLongDateString()
-                                                    @DateTime.Now.ToLongTimeString()
-                                                </label>
-                                                <input asp-for="NewComment.CommentText" class="form-control-plaintext border-bottom " />
-                                                <span asp-validation-for="NewComment.CommentText" class="text-danger-centarix"></span>
-                                            </div>
-                                        </div>
-                                    </div>
+
+                                    </ul>
                                 </div>
+
+                                <div id="comment-info">
+                                 <input type="hidden" value="0" id="index"/>
+                               
+                                </div>
+
                             </div>
                         </div>
 
