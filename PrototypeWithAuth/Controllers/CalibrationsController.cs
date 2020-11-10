@@ -115,6 +115,7 @@ namespace PrototypeWithAuth.Controllers
                     updatedRepair.CalibrationName = repair.CalibrationName;
                     updatedRepair.Date = repair.Date;
                     updatedRepair.IsRepeat = repair.IsRepeat;
+                    updatedRepair.IsDeleted = repair.IsDeleted;
                     if (repair.IsRepeat)
                     {
                         updatedRepair.Months = repair.Months;
@@ -129,7 +130,7 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(updatedRepair);
                     await _context.SaveChangesAsync();
                 }
-                else // a new repair
+                else if(!repair.IsDeleted) // a new repair that wasn't x'd out
                 {
                     repair.RequestID = vm.RequestID;
                     repair.CalibrationTypeID = 1;

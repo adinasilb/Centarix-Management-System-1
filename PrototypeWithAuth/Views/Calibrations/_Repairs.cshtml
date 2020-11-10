@@ -41,12 +41,16 @@
     var shortDate = Model.Repair.Date.Date;
 
     var divName = "repair-outer-div RepairDiv" + Model.RepairIndex;
+
+    var DeletedID = "Repairs_" + Model.RepairIndex + "__IsDeleted";
+    var DeletedName = "Repairs[" + Model.RepairIndex + "].IsDeleted";
 }
 
 @*<form action="" method="post" id="myForm" class="RepairsPartialViews"  enctype="multipart/form-data">*@
 <div class="@divName" repairIndex="@Model.RepairIndex">
 
     <input type="hidden" asp-for="RequestID" />
+    <input type="hidden" id="@DeletedID" name="@DeletedName" />
     @*@for (int i = 0; i < Model.Repair.Count; i++)
         {*@
     <div class="row">

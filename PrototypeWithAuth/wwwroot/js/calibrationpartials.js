@@ -45,10 +45,12 @@
 	$(".removeNewRepair").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var newDivClass = "RepairDiv" + $(this).attr("index");
+		var index = $(this).attr("index");
+		var newDivClass = "RepairDiv" + index;
 		console.log("newDivClass: " + newDivClass);
 		$("." + newDivClass).hide();
 
+		$("#Repairs_" + index + "__IsDeleted").val("true");
 		//$.fn.UpdateIds($(this).attr("index"));
 	});
 
