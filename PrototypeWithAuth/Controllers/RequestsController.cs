@@ -3298,7 +3298,27 @@ namespace PrototypeWithAuth.Controllers
 
             return View(accountingPaymentsViewModel);
         }
+        [HttpGet]
+        [Authorize(Roles = "Admin, Accounting")]
+        public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
+        {
 
+            var request = _context.Requests.Where(r => r.RequestID == requestID).FirstOrDefault();
+            try
+            {
+                request.PaymentStatusID = (int)newStatus;
+                _context.Update(request);
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception e)
+            {
+
+            }
+
+            var accountingPaymentsEnum = (AppUtility.AccountingPaymentsEnum)Enum.Parse(typeof(AppUtility.AccountingPaymentsEnum), currentStatus.ToString());
+
+            return RedirectToAction("AccountingPayments",new { accountingPaymentsEnum = accountingPaymentsEnum });
+        }
         [HttpGet]
         [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> AccountingNotifications(AppUtility.AccountingNotificationsEnum accountingNotificationsEnum = AppUtility.AccountingNotificationsEnum.NoInvoice)
@@ -3318,9 +3338,7 @@ namespace PrototypeWithAuth.Controllers
                     requestsList = requestsList.Where(r => r.InvoiceID == null);
                     break;
                 case AppUtility.AccountingNotificationsEnum.DidntArrive:
-                    requestsList = requestsList.Where(r => r.RequestStatusID == 2)
-                        .Where(r => DateTime.Compare(r.ParentRequest.OrderDate.AddDays(Convert.ToInt32(r.ExpectedSupplyDays)).Date, DateTime.Today.Date) < 0);
-                    //.Where(r => r.ParentRequest.OrderDate.AddDays(Convert.ToDouble(r.ExpectedSupplyDays)) <= DateTime.Today);
+                    requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r=>r.ExpectedSupplyDays!=null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
                     break;
                 case AppUtility.AccountingNotificationsEnum.PartialDelivery:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 4);

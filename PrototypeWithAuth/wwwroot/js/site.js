@@ -2601,17 +2601,18 @@ $(function () {
 		$('#addRequestComment').popover('toggle');
 
 	});
-	$("#more").click(function () {
+	$(".more").click(function () {
+		var val = $(this).val();
 		$('[data-toggle="popover"]').popover('dispose');
-		$('#more').popover({
+		$(this).popover({
 			sanitize: false,
 			placement: 'bottom',
 			html: true,
 			content: function () {
-				return $('#popover-content').html();
+				return $('#'+val).html();
 			}
 		});
-		$('#more').popover('toggle');
+		$(this).popover('toggle');
 
 	});
 	$('.employee-status-radio').off("click").on("click", function () {
