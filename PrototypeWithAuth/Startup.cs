@@ -48,15 +48,16 @@ namespace PrototypeWithAuth
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirAzureConnection")));
-
-            //services.AddDbContext<ApplicationDbContext>(options => {
+            //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("DefaultConnection"));
-            //    options.EnableSensitiveDataLogging(true);
-            //});
+            //        Configuration.GetConnectionString("ElixirAzureConnection")));
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection"));
+                options.EnableSensitiveDataLogging(true);
+            });
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
@@ -64,7 +65,7 @@ namespace PrototypeWithAuth
 
 
 
-                services.AddControllersWithViews();
+            services.AddControllersWithViews();
 
 
             // Enable Razor pages, but in the Debug configuration, compile the views at runtime, for ease of development

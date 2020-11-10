@@ -60,9 +60,15 @@ namespace PrototypeWithAuth.Controllers
         {
             var request = await _context.Requests.Where(r => r.RequestID == requestid).Include(r => r.Product).FirstOrDefaultAsync();
             var calibrations = await _context.Calibrations.Where(c => c.RequestID == requestid).ToListAsync();
-            List<ExternalCalibration> externalCalibrations = await _context.ExternalCalibrations.Where(c => c.RequestID == requestid).ToListAsync();
-            List<InternalCalibration> internalCalibrations = await _context.InternalCalibrations.Where(c => c.RequestID == requestid).ToListAsync();
-            List<Repair> repairs = await _context.Repairs.Where(c => c.RequestID == requestid).ToListAsync();
+            List<ExternalCalibration> externalCalibrations = await _context.ExternalCalibrations
+                .Where(c => c.RequestID == requestid)
+                .Where(c => c.Date > DateTime.Now).ToListAsync();
+            List<InternalCalibration> internalCalibrations = await _context.InternalCalibrations
+                .Where(c => c.RequestID == requestid)
+                .Where(c => c.Date > DateTime.Now).ToListAsync();
+            List<Repair> repairs = await _context.Repairs
+                .Where(c => c.RequestID == requestid)
+                .Where(c => c.Date > DateTime.Now).ToListAsync();
             CreateCalibrationViewModel createCalibrationViewModel = new CreateCalibrationViewModel
             {
                 ProductDescription = request.Product.ProductName,
@@ -90,7 +96,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     Date = DateTime.Now
                 },
-                RepairIndex = RepairIndex + 1,
+                RepairIndex = RepairIndex,
                 IsNew = true
             };
 
