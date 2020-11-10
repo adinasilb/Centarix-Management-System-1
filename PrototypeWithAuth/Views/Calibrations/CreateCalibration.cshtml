@@ -1,16 +1,22 @@
-﻿@model PrototypeWithAuth.ViewModels.CreateCalibrationViewModel;
+﻿
 @using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Controllers
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
+
+@model CreateCalibrationViewModel;
+
 @inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+<script src="~/js/calibrationpartials.js"></script>
 <div class="col-12  mx-auto on-form-modal supplier-form" style="width: 60%">
     <div class="on-form-modal-border">
-        <form action="" id="myForm" class="createCalibration" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+        <form action="" id="" class="createCalibration" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
             <input type="hidden" asp-for="RequestID" />
             <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
                 <div class="row">
@@ -22,8 +28,8 @@
                     <div class="col-12 px-0">
                         <div class="container-fluid div-tabs text-center modal-sides">
                             <ul class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
-                                <li class="nav-item"><a data-toggle="tab" href="#instructions" class="nav-link next-tab  lab-man-nav-link "><i class="icon-assignment-24px" style="font-size: 2rem;"></i><br />Instructions</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#repairs" class="nav-link next-tab  lab-man-nav-link" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Repairs</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#instructions" class="nav-link   lab-man-nav-link "><i class="icon-assignment-24px" style="font-size: 2rem;"></i><br />Instructions</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#repairs" class="nav-link  lab-man-nav-link" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Repairs</a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#externalCalibration" class="nav-link next-tab  lab-man-nav-link"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />External Calibration</a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#internalCalibration" class="nav-link next-tab  lab-man-nav-link "><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />In House Maintainance</a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#history" class="nav-link next-tab   lab-man-nav-link"><i class="icon-history-24px" e.css style="font-size: 2rem;"></i><br />History</a></li>
@@ -129,75 +135,48 @@
                         </div>
                         <div id="repairs" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-
-                                @{ await Html.RenderPartialAsync("_Repairs",
-                                        new PrototypeWithAuth.ViewModels._RepairsViewModel()
-                                        {
-                                            RequestID = Model.RequestID,
-                                            Repair = new Repair()
-                                        }); }
+                                <button class="addRepair text custom-button">Add Repair</button>
+                                @{ var repairIndex = 0;}
+                                <div id="repairsListDiv">
+                                    @for (var i = 0; i < Model.Repairs.Count; i++)
+                                    {
+                                        <input type="hidden" asp-for="Repairs[i].CalibrationID" />
+                                        <input type="hidden" asp-for="Repairs[i].RequestID" />
+                                        await Html.RenderPartialAsync("_Repairs",
+                                            new _RepairsViewModel()
+                                            {
+                                                RequestID = Model.RequestID,
+                                                Repair = Model.Repairs[i],
+                                                RepairIndex = i,
+                                                IsNew = false
+                                            }
+                                            );
+                                        repairIndex = i;
+                                    }
+                                </div>
+                                <input type="hidden" id="repairIndex" value="@repairIndex" />
+                                <div class="row mt-3 text-center">
+                                    <div class="col-12">
+                                        @*<input type="submit" class="text custom-button custom-button-font lab-man-background-color saveRepairs between-button-margin " value="Save" />*@
+                                        <input type="submit" class="text custom-button custom-button-font lab-man-background-color saveRepairs between-button-margin" asp-action="SaveRepairs" value="Save" />
+                                        @*<button class="text custom-button custom-button-font lab-man-background-color saveRepairs  between-button-margin">Save</button>*@
+                                        <button class="custom-button custom-cancel text dont-save-request-edits ">Cancel</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div id="externalCalibration" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                @{ await Html.RenderPartialAsync("_ExternalCalibration",
-                                          new PrototypeWithAuth.ViewModels._ExternalCalibrationViewModel()
-                                          {
-                                              RequestID = Model.RequestID,
-                                              ExternalCalibration = new ExternalCalibration()
-                                          }) ; }
-                                @*@for (int i = 0; i < Model.ExternalCalibrations.Count; i++)
-                                    {
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <label class="control-label" asp-for="ExternalCalibrations[i].Date"></label>
-                                                <input asp-for="ExternalCalibrations[i].Date" class="border-bottom form-control-plaintext" />
-                                                <span asp-validation-for="ExternalCalibrations[i].Date" class="text-danger-centarix"></span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-1">
-                                                <label class="control-label" asp-for="ExternalCalibrations[i].Days"></label>
-                                                <input asp-for="ExternalCalibrations[i].Days" class="border-bottom form-control-plaintext" />
-                                                <span asp-validation-for="ExternalCalibrations[i].Days" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-1">
-                                                <label class="control-label" asp-for="ExternalCalibrations[i].Months"></label>
-                                                <input asp-for="ExternalCalibrations[i].Months" class="border-bottom form-control-plaintext" />
-                                                <span asp-validation-for="ExternalCalibrations[i].Months" class="text-danger-centarix"></span>
-                                            </div>
-                                            <div class="col-1 offset-1">
-                                                <input type="hidden" asp-for="ExternalCalibrations[i].IsRepeat"  />                                              <div class="custom-control custom-radio mr-4  employee-type">
-                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, false, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "once", })
-                                                    <label class="radio-button custom-control-label pt-1 pl-2" for="once">Once</label>
-                                                </div>
-                                                <div class="custom-control custom-radio mr-4  employee-type">
-                                                    @Html.RadioButtonFor(model => model.ExternalCalibrations[i].IsRepeat, true, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = "repeat", })
-                                                    <label class="radio-button custom-control-label pt-1 pl-2" for="repeat">Repeat</label>
-                                                </div>
-
-                                            </div>
-
-                                            </div>
-                                        <div class="row">
-                                            <div class="col-12 border rounded" style="min-height:8rem">
-                                                <input asp-for="ExternalCalibrations[i].Description" placeholder="short explanation..." class="form-control-plaintext" />
-                                            </div>
-                                        </div>
-                                    }
-                                    <div class="row mt-3 text-center">
-                                        <div class="col-12">
-                                            <button class="text custom-button custom-button-font lab-man-background-color saveExternalCalibration  between-button-margin">Save</button>
-                                            <button class="custom-button custom-cancel text dont-save-request-edits ">Cancel</button>
-                                        </div>
-                                    </div>*@
+                                @{ await Html.RenderPartialAsync("_ExternalCalibration", CalibrationsController.GetExternalCalibrationViewModel(Model.RequestID));}
+                                @**@
 
                             </div>
                         </div>
 
                         <div id="internalCalibration" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                @{ await Html.RenderPartialAsync("_InHouseMaintenance"); }
+                                @{ await Html.RenderPartialAsync("_InternalCalibration", CalibrationsController.GetInternalCalibrationViewModel(Model.RequestID));}
+
                             </div>
                         </div>
                         <div id="history" class="tab-pane fade">
