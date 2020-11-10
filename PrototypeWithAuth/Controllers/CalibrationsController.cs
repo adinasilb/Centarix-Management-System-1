@@ -103,6 +103,24 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(repairsViewModel);
         }
 
+
+        [Authorize(Roles = "Admin, LabManagment")]
+        [HttpGet]
+        public async Task<IActionResult> _ExternalCalibration(int ECIndex)
+        {
+            _ExternalCalibrationViewModel externalCalibrationViewModel = new _ExternalCalibrationViewModel()
+            {
+                ExternalCalibration = new ExternalCalibration()
+                {
+                    Date = DateTime.Now
+                },
+                ExternalCalibrationIndex = ECIndex,
+                IsNew = true
+            };
+
+            return PartialView(externalCalibrationViewModel);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin, LabManagment")]
         public async Task<IActionResult> SaveRepairs(CreateCalibrationViewModel vm)
@@ -133,8 +151,46 @@ namespace PrototypeWithAuth.Controllers
                 else if(!repair.IsDeleted) // a new repair that wasn't x'd out
                 {
                     repair.RequestID = vm.RequestID;
-                    repair.CalibrationTypeID = 1;
+                    repair.CalibrationTypeID = 2;
                     _context.Add(repair);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(Roles ="Admin, LabManagment")]
+        public async Task<IActionResult> SaveExternalCalibrations(CreateCalibrationViewModel vm)
+        {
+            foreach (var externalCalibration in vm.ExternalCalibrations)
+            {
+                if (externalCalibration.CalibrationID > 0) //an old repair
+                {
+                    var updatedEC = _context.ExternalCalibrations.Where(c => c.CalibrationID == externalCalibration.CalibrationID).FirstOrDefault();
+                    updatedEC.CalibrationName = externalCalibration.CalibrationName;
+                    updatedEC.Date = externalCalibration.Date;
+                    updatedEC.IsRepeat = externalCalibration.IsRepeat;
+                    updatedEC.IsDeleted = externalCalibration.IsDeleted;
+                    if (externalCalibration.IsRepeat)
+                    {
+                        updatedEC.Months = externalCalibration.Months;
+                        updatedEC.Days = externalCalibration.Days;
+                    }
+                    else
+                    {
+                        externalCalibration.Months = 0;
+                        externalCalibration.Days = 0;
+                    }
+                    updatedEC.Description = externalCalibration.Description;
+                    _context.Update(updatedEC);
+                    await _context.SaveChangesAsync();
+                }
+                else if (!externalCalibration.IsDeleted) // a new repair that wasn't x'd out
+                {
+                    externalCalibration.RequestID = vm.RequestID;
+                    externalCalibration.CalibrationTypeID = 1;
+                    _context.Add(externalCalibration);
                     await _context.SaveChangesAsync();
                 }
             }
@@ -157,13 +213,6 @@ namespace PrototypeWithAuth.Controllers
                 repairsViewModel.Repair = repair;
             }
             return repairsViewModel;
-        }
-
-        [Authorize(Roles = "Admin, LabManagment")]
-        [HttpGet]
-        public async Task<IActionResult> _ExternalCalibration(int requestId, int? CalibrationID = null)
-        {
-            return PartialView(GetExternalCalibrationViewModel(requestId, CalibrationID));
         }
 
         [HttpPost]

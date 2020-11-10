@@ -128,8 +128,6 @@ namespace PrototypeWithAuth
 
             CreateRoles(serviceProvider).Wait();
 
-            //CreateSingleRole(serviceProvider).Wait(); ;
-
 
         }
         
