@@ -7,6 +7,7 @@
 @{
     var NameID = "ExternalCalibrations_" + Model.ExternalCalibrationIndex + "__CalibrationName";
     var NameName = "ExternalCalibrations[" + Model.ExternalCalibrationIndex + "].CalibrationName";
+    var NameClass = "ExternalCalibrations.CalibrationName";
 
     var DateID = "ExternalCalibrations_" + Model.ExternalCalibrationIndex + "__Date";
     var DateName = "ExternalCalibrations[" + Model.ExternalCalibrationIndex + "].Date";
@@ -59,7 +60,7 @@
         <div class="col-2">
             @if (Model.IsNew || Model.ExternalCalibration.Date > DateTime.Now)
             {
-                <button class="removeNewExternalCalibration close modal-close-padding modal-close-style" index="@Model.ExternalCalibrationIndex">X</button>
+                <button class="removeNewExternalCalibration close modal-close-padding modal-close-style text" index="@Model.ExternalCalibrationIndex">X</button>
             }
         </div>
     </div>
