@@ -1287,7 +1287,101 @@ namespace PrototypeWithAuth.Data
                  Description = "In House Maintainance",
                  Icon = "icon-inhouse-maintainance-24px"
              }
-         ); ;
+         );
+
+            modelBuilder.Entity<CompanyDayOffType>().HasData(
+             new CompanyDayOffType
+             {
+                 CompanyDayOffTypeID = 1,
+                 Name = "Purim 1"
+             },
+              new CompanyDayOffType
+              {
+                  CompanyDayOffTypeID = 2,
+                  Name = "Purim 2"
+              },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 3,
+                   Name = "Erev Pesach"
+               },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 4,
+                   Name = "Pesach"
+               },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 5,
+                   Name = "Erev Shviei Pesach"
+               },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 6,
+                   Name = "Shviei Pesach"
+               },
+                new CompanyDayOffType
+                {
+                    CompanyDayOffTypeID = 7,
+                    Name = "Yom Hazmaut"
+                },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 8,
+                   Name = "Erev Shavuous"
+               },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 9,
+                   Name = "Shavuous"
+               },
+             
+                new CompanyDayOffType
+                {
+                    CompanyDayOffTypeID = 10,
+                    Name = "Erev Rosh Hashana"
+                },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 11,
+                   Name = "Rosh Hashana 1"
+               },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 12,
+                   Name = "Rosh Hashana 2"
+               },         
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 13,
+                   Name = "Erev Yom Kippur"
+               },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 14,
+                   Name = "Yom Kippur"
+               },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 15,
+                   Name = "Erev Sukkot"
+               },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 16,
+                   Name = "Sukkot"
+               },
+               new CompanyDayOffType
+               {
+                   CompanyDayOffTypeID = 17,
+                   Name = "Erev Simchat Torah"
+               },
+                new CompanyDayOffType
+                {
+                    CompanyDayOffTypeID = 18,
+                    Name = "Simchat Torah"
+                }
+         );
 
         }
     }

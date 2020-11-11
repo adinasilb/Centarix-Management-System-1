@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Models;
-using Microsoft.Owin.Security.Cookies;
 
 namespace PrototypeWithAuth
 {
