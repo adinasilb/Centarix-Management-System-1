@@ -7,18 +7,23 @@
 @{
     var NameID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__CalibrationName";
     var NameName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].CalibrationName";
+    var NameClass = "InternalCalibrationsCalibrationName";
 
     var DateID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__Date";
     var DateName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].Date";
+    var DateClass = "InternalCalibrationsDate";
 
     var DaysID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__Days";
     var DaysName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].Days";
+    var DaysClass = "InternalCalibrationsDays";
 
     var MonthsID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__Months";
     var MonthsName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].Months";
+    var MonthsClass = "InternalCalibrationsMonths";
 
     var RepeatID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__IsRepeat";
     var RepeatName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].IsRepeat";
+    var RepeatClass = "InternalCalibrationsIsRepeat ICIsRepeat" + Model.InternalCalibrationIndex;
 
     var radioButtonsName = "IsRepeatGroup" + Model.InternalCalibrationIndex;
     var onceID = "once-ic" + Model.InternalCalibrationIndex;
@@ -53,7 +58,7 @@
     <div class="row">
         <div class="col-10">
             <span class="heading-1 modal-tab-name">
-                <input id="@NameID" name="@NameName" class="border-bottom form-control-plaintext" value="@Model.InternalCalibration.CalibrationName" />
+                <input id="@NameID" name="@NameName" class="border-bottom form-control-plaintext @NameClass" value="@Model.InternalCalibration.CalibrationName" />
             </span>
         </div>
         <div class="col-2">
@@ -66,21 +71,21 @@
     <div class="row">
         <div class="col-3">
             <label class="control-label" asp-for="InternalCalibration.Date"></label>
-            <input asp-for="InternalCalibration.Date" id="@DateID" name="@DateName" class="border-bottom form-control-plaintext" type="date" />
+            <input asp-for="InternalCalibration.Date" id="@DateID" name="@DateName" class="@DateClass border-bottom form-control-plaintext" type="date" />
         </div>
     </div>
     <div class="row">
         <div class="col-1">
             <label class="control-label" asp-for="InternalCalibration.Days"></label>
             @*since once is automatically clicked the following will come up as disabled*@
-            <input id="@DaysID" name="@DaysName" class="border-bottom form-control-plaintext" min="0" value="@Model.InternalCalibration.Days" disabled />
+            <input id="@DaysID" name="@DaysName" class="@DaysClass border-bottom form-control-plaintext" calIndex="@Model.InternalCalibrationIndex" min="0" value="@Model.InternalCalibration.Days" disabled />
         </div>
         <div class="col-1">
             <label class="control-label" asp-for="InternalCalibration.Months"></label>
-            <input id="@MonthsID" name="@MonthsName" class="border-bottom form-control-plaintext" min="0" value="@Model.InternalCalibration.Months" disabled />
+            <input id="@MonthsID" name="@MonthsName" class="@MonthsClass border-bottom form-control-plaintext" calIndex="@Model.InternalCalibrationIndex" min="0" value="@Model.InternalCalibration.Months" disabled />
         </div>
         <div class="col-1 offset-1">
-            <input type="hidden" id="@RepeatID" name="@RepeatName" class="HiddenIsRepeat" tabindex="@Model.InternalCalibrationIndex" value="@Model.InternalCalibration.IsRepeat" />
+            <input type="hidden" id="@RepeatID" name="@RepeatName" class="HiddenIsRepeat @RepeatClass " tabindex="@Model.InternalCalibrationIndex" value="@Model.InternalCalibration.IsRepeat" />
             <div class="custom-control custom-radio mr-4  repeat-type">
                 <input @onceChecked class="custom-control-input isRepeat" id="@onceID" type="radio" value="false" name="@radioButtonsName" />
                 <label class="radio-button internalCalibration custom-control-label pt-1 pl-2" for="@onceID">Once</label>
@@ -99,13 +104,40 @@
         </div>
     </div>
 </div>
-@*  }*@
-
-@*</form>*@
 
 
-@*<script type="text/javascript">
-        $(document).ready(function () {
-            alert("_repairs document is ready!");
+<script type="text/javascript">
+    $(function () {
+        var InternalCalibrationIsRepeat = function (index) {
+            return $(".ICIsRepeat" + index).val() == "true";
+        }
+        $(".InternalCalibrationsCalibrationName").each(function () {
+            $(this).rules("add", {
+                required: true
+            });
         });
-    </script>*@
+        $(".InternalCalibrationsDate").each(function () {
+            $(this).rules("add", {
+                required: true
+            });
+        });
+        $(".InternalCalibrationsDays").each(function () {
+            var index = $(this).attr("calIndex");
+            $(this).rules("add", {
+                required: InternalCalibrationIsRepeat(index),
+                integer: true,
+                number: true,
+                min: 1
+            });
+        });
+        $(".InternalCalibrationsMonths").each(function () {
+            var index = $(this).attr("calIndex");
+            $(this).rules("add", {
+                required: InternalCalibrationIsRepeat(index),
+                integer: true,
+                number: true,
+                min: 1
+            });
+        });
+    });
+</script>

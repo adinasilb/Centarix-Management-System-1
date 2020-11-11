@@ -7,18 +7,23 @@
 @{
     var NameID = "Repairs_" + Model.RepairIndex + "__CalibrationName";
     var NameName = "Repairs[" + Model.RepairIndex + "].CalibrationName";
+    var NameClass = "RepairsCalibrationName";
 
     var DateID = "Repairs_" + Model.RepairIndex + "__Date";
     var DateName = "Repairs[" + Model.RepairIndex + "].Date";
+    var DateClass = "RepairsDate";
 
     var DaysID = "Repairs_" + Model.RepairIndex + "__Days";
     var DaysName = "Repairs[" + Model.RepairIndex + "].Days";
+    var DaysClass = "RepairsDays";
 
     var MonthsID = "Repairs_" + Model.RepairIndex + "__Months";
     var MonthsName = "Repairs[" + Model.RepairIndex + "].Months";
+    var MonthsClass = "RepairsMonths";
 
     var RepeatID = "Repairs_" + Model.RepairIndex + "__IsRepeat";
     var RepeatName = "Repairs[" + Model.RepairIndex + "].IsRepeat";
+    var RepeatClass = "RepairsIsRepeat ReIsRepeat" + Model.RepairIndex;
 
     var radioButtonsName = "IsRepeatGroup" + Model.RepairIndex;
     var onceID = "once-repairs" + Model.RepairIndex;
@@ -56,7 +61,7 @@
     <div class="row">
         <div class="col-10">
             <span class="heading-1 modal-tab-name">
-                <input id="@NameID" name="@NameName" class="border-bottom form-control-plaintext" value="@Model.Repair.CalibrationName" />
+                <input id="@NameID" name="@NameName" class="@NameClass border-bottom form-control-plaintext" value="@Model.Repair.CalibrationName" />
             </span>
         </div>
         <div class="col-2">
@@ -69,21 +74,21 @@
     <div class="row">
         <div class="col-3">
             <label class="control-label" asp-for="Repair.Date"></label>
-            <input asp-for="Repair.Date" id="@DateID" name="@DateName" class="border-bottom form-control-plaintext" type="date" />
+            <input asp-for="Repair.Date" id="@DateID" name="@DateName" class="@DateClass border-bottom form-control-plaintext" type="date" />
         </div>
     </div>
     <div class="row">
         <div class="col-1">
             <label class="control-label" asp-for="Repair.Days"></label>
             @*since once is automatically clicked the following will come up as disabled*@
-            <input id="@DaysID" name="@DaysName" class="border-bottom form-control-plaintext" min="0" value="@Model.Repair.Days" disabled />
+            <input id="@DaysID" name="@DaysName" calIndex="@Model.RepairIndex" class="@DaysClass border-bottom form-control-plaintext" min="0" value="@Model.Repair.Days" disabled />
         </div>
         <div class="col-1">
             <label class="control-label" asp-for="Repair.Months"></label>
-            <input id="@MonthsID" name="@MonthsName" class="border-bottom form-control-plaintext" min="0" value="@Model.Repair.Months" disabled />
+            <input id="@MonthsID" name="@MonthsName" calIndex="@Model.RepairIndex" class="@MonthsClass border-bottom form-control-plaintext" min="0" value="@Model.Repair.Months" disabled />
         </div>
         <div class="col-1 offset-1">
-            <input type="hidden" id="@RepeatID" name="@RepeatName" class="HiddenIsRepeat" tabindex="@Model.RepairIndex" value="@Model.Repair.IsRepeat" />
+            <input type="hidden" id="@RepeatID" name="@RepeatName" class="@RepeatClass HiddenIsRepeat" tabindex="@Model.RepairIndex" value="@Model.Repair.IsRepeat" />
             <div class="custom-control custom-radio mr-4  repeat-type">
                 <input @onceChecked class="custom-control-input isRepeat" id="@onceID" type="radio" value="false" name="@radioButtonsName" />
                 @* @Html.RadioButtonFor(model => model.Repair.IsRepeat, false, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = onceID })*@
@@ -104,13 +109,40 @@
         </div>
     </div>
 </div>
-@*  }*@
-
-@*</form>*@
 
 
-@*<script type="text/javascript">
-        $(document).ready(function () {
-            alert("_repairs document is ready!");
+<script type="text/javascript">
+    $(function () {
+        var RepairsIsRepeat = function (index) {
+            return $(".ReIsRepeat" + index).val() == "true";
+        }
+        $(".RepairsCalibrationName").each(function () {
+            $(this).rules("add", {
+                required: true
+            });
         });
-    </script>*@
+        $(".RepairsDate").each(function () {
+            $(this).rules("add", {
+                required: true
+            });
+        });
+        $(".RepairsDays").each(function () {
+            var index = $(this).attr("calIndex");
+            $(this).rules("add", {
+                required: RepairsIsRepeat(index),
+                integer: true,
+                number: true,
+                min: 1
+            });
+        });
+        $(".RepairsMonths").each(function () {
+            var index = $(this).attr("calIndex");
+            $(this).rules("add", {
+                required: RepairsIsRepeat(index),
+                integer: true,
+                number: true,
+                min: 1
+            });
+        });
+    });
+</script>

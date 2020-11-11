@@ -478,41 +478,11 @@ $(function () {
 			}
 		}
 	});
-	var ExternalCalibrationIsRepeat = function (index) {
-		return $(".ECIsRepeat" + index).val() == "true";
-	}
 	$(".createCalibration").validate({
 		rules: {
 		}
 	});
-	$(".ExternalCalibrationsCalibrationName").each(function () {
-		$(this).rules("add", {
-			required: true
-		});
-	});
-	$(".ExternalCalibrationsDate").each(function () {
-		$(this).rules("add", {
-			required: true
-		});
-	});
-	$(".ExternalCalibrationsDays").each(function () {
-		var index = $(this).attr("calIndex");
-		$(this).rules("add", {
-			required: ExternalCalibrationIsRepeat(index),
-			integer: true,
-			number: true,
-			min: 1
-		});
-	});
-	$(".ExternalCalibrationsMonths").each(function () {
-		var index = $(this).attr("calIndex");
-		$(this).rules("add", {
-			required: ExternalCalibrationIsRepeat(index),
-			integer: true,
-			number: true,
-			min: 1
-		});
-	});
+	
 
 	function isInteger(n) {
 		n = parseFloat(n)
