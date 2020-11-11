@@ -87,7 +87,7 @@ namespace PrototypeWithAuth.Controllers
                     TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.EquipmentList;
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Equipment;
                     IPagedList<Request> equipments = null;
-                    if (subcategoryID > 0 )
+                    if (subcategoryID > 0)
                     {
                         equipments = await _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
                         .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
@@ -95,12 +95,12 @@ namespace PrototypeWithAuth.Controllers
                         //pass the subcategoryID into the temp data to use if you'd like to sort from there
                         TempData["SubcategoryID"] = subcategoryID;
                     }
-                    else 
+                    else
                     {
                         equipments = await _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
                         .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
                         .Include(r => r.ParentRequest).ToPagedListAsync(page, 25);
-                    }   
+                    }
                     equipments.OrderByDescending(e => e.ParentRequest.OrderDate);
 
                     return View(equipments);
@@ -133,7 +133,7 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             //use an enum to determine which page type you are using and fill the data accordingly, 
             //also pass the data through tempdata to the page so you can 
-         
+
             //instantiating the ints to keep track of the amounts- will then pass into tempdata to use on the frontend
             //if it is a request page --> get all the requests with a new or ordered request status
 
@@ -588,7 +588,7 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
                             if (_context.ParentRequests.Any())
                             {
-                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber??0;
+                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
                             }
                             requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
                             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
@@ -652,8 +652,8 @@ namespace PrototypeWithAuth.Controllers
                                 comment.RequestID = requestItemViewModel.Request.RequestID;
                                 _context.Add(comment);
                             }
-                           
-                            
+
+
                         }
                         await _context.SaveChangesAsync();
                     }
@@ -661,7 +661,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         //do something here. comment didn't save
                     }
-                   
+
                     //rename temp folder to the request id
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolderFrom = Path.Combine(uploadFolder, "0");
@@ -747,7 +747,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(c => c.ApplicationUser)
                     .Where(c => c.Request.RequestID == id).ToListAsync(),
                 CommentTypes = commentTypes
-        };
+            };
 
             if (id == 0)
             {
@@ -774,7 +774,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     .ToList();
-        
+
 
                 //may be able to do this together - combining the path for the orders folders
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -920,7 +920,7 @@ namespace PrototypeWithAuth.Controllers
         {
             return await editModalViewFunction(id, Tab);
         }
-        public async Task<IActionResult> editModalViewFunction(int? id, int? Tab=0)
+        public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0)
         {
             string ModalViewType = "";
             if (id == null)
@@ -951,7 +951,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUser)
                 .Where(r => r.Request.RequestID == id).ToListAsync(),
                 CommentTypes = commentTypes
-        };
+            };
 
             ModalViewType = "Edit";
 
@@ -1313,9 +1313,12 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
 
-                  
-                        try
+
+                    try
+                    {
+                        if (requestItemViewModel.Comments != null)
                         {
+
                             foreach (var comment in requestItemViewModel.Comments)
                             {
                                 if (!String.IsNullOrEmpty(comment.CommentText))
@@ -1329,10 +1332,11 @@ namespace PrototypeWithAuth.Controllers
                             }
                             await _context.SaveChangesAsync();
                         }
-                        catch (Exception ex)
-                        {
-                            //Tell the user that the comment didn't save here
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //Tell the user that the comment didn't save here
+                    }
 
 
 
@@ -1591,7 +1595,7 @@ namespace PrototypeWithAuth.Controllers
             var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
             {
-                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber??0;
+                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
             }
             ParentRequest pr = new ParentRequest()
             {

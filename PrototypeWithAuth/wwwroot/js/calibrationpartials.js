@@ -19,7 +19,7 @@
     //    }
     //});
 
-	$(".repeat-type label").off("click").on("click", function () {
+	$(".repeat-type label.repair").off("click").on("click", function () {
 		var value = $(this).attr("for");
 		var index = value.substr(value.length - 1, 1);
 		console.log("value: " + value + ", index: " + index);
@@ -42,13 +42,51 @@
         }
 	});
 
+	$(".repeat-type label.externalCalibration").off("click").on("click", function () {
+		var value = $(this).attr("for");
+		var index = value.substr(value.length - 1, 1);
+		console.log("value: " + value + ", index: " + index);
+		var first2Letters = value.substr(0, 2);
+		console.log("first2Letters: " + first2Letters);
+		var ecDays = $("#ExternalCalibrations_" + index + "__Days");
+		var ecMonths = $("#ExternalCalibrations_" + index + "__Months");
+		var hiddenInput = $("#ExternalCalibrations_" + index + "__IsRepeat");
+		switch (first2Letters) {
+			case "on":
+				ecDays.attr("disabled", true);
+				ecMonths.attr("disabled", true);
+				hiddenInput.val("false");
+				break;
+			case "re":
+				ecDays.attr("disabled", false);
+				ecMonths.attr("disabled", false);
+				hiddenInput.val("true");
+				break;
+		}
+	});
+
+
 	$(".removeNewRepair").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var newDivClass = "RepairDiv" + $(this).attr("index");
+		var index = $(this).attr("index");
+		var newDivClass = "RepairDiv" + index;
 		console.log("newDivClass: " + newDivClass);
 		$("." + newDivClass).hide();
 
+		$("#Repairs_" + index + "__IsDeleted").val("true");
+		//$.fn.UpdateIds($(this).attr("index"));
+	});
+
+	$(".removeNewExternalCalibration").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var index = $(this).attr("index");
+		var newDivClass = "ECDiv" + index;
+		console.log("newDivClass: " + newDivClass);
+		$("." + newDivClass).hide();
+
+		$("#ExternalCalibrations_" + index + "__IsDeleted").val("true");
 		//$.fn.UpdateIds($(this).attr("index"));
 	});
 
@@ -80,44 +118,28 @@
 				var newRepairIndex = parseInt(repairIndex) + 1;
 				console.log("new repair index: " + newRepairIndex);
 		repairIndexInput.val(newRepairIndex);
-				//$("#visualZoomModal").modal({
-				//	backdrop: true,
-				//	keyboard: true,
-				//});
-				//$(".modal").modal('show');
-				////$('.modal-backdrop').remove()
-				//var firstTDFilled = $("td.lab-man-50-background-color");
-				//var height = firstTDFilled.height();
-				//var width = firstTDFilled.width();
-				//console.log("h: " + height + "------ w: " + width);
-				////$("td").height(height);
-				////$("td").width(width);
-				//$(".visualzoom td").css('height', height);
-				//$(".visualzoom td").css('width', width);
-				////$("td").addClass("danger-color");
 			}
 		});
     });
 
-   // $(".saveRepairs").on("click", function (e) {
-   //     e.preventDefault();
-   //     e.stopPropagation();
-   //     if (!$(this).hasClass("disabled-submit")) {
-   //         console.log("save repairs clicked");
+	$(".addExternalCalibration").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var ecIndexInput = $("#externalCalibrationIndex");
+		var ecIndex = ecIndexInput.val();
+		$.ajax({
+			async: true,
+			url: "/Calibrations/_ExternalCalibration?ECIndex=" + ecIndex,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				var newEC = $(data);
+				$('#ecListDiv').append(newEC);
+				var newECIndex = parseInt(ecIndex) + 1;
+				console.log("new ec index: " + newECIndex);
+				ecIndexInput.val(parseInt(ecIndex) + 1);
+			}
+		});
+	});
 
-			//var url = "/Calibrations/_Repairs";
-			//console.log("url : " + url);
-			//var formData = new FormData($(".RepairsPartialViews")[0]);
-
-			//$.ajax({
-			//	url: url,
-			//	method: 'POST',
-			//	data: formData,
-			//	success: (result) => {
-			//	},
-			//	processData: false,
-			//	contentType: false
-			//});
-   //     }
-   // });
 });

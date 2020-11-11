@@ -39,7 +39,8 @@ namespace PrototypeWithAuth.Controllers
 
             try
             {
-                onePageOfProducts = await _context.Calibrations.Include(c => c.Request).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor).Include(c => c.Request.Product.ProductSubcategory).Include(c => c.CalibrationType).ToPagedListAsync(page, 25);
+                onePageOfProducts = await _context.Calibrations.Include(c => c.Request).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
+                    .Include(c => c.Request.Product.ProductSubcategory).Include(c => c.CalibrationType).ToPagedListAsync(page, 25);
             }
             catch (Exception ex)
             {
@@ -59,9 +60,15 @@ namespace PrototypeWithAuth.Controllers
         {
             var request = await _context.Requests.Where(r => r.RequestID == requestid).Include(r => r.Product).FirstOrDefaultAsync();
             var calibrations = await _context.Calibrations.Where(c => c.RequestID == requestid).ToListAsync();
-            List<ExternalCalibration> externalCalibrations = await _context.ExternalCalibrations.Where(c => c.RequestID == requestid).ToListAsync();
-            List<InternalCalibration> internalCalibrations = await _context.InternalCalibrations.Where(c => c.RequestID == requestid).ToListAsync();
-            List<Repair> repairs = await _context.Repairs.Where(c => c.RequestID == requestid).ToListAsync();
+            List<ExternalCalibration> externalCalibrations = await _context.ExternalCalibrations
+                .Where(c => c.RequestID == requestid)
+                .Where(c => c.Date > DateTime.Now).ToListAsync();
+            List<InternalCalibration> internalCalibrations = await _context.InternalCalibrations
+                .Where(c => c.RequestID == requestid)
+                .Where(c => c.Date > DateTime.Now).ToListAsync();
+            List<Repair> repairs = await _context.Repairs
+                .Where(c => c.RequestID == requestid)
+                .Where(c => c.Date > DateTime.Now).ToListAsync();
             CreateCalibrationViewModel createCalibrationViewModel = new CreateCalibrationViewModel
             {
                 ProductDescription = request.Product.ProductName,
@@ -89,11 +96,29 @@ namespace PrototypeWithAuth.Controllers
                 {
                     Date = DateTime.Now
                 },
-                RepairIndex = RepairIndex + 1,
+                RepairIndex = RepairIndex,
                 IsNew = true
             };
 
             return PartialView(repairsViewModel);
+        }
+
+
+        [Authorize(Roles = "Admin, LabManagment")]
+        [HttpGet]
+        public async Task<IActionResult> _ExternalCalibration(int ECIndex)
+        {
+            _ExternalCalibrationViewModel externalCalibrationViewModel = new _ExternalCalibrationViewModel()
+            {
+                ExternalCalibration = new ExternalCalibration()
+                {
+                    Date = DateTime.Now
+                },
+                ExternalCalibrationIndex = ECIndex,
+                IsNew = true
+            };
+
+            return PartialView(externalCalibrationViewModel);
         }
 
         [HttpPost]
@@ -105,8 +130,10 @@ namespace PrototypeWithAuth.Controllers
                 if (repair.CalibrationID > 0) //an old repair
                 {
                     var updatedRepair = _context.Repairs.Where(c => c.CalibrationID == repair.CalibrationID).FirstOrDefault();
+                    updatedRepair.CalibrationName = repair.CalibrationName;
                     updatedRepair.Date = repair.Date;
                     updatedRepair.IsRepeat = repair.IsRepeat;
+                    updatedRepair.IsDeleted = repair.IsDeleted;
                     if (repair.IsRepeat)
                     {
                         updatedRepair.Months = repair.Months;
@@ -121,11 +148,49 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(updatedRepair);
                     await _context.SaveChangesAsync();
                 }
-                else // a new repair
+                else if(!repair.IsDeleted) // a new repair that wasn't x'd out
                 {
                     repair.RequestID = vm.RequestID;
-                    repair.CalibrationTypeID = 1;
+                    repair.CalibrationTypeID = 2;
                     _context.Add(repair);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(Roles ="Admin, LabManagment")]
+        public async Task<IActionResult> SaveExternalCalibrations(CreateCalibrationViewModel vm)
+        {
+            foreach (var externalCalibration in vm.ExternalCalibrations)
+            {
+                if (externalCalibration.CalibrationID > 0) //an old repair
+                {
+                    var updatedEC = _context.ExternalCalibrations.Where(c => c.CalibrationID == externalCalibration.CalibrationID).FirstOrDefault();
+                    updatedEC.CalibrationName = externalCalibration.CalibrationName;
+                    updatedEC.Date = externalCalibration.Date;
+                    updatedEC.IsRepeat = externalCalibration.IsRepeat;
+                    updatedEC.IsDeleted = externalCalibration.IsDeleted;
+                    if (externalCalibration.IsRepeat)
+                    {
+                        updatedEC.Months = externalCalibration.Months;
+                        updatedEC.Days = externalCalibration.Days;
+                    }
+                    else
+                    {
+                        externalCalibration.Months = 0;
+                        externalCalibration.Days = 0;
+                    }
+                    updatedEC.Description = externalCalibration.Description;
+                    _context.Update(updatedEC);
+                    await _context.SaveChangesAsync();
+                }
+                else if (!externalCalibration.IsDeleted) // a new repair that wasn't x'd out
+                {
+                    externalCalibration.RequestID = vm.RequestID;
+                    externalCalibration.CalibrationTypeID = 1;
+                    _context.Add(externalCalibration);
                     await _context.SaveChangesAsync();
                 }
             }
@@ -148,13 +213,6 @@ namespace PrototypeWithAuth.Controllers
                 repairsViewModel.Repair = repair;
             }
             return repairsViewModel;
-        }
-
-        [Authorize(Roles = "Admin, LabManagment")]
-        [HttpGet]
-        public async Task<IActionResult> _ExternalCalibration(int requestId, int? CalibrationID = null)
-        {
-            return PartialView(GetExternalCalibrationViewModel(requestId, CalibrationID));
         }
 
         [HttpPost]

@@ -22,7 +22,8 @@
             <thead>
                 <tr class="text-center">
                     <th></th>
-                    <th>Name</th>
+                    <th>Instrument Name</th>
+                    <th>Calibration Name</th>
                     <th>Type</th>
                     <th>Code</th>
                     <th>Calibration Type</th>
@@ -47,6 +48,7 @@
                         }
                     </td>
                     <td>@item.Request.Product.ProductName</td>
+                    <td>@item.CalibrationName</td>
                     <td>@item.Request.Product.ProductSubcategory.ProductSubcategoryDescription</td>
                     <td>@item.Code</td>
                     <td>@item.CalibrationType.Description</td>

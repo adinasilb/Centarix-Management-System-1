@@ -10,5 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public int RequestID { get; set; }
         public ExternalCalibration ExternalCalibration { get; set; }
+        public int ExternalCalibrationIndex { get; set; }
+        public bool IsNew { get; set; }
     }
 }

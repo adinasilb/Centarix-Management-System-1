@@ -5,6 +5,9 @@
 <script src="~/js/calibrationpartials.js"></script>
 
 @{
+    var NameID = "Repairs_" + Model.RepairIndex + "__CalibrationName";
+    var NameName = "Repairs[" + Model.RepairIndex + "].CalibrationName";
+
     var DateID = "Repairs_" + Model.RepairIndex + "__Date";
     var DateName = "Repairs[" + Model.RepairIndex + "].Date";
 
@@ -38,18 +41,26 @@
     var shortDate = Model.Repair.Date.Date;
 
     var divName = "repair-outer-div RepairDiv" + Model.RepairIndex;
+
+    var DeletedID = "Repairs_" + Model.RepairIndex + "__IsDeleted";
+    var DeletedName = "Repairs[" + Model.RepairIndex + "].IsDeleted";
 }
 
 @*<form action="" method="post" id="myForm" class="RepairsPartialViews"  enctype="multipart/form-data">*@
 <div class="@divName" repairIndex="@Model.RepairIndex">
 
     <input type="hidden" asp-for="RequestID" />
+    <input type="hidden" id="@DeletedID" name="@DeletedName" />
     @*@for (int i = 0; i < Model.Repair.Count; i++)
         {*@
     <div class="row">
-        <div class="col-12">
-            <span class="heading-1 modal-tab-name">Repairs</span>
-            @if (Model.IsNew)
+        <div class="col-10">
+            <span class="heading-1 modal-tab-name">
+                <input id="@NameID" name="@NameName" class="border-bottom form-control-plaintext" value="@Model.Repair.CalibrationName" />
+            </span>
+        </div>
+        <div class="col-2">
+            @if (Model.IsNew || Model.Repair.Date > DateTime.Now)
             {
                 <button class="removeNewRepair close modal-close-padding modal-close-style" index="@Model.RepairIndex">X</button>
             }
@@ -76,12 +87,12 @@
             <div class="custom-control custom-radio mr-4  repeat-type">
                 <input @onceChecked class="custom-control-input isRepeat" id="@onceID" type="radio" value="false" name="@radioButtonsName" />
                 @* @Html.RadioButtonFor(model => model.Repair.IsRepeat, false, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = onceID })*@
-                <label class="radio-button custom-control-label pt-1 pl-2" for="@onceID">Once</label>
+                <label class="radio-button repair custom-control-label pt-1 pl-2" for="@onceID">Once</label>
             </div>
             <div class="custom-control custom-radio mr-4  repeat-type">
                 <input @repeatChecked class="custom-control-input isRepeat" id="@repeatID" type="radio" value="true" name="@radioButtonsName" />
                 @*@Html.RadioButtonFor(model => model.Repair.IsRepeat, true, htmlAttributes: new { @class = "custom-control-input isRepeat", @id = repeatID })*@
-                <label class="radio-button custom-control-label pt-1 pl-2" for="@repeatID">Repeat</label>
+                <label class="radio-button repair custom-control-label pt-1 pl-2" for="@repeatID">Repeat</label>
             </div>
 
         </div>

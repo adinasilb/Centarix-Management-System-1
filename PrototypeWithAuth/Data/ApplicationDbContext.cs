@@ -64,11 +64,11 @@ namespace PrototypeWithAuth.Data
         public DbSet<Request> Requests { get; set; }
         public DbSet<ParentRequest> ParentRequests { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
-        public DbSet<Product> Products  { get; set; }
-        public DbSet <ProductSubcategory> ProductSubcategories { get; set; }
-        public DbSet <ParentCategory> ParentCategories { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductSubcategory> ProductSubcategories { get; set; }
+        public DbSet<ParentCategory> ParentCategories { get; set; }
         public DbSet<UnitType> UnitTypes { get; set; }
-        public DbSet<UnitParentType> UnitParentTypes {get; set;}
+        public DbSet<UnitParentType> UnitParentTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -171,6 +171,9 @@ namespace PrototypeWithAuth.Data
 
             modelBuilder.Entity<ParentQuote>()
            .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<Calibration>()
+                .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);

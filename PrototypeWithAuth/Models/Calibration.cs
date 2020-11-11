@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int CalibrationID { get; set; }
+        public string CalibrationName { get; set; }
         public int RequestID { get; set; }
         public Request Request { get; set; }
         [DataType(DataType.Date)]
@@ -23,5 +24,6 @@ namespace PrototypeWithAuth.Models
         public int Months { get; set; }
         public bool Done { get; set; }
         public bool IsRepeat { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

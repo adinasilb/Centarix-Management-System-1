@@ -79,7 +79,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 Input = new InputModel
                 {
                     Email = user.Email,
-                    Code = code,
+                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
                     AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey)
                 };
                 return Page();
@@ -101,7 +101,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
            ;
-            var result = await _userManager.ResetPasswordAsync(user, Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Input.Code)), Input.Password);
+            var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
             if (result.Succeeded)
             {
                 var verificationCode = Input.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
@@ -117,10 +117,6 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     //return View(resetPasswordViewModel);
 
                 }                
-                user.LockoutEnabled = false;
-                user.LockoutEnd = DateTime.Now;
-                _context.Update(user);
-                await _context.SaveChangesAsync();
 
                 var signInResult = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, false, lockoutOnFailure: false);
                 if (signInResult.Succeeded)
@@ -135,6 +131,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     
                     if (result2fa.Succeeded)
                     {
+                        //user.LockoutEnabled = false;
+                        user.LockoutEnd = DateTime.Now;
                         user.NeedsToResetPassword = false;
                         _context.Update(user);
                         await _context.SaveChangesAsync();
