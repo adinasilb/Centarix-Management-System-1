@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Models;
+using Microsoft.Owin.Security.Cookies;
 
 namespace PrototypeWithAuth
 {
@@ -90,8 +91,17 @@ namespace PrototypeWithAuth
             //   .AddDataAnnotations();
             // //.AddMvcOptions(opt =>
             // //       opt.Filters.Add<RequestFilterAttribute>());
-
-            services.AddSession();
+         
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.SlidingExpiration = true;         
+          
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -115,7 +125,7 @@ namespace PrototypeWithAuth
             
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseSession();
+           // app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

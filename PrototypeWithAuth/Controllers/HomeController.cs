@@ -189,6 +189,7 @@ namespace PrototypeWithAuth.Controllers
             return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
         }
         [HttpPost]
+
         public bool UpdateLastReadNotifications()
         {
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
