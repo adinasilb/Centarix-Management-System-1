@@ -3,27 +3,31 @@
 *@
 @model PrototypeWithAuth.ViewModels._ExternalCalibrationViewModel
 <script src="~/js/calibrationpartials.js"></script>
-
+<script src="~/js/validate.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/additional-methods.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/additional-methods.min.js"></script>
 @{
     var NameID = "ExternalCalibrations_" + Model.ExternalCalibrationIndex + "__CalibrationName";
     var NameName = "ExternalCalibrations[" + Model.ExternalCalibrationIndex + "].CalibrationName";
-    var NameClass = "ExternalCalibrations.CalibrationName";
+    var NameClass = "ExternalCalibrationsCalibrationName";
 
     var DateID = "ExternalCalibrations_" + Model.ExternalCalibrationIndex + "__Date";
     var DateName = "ExternalCalibrations[" + Model.ExternalCalibrationIndex + "].Date";
-    var DateClass = "ExternalCalibrations.Date";
+    var DateClass = "ExternalCalibrationsDate";
 
     var DaysID = "ExternalCalibrations_" + Model.ExternalCalibrationIndex + "__Days";
     var DaysName = "ExternalCalibrations[" + Model.ExternalCalibrationIndex + "].Days";
-    var DaysClass = "ExternalCalibrations.Days";
+    var DaysClass = "ExternalCalibrationsDays";
 
     var MonthsID = "ExternalCalibrations_" + Model.ExternalCalibrationIndex + "__Months";
     var MonthsName = "ExternalCalibrations[" + Model.ExternalCalibrationIndex + "].Months";
-    var MonthsClass = "ExternalCalibrations.Months";
+    var MonthsClass = "ExternalCalibrationsMonths";
 
     var RepeatID = "ExternalCalibrations_" + Model.ExternalCalibrationIndex + "__IsRepeat";
     var RepeatName = "ExternalCalibrations[" + Model.ExternalCalibrationIndex + "].IsRepeat";
-    var RepeatClass = "ExternalCalibrations.IsRepeat";
+    var RepeatClass = "ExternalCalibrationsIsRepeat ECIsRepeat" + Model.ExternalCalibrationIndex;
 
     var radioButtonsName = "IsECGroup" + Model.ExternalCalibrationIndex;
     var onceID = "once-ec" + Model.ExternalCalibrationIndex;
@@ -42,7 +46,7 @@
 
     var DescID = "ExternalCalibrations_" + Model.ExternalCalibrationIndex + "__Description";
     var DescName = "ExternalCalibrations[" + Model.ExternalCalibrationIndex + "].Description";
-    var DescClass = "ExternalCalibrations.Description";
+    var DescClass = "ExternalCalibrationsDescription";
 
     var shortDate = Model.ExternalCalibration.Date.Date;
 
@@ -79,11 +83,11 @@
         <div class="col-1">
             <label class="control-label" asp-for="ExternalCalibration.Days"></label>
             @*since once is automatically clicked the following will come up as disabled*@
-            <input id="@DaysID" name="@DaysName" class="border-bottom form-control-plaintext @DaysClass" min="0" value="@Model.ExternalCalibration.Days" disabled />
+            <input id="@DaysID" name="@DaysName" class="border-bottom form-control-plaintext @DaysClass" min="0" calIndex="@Model.ExternalCalibrationIndex" value="@Model.ExternalCalibration.Days" disabled />
         </div>
         <div class="col-1">
             <label class="control-label" asp-for="ExternalCalibration.Months"></label>
-            <input id="@MonthsID" name="@MonthsName" class="border-bottom form-control-plaintext @MonthsClass" min="0" value="@Model.ExternalCalibration.Months" disabled />
+            <input id="@MonthsID" name="@MonthsName" class="border-bottom form-control-plaintext @MonthsClass" min="0" calIndex="@Model.ExternalCalibrationIndex" value="@Model.ExternalCalibration.Months" disabled />
         </div>
         <div class="col-1 offset-1">
             <input type="hidden" id="@RepeatID" name="@RepeatName" class="HiddenIsRepeat @RepeatClass" tabindex="@Model.ExternalCalibration" value="@Model.ExternalCalibration.IsRepeat" />
@@ -107,3 +111,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        //$(".ExternalCalibrationsCalibrationName").rules("add", "required");
+    });
+</script>
