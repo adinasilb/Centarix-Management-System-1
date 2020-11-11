@@ -1,6 +1,111 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model PrototypeWithAuth.ViewModels._InternalCalibrationViewModel
+<script src="~/js/calibrationpartials.js"></script>
+
+@{
+    var NameID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__CalibrationName";
+    var NameName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].CalibrationName";
+
+    var DateID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__Date";
+    var DateName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].Date";
+
+    var DaysID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__Days";
+    var DaysName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].Days";
+
+    var MonthsID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__Months";
+    var MonthsName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].Months";
+
+    var RepeatID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__IsRepeat";
+    var RepeatName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].IsRepeat";
+
+    var radioButtonsName = "IsRepeatGroup" + Model.InternalCalibrationIndex;
+    var onceID = "once" + Model.InternalCalibrationIndex;
+    var repeatID = "repeat" + Model.InternalCalibrationIndex;
+
+    var onceChecked = "";
+    var repeatChecked = "";
+    if (Model.InternalCalibration.IsRepeat)
+    {
+        repeatChecked = "checked=checked";
+    }
+    else
+    {
+        onceChecked = "checked=checked";
+    }
+
+    var DescID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__Description";
+    var DescName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].Description";
+
+    var shortDate = Model.InternalCalibration.Date.Date;
+
+    var divName = "internalcalibration-outer-div ICDiv" + Model.InternalCalibrationIndex;
+
+    var DeletedID = "InternalCalibration_" + Model.InternalCalibrationIndex + "__IsDeleted";
+    var DeletedName = "InternalCalibration[" + Model.InternalCalibrationIndex + "].IsDeleted";
+}
+
+<div class="@divName" icIndex="@Model.InternalCalibrationIndex">
+
+    <input type="hidden" asp-for="RequestID" />
+    <input type="hidden" id="@DeletedID" name="@DeletedName" />
+    <div class="row">
+        <div class="col-10">
+            <span class="heading-1 modal-tab-name">
+                <input id="@NameID" name="@NameName" class="border-bottom form-control-plaintext" value="@Model.InternalCalibration.CalibrationName" />
+            </span>
+        </div>
+        <div class="col-2">
+            @if (Model.IsNew || Model.InternalCalibration.Date > DateTime.Now)
+            {
+                <button class="removeNewInternalCalibration close modal-close-padding modal-close-style" index="@Model.InternalCalibrationIndex">X</button>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <label class="control-label" asp-for="InternalCalibration.Date"></label>
+            <input asp-for="InternalCalibration.Date" id="@DateID" name="@DateName" class="border-bottom form-control-plaintext" type="date" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1">
+            <label class="control-label" asp-for="InternalCalibration.Days"></label>
+            @*since once is automatically clicked the following will come up as disabled*@
+            <input id="@DaysID" name="@DaysName" class="border-bottom form-control-plaintext" min="0" value="@Model.InternalCalibration.Days" disabled />
+        </div>
+        <div class="col-1">
+            <label class="control-label" asp-for="InternalCalibration.Months"></label>
+            <input id="@MonthsID" name="@MonthsName" class="border-bottom form-control-plaintext" min="0" value="@Model.InternalCalibration.Months" disabled />
+        </div>
+        <div class="col-1 offset-1">
+            <input type="hidden" id="@RepeatID" name="@RepeatName" class="HiddenIsRepeat" tabindex="@Model.InternalCalibrationIndex" value="@Model.InternalCalibration.IsRepeat" />
+            <div class="custom-control custom-radio mr-4  repeat-type">
+                <input @onceChecked class="custom-control-input isRepeat" id="@onceID" type="radio" value="false" name="@radioButtonsName" />
+                <label class="radio-button internalCalibration custom-control-label pt-1 pl-2" for="@onceID">Once</label>
+            </div>
+            <div class="custom-control custom-radio mr-4  repeat-type">
+                <input @repeatChecked class="custom-control-input isRepeat" id="@repeatID" type="radio" value="true" name="@radioButtonsName" />
+                <label class="radio-button internalCalibration custom-control-label pt-1 pl-2" for="@repeatID">Repeat</label>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-12 border rounded" style="min-height:8rem">
+            <input id="@DescID" name="@DescName" value="@Model.InternalCalibration.Description" placeholder="short explanation..." class="form-control-plaintext" />
+        </div>
+    </div>
+</div>
+@*  }*@
+
+@*</form>*@
 
 
-<div class="row"><span class="heading-1 modal-tab-name">In House Maintenance</span></div>
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            alert("_repairs document is ready!");
+        });
+    </script>*@

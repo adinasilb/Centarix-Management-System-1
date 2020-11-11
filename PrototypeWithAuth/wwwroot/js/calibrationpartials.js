@@ -65,6 +65,28 @@
 		}
 	});
 
+	$(".repeat-type label.internalCalibration").off("click").on("click", function () {
+		var value = $(this).attr("for");
+		var index = value.substr(value.length - 1, 1);
+		console.log("value: " + value + ", index: " + index);
+		var first2Letters = value.substr(0, 2);
+		console.log("first2Letters: " + first2Letters);
+		var icDays = $("#InternalCalibration_" + index + "__Days");
+		var icMonths = $("#InternalCalibration_" + index + "__Months");
+		var hiddenInput = $("#InternalCalibration_" + index + "__IsRepeat");
+		switch (first2Letters) {
+			case "on":
+				icDays.attr("disabled", true);
+				icMonths.attr("disabled", true);
+				hiddenInput.val("false");
+				break;
+			case "re":
+				icDays.attr("disabled", false);
+				icMonths.attr("disabled", false);
+				hiddenInput.val("true");
+				break;
+		}
+	});
 
 	$(".removeNewRepair").off("click").on("click", function (e) {
 		e.preventDefault();
@@ -88,6 +110,17 @@
 
 		$("#ExternalCalibrations_" + index + "__IsDeleted").val("true");
 		//$.fn.UpdateIds($(this).attr("index"));
+	});
+
+	$(".removeNewInternalCalibration").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var index = $(this).attr("index");
+		var newDivClass = "ICDiv" + index;
+		console.log("newDivClass: " + newDivClass);
+		$("." + newDivClass).hide();
+
+		$("#InternalCalibration_" + index + "__IsDeleted").val("true");
 	});
 
 	//$.fn.UpdateIds = function (deletedIndex) {
@@ -123,6 +156,7 @@
     });
 
 	$(".addExternalCalibration").off("click").on("click", function (e) {
+		console.log("in EXTERNAL calibration");
 		e.preventDefault();
 		e.stopPropagation();
 		var ecIndexInput = $("#externalCalibrationIndex");
@@ -138,6 +172,26 @@
 				var newECIndex = parseInt(ecIndex) + 1;
 				console.log("new ec index: " + newECIndex);
 				ecIndexInput.val(parseInt(ecIndex) + 1);
+			}
+		});
+	});
+
+	$(".addInternalCalibration").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var icIndexInput = $("#icIndex");
+		var icIndex = icIndexInput.val();
+		$.ajax({
+			async: true,
+			url: "/Calibrations/_InternalCalibration?ICIndex=" + icIndex,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				var newIC = $(data);
+				$('#icListDiv').append(newIC);
+				var newICIndex = parseInt(icIndex) + 1;
+				console.log("new ec index: " + newICIndex);
+				icIndexInput.val(newICIndex);
 			}
 		});
 	});
