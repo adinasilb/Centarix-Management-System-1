@@ -177,21 +177,6 @@ $(function () {
 	$("#search-form #vendorBusinessIDList").change(function () {
 		$("#search-form #vendorList").val($(this).val());
 	});
-
-
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth(); //January is 0 but do not add because everytime you create a new line it adds 1
-	var yyyy = today.getFullYear();
-
-	if (dd < 10) { dd = '0' + dd }
-
-	var prevmm = mm;
-	var prevyyyy = yyyy;
-	//insert the payment lines
-
-
-
 	
 
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
@@ -2629,9 +2614,9 @@ $(function () {
 	});
 	$('.exitModal').on('click', '.close', function (e) {
 		console.log("close edit modal");
-		$.fn.CallPage('/Timekeeper/ReportHours');
+		$.fn.CallPageTimeKeeper('/Timekeeper/ReportHours');
 	})
-	$.fn.CallPage = function (url) {
+	$.fn.CallPageTimekeeper = function (url) {
 		$.ajax({
 			async: true,
 			url: url,

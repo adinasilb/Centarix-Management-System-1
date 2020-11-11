@@ -10,54 +10,82 @@ $(function () {
 
 	$.fn.ChangePaymentsTable = function (installments) {
 		//var installments = $(this).val();
-		var countPrevInstallments = $(".type-1").length;
+		var countPrevInstallments = $(".installments").length;
 		var difference = installments - countPrevInstallments;
+		var index = $('#index').val();
 		//console.log("installments: " + installments);
 		//console.log("countPrevInstallments: " + countPrevInstallments);
 		//console.log("difference: " + difference);
+	//January is 0 but do not add because everytime you create a new line it adds 1
 
-		var today = new Date();
-		var prevdd = today.getDate();
-		var prevmm = today.getMonth(); //January is 0 but do not add because everytime you create a new line it adds 1
-		var prevyyyy = today.getFullYear();
+		if (countPrevInstallments <1) {
+			var today = new Date();
+			var prevdd = today.getDate();
+			var prevmm = today.getMonth(); //January is 0 but do not add because everytime you create a new line it adds 1
+			var prevyyyy = today.getFullYear();
+		}
+		else {
+			var date = $('.paymentDate' + (countPrevInstallments - 1)).val()
+			console.log(date)
+			var lastDate = new Date(date)
+			var prevdd = lastDate.getDate();
+			var prevmm = lastDate.getMonth()+1; 
+			var prevyyyy = lastDate.getFullYear();
+			console.log("prevmm"+prevmm);
+		}
+
+	
 
 		if (prevdd < 10) { prevdd = '0' + prevdd }
 
 		if (difference > 0) {
-			console.log("in add");
-			var newIncrementNumber = countPrevInstallments;
-			for (x = difference; x > 0; x--) {
-				console.log("in for")
+			for (var x = difference; x > 0; x--) {
+				
 				var newmm = 0;
 				var newyyyy = 0;
 				if (prevmm < 12) {
+					console.log("if (prevmm < 12)");
 					newmm = parseInt(prevmm);
-					newmm = newmm + 1;
+					console.log(newmm)
+					newmm += 1;
+		
 					newyyyy = prevyyyy;
 				}
 				else {
+					console.log("else");
 					newyyyy = parseInt(prevyyyy) + 1;
 					newmm = 1;
 				}
 
 				if (newmm < 10) { newmm = '0' + newmm }
-
+				console.log(newmm)
 				var paymentDate = newyyyy + '-' + newmm + '-' + prevdd;
-
+		
 				prevyyyy = newyyyy;
 				prevmm = newmm;
-				var index = $('#index').val();
+				console.log("prevmm "+prevmm)
+
 				$.ajax({
 					async: false,
-					url: '/Requests/InstallmentsPartial?index='+ index,
+					url: '/Requests/InstallmentsPartial?index='+ (index),
 					type: 'GET',
-					cache: false,
+					cache: true,
 					success: function (data) {
 						$(".terms-modal").append(data);
-						$('#index').val(++index);
-						newIncrementNumber++;
-
+						var dateElem = '.paymentDate' + index;
+						$(dateElem).val(paymentDate)
+						$('.mdb-select' + index).materialSelect();	
 						
+					
+						var dateClass = "paymentDate" + index;
+						var sumID = "#NewPayments_" + index + "__Sum";
+						var paymentDateID = "#NewPayments_" + index + "__PaymentDate";
+						var paymentTypeID = "#NewPayments_" + index + "__CompanyAccount_PaymentType";
+						var referenceID = "#NewPayments_" + index + "__Reference";
+						$(sumID).rules("add",{ required: true, min :1 });
+						$(paymentDateID).rules("add",{ required: true });
+						$(paymentTypeID).rules("add",{ selectRequired: true });
+						$('#index').val(++index);
 					}
 				});
 			
@@ -65,8 +93,10 @@ $(function () {
 
 		}
 		else if (difference < 0) { //TODO: rework the remove
-			for (x = difference; x < 0; x++) {
-				$(".terms-modal").last().remove();
+			for (var y = difference; y < 0; y++) {
+				console.log("y:" + y)
+				$(".terms-modal").children('.row').last().remove();
+				$('#index').val(--index);
 			}
 		}
 	};
@@ -82,47 +112,51 @@ $(function () {
 		var number = id.substr(12, 1);
 		var newid = "NewPayments_" + number + "__CompanyAccountID";
 		$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
-			var item = "";
+			var item = '<option value="">Select</option>';
 			$("#" + newid).empty();
+
 			$.each(data, function (i, companyAccount) {
 				item += '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyAccountNum + '</option>'
 			});
 			$("#" + newid).html(item);
+			$("#" + newid).rules("add",{selectRequired : true})
 		});
 	});
 
-	$("#Paid").on('change', function () {
+	$(".modal").on('change', "#Paid", function () {
 		var val = $(this).val();
 		console.log("in paid fx " + val);
 		if (val == 'true') {
 			console.log("true");
-			$(".Terms").materialSelect({ destroy: true });
-			$(".terms-disabled").show();
+			$("#Terms").destroyMaterialSelect();
+			$("#Terms").attr("disabled", true)
+			$("#Terms").materialSelect();
 			$("#Installments").attr("disabled", true);
 		}
 		else {
 			console.log("false");
-			$(".terms-disabled").hide();
-			$(".Terms:last").materialSelect();
+			$("#Terms").destroyMaterialSelect();
+			$("#Terms").attr("disabled", false)
+			$("#Terms").materialSelect();
 			$("#Installments").attr("disabled", false);
 		};
 	});
 
-	$("#Terms").on('change', function () {
+	$(".modal").on('change',"#Terms" , function () {
 		var val = $(this).val();
 		console.log("in terms fx: " + val);
 		if (val == '') {
 			console.log("true");
-			//$("#Paid").attr("disabled", false);
-			$("#Paid:last").materialSelect();
-			$(".paid-disabled").hide();
+			$("#Paid").destroyMaterialSelect();
+			$("#Paid").attr("disabled", false)
+			$("#Paid").materialSelect();
 			$("#Installments").attr("disabled", false);
 		}
 		else {
 			console.log("false");
-			//$("#Paid").attr("disabled", true);
-			$("#Paid").materialSelect({ destroy: true });
-			$(".paid-disabled").show();
+			$("#Paid").destroyMaterialSelect();
+			$("#Paid").attr("disabled", true)
+			$("#Paid").materialSelect();
 			$("#Installments").attr("disabled", true);
 		}
 	});
@@ -130,16 +164,20 @@ $(function () {
 	$("#Installments").on('change', function () {
 		var val = $(this).val();
 		if (val > 0) {
-			$("#Paid").materialSelect({ destroy: true });
-			$(".paid-disabled").show();
-			$(".Terms").materialSelect({ destroy: true });
-			$(".terms-disabled").show();
+			$("#Paid").destroyMaterialSelect();
+			$("#Paid").attr("disabled", true)
+			$("#Paid").materialSelect();
+			$("#Terms").destroyMaterialSelect();
+			$("#Terms").attr("disabled", true)
+			$("#Terms").materialSelect();
 		}
 		else {
-			$(".terms-disabled").hide();
-			$(".Terms:last").materialSelect();
-			$("#Paid:last").materialSelect();
-			$(".paid-disabled").hide();
+			$("#Terms").destroyMaterialSelect();
+			$("#Terms").attr("disabled", false)
+			$("#Terms").materialSelect();
+			$("#Paid").destroyMaterialSelect();
+			$("#Paid").attr("disabled", false)
+			$("#Paid").materialSelect();
 		};
 	});
 

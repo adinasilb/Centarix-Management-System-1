@@ -78,6 +78,15 @@ $(function () {
 		},
 
 	});
+	$('.termsModalForm').validate({
+		rules: {
+			Paid: "atLeastOneTerm",
+			Terms: "atLeastOneTerm",
+			Installments: "atLeastOneTerm",	
+			
+		}
+
+	});
 	$('.editQuoteDetails').validate({
 		rules: {
 			"Request.ParentQuote.QuoteNumber": {
@@ -316,9 +325,12 @@ $(function () {
 		return value != "";
 	}, 'Field is required');
 	$.validator.addMethod("atleastOneHoursField", function (value, element) {
-		console.log("salary: " + ($("#NewEmployee_SalariedEmployee_WorkScope").val() != "") || ($("#NewEmployee_SalariedEmployee_HoursPerDay").val() != ""));
 		return ($("#NewEmployee_SalariedEmployee_WorkScope").val() != "") || ($("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "") || $("#NewEmployee_EmployeeStatusID").val() == "4";
 	}, 'Either Job Scope or Hours Per day is required');
+	$.validator.addMethod("atLeastOneTerm", function (value, element) {
+		console.log($("#Terms").val())
+		return (($("#Paid").val() != "false" && $("#Paid").val() != "") || ($("#Terms").val() != "" && $("#Terms").val() != null) || ($("#Installments").val()!=''&&parseInt($("#Installments").val()) > 0)) ;
+	}, 'Must choose one type of payment');
 	$.validator.addMethod("eitherHoursOrTime", function (value, element) {
 		return ($("#Exit1").val() != "" && $("#Entry1").val() != "") || $("#TotalHours").val() != "";
 	}, 'Either total hours or Entry1 and Entry 2 must be filled in');
@@ -343,6 +355,7 @@ $(function () {
 	var isUser = function () {
 		return $("#NewEmployee_EmployeeStatusID").val() == "4";
 	}
+
 	$('.usersForm').validate({
 		rules: {
 			"FirstName": "required",
