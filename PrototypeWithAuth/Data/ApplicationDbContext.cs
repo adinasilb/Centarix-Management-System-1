@@ -19,6 +19,8 @@ namespace PrototypeWithAuth.Data
 
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+        public DbSet<CompanyDayOff> CompanyDayOffs { get; set; }
+        public DbSet<CompanyDayOffType> CompanyDayOffTypes { get; set; }
         public DbSet<CalibrationType> CalibrationTypes { get; set; }
         public DbSet<InternalCalibration> InternalCalibrations { get; set; }
         public DbSet<ExternalCalibration> ExternalCalibrations { get; set; }

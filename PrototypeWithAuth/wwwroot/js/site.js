@@ -177,70 +177,6 @@ $(function () {
 	$("#search-form #vendorBusinessIDList").change(function () {
 		$("#search-form #vendorList").val($(this).val());
 	});
-
-
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth(); //January is 0 but do not add because everytime you create a new line it adds 1
-	var yyyy = today.getFullYear();
-
-	if (dd < 10) { dd = '0' + dd }
-
-	var prevmm = mm;
-	var prevyyyy = yyyy;
-	//insert the payment lines
-	$("#Request_ParentRequest_Installments").change(function () {
-		$.fn.ChangePaymentsTable($(this).val());
-	});
-
-	$("#Installments").on('change', function () {
-		console.log("installments changed...");
-		$.fn.ChangePaymentsTable($(this).val());
-	});
-
-	//$.fn.ChangePaymentsTable = function (installments) {
-	//	//var installments = $(this).val();
-	//	var countPrevInstallments = $(".payment-line").length;
-	//	var difference = installments - countPrevInstallments;
-
-
-	//	if (difference > 0) {
-	//		var newIncrementNumber = countPrevInstallments;
-	//		for (x = difference; x > 0; x--) {
-
-	//			var newmm = 0;
-	//			var newyyyy = 0;
-	//			if (prevmm < 12) {
-	//				newmm = parseInt(prevmm);
-	//				newmm = newmm + 1;
-	//				newyyyy = prevyyyy;
-	//			}
-	//			else {
-	//				newyyyy = parseInt(prevyyyy) + 1;
-	//				newmm = 1;
-	//			}
-
-	//			if (newmm < 10) { newmm = '0' + newmm }
-
-	//			var paymentDate = newyyyy + '-' + newmm + '-' + dd;
-
-	//			prevyyyy = newyyyy;
-	//			prevmm = newmm;
-	//			$.fn.AddNewPaymentLine(newIncrementNumber, paymentDate);
-	//			newIncrementNumber++;
-	//		};
-
-	//		$.fn.AdjustPaymentDates();
-	//	}
-	//	else if (difference < 0) { //installments were removed
-	//		for (x = difference; x < 0; x++) {
-	//			$(".payments-table tr:last").remove();
-	//		}
-	//	}
-	//};
-
-
-
 	
 
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
@@ -2678,9 +2614,9 @@ $(function () {
 	});
 	$('.exitModal').on('click', '.close', function (e) {
 		console.log("close edit modal");
-		$.fn.CallPage('/Timekeeper/ReportHours');
+		$.fn.CallPageTimeKeeper('/Timekeeper/ReportHours');
 	})
-	$.fn.CallPage = function (url) {
+	$.fn.CallPageTimekeeper = function (url) {
 		$.ajax({
 			async: true,
 			url: url,

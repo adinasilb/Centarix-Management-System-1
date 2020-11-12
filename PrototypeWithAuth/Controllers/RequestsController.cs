@@ -3137,6 +3137,13 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(commentsInfoViewModel);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        public async Task<IActionResult> InstallmentsPartial( int index)
+        {
+            return PartialView(index);
+        }
+
 
 
         [HttpGet]

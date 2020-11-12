@@ -10,124 +10,98 @@ $(function () {
 
 	$.fn.ChangePaymentsTable = function (installments) {
 		//var installments = $(this).val();
-		var countPrevInstallments = $(".type-1").length;
+		var countPrevInstallments = $(".installments").length;
 		var difference = installments - countPrevInstallments;
+		var index = $('#index').val();
 		//console.log("installments: " + installments);
 		//console.log("countPrevInstallments: " + countPrevInstallments);
 		//console.log("difference: " + difference);
+	//January is 0 but do not add because everytime you create a new line it adds 1
 
-		var today = new Date();
-		var prevdd = today.getDate();
-		var prevmm = today.getMonth(); //January is 0 but do not add because everytime you create a new line it adds 1
-		var prevyyyy = today.getFullYear();
+		if (countPrevInstallments <1) {
+			var today = new Date();
+			var prevdd = today.getDate();
+			var prevmm = today.getMonth(); //January is 0 but do not add because everytime you create a new line it adds 1
+			var prevyyyy = today.getFullYear();
+		}
+		else {
+			var date = $('.paymentDate' + (countPrevInstallments - 1)).val()
+			console.log(date)
+			var lastDate = new Date(date)
+			var prevdd = lastDate.getDate();
+			var prevmm = lastDate.getMonth()+1; 
+			var prevyyyy = lastDate.getFullYear();
+			console.log("prevmm"+prevmm);
+		}
+
+	
 
 		if (prevdd < 10) { prevdd = '0' + prevdd }
 
 		if (difference > 0) {
-			console.log("in add");
-			var newIncrementNumber = countPrevInstallments;
-			for (x = difference; x > 0; x--) {
-				console.log("in for")
+			for (var x = difference; x > 0; x--) {
+				
 				var newmm = 0;
 				var newyyyy = 0;
 				if (prevmm < 12) {
+					console.log("if (prevmm < 12)");
 					newmm = parseInt(prevmm);
-					newmm = newmm + 1;
+					console.log(newmm)
+					newmm += 1;
+		
 					newyyyy = prevyyyy;
 				}
 				else {
+					console.log("else");
 					newyyyy = parseInt(prevyyyy) + 1;
 					newmm = 1;
 				}
 
 				if (newmm < 10) { newmm = '0' + newmm }
-
+				console.log(newmm)
 				var paymentDate = newyyyy + '-' + newmm + '-' + prevdd;
-
+		
 				prevyyyy = newyyyy;
 				prevmm = newmm;
-				console.log('before paymentline')
-				$.fn.AddNewPaymentLine(newIncrementNumber, paymentDate);
-				newIncrementNumber++;
+				console.log("prevmm "+prevmm)
+
+				$.ajax({
+					async: false,
+					url: '/Requests/InstallmentsPartial?index='+ (index),
+					type: 'GET',
+					cache: true,
+					success: function (data) {
+						$(".terms-modal").append(data);
+						var dateElem = '.paymentDate' + index;
+						$(dateElem).val(paymentDate)
+						$('.mdb-select' + index).materialSelect();	
+						
+					
+						var dateClass = "paymentDate" + index;
+						var sumID = "#NewPayments_" + index + "__Sum";
+						var paymentDateID = "#NewPayments_" + index + "__PaymentDate";
+						var paymentTypeID = "#NewPayments_" + index + "__CompanyAccount_PaymentType";
+						var referenceID = "#NewPayments_" + index + "__Reference";
+						$(sumID).rules("add",{ required: true, min :1 });
+						$(paymentDateID).rules("add",{ required: true });
+						$(paymentTypeID).rules("add",{ selectRequired: true });
+						$('#index').val(++index);
+					}
+				});
+			
 			};
 
-			$.fn.AdjustPaymentDates();
 		}
 		else if (difference < 0) { //TODO: rework the remove
-			for (x = difference; x < 0; x++) {
-				console.log("x: " + x);
-				$(".payment-sum input").last().remove();
-				$(".payment-date input").last().remove();
-				console.log($(".payment-date input").last().val());
-				$(".payment-type select").last().remove();
-				$(".payment-account select").last().remove();
-				$(".payment-reference input").last().remove();
+			for (var y = difference; y < 0; y++) {
+				console.log("y:" + y)
+				$(".terms-modal").children('.row').last().remove();
+				$('#index').val(--index);
 			}
 		}
 	};
 
 
-
-	$.fn.AddNewPaymentLine = function (increment, date) {
-		var mdbSelect = "mdb-select-" + increment;
-		var htmlTR = "";
-		//htmlTR += "<tr class='payment-line m-0 p-0'>";
-		//htmlTR += "<td class='m-0 p-0'>";
-
-		var htmlPS = "";
-		htmlPS += '<input class="form-control-plaintext border-bottom sum-1" type="text" data-val="true" data-val-required="The Sum is required." id="NewPayments_' + increment + '__Sum" name="NewPayments[' + increment + '].Sum" value=""><input/>';
-		htmlPS += ' <span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].Sum" data-valmsg-replace="true"></span>';
-		console.log(htmlPS);
-		var htmlPD = "";
-		htmlPD += '<input class="form-control-plaintext border-bottom date-1" type="date" data-val="true" data-val-required="The PaymentDate field is required." id="NewPayments_' + increment + '__PaymentDate" name="NewPayments[' + increment + '].PaymentDate" value="' + date + '"><input/>';
-		htmlPD += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].PaymentDate" data-valmsg-replace="true"></span>';
-		//htmlTR += '</td>';
-		//htmlTR += '<td class="m-0 p-0">';
-		var htmlPT = "";
-		htmlPT += '<select class="mdb-select ' + mdbSelect + ' custom select-dropdown form-control-plaintext paymentType type-1" id="NewPayments_' + increment + '_CompanyAccount_PaymentType" name="NewPayments[' + increment + '].CompanyAccount.PaymentType"><option value="">Select A Payment Type </option>';
-		htmlPT += '<option value="1">Credit Card</option>';
-		htmlPT += '<option value="2">Bank Account</option>';
-		htmlPT += '</select>';
-		htmlPT += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.PaymentType" data-valmsg-replace="true"></span>';
-		//htmlTR += '</td>';
-		//htmlTR += '<td class="m-0 p-0">';
-		var htmlPA = "";
-		var newPaymentsId = "NewPayments_" + increment + "__CompanyAccountID";
-		var newPaymentsName = "NewPayments[" + increment + "].CompanyAccountID";
-		htmlPA += '<select class="mdb-select  ' + mdbSelect + ' custom select-dropdown form-control-plaintext companyAccountNum account-1" id="' + newPaymentsId + '" name="' + newPaymentsName + '"></select>';
-		htmlPA += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].CompanyAccount.CompanyAccountID" data-valmsg-replace="true"></span>';
-		//htmlTR += '</td>';
-		//htmlTR += '<td class="m-0 p-0">';
-		var htmlPR = "";
-		htmlPR += '<input class="form-control-plaintext border-bottom reference-1" type="text" data-val="true" data-val-required="The Reference Number is required." id="NewPayments_' + increment + '__Reference" name="NewPayments[' + increment + '].Reference" value="" ><input/>';
-		htmlPR += '<span class="text-danger-centarix field-validation-valid" data-valmsg-for="NewPayments[' + increment + '].Reference" data-valmsg-replace="true"></span>';
-		//htmlTR += '</td>';
-		//htmlTR += '</tr >';
-		//$("body").append(htmlTR);
-		//$(".payments-table tr:last").after(htmlTR);
-		$(".payment-sum").append(htmlPS);
-		$(".payment-date").append(htmlPD);
-		$(".payment-type").append(htmlPT);
-		$(".payment-account").append(htmlPA);
-		$(".payment-reference").append(htmlPR);
-
-
-		$('.' + mdbSelect).materialSelect();
-
-		//$.fn.AdjustInputHeights();
-	};
-
-	$.fn.AdjustInputHeights = function () {
-		var input = $("#Installments");
-		var height = input.height();
-		console.log("height: " + height);
-		$(".date-1").height(height);
-		console.log("height date 1: " + $(".date-1").height());
-		$(".type-1").height(height);
-		console.log("height type 1: " + $(".type-1").height());
-		$(".account-1").height(height);
-		$(".reference-1").height(height);
-	};
 
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
 	$(".modal").on("change", ".paymentType", function (e) {
@@ -138,52 +112,51 @@ $(function () {
 		var number = id.substr(12, 1);
 		var newid = "NewPayments_" + number + "__CompanyAccountID";
 		$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
-			var item = "";
+			var item = '<option value="">Select</option>';
 			$("#" + newid).empty();
+
 			$.each(data, function (i, companyAccount) {
 				item += '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyAccountNum + '</option>'
 			});
 			$("#" + newid).html(item);
+			$("#" + newid).rules("add",{selectRequired : true})
 		});
 	});
 
-
-	$.fn.AdjustPaymentDates = function () {
-
-	};
-
-	$("#Paid").on('change', function () {
+	$(".modal").on('change', "#Paid", function () {
 		var val = $(this).val();
 		console.log("in paid fx " + val);
 		if (val == 'true') {
 			console.log("true");
-			$(".Terms").materialSelect({ destroy: true });
-			$(".terms-disabled").show();
+			$("#Terms").destroyMaterialSelect();
+			$("#Terms").attr("disabled", true)
+			$("#Terms").materialSelect();
 			$("#Installments").attr("disabled", true);
 		}
 		else {
 			console.log("false");
-			$(".terms-disabled").hide();
-			$(".Terms:last").materialSelect();
+			$("#Terms").destroyMaterialSelect();
+			$("#Terms").attr("disabled", false)
+			$("#Terms").materialSelect();
 			$("#Installments").attr("disabled", false);
 		};
 	});
 
-	$("#Terms").on('change', function () {
+	$(".modal").on('change',"#Terms" , function () {
 		var val = $(this).val();
 		console.log("in terms fx: " + val);
 		if (val == '') {
 			console.log("true");
-			//$("#Paid").attr("disabled", false);
-			$("#Paid:last").materialSelect();
-			$(".paid-disabled").hide();
+			$("#Paid").destroyMaterialSelect();
+			$("#Paid").attr("disabled", false)
+			$("#Paid").materialSelect();
 			$("#Installments").attr("disabled", false);
 		}
 		else {
 			console.log("false");
-			//$("#Paid").attr("disabled", true);
-			$("#Paid").materialSelect({ destroy: true });
-			$(".paid-disabled").show();
+			$("#Paid").destroyMaterialSelect();
+			$("#Paid").attr("disabled", true)
+			$("#Paid").materialSelect();
 			$("#Installments").attr("disabled", true);
 		}
 	});
@@ -191,22 +164,22 @@ $(function () {
 	$("#Installments").on('change', function () {
 		var val = $(this).val();
 		if (val > 0) {
-			$("#Paid").materialSelect({ destroy: true });
-			$(".paid-disabled").show();
-			$(".Terms").materialSelect({ destroy: true });
-			$(".terms-disabled").show();
+			$("#Paid").destroyMaterialSelect();
+			$("#Paid").attr("disabled", true)
+			$("#Paid").materialSelect();
+			$("#Terms").destroyMaterialSelect();
+			$("#Terms").attr("disabled", true)
+			$("#Terms").materialSelect();
 		}
 		else {
-			$(".terms-disabled").hide();
-			$(".Terms:last").materialSelect();
-			$("#Paid:last").materialSelect();
-			$(".paid-disabled").hide();
+			$("#Terms").destroyMaterialSelect();
+			$("#Terms").attr("disabled", false)
+			$("#Terms").materialSelect();
+			$("#Paid").destroyMaterialSelect();
+			$("#Paid").attr("disabled", false)
+			$("#Paid").materialSelect();
 		};
 	});
-
-	$.fn.HideAndShowFields = function (type) {
-
-	};
 
 
 })

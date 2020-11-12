@@ -23,13 +23,14 @@
 
 <script src="~/js/TermsModal.js"></script>
 <script src="~/js/site.js"></script>
+<script src="~/js/validate.js"></script>
 <div class="modal modal-view termsModal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
-    <div class="modal-dialog-centered modal-xl mx-auto @form" role="document" style="max-height:100%; max-width:60rem; ">
+    <div class="modal-dialog-centered modal-xl mx-auto on-form-modal @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" id="TermsModal" class="modal-padding">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" id="myForm" class="modal-padding termsModalForm">
 
                 <input type="hidden" asp-for="ParentRequest.ParentRequestID" />
                 <div class="modal-header modal-header-padding">
@@ -47,7 +48,7 @@
                                     <option value=true>Yes</option>
                                     <option value=false>No</option>
                                 </select>
-                                <select class="form-control-plaintext paid-disabled border-bottom" disabled></select>
+
                                 <span asp-validation-for="Paid" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-2">
@@ -60,16 +61,16 @@
                                 @Html.DropDownListFor(m => m.Terms,
                                     Model.TermsList,
                                     "Select",
-                                    new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id="Terms", @searchable = "default value" }
+                                    new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id = "Terms", @searchable = "default value" }
                                 )
-                                <select class="form-control-plaintext terms-disabled border-bottom" disabled></select>
+
                                 @*<select asp-for="Terms" asp-items="@Model.TermsList" class="form-control-plaintext border-bottom">
-                                        <option value="selected" selected="selected">Select</option>
-                                        <option value="0">Pay Now</option>
-                                        <option value="15">+15</option>
-                                        <option value="30">+30</option>
-                                        <option value="45">+45</option>
-                                    </select>*@
+                            <option value="selected" selected="selected">Select</option>
+                            <option value="0">Pay Now</option>
+                            <option value="15">+15</option>
+                            <option value="30">+30</option>
+                            <option value="45">+45</option>
+                        </select>*@
                                 <span asp-validation-for="Terms" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-2">
@@ -96,47 +97,47 @@
                                     <span asp-validation-for="Installments" class="text-danger-centarix"></span>
                                 </div>
                             </div>
-                            <div class="col-2">
-                                <div class="form-group payment-sum">
-                                    <label class="control-label">Sum</label>
+                            <div class="col-10 container terms-modal">
+                                <div class="row mb-0">
+                                    <div class="col">
+                                        <div class="form-group payment-sum">
+                                            <label class="control-label">Sum</label>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-4">
+                                        <div class="form-group payment-date">
+                                            <label class="control-label">Payment Date</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="payment-type">
+                                            <label class="control-label">Payment Type</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group payment-account">
+                                            <label class="control-label">Account</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group payment-reference">
+                                            <label class="control-label">Reference</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-2">
-                                <div class="form-group payment-date">
-                                    <label class="control-label">Payment Date</label>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="payment-type">
-                                    <label class="control-label">Payment Type</label>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="form-group payment-account">
-                                    <label class="control-label">Account</label>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="form-group payment-reference">
-                                    <label class="control-label">Reference</label>
-                                </div>
-                            </div>
+                            <input type="hidden" value="0" id="index" />
                         </div>
-                        @*<table class="table table-sm payments-table">
-                                <thead>
-                                    <tr>
-                                        <th class="control-label">Payment Date</th>
-                                        <th class="control-label">Payment Type</th>
-                                        <th class="control-label">Account</th>
-                                        <th class="control-label">Reference</th>
-                                    </tr>
-                                </thead>
-                            </table>*@
                     </div>
                 </div>
                 <div class="modal-footer modal-footer-mt">
                     <input type="submit" asp value="Save" class="custom-button custom-button-font @bcColor" asp-action="TermsModal" />
                 </div>
+                <input type="hidden" asp-for="ParentRequest.OrderDate" />
+                <input type="hidden" asp-for="ParentRequest.OrderNumber" />
+                <input type="hidden" asp-for="ParentRequest.ApplicationUserID" />
             </form>
         </div>
     </div>

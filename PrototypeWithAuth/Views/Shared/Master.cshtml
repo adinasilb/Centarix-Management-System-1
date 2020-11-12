@@ -247,6 +247,8 @@
             //});
            // $('form').attr('autocomplete', 'off');
 
+
+
             $("#alertCount").hide();
 
 
@@ -325,7 +327,6 @@
 
         });
 
-
         $.fn.CallPage = function (itemurl, $type) {
             console.log("in call page function");
             //delete existing modals
@@ -359,6 +360,7 @@
 
 
                 }
+       
 
             });
         }
@@ -535,6 +537,7 @@
                 });
                 $(".modal").modal('show');
             }
+
         });
         return false;
     };
@@ -585,6 +588,7 @@
                 url: $itemurl,
                 type: 'GET',
                 cache: false,
+
                 success: function (data) {
                     $('#loading').hide();
                     console.log("success!");
@@ -657,12 +661,13 @@
                     $("#loading").hide();
                     alert(err.Message);
                 }
+
                 //error: function (/*request, status, error*/) {
                 //    console.log("ajax call went wrong:" /*+ request.responseText*/);
                 //}
             });
-            //$("#loading").hide();
         }
+       
 
         $.fn.OnOpenModalView = function () {
             $('.mdb-select').materialSelect();
@@ -1034,7 +1039,7 @@
                async: true,
                url: link,
                type: 'GET',
-               cache: true,
+               cache: false,
                success: function (data) {
                    console.log("count: " + data);
                    $("#alertCount").html('<span>'+data+'</span>');
@@ -1052,7 +1057,7 @@
                 async: true,
                 url: "/Home/UpdateLastReadNotifications",
                 type: 'POST',
-                cache: true,
+                cache: false,
                 success: function (data) {
                     $.fn.GetNotifcationCount();
                 }
