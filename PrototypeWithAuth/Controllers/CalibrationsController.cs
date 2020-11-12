@@ -40,7 +40,9 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 onePageOfProducts = await _context.Calibrations.Include(c => c.Request).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
-                    .Include(c => c.Request.Product.ProductSubcategory).Include(c => c.CalibrationType).ToPagedListAsync(page, 25);
+                    .Include(c => c.Request.Product.ProductSubcategory).Include(c => c.CalibrationType)
+                    .OrderBy(c => c.Date).ThenBy(c => c.Request.Product.ProductName).ThenBy(c => c.CalibrationName)
+                    .ToPagedListAsync(page, 25);
             }
             catch (Exception ex)
             {
@@ -121,6 +123,23 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(externalCalibrationViewModel);
         }
 
+        [Authorize(Roles = "Admin, LabManagment")]
+        [HttpGet]
+        public async Task<IActionResult> _InternalCalibration(int ICIndex)
+        {
+            _InternalCalibrationViewModel internalCalibrationViewModel = new _InternalCalibrationViewModel()
+            {
+                InternalCalibration = new InternalCalibration()
+                {
+                    Date = DateTime.Now
+                },
+                InternalCalibrationIndex = ICIndex,
+                IsNew = true
+            };
+
+            return PartialView(internalCalibrationViewModel);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin, LabManagment")]
         public async Task<IActionResult> SaveRepairs(CreateCalibrationViewModel vm)
@@ -197,6 +216,44 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin, LabManagment")]
+        public async Task<IActionResult> SaveInternalCalibrations(CreateCalibrationViewModel vm)
+        {
+            foreach (var internalCalibration in vm.InternalCalibration)
+            {
+                if (internalCalibration.CalibrationID > 0) //an old calibration
+                {
+                    var updatedInternalCalibration = _context.InternalCalibrations.Where(c => c.CalibrationID == internalCalibration.CalibrationID).FirstOrDefault();
+                    updatedInternalCalibration.CalibrationName = internalCalibration.CalibrationName;
+                    updatedInternalCalibration.Date = internalCalibration.Date;
+                    updatedInternalCalibration.IsRepeat = internalCalibration.IsRepeat;
+                    updatedInternalCalibration.IsDeleted = internalCalibration.IsDeleted;
+                    if (internalCalibration.IsRepeat)
+                    {
+                        updatedInternalCalibration.Months = internalCalibration.Months;
+                        updatedInternalCalibration.Days = internalCalibration.Days;
+                    }
+                    else
+                    {
+                        updatedInternalCalibration.Months = 0;
+                        updatedInternalCalibration.Days = 0;
+                    }
+                    updatedInternalCalibration.Description = internalCalibration.Description;
+                    _context.Update(updatedInternalCalibration);
+                    await _context.SaveChangesAsync();
+                }
+                else if (!internalCalibration.IsDeleted) // a new calibration that wasn't x'd out
+                {
+                    internalCalibration.RequestID = vm.RequestID;
+                    internalCalibration.CalibrationTypeID = 3;
+                    _context.Add(internalCalibration);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
 
         //writing this in a function because it's also called from the RenderPartialAsync in the view
         [Authorize(Roles = "Admin, LabManagment")]
@@ -233,13 +290,6 @@ namespace PrototypeWithAuth.Controllers
                 externalCalibrationViewModel.ExternalCalibration = new ExternalCalibration();
             }
             return externalCalibrationViewModel;
-        }
-
-        [Authorize(Roles = "Admin, LabManagment")]
-        [HttpGet]
-        public async Task<IActionResult> _InternalCalibration(int requestId, int? CalibrationID = null)
-        {
-            return PartialView(GetInternalCalibrationViewModel(requestId, CalibrationID));
         }
 
         [HttpPost]

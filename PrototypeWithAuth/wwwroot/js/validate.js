@@ -491,27 +491,11 @@ $(function () {
 			}
 		}
 	});
-	var RepairIsRepeat = function () {
-		return $("#Repair_IsRepeat").val() == "repeat";
-	}
-	$(".RepairsPartialViews").validate({
+	$(".createCalibration").validate({
 		rules: {
-			"Repair.Date": {
-				required: true
-			},
-			"Repair.IsRepeat": {
-				required: true
-			},
-			"Repair.Days": {
-				required: RepairIsRepeat,
-				number: true
-			},
-			"Repair.Months": {
-				required: RepairIsRepeat,
-				number: true
-			}
 		}
 	});
+	
 
 	function isInteger(n) {
 		n = parseFloat(n)
@@ -526,9 +510,11 @@ $(function () {
 
 	});
 	$('#myForm input').focusout(function (e) {
+		console.log("validating input...");
 		$("#myForm").data("validator").settings.ignore = "";
-		$('.error').addClass("beforeCallValid")
+		$('.error').addClass("beforeCallValid");
 		if ($('#myForm').valid()) {
+			console.log("valid");
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
 		} else {
 			$(".error:not(.beforeCallValid)").addClass("afterCallValid")

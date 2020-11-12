@@ -16,7 +16,7 @@
 <script src="~/js/calibrationpartials.js"></script>
 <div class="col-12  mx-auto on-form-modal supplier-form" style="width: 60%">
     <div class="on-form-modal-border">
-        <form action="" id="" class="createCalibration" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+        <form action="" id="myForm" class="createCalibration" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
             <input type="hidden" asp-for="RequestID" />
             <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
                 <div class="row">
@@ -200,8 +200,32 @@
 
                         <div id="internalCalibration" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                @{ await Html.RenderPartialAsync("_InternalCalibration", CalibrationsController.GetInternalCalibrationViewModel(Model.RequestID));}
-
+                                <button class="addInternalCalibration text custom-button">Add Internal Calibration</button>
+                                @{ var icIndex = 0;}
+                                <div id="icListDiv">
+                                    @for (var i = 0; i < Model.InternalCalibration.Count; i++)
+                                    {
+                                        <input type="hidden" asp-for="InternalCalibration[i].CalibrationID" />
+                                        <input type="hidden" asp-for="InternalCalibration[i].RequestID" />
+                                        await Html.RenderPartialAsync("_InternalCalibration",
+                                            new _InternalCalibrationViewModel()
+                                            {
+                                                RequestID = Model.RequestID,
+                                                InternalCalibration = Model.InternalCalibration[i],
+                                                InternalCalibrationIndex = i,
+                                                IsNew = false
+                                            }
+                                            );
+                                        icIndex = i + 1;
+                                    }
+                                </div>
+                                <input type="hidden" id="icIndex" value="@icIndex" />
+                                <div class="row mt-3 text-center">
+                                    <div class="col-12">
+                                        <input type="submit" class="text custom-button custom-button-font lab-man-background-color saveInternalCalibrations between-button-margin" asp-action="SaveInternalCalibrations" value="Save" />
+                                        <button class="custom-button custom-cancel text dont-save-request-edits ">Cancel</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div id="history" class="tab-pane fade">
