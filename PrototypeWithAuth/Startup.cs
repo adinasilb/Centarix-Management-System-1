@@ -174,7 +174,8 @@ namespace PrototypeWithAuth
                 TwoFactorEnabled = true,
                 EmployeeStatusID = 4,
                 LockoutEnabled = true,
-                LockoutEnd = new DateTime(2999, 01, 01)
+                LockoutEnd = new DateTime(2999, 01, 01),
+                NeedsToResetPassword= true
             };
             var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
             adminuser.EmailConfirmed = true;
