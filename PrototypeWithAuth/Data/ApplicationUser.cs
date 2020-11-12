@@ -34,6 +34,7 @@ namespace PrototypeWithAuth.Data
         public double OperationMonthlyLimit { get; set; }
         public double OperationUnitLimit { get; set; }
         public double OperationOrderLimit { get; set; }
+        public bool IsSuspended { get; set; }
         public bool IsDeleted { get; set; }
         public string UserImage { get; set; }
 

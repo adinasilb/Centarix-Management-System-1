@@ -52,10 +52,10 @@
                         @Html.DisplayFor(modelItem => user.DateCreated)
                     </a>
                 </td>
-                @if (User.IsInRole("CEO"))
-                {
-                    <td>
-                        @{
+                <td>
+                    @if (User.IsInRole("CEO"))
+                    {
+                        
                             var userid = user.Id;
 
                             if (userid != UserManager.GetUserId(User) && Model.IsCEO)
@@ -81,11 +81,9 @@
                                 }
                             }
 
-
-                        }
-
-                    </td>
-                }
+                                                
+                    }
+                </td>
             </tr>
         }
     </tbody>

@@ -57,7 +57,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("CentarixTestConnection"));
+                    Configuration.GetConnectionString("DefaultConnection"));
                 options.EnableSensitiveDataLogging(true);
             });
 
