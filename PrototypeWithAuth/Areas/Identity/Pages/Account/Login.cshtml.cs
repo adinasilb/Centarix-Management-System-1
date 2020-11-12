@@ -138,6 +138,10 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                         return RedirectToPage("./ResetPassword", new { code = code, userId = user.Id });
                     }
+                    else if (user.IsSuspended)
+                    {
+                        _logger.LogInformation("User is suspended");
+                    }
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }

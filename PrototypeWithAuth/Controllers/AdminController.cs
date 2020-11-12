@@ -828,11 +828,13 @@ namespace PrototypeWithAuth.Controllers
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
             if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > DateTime.Now))
             {
+                applicationUser.IsSuspended = false;
                 applicationUser.LockoutEnabled = false;
                 applicationUser.LockoutEnd = DateTime.Now;
             }
             else
             {
+                applicationUser.IsSuspended = true;
                 applicationUser.LockoutEnabled = true;
                 applicationUser.LockoutEnd = new DateTime(2999, 01, 01);
             }
