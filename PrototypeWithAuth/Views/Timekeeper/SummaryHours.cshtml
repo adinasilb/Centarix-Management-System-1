@@ -1,7 +1,10 @@
-﻿@model List<EmployeeHours>
+﻿
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
+@model SummaryHoursViewModel; 
+
 @inject UserManager<ApplicationUser> UserManager
 
 @{
@@ -29,7 +32,7 @@
 
                     @{
                         int[] months = Enumerable.Range(1, 12).ToArray();
-                        int curMonth = DateTime.Today.Month;
+                        int curMonth = Model.CurrentMonth.Month;
                     }
 
                     @Html.DropDownList("months", months.Select(x =>
@@ -47,7 +50,7 @@
     </div>
     <div class="row">
         <div class="col-8" id="hoursTable">
-            @Html.Partial("HoursPage")
+            @Html.Partial("HoursPage", Model.EmployeeHours)
         </div>
     </div>
 </div>
