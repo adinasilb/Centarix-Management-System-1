@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Models;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace PrototypeWithAuth
 {
@@ -55,14 +57,9 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
+                    Configuration.GetConnectionString("CentarixTestConnection"));
                 options.EnableSensitiveDataLogging(true);
             });
-
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("CentarixConnection")));
-
 
 
             services.AddControllersWithViews();
@@ -125,10 +122,19 @@ namespace PrototypeWithAuth
                 endpoints.MapRazorPages();
             });
 
-
+            //ChangePassword(serviceProvider).Wait();
             CreateRoles(serviceProvider).Wait();
 
 
+        }
+
+        private async Task ChangePassword(IServiceProvider serviceProvider)
+        {
+            var _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var user = await _userManager.FindByEmailAsync("adina@centarix.com");
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var result = _userManager.ResetPasswordAsync(user, code, "adinabCE2063*");
         }
         
 
@@ -173,7 +179,8 @@ namespace PrototypeWithAuth
                 TwoFactorEnabled = true,
                 EmployeeStatusID = 4,
                 LockoutEnabled = true,
-                LockoutEnd = new DateTime(2999, 01, 01)
+                LockoutEnd = new DateTime(2999, 01, 01),
+                NeedsToResetPassword = true
             };
             var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
             adminuser.EmailConfirmed = true;

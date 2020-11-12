@@ -116,14 +116,18 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     Input.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
                     //return View(resetPasswordViewModel);
 
-                }                
+                }
+
+                user.LockoutEnd = DateTime.Now;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
 
                 var signInResult = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, false, lockoutOnFailure: false);
                 if (signInResult.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                else if (signInResult.RequiresTwoFactor)
+                else if (signInResult.IsLockedOut || signInResult.RequiresTwoFactor)
                 {
                     var authenticatorCode = Input.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
 
@@ -132,7 +136,6 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     if (result2fa.Succeeded)
                     {
                         //user.LockoutEnabled = false;
-                        user.LockoutEnd = DateTime.Now;
                         user.NeedsToResetPassword = false;
                         _context.Update(user);
                         await _context.SaveChangesAsync();
