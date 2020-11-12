@@ -2628,20 +2628,6 @@ $(function () {
 		});
 	}
 
-//WEBCAM TRIAL:
-	$(".open-webcam").on("click", function (e) {
-		e.stopPropagation();
-		e.preventDefault();
-
-		$.ajax({
-			async: true,
-			url: "/Home/OpenWebcam",
-			type: 'GET',
-			cache: true,
-			success: function (data) {
-			}
-		});
-	});
 
 
 });
