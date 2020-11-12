@@ -283,8 +283,11 @@ namespace PrototypeWithAuth.Controllers
                         await _context.SaveChangesAsync();
                         //placeholderInstanceIds.Add(new List<int>());
                         //placeholderInstanceIds[0].Add(addLocationViewModel.LocationInstance.LocationInstanceID);
-
-                        int lastCompanyLocNo = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo;
+                        int lastCompanyLocNo = 1;
+                        if (_context.LocationInstances.Any())
+                        {
+                            lastCompanyLocNo = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo + 1;
+                        }
                         string nameAbbrev = addLocationViewModel.LocationInstance.LocationInstanceName;
                         int previousH = addLocationViewModel.LocationInstance.Height;
                         int previousW = addLocationViewModel.LocationInstance.Width;
@@ -381,7 +384,11 @@ namespace PrototypeWithAuth.Controllers
                         addLocationViewModel.LocationInstance.Width = 1;
                         addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
 
-                        int CompanyLocNo = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo + 1;
+                        int CompanyLocNo = 1;
+                        if (_context.LocationInstances.Any())
+                        {
+                            CompanyLocNo = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo + 1;
+                        }
                         addLocationViewModel.LocationInstance.CompanyLocationNo = CompanyLocNo;
 
                         _context.Add(addLocationViewModel.LocationInstance); 
@@ -519,7 +526,11 @@ namespace PrototypeWithAuth.Controllers
                         addLocationViewModel.LocationInstance.Width = 1;
                         addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
 
-                        int CoNo = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo + 1;
+                        int CoNo = 1;
+                        if (_context.LocationInstances.Any())
+                        {
+                            CoNo = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo + 1;
+                        }
                         addLocationViewModel.LocationInstance.CompanyLocationNo = CoNo;
                         string nameAbbrev1 = addLocationViewModel.LocationInstance.LocationInstanceName;
 
@@ -589,7 +600,11 @@ namespace PrototypeWithAuth.Controllers
                         addLocationViewModel.LocationInstance.Width = subLocationViewModel.LocationInstances[0].Width;
                         addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
 
-                        int CoNo2 = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo + 1;
+                        int CoNo2 = 1;
+                        if (_context.LocationInstances.Any())
+                        {
+                            CoNo2 = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo + 1;
+                        }
                         addLocationViewModel.LocationInstance.CompanyLocationNo = CoNo2;
                         string nameAbbrev2 = addLocationViewModel.LocationInstance.LocationInstanceName;
 

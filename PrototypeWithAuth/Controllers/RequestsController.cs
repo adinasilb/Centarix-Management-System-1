@@ -281,6 +281,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 onePageOfProducts = await RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.ParentRequest)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                     .ToPagedListAsync(pageNumber, 25);
 
@@ -642,18 +643,22 @@ namespace PrototypeWithAuth.Controllers
 
                     try
                     {
-                        foreach (var comment in requestItemViewModel.Comments)
+                        if (requestItemViewModel.Comments != null)
                         {
-                            if (comment.CommentText.Length != 0)
+
+                            foreach (var comment in requestItemViewModel.Comments)
                             {
-                                //save the new comment
-                                comment.ApplicationUserID = currentUser.Id;
-                                comment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
-                                comment.RequestID = requestItemViewModel.Request.RequestID;
-                                _context.Add(comment);
+                                if (comment.CommentText.Length != 0)
+                                {
+                                    //save the new comment
+                                    comment.ApplicationUserID = currentUser.Id;
+                                    comment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                                    comment.RequestID = requestItemViewModel.Request.RequestID;
+                                    _context.Add(comment);
+                                }
+
+
                             }
-
-
                         }
                         await _context.SaveChangesAsync();
                     }
@@ -3139,7 +3144,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> InstallmentsPartial( int index)
+        public async Task<IActionResult> InstallmentsPartial(int index)
         {
             return PartialView(index);
         }
@@ -3321,14 +3326,14 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(request);
                 await _context.SaveChangesAsync();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
 
             var accountingPaymentsEnum = (AppUtility.AccountingPaymentsEnum)Enum.Parse(typeof(AppUtility.AccountingPaymentsEnum), currentStatus.ToString());
 
-            return RedirectToAction("AccountingPayments",new { accountingPaymentsEnum = accountingPaymentsEnum });
+            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = accountingPaymentsEnum });
         }
         [HttpGet]
         [Authorize(Roles = "Admin, Accounting")]
@@ -3349,7 +3354,7 @@ namespace PrototypeWithAuth.Controllers
                     requestsList = requestsList.Where(r => r.InvoiceID == null);
                     break;
                 case AppUtility.AccountingNotificationsEnum.DidntArrive:
-                    requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r=>r.ExpectedSupplyDays!=null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
+                    requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
                     break;
                 case AppUtility.AccountingNotificationsEnum.PartialDelivery:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 4);
