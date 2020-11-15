@@ -131,7 +131,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 else if (result.IsLockedOut)
                 {
                     _logger.LogInformation("User locked out.");
-                    if (user.NeedsToResetPassword)
+                    if (user.NeedsToResetPassword && !user.IsSuspended)
                     {
                         //await _signInManager.SignOutAsync();
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
