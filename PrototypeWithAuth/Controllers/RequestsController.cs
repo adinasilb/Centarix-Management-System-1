@@ -3275,17 +3275,24 @@ namespace PrototypeWithAuth.Controllers
                 .Where(r => r.InvoiceID != null)
                 .Where(r => r.ParentRequest.WithoutOrder == false)
                 .Where(r => r.IsDeleted == false);
+
+            var payNowList = requestsList
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                .Where(r => r.PaymentStatusID == 3);
+
+            var payNowListCount = payNowList.ToList().Count;
+
+            TempData["PayNowCount"] = payNowListCount;
+
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.AccountingPaymentsEnum.MonthlyPayment:
                     requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                .Where(r => r.PaymentStatusID == 1);
+                        .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                        .Where(r => r.PaymentStatusID == 1);
                     break;
                 case AppUtility.AccountingPaymentsEnum.PayNow:
-                    requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                .Where(r => r.PaymentStatusID == 3);
+                    requestsList = payNowList;
                     break;
                 case AppUtility.AccountingPaymentsEnum.PayLater:
                     requestsList = requestsList
@@ -3305,7 +3312,8 @@ namespace PrototypeWithAuth.Controllers
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
             {
                 AccountingPaymentsEnum = accountingPaymentsEnum,
-                Requests = requestsList.ToLookup(r => r.Product.Vendor)
+                Requests = requestsList.ToLookup(r => r.Product.Vendor),
+                PayNowListNum = payNowListCount
             };
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;

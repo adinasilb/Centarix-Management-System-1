@@ -8,6 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class MenuItems
     {
+        public int MenuItemsID { get; set; }
         public string Description { get; set; }
         public string ActionLink { get; set; }
         public string Controller { get; set; }
@@ -16,5 +17,6 @@ namespace PrototypeWithAuth.ViewModels
         public string Classes { get; set; }
         public string ID { get; set; }
         public string IconName { get; set; }
+        public string SidebarCountReference { get; set; }
     }
 }

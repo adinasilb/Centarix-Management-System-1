@@ -12,5 +12,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.AccountingPaymentsEnum AccountingPaymentsEnum { get; set; }
         public AppUtility.AccountingNotificationsEnum AccountingNotificationsEnum { get; set; }
         public ILookup<Vendor, Request> Requests { get; set; }
+
+        public int PayNowListNum { get; set; }
     }
 }

@@ -755,6 +755,7 @@ namespace PrototypeWithAuth.AppData
             if (SidebarTitle == AppUtility.AccountingPaymentsEnum.MonthlyPayment.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
+                MenuItemsID = 1,
                 Description = "Monthly Payment",
                 Controller = "Requests",
                 Action = "AccountingPayments",
@@ -768,6 +769,7 @@ namespace PrototypeWithAuth.AppData
             if (SidebarTitle == AppUtility.AccountingPaymentsEnum.PayNow.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
+                MenuItemsID = 2,
                 Description = "Pay Now",
                 Controller = "Requests",
                 Action = "AccountingPayments",
@@ -781,6 +783,7 @@ namespace PrototypeWithAuth.AppData
             if (SidebarTitle == AppUtility.AccountingPaymentsEnum.PayLater.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
+                MenuItemsID = 3,
                 Description = "Pay Later",
                 Controller = "Requests",
                 Action = "AccountingPayments",
@@ -794,6 +797,7 @@ namespace PrototypeWithAuth.AppData
             if (SidebarTitle == AppUtility.AccountingPaymentsEnum.Installments.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
+                MenuItemsID = 4,
                 Description = "Installments",
                 Controller = "Requests",
                 Action = "AccountingPayments",
@@ -807,6 +811,7 @@ namespace PrototypeWithAuth.AppData
             if (SidebarTitle == AppUtility.AccountingPaymentsEnum.StandingOrders.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
+                MenuItemsID = 5,
                 Description = "Standing Orders",
                 Controller = "Requests",
                 Action = "AccountingPayments",
