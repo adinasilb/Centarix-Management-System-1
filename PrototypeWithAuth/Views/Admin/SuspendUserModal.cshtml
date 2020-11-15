@@ -1,5 +1,16 @@
 ﻿@model PrototypeWithAuth.Data.ApplicationUser
 
+@{
+    bool Suspend = true;
+    var suspendText = "suspend";
+    if (Model.LockoutEnabled && Model.LockoutEnd > DateTime.Now && Model.IsSuspended)
+    {
+        Suspend = false;
+        suspendText = "unsuspend";
+    }
+
+}
+
 <div class="modal modal-view " id="myModal" role="dialog" aria-labelledby="User" data-backdrop="false">
     <div class="modal-dialog-centered modal-lg mx-auto " role="document" style="max-height:100%; width: 50%; max-width: 100%">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
@@ -14,10 +25,10 @@
                 <div class="modal-body ">
 
                     @Html.HiddenFor(model => model.Id)
-                    <span class="text">Are you sure you would like to suspend this user?</span>
+                    <span class="text">Are you sure you would like to @suspendText this user?</span>
                     <div class="modal-footer-mt ">
                         <div class="mx-auto text-center">
-                            @if (Model.LockoutEnabled && Model.LockoutEnd > DateTime.Now)
+                            @if (Suspend)
                             {
                                 <input type="submit" value="Unsuspend" asp-action="SuspendUserModal" class="custom-button custom-button-font users-background-color between-button-margin " />
                             }

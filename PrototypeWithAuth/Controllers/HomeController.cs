@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -10,11 +11,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+//using OpenCvSharp;
+using WebcamCapturer.Core;
+using WebcamCapturer.Controls;
+using WebcamCapturer;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using SQLitePCL;
+using WebcamCapturer.Controls.WPF;
+using OpenCvSharp;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -52,7 +59,7 @@ namespace PrototypeWithAuth.Controllers
                 User = user,
                 ErrorMessage = errorMsg,
                 AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey),
-                TwoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel ()
+                TwoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel()
             };
             return View("ResetPassword", resetPasswordViewModel);
         }
@@ -62,7 +69,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var user = _context.Users.Where(u => u.Id == resetPasswordViewModel.User.Id).FirstOrDefault();
             string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-       
+
             IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordViewModel.Password);
             if (passwordChangeResult.Succeeded)
             {
@@ -81,7 +88,7 @@ namespace PrototypeWithAuth.Controllers
                 user.NeedsToResetPassword = false;
                 _context.Update(user);
                 await _context.SaveChangesAsync();
-               
+
                 return RedirectToAction("Index");
             }
             else
@@ -114,7 +121,7 @@ namespace PrototypeWithAuth.Controllers
 
         //Adina added in
         [Authorize(Roles = "Admin")]
-        public IActionResult IndexAdmin()
+        public async Task<IActionResult> IndexAdmin()
         {
             var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
             if (user.LastLogin.Date < DateTime.Today)
@@ -127,6 +134,9 @@ namespace PrototypeWithAuth.Controllers
                 _context.SaveChanges();
             }
             IEnumerable<Menu> menu = _context.Menus.Select(x => x);
+
+            
+
             return View(menu);
         }
 
@@ -201,9 +211,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public  IActionResult Login2FA()
+        public IActionResult Login2FA()
         {
-            TwoFactorAuthenticationViewModel twoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel {  };
+            TwoFactorAuthenticationViewModel twoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel { };
             return View(twoFactorAuthenticationViewModel);
         }
         [HttpPost]
@@ -332,6 +342,11 @@ namespace PrototypeWithAuth.Controllers
                 _urlEncoder.Encode("PrototypeWithAuth"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
+        }
+
+        public async Task<IActionResult> WebCam()
+        {
+            return null;
         }
 
     }

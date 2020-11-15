@@ -51,7 +51,7 @@
 
         </div>
         @if (Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit1) ||
-      Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit2))
+    Model.EntryExitEnum.Equals(PrototypeWithAuth.AppData.AppUtility.EntryExitEnum.Exit2))
         {
             <div class=" text-center timekeeper-font-color font-weight-bolder">
                 <label style="font-size:2.0625rem;">Entered @Model.Entry?.ToString("HH:mm"), Working <span id="working">@((DateTime.Now - Model.Entry)?.ToString(@"hh\:mm\:ss"))</span></label>

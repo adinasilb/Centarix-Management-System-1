@@ -58,7 +58,9 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersList;
             List<Employee> users = new List<Employee>();
             users = _context.Employees
-                .Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).OrderBy(u => u.UserNum)
+                .Where(u => !u.IsSuspended) //instead of using lockout use bool so needstoreset password will be shown
+                //.Where(u => u.NeedsToResetPassword? !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
+                .OrderBy(u => u.UserNum)
                 .ToList();
             bool IsCEO = false;
             if (User.IsInRole("CEO"))
@@ -577,12 +579,20 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case 1: /*Salaried Employee*/
                             var salariedEmployee = _context.SalariedEmployees.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
+                            if (salariedEmployee == null)
+                            {
+                                salariedEmployee = new SalariedEmployee();
+                            }
                             salariedEmployee.EmployeeId = employeeEditted.Id;
                             salariedEmployee.HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay;
                             employeeEditted.SalariedEmployee = salariedEmployee;
                             break;
                         case 2: /*Freelancer*/
                             var freelancer = _context.Freelancers.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
+                            if (freelancer == null)
+                            {
+                                freelancer = new Freelancer();
+                            }
                             freelancer.EmployeeId = employeeEditted.Id;
                             employeeEditted.Freelancer = freelancer;
                             break;
@@ -828,11 +838,13 @@ namespace PrototypeWithAuth.Controllers
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
             if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > DateTime.Now))
             {
+                applicationUser.IsSuspended = false;
                 applicationUser.LockoutEnabled = false;
                 applicationUser.LockoutEnd = DateTime.Now;
             }
             else
             {
+                applicationUser.IsSuspended = true;
                 applicationUser.LockoutEnabled = true;
                 applicationUser.LockoutEnd = new DateTime(2999, 01, 01);
             }

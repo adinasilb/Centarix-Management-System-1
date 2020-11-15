@@ -131,12 +131,16 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 else if (result.IsLockedOut)
                 {
                     _logger.LogInformation("User locked out.");
-                    if (user.NeedsToResetPassword)
+                    if (user.NeedsToResetPassword && !user.IsSuspended)
                     {
                         //await _signInManager.SignOutAsync();
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                         return RedirectToPage("./ResetPassword", new { code = code, userId = user.Id });
+                    }
+                    else if (user.IsSuspended)
+                    {
+                        _logger.LogInformation("User is suspended");
                     }
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
