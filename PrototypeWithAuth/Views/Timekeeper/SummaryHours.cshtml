@@ -36,13 +36,13 @@
                     }
 
                     @Html.DropDownList("months", months.Select(x =>
-                        new SelectListItem
-                        {
-                            Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
-                            Value = x.ToString(),
-                            Selected = (x == curMonth)
-                        }
-                    ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })
+         new SelectListItem
+         {
+             Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
+             Value = x.ToString(),
+             Selected = (x == curMonth)
+         }
+     ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })
                 </div>
 
             </div>
@@ -50,7 +50,7 @@
     </div>
     <div class="row">
         <div class="col-8" id="hoursTable">
-            @Html.Partial("HoursPage", Model)
+            @{await Html.RenderPartialAsync("HoursPage", Model);            }
         </div>
     </div>
 </div>

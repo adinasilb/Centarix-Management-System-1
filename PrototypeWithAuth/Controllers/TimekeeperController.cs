@@ -192,18 +192,39 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> HoursPage(int month = 0)
         {
+            var userid = _userManager.GetUserId(User);
+            var user = _context.Employees.Where(u => u.Id == userid).Include(e => e.SalariedEmployee).FirstOrDefault();
+
+
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.TimeKeeperSidebarEnum.SummaryHours;
             var hours = GetHours(new DateTime(DateTime.Now.Year, month, DateTime.Now.Day));
-            return PartialView(hours);
+            var CurMonth = new DateTime(DateTime.Now.Year, month, DateTime.Now.Day);
+            double? totalhours;
+            if (user.EmployeeStatusID != 1)
+            {
+                totalhours = null;
+            }
+            else
+            {
+                totalhours = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, month, 1), _context.CompanyDayOffs) * user.SalariedEmployee.HoursPerDay;
+            }
+            SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
+            {
+                EmployeeHours = hours,
+                CurrentMonth = CurMonth,
+                TotalHoursInMonth = totalhours
+
+            };
+            return PartialView(summaryHoursViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, TimeKeeper")]
         public async Task<IActionResult> SummaryHours(DateTime? Month)
         {
             var userid = _userManager.GetUserId(User);
-            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid & u.EmployeeStatusID==1).Include(e=>e.SalariedEmployee).First();
+            var user = _context.Employees.Where(u => u.Id == userid).Include(e=>e.SalariedEmployee).FirstOrDefault();
             
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
@@ -211,13 +232,13 @@ namespace PrototypeWithAuth.Controllers
             var hours = GetHours(DateTime.Now);
             var CurMonth = Month ?? DateTime.Today;
             double? totalhours;
-            if (user == null)
+            if (user.EmployeeStatusID!= 1)
             {
                 totalhours = null;
             }
             else
             {
-                totalhours =GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, (Month?.Month ?? DateTime.Now.Month), 1)) * user.SalariedEmployee.HoursPerDay;
+                totalhours =AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, (Month?.Month ?? DateTime.Now.Month), 1), _context.CompanyDayOffs) * user.SalariedEmployee.HoursPerDay;
             }
             SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
             {
@@ -536,22 +557,6 @@ namespace PrototypeWithAuth.Controllers
     }
 
 
-    private int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth)
-    {
-        DateTime nextDay = firstOfTheMonth;
-        var endOfTheMonth = firstOfTheMonth.AddMonths(1);
-        int totalDays = 0;
-        var companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == firstOfTheMonth.Year && firstOfTheMonth.Month == d.Date.Month).ToList();
-        while (nextDay.Date < endOfTheMonth)
-        {
-            if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(nextDay.Date))
-            {
-                totalDays += 1;
-            }
-            nextDay = nextDay.AddDays(1);
-        }
-        return totalDays;
-    }
-}
+  }
 }
 

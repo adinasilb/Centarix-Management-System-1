@@ -293,7 +293,22 @@ namespace PrototypeWithAuth.AppData
 
             return list;
         }
-       
+        public static int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs)
+        {
+            DateTime nextDay = firstOfTheMonth;
+            var endOfTheMonth = firstOfTheMonth.AddMonths(1);
+            int totalDays = 0;
+            var companyDaysOff = companyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == firstOfTheMonth.Year && firstOfTheMonth.Month == d.Date.Month).ToList();
+            while (nextDay.Date < endOfTheMonth)
+            {
+                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(nextDay.Date))
+                {
+                    totalDays += 1;
+                }
+                nextDay = nextDay.AddDays(1);
+            }
+            return totalDays;
+        }
     }
 
 }
