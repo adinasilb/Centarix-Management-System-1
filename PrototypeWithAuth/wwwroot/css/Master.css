@@ -66,6 +66,11 @@
 .danger-color {
     background-color: var(--danger-color);
 }
+
+.danger-text {
+    color: var(--danger-color);
+}
+
 .border-danger-centarix {
     border-color: var(--danger-color) !important;
 }

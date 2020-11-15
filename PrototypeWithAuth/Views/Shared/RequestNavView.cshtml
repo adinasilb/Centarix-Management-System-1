@@ -289,7 +289,7 @@
                 <div class="sidebar-shadow1">
                     <div style="@style" class="navbar-expand-lg text-center ourNavBar">
                         @*<nav class="navbar navbar-expand-lg">*@
-                        <ul class="nav flex-column nav-pills nav-stacked nav-top-sidebar1" 
+                        <ul class="nav flex-column nav-pills nav-stacked nav-top-sidebar1"
                             style="left: 55px !important;  position: fixed; left: 50%; transform: translate(-55px, 0); max-width: @sidebarWidth; min-width: @sidebarWidth; min-height: 100rem;
 ">
                             @{
@@ -314,6 +314,14 @@
                 @*</nav>*@
             </div>
             <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 render-body ">
+                @if (ViewBag.ErrorHeader != null)
+                {
+                    <span class="heading-1 danger-text">Error: @ViewBag.ErrorHeader</span><br />
+                }
+                @if (ViewBag.ErrorText != null)
+                {
+                    <span class="text danger-text">@ViewBag.ErrorText</span>
+                }
                 <!--class="col-md-10 border-left"-->
                 @RenderBody()
             </div>

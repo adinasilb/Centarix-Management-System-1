@@ -82,6 +82,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
             }
             TempData["Action"] = AppUtility.SuppliersEnum.All;
+
             return View(await _context.Vendors.ToListAsync());
 
         }
