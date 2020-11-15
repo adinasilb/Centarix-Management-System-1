@@ -321,6 +321,46 @@ namespace PrototypeWithAuth.AppData
 
             return MainMenuItems;
         }
+
+        public static List<MenuItems> CreateExpensesMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
+        {
+            var MainMenuItems = new List<MenuItems>();
+
+            var CurrentClasses = OrigClasses;
+            if (MainMenu == AppUtility.ExpensesPageTypeEnum.ExpensesSummary.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Summary",
+                Controller = "Expenses",
+                Action = "SummaryPieCharts",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                ID = ""
+            });
+            if (MainMenu == AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Statistics",
+                Controller = "Expenses",
+                Action = "",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                ID = ""
+            });
+            if (MainMenu == AppUtility.ExpensesPageTypeEnum.ExpensesCost.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Costs",
+                Controller = "Expenses",
+                Action = "",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                ID = ""
+            });
+
+            return MainMenuItems;
+        }
+
         public static List<MenuItems> GetOrdersAndInventoryRequestsSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
             var SidebarMenuItems = new List<MenuItems>();

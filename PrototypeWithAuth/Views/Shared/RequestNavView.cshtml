@@ -48,6 +48,10 @@
     {
         MainMenuItems = CreateMenus.CreateTimekeeperMainMenu(pageType, initalClasses, " text-dark timekeeper-filter");
     }
+    else if (MenuType == AppUtility.MenuItems.Expenses.ToString())
+    {
+        MainMenuItems = CreateMenus.CreateExpensesMainMenu(pageType, initalClasses, " text-dark expenses-filter");
+    }
 
     //passing the
     string inventoryClass = initalClasses;

@@ -32,6 +32,8 @@ namespace PrototypeWithAuth.AppData
         public enum OperationsSidebarEnum { LastItem, AddItem, Type, Vendors, Owner, Search }
         public enum TimeKeeperPageTypeEnum { None, Report, TimekeeperSummary }
         public enum TimeKeeperSidebarEnum { ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences }
+        public enum ExpensesPageTypeEnum { ExpensesSummary, ExpensesStatistics, ExpensesCost }
+        public enum ExpensesSidebarEnum { SummaryPieCharts, SummaryTables, SummaryGraphs, StatisticsProject, StatisticsItem, StatisticsWorker, StatisticsCategory, StatisticsVendor, CostsProject, CostsAdvancedSearch, CostsAdvancedLists }
         public enum MenuItems { OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Expenses, Income, Users }
         public enum RoleItems { Admin, CEO }
         public enum AccountingNotificationsEnum
