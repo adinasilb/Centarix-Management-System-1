@@ -314,13 +314,9 @@
                 @*</nav>*@
             </div>
             <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 render-body ">
-                @if (ViewBag.ErrorHeader != null)
+                @if (ViewBag.ErrorMessage != null)
                 {
-                    <span class="heading-1 danger-text">Error: @ViewBag.ErrorHeader</span><br />
-                }
-                @if (ViewBag.ErrorText != null)
-                {
-                    <span class="text danger-text">@ViewBag.ErrorText</span>
+                    <span class="text danger-text">Error: @ViewBag.ErrorMessage</span><br />
                 }
                 <!--class="col-md-10 border-left"-->
                 @RenderBody()

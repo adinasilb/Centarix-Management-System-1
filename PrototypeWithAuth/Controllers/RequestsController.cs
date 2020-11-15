@@ -297,14 +297,22 @@ namespace PrototypeWithAuth.Controllers
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
 
+            if (ViewBag.ErrorMessage != null)
+            {
+                ViewBag.ErrorMessage = ViewBag.ErrorMessage;
+            }
+
             return View(onePageOfProducts);
         }
+
+
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> DeleteModal(int? id, bool isQuote = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.OrdersAndInventory)
         {
             if (id == null)
             {
+                ViewBag.ErrorMessage = "Product not found (no id). Unable to delete.";
                 return NotFound();
             }
 
@@ -314,6 +322,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (request == null)
             {
+                ViewBag.ErrorMessage = "Product not found (no request). Unable to delete";
                 return NotFound();
             }
 
@@ -337,8 +346,16 @@ namespace PrototypeWithAuth.Controllers
                 .ThenInclude(ps => ps.ParentCategory)
                 .FirstOrDefault();
             request.IsDeleted = true;
-            _context.Update(request);
-            _context.SaveChanges();
+            try
+            {
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Unable to Delete. " + ex.Message;
+                return NotFound();
+            }
             var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
             if (parentRequest != null)
             {
@@ -346,8 +363,16 @@ namespace PrototypeWithAuth.Controllers
                 if (parentRequest.Requests.Count() <= 1)
                 {
                     parentRequest.IsDeleted = true;
-                    _context.Update(parentRequest);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        _context.Update(parentRequest);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewBag.ErrorHeader += "/n Parent Request Not Deleted";
+                        ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not the Parent Request";
+                    }
                 }
 
             }
@@ -358,8 +383,16 @@ namespace PrototypeWithAuth.Controllers
                 if (parentQuote.Requests.Count() <= 1)
                 {
                     parentQuote.IsDeleted = true;
-                    _context.Update(parentQuote);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        _context.Update(parentQuote);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewBag.ErrorHeader += "/n Parent Quote Not Deleted";
+                        ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not the Parent Quote";
+                    }
                 }
 
             }
@@ -368,10 +401,27 @@ namespace PrototypeWithAuth.Controllers
                 requestLocationInstance.IsDeleted = true;
                 var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
                 locationInstance.IsFull = false;
-                _context.Update(requestLocationInstance);
-                _context.SaveChanges();
-                _context.Update(locationInstance);
-                _context.SaveChanges();
+                try
+                {
+                    _context.Update(requestLocationInstance);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    //TODO: make sure the name won't be null over here
+                    ViewBag.ErrorHeader += "/n Request not removed from location";
+                    ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not fully removed from the location: " + requestLocationInstance.LocationInstance.LocationInstanceName;
+                }
+                try
+                {
+                    _context.Update(locationInstance);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorHeader += "/n Request not removed from location";
+                    ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not fully removed from the location: " + locationInstance.LocationInstanceName;
+                }
             }
 
             if (deleteRequestViewModel.IsReorder)
@@ -531,7 +581,8 @@ namespace PrototypeWithAuth.Controllers
             //todo terms and installements and paid
             var context = new ValidationContext(requestItemViewModel.Request, null, null);
             var results = new List<ValidationResult>();
-            if (Validator.TryValidateObject(requestItemViewModel.Request, context, results, true))
+            var validatorCreate = Validator.TryValidateObject(requestItemViewModel.Request, context, results, true);
+            if (validatorCreate)
             {
                 /*
                  * the viewmodel loads the request.product with a primary key of 0
@@ -555,9 +606,11 @@ namespace PrototypeWithAuth.Controllers
                     }
                     catch (Exception ex)
                     {
-                        TempData["ErrorMessage"] = ex.Message;
-                        TempData["InnerMessage"] = ex.InnerException;
-                        return View("~/Views/Shared/RequestError.cshtml");
+                        ViewBag.ErrorHeader += "/n Unable to assign data";
+                        ViewBag.ErrorText += "/n Error assigning the following fields: subproject, quote status, request status";
+                        //TempData["ErrorMessage"] = ex.Message;
+                        //TempData["InnerMessage"] = ex.InnerException;
+                        //return View("~/Views/Shared/RequestError.cshtml");
                     }
                 }
                 else
@@ -712,8 +765,12 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                TempData["InnerMessage"] = "The request model failed to validate. Please ensure that all fields were filled in correctly";
-                return View("~/Views/Shared/RequestError.cshtml");
+                ViewBag.ErrorHeader += "/n Unable to create";
+                ViewBag.ErrorText += "/n The request model failed to validate. Please ensure that all fields were filled in correctly /n";
+                ViewBag.ErrorText += validatorCreate.ToString();
+                return View();
+                //TempData["InnerMessage"] = "The request model failed to validate. Please ensure that all fields were filled in correctly";
+                //return View("~/Views/Shared/RequestError.cshtml");
             }
         }
 
