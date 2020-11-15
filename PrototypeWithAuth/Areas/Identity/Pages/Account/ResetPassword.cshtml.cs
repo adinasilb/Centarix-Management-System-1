@@ -116,23 +116,29 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     Input.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
                     //return View(resetPasswordViewModel);
 
-                }                
+                }
+
+                //if (!user.IsSuspended) //don't want to unlock them out if they are suspended
+                //{
+                    user.LockoutEnd = DateTime.Now;
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                //}
 
                 var signInResult = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, false, lockoutOnFailure: false);
                 if (signInResult.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                else if (signInResult.RequiresTwoFactor)
+                else if (signInResult.RequiresTwoFactor) //took out the is locked out query- b/c they may be suspended
                 {
                     var authenticatorCode = Input.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
 
                     var result2fa = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, false);
-                    
+
                     if (result2fa.Succeeded)
                     {
                         //user.LockoutEnabled = false;
-                        user.LockoutEnd = DateTime.Now;
                         user.NeedsToResetPassword = false;
                         _context.Update(user);
                         await _context.SaveChangesAsync();
@@ -142,7 +148,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     else
                     {
                         user.LockoutEnabled = true;
-                        user.LockoutEnd = new DateTime(2999,01 , 01);
+                        user.LockoutEnd = new DateTime(2999, 01, 01);
                         _context.Update(user);
                         await _context.SaveChangesAsync();
                         errorMessage += "Invalid Authentication Code";

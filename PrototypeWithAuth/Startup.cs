@@ -131,7 +131,7 @@ namespace PrototypeWithAuth
 
 
         }
-        
+
 
         //Seed database with new roles
 
@@ -166,16 +166,17 @@ namespace PrototypeWithAuth
 
             var adminuser = new Employee()
             {
-                UserName = "adina@centarix.com",
-                Email = "adina@centarix.com",
-                FirstName = "Adina",
-                LastName = "Gayer",
+                UserName = "shimon@centarix.com",
+                Email = "shimon@centarix.com",
+                FirstName = "Shimon",
+                LastName = "Meshi Zahav",
                 EmailConfirmed = true,
                 TwoFactorEnabled = true,
                 EmployeeStatusID = 4,
                 LockoutEnabled = true,
                 LockoutEnd = new DateTime(2999, 01, 01),
-                NeedsToResetPassword= true
+                NeedsToResetPassword= true,
+                UserNum = 3
             };
             var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
             adminuser.EmailConfirmed = true;
