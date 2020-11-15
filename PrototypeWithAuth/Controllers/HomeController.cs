@@ -121,7 +121,7 @@ namespace PrototypeWithAuth.Controllers
 
         //Adina added in
         [Authorize(Roles = "Admin")]
-        public IActionResult IndexAdmin()
+        public async Task<IActionResult> IndexAdmin()
         {
             var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
             if (user.LastLogin.Date < DateTime.Today)
@@ -134,6 +134,9 @@ namespace PrototypeWithAuth.Controllers
                 _context.SaveChanges();
             }
             IEnumerable<Menu> menu = _context.Menus.Select(x => x);
+
+            
+
             return View(menu);
         }
 

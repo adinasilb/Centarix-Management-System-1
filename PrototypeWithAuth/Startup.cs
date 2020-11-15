@@ -132,19 +132,20 @@ namespace PrototypeWithAuth
             });
 
             //ChangePassword(serviceProvider).Wait();
-            CreateRoles(serviceProvider).Wait();
+            //CreateRoles(serviceProvider).Wait();
+            //AddRole(serviceProvider).Wait();
 
 
         }
 
-        private async Task ChangePassword(IServiceProvider serviceProvider)
-        {
-            var _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var user = await _userManager.FindByEmailAsync("adina@centarix.com");
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var result = _userManager.ResetPasswordAsync(user, code, "adinabCE2063*");
-        }
+        //private async Task ChangePassword(IServiceProvider serviceProvider)
+        //{
+        //    var _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        //    var user = await _userManager.FindByEmailAsync("adina@centarix.com");
+        //    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+        //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        //    var result = _userManager.ResetPasswordAsync(user, code, "adinabCE2063*");
+        //}
         
 
         //Seed database with new roles
