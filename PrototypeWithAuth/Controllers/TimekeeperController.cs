@@ -511,5 +511,22 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
+
+        private int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth)
+        {
+            DateTime nextDay = firstOfTheMonth;
+            var endOfTheMonth = firstOfTheMonth.AddMonths(1);
+            int totalDays = 0;
+            var companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == firstOfTheMonth.Year && firstOfTheMonth.Month == cdo.Date.Month).ToList();
+            while (nextDay.Date < endOfTheMonth)
+            {
+                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(nextDay.Date))
+                {
+                    totalDays += 1;
+                }
+                nextDay = nextDay.AddDays(1);
+            }
+            return totalDays;
+        }
     }
 }
