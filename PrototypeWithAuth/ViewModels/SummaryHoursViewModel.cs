@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public List<EmployeeHours> EmployeeHours { get; set; }
         public DateTime CurrentMonth { get; set; }
+        public double? TotalHoursInMonth { get; set; }
     }
 }

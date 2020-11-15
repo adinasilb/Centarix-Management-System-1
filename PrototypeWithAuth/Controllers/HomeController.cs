@@ -238,13 +238,21 @@ namespace PrototypeWithAuth.Controllers
         private void fillInTimekeeperMissingDays(ApplicationUser user)
         {
             DateTime nextDay = user.LastLogin.AddDays(1);
+            var year = nextDay.Year;
             if (user.LastLogin == new DateTime())
             {
                 return;
             }
+            var companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == year).ToList();
+
             while (nextDay.Date <= DateTime.Today)
             {
-                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
+                if( year != nextDay.Year)
+                {
+                    year = nextDay.Year;
+                    companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == year).ToList();
+                }
+                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(nextDay.Date))
                 {
                     var existentHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Date == nextDay.Date).FirstOrDefault();
                     if (existentHours == null)
