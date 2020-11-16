@@ -1371,7 +1371,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "CostsAdvancedList",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-zoom_in-24px"
+                IconName = "icon-search-list-24px"
             });
 
             return SidebarMenuItems;

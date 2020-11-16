@@ -4,13 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Data;
+using PrototypeWithAuth.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class ExpensesController : Controller
     {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
@@ -20,7 +32,25 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesSummary.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.SummaryPieCharts.ToString();
 
-            return View();
+            SummaryPieChartsViewModel summaryPieChartsViewModel = new SummaryPieChartsViewModel()
+            {
+                Years = _context.Requests.Select(r => r.CreationDate.Year).Distinct().ToList(),
+                CategoryTypes = _context.CategoryTypes.ToList(),
+                ParentCategories = _context.ParentCategories.ToList(),
+                ProductSubcategories = _context.ProductSubcategories.ToList(),
+                Projects = _context.Projects.ToList(),
+                SubProjects = _context.SubProjects.ToList(),
+                Employees = _context.Employees
+                    .Select(
+                        e => new SelectListItem
+                        {
+                            Text = e.FirstName + " " + e.LastName,
+                            Value = e.Id
+                        }
+                    ).ToList()
+            };
+
+            return View(summaryPieChartsViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]

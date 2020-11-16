@@ -24,6 +24,11 @@
     --accounting-25: rgb(162, 111, 240, .25);
     --operations-25: rgb(63, 81, 181, .25);
     --users-25: rgb(121,85,72, .25);
+    --protocols-25: rgb(0, 150, 136, .25);
+    --biomarkers-25: rgb(244, 67, 54, .25);
+    --timekeeper-25: rgb(255, 152, 0, .25);
+    --expenses-25: rgb(0, 188, 212, .25);
+    --income-25: rgb(76, 175, 80, .25);
     --acc-color: #A26FF0;
     --protocol-color: #009688;
     --expense-color: #00BCD4;
@@ -148,6 +153,10 @@
 
 .expenses-filter {
     filter: var(--expense-filter) !important;
+}
+
+.expenses-background-color{
+    background-color: var(--expense-color) !important;
 }
 
 
@@ -340,8 +349,16 @@ table td, table td .btn, .text, table th {
 .new-modal-body .row,
 .modal-body .row,
 .new-modal-body .comment-row,
-.modal-body .comment-row {
+.modal-body .comment-row,{
     margin-bottom: 2.063rem;
+}
+
+.select-box-margin-bottom {
+    margin-bottom: 1.3rem;
+}
+
+.margin-top-button {
+    margin-top: 3.125rem;
 }
 
 .top-radio-buttons {
