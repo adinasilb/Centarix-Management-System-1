@@ -1,0 +1,181 @@
+﻿
+@model PrototypeWithAuth.ViewModels.WorkersHoursViewModel
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    Layout = null;
+
+    var date = new DateTime(Model.Year, Model.Month, 1);
+    var monthStyle = "";
+    var yearStyle = " ";
+    var header = "";
+    var col1 = "";
+    var col2 = "";
+    var totalHoursYearOrMonth = 0;
+    switch (Model.YearlyMonthlyEnum)
+    {
+        case AppUtility.YearlyMonthlyEnum.Monthly:
+            monthStyle = "yearly-monthly ";
+            header = date.ToString("MMMM") + " ";
+            col1 = " col-2 ";
+            col2 = " col-6 ";
+            totalHoursYearOrMonth = Model.TotalWorkingDaysInMonth;
+            break;
+        case AppUtility.YearlyMonthlyEnum.Yearly:
+            yearStyle = "yearly-monthly ";
+            col1 = " col-1 ";
+            col2 = " col-7 ";
+            totalHoursYearOrMonth = Model.TotalWorkingDaysInYear;
+            break;
+    }
+
+}
+<input type="hidden" id="newYearAmount" value="@Model.TotalWorkingDaysInYear"/>
+<input type="hidden" id="currentYear" value="@Model.Year"
+<div class="container-fluid m-0">
+    <div class="row">
+        <div class="@col1 heading-1">
+            @header@date.Year
+        </div>
+        <div class="@col2 ">
+            <a class="black-text py-2 mr-6  rounded-pill @monthStyle text-center  px-5  border border-dark black-text yearlyMonthlySwitch" yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Monthly" style="font-size:1.4375rem; " month="@Model.Month" year="@Model.Year">Monthly</a>
+
+            <a class="@yearStyle  px-5  py-2 rounded-pill text-center  border border-dark black-text yearlyMonthlySwitch" 
+               yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Yearly" style="font-size:1.4375rem " month="@Model.Month" year="@Model.Year">Yearly</a>
+        </div>
+        @{ var yearDropDown = "offset-3"; }
+        @if (Model.YearlyMonthlyEnum == AppUtility.YearlyMonthlyEnum.Monthly)
+        {
+            <div class="col-1 text-right offset-2 ">
+                <div>
+                    @Html.DropDownList("months", Model.Months.Select(x =>
+                        new SelectListItem
+                        {
+                            Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
+                            Value = x+"",
+                            Selected = (x == Model.Month)
+                        }
+                    ), htmlAttributes: new { @class = "mdb-select  custom users select-dropdown workersHoursMonths", @name = "DOBMonth", @year = Model.Year, @month =Model.Month, @yearlyMonthlySwitch = AppUtility.YearlyMonthlyEnum.Monthly })
+                </div>
+            </div>
+            yearDropDown = "";
+        }
+
+        <div class="col-1 @yearDropDown">
+            <div>
+                @Html.DropDownList("years", Model.Years.Select(x =>
+                    new SelectListItem
+                    {
+                        Text = x.ToString(),
+                        Value=x.ToString(),
+                        Selected = (x == Model.Year)
+                    }
+                ), htmlAttributes: new { @class = "mdb-select  custom users select-dropdown workersHoursYears", @name = "DOBYear", @year = Model.Year, @month = Model.Month, @yearlyMonthlySwitch = Model.YearlyMonthlyEnum })
+                <input type="hidden" class="workerHoursAttr"   yearlyMonthlyEnum="@Model.YearlyMonthlyEnum" month="@Model.Month" year="@Model.Year"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ">
+        <table class="table table-headerspaced  col-12 ">
+            <tbody>
+                <tr class="text-center " style="border-color:transparent; border-bottom: 1px solid lightgrey;">
+                    <td width="11%"></td>
+                    <td width="11%">Name</td>
+                    <td width="11%">
+                        Job Title
+                    </td>
+                    <td width="11%">
+                        Job Category
+                    </td>
+                    <td width="11%">
+                        Job Type
+                    </td>
+                    <td width="10%">
+                        Hours
+                    </td>
+                    <td width="8%">
+                        Working Days
+                    </td>
+                    <td width="8%">
+                        Vacation Days
+                    </td>
+                    <td width="8%">
+                        Sick Days
+                    </td>
+                </tr>
+                
+                @foreach (var employee in Model.Employees)
+                {
+                    <tr class="text-center users-tr ">
+                        <td width="11%" class="py-2">
+                            @{
+                                var src = "/UserImages/profile_circle_big.png";
+                                if (employee.Employee.UserImage != null)
+                                {
+                                    src = UserManager.GetUserAsync(User).Result.UserImage;
+                                }
+                            }
+                            <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
+                        </td>
+                        <td width="11%">
+                            @employee.Employee.FirstName  @employee.Employee.LastName
+                        </td>
+                        <td width="11%">
+                            @employee.Employee.JobTitle
+                        </td>
+                        <td width="11%">
+                            @employee.Employee.JobCategoryType?.Description
+                        </td>
+                        <td width="11%">
+                            @employee.Employee.EmployeeStatus.Description
+                        </td>
+                        <td width="10%">
+                            @{var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
+                                var totalHoursString = "";                                
+                            }
+                            @if (employee.Employee.EmployeeStatusID == 1)
+                            {
+                                var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
+                                var totalInMonth = TimeSpan.FromHours(totalHoursInRange);                             
+                                totalHoursString = totalHours+":"+employee.Hours.ToString("mm")+"/"+ Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
+                            }
+                            else
+                            {
+
+                                totalHoursString = totalHours+":"+employee.Hours.ToString("mm");
+                            }
+                            @totalHoursString
+                        </td>
+                        <td width="8%">
+                            @{
+                                var totalDaysString = "";
+                            }
+                            @if (employee.Employee.EmployeeStatusID == 1)
+                            {
+                                var totalDaysInRange = (totalHoursYearOrMonth - employee.VacationSickCount);
+                                totalDaysString = employee.WorkingDays + "/" + totalDaysInRange;
+                            }
+                            else
+                            {
+
+                                totalDaysString = employee.WorkingDays+"";
+                            }
+                            @totalDaysString
+                        </td>
+                        <td width="8%">
+                            @employee.VacationDays
+                        </td>
+                        <td width="8%">
+                            @employee.SickDays
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="~/js/workerHours.js"></script>

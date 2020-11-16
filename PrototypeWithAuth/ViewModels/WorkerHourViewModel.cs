@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.ViewModels
         public int WorkingDays { get; set; }
         public int VacationDays { get; set; }
         public int SickDays { get; set; }
+        public int VacationSickCount { get; set; }
     }
 }

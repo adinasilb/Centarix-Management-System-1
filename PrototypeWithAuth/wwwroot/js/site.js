@@ -2370,12 +2370,6 @@ $(function () {
 		});
 	});
 
-	$('.workersHours').change(function () {
-		var url = $(this).val();
-		if (url != null && url != '') {
-			window.location.href = url;
-		}
-	});
 
 
 	//function ChangeEdits() {
