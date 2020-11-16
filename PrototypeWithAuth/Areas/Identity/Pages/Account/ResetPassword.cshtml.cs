@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using PrototypeWithAuth.Data;
 using System.Diagnostics;
-using System.Web;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -80,7 +79,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 Input = new InputModel
                 {
                     Email = user.Email,
-                    Code = HttpUtility.UrlEncode(code),
+                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
                     AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey)
                 };
                 return Page();
@@ -166,7 +165,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             }
          
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            code = HttpUtility.UrlDecode(code);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             Input = new InputModel
             {
                 Email = user.Email,
