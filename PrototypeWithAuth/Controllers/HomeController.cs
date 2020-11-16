@@ -73,7 +73,7 @@ namespace PrototypeWithAuth.Controllers
             IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordViewModel.Password);
             if (passwordChangeResult.Succeeded)
             {
-                var verificationCode = resetPasswordViewModel.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+                var verificationCode = resetPasswordViewModel.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
                 var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
                     user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
@@ -221,7 +221,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             // Strip spaces and hypens
-            var verificationCode = twoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+            var verificationCode = twoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
             var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
                 user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
