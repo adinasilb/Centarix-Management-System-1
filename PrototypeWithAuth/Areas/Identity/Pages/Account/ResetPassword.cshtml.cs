@@ -104,7 +104,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
             if (result.Succeeded)
             {
-                var verificationCode = Input.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+                var verificationCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
                 var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
                     user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
@@ -132,7 +132,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 }
                 else if (signInResult.RequiresTwoFactor) //took out the is locked out query- b/c they may be suspended
                 {
-                    var authenticatorCode = Input.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+                    var authenticatorCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
                     var result2fa = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, false);
                     

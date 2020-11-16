@@ -12,7 +12,7 @@
     if (AppUtility.IsAjaxRequest(Context.Request))
     {
         Layout = null;
-
+        <script>$('.mdb-select').materialSelect()</script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     }
     else
@@ -36,13 +36,13 @@
                     }
 
                     @Html.DropDownList("months", months.Select(x =>
-                        new SelectListItem
-                        {
-                            Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
-                            Value = x.ToString(),
-                            Selected = (x == curMonth)
-                        }
-                    ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })
+         new SelectListItem
+         {
+             Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
+             Value = x.ToString(),
+             Selected = (x == curMonth)
+         }
+     ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })
                 </div>
 
             </div>
@@ -50,7 +50,7 @@
     </div>
     <div class="row">
         <div class="col-8" id="hoursTable">
-            @Html.Partial("HoursPage", Model.EmployeeHours)
+            @{await Html.RenderPartialAsync("HoursPage", Model);            }
         </div>
     </div>
 </div>

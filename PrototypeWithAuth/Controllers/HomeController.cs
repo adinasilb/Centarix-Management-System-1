@@ -73,7 +73,7 @@ namespace PrototypeWithAuth.Controllers
             IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordViewModel.Password);
             if (passwordChangeResult.Succeeded)
             {
-                var verificationCode = resetPasswordViewModel.TwoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+                var verificationCode = resetPasswordViewModel.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
                 var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
                     user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
@@ -221,7 +221,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             // Strip spaces and hypens
-            var verificationCode = twoFactorAuthenticationViewModel.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+            var verificationCode = twoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
             var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
                 user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
@@ -238,13 +238,21 @@ namespace PrototypeWithAuth.Controllers
         private void fillInTimekeeperMissingDays(ApplicationUser user)
         {
             DateTime nextDay = user.LastLogin.AddDays(1);
+            var year = nextDay.Year;
             if (user.LastLogin == new DateTime())
             {
                 return;
             }
+            var companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == year).ToList();
+
             while (nextDay.Date <= DateTime.Today)
             {
-                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
+                if( year != nextDay.Year)
+                {
+                    year = nextDay.Year;
+                    companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == year).ToList();
+                }
+                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(nextDay.Date))
                 {
                     var existentHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Date == nextDay.Date).FirstOrDefault();
                     if (existentHours == null)
@@ -348,6 +356,7 @@ namespace PrototypeWithAuth.Controllers
         {
             return null;
         }
+        
 
     }
 }

@@ -13,6 +13,9 @@ namespace PrototypeWithAuth.ViewModels
         public int Month { get; set; }
         public List<int> Years { get; set; }
         public List<int> Months { get; set; }
+        
         public List<WorkerHourViewModel> Employees { get; set; }
+        public int TotalWorkingDaysInYear { get; set; }
+        public int TotalWorkingDaysInMonth { get; set; }
     }
 }

@@ -2099,13 +2099,13 @@ $(function () {
 		$.fn.GetEmployeeHourFromToday();
 		return false;
 	});
-	$("#entry").click(function (e) {
+	$("#entry").off('click').click(function (e) {
 		e.preventDefault();
 	});
-	$("#exit").click(function (e) {
+	$("#exit").off('click').click(function (e) {
 		e.preventDefault();
 	});
-	$('.monthsHours .select-dropdown').change(function (e) {
+	$('.monthsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".monthsHours chnage")
 		if ($(this).val() != '') {
 			$.fn.SortByMonth($(this).val())
@@ -2122,12 +2122,12 @@ $(function () {
 			}
 		});
 	};
-	$(".open-work-from-home-modal").click(function (e) {
+	$(".open-work-from-home-modal").off('click').click(function (e) {
 		var itemurl = "ReportHoursFromHomeModal";
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
-	$(".open-update-hours-modal").click(function (e) {
+	$(".open-update-hours-modal").off('click').click(function (e) {
 		var val = $(this).val();
 		if (val != '') {
 			var date = new Date(val).toISOString();
@@ -2138,7 +2138,7 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
-	$(".report-vacation-days").click(function (e) {
+	$(".report-vacation-days").off('click').click(function (e) {
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
@@ -2151,17 +2151,20 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
-	$(".report-sick-days").click(function (e) {
+	$(".report-sick-days").off('click').click(function (e) {
 
 		$("#loading").show();
 		var pageType = "";
+		var selectedDate = null;
 		if ($(this).hasClass("SummaryHours")) {
+			selectedDate = $(this).val();
+			console.log("selecteddate: " + selectedDate)
 			pageType = "SummaryHours";
 		}
 		if ($(this).hasClass("ReportDaysOff")) {
 			pageType = "ReportDaysOff";
 		}
-		var itemurl = "SickDay?PageType=" + pageType;
+		var itemurl = "SickDay?PageType=" + pageType + "&date=" + selectedDate;
 		$.fn.CallModal(itemurl);
 	});
 
@@ -2296,7 +2299,7 @@ $(function () {
 	//		msg = '<span class="msg">Hidden input value: ';
 	//	$('.msg').html(msg + input + '</span>');
 	//}); 
-	$.fn.SaveOffDays = function (url, pageType) {
+	$.fn.SaveOffDays = function (url, pageType, month) {
 		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
 		var dateRangeFromDay = rangeFrom.attr('data-date');
@@ -2317,7 +2320,7 @@ $(function () {
 		console.log(dateFrom + "-" + dateTo);
 		$.ajax({
 			async: false,
-			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType,
+			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
 			type: 'POST',
 			cache: false,
 			success: function (data) {
@@ -2328,8 +2331,9 @@ $(function () {
 		});
 	}
 
-	$("body").on("click", "#saveVacation", function (e) {
+	$("#saveVacation").off('click').click(function (e) {
 		e.preventDefault();
+
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
@@ -2337,21 +2341,24 @@ $(function () {
 		if ($(this).hasClass("ReportDaysOff")) {
 			pageType = "ReportDaysOff";
 		}
-		$.fn.SaveOffDays("SaveVacation", pageType);
+
+		$.fn.SaveOffDays("SaveVacation", pageType,"");
 	});
-	$("body").on("click", "#saveSick", function (e) {
+	$("body").off('click').on("click", "#saveSick", function (e) {
 		e.preventDefault();
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
+			var month = $('#months').val();
+			console.log("month: "+month)
 			pageType = "SummaryHours";
 		}
 		if ($(this).hasClass("ReportDaysOff")) {
 			pageType = "ReportDaysOff";
 		}
-		$.fn.SaveOffDays("SaveSick", pageType);
+		$.fn.SaveOffDays("SaveSick", pageType, month);
 	});
 
-	$(".approve-hours").click(function (e) {
+	$(".approve-hours").off('click').click(function (e) {
 		$.ajax({
 			async: true,
 			url: "ApproveHours" + '?id=' + $(this).val(),
@@ -2363,12 +2370,6 @@ $(function () {
 		});
 	});
 
-	$('.workersHours').change(function () {
-		var url = $(this).val();
-		if (url != null && url != '') {
-			window.location.href = url;
-		}
-	});
 
 
 	//function ChangeEdits() {
@@ -2537,7 +2538,7 @@ $(function () {
 		$('#addRequestComment').popover('toggle');
 
 	});
-	$(".more").click(function () {
+	$(".more").off('click').click(function () {
 		var val = $(this).val();
 		$('[data-toggle="popover"]').popover('dispose');
 		$(this).popover({
@@ -2600,19 +2601,19 @@ $(function () {
 	//$(".mdb-select").off("change").on("change", function () {
 	//	alert("select changed!");
 	//});
-	$('.modal #FirstName').change(function () {
+	$('.modal #FirstName').off('change').change(function () {
 		$('.userName').val($(this).val() + " " + $('#LastName').val())
 	});
-	$('.modal #LastName').change(function () {
+	$('.modal #LastName').off('change').change(function () {
 		$('.userName').val($('#FirstName').val() + " " + $(this).val())
 	});
-	$('#FirstName').change(function () {
+	$('#FirstName').off('change').change(function () {
 		$('.userName').val($(this).val() + " " + $('#LastName').val())
 	});
-	$('#LastName').change(function () {
+	$('#LastName').off('change').change(function () {
 		$('.userName').val($('#FirstName').val() + " " + $(this).val())
 	});
-	$('.exitModal').on('click', '.close', function (e) {
+	$('.exitModal').off('click').on('click', '.close', function (e) {
 		console.log("close edit modal");
 		$.fn.CallPageTimeKeeper('/Timekeeper/ReportHours');
 	})

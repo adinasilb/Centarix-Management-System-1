@@ -256,7 +256,7 @@ namespace PrototypeWithAuth.AppData
                         //    accountingPopoverLink.Action = "ChangePaymentStatus";
                         //    accountingPopoverLink.Controller = "Requests";
                         //    accountingPopoverLink.Color = "#00CA72";
-                        //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px";
+                        //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px1";
                         //    break;
                         case PaymentsPopoverEnum.MonthlyPayment:
                             accountingPopoverLink.Action = "ChangePaymentStatus";
@@ -295,6 +295,42 @@ namespace PrototypeWithAuth.AppData
 
             return list;
         }
+        public static int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
+        {
+            DateTime nextDay = firstOfTheMonth;
+            var endOfTheMonth = firstOfTheMonth.AddMonths(1);
+            int totalDays = 0;
+            var companyDaysOffCount = companyDayOffs.Where(d => d.Date.Year == firstOfTheMonth.Year && firstOfTheMonth.Month == d.Date.Month).Count();
+            while (nextDay.Date < endOfTheMonth)
+            {
+                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    totalDays += 1;
+                }
+                nextDay = nextDay.AddDays(1);
+            }
+
+            return totalDays-vacationSickCount-companyDaysOffCount;
+        }
+
+        public static int GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
+        {
+            DateTime nextDay = firstOfTheYear;
+            var endofTheYear = firstOfTheYear.AddYears(1);
+            int totalDays = 0;
+            var companyDaysOffCount = companyDayOffs.Where(d => d.Date.Year == firstOfTheYear.Year).Count();
+            while (nextDay.Date < endofTheYear)
+            {
+                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    totalDays += 1;
+                }
+                nextDay = nextDay.AddDays(1);
+            }
+
+            return totalDays - vacationSickCount-companyDaysOffCount;
+        }
+
     }
 
 }

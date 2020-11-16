@@ -1,9 +1,8 @@
-﻿@model List<EmployeeHours>
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
-
+@model PrototypeWithAuth.ViewModels.SummaryHoursViewModel
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
@@ -25,7 +24,7 @@
         Total
     </div>
 </div>
-@foreach (var eh in Model)
+@foreach (var eh in Model.EmployeeHours)
 {
     <div class="row border p-3 text-center">
         <div class="col-4 pl-5 text-left">
@@ -98,18 +97,25 @@
 </div>
 <div class="row mt-2 p-4  border  text-center" style="border-color: var(--timekeeper-color) !important;">
     <div class="col-2">
-        @Model.Where(eh => eh.OffDayTypeID == null).Count()
+        @Model.EmployeeHours.Where(eh => eh.OffDayTypeID == null).Count()
     </div>
     <div class="col-2">
-        @Model.Where(eh => eh.OffDayTypeID == 1).Count()
+        @Model.EmployeeHours.Where(eh => eh.OffDayTypeID == 1).Count()
     </div>
     <div class="col-2">
-        @Model.Where(eh => eh.OffDayTypeID == 2).Count()
+        @Model.EmployeeHours.Where(eh => eh.OffDayTypeID == 2).Count()
     </div>
     <div class="col-6 text-right pr-5 timekeeper-font-color font-weight-bold">
-        @{ var sum = new TimeSpan(Model.Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
+        @{ var sum = new TimeSpan(Model.EmployeeHours.Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
         @{var totalHours = sum.Days * 24 + sum.Hours;
+            String? totalInMonthString = null;
+            if (Model.TotalHoursInMonth != null)
+            {
+                var totalInMonth = TimeSpan.FromHours(Model.TotalHoursInMonth ?? 0);
+                totalInMonthString= " / "+Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
+            }
+
         }
-        @totalHours:@sum.ToString("mm")
+        @totalHours:@sum.ToString("mm")@totalInMonthString
     </div>
 </div>
