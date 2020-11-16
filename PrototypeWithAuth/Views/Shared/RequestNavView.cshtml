@@ -329,11 +329,11 @@
                 </div>
                 @*</nav>*@
             </div>
+            @if (ViewBag.ErrorMessage != null)
+            {
+        <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text">Error: @ViewBag.ErrorMessage</span></div><br />
+            }
             <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 render-body ">
-                @if (ViewBag.ErrorMessage != null)
-                {
-                    <span class="text danger-text">Error: @ViewBag.ErrorMessage</span><br />
-                }
                 <!--class="col-md-10 border-left"-->
                 @RenderBody()
             </div>
