@@ -2151,17 +2151,20 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
-	$(".report-sick-days").click(function (e) {
+	$(".report-sick-days").off('click').click(function (e) {
 
 		$("#loading").show();
 		var pageType = "";
+		var selectedDate = null;
 		if ($(this).hasClass("SummaryHours")) {
+			selectedDate = $(this).val();
+			console.log("selecteddate: " + selectedDate)
 			pageType = "SummaryHours";
 		}
 		if ($(this).hasClass("ReportDaysOff")) {
 			pageType = "ReportDaysOff";
 		}
-		var itemurl = "SickDay?PageType=" + pageType;
+		var itemurl = "SickDay?PageType=" + pageType + "&date=" + selectedDate;
 		$.fn.CallModal(itemurl);
 	});
 
@@ -2296,7 +2299,7 @@ $(function () {
 	//		msg = '<span class="msg">Hidden input value: ';
 	//	$('.msg').html(msg + input + '</span>');
 	//}); 
-	$.fn.SaveOffDays = function (url, pageType) {
+	$.fn.SaveOffDays = function (url, pageType, month) {
 		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
 		var dateRangeFromDay = rangeFrom.attr('data-date');
@@ -2317,7 +2320,7 @@ $(function () {
 		console.log(dateFrom + "-" + dateTo);
 		$.ajax({
 			async: false,
-			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType,
+			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
 			type: 'POST',
 			cache: false,
 			success: function (data) {
@@ -2328,7 +2331,7 @@ $(function () {
 		});
 	}
 
-	$("body").on("click", "#saveVacation", function (e) {
+	$("body").off('click').on("click", "#saveVacation", function (e) {
 		e.preventDefault();
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
@@ -2339,19 +2342,21 @@ $(function () {
 		}
 		$.fn.SaveOffDays("SaveVacation", pageType);
 	});
-	$("body").on("click", "#saveSick", function (e) {
+	$("body").off('click').on("click", "#saveSick", function (e) {
 		e.preventDefault();
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
+			var month = $('#months').val();
+			console.log("month: "+month)
 			pageType = "SummaryHours";
 		}
 		if ($(this).hasClass("ReportDaysOff")) {
 			pageType = "ReportDaysOff";
 		}
-		$.fn.SaveOffDays("SaveSick", pageType);
+		$.fn.SaveOffDays("SaveSick", pageType, month);
 	});
 
-	$(".approve-hours").click(function (e) {
+	$(".approve-hours").off('click').click(function (e) {
 		$.ajax({
 			async: true,
 			url: "ApproveHours" + '?id=' + $(this).val(),

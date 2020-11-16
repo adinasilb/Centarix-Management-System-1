@@ -208,7 +208,8 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                totalhours = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, month, 1), _context.CompanyDayOffs) * user.SalariedEmployee.HoursPerDay;
+                var vacationSickCount= _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == DateTime.Now.Year && (eh.OffDayTypeID==2||eh.OffDayTypeID==1) &&eh.Date<=DateTime.Now.Date).Count();
+                totalhours = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, month, 1), _context.CompanyDayOffs, vacationSickCount) * user.SalariedEmployee.HoursPerDay;
             }
             SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
             {
@@ -229,7 +230,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.TimeKeeperSidebarEnum.SummaryHours;
-            var hours = GetHours(DateTime.Now);
+            var hours = GetHours(Month??DateTime.Now);
             var CurMonth = Month ?? DateTime.Today;
             double? totalhours;
             if (user.EmployeeStatusID!= 1)
@@ -238,7 +239,9 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                totalhours =AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, (Month?.Month ?? DateTime.Now.Month), 1), _context.CompanyDayOffs) * user.SalariedEmployee.HoursPerDay;
+                var month = (Month?.Month ?? DateTime.Now.Month);
+                var vacationSickCount = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == DateTime.Now.Year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date).Count();
+                totalhours =AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, (Month?.Month ?? DateTime.Now.Month), 1), _context.CompanyDayOffs, vacationSickCount) * user.SalariedEmployee.HoursPerDay;
             }
             SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
             {
@@ -438,9 +441,9 @@ namespace PrototypeWithAuth.Controllers
     }
     [HttpGet]
     [Authorize(Roles = "Admin, TimeKeeper")]
-    public async Task<IActionResult> SickDay(String PageType)
+    public async Task<IActionResult> SickDay(String PageType, DateTime? date)
     {
-        return PartialView("SickDay", PageType);
+        return PartialView("SickDay",  new SickDayViewModel { PageType=PageType, SelectedDate=date??DateTime.Now });
     }
     [HttpGet]
     [Authorize(Roles = "Admin, TimeKeeper")]
@@ -465,7 +468,7 @@ namespace PrototypeWithAuth.Controllers
     }
     [HttpPost]
     [Authorize(Roles = "Admin, TimeKeeper")]
-    public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo, String PageType)
+    public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo, String PageType )
     {
         SaveOffDay(dateFrom, dateTo, 2);
         return RedirectToAction(PageType);
@@ -473,10 +476,10 @@ namespace PrototypeWithAuth.Controllers
 
     [HttpPost]
     [Authorize(Roles = "Admin, TimeKeeper")]
-    public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo, String PageType)
+    public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo, String PageType, int? month)
     {
         SaveOffDay(dateFrom, dateTo, 1);
-        return RedirectToAction(PageType);
+        return RedirectToAction(PageType,  new { Month = new DateTime(DateTime.Now.Year, month??DateTime.Now.Month, 1 )});
     }
 
     private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, int offDayTypeID)

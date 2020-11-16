@@ -293,7 +293,7 @@ namespace PrototypeWithAuth.AppData
 
             return list;
         }
-        public static int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs)
+        public static int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
         {
             DateTime nextDay = firstOfTheMonth;
             var endOfTheMonth = firstOfTheMonth.AddMonths(1);
@@ -307,7 +307,8 @@ namespace PrototypeWithAuth.AppData
                 }
                 nextDay = nextDay.AddDays(1);
             }
-            return totalDays;
+
+            return totalDays-vacationSickCount;
         }
     }
 

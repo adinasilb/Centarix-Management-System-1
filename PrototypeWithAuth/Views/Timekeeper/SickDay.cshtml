@@ -1,4 +1,4 @@
-﻿@model String
+﻿@model PrototypeWithAuth.ViewModels.SickDayViewModel
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <div class="modal modal-document fader on-form-modal timekeeper-form " id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered mx-auto modal-sm  work-from-home-modal">
@@ -18,10 +18,10 @@
                     </div>
                 </div>
                 <div class="datepicker-here" data-range="true" id="vacation-dates"
-                     data-multiple-dates-separator=" - " data-language='en'></div>
+                     data-multiple-dates-separator=" - " data-language='en' ></div>
                 <div class="modal-footer mt-4 border-0 ">
                     <div class="text-center m-auto">
-                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin @Model" id="saveSick" value="Save" />
+                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin @Model.PageType" id="saveSick" value="Save" />
                         <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
@@ -29,7 +29,10 @@
         </div>
     </div>
 </div>
-
+<script>
+    $('#vacation-dates').datepicker().data('datepicker').selectDate(new Date("@Model.SelectedDate.Year-@Model.SelectedDate.ToString("MM")-@Model.SelectedDate.ToString("dd")"))
+</script>
 <script src="~/js/datepicker.min.js"></script>
 <!-- Include English language -->
 <script src="~/js/datepicker.en.js"></script>
+
