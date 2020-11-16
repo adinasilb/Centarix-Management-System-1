@@ -112,10 +112,10 @@
             if (Model.TotalHoursInMonth != null)
             {
                 var totalInMonth = TimeSpan.FromHours(Model.TotalHoursInMonth ?? 0);
-                totalInMonthString= Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
+                totalInMonthString= " / "+Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
             }
 
         }
-        @totalHours:@sum.ToString("mm")/@totalInMonthString
+        @totalHours:@sum.ToString("mm")@totalInMonthString
     </div>
 </div>

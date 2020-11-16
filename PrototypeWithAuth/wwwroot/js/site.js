@@ -2331,8 +2331,9 @@ $(function () {
 		});
 	}
 
-	$("body").off('click').on("click", "#saveVacation", function (e) {
+	$("#saveVacation").off('click').click(function (e) {
 		e.preventDefault();
+
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
@@ -2340,7 +2341,8 @@ $(function () {
 		if ($(this).hasClass("ReportDaysOff")) {
 			pageType = "ReportDaysOff";
 		}
-		$.fn.SaveOffDays("SaveVacation", pageType);
+
+		$.fn.SaveOffDays("SaveVacation", pageType,"");
 	});
 	$("body").off('click').on("click", "#saveSick", function (e) {
 		e.preventDefault();
