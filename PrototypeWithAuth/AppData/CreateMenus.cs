@@ -133,9 +133,9 @@ namespace PrototypeWithAuth.AppData
                 Controller = "Calibrations",
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
-                    {
-                       
-                    },
+                {
+
+                },
                 Classes = AllClasses
             });
             if (MainMenu == AppUtility.LabManagementPageTypeEnum.Quotes.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
@@ -342,7 +342,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Statistics",
                 Controller = "Expenses",
-                Action = "",
+                Action = "StatisticsProject",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 ID = ""
@@ -352,7 +352,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Costs",
                 Controller = "Expenses",
-                Action = "",
+                Action = "CostsProject",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 ID = ""
@@ -1159,7 +1159,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-pending-24px-1"
             });
-           
+
             return SidebarMenuItems;
         }
 
@@ -1235,6 +1235,143 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-event-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateExpensesSummarySidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+            var CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.SummaryPieCharts.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Pie Charts",
+                Controller = "Expenses",
+                Action = "SummaryPieCharts",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-pie_chart-24px-2"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.SummaryTables.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Tables",
+                Controller = "Expenses",
+                Action = "SummaryTables",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-table_chart-24px-1"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.SummaryGraphs.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Graphs",
+                Controller = "Expenses",
+                Action = "SummaryGraphs",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-insert_chart-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateExpensesStatisticsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+            var CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.StatisticsProject.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Project",
+                Controller = "Expenses",
+                Action = "StatisticsProject",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-folder_open-24px"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.StatisticsItem.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Item",
+                Controller = "Expenses",
+                Action = "StatisticsItem",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-centarix-icons-05"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.StatisticsWorker.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Worker",
+                Controller = "Expenses",
+                Action = "StatisticsWorker",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-face-24px"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.StatisticsCategory.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Category",
+                Controller = "Expenses",
+                Action = "StatisticsCategory",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-storefront-24px"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.StatisticsVendor.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Vendor",
+                Controller = "Expenses",
+                Action = "StatisticsVendor",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-storefront-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateExpensesCostsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+            var CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.CostsProject.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Project",
+                Controller = "Expenses",
+                Action = "CostsProject",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-zoom_in-24px-01"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.CostsAdvancedSearch.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Advanced Search",
+                Controller = "Expenses",
+                Action = "CostsAdvancedSearch",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-zoom_in-24px"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.CostsAdvancedLists.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Advanced List",
+                Controller = "Expenses",
+                Action = "CostsAdvancedList",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-zoom_in-24px"
             });
 
             return SidebarMenuItems;
