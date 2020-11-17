@@ -13,5 +13,8 @@ namespace PrototypeWithAuth.ViewModels
         public int Operation { get; set; }
         public int Instrument { get; set; }
         public int Reagents { get; set; }
+        public int Plastics { get; set; }
+        public int Reusable { get; set; }
+        //public int Total { get; set; }
     }
 }

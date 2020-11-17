@@ -349,7 +349,8 @@ table td, table td .btn, .text, table th {
 .new-modal-body .row,
 .modal-body .row,
 .new-modal-body .comment-row,
-.modal-body .comment-row,{
+.modal-body .comment-row,
+.under-row-margin {
     margin-bottom: 2.063rem;
 }
 

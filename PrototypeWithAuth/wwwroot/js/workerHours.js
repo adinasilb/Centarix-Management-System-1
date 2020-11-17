@@ -16,7 +16,7 @@
             cache: false,
             success: function (data) {
                 $(".hours-partial").html(data);
-                $('.mdb-select').materialSelect();
+                $('.mdb-select-workers').materialSelect();
                
                 if (yeardiff) {
                     $('#TotalWorkingDaysInYear').val($('#newYearAmount').val())

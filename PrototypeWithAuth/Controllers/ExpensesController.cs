@@ -59,8 +59,34 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesSummary.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.SummaryTables.ToString();
+
+            SummaryTablesViewModel summaryTablesViewModel = new SummaryTablesViewModel()
+            {
+                CurrentYear = DateTime.Today.Year,
+                SummaryTableItems = new List<SummaryTableItem>()
+                {
+                    new SummaryTableItem(){
+                        Month = DateTime.Today,
+                        Salary = 1400,
+                        Lab = 4000,
+                        Operation = 90,
+                        Reagents = 115000,
+                        Plastics = 90080,
+                        Reusable = 2500
+                    }
+                }
+
+            };
+
+            return View(summaryTablesViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult _SummaryTables(string currency, int year)
+        {
             return View();
         }
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult SummaryGraphs()
