@@ -60,33 +60,35 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesSummary.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.SummaryTables.ToString();
 
-            SummaryTablesViewModel summaryTablesViewModel = new SummaryTablesViewModel()
-            {
-                CurrentYear = DateTime.Today.Year,
-                Currency = AppUtility.CurrencyEnum.USD,
-                SummaryTableItems = new List<SummaryTableItem>()
-                {
-                    new SummaryTableItem(){
-                        Month = DateTime.Today,
-                        Salary = string.Format("{0:n0}", Convert.ToInt32("1400")),
-                        Lab = "4000",
-                        Operation = "90",
-                        Instrument = "980000",
-                        Reagents = "115000",
-                        Plastics = "90080",
-                        Reusable = "2500"
-                    }
-                }
-
-            };
-
+            SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(AppUtility.CurrencyEnum.USD, DateTime.Now.Year);
             return View(summaryTablesViewModel);
         }
 
         [HttpGet]
-        public IActionResult _SummaryTables(string currency, int year)
+        public IActionResult _SummaryTables(AppUtility.CurrencyEnum currencyEnum, int year)
         {
-            return View();
+            SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(currencyEnum, year);
+            return View(summaryTablesViewModel);
+        }
+
+        public SummaryTablesViewModel GetSummaryTablesViewModel(AppUtility.CurrencyEnum currencyEnum, int year)
+        {
+            List<SummaryTableItem> summaryTableItems = new List<SummaryTableItem>();
+            for (int i = 1; i <= 12; i++)
+            {
+                SummaryTableItem sti = new SummaryTableItem()
+                {
+                    Month = new DateTime(year, i, 1)
+                };
+                summaryTableItems.Add(sti);
+            }
+            SummaryTablesViewModel summaryTablesViewModel = new SummaryTablesViewModel()
+            {
+                Currency = currencyEnum,
+                CurrentYear = year,
+                SummaryTableItems = summaryTableItems
+            };
+            return summaryTablesViewModel;
         }
 
         [HttpGet]
