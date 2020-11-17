@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Diagnostics;
+using System.Web;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -135,7 +136,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     {
                         //await _signInManager.SignOutAsync();
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        code = HttpUtility.UrlEncode(code);
                         return RedirectToPage("./ResetPassword", new { code = code, userId = user.Id });
                     }
                     else if (user.IsSuspended)

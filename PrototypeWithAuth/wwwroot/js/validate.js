@@ -484,7 +484,7 @@ $(function () {
 				required: true,
 				equalTo: "#Input_Password"
 			},
-			"Input.TwoFactorAuthenticationViewModel.Code": {
+			"Input.TwoFactorAuthenticationViewModel.TwoFACode": {
 				required: true,
 				integer: true,
 				number: true
