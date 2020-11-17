@@ -63,16 +63,18 @@ namespace PrototypeWithAuth.Controllers
             SummaryTablesViewModel summaryTablesViewModel = new SummaryTablesViewModel()
             {
                 CurrentYear = DateTime.Today.Year,
+                Currency = AppUtility.CurrencyEnum.USD,
                 SummaryTableItems = new List<SummaryTableItem>()
                 {
                     new SummaryTableItem(){
                         Month = DateTime.Today,
-                        Salary = 1400,
-                        Lab = 4000,
-                        Operation = 90,
-                        Reagents = 115000,
-                        Plastics = 90080,
-                        Reusable = 2500
+                        Salary = string.Format("{0:n0}", Convert.ToInt32("1400")),
+                        Lab = "4000",
+                        Operation = "90",
+                        Instrument = "980000",
+                        Reagents = "115000",
+                        Plastics = "90080",
+                        Reusable = "2500"
                     }
                 }
 

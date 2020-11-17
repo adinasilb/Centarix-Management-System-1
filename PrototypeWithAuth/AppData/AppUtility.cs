@@ -25,7 +25,7 @@ namespace PrototypeWithAuth.AppData
         public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, SearchLM }
         public enum LabManagementSidebarEnum { None, Orders, Quotes, AllSuppliers, NewSupplier, SearchSupplier, LocationsList, SearchRequests, SearchEquipment, Calibrate, EquipmentList, EquipmentCategories }
         public enum OrdersAndInventorySidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
-        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual  } //Listed in the site.js (if you change here must change there)
+        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual } //Listed in the site.js (if you change here must change there)
         public enum UserPageTypeEnum { None, User, Workers }
         public enum UserSideBarEnum { UsersList, UsersAdd, WorkersDetails, WorkersHours, WorkersSalary, WorkersAwaitingApproval, AddWorker }
         public enum OperationsPageTypeEnum { RequestOperations, InventoryOperations, SearchOperations }
@@ -36,6 +36,7 @@ namespace PrototypeWithAuth.AppData
         public enum ExpensesSidebarEnum { SummaryPieCharts, SummaryTables, SummaryGraphs, StatisticsProject, StatisticsItem, StatisticsWorker, StatisticsCategory, StatisticsVendor, CostsProject, CostsAdvancedSearch, CostsAdvancedLists, WorkersDetails, WorkersHours, WorkersSalary }
         public enum MenuItems { OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
+        public enum CurrencyEnum { USD, NIS }
         public enum AccountingNotificationsEnum
         {
             [Display(Name = "No Invoice")]
@@ -61,15 +62,15 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsPopoverEnum
         {
             //Share,
-           // Order,
+            // Order,
             [Display(Name = "Monthly Payment")]
-            MonthlyPayment =1,
+            MonthlyPayment = 1,
             [Display(Name = "Pay Now")]
             PayNow = 3,
             [Display(Name = "Pay Later")]
-            PayLater =4, 
-            Installments =5,
-           // Clarification
+            PayLater = 4,
+            Installments = 5,
+            // Clarification
         }
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
@@ -282,12 +283,12 @@ namespace PrototypeWithAuth.AppData
                             accountingPopoverLink.Color = "#7D9BAA";
                             accountingPopoverLink.Icon = "icon-centarix-icons-20";
                             break;
-                        //case PaymentsPopoverEnum.Clarification:
-                        //    accountingPopoverLink.Action = "ChangePaymentStatus";
-                        //    accountingPopoverLink.Controller = "Requests";
-                        //    accountingPopoverLink.Color = "#E27933";
-                        //    accountingPopoverLink.Icon = "icon-report_problem-24px-2";
-                        //    break;
+                            //case PaymentsPopoverEnum.Clarification:
+                            //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                            //    accountingPopoverLink.Controller = "Requests";
+                            //    accountingPopoverLink.Color = "#E27933";
+                            //    accountingPopoverLink.Icon = "icon-report_problem-24px-2";
+                            //    break;
                     }
                     list.Add(accountingPopoverLink);
                 }
@@ -310,7 +311,7 @@ namespace PrototypeWithAuth.AppData
                 nextDay = nextDay.AddDays(1);
             }
 
-            return totalDays-vacationSickCount-companyDaysOffCount;
+            return totalDays - vacationSickCount - companyDaysOffCount;
         }
 
         public static int GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
@@ -328,7 +329,7 @@ namespace PrototypeWithAuth.AppData
                 nextDay = nextDay.AddDays(1);
             }
 
-            return totalDays - vacationSickCount-companyDaysOffCount;
+            return totalDays - vacationSickCount - companyDaysOffCount;
         }
 
     }

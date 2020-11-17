@@ -8,13 +8,13 @@ namespace PrototypeWithAuth.ViewModels
     public class SummaryTableItem
     {
         public DateTime Month { get; set; }
-        public int Salary { get; set; }
-        public int Lab { get; set; }
-        public int Operation { get; set; }
-        public int Instrument { get; set; }
-        public int Reagents { get; set; }
-        public int Plastics { get; set; }
-        public int Reusable { get; set; }
-        //public int Total { get; set; }
+        public string Salary { get; set; }
+        public string Lab { get; set; }
+        public string Operation { get; set; }
+        public string Instrument { get; set; }
+        public string Reagents { get; set; }
+        public string Plastics { get; set; }
+        public string Reusable { get; set; }
+        public string Total { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using PrototypeWithAuth.ViewModels;
+@using PrototypeWithAuth.AppData;  
 @model SummaryTablesViewModel
 
 @{
@@ -14,19 +15,18 @@
         </div>
         <div class="col-3 offset-2">
             <select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 " searchable="Search Currency">
-                <option>Currency</option>
-                <option value="dollar" selected>&dollar; USD</option>
-                <option value="shekel">&#8362; NIS</option>
+                <option value="@AppUtility.CurrencyEnum.USD" selected>&dollar; USD</option>
+                <option value="@AppUtility.CurrencyEnum.NIS">&#8362; NIS</option>
             </select>
             @*</div>
                 <div class="col-1 p-0 monthsHours">*@
 
             @{
-                int[] years = Enumerable.Range(2010, DateTime.Today.Year).ToArray();
+                var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
                 int curYear = Model.CurrentYear;
             }
 
-            @Html.DropDownList("months", years.Select(x =>
+            @Html.DropDownList("years", years.Select(x =>
  new SelectListItem
  {
      Text = x.ToString(),
