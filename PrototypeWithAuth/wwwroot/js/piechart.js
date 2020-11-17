@@ -57,16 +57,22 @@
 							sum += data;
 						});
 						let percentage = (value * 100 / sum).toFixed(2) + "%";
-						return percentage;
+						return ctx.chart.data.labels[ctx.dataIndex] + "\n" + percentage+ "\n" + ctx.chart.data.datasets[0].data[ctx.dataIndex] ;
 					},
 					color: 'white',
 					labels: {
 						title: {
 							font: {
-								size: '30'
-							}
+								size: function (value) {
+									value.split("\n")
+								},
+								textAlign: 'center'
+							},
+							
+
 						}
 					},
+
 				}
 			}
 		}
