@@ -1400,7 +1400,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "WorkersDetails",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-zoom_in-24px-01"
+                IconName = "icon-assignment_ind-24px-1"
             });
             if (SidebarTitle == AppUtility.ExpensesSidebarEnum.WorkersHours.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1410,7 +1410,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "WorkersHours",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-zoom_in-24px-01"
+                IconName = "icon-access_time-24px"
             });
             if (SidebarTitle == AppUtility.ExpensesSidebarEnum.WorkersSalary.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1420,7 +1420,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "WorkersSalary",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-zoom_in-24px-01"
+                IconName = "icon-monetization_on-24px"
             });
 
             return SidebarMenuItems;

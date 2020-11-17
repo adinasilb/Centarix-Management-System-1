@@ -1,6 +1,5 @@
 ﻿$(function () {
 	$.fn.reloadHoursPage = function (year, month, yearlyMonthlyEnum) {
-		alert("in reload hours page fx");
 		var yeardiff = false;
 		if ($('#TotalWorkingDaysInYear').attr('year') == year) {
 			var amountInYear = $('#TotalWorkingDaysInYear').val();
@@ -20,10 +19,10 @@
 			cache: false,
 			success: function (data) {
 				$(".hours-partial").html(data);
-				//$('.mdb-select-workers').materialSelect();
+				$('.mdb-select-workers').materialSelect();
 
-				$.fn.EnableMaterialSelectWorkers("#months", "select-options-months");
-				$.fn.EnableMaterialSelectWorkers("#years", "select-options-years");
+				//$.fn.EnableMaterialSelectWorkers("#months", "select-options-months");
+				//$.fn.EnableMaterialSelectWorkers("#years", "select-options-years");
 
 				if (yeardiff) {
 					$('#TotalWorkingDaysInYear').val($('#newYearAmount').val())
@@ -43,7 +42,7 @@
 		return false;
 	});
 
-	$('.workersHoursMonths').off('change').change(function () {
+	$('body').off("change", ".workersHoursMonths").on("change", ".workersHoursMonths", function () {
 		var year = $('.workerHoursAttr').attr('year');
 		var yearlyMonthlyEnum = $('.workerHoursAttr').attr('yearlyMonthlyEnum');
 		var month = $(this).val();
@@ -52,10 +51,9 @@
 	});
 
 	$('body').off("change", ".workersHoursYears").on("change", ".workersHoursYears", function () {
-	    alert("workers hours years changed from body");
-	    var year = $(this).val();
-	    console.log("on change: " + $(this).val())
-	    var yearlyMonthlyEnum = $('.workerHoursAttr').attr('yearlyMonthlyEnum');
+		var year = $(this).val();
+		console.log("on change: " + $(this).val())
+		var yearlyMonthlyEnum = $('.workerHoursAttr').attr('yearlyMonthlyEnum');
 		var month = $('.workerHoursAttr').attr('month');
 
 		$.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
@@ -82,29 +80,29 @@
 	//    $.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
 	//});
 
-	$.fn.EnableMaterialSelectWorkers = function (selectID, dataActivates) {
-		var selectedIndex = $('#' + dataActivates).find(".active").index();
+	//$.fn.EnableMaterialSelectWorkers = function (selectID, dataActivates) {
+	//	var selectedIndex = $('#' + dataActivates).find(".active").index();
 
-		selectedIndex = selectedIndex - 1;
+	//	selectedIndex = selectedIndex - 1;
 
-		$(selectID).destroyMaterialSelect();
-		$(selectID).prop("disabled", false);
-		$(selectID).prop('selectedIndex', selectedIndex);
-		$(selectID).removeAttr("disabled")
-		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
-		$(selectID).materialSelect();
-		$('.open-document-modal').attr("data-val", true);
-	}
+	//	$(selectID).destroyMaterialSelect();
+	//	$(selectID).prop("disabled", false);
+	//	$(selectID).prop('selectedIndex', selectedIndex);
+	//	$(selectID).removeAttr("disabled")
+	//	$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
+	//	$(selectID).materialSelect();
+	//	$('.open-document-modal').attr("data-val", true);
+	//}
 
-	jQuery.fn.extend({
-		destroyMaterialSelect: function () {
-			return this.each(function () {
-				let wrapper = $(this).parent();
-				let core = wrapper.find('select');
-				wrapper.after(core.removeClass('initialized').prop('outerHTML'));
-				wrapper.remove();
-			});
-		}
-	});
+	//jQuery.fn.extend({
+	//	destroyMaterialSelect: function () {
+	//		return this.each(function () {
+	//			let wrapper = $(this).parent();
+	//			let core = wrapper.find('select');
+	//			wrapper.after(core.removeClass('initialized').prop('outerHTML'));
+	//			wrapper.remove();
+	//		});
+	//	}
+	//});
 
 })
