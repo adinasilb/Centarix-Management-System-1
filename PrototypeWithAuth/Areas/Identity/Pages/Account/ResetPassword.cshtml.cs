@@ -101,6 +101,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
            ;
+
+
             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
             if (result.Succeeded)
             {
@@ -115,6 +117,9 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     Input.ErrorMessage = "Invalid Authentication Code";
                     Input.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
                     //return View(resetPasswordViewModel);
+                    var pcode = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    pcode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(pcode));
+                    return RedirectToPage("./ResetPassword", new { code = pcode, userId = user.Id });
 
                 }
 
@@ -132,27 +137,29 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 }
                 else if (signInResult.RequiresTwoFactor) //took out the is locked out query- b/c they may be suspended
                 {
-                    var authenticatorCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
+                    return RedirectToPage(".LoginWith2fa");
 
-                    var result2fa = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, false);
-                    
-                    if (result2fa.Succeeded)
-                    {
-                        //user.LockoutEnabled = false;
-                        user.NeedsToResetPassword = false;
-                        _context.Update(user);
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction("Index", "Home");
-                    }
-                    //TODO: Add errors for 2fa
-                    else
-                    {
-                        user.LockoutEnabled = true;
-                        user.LockoutEnd = new DateTime(2999,01 , 01);
-                        _context.Update(user);
-                        await _context.SaveChangesAsync();
-                        errorMessage += "Invalid Authentication Code";
-                    }
+                    //var authenticatorCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+                    //var result2fa = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, false);
+
+                    //if (result2fa.Succeeded)
+                    //{
+                    //    //user.LockoutEnabled = false;
+                    //    user.NeedsToResetPassword = false;
+                    //    _context.Update(user);
+                    //    await _context.SaveChangesAsync();
+                    //    return RedirectToAction("Index", "Home");
+                    //}
+                    ////TODO: Add errors for 2fa
+                    //else
+                    //{
+                    //    user.LockoutEnabled = true;
+                    //    user.LockoutEnd = new DateTime(2999,01 , 01);
+                    //    _context.Update(user);
+                    //    await _context.SaveChangesAsync();
+                    //    errorMessage += "Invalid Authentication Code";
+                    //}
 
                 }
                 //TODO: Add errors for signing
@@ -163,7 +170,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, error.Description);
                 errorMessage += "\n" + error.Description;
             }
-         
+
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             Input = new InputModel
@@ -173,7 +180,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 AuthenticatorUri = Input.AuthenticatorUri,
                 ErrorMessage = errorMessage
             };
-            return Page();
+            //return Page();
+            return RedirectToPage("./ResetPassword", new { code = code, userId = user.Id });
         }
 
         private string GenerateQrCodeUri(string email, string unformattedKey)

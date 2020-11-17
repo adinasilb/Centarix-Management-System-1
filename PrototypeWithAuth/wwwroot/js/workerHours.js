@@ -39,12 +39,34 @@
         var month = $(this).val();
         $.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);     
     });
-    $('.workersHoursYears').off('change').change(function () {
+
+    //$('body').off("change", ".workersHoursYears").on("change", ".workersHoursYears", function () {
+    //    alert("workers hours years changed from body");
+    //    var year = $(this).val();
+    //    console.log("on change: " + $(this).val())
+    //    var yearlyMonthlyEnum = $('.workerHoursAttr').attr('yearlyMonthlyEnum');
+    //    var month = $('.workerHoursAttr').attr('month');
+
+    //    $.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
+    //});
+
+    $(".workersHoursYears input").off("click").on("click", function () {
+        alert("workers hours years input changed");
         var year = $(this).val();
-        console.log("on change: "+$(this).val())
+        console.log("on change: " + $(this).val())
         var yearlyMonthlyEnum = $('.workerHoursAttr').attr('yearlyMonthlyEnum');
         var month = $('.workerHoursAttr').attr('month');
-   
+
         $.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
     });
+
+    //$('.workersHoursYears').off('change').change(function () {
+    //    alert("workers hours years changed");
+    //    var year = $(this).val();
+    //    console.log("on change: "+$(this).val())
+    //    var yearlyMonthlyEnum = $('.workerHoursAttr').attr('yearlyMonthlyEnum');
+    //    var month = $('.workerHoursAttr').attr('month');
+   
+    //    $.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
+    //});
 })
