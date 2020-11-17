@@ -190,6 +190,10 @@
     {
         SidebarMenuItems = CreateMenus.CreateExpensesCostsSidebar(sidebarType, originalNavClasses, "expenses-filter");
     }
+    else if (pageType == AppUtility.ExpensesPageTypeEnum.ExpensesWorkers.ToString())
+    {
+        SidebarMenuItems = CreateMenus.CreateExpensesWorkersSidebar(sidebarType, originalNavClasses, "expenses-filter");
+    }
 
     var sidebarWidth = "119px";
 
