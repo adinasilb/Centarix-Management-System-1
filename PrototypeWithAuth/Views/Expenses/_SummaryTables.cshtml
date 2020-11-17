@@ -1,0 +1,59 @@
+﻿@using PrototypeWithAuth.ViewModels;
+@model SummaryTablesViewModel;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+<table class="table table-headerspaced table-noheaderlines table-hover ">
+    <thead>
+        <tr class="text-center">
+            <th>Month</th>
+            <th>Salaries</th>
+            <th>Lab</th>
+            <th>Operation</th>
+            <th>Instruments</th>
+            <th>Reagents</th>
+            <th>Plastics</th>
+            <th>Reusable</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var tableRow in Model.SummaryTableItems)
+        {
+            <tr class="text-center">
+                <td>
+                    @tableRow.Month.Month / @tableRow.Month.Year.ToString().Substring(2, 2)
+                </td>
+                <td>
+                    @tableRow.Salary
+                </td>
+                <td>
+                    @tableRow.Lab
+                </td>
+                <td>
+                    @tableRow.Operation
+                </td>
+                <td>
+                    @tableRow.Instrument
+                </td>
+                <td>
+                    @tableRow.Reagents
+                </td>
+                <td>
+                    @tableRow.Plastics
+                </td>
+                <td>
+                    @tableRow.Reusable
+                </td>
+                <td>
+                    @{ 
+                        var total = tableRow.Salary + tableRow.Lab + tableRow.Operation + tableRow.Instrument + tableRow.Reagents + tableRow.Plastics + tableRow.Reusable;
+                    }
+                    @total
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
