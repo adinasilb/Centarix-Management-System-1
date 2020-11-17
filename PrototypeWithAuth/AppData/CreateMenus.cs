@@ -357,6 +357,16 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 ID = ""
             });
+            if (MainMenu == AppUtility.ExpensesPageTypeEnum.ExpensesWorkers.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Workers",
+                Controller = "Expenses",
+                Action = "WorkersDetails",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                ID = ""
+            });
 
             return MainMenuItems;
         }
@@ -1372,6 +1382,45 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-search-list-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateExpensesWorkersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            var SidebarMenuItems = new List<MenuItems>();
+            var CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.WorkersDetails.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Details",
+                Controller = "Expenses",
+                Action = "WorkersDetails",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-assignment_ind-24px-1"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.WorkersHours.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Hours",
+                Controller = "Expenses",
+                Action = "WorkersHours",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-access_time-24px"
+            });
+            if (SidebarTitle == AppUtility.ExpensesSidebarEnum.WorkersSalary.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Salary",
+                Controller = "Expenses",
+                Action = "WorkersSalary",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
             });
 
             return SidebarMenuItems;

@@ -186,7 +186,7 @@ namespace PrototypeWithAuth.Controllers
             };
             registerUserViewModel.ExpenseesRoles = new List<UserRoleViewModel>()
             {
-                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Expenses, Name="General", Selected=false }
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Reports, Name="General", Selected=false }
             };
             registerUserViewModel.IncomeRoles = new List<UserRoleViewModel>()
             {
@@ -372,7 +372,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (expensesRole.Name == "General" && expensesRole.Selected == true)
                     {
-                        await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Expenses.ToString());
+                        await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Reports.ToString());
                     }
                 }
                 foreach (var incomeRole in registerUserViewModel.IncomeRoles)
@@ -697,13 +697,13 @@ namespace PrototypeWithAuth.Controllers
                     await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Accounting.ToString());
                 }
 
-                if (rolesList.Contains(AppUtility.MenuItems.Expenses.ToString()) && !registerUserViewModel.ExpenseesRoles[0].Selected)
+                if (rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && !registerUserViewModel.ExpenseesRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Expenses.ToString());
+                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Reports.ToString());
                 }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Expenses.ToString()) && registerUserViewModel.ExpenseesRoles[0].Selected)
+                else if (!rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && registerUserViewModel.ExpenseesRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Expenses.ToString());
+                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Reports.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Income.ToString()) && !registerUserViewModel.IncomeRoles[0].Selected)
@@ -955,7 +955,7 @@ namespace PrototypeWithAuth.Controllers
             };
                 registerUserViewModel.ExpenseesRoles = new List<UserRoleViewModel>()
             {
-                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Expenses, Name="General", Selected=false }
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Reports, Name="General", Selected=false }
             };
                 registerUserViewModel.IncomeRoles = new List<UserRoleViewModel>()
             {
@@ -987,7 +987,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         registerUserViewModel.OperationRoles[0].Selected = true;
                     }
-                    else if (role == AppUtility.MenuItems.Expenses.ToString()) //this was giving me an error in a switch case
+                    else if (role == AppUtility.MenuItems.Reports.ToString()) //this was giving me an error in a switch case
                     {
                         registerUserViewModel.ExpenseesRoles[0].Selected = true;
                     }

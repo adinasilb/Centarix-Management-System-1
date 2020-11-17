@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using PrototypeWithAuth.Data;
 using System.Diagnostics;
-using System.Web;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -80,7 +79,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 Input = new InputModel
                 {
                     Email = user.Email,
-                    Code = code,
+                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
                     AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey)
                 };
                 return Page();
@@ -101,24 +100,29 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 // Don't reveal that the user does not exist
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
-            var verificationCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
+           ;
 
-            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
 
-            if (!is2faTokenValid)
-            {
-                var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-                Input.ErrorMessage = "Invalid Authentication Code";
-                Input.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
-                return Page();
-
-            }
-
-            var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(Input.Code), Input.Password);
+            var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
             if (result.Succeeded)
             {
-               
+                var verificationCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+                var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
+                    user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+
+                if (!is2faTokenValid)
+                {
+                    var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+                    Input.ErrorMessage = "Invalid Authentication Code";
+                    Input.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
+                    //return View(resetPasswordViewModel);
+                    var pcode = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    pcode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(pcode));
+                    return RedirectToPage("./ResetPassword", new { code = pcode, userId = user.Id });
+
+                }
+
                 if (!user.IsSuspended) //don't want to unlock them out if they are suspended
                 {
                     user.LockoutEnd = DateTime.Now;
@@ -133,27 +137,29 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 }
                 else if (signInResult.RequiresTwoFactor) //took out the is locked out query- b/c they may be suspended
                 {
-                    var authenticatorCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
+                    return RedirectToPage(".LoginWith2fa");
 
-                    var result2fa = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, false);
-                    
-                    if (result2fa.Succeeded)
-                    {
-                        //user.LockoutEnabled = false;
-                        user.NeedsToResetPassword = false;
-                        _context.Update(user);
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction("Index", "Home");
-                    }
-                    //TODO: Add errors for 2fa
-                    else
-                    {
-                        user.LockoutEnabled = true;
-                        user.LockoutEnd = new DateTime(2999,01 , 01);
-                        _context.Update(user);
-                        await _context.SaveChangesAsync();
-                        errorMessage += "Invalid Authentication Code";
-                    }
+                    //var authenticatorCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+                    //var result2fa = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, false);
+
+                    //if (result2fa.Succeeded)
+                    //{
+                    //    //user.LockoutEnabled = false;
+                    //    user.NeedsToResetPassword = false;
+                    //    _context.Update(user);
+                    //    await _context.SaveChangesAsync();
+                    //    return RedirectToAction("Index", "Home");
+                    //}
+                    ////TODO: Add errors for 2fa
+                    //else
+                    //{
+                    //    user.LockoutEnabled = true;
+                    //    user.LockoutEnd = new DateTime(2999,01 , 01);
+                    //    _context.Update(user);
+                    //    await _context.SaveChangesAsync();
+                    //    errorMessage += "Invalid Authentication Code";
+                    //}
 
                 }
                 //TODO: Add errors for signing
@@ -165,14 +171,17 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 errorMessage += "\n" + error.Description;
             }
 
-            //not sure this code really works
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            code = HttpUtility.UrlEncode(code);
-
-            Input.Code = code;
-
-
-            return Page();
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            Input = new InputModel
+            {
+                Email = user.Email,
+                Code = code,
+                AuthenticatorUri = Input.AuthenticatorUri,
+                ErrorMessage = errorMessage
+            };
+            //return Page();
+            return RedirectToPage("./ResetPassword", new { code = code, userId = user.Id });
         }
 
         private string GenerateQrCodeUri(string email, string unformattedKey)
