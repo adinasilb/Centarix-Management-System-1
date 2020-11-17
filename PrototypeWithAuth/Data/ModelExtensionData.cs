@@ -877,7 +877,7 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 8,
-                    MenuDescription = AppUtility.MenuItems.Expenses.ToString(),
+                    MenuDescription = AppUtility.MenuItems.Reports.ToString(),
                     MenuViewName = "Expenses",
                     ControllerName = "Expenses",
                     ActionName = "SummaryPieCharts",
