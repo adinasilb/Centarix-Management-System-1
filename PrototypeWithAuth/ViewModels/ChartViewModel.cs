@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class PieChartViewModel
+    public class ChartViewModel
     {
         public String SectionName { get; set; }
         public String SectionColor { get; set; }

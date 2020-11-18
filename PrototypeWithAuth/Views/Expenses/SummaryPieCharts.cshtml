@@ -1,124 +1,20 @@
 ﻿@using PrototypeWithAuth.ViewModels;
-@model SummaryPieChartsViewModel
-@using PrototypeWithAuth.AppData
+@model SummaryChartsViewModel
 @{
     ViewData["Title"] = "SummaryPieCharts";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
-    int[] months = Enumerable.Range(1, 12).ToArray();
-
-
-    var years = Enumerable.Range(2010, DateTime.Today.Year - 2010 + 1);
 }
     <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="chartForm">
 
         <div class="row">
 
             <div class="col-2 chart-dropdownlists">
-
-                <div class=" select-box-margin-bottom">
-
-                    @Html.DropDownListFor(vm => vm.SelectedYears, years.Select(x =>
-        new SelectListItem
-        {
-            Text = x.ToString(),
-            Value = x.ToString(),
-            Selected = (x == DateTime.Now.Year)
+                @{ await Html.RenderPartialAsync("_DDLForCharts", Model);
         }
-        ), htmlAttributes: new { @class = " mdb-select  custom select-dropdown form-control-plaintext ", @name = "SelectedYear", @searchable = "Search year..", @multiple = "multiple", data_placeholder = "Year" })
-                </div>
-                <div class=" select-box-margin-bottom">
-                    @Html.DropDownListFor(
-                 vm => vm.SelectedMonths,
-                  months.Select(x =>
-                  new SelectListItem
-                  {
-                      Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
-                      Value = x.ToString()
-                  }),
-                 new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Month", @multiple = "multiple", data_placeholder = "Month" }
-             )
-                </div>
-                <div class=" select-box-margin-bottom">
-                    @Html.DropDownListFor(
-                 vm => vm.SelectedCategoryTypes,
-                 new SelectList(
-                     Model.CategoryTypes,
-                     "CategoryTypeID",
-                     "CategoryTypeDescription"),
-                 //"Lab / Operation",
-                 new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Lab / Operation", @multiple = "multiple", data_placeholder = "Lab / Operation" }
-             )
-                </div>
-                <div class=" select-box-margin-bottom">
-                    @Html.DropDownListFor(
-                 vm => vm.SelectedParentCategories,
-                 new SelectList(
-                     Model.ParentCategories,
-                     "ParentCategoryID",
-                     "ParentCategoryDescription"),
-                 //"Category",
-                 new { @class = "mdb-select custom select-dropdown form-control-plaintext parentlistMulitple", @searchable = "Search Category", @multiple = "multiple", data_placeholder = "Categories", @id = "parentlistMulitple" }
-             )
-                </div>
-                <div class=" select-box-margin-bottom">
-                    @Html.DropDownListFor(
-                 vm => vm.SelectedProductSubcategories,
-                 new SelectList(
-                     Model.ProductSubcategories,
-                     "ProductSubcategoryID",
-                     "ProductSubcategoryDescription"),
-                 //"Sub Category",
-                 new { @class = "mdb-select custom select-dropdown mdb-select-sublist form-control-plaintext", @searchable = "Search Sub Category", @multiple = "multiple", data_placeholder = "Sub Categories", @id = "sublist" }
-             )
-                </div>
-                <div class=" select-box-margin-bottom">
-                    @Html.DropDownListFor(
-                 vm => vm.SelectedProjects,
-                 new SelectList(
-                     Model.Projects,
-                     "ProjectID",
-                     "ProjectDescription"),
-                 //"Project",
-                 new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Projects", @multiple = "multiple", data_placeholder = "Projects", }
-             )
-                </div>
-                <div class=" select-box-margin-bottom">
-                    @Html.DropDownListFor(
-                 vm => vm.SelectedSubProjects,
-                 new SelectList(
-                     Model.SubProjects,
-                     "SubProjectID",
-                     "SubProjectDescription"),
-                 //"Sub Project",
-                 new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Sub Projects", @multiple = "multiple", data_placeholder = "Sub Projects" }
-             )
-                </div>
-                @*<div class=" select-box-margin-bottom">
-                       @Html.DropDownListFor(
-                    vm => vm.AdvancedGraph,
-                    new SelectList(
-                        ""),
-                    "Advanced Graph",
-                    new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Advanced Graphs", @multiple = "multiple" }
-                )
-                   </div>*@
-                <div class=" select-box-margin-bottom">
-                    <select asp-for="Currency" class="mdb-select custom select-dropdown form-control-plaintext" searchable="Search Currency" data-placeholder="Currency">
-                        <option value="@AppUtility.CurrencyEnum.USD">&dollar; USD</option>
-                        <option value="@AppUtility.CurrencyEnum.NIS" selected>&#8362; NIS</option>
-                    </select>
-                </div>
-                <div class=" select-box-margin-bottom">
-                    @Html.DropDownListFor(
-                 vm => vm.SelectedEmployees,
-                 Model.Employees,
-                 new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Sub Projects", @multiple = "multiple", data_placeholder = "Workers" }
-             )
-                </div>
                 <div class="margin-top-button">
                     <input type="submit" value="Create a pie chart" id="createPieChart" style="width:100%; padding-left: 2.875rem; padding-right: 2.875rem;"
-                           class="expenses-background-color custom-button custom-button-font float-left text"  />
+                           class="expenses-background-color custom-button custom-button-font float-left text" />
                 </div>
             </div>
 

@@ -7,7 +7,7 @@ using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class SummaryPieChartsViewModel
+    public class SummaryChartsViewModel
     {
         public DateTime Year { get; set; }
         public List<int> Years { get; set; }

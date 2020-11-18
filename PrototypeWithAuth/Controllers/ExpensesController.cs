@@ -35,55 +35,52 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesSummary.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.SummaryPieCharts.ToString();
 
-            SummaryPieChartsViewModel summaryPieChartsViewModel = new SummaryPieChartsViewModel()
-            {
-                Years = _context.Requests.Select(r => r.CreationDate.Year).Distinct().ToList(),
-                CategoryTypes = _context.CategoryTypes.ToList(),
-                ParentCategories = _context.ParentCategories.ToList(),
-                ProductSubcategories = _context.ProductSubcategories.ToList(),
-                Projects = _context.Projects.ToList(),
-                SubProjects = _context.SubProjects.ToList(),
-                Employees = _context.Employees
-                    .Select(
-                        e => new SelectListItem
-                        {
-                            Text = e.FirstName + " " + e.LastName,
-                            Value = e.Id
-                        }
-                    ).ToList()
-            };
+            SummaryChartsViewModel summaryChartsViewModel = GetSummaryChartsViewModel();
 
-            return View(summaryPieChartsViewModel);
+            return View(summaryChartsViewModel);
         }
         [HttpPost]
-        public IActionResult _PieChart(SummaryPieChartsViewModel summaryPieChartsViewModel)
+        public IActionResult _PieChart(SummaryChartsViewModel summaryChartsViewModel)
+        {
+            ChartViewModel pieChartViewModel = GetChartData(summaryChartsViewModel);
+
+            return PartialView(pieChartViewModel);
+        }
+        [HttpPost]
+        public IActionResult _GraphChart(SummaryChartsViewModel summaryChartsViewModel)
+        {
+            ChartViewModel chartViewModel = GetChartData(summaryChartsViewModel);
+
+            return PartialView(chartViewModel);
+        }
+        private ChartViewModel GetChartData(SummaryChartsViewModel summaryChartsViewModel)
         {
             bool isDollars = false;
-            var requests = _context.Requests.Where(r=>r.RequestStatusID==3 && r.PaymentStatusID==6);
+            var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6);
             IEnumerable<Request> requestList = null;
-            if (summaryPieChartsViewModel.SelectedYears == null)
+            if (summaryChartsViewModel.SelectedYears == null)
             {
                 requests.Where(r => r.CreationDate.Year == DateTime.Now.Year);
             }
             else
             {
-                requests.Where(r => summaryPieChartsViewModel.SelectedYears.Contains( r.CreationDate.Year));
+                requests.Where(r => summaryChartsViewModel.SelectedYears.Contains(r.CreationDate.Year));
             }
-            if (summaryPieChartsViewModel.SelectedMonths != null)
+            if (summaryChartsViewModel.SelectedMonths != null)
             {
-                requests = requests.Where(r => summaryPieChartsViewModel.SelectedMonths.Contains(r.CreationDate.Month));                
+                requests = requests.Where(r => summaryChartsViewModel.SelectedMonths.Contains(r.CreationDate.Month));
             }
-            if (summaryPieChartsViewModel.Currency!=null && summaryPieChartsViewModel.Currency.Equals(AppUtility.CurrencyEnum.USD.ToString()))
+            if (summaryChartsViewModel.Currency != null && summaryChartsViewModel.Currency.Equals(AppUtility.CurrencyEnum.USD.ToString()))
             {
                 isDollars = true;
             }
             Random rnd = new Random();
-            PieChartViewModel pieChartViewModel = new PieChartViewModel();
-            if (summaryPieChartsViewModel.SelectedParentCategories != null)
+            ChartViewModel pieChartViewModel = new ChartViewModel();
+            if (summaryChartsViewModel.SelectedParentCategories != null)
             {
-                if (summaryPieChartsViewModel.SelectedProductSubcategories != null)
+                if (summaryChartsViewModel.SelectedProductSubcategories != null)
                 {
-                    var subCategories = _context.ProductSubcategories.Where(ps => summaryPieChartsViewModel.SelectedProductSubcategories.Contains(ps.ProductSubcategoryID));
+                    var subCategories = _context.ProductSubcategories.Where(ps => summaryChartsViewModel.SelectedProductSubcategories.Contains(ps.ProductSubcategoryID));
                     foreach (var ps in subCategories)
                     {
                         requestList = requests.Where(r => r.Product.ProductSubcategoryID == ps.ProductSubcategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory);
@@ -104,7 +101,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    var parentCategories = _context.ParentCategories.Where(pc => summaryPieChartsViewModel.SelectedParentCategories.Contains(pc.ParentCategoryID));
+                    var parentCategories = _context.ParentCategories.Where(pc => summaryChartsViewModel.SelectedParentCategories.Contains(pc.ParentCategoryID));
                     foreach (var pc in parentCategories)
                     {
                         requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
@@ -124,14 +121,14 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
             }
-            else if (summaryPieChartsViewModel.SelectedProjects != null)
+            else if (summaryChartsViewModel.SelectedProjects != null)
             {
-                if (summaryPieChartsViewModel.SelectedSubProjects != null)
+                if (summaryChartsViewModel.SelectedSubProjects != null)
                 {
-                    var subProjects = _context.SubProjects.Where(sp => summaryPieChartsViewModel.SelectedSubProjects.Contains(sp.SubProjectID));
-                    foreach (var sp in subProjects )
+                    var subProjects = _context.SubProjects.Where(sp => summaryChartsViewModel.SelectedSubProjects.Contains(sp.SubProjectID));
+                    foreach (var sp in subProjects)
                     {
-                        requestList = requests.Where(r => r.SubProjectID== sp.SubProjectID);
+                        requestList = requests.Where(r => r.SubProjectID == sp.SubProjectID);
                         double cost = 0;
                         if (isDollars)
                         {
@@ -149,7 +146,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    var projects = _context.Projects.Where(s => summaryPieChartsViewModel.SelectedProjects.Contains(s.ProjectID));
+                    var projects = _context.Projects.Where(s => summaryChartsViewModel.SelectedProjects.Contains(s.ProjectID));
                     foreach (var s in projects)
                     {
                         requestList = requests.Where(r => r.SubProject.ProjectID == s.ProjectID);
@@ -169,31 +166,31 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
             }
-            else if (summaryPieChartsViewModel.SelectedEmployees != null)
+            else if (summaryChartsViewModel.SelectedEmployees != null)
             {
-                var employees = _context.Employees.Where(e => summaryPieChartsViewModel.SelectedEmployees.Contains(e.Id));
-              
-                foreach(var e in employees)
+                var employees = _context.Employees.Where(e => summaryChartsViewModel.SelectedEmployees.Contains(e.Id));
+
+                foreach (var e in employees)
                 {
                     requestList = requests.Where(r => r.ApplicationUserCreatorID == e.Id);
                     double cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost/ r.ExchangeRate==0?AppUtility.ExchangeRateIfNull:r.ExchangeRate);
+                        cost = requestList.Sum(r => r.Cost / r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate);
                     }
                     else
                     {
                         cost = requestList.Sum(r => r.Cost);
                     }
-                   
+
                     pieChartViewModel.SectionName += "\"" + e.FirstName + " " + e.LastName + "\",";
                     pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
-                    pieChartViewModel.SectionValue += "\""  +cost+ "\",";
+                    pieChartViewModel.SectionValue += "\"" + cost + "\",";
                 }
             }
-            else if(summaryPieChartsViewModel.SelectedCategoryTypes!=null)
+            else if (summaryChartsViewModel.SelectedCategoryTypes != null)
             {
-                var categories = _context.CategoryTypes.Where(ct => summaryPieChartsViewModel.SelectedCategoryTypes.Contains(ct.CategoryTypeID));
+                var categories = _context.CategoryTypes.Where(ct => summaryChartsViewModel.SelectedCategoryTypes.Contains(ct.CategoryTypeID));
                 foreach (var c in categories)
                 {
                     requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == c.CategoryTypeID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ThenInclude(pc => pc.CategoryType);
@@ -212,8 +209,8 @@ namespace PrototypeWithAuth.Controllers
                     pieChartViewModel.SectionValue += "\"" + cost + "\",";
                 }
             }
-   
-            return PartialView(pieChartViewModel);
+
+            return pieChartViewModel;
         }
 
         [HttpGet]
@@ -258,8 +255,32 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesSummary.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.SummaryGraphs.ToString();
-            return View();
+            SummaryChartsViewModel summaryChartsViewModel = GetSummaryChartsViewModel();
+
+            return View(summaryChartsViewModel);
         }
+
+        private SummaryChartsViewModel GetSummaryChartsViewModel()
+        {
+            return new SummaryChartsViewModel()
+            {
+                Years = _context.Requests.Select(r => r.CreationDate.Year).Distinct().ToList(),
+                CategoryTypes = _context.CategoryTypes.ToList(),
+                ParentCategories = _context.ParentCategories.ToList(),
+                ProductSubcategories = _context.ProductSubcategories.ToList(),
+                Projects = _context.Projects.ToList(),
+                SubProjects = _context.SubProjects.ToList(),
+                Employees = _context.Employees
+                              .Select(
+                                  e => new SelectListItem
+                                  {
+                                      Text = e.FirstName + " " + e.LastName,
+                                      Value = e.Id
+                                  }
+                              ).ToList()
+            };
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult StatisticsProject()
