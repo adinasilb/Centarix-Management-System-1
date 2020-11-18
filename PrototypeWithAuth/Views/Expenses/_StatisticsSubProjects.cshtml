@@ -1,0 +1,59 @@
+﻿@using PrototypeWithAuth.Models
+@using PrototypeWithAuth.ViewModels
+@model _StatisticsProjectViewModel
+
+<div class="px-5">
+    <table class="table table-sm table-hover mb-0">
+        <thead>
+            <tr class="text-left">
+                <th class="under-td-padding pl-5 border-0" width="30%">
+                    Name
+                </th>
+                <th class="under-td-padding pl-3 border-0" width="20%">
+                    Orders
+                </th>
+                <th class="under-td-padding pl-3 border-0" width="20%">
+                    Items
+                </th>
+                <th class="under-td-padding pl-5 border-0" width="30%">
+                    Price
+                </th>
+            </tr>
+        </thead>
+    </table>
+    </div>
+<div class="px-5 graduated-table-background-color second-graduated-div">
+    <div class="heading-1 heading-table-margins">
+        @Model.ProjectName
+    </div>
+    <table class="table table-sm table-hover ">
+                <tbody>
+            @foreach (var subproject in Model.SubProjects)
+            {
+                var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-project-button";
+                <tr class="location-index-border text-left">
+                    <td class="p-0" width="30%">
+                        <button class="@buttonClasses" value="@subproject.SubProjectID">
+                            @subproject.SubProjectDescription
+                        </button>
+                    </td>
+                    <td class="p-0" width="20%">
+                        <button class="@buttonClasses" value="@subproject.SubProjectID">
+                            @subproject.Requests.Count()
+                        </button>
+                    </td>
+                    <td class="p-0" width="20%">
+                        <button class="@buttonClasses" value="@subproject.SubProjectID">
+                            @subproject.Requests.Select(r => r.ProductID).Distinct().Count()
+                        </button>
+                    </td>
+                    <td class="p-0" width="30%">
+                        <button class="@buttonClasses" value="@subproject.SubProjectID">
+                            &#8362; @string.Format("{0:n0}", Convert.ToInt32(subproject.Requests.Sum(r => r.Cost)))
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

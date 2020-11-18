@@ -10,6 +10,9 @@ using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.CodeAnalysis;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -68,7 +71,7 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult _SummaryTables(AppUtility.CurrencyEnum currencyEnum, int year)
         {
             SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(currencyEnum, year);
-            return View(summaryTablesViewModel);
+            return PartialView(summaryTablesViewModel);
         }
 
         public SummaryTablesViewModel GetSummaryTablesViewModel(AppUtility.CurrencyEnum currencyEnum, int year)
@@ -78,8 +81,47 @@ namespace PrototypeWithAuth.Controllers
             {
                 SummaryTableItem sti = new SummaryTableItem()
                 {
-                    Month = new DateTime(year, i, 1)
+                    Month = new DateTime(year, i, 1),
+                    Salary = string.Format("{0:n0}", Convert.ToInt32("0")),
                 };
+                var requestsFromMonth = _context.Requests.Where(r => r.CreationDate.Year == year && r.CreationDate.Month == i)
+                    .Where(r => r.RequestStatusID == 3) //items that were paid for and received
+                    .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
+                double lab = 0;
+                double operation = 0;
+                double instrument = 0;
+                double reagents = 0;
+                double plastics = 0;
+                double reusables = 0;
+                double total = 0;
+                switch (currencyEnum)
+                {
+                    case AppUtility.CurrencyEnum.NIS:
+                        lab = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Sum(r => r.Cost);
+                        operation = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2).Sum(r => r.Cost);
+                        instrument = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Sum(r => r.Cost);
+                        reagents = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 2).Sum(r => r.Cost);
+                        plastics = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 1).Sum(r => r.Cost);
+                        reusables = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 4).Sum(r => r.Cost);
+                        total = requestsFromMonth.Sum(r => r.Cost);
+                        break;
+                    case AppUtility.CurrencyEnum.USD:
+                        lab = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        operation = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2).Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        instrument = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        reagents = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 2).Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        plastics = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 1).Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        reusables = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 4).Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        total = requestsFromMonth.Sum(r => r.Cost / r.ExchangeRate);
+                        break;
+                }
+                sti.Lab = string.Format("{0:n0}", Convert.ToInt32(lab));
+                sti.Operation = string.Format("{0:n0}", Convert.ToInt32(operation));
+                sti.Instrument = string.Format("{0:n0}", Convert.ToInt32(instrument));
+                sti.Reagents = string.Format("{0:n0}", Convert.ToInt32(reagents));
+                sti.Plastics = string.Format("{0:n0}", Convert.ToInt32(plastics));
+                sti.Reusable = string.Format("{0:n0}", Convert.ToInt32(reusables));
+                sti.Total = string.Format("{0:n0}", Convert.ToInt32(total));
                 summaryTableItems.Add(sti);
             }
             SummaryTablesViewModel summaryTablesViewModel = new SummaryTablesViewModel()
@@ -107,8 +149,26 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsProject.ToString();
-            return View();
+
+            var projects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product).ToList();
+
+            return View(projects);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, CEO, Expenses")]
+        public IActionResult _StatisticsSubProjects(int ProjectID)
+        {
+            _StatisticsProjectViewModel statisticsProjectViewModel = new _StatisticsProjectViewModel()
+            {
+                SubProjects = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID)
+                .Include(sp => sp.Requests).ThenInclude(r => r.Product).ToList(),
+                ProjectName = _context.Projects.Where(p => p.ProjectID == ProjectID).FirstOrDefault().ProjectDescription
+            };
+
+            return PartialView(statisticsProjectViewModel);
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult StatisticsItem()

@@ -106,6 +106,8 @@ namespace PrototypeWithAuth.AppData
             return ReturnList;
         }
 
+        public static double ExchangeRateIfNull = 3.5;
+
         public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
         {
             IQueryable<Request> ReturnList = Enumerable.Empty<Request>().AsQueryable();

@@ -55,6 +55,7 @@
     --text-font-size: 1rem;
     --text-font-weight: 400;
     --small-text-font-size: .9rem;
+    --graduated-table-background-color: #FAFAFB;
 }
 
 .success-color {
@@ -80,6 +81,7 @@
 .border-danger-centarix {
     border-color: var(--danger-color) !important;
 }
+
 .operations-filter {
     filter: var(--operations-filter);
 }
@@ -123,6 +125,7 @@
 .order-inv-filter {
     filter: var(--order-inv-filter);
 }
+
 .oper-filter {
     filter: var(--operations-filter);
 }
@@ -130,12 +133,15 @@
 .order-inv-background-color {
     background-color: var(--order-inv-color) !important;
 }
+
 .users-background-color {
     background-color: var(--user-color) !important;
 }
+
 .users-border-color {
     border: solid 2px var(--user-color) !important;
 }
+
 .lab-man-filter {
     filter: var(--lab-man-filter) !important;
 }
@@ -143,6 +149,7 @@
 .lab-man-background-color {
     background-color: var(--lab-man-color) !important;
 }
+
 .oper-background-color {
     background-color: var(--operations-color) !important;
 }
@@ -151,11 +158,15 @@
     color: var(--expense-color) !important;
 }
 
+.expenses-background-color-25 {
+    background-color: var(--expenses-25) !important;
+}
+
 .expenses-filter {
     filter: var(--expense-filter) !important;
 }
 
-.expenses-background-color{
+.expenses-background-color {
     background-color: var(--expense-color) !important;
 }
 
@@ -187,87 +198,105 @@ a.yearly-monthly, input[type=button].yearly-monthly {
     filter: invert(56%) sepia(47%) saturate(3021%) hue-rotate(116deg) brightness(98%) contrast(101%);
 }
 
+.graduated-table-background-color {
+    background-color: var(--graduated-table-background-color) !important;
+}
 
-.px-2rem{
+
+.px-2rem {
     padding-right: 2.25rem !important;
     padding-left: 2.25rem !important;
 }
 
 
-body{
+body {
     color: var(--black-87);
-    text-transform:capitalize;
+    text-transform: capitalize;
     font-weight: var(--bold-regular)
 }
 
 /*fonts*/
-.heading-1{
+.heading-1 {
     font-size: 1.75rem !important;
     font-weight: var(--bold-medium) !important;
 }
+
 .tabs-font {
     font-size: 1.25rem;
     font-weight: var(--bold-medium);
 }
+
 .top-menu {
     font-size: 1.5rem;
     font-weight: var(--bold-regular);
 }
+
 .side-menu {
     font-size: .906rem;
     font-weight: var(--bold-regular)
 }
+
 .text {
     font-size: var(--text-font-size);
     font-weight: var(--text-font-weight);
 }
+
 .text-field-explanation {
     font-size: 1rem;
     font-weight: var(--bold-light)
 }
+
 input:not(input[type=button]) {
     font-size: 1rem !important;
     font-weight: var(--bold-regular) !important;
 }
+
 .control-label {
     font-size: .75rem;
     font-weight: var(--bold-regular);
     margin-bottom: 0px;
 }
+
 .form-group {
     margin-bottom: 0 !important;
 }
+
 .button {
     font-size: 1rem;
     font-weight: var(--bold-regular)
 }
+
 .custom-button-font {
     font-size: 1.563rem;
     font-weight: var(--bold-regular);
     color: var(--white);
-    
 }
+
 .custom-button-small-font {
     font-size: .8rem;
     font-weight: var(--bold-medium);
     color: var(--white);
 }
+
 .custom-button-table-font {
     font-size: 1rem;
     font-weight: var(--bold-medium);
     color: var(--white);
 }
+
 .custom-cancel {
     border: .0625rem solid #000000DB !important;
-    background-color:transparent;
+    background-color: transparent;
     font-weight: var(--bold-light);
     font-size: 1.438rem;
 }
+
 .custom-clear-button-table {
     background-color: transparent;
     font-weight: var(--bold-medium);
     font-size: 1rem;
 }
+
 .custom-cancel:hover {
     background-color: rgba(229,229,229, .55);
 }
@@ -289,6 +318,7 @@ table td, table td .btn, .text, table th {
     margin-left: 5.625rem;
     margin-right: 5.625rem;
 }
+
 .nav-top-margin1 {
     padding-top: 4.85rem;
 }
@@ -296,6 +326,7 @@ table td, table td .btn, .text, table th {
 .nav-top-margin2 {
     margin-top: 5rem;
 }
+
 .m-6 {
     margin: 4rem !important;
 }
@@ -315,8 +346,9 @@ table td, table td .btn, .text, table th {
 .ml-6 {
     margin-left: 4rem !important;
 }
-.between-button-margin{
-    margin-right:3.125rem;
+
+.between-button-margin {
+    margin-right: 3.125rem;
 }
 
 /*body shadows*/
@@ -354,6 +386,10 @@ table td, table td .btn, .text, table th {
     margin-bottom: 2.063rem;
 }
 
+.under-td-padding {
+    padding-bottom: 2.063rem !important;
+}
+
 .select-box-margin-bottom {
     margin-bottom: 1.3rem;
 }
@@ -365,6 +401,7 @@ table td, table td .btn, .text, table th {
 .top-radio-buttons {
     margin-top: 2.063rem;
 }
+
 .no-mb {
     margin-bottom: 0 !important;
 }
@@ -381,88 +418,131 @@ table td, table td .btn, .text, table th {
 .circular-profile-img {
     height: 50px;
     width: 50px;
-    border-radius:50% !important;
+    border-radius: 50% !important;
     border: 1px solid rgba(0, 0, 0, .54) !important;
 }
+
 .circular-profile-img-50 {
     height: 50px;
     width: 50px;
     clip-path: circle(25px at center);
 }
+
 .circular-profile-img-65 {
     height: 65px;
     width: 65px;
     clip-path: circle(32.5px at center);
 }
+
 .circular-profile-img-89 {
     height: 89px;
     width: 89px;
     clip-path: circle(44.5px at center);
 }
+
 .circular-profile-img-150 {
     height: 150px;
     width: 150px;
     clip-path: circle(75px at center);
 }
+
 .circular-profile-img-141 {
     height: 141px;
     width: 141px;
     clip-path: circle(70.5px at center);
 }
+
 .circular-profile-img-400 {
     height: 400px;
     width: 400px;
     clip-path: circle(200px at center);
 }
-.circular-profile-img-225{
+
+.circular-profile-img-225 {
     height: 225px;
     width: 225px;
     clip-path: circle(112.5px at center);
 }
+
 .circular-profile-img-197 {
     height: 197px;
     width: 197px;
     clip-path: circle(98.5px at center);
 }
+
 .circular-profile-img img {
     position: relative;
     height: 100%;
 }
 
-.modal-border-radius{
+.modal-border-radius {
     border-radius: 2.8125rem !important;
     border: none !important;
 }
+
 .modal-padding {
     margin-top: 5rem;
     margin-left: 5rem;
     margin-right: 5rem;
     margin-bottom: 3.5rem;
 }
+
 .modal-close-padding {
     margin-top: 1.375rem;
     margin-right: 2rem;
 }
+
 .modal-close-style {
-    font-size:2.5rem !important; 
-    font-weight:400 !important;
+    font-size: 2.5rem !important;
+    font-weight: 400 !important;
 }
-.modal-box-shadow{
+
+.modal-box-shadow {
     box-shadow: 0 0 .625rem #00000091 !important;
 }
-.modal-footer-mt{
-    margin-top:3.25rem !important;
+
+.modal-footer-mt {
+    margin-top: 3.25rem !important;
 }
-.modal-header-padding{
+
+.modal-header-padding {
     padding-bottom: 3.25rem !important;
 }
 
 .item-table {
-    height:8.125rem;
+    height: 8.125rem;
 }
+
 .table-icon-div {
     height: 3rem;
     width: 3rem;
     display: flex;
     align-items: center;
 }
+
+.heading-table-margins {
+    padding-top: 0.9375rem;
+    padding-bottom: 0.9375rem;
+}
+
+.statistics-project-selected {
+    border-left: .3rem solid var(--expense-color) !important
+}
+
+.second-graduated-div {
+    padding-bottom: 2.063rem !important;
+}
+
+    .second-graduated-div tr {
+        border-left: 0 !important;
+        border-right: 0 !important;
+    }
+
+        .second-graduated-div tr:first-child,
+        .second-graduated-div tr:first-child td{
+            border-top: 0 !important;
+        }
+
+        .second-graduated-div tr:last-child {
+            border-bottom: 0 !important;
+        }
