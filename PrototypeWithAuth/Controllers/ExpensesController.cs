@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Abp.Extensions;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +9,10 @@ using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Chart.Mvc.Core.SimpleChart;
+using System.Drawing;
+using PrototypeWithAuth.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -52,6 +55,167 @@ namespace PrototypeWithAuth.Controllers
 
             return View(summaryPieChartsViewModel);
         }
+        [HttpPost]
+        public IActionResult _PieChart(SummaryPieChartsViewModel summaryPieChartsViewModel)
+        {
+            bool isDollars = false;
+            var requests = _context.Requests.Where(r=>r.RequestStatusID==3 && r.PaymentStatusID==6);
+            IEnumerable<Request> requestList = null;
+            if (summaryPieChartsViewModel.SelectedYears == null)
+            {
+                requests.Where(r => r.CreationDate.Year == DateTime.Now.Year);
+            }
+            else
+            {
+                requests.Where(r => summaryPieChartsViewModel.SelectedYears.Contains( r.CreationDate.Year));
+            }
+            if (summaryPieChartsViewModel.SelectedMonths != null)
+            {
+                requests = requests.Where(r => summaryPieChartsViewModel.SelectedMonths.Contains(r.CreationDate.Month));                
+            }
+            if (summaryPieChartsViewModel.Currency!=null && summaryPieChartsViewModel.Currency.Equals(AppUtility.CurrencyEnum.USD.ToString()))
+            {
+                isDollars = true;
+            }
+            Random rnd = new Random();
+            PieChartViewModel pieChartViewModel = new PieChartViewModel();
+            if (summaryPieChartsViewModel.SelectedParentCategories != null)
+            {
+                if (summaryPieChartsViewModel.SelectedProductSubcategories != null)
+                {
+                    var subCategories = _context.ProductSubcategories.Where(ps => summaryPieChartsViewModel.SelectedProductSubcategories.Contains(ps.ProductSubcategoryID));
+                    foreach (var ps in subCategories)
+                    {
+                        requestList = requests.Where(r => r.Product.ProductSubcategoryID == ps.ProductSubcategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory);
+                        double cost = 0;
+                        if (isDollars)
+                        {
+                            cost = requestList.Sum(r => r.Cost / r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate);
+                        }
+                        else
+                        {
+                            cost = requestList.Sum(r => r.Cost);
+                        }
+
+                        pieChartViewModel.SectionName += "\"" + ps.ProductSubcategoryDescription + "\",";
+                        pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                        pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                    }
+                }
+                else
+                {
+                    var parentCategories = _context.ParentCategories.Where(pc => summaryPieChartsViewModel.SelectedParentCategories.Contains(pc.ParentCategoryID));
+                    foreach (var pc in parentCategories)
+                    {
+                        requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
+                        double cost = 0;
+                        if (isDollars)
+                        {
+                            cost = requestList.Sum(r => r.Cost / r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate);
+                        }
+                        else
+                        {
+                            cost = requestList.Sum(r => r.Cost);
+                        }
+
+                        pieChartViewModel.SectionName += "\"" + pc.ParentCategoryDescription + "\",";
+                        pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                        pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                    }
+                }
+            }
+            else if (summaryPieChartsViewModel.SelectedProjects != null)
+            {
+                if (summaryPieChartsViewModel.SelectedSubProjects != null)
+                {
+                    var subProjects = _context.SubProjects.Where(sp => summaryPieChartsViewModel.SelectedSubProjects.Contains(sp.SubProjectID));
+                    foreach (var sp in subProjects )
+                    {
+                        requestList = requests.Where(r => r.SubProjectID== sp.SubProjectID);
+                        double cost = 0;
+                        if (isDollars)
+                        {
+                            cost = requestList.Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        }
+                        else
+                        {
+                            cost = requestList.Sum(r => r.Cost);
+                        }
+
+                        pieChartViewModel.SectionName += "\"" + sp.SubProjectDescription + "\",";
+                        pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                        pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                    }
+                }
+                else
+                {
+                    var projects = _context.Projects.Where(s => summaryPieChartsViewModel.SelectedProjects.Contains(s.ProjectID));
+                    foreach (var s in projects)
+                    {
+                        requestList = requests.Where(r => r.SubProject.ProjectID == s.ProjectID);
+                        double cost = 0;
+                        if (isDollars)
+                        {
+                            cost = requestList.Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        }
+                        else
+                        {
+                            cost = requestList.Sum(r => r.Cost);
+                        }
+
+                        pieChartViewModel.SectionName += "\"" + s.ProjectDescription + "\",";
+                        pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                        pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                    }
+                }
+            }
+            else if (summaryPieChartsViewModel.SelectedEmployees != null)
+            {
+                var employees = _context.Employees.Where(e => summaryPieChartsViewModel.SelectedEmployees.Contains(e.Id));
+              
+                foreach(var e in employees)
+                {
+                    requestList = requests.Where(r => r.ApplicationUserCreatorID == e.Id);
+                    double cost = 0;
+                    if (isDollars)
+                    {
+                        cost = requestList.Sum(r => r.Cost/ r.ExchangeRate==0?AppUtility.ExchangeRateIfNull:r.ExchangeRate);
+                    }
+                    else
+                    {
+                        cost = requestList.Sum(r => r.Cost);
+                    }
+                   
+                    pieChartViewModel.SectionName += "\"" + e.FirstName + " " + e.LastName + "\",";
+                    pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                    pieChartViewModel.SectionValue += "\""  +cost+ "\",";
+                }
+            }
+            else if(summaryPieChartsViewModel.SelectedCategoryTypes!=null)
+            {
+                var categories = _context.CategoryTypes.Where(ct => summaryPieChartsViewModel.SelectedCategoryTypes.Contains(ct.CategoryTypeID));
+                foreach (var c in categories)
+                {
+                    requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == c.CategoryTypeID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ThenInclude(pc => pc.CategoryType);
+                    double cost = 0;
+                    if (isDollars)
+                    {
+                        cost = requestList.Sum(r => r.Cost / r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate);
+                    }
+                    else
+                    {
+                        cost = requestList.Sum(r => r.Cost);
+                    }
+
+                    pieChartViewModel.SectionName += "\"" + c.CategoryTypeDescription + "\",";
+                    pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                    pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                }
+            }
+   
+            return PartialView(pieChartViewModel);
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult SummaryTables()

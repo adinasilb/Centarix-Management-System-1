@@ -36,6 +36,7 @@ namespace PrototypeWithAuth.AppData
         public enum ExpensesSidebarEnum { SummaryPieCharts, SummaryTables, SummaryGraphs, StatisticsProject, StatisticsItem, StatisticsWorker, StatisticsCategory, StatisticsVendor, CostsProject, CostsAdvancedSearch, CostsAdvancedLists, WorkersDetails, WorkersHours, WorkersSalary }
         public enum MenuItems { OrdersAndInventory, Protocols, Operation, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
+        public enum CurrencyEnum { USD, NIS }
         public enum AccountingNotificationsEnum
         {
             [Display(Name = "No Invoice")]
@@ -104,6 +105,8 @@ namespace PrototypeWithAuth.AppData
             }
             return ReturnList;
         }
+
+        public static double ExchangeRateIfNull = 3.5;
 
         public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
         {

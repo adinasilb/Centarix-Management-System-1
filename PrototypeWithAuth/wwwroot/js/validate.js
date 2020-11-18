@@ -338,7 +338,7 @@ $(function () {
 		return isInteger(value) || value == '';
 	}, 'Field must be an integer');
 
-	$('.mdb-select').change(function () {
+	$('#myForm .mdb-select').change(function () {
 		if ($(this).rules()) {
 			$(this).valid();
 		}
