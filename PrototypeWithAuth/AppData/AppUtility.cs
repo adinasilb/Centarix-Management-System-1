@@ -334,6 +334,13 @@ namespace PrototypeWithAuth.AppData
             return totalDays - vacationSickCount-companyDaysOffCount;
         }
 
+        public static List<String> GetChartColors()
+        {
+            return new List<string> { "#FFCDD2" , "#E91E63", "#9C27B0",
+            "#673AB7",  "#9E9E9E", "#607D8B", "#00BCD4", "#2196F3", "#03A9F4", "#009688", "#8BC34A", "#CDDC39",
+                "#FF5722",  "#3F51B5",  "#795548",  "#FFEB3B", "#FFC107", "#4CAF50", "#FF9800"};
+        }
+
     }
 
 }

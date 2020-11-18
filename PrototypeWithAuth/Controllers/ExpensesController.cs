@@ -55,7 +55,9 @@ namespace PrototypeWithAuth.Controllers
         }
         private ChartViewModel GetChartData(SummaryChartsViewModel summaryChartsViewModel)
         {
+            var count = 0;
             bool isDollars = false;
+            var colors = AppUtility.GetChartColors().OrderBy(a => Guid.NewGuid()).ToList(); ;
             var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6);
             IEnumerable<Request> requestList = null;
             if (summaryChartsViewModel.SelectedYears == null)
@@ -74,12 +76,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 isDollars = true;
             }
-            Random rnd = new Random();
             ChartViewModel pieChartViewModel = new ChartViewModel();
             if (summaryChartsViewModel.SelectedParentCategories != null)
             {
                 if (summaryChartsViewModel.SelectedProductSubcategories != null)
                 {
+                    count = 0;
                     var subCategories = _context.ProductSubcategories.Where(ps => summaryChartsViewModel.SelectedProductSubcategories.Contains(ps.ProductSubcategoryID));
                     foreach (var ps in subCategories)
                     {
@@ -95,15 +97,17 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         pieChartViewModel.SectionName += "\"" + ps.ProductSubcategoryDescription + "\",";
-                        pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                        pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
                         pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                        count++;
                     }
                 }
                 else
                 {
+                    count = 0;
                     var parentCategories = _context.ParentCategories.Where(pc => summaryChartsViewModel.SelectedParentCategories.Contains(pc.ParentCategoryID));
                     foreach (var pc in parentCategories)
-                    {
+                    {   
                         requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
                         double cost = 0;
                         if (isDollars)
@@ -116,8 +120,9 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         pieChartViewModel.SectionName += "\"" + pc.ParentCategoryDescription + "\",";
-                        pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                        pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
                         pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                        count++;
                     }
                 }
             }
@@ -125,6 +130,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (summaryChartsViewModel.SelectedSubProjects != null)
                 {
+                    count = 0;
                     var subProjects = _context.SubProjects.Where(sp => summaryChartsViewModel.SelectedSubProjects.Contains(sp.SubProjectID));
                     foreach (var sp in subProjects)
                     {
@@ -140,12 +146,14 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         pieChartViewModel.SectionName += "\"" + sp.SubProjectDescription + "\",";
-                        pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                        pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
                         pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                        count++;
                     }
                 }
                 else
                 {
+                    count = 0;
                     var projects = _context.Projects.Where(s => summaryChartsViewModel.SelectedProjects.Contains(s.ProjectID));
                     foreach (var s in projects)
                     {
@@ -161,15 +169,16 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         pieChartViewModel.SectionName += "\"" + s.ProjectDescription + "\",";
-                        pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                        pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
                         pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                        count++;
                     }
                 }
             }
             else if (summaryChartsViewModel.SelectedEmployees != null)
             {
                 var employees = _context.Employees.Where(e => summaryChartsViewModel.SelectedEmployees.Contains(e.Id));
-
+                count = 0;
                 foreach (var e in employees)
                 {
                     requestList = requests.Where(r => r.ApplicationUserCreatorID == e.Id);
@@ -184,12 +193,14 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     pieChartViewModel.SectionName += "\"" + e.FirstName + " " + e.LastName + "\",";
-                    pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                    pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
                     pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                    count++;
                 }
             }
             else if (summaryChartsViewModel.SelectedCategoryTypes != null)
             {
+                count = 0;
                 var categories = _context.CategoryTypes.Where(ct => summaryChartsViewModel.SelectedCategoryTypes.Contains(ct.CategoryTypeID));
                 foreach (var c in categories)
                 {
@@ -205,8 +216,9 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     pieChartViewModel.SectionName += "\"" + c.CategoryTypeDescription + "\",";
-                    pieChartViewModel.SectionColor += "\"#" + Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name + "\",";
+                    pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
                     pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                    count++;
                 }
             }
 
