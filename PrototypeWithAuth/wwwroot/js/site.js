@@ -46,6 +46,10 @@ $(function () {
 	$("#parentlist").change(function () {
 		$.fn.parentListChange();
 	});
+	$("#parentlistMulitple").keyup(function () {
+		alert("select multiple focus out")
+		$.fn.parentListMultipleChange();
+	});
 	$('.modal').on('change', '#parentlist', function () {
 		$.fn.parentListChange();
 	});
@@ -79,6 +83,26 @@ $(function () {
 		console.log("url: " + url);
 
 		$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+			var firstitem1 = '<option value=""> Select Subcategory</option>';
+			$("#sublist").empty();
+			$("#sublist").append(firstitem1);
+
+			$.each(data, function (i, subCategory) {
+				var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
+				$("#sublist").append(newitem1);
+			});
+			$("#sublist").materialSelect();
+			return false;
+		});
+	};
+	$.fn.parentListMultipleChange = function () {
+		console.log("in parent list");
+		var parentCategoryIds = $("#parentlist").val();
+		console.log("parentcategoryids: " + parentCategoryIds);
+		var url = "/Requests/GetSubCategoryListMultiple";
+		console.log("url: " + url);
+
+		$.getJSON(url, { ParentCategoryId: parentCategoryIds }, function (data) {
 			var firstitem1 = '<option value=""> Select Subcategory</option>';
 			$("#sublist").empty();
 			$("#sublist").append(firstitem1);

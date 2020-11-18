@@ -1,0 +1,69 @@
+﻿@model PrototypeWithAuth.ViewModels.ChartViewModel
+<canvas id="labelChart" width="400" height="400"></canvas>
+<script>
+	$(function () {
+//alert("chart function")
+	var ctxP = document.getElementById("labelChart").getContext('2d');
+
+	var myBarChart = new Chart(ctxP, {
+
+		plugins: [ChartDataLabels],
+		type: 'bar',
+		data: {
+            labels: [@Html.Raw(Model.SectionName)],
+			//ChartDataLabels: ["1", "2", "3", "4", "5"],
+			datasets: [{
+				data: [@Html.Raw(Model.SectionValue)],
+				backgroundColor: [@Html.Raw(Model.SectionColor)],
+                barPercentage: 0.5,
+                barThickness: 3,
+                maxBarThickness: 6,
+                minBarLength: 0,
+                //hoverBackgroundColor: [@Html.Raw(Model.SectionColor)],
+			},
+			]
+		},
+		options: {
+			hover: false,
+			tooltips: {
+				// Disable the on-canvas tooltip
+				enabled: false,
+			},
+			legend: {
+				display: false
+			},
+			responsive: true,
+
+			plugins: {
+				datalabels: {
+					//formatter: (value, ctx) => {
+					//	var sum = 0;
+					//	var dataArr = ctx.chart.data.datasets[0].data;
+					//	dataArr.map(data => {
+					//		sum += parseFloat(data);
+					//	});
+					//	//alert(sum)
+     //                   var percentage = (value * 100 / sum).toFixed(2) + "%";
+     //                   //alert("value"+(value * 100)+ "sum"+sum)
+     //                   return ctx.chart.data.labels[ctx.dataIndex] + "\n" + percentage + "\n" + parseFloat(ctx.chart.data.datasets[0].data[ctx.dataIndex]).toFixed(2) ;
+					//},
+					color: 'white',
+					labels: {
+						title: {
+							font: {
+								size: 18,
+								textAlign: 'center'
+							},
+							text: "Custom TEgt"
+
+
+						}
+					},
+
+				}
+			}
+		}
+	});
+
+})</script>
+
