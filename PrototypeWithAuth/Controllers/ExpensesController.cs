@@ -57,7 +57,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var count = 0;
             bool isDollars = false;
-            var colors = AppUtility.GetChartColors().OrderBy(a => Guid.NewGuid()).ToList(); ;
+            var colors = AppUtility.GetChartColors();
             var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6);
             IEnumerable<Request> requestList = null;
             if (summaryChartsViewModel.SelectedYears == null)
@@ -82,9 +82,14 @@ namespace PrototypeWithAuth.Controllers
                 if (summaryChartsViewModel.SelectedProductSubcategories != null)
                 {
                     count = 0;
+                 
                     var subCategories = _context.ProductSubcategories.Where(ps => summaryChartsViewModel.SelectedProductSubcategories.Contains(ps.ProductSubcategoryID));
                     foreach (var ps in subCategories)
                     {
+                        if (count > 18)
+                        {
+                            count = 0;
+                        }
                         requestList = requests.Where(r => r.Product.ProductSubcategoryID == ps.ProductSubcategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory);
                         double cost = 0;
                         if (isDollars)
@@ -107,7 +112,11 @@ namespace PrototypeWithAuth.Controllers
                     count = 0;
                     var parentCategories = _context.ParentCategories.Where(pc => summaryChartsViewModel.SelectedParentCategories.Contains(pc.ParentCategoryID));
                     foreach (var pc in parentCategories)
-                    {   
+                    {
+                        if (count > 18)
+                        {
+                            count = 0;
+                        }
                         requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
                         double cost = 0;
                         if (isDollars)
@@ -134,6 +143,10 @@ namespace PrototypeWithAuth.Controllers
                     var subProjects = _context.SubProjects.Where(sp => summaryChartsViewModel.SelectedSubProjects.Contains(sp.SubProjectID));
                     foreach (var sp in subProjects)
                     {
+                        if (count > 18)
+                        {
+                            count = 0;
+                        }
                         requestList = requests.Where(r => r.SubProjectID == sp.SubProjectID);
                         double cost = 0;
                         if (isDollars)
@@ -157,6 +170,10 @@ namespace PrototypeWithAuth.Controllers
                     var projects = _context.Projects.Where(s => summaryChartsViewModel.SelectedProjects.Contains(s.ProjectID));
                     foreach (var s in projects)
                     {
+                        if (count > 18)
+                        {
+                            count = 0;
+                        }
                         requestList = requests.Where(r => r.SubProject.ProjectID == s.ProjectID);
                         double cost = 0;
                         if (isDollars)
@@ -181,6 +198,10 @@ namespace PrototypeWithAuth.Controllers
                 count = 0;
                 foreach (var e in employees)
                 {
+                    if (count > 18)
+                    {
+                        count = 0;
+                    }
                     requestList = requests.Where(r => r.ApplicationUserCreatorID == e.Id);
                     double cost = 0;
                     if (isDollars)
@@ -204,6 +225,10 @@ namespace PrototypeWithAuth.Controllers
                 var categories = _context.CategoryTypes.Where(ct => summaryChartsViewModel.SelectedCategoryTypes.Contains(ct.CategoryTypeID));
                 foreach (var c in categories)
                 {
+                    if (count > 18)
+                    {
+                        count = 0;
+                    }
                     requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == c.CategoryTypeID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ThenInclude(pc => pc.CategoryType);
                     double cost = 0;
                     if (isDollars)
