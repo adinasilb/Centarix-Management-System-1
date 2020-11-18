@@ -9,7 +9,6 @@
 
 
 }
-<script src="~/js/workerHours.js"></script>
 <input type="hidden" asp-for="TotalWorkingDaysInYear" year="@Model.Year" />
 <div class="hours-partial">
     @{ await Html.RenderPartialAsync("_Hours", Model);

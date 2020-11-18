@@ -1263,7 +1263,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "SummaryPieCharts",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-pie_chart-24px-2"
+                IconName = "icon-pie_chart-24px2"
             });
             if (SidebarTitle == AppUtility.ExpensesSidebarEnum.SummaryTables.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1273,7 +1273,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "SummaryTables",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-table_chart-24px-1"
+                IconName = "icon-table_chart-24px1"
             });
             if (SidebarTitle == AppUtility.ExpensesSidebarEnum.SummaryGraphs.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()

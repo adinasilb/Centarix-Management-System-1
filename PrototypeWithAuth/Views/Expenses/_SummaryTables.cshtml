@@ -1,9 +1,19 @@
 ﻿@using PrototypeWithAuth.ViewModels;
+@using PrototypeWithAuth.AppData;
 @model SummaryTablesViewModel;
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
 
+@{
+    var currencySymbol = '\u0024';
+    switch (Model.Currency)
+    {
+        case AppUtility.CurrencyEnum.USD:
+            currencySymbol = '\u0024';
+            break;
+        case AppUtility.CurrencyEnum.NIS:
+            currencySymbol = '\u20AA';
+            break;
+    }
+}
 
 <table class="table table-headerspaced table-noheaderlines table-hover ">
     <thead>
@@ -20,38 +30,35 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var tableRow in Model.SummaryTableItems)
+        @foreach (var tableRow in Model.SummaryTableItems)
         {
             <tr class="text-center">
                 <td>
-                    @tableRow.Month.Month / @tableRow.Month.Year.ToString().Substring(2, 2)
+                    @tableRow.Month.Month/@tableRow.Month.Year.ToString().Substring(2, 2)
                 </td>
                 <td>
-                    @tableRow.Salary
+                    @currencySymbol @tableRow.Salary
                 </td>
                 <td>
-                    @tableRow.Lab
+                    @currencySymbol @tableRow.Lab
                 </td>
                 <td>
-                    @tableRow.Operation
+                    @currencySymbol @tableRow.Operation
                 </td>
                 <td>
-                    @tableRow.Instrument
+                    @currencySymbol @tableRow.Instrument
                 </td>
                 <td>
-                    @tableRow.Reagents
+                    @currencySymbol @tableRow.Reagents
                 </td>
                 <td>
-                    @tableRow.Plastics
+                    @currencySymbol @tableRow.Plastics
                 </td>
                 <td>
-                    @tableRow.Reusable
+                    @currencySymbol @tableRow.Reusable
                 </td>
                 <td>
-                    @{ 
-                        var total = tableRow.Salary + tableRow.Lab + tableRow.Operation + tableRow.Instrument + tableRow.Reagents + tableRow.Plastics + tableRow.Reusable;
-                    }
-                    @total
+                    @currencySymbol @tableRow.Total
                 </td>
             </tr>
         }

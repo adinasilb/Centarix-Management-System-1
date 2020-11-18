@@ -2315,6 +2315,7 @@ $(function () {
 	//});
 	/*End Dropdown Menu*/
 	$("body").off('click').on("click", ".upload-image", function (e) {
+		console.log("in upload image");
 		$.fn.CallModal2("/Admin/UserImageModal");
 	});
 

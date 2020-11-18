@@ -1,5 +1,6 @@
 ﻿$(function () {
 	$.fn.reloadHoursPage = function (year, month, yearlyMonthlyEnum) {
+		alert("in reload hours page");
 		var yeardiff = false;
 		if ($('#TotalWorkingDaysInYear').attr('year') == year) {
 			var amountInYear = $('#TotalWorkingDaysInYear').val();
@@ -16,7 +17,7 @@
 			async: true,
 			url: url,
 			type: 'GET',
-			cache: false,
+			cache: true,
 			success: function (data) {
 				$(".hours-partial").html(data);
 				$('.mdb-select-workers').materialSelect();
@@ -32,14 +33,15 @@
 			}
 		});
 	};
-	$('.yearlyMonthlySwitch').off('click').click(function (e) {
+	$('.yearlyMonthlySwitch').off('click').on("click", function (e) {
+		//$('body').off("change", ".workersHoursMonths").on("change", ".workersHoursMonths", function () {
+		alert("in yearly monthly switch");
 		e.preventDefault();
 		var year = $(this).attr('year');
-		var yearlyMonthlyEnum = $(el).attr('yearlyMonthlyEnum');
+		var yearlyMonthlyEnum = $(this).attr('yearlyMonthlyEnum');
 		var month = $(this).attr('month');
 
 		$.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
-		return false;
 	});
 
 	$('body').off("change", ".workersHoursMonths").on("change", ".workersHoursMonths", function () {
@@ -60,49 +62,5 @@
 		return false;
 	});
 
-	//$(".workersHoursYears input").off("click").on("click", function () {
-	//	alert("workers hours years input changed");
-	//	var year = $(this).val();
-	//	console.log("on change: " + $(this).val())
-	//	var yearlyMonthlyEnum = $('.workerHoursAttr').attr('yearlyMonthlyEnum');
-	//	var month = $('.workerHoursAttr').attr('month');
-
-	//	$.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
-	//});
-
-	//$('.workersHoursYears').off('change').change(function () {
-	//    alert("workers hours years changed");
-	//    var year = $(this).val();
-	//    console.log("on change: "+$(this).val())
-	//    var yearlyMonthlyEnum = $('.workerHoursAttr').attr('yearlyMonthlyEnum');
-	//    var month = $('.workerHoursAttr').attr('month');
-
-	//    $.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
-	//});
-
-	//$.fn.EnableMaterialSelectWorkers = function (selectID, dataActivates) {
-	//	var selectedIndex = $('#' + dataActivates).find(".active").index();
-
-	//	selectedIndex = selectedIndex - 1;
-
-	//	$(selectID).destroyMaterialSelect();
-	//	$(selectID).prop("disabled", false);
-	//	$(selectID).prop('selectedIndex', selectedIndex);
-	//	$(selectID).removeAttr("disabled")
-	//	$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
-	//	$(selectID).materialSelect();
-	//	$('.open-document-modal').attr("data-val", true);
-	//}
-
-	//jQuery.fn.extend({
-	//	destroyMaterialSelect: function () {
-	//		return this.each(function () {
-	//			let wrapper = $(this).parent();
-	//			let core = wrapper.find('select');
-	//			wrapper.after(core.removeClass('initialized').prop('outerHTML'));
-	//			wrapper.remove();
-	//		});
-	//	}
-	//});
 
 })

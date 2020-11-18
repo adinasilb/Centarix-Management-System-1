@@ -33,7 +33,8 @@
     }
 
 }
-<input type="hidden" id="newYearAmount" value="@Model.TotalWorkingDaysInYear"/>
+<script src="~/js/workerHours.js"></script>
+<input type="hidden" id="newYearAmount" value="@Model.TotalWorkingDaysInYear" />
 <input type="hidden" id="currentYear" value="@Model.Year" />
 <div class="container-fluid m-0">
     <div class="row">
@@ -43,7 +44,7 @@
         <div class="@col2 ">
             <a class="black-text py-2 mr-6  rounded-pill @monthStyle text-center  px-5  border border-dark black-text yearlyMonthlySwitch" yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Monthly" style="font-size:1.4375rem; " month="@Model.Month" year="@Model.Year">Monthly</a>
 
-            <a class="@yearStyle  px-5  py-2 rounded-pill text-center  border border-dark black-text yearlyMonthlySwitch" 
+            <a class="@yearStyle  px-5  py-2 rounded-pill text-center  border border-dark black-text yearlyMonthlySwitch"
                yearlyMonthlyEnum="@AppUtility.YearlyMonthlyEnum.Yearly" style="font-size:1.4375rem " month="@Model.Month" year="@Model.Year">Yearly</a>
         </div>
         @{ var yearDropDown = "offset-3"; }
@@ -55,10 +56,10 @@
                         new SelectListItem
                         {
                             Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
-                            Value = x+"",
+                            Value = x + "",
                             Selected = (x == Model.Month)
                         }
-                    ), htmlAttributes: new { @class = "mdb-select mdb-select-workers custom users select-dropdown workersHoursMonths", @name = "DOBMonth", @year = Model.Year, @month =Model.Month, @yearlyMonthlySwitch = AppUtility.YearlyMonthlyEnum.Monthly })
+                    ), htmlAttributes: new { @class = "mdb-select mdb-select-workers custom users select-dropdown workersHoursMonths", @name = "DOBMonth", @year = Model.Year, @month = Model.Month, @yearlyMonthlySwitch = AppUtility.YearlyMonthlyEnum.Monthly })
                 </div>
             </div>
             yearDropDown = "";
@@ -70,11 +71,11 @@
                     new SelectListItem
                     {
                         Text = x.ToString(),
-                        Value=x.ToString(),
+                        Value = x.ToString(),
                         Selected = (x == Model.Year)
                     }
                 ), htmlAttributes: new { @class = "mdb-select mdb-select-workers custom users select-dropdown workersHoursYears why-dropdown", @name = "DOBYear", @year = Model.Year, @month = Model.Month, @yearlyMonthlySwitch = Model.YearlyMonthlyEnum })
-                <input type="hidden" class="workerHoursAttr"   yearlyMonthlyEnum="@Model.YearlyMonthlyEnum" month="@Model.Month" year="@Model.Year"/>
+                <input type="hidden" class="workerHoursAttr" yearlyMonthlyEnum="@Model.YearlyMonthlyEnum" month="@Model.Month" year="@Model.Year" />
             </div>
         </div>
     </div>
@@ -107,7 +108,7 @@
                         Sick Days
                     </td>
                 </tr>
-                
+
                 @foreach (var employee in Model.Employees)
                 {
                     <tr class="text-center users-tr ">
@@ -135,18 +136,18 @@
                         </td>
                         <td width="10%">
                             @{var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
-                                var totalHoursString = "";                                
+                                var totalHoursString = "";
                             }
                             @if (employee.Employee.EmployeeStatusID == 1)
                             {
                                 var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
-                                var totalInMonth = TimeSpan.FromHours(totalHoursInRange);                             
-                                totalHoursString = totalHours+":"+employee.Hours.ToString("mm")+"/"+ Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
+                                var totalInMonth = TimeSpan.FromHours(totalHoursInRange);
+                                totalHoursString = totalHours + ":" + employee.Hours.ToString("mm") + "/" + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
                             }
                             else
                             {
 
-                                totalHoursString = totalHours+":"+employee.Hours.ToString("mm");
+                                totalHoursString = totalHours + ":" + employee.Hours.ToString("mm");
                             }
                             @totalHoursString
                         </td>
@@ -162,7 +163,7 @@
                             else
                             {
 
-                                totalDaysString = employee.WorkingDays+"";
+                                totalDaysString = employee.WorkingDays + "";
                             }
                             @totalDaysString
                         </td>
@@ -178,11 +179,3 @@
         </table>
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        //alert("in doc ready of partial view - new");
-        //$(".workersHoursYears").unbind("change");
-        //$("#workersHoursYears").removeClass("workersHoursYears");
-        //$("#workersHoursYears").addClass("workersHoursYears");
-    });
-</script>

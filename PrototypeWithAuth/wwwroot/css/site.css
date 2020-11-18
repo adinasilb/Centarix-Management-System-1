@@ -1573,8 +1573,9 @@ td .btn {
 
 /*take out the border radius of the dropdowns*/
 .select-wrapper input.select-dropdown {
-    border-radius: 0 !important;
-    border-bottom: 1px solid #dee2e6 !important;
+    border-radius: .25rem;
+    padding-left: .5rem !important;
+    /*border-bottom: 1px solid #dee2e6 !important;*/
 }
 
 /*.custom.select-wrapper input.select-dropdown, .dropdown .select, .dropdown-multiple .select {
@@ -1953,6 +1954,10 @@ span.caret {
     box-shadow: 0 2px 0 0 var( --expense-color) !important;
 }
 
+
+.expenses.select-wrapper input.select-dropdown, .expenses-form .select-wrapper input.select-dropdown {
+    border: 0.094rem solid var(--black-87);
+}
 
 .expenses.select-wrapper input.select-dropdown:active, .expenses-form .select-wrapper input.select-dropdown:active {
     border: 0.063rem solid var(--expense-color);

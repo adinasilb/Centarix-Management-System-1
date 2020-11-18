@@ -1,39 +1,40 @@
 ﻿@using PrototypeWithAuth.ViewModels;
+@using PrototypeWithAuth.AppData;
 @model SummaryTablesViewModel
 
 @{
     ViewData["Title"] = "SummaryTables";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+<script src="~/js/summarytables.js"></script>
 
-<div class=" container-fluid">
-
+<div class="container-fluid">
 
     <div class="row under-row-margin">
         <div class="col-7 heading-1 p-0">
         </div>
         <div class="col-3 offset-2">
-            <select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 " searchable="Search Currency">
-                <option>Currency</option>
-                <option value="dollar" selected>&dollar; USD</option>
-                <option value="shekel">&#8362; NIS</option>
+            <select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 change-currency" 
+                    id="select-currency" searchable="Search Currency">
+                <option value="@AppUtility.CurrencyEnum.USD" selected>&dollar; USD</option>
+                <option value="@AppUtility.CurrencyEnum.NIS">&#8362; NIS</option>
             </select>
             @*</div>
                 <div class="col-1 p-0 monthsHours">*@
 
             @{
-                int[] years = Enumerable.Range(2010, DateTime.Today.Year).ToArray();
+                var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
                 int curYear = Model.CurrentYear;
             }
 
-            @Html.DropDownList("months", years.Select(x =>
+            @Html.DropDownList("select-years", years.Select(x =>
  new SelectListItem
  {
      Text = x.ToString(),
      Value = x.ToString(),
      Selected = (x == curYear)
  }
-), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3", @name = "SelectedYear", @searchable = "Search here.." })
+), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3 change-year", @name = "SelectedYear", @searchable = "Search here.." })
         </div>
 
     </div>
@@ -41,6 +42,8 @@
 <div class="row">
     <div class="col-12" id="summaryTable">
         @{ await Html.RenderPartialAsync("_SummaryTables", Model);}
-        @*@{await Html.RenderPartialAsync("HoursPage", Model); }*@
     </div>
 </div>
+
+<script type="text/javascript">
+</script>

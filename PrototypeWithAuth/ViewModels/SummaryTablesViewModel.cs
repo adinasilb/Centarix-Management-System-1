@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -9,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public int CurrentYear { get; set; }
         public List<SummaryTableItem> SummaryTableItems { get; set; }
+        public AppUtility.CurrencyEnum Currency { get; set; }
     }
 }

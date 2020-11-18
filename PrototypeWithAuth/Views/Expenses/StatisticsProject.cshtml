@@ -1,8 +1,100 @@
-﻿
+﻿@using PrototypeWithAuth.AppData;
+@using PrototypeWithAuth.ViewModels;
+@model List<Project>;
+
 @{
     ViewData["Title"] = "StatisticsProject";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+<script src="~/js/statisticsproject.js"></script>
 
-<h1>StatisticsProject</h1>
+<div class="container-fluid">
+    <div class="row under-row-margin">
+        <div class="col-7 heading-1 p-0">
+        </div>
+        <div class="col-3 offset-2">
+            <select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 change-currency"
+                    id="select-currency" searchable="Search Currency">
+                <option value="@AppUtility.CurrencyEnum.USD" selected>&dollar; USD</option>
+                <option value="@AppUtility.CurrencyEnum.NIS">&#8362; NIS</option>
+            </select>
+            @*</div>
+                <div class="col-1 p-0 monthsHours">*@
+
+            @{
+                var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
+                int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
+            }
+
+            @Html.DropDownList("select-years", years.Select(x =>
+ new SelectListItem
+ {
+     Text = x.ToString(),
+     Value = x.ToString(),
+     Selected = (x == curYear)
+ }
+), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3 change-year", @name = "SelectedYear", @searchable = "Search here.." })
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-6 px-0">
+            <table class="table table-sm table-hover ">
+                <thead>
+                    <tr class="text-left">
+                        <th class="under-td-padding pl-5">
+                            Name
+                        </th>
+                        <th class="under-td-padding pl-3">
+                            Orders
+                        </th>
+                        <th class="under-td-padding pl-3">
+                            Items
+                        </th>
+                        <th class="under-td-padding pl-5">
+                            Price
+                        </th>
+                        <th class="under-td-padding pl-3"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in Model)
+                    {
+                        var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-project-button";
+                        <tr class="location-index-border text-left">
+                            <td class="p-0">
+                                <button class="@buttonClasses" value="@project.ProjectID">
+                                    @project.ProjectDescription
+                                </button>
+                            </td>
+                            <td class="p-0">
+                                <button class="@buttonClasses" value="@project.ProjectID">
+                                    @project.SubProjects.Sum(sp => sp.Requests.Count())
+                                </button>
+                            </td>
+                            <td class="p-0">
+                                <button class="@buttonClasses" value="@project.ProjectID">
+                                    @project.SubProjects.SelectMany(sp => sp.Requests.Select(r => r.ProductID)).Distinct().Count()
+                                </button>
+                            </td>
+                            <td class="p-0">
+                                <button class="@buttonClasses" value="@project.ProjectID">
+                                    &#8362; @string.Format("{0:n0}", Convert.ToInt32(@project.SubProjects.Sum(sp => sp.Requests.Sum(r => r.Cost))))
+                                </button>
+                            </td>
+                            <td class="p-0">
+                                <button class="@buttonClasses" value="@project.ProjectID">
+                                    <i class="icon-back-24px ml-3 large-icon float-right"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-6 subprojects-table px-0">
+
+        </div>
+    </div>
+</div>
 

@@ -1,5 +1,11 @@
 ﻿
 $(function () {
+	$("body").off('click').on("click", ".upload-image", function (e) {
+		console.log("in upload image");
+		$.fn.CallModal2("/Admin/UserImageModal");
+	});
+
+
 	$("#NewEmployee_DOB").on("change", function () {
 		var age = 0;
 		console.log("age: " + age);
