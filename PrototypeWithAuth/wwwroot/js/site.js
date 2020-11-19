@@ -2550,6 +2550,19 @@ $(function () {
 		$('#addSupplierComment').popover('toggle');
 
 	});
+	$("#home-btn").click(function () {
+		$('[data-toggle="popover"]').popover('dispose');
+		$("#home-btn").popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#home-content').html();
+			}
+		});
+		$("#home-btn").popover('toggle');
+
+	});
 	$("#addRequestComment").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');
 		$('#addRequestComment').popover({

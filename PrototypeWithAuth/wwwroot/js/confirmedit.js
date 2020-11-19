@@ -42,9 +42,7 @@
 			type: 'POST',
 			cache: true,
 			success: function (data) {
-				alert("save edit successful!")
-				//open the confirm edit modal
-
+				$.fn.getMenuItems();
 			}
 		});
 		$.fn.TurnToDetails();

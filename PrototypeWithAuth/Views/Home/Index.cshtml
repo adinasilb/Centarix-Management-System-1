@@ -16,47 +16,47 @@
     <h2>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h2>
     <div class="container col-md-12" style="min-width:560px">
         <div class="row mt-5 mb-2">
-
-            @for (int i = 0; i < Model.Count() / 2; i++)
-            {
-                if (i > 0 && i % 8 == 0)
+            @{ var offset1 = "offset-";
+                var offset2 = "offset-";
+                int indexToBreakNextLine = Model.Count();
+                if (Model.Count() % 2 == 0 && Model.Count() > 5)
                 {
-                @:</div><div class="d-flex mt-5">
+                    indexToBreakNextLine = Model.Count() / 2;
+                    offset1 += (5 - (indexToBreakNextLine - 1));
+                    offset2 += (5 - (indexToBreakNextLine - 1));
                 }
-                if (i == 0)
+                else if (Model.Count() <= 5)
                 {
-                    <div class="px-2 pt-2 offset-1 col-2 module-button-div">
-                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
-                    </div>
+                    offset1 += (5 - Model.Count()+1);
                 }
                 else
                 {
-                    <div class="px-2 pt-2 col-2 module-button-div">
-                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
-                    </div>
+                    indexToBreakNextLine = (Model.Count()+1)/2;
+                    offset1 += (5 - (indexToBreakNextLine - 1));
+                    offset2 += (5 - (Model.Count()-indexToBreakNextLine - 1));
                 }
-
-
             }
-        </div>
-        <div class="row mt-4">
 
-            @for (int i = Model.Count() / 2; i < Model.Count(); i++)
+            @for (int i = 0; i < Model.Count(); i++)
             {
-                if (i > 0 && i + 1 % 8 == 0)
+
+
+                if (0 == i)
                 {
-                @:</div><div class="d-flex mt-3">
+                    <div class="px-2 pt-2 @offset1 col-2 module-button-div text-center d-inline-block">
+                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new { })"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    </div>
                 }
-                if (i == 5)
+                else if (i==indexToBreakNextLine)
                 {
-                    <div class="px-2 pt-2 offset-1 col-2 module-button-div">
-                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    <div class="px-2 pt-2 @offset2 col-2 module-button-div text-center d-inline-block">
+                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new { })"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
                     </div>
                 }
                 else
                 {
-                    <div class="px-2 pt-2 col-2 module-button-div">
-                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    <div class="px-2 pt-2  col-2 module-button-div text-center d-inline-block">
+                        <a class="module-button bold-hover-effects" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new { })"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
                     </div>
                 }
 

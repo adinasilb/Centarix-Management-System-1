@@ -136,7 +136,6 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     {
                         //await _signInManager.SignOutAsync();
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        code = HttpUtility.UrlEncode(code);
                         return RedirectToPage("./ResetPassword", new { code = code, userId = user.Id });
                     }
                     else if (user.IsSuspended)

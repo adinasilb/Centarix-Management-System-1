@@ -79,7 +79,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 Input = new InputModel
                 {
                     Email = user.Email,
-                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
+                    Code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)),
                     AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey)
                 };
                 return Page();
@@ -103,7 +103,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
            ;
 
 
-            var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
+            var result = await _userManager.ResetPasswordAsync(user, Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Input.Code)), Input.Password);
             if (result.Succeeded)
             {
                 var verificationCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);

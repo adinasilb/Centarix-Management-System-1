@@ -13,8 +13,6 @@ using Chart.Mvc.Core.SimpleChart;
 using System.Drawing;
 using PrototypeWithAuth.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Microsoft.CodeAnalysis;
 
 namespace PrototypeWithAuth.Controllers

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -11,17 +10,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-//using OpenCvSharp;
-using WebcamCapturer.Core;
-using WebcamCapturer.Controls;
-using WebcamCapturer;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
-using SQLitePCL;
-using WebcamCapturer.Controls.WPF;
-using OpenCvSharp;
+
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -41,104 +34,50 @@ namespace PrototypeWithAuth.Controllers
             _urlEncoder = urlEncoder;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ResetPassword(string errorMsg = "")
+        public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
-            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-            if (string.IsNullOrEmpty(unformattedKey))
+            var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
+
+            if (user.LastLogin.Date < DateTime.Today)
             {
-                await _userManager.ResetAuthenticatorKeyAsync(user);
-                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-            }
-
-            var email = user.Email;
-
-            ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel()
-            {
-                User = user,
-                ErrorMessage = errorMsg,
-                AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey),
-                TwoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel()
-            };
-            return View("ResetPassword", resetPasswordViewModel);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
-        {
-            var user = _context.Users.Where(u => u.Id == resetPasswordViewModel.User.Id).FirstOrDefault();
-            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordViewModel.Password);
-            if (passwordChangeResult.Succeeded)
-            {
-                var verificationCode = resetPasswordViewModel.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
-
-                var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                    user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
-
-                if (!is2faTokenValid)
-                {
-                    var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-                    resetPasswordViewModel.ErrorMessage = "Invalid Authentication Code";
-                    resetPasswordViewModel.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
-                    return View(resetPasswordViewModel);
-                }
-                user.NeedsToResetPassword = false;
+                fillInOrderLate(user);
+                fillInTimekeeperMissingDays(user);
+                fillInTimekeeperNotifications(user);
+                user.LastLogin = DateTime.Now;
                 _context.Update(user);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Index");
+                _context.SaveChanges();
+            }
+            var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+            IEnumerable<Menu> menu = null;
+            if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
+            {
+                menu = _context.Menus.Select(x => x);
             }
             else
             {
-                return RedirectToAction("ResetPassword", passwordChangeResult.ToString());
+                menu = _context.Menus.Where(m => rolesList.Contains(m.MenuDescription));
             }
-        }
-        public IActionResult Index()
-        {
-            var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
 
-            //Adina added in 3 lines
-            if (User.IsInRole("Admin"))
-            {
-                return RedirectToAction("IndexAdmin");
-            }
-            if (user.LastLogin.Date < DateTime.Today)
-            {
-                fillInOrderLate(user);
-                fillInTimekeeperMissingDays(user);
-                fillInTimekeeperNotifications(user);
-                user.LastLogin = DateTime.Now;
-                _context.Update(user);
-                _context.SaveChanges();
-            }
-            IEnumerable<Menu> menu = _context.Menus.Select(x => x);
 
             return View(menu);
         }
-
-        //Adina added in
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> IndexAdmin()
+        public async Task<IActionResult> _MenuButtons()
         {
-            var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
-            if (user.LastLogin.Date < DateTime.Today)
+            var user = await _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefaultAsync();
+            var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+            IEnumerable<Menu> menu = null;
+            if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
             {
-                fillInOrderLate(user);
-                fillInTimekeeperMissingDays(user);
-                fillInTimekeeperNotifications(user);
-                user.LastLogin = DateTime.Now;
-                _context.Update(user);
-                _context.SaveChanges();
+                menu = _context.Menus.Select(x => x);
             }
-            IEnumerable<Menu> menu = _context.Menus.Select(x => x);
+            else
+            {
+                menu = _context.Menus.Where(m=> rolesList.Contains(m.MenuDescription));
+            }
 
-            
-
-            return View(menu);
+            return PartialView(menu);
         }
+        
 
         public IActionResult Privacy()
         {

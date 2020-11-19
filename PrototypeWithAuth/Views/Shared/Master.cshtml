@@ -326,6 +326,7 @@
             }
             $.fn.GetNotifcationCount();
             $.fn.GetNotifications();
+            $.fn.getMenuItems();
 
         });
 
@@ -804,6 +805,20 @@
             return false;
         };
 
+
+        $.fn.getMenuItems = function () {
+            alert("get menu items")
+            $.ajax({
+                async: true,
+                url: '/Home/_MenuButtons',
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    $('#home-content').html(data);
+
+                }
+            });
+        }
 
         $.fn.CallPageUser = function ($itemurl) {
             //delete existing modals
