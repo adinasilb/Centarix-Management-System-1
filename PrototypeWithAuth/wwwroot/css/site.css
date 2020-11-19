@@ -1664,11 +1664,47 @@ td .btn {
 .modal.on-form-modal {
     margin-top: 0rem !important;
 }
-
-.on-form-modal-border {
-    border: .031rem solid #DCDCDC;
+.order-inv-form .on-form-modal-border {
+    border: 0.125rem solid var(--order-inv-color);
+}
+.order-inv-form .new-modal-header:not(.modal-line-1-header-with-back) {
+    border-bottom: 0.125rem solid var(--order-inv-color) !important;
+}
+.oper-form .on-form-modal-border {
+    border: 0.125rem solid var(--operations-color);
 }
 
+.oper-form .new-modal-header:not(.modal-line-1-header-with-back) {
+    border-bottom: 0.125rem solid var(--operations-color) !important;
+}
+.accounting-form .on-form-modal-border {
+    border: 0.125rem solid var(--acc-color);
+}
+
+.accounting-form .new-modal-header:not(.modal-line-1-header-with-back) {
+    border-bottom: 0.125rem solid var(--acc-color) !important;
+}
+.users-form .on-form-modal-border {
+    border: 0.125rem solid var(--user-color);
+}
+.on-form-modal-border {
+    border-radius: 1.25rem;
+}
+.users-form .new-modal-header:not(.modal-line-1-header-with-back) {
+    border-bottom: 0.125rem solid var(--user-color) !important;
+}
+.new-modal-header.modal-line-1-header-with-back {
+    border-bottom: 0.125rem solid #DCDCDC !important;
+    padding-bottom: 0px !important;
+}
+
+.supplier-form .on-form-modal-border {
+    border: .031rem solid var(--lab-man-color);
+}
+
+.supplier-form .new-modal-header:not(.modal-line-1-header-with-back) {
+    border-bottom: .031rem solid var(--lab-man-color) !important;
+}
 .modal-line-1-header {
     padding-top: 3.75rem;
 }
@@ -2217,10 +2253,13 @@ span.caret {
     padding-bottom: 3.4375rem;
     padding-right: 3.6875rem !important;
     padding-left: 3.6875rem !important;
+    box-shadow: none !important;
+        border:none !important;
 }
 .edit-modal-outer-body {
-    padding: 1.25rem;
-    background: #F6F7F8;
+   /* padding: 1.25rem;
+    background: #F6F7F8;*/
+   background-color:white !important;
 }
 .custom-control [type=checkbox]:checked + label:before {
     border-right: 0px !important;
