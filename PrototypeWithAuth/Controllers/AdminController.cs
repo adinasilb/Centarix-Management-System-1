@@ -503,7 +503,6 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin , Users")]
         public async Task<IActionResult> EditUser(RegisterUserViewModel registerUserViewModel)
         {
-
             try
             {
                 Employee userEditted = userEditted = await _context.Employees.Where(u => u.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();

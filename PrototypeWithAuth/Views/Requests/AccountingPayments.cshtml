@@ -34,7 +34,7 @@
                                 var vendorsCount = Model.Requests.Count();
                                 for (int x = 0; x < vendorsCount; x++)
                                 {
-                                    totalCost += Model.Requests.ElementAt(x).Select(r=>r.Cost).Sum(c=>c);
+                                    totalCost += Model.Requests.ElementAt(x).Select(r => r.Cost).Sum(c => c);
                                 }
                             }
 
@@ -136,38 +136,41 @@
                                         <i class="icon-monetization_on-24px green-overlay px-1" style="font-size:1.6rem;"></i>
                                     </a>
                                 </div>
-                        
+
                                 <div class="table-icon-div">
                                     <a href="" class="p-0 m-0">
                                         <i class="icon-favorite_border-24px accounting-filter px-1" style="font-size:1.6rem;"></i>
                                     </a>
                                 </div>
-                            @*<a href="">
-            <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
-                                
-        </a>*@
+                                @*<a href="">
+                                        <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i>
+
+                                    </a>*@
                                 @{ String popoverID = Request.RequestID + "more";}
 
-                            <div class="table-icon-div">
-                                <ul class="list-unstyled p-0 m-0">
-                                    <li><button href="#"  type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@popoverID"><i class="icon-more_vert-24px px-1" style="font-size:1.6rem;"></i></button></li>
+                                <div class="table-icon-div">
+                                    <ul class="list-unstyled p-0 m-0">
+                                        <li>
+                                            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@popoverID">
+                                                <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;">
+                                                </i>
+                                            </button>
+                                        </li>
+                                        <div style="display:none;" id="@popoverID">
+                                            @{ var links = AppUtility.GetPaymentsPopoverLinks(Model.AccountingPaymentsEnum.ToString());}
+                                            @foreach (var link in links)
+                                            {
+                                                <div class="row px-3 accounting-popover">
+                                                    <a asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation" asp-route-requestID="@Request.RequestID" asp-route-newStatus="@link.Description" class="btn-link text no-hover"><i class="@link.Icon " style="color:@link.Color"></i><label class="m-2">@link.Description.ToString() </label></a>
+                                                </div>
+                                                <hr class="m-0" />
+                                            }
 
-                                    <div style="display:none;" id="@popoverID" >
-                                        @{ var links = AppUtility.GetPaymentsPopoverLinks(Model.AccountingPaymentsEnum.ToString());}
-                                        @foreach (var link in links)
-                                        {
-                                            <div class="row px-3 accounting-popover">
-                                                <a  asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation"  asp-route-requestID="@Request.RequestID" asp-route-newStatus="@link.Description" class="btn-link text no-hover"><i class="@link.Icon " style="color:@link.Color"></i><label class="m-2">@link.Description.ToString() </label></a>
-</div>
-                                           
-                                            <hr class="m-0" />
-                                        }
+                                        </div>
 
-                                    </div>
-
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
-                      </div>
                         </td>
                     </tr>
                 }
