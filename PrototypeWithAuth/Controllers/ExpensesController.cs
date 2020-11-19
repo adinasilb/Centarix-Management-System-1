@@ -62,7 +62,7 @@ namespace PrototypeWithAuth.Controllers
             bool isDollars = false;
             var colors = AppUtility.GetChartColors();
             var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6);
-            IEnumerable<Request> requestList = null;
+            IEnumerable<Models.Request> requestList = null;
             if (summaryChartsViewModel.SelectedYears == null)
             {
                 requests.Where(r => r.CreationDate.Year == DateTime.Now.Year);

@@ -221,6 +221,11 @@ i.fas {
     border-bottom: 2px solid black !important;
 }
 
+[type=checkbox].filled-in:checked + label:before {
+    border-right: 2px solid white !important;
+    border-bottom: 2px solid white !important;
+}
+
 .white-background::before {
     background-color: white !important;
 }
@@ -338,9 +343,13 @@ center-horizontally {
     padding: 0 !important;
 }
 
-.clicked-border {
+.clicked-border-acc {
     /*border-color: #A56FF1 !important;*/ /*invert(46%) sepia(76%) saturate(601%) hue-rotate(220deg) brightness(98%) contrast(93%);*/
-    border: 2px double #A56FF1 !important;
+    border: 2px double var(--acc-color) !important;
+}
+
+.clicked-border-orders-inv {
+    border: 2px double var(--order-inv-color) !important;
 }
 
 .carousel.vertical .item {
@@ -894,6 +903,13 @@ ul li.lab-man-sidebar.active {
     background-color: rgba(0, 0, 0, 0.075);
 }
 
+.table .btn{
+    text-align: left !important;
+}
+
+/*.table tbody td{
+    margin-left: 1rem;
+}*/
 
 
 /*table CSS*/
@@ -935,9 +951,9 @@ table.table tbody tr {
     border: 2px solid #ebebeb;
 }
 
-table.table td {
+table.table td, table.table th {
     vertical-align: middle;
-    margin-right: 20px;
+    margin-right: .9375rem;
 }
 
 .vendor-list-item {
@@ -2283,5 +2299,11 @@ input[type=text].error, input[type=number].error {
 
 a {
     text-decoration: none !important;
+}
+
+.form-check-input[type="checkbox"].fci-oi.filled-in:checked + label:after,
+label.btn input[type="checkbox"].fci-oi.filled-in:checked + label:after {
+    border: 2px solid var(--order-inv-color);
+    background-color: var(--order-inv-color);
 }
 
