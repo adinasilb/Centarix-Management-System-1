@@ -49,19 +49,24 @@ namespace PrototypeWithAuth.Controllers
             //CreateSingleRole();
         }
 
+
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Admin , Users")]
         public IActionResult Index()
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersList;
+
+            ViewBag.ErrorMessage = ViewBag.ErrorMessage;
+
             List<Employee> users = new List<Employee>();
             users = _context.Employees
-                .Where(u => !u.IsSuspended) //instead of using lockout use bool so needstoreset password will be shown
+                //.Where(u => !u.IsSuspended) //instead of using lockout use bool so needstoreset password will be shown
                 //.Where(u => u.NeedsToResetPassword? !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
-                .OrderBy(u => u.UserNum)
+                //.OrderBy(u => u.UserNum)
                 .ToList();
+            var UsersList = _context.Users.ToList();
             bool IsCEO = false;
             if (User.IsInRole("CEO"))
             {
@@ -480,6 +485,14 @@ namespace PrototypeWithAuth.Controllers
                 //    }
                 //}
 
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "User Failed to add. Please try again.";
+                foreach (var e in result.Errors)
+                {
+                    ViewBag.ErrorMessage += "/n " + e;
+                }
             }
             return RedirectToAction("Index");
         }

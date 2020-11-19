@@ -234,7 +234,7 @@
                 <span style="@styleClass">
                     <a class="navbar-brand home-nav-item" asp-area="" asp-controller="Home" asp-action="Index">
                         <img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" />
-                    </a> 
+                    </a>
                 </span>
 
                 <div class="collapse navbar-collapse">
@@ -243,7 +243,7 @@
                         @foreach (var MenuItem in MainMenuItems)
                         {
                             <li class="nav-item " style="margin-right: 4.375rem;">
-                                @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes+" top-menu", @id = MenuItem.ID })
+                                @Html.ActionLink(MenuItem.Description, MenuItem.Action, MenuItem.Controller, MenuItem.RouteValues, new { @class = MenuItem.Classes + " top-menu", @id = MenuItem.ID })
                             </li>
                         }
                     </ul>
@@ -267,16 +267,16 @@
                                     <span class="text">
                                         @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName &nbsp;
                                     </span>
-                                        <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
-                                            @{
-                                                var src = "/UserImages/profile_circle_big.png";
-                                                if (UserManager.GetUserAsync(User).Result.UserImage != null)
-                                                {
-                                                    src = UserManager.GetUserAsync(User).Result.UserImage;
-                                                }
+                                    <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
+                                        @{
+                                            var src = "/UserImages/profile_circle_big.png";
+                                            if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                                            {
+                                                src = UserManager.GetUserAsync(User).Result.UserImage;
                                             }
-                                            <img src="@src" class=" ml-0" alt="default User image" />
-                                        </button>
+                                        }
+                                        <img src="@src" class=" ml-0" alt="default User image" />
+                                    </button>
                                 </div>
                             </div>
                         </li>
@@ -335,7 +335,7 @@
             </div>
             @if (ViewBag.ErrorMessage != null)
             {
-        <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text">Error: @ViewBag.ErrorMessage</span></div><br />
+                <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text">Error: @ViewBag.ErrorMessage</span></div><br />
             }
             <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 render-body ">
                 <!--class="col-md-10 border-left"-->
