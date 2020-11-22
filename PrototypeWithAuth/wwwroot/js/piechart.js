@@ -19,6 +19,7 @@
 			data: formData,
 
 			success: function (data) {
+
 				$('.chartDiv').html(data);
 			},
 			processData: false,

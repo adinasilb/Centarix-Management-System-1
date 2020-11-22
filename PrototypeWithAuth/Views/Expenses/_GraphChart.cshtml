@@ -1,9 +1,11 @@
 ﻿@model PrototypeWithAuth.ViewModels.ChartViewModel
-<canvas id="labelChart" width="400" height="400"></canvas>
+    <div id="labelChart" style="height: 700px; width: 100%;"></div>
+<script type="text/javascript" src="~/lib/canvasjs.min.js"></script>
+
 <script>
 	$(function () {
 //alert("chart function")
-	var ctxP = document.getElementById("labelChart").getContext('2d');
+	@*var ctxP = document.getElementById("labelChart").getContext('2d');
 
 	var myBarChart = new Chart(ctxP, {
 
@@ -65,7 +67,52 @@
 				}
 			}
 		}
-	});
+	});*@
+		var colors = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionColor))')
+        var values = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionValue))')
+		var names = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionName))')
+		  var currency = JSON.parse('@Html.Raw(Json.Serialize(Model.Currency))')
+		var datapoints =[]
+        for (var i = 0, len = values.length; i < len; i++) {
+			datapoints.push({x:i+1, y: values[i], label: names[i] })
+		}
+        CanvasJS.addColorSet("colors",
+            colors);
+
+        var chart = new CanvasJS.Chart("labelChart",
+			{
+				colorSet: "colors",
+                title: {
+
+                },
+                legend: {
+
+				},
+                axisX: {
+                    labelFontSize: 12,
+				},
+                axisY: {
+					labelFontSize: 12,
+					lineThickness: 0,
+                    valueFormatString: currency+"#######.00",
+				},
+
+                data: [
+					{
+
+                        //indexLabelPlacement: "outside",
+                        //indexLabelOrientation: "horizontal",
+						//toolTipContent: "{y} - #percent %",
+                       // indexLabel: "{indexLabel} {y} - #percent %",
+
+                        type: "column",
+                        showInLegend: false,
+
+						dataPoints: datapoints
+                    }
+                ]
+            });
+        chart.render();
 
 })</script>
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +20,6 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-
         public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -60,7 +58,9 @@ namespace PrototypeWithAuth.Controllers
             bool isDollars = false;
             var colors = AppUtility.GetChartColors();
             var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6);
+            string currency = "₪";
             IEnumerable<Request> requestList = null;
+         
             if (summaryChartsViewModel.SelectedYears == null)
             {
                 requests.Where(r => r.CreationDate.Year == DateTime.Now.Year);
@@ -76,8 +76,14 @@ namespace PrototypeWithAuth.Controllers
             if (summaryChartsViewModel.Currency != null && summaryChartsViewModel.Currency.Equals(AppUtility.CurrencyEnum.USD.ToString()))
             {
                 isDollars = true;
+                currency = "$";
             }
-            ChartViewModel pieChartViewModel = new ChartViewModel();
+            ChartViewModel pieChartViewModel = new ChartViewModel ();
+            pieChartViewModel.SectionColor = new List<String>();
+            pieChartViewModel.SectionName = new List<String>();
+            pieChartViewModel.SectionValue = new List<double>();
+            pieChartViewModel.Currency = currency;
+
             if (summaryChartsViewModel.SelectedParentCategories != null)
             {
                 if (summaryChartsViewModel.SelectedProductSubcategories != null)
@@ -95,16 +101,16 @@ namespace PrototypeWithAuth.Controllers
                         double cost = 0;
                         if (isDollars)
                         {
-                            cost = requestList.Sum(r => r.Cost / r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate);
+                            cost = requestList.Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
                         }
                         else
                         {
                             cost = requestList.Sum(r => r.Cost);
                         }
 
-                        pieChartViewModel.SectionName += "\"" + ps.ProductSubcategoryDescription + "\",";
-                        pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
-                        pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                        pieChartViewModel.SectionName.Add( ps.ProductSubcategoryDescription );
+                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        pieChartViewModel.SectionValue.Add(cost);
                         count++;
                     }
                 }
@@ -112,6 +118,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     count = 0;
                     var parentCategories = _context.ParentCategories.Where(pc => summaryChartsViewModel.SelectedParentCategories.Contains(pc.ParentCategoryID));
+           
                     foreach (var pc in parentCategories)
                     {
                         if (count > 18)
@@ -122,16 +129,16 @@ namespace PrototypeWithAuth.Controllers
                         double cost = 0;
                         if (isDollars)
                         {
-                            cost = requestList.Sum(r => r.Cost / r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate);
+                            cost = requestList.Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
                         }
                         else
                         {
                             cost = requestList.Sum(r => r.Cost);
                         }
 
-                        pieChartViewModel.SectionName += "\"" + pc.ParentCategoryDescription + "\",";
-                        pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
-                        pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                        pieChartViewModel.SectionName.Add(pc.ParentCategoryDescription);
+                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        pieChartViewModel.SectionValue.Add(cost);
                         count++;
                     }
                 }
@@ -159,9 +166,9 @@ namespace PrototypeWithAuth.Controllers
                             cost = requestList.Sum(r => r.Cost);
                         }
 
-                        pieChartViewModel.SectionName += "\"" + sp.SubProjectDescription + "\",";
-                        pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
-                        pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                        pieChartViewModel.SectionName.Add(sp.SubProjectDescription);
+                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        pieChartViewModel.SectionValue.Add(cost);
                         count++;
                     }
                 }
@@ -186,9 +193,9 @@ namespace PrototypeWithAuth.Controllers
                             cost = requestList.Sum(r => r.Cost);
                         }
 
-                        pieChartViewModel.SectionName += "\"" + s.ProjectDescription + "\",";
-                        pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
-                        pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                        pieChartViewModel.SectionName.Add(s.ProjectDescription);
+                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        pieChartViewModel.SectionValue.Add(cost);
                         count++;
                     }
                 }
@@ -207,16 +214,16 @@ namespace PrototypeWithAuth.Controllers
                     double cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost / r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate);
+                        cost = requestList.Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
                     }
                     else
                     {
                         cost = requestList.Sum(r => r.Cost);
                     }
 
-                    pieChartViewModel.SectionName += "\"" + e.FirstName + " " + e.LastName + "\",";
-                    pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
-                    pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                    pieChartViewModel.SectionName.Add(e.FirstName + " " + e.LastName);
+                    pieChartViewModel.SectionColor.Add(colors[count]);
+                    pieChartViewModel.SectionValue.Add(cost);
                     count++;
                 }
             }
@@ -234,16 +241,16 @@ namespace PrototypeWithAuth.Controllers
                     double cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost / r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate);
+                        cost = requestList.Sum(r => r.Cost / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
                     }
                     else
                     {
                         cost = requestList.Sum(r => r.Cost);
                     }
 
-                    pieChartViewModel.SectionName += "\"" + c.CategoryTypeDescription + "\",";
-                    pieChartViewModel.SectionColor += "\"" + colors[count] + "\",";
-                    pieChartViewModel.SectionValue += "\"" + cost + "\",";
+                    pieChartViewModel.SectionName.Add( c.CategoryTypeDescription);
+                    pieChartViewModel.SectionColor.Add(colors[count]);
+                    pieChartViewModel.SectionValue.Add(cost);
                     count++;
                 }
             }

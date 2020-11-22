@@ -1,35 +1,13 @@
 ﻿@model PrototypeWithAuth.ViewModels.ChartViewModel
-<canvas id="labelChart" width="400" height="400"></canvas>
+@using System.Text.Json
+<div id="labelChart" style="height: 700px; width: 100%;"></div>
+<script type="text/javascript" src="~/lib/canvasjs.min.js"></script>
+
 <script>
 	$(function () {
-//alert("chart function")
-	var ctxP = document.getElementById("labelChart").getContext('2d');
-
-	var bodyStyles = window.getComputedStyle(document.body);
-	var $orderInvColor = bodyStyles.getPropertyValue("--order-inv-color");
-	var $protocolsColor = bodyStyles.getPropertyValue("--protocol-color");
-	var $operationsColor = bodyStyles.getPropertyValue("--operations-color");
-	var $biomarkersColor = bodyStyles.getPropertyValue("--biomarkers-color");
-	var $timekeeperColor = bodyStyles.getPropertyValue("--timekeeper-color");
-	var $labManageColor = bodyStyles.getPropertyValue("--lab-man-color");
-	var $accountingColor = bodyStyles.getPropertyValue("--acc-color");
-	var $expensesColor = bodyStyles.getPropertyValue("--expense-color");
-	var $incomeColor = bodyStyles.getPropertyValue("--income-color");
-	var $usersColor = bodyStyles.getPropertyValue("--user-color");
-	var $orderInvColorHover = bodyStyles.getPropertyValue("--order-inv-25");
-	var $protocolsColorHover = bodyStyles.getPropertyValue("--protocols-25");
-	var $operationsColorHover = bodyStyles.getPropertyValue("--operations-25");
-	var $biomarkersColorHover = bodyStyles.getPropertyValue("--biomarkers-25");
-	var $timekeeperColorHover = bodyStyles.getPropertyValue("--timekeeper-25");
-	var $labManageColorHover = bodyStyles.getPropertyValue("--lab-man-25");
-	var $accountingColorHover = bodyStyles.getPropertyValue("--accounting-25");
-	var $expensesColorHover = bodyStyles.getPropertyValue("--expenses-25");
-	var $incomeColorHover = bodyStyles.getPropertyValue("--income-25");
-	var $usersColorHover = bodyStyles.getPropertyValue("--users-25");
 
 
-
-	var myPieChart = new Chart(ctxP, {
+	@*var myPieChart = new Chart(ctxP, {
 
 		plugins: [ChartDataLabels],
 		type: 'pie',
@@ -60,11 +38,11 @@
 					display: function (ctx) {
 						//only displays labels with values
 						return ctx.chart.data.datasets[0].data[ctx.dataIndex] != 0;
-                       
+
                     },
 					//anchor: 'end',
 					//clamp: false,
-				
+
 					//align:'end',
 					formatter: (value, ctx) => {
 						var sum = 0;
@@ -93,7 +71,43 @@
 				}
 			}
 		}
-	});
+	});*@
+		var colors = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionColor))')
+        var values = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionValue))')
+		var names = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionName))')
+        var currency = JSON.parse('@Html.Raw(Json.Serialize(Model.Currency))')
+		var datapoints =[]
+        for (var i = 0, len = values.length; i < len; i++) {
+			datapoints.push({ y: values[i], indexLabel: names[i] })
+		}
+        CanvasJS.addColorSet("colors",
+            colors);
+
+        var chart = new CanvasJS.Chart("labelChart",
+			{
+				colorSet: "colors",
+                title: {
+
+                },
+                legend: {
+
+				},
+
+                data: [
+					{
+                        indexLabelFontSize: 12,
+                        indexLabelPlacement: "outside",
+                        indexLabelOrientation: "horizontal",
+						toolTipContent: currency+"{y} - #percent %",
+                        indexLabel: "{indexLabel} {y}%",
+                        type: "pie",
+                        showInLegend: false,
+
+						dataPoints: datapoints
+                    }
+                ]
+            });
+        chart.render();
 
 })</script>
 

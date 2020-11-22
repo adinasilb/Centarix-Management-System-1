@@ -54,7 +54,7 @@
     <link href="~/lib/bootstrap/dist/css/modules/megamenu.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/modules/parallax.min.css" rel="stylesheet" />
 
-    <script src="~/lib/canvasjs.min.js"></script>
+
     <!-- Font Awesome -->
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
                 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/style.css">
@@ -215,6 +215,7 @@
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/toastr.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map-world-mill.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map.js"></script>
+    <script type="text/javascript" src="~/lib/canvasjs.min.js"></script>
 
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -251,7 +252,7 @@
 
             $("#alertCount").hide();
 
-           
+
 
 
             //Try to disable autocomplete on all inputs --> but chrome may ignore it
@@ -363,7 +364,7 @@
 
 
                 }
-       
+
 
             });
         }
@@ -670,7 +671,7 @@
                 //}
             });
         }
-       
+
 
         $.fn.OnOpenModalView = function () {
             $('.mdb-select').materialSelect();
@@ -807,7 +808,7 @@
 
 
         $.fn.getMenuItems = function () {
-            alert("get menu items")
+           // alert("get menu items")
             $.ajax({
                 async: true,
                 url: '/Home/_MenuButtons',

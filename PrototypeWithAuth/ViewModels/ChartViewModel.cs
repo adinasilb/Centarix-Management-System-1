@@ -7,8 +7,9 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class ChartViewModel
     {
-        public String SectionName { get; set; }
-        public String SectionColor { get; set; }
-        public String SectionValue { get; set; }
+        public List<String> SectionName { get; set; }
+        public List<String> SectionColor { get; set; }
+        public List<double> SectionValue { get; set; }
+        public String Currency { get; set; }
     }
 }
