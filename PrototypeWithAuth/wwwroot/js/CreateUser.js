@@ -1,10 +1,11 @@
 ﻿
 $(function () {
-	$("body").off('click').on("click", ".upload-image", function (e) {
-		console.log("in upload image");
-		$.fn.CallModal2("/Admin/UserImageModal");
-	});
 
+	$(".upload-image").off("click").on("click", function (e) {
+		console.log("in upload image 2");
+		$.fn.CallModal2("/Admin/UserImageModal");
+		return false;
+	});
 
 	$("#NewEmployee_DOB").on("change", function () {
 		var age = 0;

@@ -1,13 +1,13 @@
 ﻿@model PrototypeWithAuth.ViewModels.RegisterUserViewModel;
 @using PrototypeWithAuth.AppData;
 
-<script src="~/js/CreateUser.js"></script>
 
 @{
     ViewData["Title"] = "CreateUser";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
+<script src="~/js/CreateUser.js"></script>
 <div class="col-12 create-user mx-auto on-form-modal users-form" style="width: 60%">
     <div class="on-form-modal-border">
         <form action="" id="myForm" method="post" class="usersForm" enctype="multipart/form-data" style="height: 100%; ">
@@ -259,12 +259,12 @@
                                     </div>
                                     <div class="col-6">
                                         @*<label asp-for="ConfirmPassword" class="control-label"></label>
-                        <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6 p-0">*@
+                                                    <input asp-for="ConfirmPassword" class="form-control-plaintext border-bottom" autocomplete="off" readonly />
+                                                    <span asp-validation-for="ConfirmPassword" class="text-danger-centarix"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6 p-0">*@
                                         <label asp-for="SecureAppPass" class="control-label"></label>
                                         <input asp-for="SecureAppPass" class="form-control-plaintext border-bottom" autocomplete="off" />
                                         <span asp-validation-for="SecureAppPass" class="text-danger-centarix"></span>

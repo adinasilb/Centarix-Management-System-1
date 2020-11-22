@@ -903,12 +903,21 @@
             });
         };
 
-        $("table tr .form-check-input").click(function () {
+        $("table tr .form-check-input.fci-acc").click(function () {
             if ($(this).is(':checked')) {
-                $(this).closest("tr").addClass("clicked-border");
+                $(this).closest("tr").addClass("clicked-border-acc");
             }
             else {
-                $(this).closest("tr").removeClass("clicked-border");
+                $(this).closest("tr").removeClass("clicked-border-acc");
+            }
+        });
+
+        $("table tr .form-check-input.fci-oi").click(function () {
+            if ($(this).is(':checked')) {
+                $(this).closest("tr").addClass("clicked-border-orders-inv");
+            }
+            else {
+                $(this).closest("tr").removeClass("clicked-border-orders-inv");
             }
         });
 

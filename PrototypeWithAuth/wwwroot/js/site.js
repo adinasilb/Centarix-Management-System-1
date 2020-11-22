@@ -2314,10 +2314,10 @@ $(function () {
 	});
 	//});
 	/*End Dropdown Menu*/
-	$("body").off('click').on("click", ".upload-image", function (e) {
-		console.log("in upload image");
-		$.fn.CallModal2("/Admin/UserImageModal");
-	});
+	//$("body").off('click').on("click", ".upload-image", function (e) {
+	//	console.log("in upload image");
+	//	$.fn.CallModal2("/Admin/UserImageModal");
+	//});
 
 	//$('.dropdown-menu li').click(function () {
 	//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
