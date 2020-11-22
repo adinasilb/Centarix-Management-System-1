@@ -16,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Microsoft.CodeAnalysis;
+using Project = PrototypeWithAuth.Models.Project;
+using Request = PrototypeWithAuth.Models.Request;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -372,9 +374,55 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsProject.ToString();
 
-            var projects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product).ToList();
+            var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
+                .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
+                .ToList();
 
-            return View(projects);
+            //var MatchingRequests = _context.Requests.Where(r => r.Invoice.InvoiceDate.Month == 9).ToList();
+
+            List<ProjectStatistics> projectStatistics = new List<ProjectStatistics>();
+
+            //This is to ensure that all projects  are passed into the front end even if there aren't any orders for it
+            foreach(var project in AllProjects)
+            {
+                var MonthlyRequestsInProject = project.SubProjects.SelectMany(sp => sp.Requests.Where(r => r.Invoice?.InvoiceDate.Month == 9)).ToList();
+                if (MonthlyRequestsInProject.Any())
+                {
+                    ProjectStatistics ps = new ProjectStatistics()
+                    {
+                        ProjectID = project.ProjectID,
+                        ProjectName = project.ProjectDescription,
+                        Orders = MonthlyRequestsInProject.Count(),
+                        Items = MonthlyRequestsInProject.Select(r => r.ProductID).Distinct().Count(),
+                        Price = Convert.ToInt32(MonthlyRequestsInProject.Sum(r => r.Cost))
+                    };
+                    projectStatistics.Add(ps);
+                }
+                else
+                {
+                    ProjectStatistics ps = new ProjectStatistics()
+                    {
+                        ProjectID = project.ProjectID,
+                        ProjectName = project.ProjectDescription,
+                        Orders = 0,
+                        Items = 0,
+                        Price = 0
+                    };
+                    projectStatistics.Add(ps);
+                }
+            }
+
+                //.Select(p => p.SubProjects.Select(sp => sp.Requests.Where(r => r.Invoice.InvoiceDate.Month == 1).Where(r => r.Invoice.InvoiceDate.Year == 2020).ToList()).Select(p => p.Select(sp => sp.SubProject.Project).ToList()).ToList();
+            var months = new List<int>() { 1 };
+
+            StatisticsProjectViewModel statisticsProjectViewModel = new StatisticsProjectViewModel()
+            {
+                ProjectStatistics = projectStatistics,
+                Months = months,
+                Year = 2020
+            };
+
+            return View(statisticsProjectViewModel);
         }
 
         [HttpGet]
