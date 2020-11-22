@@ -374,18 +374,28 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsProject.ToString();
 
+
             var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
                 .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
                 .ToList();
+
+            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { 9 }, 2020));
+        }
+
+        public static StatisticsProjectViewModel GetStatisticsProjectViewModel(List<Project> AllProjects, List<int> Months, int Year)
+        {
 
             //var MatchingRequests = _context.Requests.Where(r => r.Invoice.InvoiceDate.Month == 9).ToList();
 
             List<ProjectStatistics> projectStatistics = new List<ProjectStatistics>();
 
             //This is to ensure that all projects  are passed into the front end even if there aren't any orders for it
-            foreach(var project in AllProjects)
+            foreach (var project in AllProjects)
             {
-                var MonthlyRequestsInProject = project.SubProjects.SelectMany(sp => sp.Requests.Where(r => r.Invoice?.InvoiceDate.Month == 9)).ToList();
+                var MonthlyRequestsInProject = project.SubProjects.SelectMany(
+                    sp => sp.Requests.Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
+                    .Where(r => r.Invoice?.InvoiceDate.Year == Year)
+                    ).ToList();
                 if (MonthlyRequestsInProject.Any())
                 {
                     ProjectStatistics ps = new ProjectStatistics()
@@ -412,17 +422,14 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-                //.Select(p => p.SubProjects.Select(sp => sp.Requests.Where(r => r.Invoice.InvoiceDate.Month == 1).Where(r => r.Invoice.InvoiceDate.Year == 2020).ToList()).Select(p => p.Select(sp => sp.SubProject.Project).ToList()).ToList();
-            var months = new List<int>() { 1 };
-
             StatisticsProjectViewModel statisticsProjectViewModel = new StatisticsProjectViewModel()
             {
                 ProjectStatistics = projectStatistics,
-                Months = months,
-                Year = 2020
+                Months = Months,
+                Year = Year
             };
 
-            return View(statisticsProjectViewModel);
+            return statisticsProjectViewModel;
         }
 
         [HttpGet]

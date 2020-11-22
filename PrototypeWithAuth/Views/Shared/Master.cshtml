@@ -327,7 +327,24 @@
             $.fn.GetNotifcationCount();
             $.fn.GetNotifications();
 
+            $.fn.ChangeCheckboxesToFilledIn();
+
         });
+
+        $.fn.ChangeCheckboxesToFilledIn = function () {
+            console.log("in change checkboxes to filled in");
+            var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
+            dropdown.addClass("filled-in");
+            //dropdown.addClass("fci-exp");
+            $(".multiple-select-dropdown li span").replaceWith(function () {
+                return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+            });
+
+            //var boolExpenses = false;
+            //if (dropdown.parent("div.select-wrapper").hasClass("expenses")) {
+            //    console.log("expenses checkboxes!")
+            //}
+        };
 
         $.fn.CallPage = function (itemurl, $type) {
             console.log("in call page function");
