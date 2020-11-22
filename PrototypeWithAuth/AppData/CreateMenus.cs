@@ -357,16 +357,16 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 ID = ""
             });
-            if (MainMenu == AppUtility.ExpensesPageTypeEnum.ExpensesWorkers.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Workers",
-                Controller = "Expenses",
-                Action = "WorkersDetails",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                ID = ""
-            });
+            //if (MainMenu == AppUtility.ExpensesPageTypeEnum.ExpensesWorkers.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //MainMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Workers",
+            //    Controller = "Expenses",
+            //    Action = "WorkersDetails",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    ID = ""
+            //});
 
             return MainMenuItems;
         }
