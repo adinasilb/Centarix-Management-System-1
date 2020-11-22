@@ -1612,7 +1612,7 @@ $(function () {
 		//var imgPath = $("#UserImageModal")[0].value;
 		var imgPath = $("#UserImagePath").val();
 		//$(".user-image").html('<img src="~/' + imgPath + '" class="user-image" />');
-		$("#user-image").attr("src", imgPath);
+		$("#user-image").attr("src", "/"+imgPath);
 		$(".userImage i").hide();
 
 		$('.modal.userImageModal').remove();
@@ -2284,7 +2284,7 @@ $(function () {
 		//alert("in multiple");
 		$(this).parents('.dropdown-multiple').find('span:not(.caret)').append($(this).find('label').text());
 	});
-	/*End Dropdown Menu*/
+	/*End Dropdown Menu*/ 
 
 
 	//$('.dropdown-menu li').click(function () {

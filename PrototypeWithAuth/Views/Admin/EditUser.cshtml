@@ -48,7 +48,7 @@
                             <button type="button" class="btn no-box-shadow upload-image-icon upload-image border-0 rounded-circle p-0 m-0 mark-readonly" disabled>
                                 <div class="userImage upload-image btn btn-link no-hover p-0 circular-profile-img circular-profile-img-89 m-0 text-decoration-none">
                                     @{
-                                        var src = "~/images/user-image-placeholder.png";
+                                        var src = "src=" + "/images/user-image-placeholder.png";
                                         var hiddenIcon = "";
                                         if (Model.UserImage != null)
                                         {
@@ -57,7 +57,7 @@
                                         }
 
                                     }
-                                    <i class="icon-face-24px temp-image" style="font-size: 2rem; @hiddenIcon"></i>
+                               
                                     <img id="user-image" @src />
                                 </div>
                             </button>
@@ -109,3 +109,10 @@
         </div>
     </div>
 </div>
+<script>
+    $(".upload-image").off("click").on("click", function (e) {
+        console.log("in upload image 2");
+        $.fn.CallModal2("/Admin/UserImageModal");
+        return false;
+    });
+</script>

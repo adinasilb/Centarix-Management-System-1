@@ -21,7 +21,7 @@
                     <div class="col-2 form-group modal-line-1-header pl-0  d-table">
                         <button type="button" class="btn no-box-shadow upload-image-icon upload-image border-0 rounded-circle p-0 m-0">
                             <div class="userImage upload-image btn btn-link no-hover p-0 circular-profile-img circular-profile-img-89 m-0 text-decoration-none">                              
-                                <img src="~/images/user-image-placeholder.png" />
+                                <img id="user-image" src="~/images/user-image-placeholder.png" />
                             </div>
                         </button>
                     </div>
@@ -638,3 +638,9 @@
         </form>
     </div>
 </div>
+<script>
+    $(".upload-image").off("click").on("click", function (e) {
+        console.log("in upload image 2");
+        $.fn.CallModal2("/Admin/UserImageModal");
+        return false;
+    });</script>
