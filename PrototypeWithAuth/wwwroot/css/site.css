@@ -2340,12 +2340,93 @@ a {
     text-decoration: none !important;
 }
 
-.form-check-input[type="checkbox"].fci-oi.filled-in:checked + label:after,
-label.btn input[type="checkbox"].fci-oi.filled-in:checked + label:after {
+
+/*Checkbox Fill Ins*/
+
+.form-check {
+    padding-left: 0 !important; /*Overridding bootstrap*/
+}
+
+/*Orders & Inventory*/
+.orders-and-inv .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after,
+.order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--order-inv-color);
     background-color: var(--order-inv-color);
 }
 
-.greater-Z-index {
-    z-index: 1034 !important;
+/*Protocols*/
+.protocols .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.protocols label.btn input[type="checkbox"].filled-in:checked + label:after,
+.protocol-form .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.protocol-form label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid var(--protocol-color);
+    background-color: var(--protocol-color);
 }
+
+/*Operations*/
+.oper-form .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.oper-form label.btn input[type="checkbox"].filled-in:checked + label:after,
+.operations .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.operations label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid var(--operations-color);
+    background-color: var(--operations-color);
+}
+
+/*Biomarkers*/
+.bio-form .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.bio-form label.btn input[type="checkbox"].filled-in:checked + label:after,
+.biomarkers .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.biomarkers label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid var(--biomarkers-color);
+    background-color: var(--biomarkers-color);
+}
+
+/*Timekeeper*/
+.timekeeper-form .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after,
+.timekeeper-form label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after,
+.timekeeper .form-check-input[type="checkbox"].fci-time.filled-in:checked + label:after,
+.timekeeper label.btn input[type="checkbox"].fci-time.filled-in:checked + label:after {
+    border: 2px solid var(--timekeeper-color);
+    background-color: var(--timekeeper-color);
+}
+
+/*LabManagements*/
+.supplier-form .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.supplier-form label.btn input[type="checkbox"].filled-in:checked + label:after,
+.labmanage .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.labmanage label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid var(--lab-man-color);
+    background-color: var(--lab-man-color);
+}
+
+/*ACCOUNTING - FIGURE OUT LATER*/
+
+/*Expenses*/
+.expenses .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.expenses label.btn input[type="checkbox"].fci-exp.filled-in:checked + label:after,
+.expenses-form .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.expenses-form label.btn input[type="checkbox"].fci-exp.filled-in:checked + label:after {
+    border: 2px solid var(--expense-color);
+    background-color: var(--expense-color);
+}
+
+/*Income*/
+.income-form .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.income-form label.btn input[type="checkbox"].filled-in:checked + label:after,
+.income .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.income label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid var(--income-color);
+    background-color: var(--income-color);
+}
+
+/*Users*/
+.users-form .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.users-form label.btn input[type="checkbox"].filled-in:checked + label:after,
+.users .form-check-input[type="checkbox"].filled-in:checked + label:after,
+.users label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid var(--user-color);
+    background-color: var(--user-color);
+}
+
