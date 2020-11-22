@@ -272,6 +272,22 @@
             $('#dtBasicExample').DataTable();
             $('.dataTables_length').addClass('bs-select');
             $('.mdb-select').materialSelect();
+            $("input[data-activates='select-options-SelectedMonths']").attr('placeholder', "Month")
+            $("input[data-activates='select-options-SelectedYears']").attr('placeholder', "Year")
+            $("input[data-activates='select-options-SelectedCategoryTypes']").attr('placeholder', "Lab / Operation")
+            $("input[data-activates='select-options-sublist']").attr('placeholder', "Sub Category")
+            $("input[data-activates='select-options-SelectedProjects']").attr('placeholder', "Project")
+            $("input[data-activates='select-options-SelectedSubProjects']").attr('placeholder', "Sub Project")
+            $("input[data-activates='select-options-SelectedEmployees']").attr('placeholder', "Worker")
+            $("input[data-activates='select-options-parentlistMulitple']").attr('placeholder', "Category")
+            $("input[data-activates='select-options-SelectedMonths']").val('')
+            $("input[data-activates='select-options-SelectedYears']").val('')
+            $("input[data-activates='select-options-SelectedCategoryTypes']").val('')
+            $("input[data-activates='select-options-sublist']").val('')
+            $("input[data-activates='select-options-SelectedProjects']").val('')
+            $("input[data-activates='select-options-SelectedSubProjects']").val('')
+            $("input[data-activates='select-options-SelectedEmployees']").val('')
+            $("input[data-activates='select-options-parentlistMulitple']").val('')
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             $('.timekeeper .dropdown-content').removeClass('w-100');
             $('.datepicker').pickadate();
