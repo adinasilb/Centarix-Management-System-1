@@ -6,9 +6,12 @@
 		//set the view:
 		var colorClass = "graduated-table-background-color";
 		var borderLeftClass = "statistics-project-selected";
+		var arrowClass = "expenses-filter";
 		$("tr").removeClass(borderLeftClass);
 		$("button").removeClass(colorClass);
+		$("i").removeClass(arrowClass);
 		$(this).parent().parent().children("td").children("button").addClass(colorClass);
+		$(this).parent().parent().children("td").children(".right-arrow-icon").children("i").addClass(arrowClass)
 		$(this).parent().parent().addClass(borderLeftClass);
 
 		//fill the second div:

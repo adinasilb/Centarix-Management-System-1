@@ -39,58 +39,7 @@
     </div>
     <div class="row">
         <div class="col-6 px-0">
-            <table class="table table-sm table-hover ">
-                <thead>
-                    <tr class="text-left">
-                        <th class="under-td-padding pl-5">
-                            Name
-                        </th>
-                        <th class="under-td-padding pl-3">
-                            Orders
-                        </th>
-                        <th class="under-td-padding pl-3">
-                            Items
-                        </th>
-                        <th class="under-td-padding pl-5">
-                            Price
-                        </th>
-                        <th class="under-td-padding pl-3"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var project in Model)
-                    {
-                        var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-project-button";
-                        <tr class="location-index-border text-left">
-                            <td class="p-0">
-                                <button class="@buttonClasses" value="@project.ProjectID">
-                                    @project.ProjectDescription
-                                </button>
-                            </td>
-                            <td class="p-0">
-                                <button class="@buttonClasses" value="@project.ProjectID">
-                                    @project.SubProjects.Sum(sp => sp.Requests.Count())
-                                </button>
-                            </td>
-                            <td class="p-0">
-                                <button class="@buttonClasses" value="@project.ProjectID">
-                                    @project.SubProjects.SelectMany(sp => sp.Requests.Select(r => r.ProductID)).Distinct().Count()
-                                </button>
-                            </td>
-                            <td class="p-0">
-                                <button class="@buttonClasses" value="@project.ProjectID">
-                                    &#8362; @string.Format("{0:n0}", Convert.ToInt32(@project.SubProjects.Sum(sp => sp.Requests.Sum(r => r.Cost))))
-                                </button>
-                            </td>
-                            <td class="p-0">
-                                <button class="@buttonClasses" value="@project.ProjectID">
-                                    <i class="icon-back-24px ml-3 large-icon float-right"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            @{ await Html.RenderPartialAsync("_StatisticsProjects", Model);}
         </div>
         <div class="col-6 subprojects-table px-0">
 
