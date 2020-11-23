@@ -266,6 +266,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.ApplicationUserID = applicationUserID;
             /*AppUtility.RequestPageTypeEnum*/
             requestIndexViewModel.PageType = PageType;
+            requestIndexViewModel.SectionType = SectionType;
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
             requestIndexViewModel.RequestParentLocationInstanceID = parentLocationInstanceID;

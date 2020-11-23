@@ -689,7 +689,8 @@ namespace PrototypeWithAuth.AppData
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"SectionType", AppUtility.MenuItems.LabManagement }
+                    {"SectionType", AppUtility.MenuItems.LabManagement },
+                    { "PageType", AppUtility.LabManagementSidebarEnum.EquipmentList.ToString() }
                 },
                 IconName = "icon-format_list_bulleted-24px-01",
                 Classes = Classes

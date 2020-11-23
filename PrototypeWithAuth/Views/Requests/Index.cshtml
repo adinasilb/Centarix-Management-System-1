@@ -32,7 +32,7 @@
     string plApplicationUserID = null;
     int plParentLocationInstanceID = 0;
 
-
+    
     if (TempData["TempPageType"] != null)
     {
         pgt = TempData["TempPageType"].ToString();
@@ -49,13 +49,13 @@
     {
         backTextBool = true;
         backText = Model.VendorID.ToString();
-        backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = Model.PageType }).ToString();
+        backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = Model.SectionType }).ToString();
     }
     if (Model.VendorID > 0)
     {
         backTextBool = true;
         backText = Model.VendorID.ToString();
-        backLink = Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType }).ToString();
+        backLink = Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType, SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString();
     }
     if (!string.IsNullOrEmpty(Model.ApplicationUserID))
     {
