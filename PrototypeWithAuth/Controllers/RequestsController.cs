@@ -104,10 +104,20 @@ namespace PrototypeWithAuth.Controllers
             TempData["AmountReceived"] = receivedCount;
             TempData["AmountApproved"] = approvedCount;
 
+            if (SectionType.Equals(AppUtility.MenuItems.LabManagement))
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Equipment;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.EquipmentList;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
+            }
+            else
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
+                TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
+            }
+         
 
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OrdersAndInventorySidebarEnum.LastItem ;
             if (ViewBag.ErrorMessage != null)
             {
                 ViewBag.ErrorMessage = ViewBag.ErrorMessage;
@@ -255,7 +265,7 @@ namespace PrototypeWithAuth.Controllers
             /*string*/
             requestIndexViewModel.ApplicationUserID = applicationUserID;
             /*AppUtility.RequestPageTypeEnum*/
-            requestIndexViewModel.PageType = (int)PageType;
+            requestIndexViewModel.PageType = PageType;
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
             requestIndexViewModel.RequestParentLocationInstanceID = parentLocationInstanceID;
@@ -2507,7 +2517,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
-                return View("Index", onePageOfProducts);
+                 return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
             }
             else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
             {
@@ -2524,7 +2534,7 @@ namespace PrototypeWithAuth.Controllers
                 return RedirectToAction("Index", "Operations", new { vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
             }
 
-            return View("Index", onePageOfProducts);
+            return RedirectToAction("Index", new {pagetype= TempData[AppUtility.TempDataTypes.PageType.ToString()] , vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
 
         }
 

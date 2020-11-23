@@ -28,7 +28,7 @@
  }
 }
 <div class="">
-
+    
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <tbody>
             @*@foreach (var item in Model)*@
@@ -109,20 +109,19 @@
                         @*@Html.DisplayFor(modelItem => item.Cost)*@
                         @{
                             var item = Model.PagedList[itemNum];
-                            string formattedCost = "";
                             var currency = "he-IL";
                             var pricePerUnit = item.PricePerUnit;
                             var cost = item.Cost;
                             var total = item.TotalWithVat;
                             var vat = item.VAT;
-
+                            var exchangeRate = item.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : item.ExchangeRate;
                             if (Model.currency == AppUtility.CurrencyEnum.USD)
                             {
                                 currency = "en-US";
-                                pricePerUnit = item.PricePerUnit / item.ExchangeRate;
-                                cost = item.Cost / item.ExchangeRate;
-                                total = item.TotalWithVat / item.ExchangeRate;
-                                vat = item.VAT / item.ExchangeRate;
+                                pricePerUnit = item.PricePerUnit / exchangeRate;
+                                cost = item.Cost / exchangeRate;
+                                total = item.TotalWithVat / exchangeRate;
+                                vat = item.VAT / exchangeRate;
                             }
                         }
 
