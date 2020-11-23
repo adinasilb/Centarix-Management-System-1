@@ -79,7 +79,7 @@ namespace PrototypeWithAuth.Controllers
             RequestsSearchViewModel? requestsSearchViewModel = null)
         {
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = false }));
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p==AppUtility.PriceSortEnum.Total?true:false }));
 
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
            
@@ -114,6 +114,7 @@ namespace PrototypeWithAuth.Controllers
             }
             var viewmodel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID, PageType, SectionType, requestsSearchViewModel);
             viewmodel.PriceSortEnums = priceSorts;
+            viewmodel.currency = AppUtility.CurrencyEnum.NIS;
             return View(viewmodel);
         }
         private async Task<RequestIndexViewModel> GetIndexViewModel(int page =1, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
@@ -284,13 +285,16 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> _IndexTable(RequestIndexViewModel viewModel, List<String> selectPriceSort)
+        public async Task<IActionResult> _IndexTable(int page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
+            AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.OrdersAndInventory,
+            RequestsSearchViewModel? requestsSearchViewModel = null, List<String> selectedPriceSort =null, AppUtility.CurrencyEnum selectedCurrency = AppUtility.CurrencyEnum.NIS)
         {
-            if(viewModel == null)
-            {
-                viewModel = await GetIndexViewModel(PageType: AppUtility.RequestPageTypeEnum.Request);
-            }
-            viewModel.PriceSortEnumsList = selectPriceSort;
+
+             RequestIndexViewModel viewModel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID,
+            PageType, SectionType ,
+            requestsSearchViewModel);
+            viewModel.currency = selectedCurrency;
+            viewModel.PriceSortEnumsList = selectedPriceSort;
             return PartialView(viewModel);
         }
 

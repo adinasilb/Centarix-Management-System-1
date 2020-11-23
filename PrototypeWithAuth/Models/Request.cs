@@ -101,6 +101,16 @@ namespace PrototypeWithAuth.Models
             private set { _PricePerUnit = value; }
 
         }
+        private double _CostInDollars;
+        public double CostInDollars
+        {
+            get
+            {
+                return Cost / ExchangeRate;
+            }
+            private set { _CostInDollars = value; }
+
+        }
         private double _TotalWithVat;
         public double TotalWithVat
         {

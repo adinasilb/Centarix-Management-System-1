@@ -1461,7 +1461,7 @@ body {
 }
 
 .home-nav-item {
-    padding-left: 2.25rem;
+    margin-left: 2.25rem;
     margin-right:0px !important;
 }
 
@@ -2284,6 +2284,10 @@ span.caret {
 .order-inv-form .custom-control-input:checked ~ .custom-control-label::before {
     border-color: var(--order-inv-color);
     background-color: var(--order-inv-color);
+}
+.plain-form .custom-control-input:checked ~ .custom-control-label::before {
+    border-color: var(--black-87);
+    background-color: var(--black-87);
 }
 .oper-form .custom-control-input:checked ~ .custom-control-label::before {
     border-color: var(--operations-color);

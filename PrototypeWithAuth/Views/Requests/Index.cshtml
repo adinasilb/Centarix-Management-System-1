@@ -1,6 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexViewModel
 @using PrototypeWithAuth.AppData;
-
+@using Newtonsoft.Json;
 @using PrototypeWithAuth.Data;
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
@@ -77,7 +77,7 @@
     int vendorID = Model.VendorID; int subcategoryID = Model.SubCategoryID; string applicationUserID = Model.ApplicationUserID;
 
 
-   
+
 
     //saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
     bool Request = false;
@@ -106,7 +106,7 @@
     string receivedActiveClass = "";
     string approvedActiveClass = "";
     int requestStatusID = 0;
-    bool isEquipment =Model. PageType.Equals(AppUtility.LabManagementPageTypeEnum.Equipment);
+    bool isEquipment = Model.PageType.Equals(AppUtility.LabManagementPageTypeEnum.Equipment);
     if (!search && !isEquipment)
     {
         newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
@@ -177,144 +177,192 @@
         </a>
     </div>
 }
+<form action="" id="requestIndexForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+    @if (TempData[AppUtility.TempDataTypes.PageType.ToString()].Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
+    {
 
-@if (TempData[AppUtility.TempDataTypes.PageType.ToString()].Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
-{
-    <div class="">
-        <div class="item-table">
-            <ul class="pl-0">
-                <li class="list-inline-item active m-0">
-                    <a class="@newActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
-                </li>
-                <li class="list-inline-item m-0">
-                    <a class="@approvedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
+        <div class="">
+            <div class="item-table">
+                <ul class="pl-0">
+                    <li class="list-inline-item active m-0">
+                        <a class="@newActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
+                    </li>
+                    <li class="list-inline-item m-0">
+                        <a class="@approvedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
 
-                </li>
+                    </li>
 
-                <li class="list-inline-item m-0">
-                    <a class="@orderedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
-                </li>
+                    <li class="list-inline-item m-0">
+                        <a class="@orderedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
+                    </li>
 
-                <li class="list-inline-item ">
-                    <a class="@receivedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
-                </li>
-            </ul>
+                    <li class="list-inline-item ">
+                        <a class="@receivedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-}
-<table class="table table-headerspaced table-noheaderlines table-hover ">
-    <thead>
-        <tr class="text-center">
-            @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>*@
-            <th width="7%"></th>
-            <th width="7%"></th>
-            @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductName)</th>*@
-            <th width="15%">Item Name</th>
-            @*<th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>*@
-            <th width="7%">Vendor</th>
-            @if (!Summary)
-            {
-                <th width="9%">
-                    Amount
 
-                </th>
-            }
-
-            @*Placeholder until we insert total*@
-            <th width="10%">
-                @Html.DisplayNameFor(m => m.PagedList[0].Cost)
-                <span class="d-inline-block">
-                    <ul class="list-unstyled p-0 m-0">
-                        <li>
-                            <button id="pricePopover" type="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body" class="btn p-0 m-0 no-box-shadow">
-                                <i class="icon-centarix-icons-17" style="font-size:1.6rem;">
-                                </i>
-                            </button>
-                        </li>
-                        <div style="display:none;" id="priceSortContent" class="">
-                            @for (int i = 0; i < Model.PriceSortEnums.Count; i++)
-                            {
-                                var val = (int)(Model.PriceSortEnums[i].PriceSortEnum);
-                                var id = "PriceSortEnums_" + i + "__Selected";
-                                <div class="custom-control custom-checkbox order-inv-form" onclick="callIndexWithNewFilter(@val, @id)">
-                                    <input type="checkbox" class="custom-control-input priceSort" enum="@Model.PriceSortEnums[i].PriceSortEnum" asp-for="PriceSortEnums[i].Selected" />
-                                    <label class="custom-control-label" asp-for="PriceSortEnums[i].Selected">@Html.DisplayFor(e => Model.PriceSortEnums[i].PriceSortEnum)</label>
-                                </div>
-                            }
-
-                        </div>
-
-                    </ul>
-                </span>
-            </th>
-            @*Later on should have a better location...*@
-            @if (Inventory)
-            {
-                <th> Location </th>
-            }
-            <th width="10%">@Html.DisplayNameFor(m => m.PagedList[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
-            @*<th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>*@
-
-            @if (!Summary)
-            {
-                <th width="10%">Owner</th>
-                if (Model.PagedList[0].RequestStatusID == 2)
+    }
+    <table class="table table-headerspaced table-noheaderlines table-hover ">
+        <thead>
+            <tr class="text-center">
+                @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>*@
+                <th width="7%"></th>
+                <th width="7%"></th>
+                @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductName)</th>*@
+                <th width="15%">Item Name</th>
+                @*<th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>*@
+                <th width="7%">Vendor</th>
+                @if (!Summary)
                 {
                     <th width="9%">
-                        @Html.DisplayNameFor(m => m.PagedList[0].ParentRequest.OrderDate)
+                        Amount
+
                     </th>
                 }
-                else if (Model.PagedList[0].RequestStatusID == 3)
+
+                @*Placeholder until we insert total*@
+                <th width="12%">
+                    @Html.DisplayNameFor(m => m.PagedList[0].Cost)
+                    <span class="d-inline-block">
+                        <ul class="list-unstyled p-0 m-0">
+                            <li>
+                                <button id="pricePopover" type="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body" class="btn p-0 m-0 no-box-shadow text">
+                                    <i class="icon-centarix-icons-17" style="font-size:1.6rem;">
+                                    </i>
+                                </button>
+                            </li>
+                            <div style="display:none;" id="priceSortContent" class="">
+                                @for (int i = 0; i < Model.PriceSortEnums.Count; i++)
+                                {
+                                    var val = (int)(Model.PriceSortEnums[i].PriceSortEnum);
+                                    var id = "PriceSortEnums_" + i + "__Selected";
+                                    <div class="custom-control custom-checkbox plain-form priceFilterDiv" onclick="callIndexWithNewFilter(@val, @id)">
+                                        <input type="checkbox" class="custom-control-input priceSort" enum="@Model.PriceSortEnums[i].PriceSortEnum" asp-for="PriceSortEnums[i].Selected" />
+                                        <label class="custom-control-label text" asp-for="PriceSortEnums[i].Selected">@Html.DisplayFor(e => Model.PriceSortEnums[i].PriceSortEnum)</label>
+                                    </div>
+                                    <hr class="mx-0  my-1" />
+                                }
+
+                            <div class="row mt-2">
+                                <div class="col-5">
+                                    <div class="custom-control custom-radio">
+                                        <input checked="checked"
+                                               id="nis"
+                                               name="currency"
+                                               type="radio"
+                                               value="@AppUtility.CurrencyEnum.NIS"   class="custom-control-input currency">
+                                        <label class="custom-control-label currency radio-button text" for="nis">@AppUtility.CurrencyEnum.NIS.ToString()</label>
+                                    </div>
+
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio">
+                                        <input id="usd"
+                                           name="currency"
+                                           type="radio"
+                                           value="@AppUtility.CurrencyEnum.USD" 
+                                             class="custom-control-input currency">
+                                        <label class="custom-control-label currency radio-button text" for="usd">@AppUtility.CurrencyEnum.USD.ToString()</label>
+                                    </div>                                
+                                </div>
+                            </div>
+                            </div>
+
+                        </ul>
+                    </span>
+                </th>
+                @*Later on should have a better location...*@
+                @if (Inventory)
                 {
-                    <th width="9%">@Html.DisplayNameFor(m => m.PagedList[0].ArrivalDate)</th>
+                    <th> Location </th>
+                }
+                <th width="10%">@Html.DisplayNameFor(m => m.PagedList[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
+                @*<th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>*@
+
+                @if (!Summary)
+                {
+                    <th width="10%">Owner</th>
+                    if (Model.PagedList[0].RequestStatusID == 2)
+                    {
+                        <th width="9%">
+                            @Html.DisplayNameFor(m => m.PagedList[0].ParentRequest.OrderDate)
+                        </th>
+                    }
+                    else if (Model.PagedList[0].RequestStatusID == 3)
+                    {
+                        <th width="9%">@Html.DisplayNameFor(m => m.PagedList[0].ArrivalDate)</th>
+                    }
+                    else
+                    {
+                        <th width="9%">Request Date</th>
+                    }
                 }
                 else
                 {
-                    <th width="9%">Request Date</th>
+                    <th width="9%">Last Ordered</th>
                 }
-            }
-            else
-            {
-                <th width="9%">Last Ordered</th>
-            }
-            <th width="9%"></th>
+                <th width="9%"></th>
 
-        </tr>
-    </thead>
-</table>
-<div class="index-partial">
-    @{
-        await Html.RenderPartialAsync("_IndexTable", Model);
+            </tr>
+        </thead>
+    </table>
+    <div class="index-partial">
+        @{
+            await Html.RenderPartialAsync("_IndexTable", Model);
 
-    }
-</div>
-
+        }
+    </div>
+</form>
 <script>
+    $('body').on('click', '.priceFilterDiv', function (e) { e.preventDefault(); }).click();
+    function callIndexWithNewFilter(val, id) {
+        $(id).attr("checked", !$(id).prop("checked"));   
 
-        function callIndexWithNewFilter(val, id) {
-            $(id).attr('checked', $(id).val());
-            var selectedPriceSort = [];
-            $(".priceSort:checked").each(function (e) {
+        ajaxCallToPartial();
+        return false;
+    }
+    function ajaxCallToPartial() {
+        var selectedPriceSort = [];
+        $(".popover-body .priceSort:checked").each(function (e) {
+            selectedPriceSort.push($(this).attr("enum"));
+        })
+        $.ajax({
+            async: true,
+            url: "/Requests/_IndexTable",
+            data: {
+                page: '@Html.Raw(Model.Page)',
+                RequestStatusID:  '@Html.Raw(Model.RequestStatusID)',
+                subcategoryID:  '@Html.Raw(Model.SubCategoryID)',
+                vendorID : '@Html.Raw(Model.VendorID)',
+                applicationUserID:  '@Html.Raw(Model.ApplicationUserID)',
+                parentLocationInstanceID :  '@Html.Raw(Model.RequestParentLocationInstanceID)',
+                PageType:  '@Html.Raw(Model.PageType)',
+                selectedPriceSort: selectedPriceSort,
+                selectedCurrency: $("input[name='currency']:checked").val()
+            },
+            traditional: true,
+            type: 'GET',
+            cache: true,
+            success: function (data) {
+                $(".index-partial").html(data);
 
-                    selectedPriceSort.push($(this).attr("enum"));
-                })
-         //  alert(selectedPriceSort);
-            $.ajax({
-                async: true,
-                url: "/Requests/_IndexTable",
-                data: {
-                    viewModel: JSON.stringify('@Html.Raw(Model)'),
-                    selectedPriceSort : selectedPriceSort
-                },
-                contentType: 'application/json;',
-                type: 'GET',
-                cache: true,
-                success: function (data) {
-                    $(".index-partial").html(data);
-
-                    return false;
-                }
-            });
-            return false;
+                return true;
             }
+        });
+    }
+    $('body').on('click', "#nis, #usd", function (e) {
+        if ($(this).attr('id') == "nis") {
+            $("#usd").attr("checked", false);
+        }
+        else {
+            $("#nis").attr("checked", false);
+        }
+      
+        $(this).attr("checked", true);
+        ajaxCallToPartial();
+        return false;
+    });
+ 
 </script>

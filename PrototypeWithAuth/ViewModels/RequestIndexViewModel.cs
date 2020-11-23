@@ -12,6 +12,7 @@ namespace PrototypeWithAuth.ViewModels
        public IPagedList<PrototypeWithAuth.Models.Request> PagedList { get; set; }
        public List<PriceSortViewModel> PriceSortEnums { get; set; }
         public List<String> PriceSortEnumsList { get; set; }
+        public AppUtility.CurrencyEnum currency { get; set; }
         public int? Page { get; set; }
         public int RequestStatusID { get; set; }
         public int SubCategoryID { get; set; }
