@@ -159,6 +159,8 @@
     <Compile Remove="Data\Migrations\20200922231856_addedEmployeesIenumerables.Designer.cs" />
     <Compile Remove="Data\Migrations\20201029101427_changedFuullTimeTo8.4Hours.cs" />
     <Compile Remove="Data\Migrations\20201029101427_changedFuullTimeTo8.4Hours.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201123072838_TookAwayVAt.cs" />
+    <Compile Remove="Data\Migrations\20201123072838_TookAwayVAt.Designer.cs" />
   </ItemGroup>
 
 

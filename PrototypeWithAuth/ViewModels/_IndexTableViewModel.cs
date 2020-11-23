@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrototypeWithAuth.AppData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,5 +18,6 @@ namespace PrototypeWithAuth.ViewModels
 
         //column widths: 
         public Dictionary<string, string> ColumnWidths {get; set;}
+        public List<AppUtility.PriceSortEnum> PriceSorts { get; set; }
     }
 }

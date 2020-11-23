@@ -15,6 +15,12 @@ namespace PrototypeWithAuth.AppData
 {
     public static class AppUtility
     {
+        public enum PriceSortEnum {Unit=1, Total=2,
+            [Display(Name = "VAT")] 
+            Vat=3,
+            [Display(Name = "Total + VAT")]
+            TotalVat=4
+        }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }

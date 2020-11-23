@@ -180,6 +180,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
             modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
+            modelBuilder.Entity<Request>().Ignore(e => e.VAT);
+            modelBuilder.Entity<Request>().Ignore(e => e.PricePerUnit);
+            modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Seed();
 

@@ -1,4 +1,4 @@
-﻿@model _IndexTableViewModel
+﻿@model RequestIndexViewModel
 
 @using PrototypeWithAuth.AppData;
 @using PrototypeWithAuth.ViewModels;
@@ -9,100 +9,25 @@
 
 @using X.PagedList.Mvc.Core; @* import this so we get our HTML Helper *@
 @using X.PagedList; @* import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)*@
+@{//saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
+    bool Request = false;
+    bool Inventory = false;
+    bool Summary = false;
 
-    <div class="">
-        <table class="table table-headerspaced table-noheaderlines table-hover ">
-            <thead>
-                <tr class="text-center">
-                    @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>*@
-                    <th></th>
-                    <th></th>
-                    @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductName)</th>*@
-                    <th>Item Name</th>
-                    @*<th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>*@
-                    <th>Vendor</th>
-                    @if (!Model.Summary)
-                    {
-                        <th>
-                            Amount
-                            <span class="float-right">
-                                <ul class="list-unstyled p-0 m-0">
-                                    <li>
-                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="amount">
-                                            <i class="icon-centarix-icons-17" style="font-size:1.6rem;">
-                                            </i>
-                                        </button>
-                                    </li>
-                                    <span style="display:none;" id="amount">
-                                        @*@{ var links = AppUtility.GetPaymentsPopoverLinks(Model.AccountingPaymentsEnum.ToString());}*@
-                                        @*@foreach (var link in links)
-                                        {*@
-                                        <span class="row px-3">
-                                            <a asp-action="" asp-controller="" asp-route-currentStatus="" asp-route-requestID="" asp-route-newStatus="" class="btn-link text no-hover">
-                                            </a>
-                                            <i class=" " style=""></i>
-                                            <label class="m-2">Biggest Unit</label>
-                                        </span>
-                                        <hr class="m-0" />
-                                        <span class="row px-3">
-                                            <a asp-action="" asp-controller="" asp-route-currentStatus="" asp-route-requestID="" asp-route-newStatus="" class="btn-link text no-hover">
-                                            </a>
-                                            <i class=" " style=""></i>
-                                            <label class="m-2">Medium Unit</label>
-                                        </span>
-                                        <hr class="m-0" />
-                                        <span class="row px-3">
-                                            <a asp-action="" asp-controller="" asp-route-currentStatus="" asp-route-requestID="" asp-route-newStatus="" class="btn-link text no-hover">
-                                            </a>
-                                            <i class=" " style=""></i>
-                                            <label class="m-2">Smallest Unit</label>
-                                        </span>
-                                        @*  }*@
-
-                                    </span>
-
-                                </ul>
-                            </span>
-                        </th>
-                    }
-
-                    @*Placeholder until we insert total*@
-                    <th>@Html.DisplayNameFor(m => m.PagedList[0].Cost)</th>
-                    @*Later on should have a better location...*@
-                    @if (Model.Inventory)
-                    {
-                        <th> Location </th>
-                    }
-                    <th>@Html.DisplayNameFor(m => m.PagedList[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
-                    @*<th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>*@
-
-                    @if (!Model.Summary)
-                    {
-                        <th>Owner</th>
-                        if (Model.RequestStatusID == 2)
-                        {
-                            <th>
-                                @Html.DisplayNameFor(m => m.PagedList[0].ParentRequest.OrderDate)
-                            </th>
-                        }
-                        else if (Model.RequestStatusID == 3)
-                        {
-                            <th>@Html.DisplayNameFor(m => m.PagedList[0].ArrivalDate)</th>
-                        }
-                        else
-                        {
-                            <th>Request Date</th>
-                        }
-                    }
-                    else
-                    {
-                        <th>Last Ordered</th>
-                    }
-                    <th></th>
-
-                </tr>
-            </thead>
-        </table>
+    if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
+    {
+        Request = true;
+    }
+    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    {
+        Inventory = true;
+    }
+    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Summary))
+    {
+        Summary = true;
+    }
+ }
+    <div class="">   
 
         <table class="table table-headerspaced table-noheaderlines table-hover ">
             <tbody>
@@ -110,13 +35,13 @@
                 @for (int itemNum = 0; itemNum < Model.PagedList.Count; itemNum++)
                 {
                     <tr class="text-center ">
-                        <td>
+                        <td width="7%">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input fci-oi filled-in" id="@Model.PagedList[itemNum].RequestID">
                                 <label class="form-check-label" for="@Model.PagedList[itemNum].RequestID">@Model.PagedList[itemNum].RequestID</label>
                             </div>
                         </td>
-                        <td>
+                        <td width="7%">
                             @if (Model.PagedList[itemNum].Product.ProductSubcategory.ImageURL != null)
                             {
                                 var imageurl = Model.PagedList[itemNum].Product.ProductSubcategory.ImageURL;
@@ -127,7 +52,7 @@
                                 <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
                             }
                         </td>
-                        @if (Model.Summary)
+                        @if (Summary)
                         {
                             <td width="15%">
                                 <button class="btn p-0 m-0 inv-link-clr load-product-details-summary no-box-shadow" title="Details" value="@Model.PagedList[itemNum].RequestID" data-target="item" href="item">
@@ -145,10 +70,10 @@
                         }
 
 
-                        <td> @Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.Vendor.VendorEnName) </td>
-                        @if (!Model.Summary)
+                        <td width="7%"> @Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.Vendor.VendorEnName) </td>
+                        @if (!Summary)
                         {
-                            <td>
+                            <td width="9%">
                                 <ul style="list-style: none; padding-left:0px;" class="mb-0">
 
                                     @if (Model.PagedList[itemNum].Unit != null)
@@ -180,47 +105,73 @@
                             @*Computed column?*@
                         }
 
-                        <td>
-                            @*@Html.DisplayFor(modelItem => item.Cost)*@
-                            @{
-                                decimal cost = (decimal)Model.PagedList[itemNum].Cost;
-                                string formattedCost = cost.ToString("C02");
-                            }
-                            @formattedCost
-                        </td>
+                    <td width="9%">
+                        @*@Html.DisplayFor(modelItem => item.Cost)*@
+                        @{
+                            var item = Model.PagedList[itemNum];
+                            string formattedCost = "";
+                        }
+                       
+                       @if (Model.PriceSortEnumsList != null)
+                       {
+                           for (int i = 0; i < Model.PriceSortEnumsList.Count; i++)
+                           {
+                               switch (Enum.Parse(typeof(AppUtility.PriceSortEnum), Model.PriceSortEnumsList[i]))
+                               {
+                                   case AppUtility.PriceSortEnum.Unit:
+                                       formattedCost += "\nU: " + item.PricePerUnit.ToString("C02");
+                                       break;
+                                   case AppUtility.PriceSortEnum.Total:
+                                       formattedCost += "\nT: " + item.Cost.ToString("C02");
+                                       break;
+                                   case AppUtility.PriceSortEnum.Vat:
+                                       formattedCost += "\nV: " + item.VAT.ToString("C02");
+                                       break;
+                                   case AppUtility.PriceSortEnum.TotalVat:
+                                       formattedCost += "\nP: " + item.TotalWithVat.ToString("C02");
+                                       break;
+                               }
+                           }
+                       }
+                       else
+                       {
+                           formattedCost = "\nT: " + item.Cost.ToString("C02");
+                       }
+                        @formattedCost
+                    </td>
                         @*Later on should have a better location...*@
-                        @if (Model.Inventory)
+                        @if (Inventory)
                         {
 
-                            <td>
+                            <td width="10%">
                                 @if (Model.PagedList[itemNum].RequestLocationInstances != null)
                                 {
-                                    @Html.DisplayFor(modelItem => Model.PagedList[itemNum].RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName)
+                                                @Html.DisplayFor(modelItem => Model.PagedList[itemNum].RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName)
                                 }
                             </td>
                         }
-                        <td> @Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.ProductSubcategory.ProductSubcategoryDescription) </td>
-                        @if (!Model.Summary)
+                        <td width="10%"> @Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.ProductSubcategory.ProductSubcategoryDescription) </td>
+                        @if (!Summary)
                         {
-                            <td>
+                            <td width="10%">
                                 @Html.DisplayFor(modelItem => Model.PagedList[itemNum].ApplicationUserCreator.FirstName)
                                 @Html.DisplayFor(modelItem => Model.PagedList[itemNum].ApplicationUserCreator.LastName)
                             </td>
                         }
                         @{
-                            if (Model.RequestStatusID == 2 || Model.Summary)
-                            {
-                                <td>@Model.PagedList[itemNum].ParentRequest?.OrderDate.ToString("yyyy-MM-dd")</td>
-                            }
-                            else if (Model.RequestStatusID == 3)
-                            {
-                                <td>@Model.PagedList[itemNum].ArrivalDate.ToString("yyyy-MM-dd")</td>
-                            }
-                            else
-                            {
-                                <td>@Model.PagedList[itemNum].CreationDate.ToString("yyyy-MM-dd")</td>
-                            }
-                        }
+                                            if (Model.RequestStatusID == 2 || Summary)
+                                            {
+                                <td width="9%">@Model.PagedList[itemNum].ParentRequest?.OrderDate.ToString("yyyy-MM-dd")</td>
+                                            }
+                                            else if (Model.RequestStatusID == 3)
+                                            {
+                                <td width="9%">@Model.PagedList[itemNum].ArrivalDate.ToString("yyyy-MM-dd")</td>
+                                            }
+                                            else
+                                            {
+                                <td width="9%">@Model.PagedList[itemNum].CreationDate.ToString("yyyy-MM-dd")</td>
+                                            }
+                                        }
                         <td width="9%">
                             <div class="d-inline-flex">
                                 <div class="table-icon-div">
@@ -261,15 +212,15 @@
                                     }
 
                                 </div>
-                                @if (Model.IsEquipment)
-                                {
+                                @*@if (IsEquipment)
+                            {
                                     <div class="table-icon-div">
                                         <a class="btn p-0 m-0 no-box-shadow" data-title="Create" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
                                             <i style="        font-size: 2rem;
         color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
                                         </a>
                                     </div>
-                                }
+                                }*@
                                 <div class="table-icon-div">
                                     <button class="btn p-0 m-0 load-confirm-delete no-box-shadow" data-title="delete" value="@Model.PagedList[itemNum].RequestID" name="@AppUtility.MenuItems.OrdersAndInventory"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button>
                                 </div>
