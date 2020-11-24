@@ -1064,7 +1064,7 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary()
                 {
                     {"PageType", typePageType },
-                    {"categoryType", AppUtility.CategoryTypeEnum.Operations }
+                    {"categoryType", 2 }
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-face-24px"

@@ -31,16 +31,16 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
 
         [Authorize(Roles = "Admin, Users")]
-        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.CategoryTypeEnum categoryType = AppUtility.CategoryTypeEnum.Lab)
+        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1)
         {
-            TempData["CategoryType"] = categoryType;
-            if (categoryType == AppUtility.CategoryTypeEnum.Lab)
+            TempData["CategoryType"] = categoryType == 1 ? AppUtility.CategoryTypeEnum.Lab:AppUtility.CategoryTypeEnum.Operations ;
+            if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
                 TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Owner;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             }
-            if (categoryType == AppUtility.CategoryTypeEnum.Operations)
+            if (categoryType == 2)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Owner;

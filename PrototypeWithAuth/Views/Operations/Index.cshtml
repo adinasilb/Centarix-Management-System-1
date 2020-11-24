@@ -48,27 +48,27 @@
     <input type="hidden" asp-for="VendorID" />
     <input type="hidden" asp-for="ApplicationUserID" />
     <input type="hidden" asp-for="RequestParentLocationInstanceID" />
-    if (Model.SubCategoryID > 0)
-    {
-        backTextBool = true;
-        backText = Model.VendorID.ToString();
-        backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations , @categoryType=2}).ToString();
-    }
-    if (Model.VendorID > 0)
-    {
-        backTextBool = true;
-        backText = Model.VendorID.ToString();
-        backLink = Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType, SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString();
-    }
-    if (!string.IsNullOrEmpty(Model.ApplicationUserID))
-    {
-        backTextBool = true;
-        backText = Model.ApplicationUserID;
-        backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pgt }).ToString();
-    }
+                if (Model.SubCategoryID > 0)
+                {
+                    backTextBool = true;
+                    backText = Model.VendorID.ToString();
+                    backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations , @categoryType=2}).ToString();
+                }
+                if (Model.VendorID > 0)
+                {
+                    backTextBool = true;
+                    backText = Model.VendorID.ToString();
+                    backLink = Url.ActionLink("Index", "Vendors", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations, @categoryType = 2 }).ToString();
+                }
+                if (!string.IsNullOrEmpty(Model.ApplicationUserID))
+                {
+                    backTextBool = true;
+                    backText = Model.ApplicationUserID;
+                    backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations, @categoryType = 2 }).ToString();
+            }
 
 
-    bool search = false;
+            bool search = false;
     if (TempData["Search"] != null)
     {
         if (TempData["Search"].ToString() == "True")
@@ -281,22 +281,22 @@
                     <th width="10%">Owner</th>
                     if (requestStatusID == 2)
                     {
-                        <th idth="10%">@Html.DisplayNameFor(m => m.PagedList[0].ParentRequest.OrderDate)</th>
+                        <th width="9%">@Html.DisplayNameFor(m => m.PagedList[0].ParentRequest.OrderDate)</th>
                     }
                     else if (requestStatusID == 3)
                     {
-                        <th idth="10%">@Html.DisplayNameFor(m => m.PagedList[0].ArrivalDate)</th>
+                        <th width="9%">@Html.DisplayNameFor(m => m.PagedList[0].ArrivalDate)</th>
                     }
                     else
                     {
-                        <th idth="10%">Request Date</th>
+                        <th width="9%">Request Date</th>
                     }
                 }
                 else
                 {
-                    <th idth="10%">Last Ordered</th>
+                    <th width="9%">Last Ordered</th>
                 }
-                <th width="10%"></th>
+                <th style="width:9%"></th>
             </tr>
         </thead>
     </table>
