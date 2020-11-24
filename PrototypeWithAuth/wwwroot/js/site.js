@@ -46,10 +46,7 @@ $(function () {
 	$("#parentlist").change(function () {
 		$.fn.parentListChange();
 	});
-	$("#parentlistMulitple").keyup(function () {
-		alert("select multiple focus out")
-		$.fn.parentListMultipleChange();
-	});
+
 	$('.modal').on('change', '#parentlist', function () {
 		$.fn.parentListChange();
 	});
@@ -97,23 +94,34 @@ $(function () {
 	};
 	$.fn.parentListMultipleChange = function () {
 		console.log("in parent list");
-		var parentCategoryIds = $("#parentlist").val();
-		console.log("parentcategoryids: " + parentCategoryIds);
+
+		var parentCategoryIds = $("#parentlistMulitple").map(function (i, el) {
+			if ($(el).val() != '') {
+				return $(el).val();
+			}
+		}).get();
 		var url = "/Requests/GetSubCategoryListMultiple";
-		console.log("url: " + url);
+		$.ajax({
+			async: true,
+			url: url,
+			data: { ParentCategoryIds: parentCategoryIds },
+			traditional: true,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				var firstitem1 = '<option value=""> Select Subcategory</option>';
+				$("#sublist").empty();
+				$("#sublist").append(firstitem1);
 
-		$.getJSON(url, { ParentCategoryId: parentCategoryIds }, function (data) {
-			var firstitem1 = '<option value=""> Select Subcategory</option>';
-			$("#sublist").empty();
-			$("#sublist").append(firstitem1);
-
-			$.each(data, function (i, subCategory) {
-				var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
-				$("#sublist").append(newitem1);
-			});
-			$("#sublist").materialSelect();
-			return false;
+				$.each(data, function (i, subCategory) {
+					var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
+					$("#sublist").append(newitem1);
+				});
+				$("#sublist").materialSelect();
+				return false;
+			}
 		});
+	
 	};
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 	$(".Project").change(function () {
@@ -133,7 +141,7 @@ $(function () {
 		console.log("project was changed");
 		var projectId = $(this).val();
 		var url = "/Requests/GetSubProjectList";
-
+		
 		$.getJSON(url, { ProjectID: projectId }, function (data) {
 			var item1 = "<option value=''>Select Sub Project</option>";
 			$("#SubProject").empty();
