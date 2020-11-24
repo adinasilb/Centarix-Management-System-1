@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis;
 using Project = PrototypeWithAuth.Models.Project;
 using Request = PrototypeWithAuth.Models.Request;
+using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -462,12 +463,24 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult StatisticsWorker()
+        public async Task<IActionResult> StatisticsWorker()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsWorker.ToString();
-            return View();
+
+            var employees = await _context.Employees
+                .Include(e => e.RequestsCreated).ThenInclude(r => r.Product).ToListAsync();
+
+            StatisticsWorkerViewModel statisticsWorkerViewModel = new StatisticsWorkerViewModel()
+            {
+                Employees = employees,
+                CategoryTypes = _context.CategoryTypes.ToList(),
+                Months = new List<int> { 1 },
+                Year = 2020
+            };
+
+            return View(statisticsWorkerViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
