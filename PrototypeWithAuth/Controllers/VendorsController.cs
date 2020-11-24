@@ -39,18 +39,18 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: Vendors
         [Authorize(Roles = "Admin, OrdersAndInventory")]
-        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1, AppUtility.MenuItems SectionType = AppUtility.MenuItems.OrdersAndInventory)
+        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             TempData["SectionType"] = SectionType;
             if (categoryType == 1)
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
                 TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
             }
             else
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
                 if (PageType == AppUtility.RequestPageTypeEnum.Request || PageType.ToString() == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
                 {
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations.ToString();

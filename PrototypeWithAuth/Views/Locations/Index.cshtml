@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
     switch (TempData[AppUtility.TempDataTypes.MenuType.ToString()])
     {
-        case AppUtility.MenuItems.OrdersAndInventory:
+        case AppUtility.MenuItems.Requests:
             Layout = "~/Views/Shared/RequestNavView.cshtml";
             break;
         case AppUtility.MenuItems.LabManagement:

@@ -1,4 +1,4 @@
-﻿@model IPagedList<PrototypeWithAuth.Models.Request>
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexViewModel
 @using PrototypeWithAuth.AppData;
 
 @using PrototypeWithAuth.Data;
@@ -19,6 +19,8 @@
     /*
      * BEGIN REMEMBERING DATA
      */
+
+    <input type="hidden" id="section" value="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]" />
     var backTextBool = false;
     string backText = "";
     string backLink = "";
@@ -32,60 +34,39 @@
     string plApplicationUserID = null;
     int plParentLocationInstanceID = 0;
 
+    TempData.Keep(AppUtility.TempDataTypes.PageType.ToString());
 
     if (TempData["TempPageType"] != null)
     {
         pgt = TempData["TempPageType"].ToString();
         TempData["TempPageType"] = TempData["TempPageType"];
     }
-    if (TempData["TempPage"] != null)
+    <input type="hidden" asp-for=" Page" />
+    <input type="hidden" asp-for="RequestStatusID" />
+    <input type="hidden" asp-for="SubCategoryID" />
+    <input type="hidden" asp-for="PageType" />
+    <input type="hidden" asp-for="VendorID" />
+    <input type="hidden" asp-for="ApplicationUserID" />
+    <input type="hidden" asp-for="RequestParentLocationInstanceID" />
+    if (Model.SubCategoryID > 0)
     {
-        TempData["TempPage"] = TempData["TempPage"];
+        backTextBool = true;
+        backText = Model.VendorID.ToString();
+        backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations , @categoryType=2}).ToString();
     }
-    if (TempData["TempRequestStatusID"] != null)
+    if (Model.VendorID > 0)
     {
-        TempData["TempRequestStatusID"] = TempData["TempRequestStatusID"];
+        backTextBool = true;
+        backText = Model.VendorID.ToString();
+        backLink = Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType, SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString();
     }
-    if (TempData["TempSubcategoryID"] != null)
+    if (!string.IsNullOrEmpty(Model.ApplicationUserID))
     {
-        if ((Int32)TempData["TempSubcategoryID"] > 0)
-        {
-            backTextBool = true;
-            backText = TempData["TempSubcategoryID"].ToString();
-            backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = pgt, @categoryType = 2 }).ToString();
-        }
-        TempData["TempSubcategoryID"] = TempData["TempSubcategoryID"];
+        backTextBool = true;
+        backText = Model.ApplicationUserID;
+        backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pgt }).ToString();
     }
-    if (TempData["TempVendorID"] != null)
-    {
-        if ((Int32)TempData["TempVendorID"] > 0)
-        {
-            backTextBool = true;
-            backText = TempData["TempVendorID"].ToString();
-            backLink = Url.ActionLink("Index", "Vendors", new { @PageType = pgt, @categoryType = 2 }).ToString();
-        }
-        TempData["TempVendorID"] = TempData["TempVendorID"];
-    }
-    if (TempData["TempApplicationUserID"] != null)
-    {
-        if (!string.IsNullOrEmpty(TempData["TempApplicationUserID"].ToString()))
-        {
-            backTextBool = true;
-            backText = TempData["TempApplicationUserID"].ToString();
-            backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pgt, @categoryType = AppUtility.CategoryTypeEnum.Operations }).ToString();
-        }
-        TempData["TempApplicationUserID"] = TempData["TempApplicationUserID"];
-    }
-    if (TempData["ParentLocationInstanceID"] != null)
-    {
-        TempData["ParentLocationInstanceID"] = TempData["ParentLocationInstanceID"];
-    }
-    /*RequestsSearchViewModel?
-    TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;*/
-    /*
-     * BEGIN REMEMBERING DATA
-     * follow through on the modals these will be remembered on top
-     */
+
 
     bool search = false;
     if (TempData["Search"] != null)
@@ -96,35 +77,24 @@
         }
     }
 
-    int vendorID = 0; int subcategoryID = 0; string applicationUserID = null;
-    if (TempData["VendorID"] != null)
-    {
-        vendorID = (int)TempData["VendorID"];
-    }
-    else if (TempData["SubcategoryID"] != null)
-    {
-        subcategoryID = (int)TempData["SubcategoryID"];
-    }
-    else if (TempData["ApplicationUserID"] != null)
-    {
-        applicationUserID = TempData["ApplicationUserID"].ToString();
-    }
+    int vendorID = Model.VendorID; int subcategoryID = Model.SubCategoryID; string applicationUserID = Model.ApplicationUserID;
 
-    var PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString();
+
+
 
     //saving the info in a bool so I don't need to retest it against the enum anytime i want to see it in the page
     bool Request = false;
     bool Inventory = false;
     bool Summary = false;
-    if (PageType.Equals(AppUtility.OperationsPageTypeEnum.RequestOperations.ToString()))
+    if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
     {
         Request = true;
     }
-    else if (PageType.Equals(AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString()))
+    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
     {
         Inventory = true;
     }
-    else if (PageType.Equals(AppUtility.RequestPageTypeEnum.Summary.ToString()))
+    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Summary))
     {
         Summary = true;
     }
@@ -138,7 +108,7 @@
     string orderedActiveClass = "";
     string receivedActiveClass = "";
     string approvedActiveClass = "";
-    int requestStatusID = 0;
+    int requestStatusID = Model.RequestStatusID;
     if (!search)
     {
         newButtonText = "New [" + TempData["AmountNew"].ToString() + "]";
@@ -153,8 +123,6 @@
         approvedActiveClass = "new-button  new-oper-button pt-4 ";
 
         //changing the classes for the action links based on the tempdata of request status
-
-        int.TryParse(TempData["RequestStatusID"].ToString(), out requestStatusID);
         switch (requestStatusID)
         {
             case 1:
@@ -210,8 +178,7 @@
         </a>
     </div>
 }
-
-@if (PageType.Equals(AppUtility.OperationsPageTypeEnum.RequestOperations.ToString()) && !search)
+@if (TempData[AppUtility.TempDataTypes.PageType.ToString()].Equals(AppUtility.OperationsPageTypeEnum.RequestOperations.ToString()) && !search)
 {
     <div class="row">
         <div class="">
@@ -236,170 +203,112 @@
     </div>
 }
 
-<div class="">
+@if (Model.PagedList.Count() > 0)
+{
     <table class="table table-headerspaced table-noheaderlines table-hover item-table">
         <thead>
             <tr class="text-center">
+                <th width="7%"></th>
                 @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>*@
-                <th>Item Image</th>
+                <th width="7%"></th>
                 @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductName)</th>*@
-                <th>Item Name</th>
+                <th width="15%">Item Name</th>
                 @*<th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>*@
-                <th>Vendor</th>
+                <th width="7%">Vendor</th>
 
                 @*Placeholder until we insert total*@
-                <th>@Html.DisplayNameFor(m => m[0].Cost)</th>
+                <th width="12%">
+                    @Html.DisplayNameFor(m => m.PagedList[0].Cost)
+                    <span class="d-inline-block">
+                        <ul class="list-unstyled p-0 m-0">
+                            <li>
+                                <button id="pricePopover" type="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body" class="btn p-0 m-0 no-box-shadow text">
+                                    <i class="icon-centarix-icons-17" style="font-size:1.6rem;">
+                                    </i>
+                                </button>
+                            </li>
+                            <div style="display:none;" id="priceSortContent" class="">
+                                @for (int i = 0; i < Model.PriceSortEnums.Count; i++)
+                                {
+                                    var val = (int)(Model.PriceSortEnums[i].PriceSortEnum);
+                                    var id = "PriceSortEnums_" + i + "__Selected";
+                                    <div class="custom-control custom-checkbox plain-form priceFilterDiv" onclick="callIndexWithNewFilter(@val, @id)">
+                                        <input type="checkbox" class="custom-control-input priceSort" enum="@Model.PriceSortEnums[i].PriceSortEnum" asp-for="PriceSortEnums[i].Selected" />
+                                        <label class="custom-control-label text" asp-for="PriceSortEnums[i].Selected">@Html.DisplayFor(e => Model.PriceSortEnums[i].PriceSortEnum)</label>
+                                    </div>
+                                    <hr class="mx-0  my-1" />
+                                }
+
+                                <div class="row mt-2">
+                                    <input type="hidden" id="tempCurrency" value="NIS"/>
+                                    <div class="col-5">
+                                        <div class="custom-control custom-radio">
+                                            <input checked
+                                                   id="nis"
+                                                   name="currency"
+                                                   type="radio"
+                                                   value="@AppUtility.CurrencyEnum.NIS" class="custom-control-input currency nis">
+                                            <label class="custom-control-label currency radio-button text " for="nis">@AppUtility.CurrencyEnum.NIS.ToString()</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="custom-control custom-radio">
+                                            <input id="usd"
+                                                   name="currency"
+                                                   type="radio"
+                                                   value="@AppUtility.CurrencyEnum.USD"
+                                                   class="custom-control-input currency usd">
+                                            <label class="custom-control-label currency radio-button text" for="usd">@AppUtility.CurrencyEnum.USD.ToString()</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </ul>
+                    </span>
+                </th>
                 @*Later on should have a better location...*@
                 @if (Inventory)
                 {
                     <th> Location </th>
                 }
-                <th>@Html.DisplayNameFor(m => m[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
+                <th width="10%">@Html.DisplayNameFor(m => m.PagedList[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
                 @*<th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>*@
 
                 @if (!Summary)
                 {
-                    <th>Owner</th>
+                    <th width="10%">Owner</th>
                     if (requestStatusID == 2)
                     {
-                        <th>@Html.DisplayNameFor(m => m[0].ParentRequest.OrderDate)</th>
+                        <th idth="10%">@Html.DisplayNameFor(m => m.PagedList[0].ParentRequest.OrderDate)</th>
                     }
                     else if (requestStatusID == 3)
                     {
-                        <th>@Html.DisplayNameFor(m => m[0].ArrivalDate)</th>
+                        <th idth="10%">@Html.DisplayNameFor(m => m.PagedList[0].ArrivalDate)</th>
                     }
                     else
                     {
-                        <th>Request Date</th>
+                        <th idth="10%">Request Date</th>
                     }
                 }
                 else
                 {
-                    <th>Last Ordered</th>
+                    <th idth="10%">Last Ordered</th>
                 }
-                <th></th>
-
+                <th width="10%"></th>
             </tr>
         </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr class="text-center ">
-                    <td>
-                        @if (item.Product.ProductSubcategory.ImageURL != null)
-                        {
-                            var imageurl = item.Product.ProductSubcategory.ImageURL;
-                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
-                        }
-                        else
-                        {
-                            <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
-                        }
-                    </td>
-                    @if (Summary)
-                    {
-                        <td> <button class="btn inv-link-clr oper-link-clr load-product-details-summary no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
-                    }
-                    else
-                    {
-                        <td> <button class="btn inv-link-clr oper-link-clr load-product-details operations no-box-shadow" title="Details" value="@item.RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => item.Product.ProductName) </button></td>
-                    }
-
-
-                    <td> @Html.DisplayFor(modelItem => item.Product.Vendor.VendorEnName) </td>
-
-                    <td>
-                        @*@Html.DisplayFor(modelItem => item.Cost)*@
-                        @{
-                            decimal cost = (decimal)item.Cost;
-                            string formattedCost = cost.ToString("C02");
-                        }
-                        @formattedCost
-                    </td>
-                    @*Later on should have a better location...*@
-                    @if (Inventory)
-                    {
-
-                        <td>
-                            @if (item.RequestLocationInstances != null)
-                            {
-                                @Html.DisplayFor(modelItem => item.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceName)
-                            }
-                        </td>
-                    }
-                    <td> @Html.DisplayFor(modelItem => item.Product.ProductSubcategory.ProductSubcategoryDescription) </td>
-                    @if (!Summary)
-                    {
-                        <td> @Html.DisplayFor(modelItem => item.ApplicationUserCreator.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUserCreator.LastName) </td>
-                    }
-                    @{
-                        if (requestStatusID == 2 || Summary)
-                        {
-                            <td>@Html.DisplayFor(m => item.ParentRequest.OrderDate)</td>
-                        }
-                        else if (requestStatusID == 3)
-                        {
-                            <td>@Html.DisplayFor(m => item.ArrivalDate)</td>
-                        }
-                        else
-                        {
-                            <td>@Html.DisplayFor(m => item.CreationDate)</td>
-                        }
-                    }
-                    <td style="width:9%">
-                        <div class="d-inline-flex">
-                            <div class="table-icon-div">
-
-
-                                @if (item.RequestStatusID == 1)
-                                {
-                                    //this is a nested if b/c if user can't approve then i still don't want it to go the the else
-                                    if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
-                                    {
-                                        if (item is Reorder)
-                                        {
-                                            <a class="btn p-0 m-0 no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder",  "Requests", new { id = item.RequestID })">
-                                                <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
-
-                                            <a class="btn p-0 m-0  no-box-shadow" data-title="Approve" href="@Url.Action("Approve", "Requests", new { id = item.RequestID })">
-                                                <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
-                                            </a>
-                                        }
-
-                                    }
-                                }
-
-                                else if (item.RequestStatusID == 2)
-                                {
-                                    <button class="btn p-0 m-0  load-receive-and-location no-box-shadow operations" data-title="receive" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold "></i></button> // receive
-                                }
-                                else if (item.RequestStatusID == 6)
-                                {
-                                    <a class="btn p-0 m-0 no-box-shadow" data-title="Order" href="@Url.Action("Order", "Operations", new { id = item.RequestID })">
-                                        <i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px1 hover-bold"></i>
-                                    </a>
-                                }
-
-                            </div>
-
-                            <div class="table-icon-div">
-                                <button class="btn p-0 m-0 load-confirm-delete no-box-shadow " data-title="delete" value="@item.RequestID" name="@AppUtility.MenuItems.Operation"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button> @*delete*@
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
     </table>
-</div>
-
+    <div class="index-partial">
+        @{
+            await Html.RenderPartialAsync("_IndexTable", Model);
+        }
+    </div>
+}
 <div class="row">
     <div class="col-6 offset-6 text-center">
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        @Html.PagedListPager(Model.PagedList, page => Url.Action("Index", new { page }))
     </div>
 </div>
+<script src="~/js/IndexPartialScript.js"></script>

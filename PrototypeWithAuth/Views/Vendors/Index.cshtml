@@ -5,7 +5,7 @@
     string controller = "";
     ViewData["Title"] = "IndexForPayment";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-    if (TempData["SectionType"].Equals(AppUtility.MenuItems.Operation))
+    if (TempData["SectionType"].Equals(AppUtility.MenuItems.Operations))
     {
         hoverClass = "oper-link-clr";
         controller = "Operations";

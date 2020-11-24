@@ -24,7 +24,7 @@
     string initalClasses = "opac87 align-text-bottom  py-3";
     string currentClasses = " activeNavLink  ";
 
-    if (MenuType == AppUtility.MenuItems.OrdersAndInventory.ToString())
+    if (MenuType == AppUtility.MenuItems.Requests.ToString())
     {
         MainMenuItems = CreateMenus.CreateOrdersAndInventoryMainMenu(pageType, initalClasses, " activeNavLink");
     }
@@ -36,7 +36,7 @@
     {
         MainMenuItems = CreateMenus.CreateAccountingMainMenu(pageType, initalClasses, " text-dark accounting-filter");
     }
-    else if (MenuType == AppUtility.MenuItems.Operation.ToString())
+    else if (MenuType == AppUtility.MenuItems.Operations.ToString())
     {
         MainMenuItems = CreateMenus.CreateOperationsMainMenu(pageType, initalClasses, " text-dark operations-filter");
     }

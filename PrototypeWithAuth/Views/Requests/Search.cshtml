@@ -11,7 +11,7 @@
         form = "supplier-form";
 
     }
-    else if (Model.SectionType == AppUtility.MenuItems.OrdersAndInventory)
+    else if (Model.SectionType == AppUtility.MenuItems.Requests)
     {
 
         form = "order-inv-form";
@@ -102,7 +102,7 @@
                                     </div>
                                 </div>
                                 @{var display = "";}
-                                @if (Model.SectionType == AppUtility.MenuItems.Operation)
+                                @if (Model.SectionType == AppUtility.MenuItems.Operations)
                                 {
                                     display = "d-none";
                                 }

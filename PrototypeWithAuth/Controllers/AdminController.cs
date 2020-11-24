@@ -163,7 +163,7 @@ namespace PrototypeWithAuth.Controllers
 
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {
-                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.OrdersAndInventory, Name="General", Selected=false }
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Requests, Name="General", Selected=false }
             };
             registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>()
             {
@@ -171,7 +171,7 @@ namespace PrototypeWithAuth.Controllers
             };
             registerUserViewModel.OperationRoles = new List<UserRoleViewModel>()
             {
-                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Operation, Name="General", Selected=false }
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Operations, Name="General", Selected=false }
             };
             registerUserViewModel.BiomarkerRoles = new List<UserRoleViewModel>()
             {
@@ -328,7 +328,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (orderRole.Name == "General" && orderRole.Selected == true)
                     {
-                        await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.OrdersAndInventory.ToString());
+                        await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Requests.ToString());
                     }
                 }
                 foreach (var protcolRole in registerUserViewModel.ProtocolRoles)
@@ -342,7 +342,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (operationRole.Name == "General" && operationRole.Selected == true)
                     {
-                        await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Operation.ToString());
+                        await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Operations.ToString());
                     }
                 }
                 foreach (var biomarkerRole in registerUserViewModel.BiomarkerRoles)
@@ -646,13 +646,13 @@ namespace PrototypeWithAuth.Controllers
 
                 var rolesList = await _userManager.GetRolesAsync(userEditted).ConfigureAwait(false);
 
-                if (rolesList.Contains(AppUtility.MenuItems.OrdersAndInventory.ToString()) && !registerUserViewModel.OrderRoles[0].Selected)
+                if (rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && !registerUserViewModel.OrderRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.OrdersAndInventory.ToString());
+                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Requests.ToString());
                 }
-                else if (!rolesList.Contains(AppUtility.MenuItems.OrdersAndInventory.ToString()) && registerUserViewModel.OrderRoles[0].Selected)
+                else if (!rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && registerUserViewModel.OrderRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.OrdersAndInventory.ToString());
+                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Requests.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) && !registerUserViewModel.ProtocolRoles[0].Selected)
@@ -664,13 +664,13 @@ namespace PrototypeWithAuth.Controllers
                     await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Protocols.ToString());
                 }
 
-                if (rolesList.Contains(AppUtility.MenuItems.Operation.ToString()) && !registerUserViewModel.OperationRoles[0].Selected)
+                if (rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && !registerUserViewModel.OperationRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Operation.ToString());
+                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Operations.ToString());
                 }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Operation.ToString()) && registerUserViewModel.OperationRoles[0].Selected)
+                else if (!rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && registerUserViewModel.OperationRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Operation.ToString());
+                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Operations.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) && !registerUserViewModel.BiomarkerRoles[0].Selected)
@@ -939,7 +939,7 @@ namespace PrototypeWithAuth.Controllers
 
                 registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {
-                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.OrdersAndInventory, Name="General", Selected=false }
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Requests, Name="General", Selected=false }
             };
                 registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>()
             {
@@ -947,7 +947,7 @@ namespace PrototypeWithAuth.Controllers
             };
                 registerUserViewModel.OperationRoles = new List<UserRoleViewModel>()
             {
-                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Operation, Name="General", Selected=false }
+                new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Operations, Name="General", Selected=false }
             };
                 registerUserViewModel.BiomarkerRoles = new List<UserRoleViewModel>()
             {
@@ -979,7 +979,7 @@ namespace PrototypeWithAuth.Controllers
             };
                 foreach (var role in rolesList)
                 {
-                    if (role == AppUtility.MenuItems.OrdersAndInventory.ToString()) //this was giving me an error in a switch case
+                    if (role == AppUtility.MenuItems.Requests.ToString()) //this was giving me an error in a switch case
                     {
                         registerUserViewModel.OrderRoles[0].Selected = true;
                     }
@@ -995,7 +995,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         registerUserViewModel.AccountingRoles[0].Selected = true;
                     }
-                    else if (role == AppUtility.MenuItems.Operation.ToString()) //this was giving me an error in a switch case
+                    else if (role == AppUtility.MenuItems.Operations.ToString()) //this was giving me an error in a switch case
                     {
                         registerUserViewModel.OperationRoles[0].Selected = true;
                     }

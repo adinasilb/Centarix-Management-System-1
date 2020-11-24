@@ -37,13 +37,13 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (categoryType == 1)
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
                 TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Type;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             }
             else if (categoryType == 2)
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Type;
                 if (PageType.ToString() == AppUtility.RequestPageTypeEnum.Inventory.ToString())
                 {

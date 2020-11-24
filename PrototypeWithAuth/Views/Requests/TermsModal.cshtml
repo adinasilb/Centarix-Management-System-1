@@ -4,7 +4,7 @@
     Layout = null;
     var bcColor = "order-inv-background-color";
     string form = "";
-    if (Model.SectionType == AppUtility.MenuItems.Operation)
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
@@ -14,7 +14,7 @@
         bcColor = "lab-man-background-color";
         form = "supplier-form";
     }
-    else if (Model.SectionType == AppUtility.MenuItems.OrdersAndInventory)
+    else if (Model.SectionType == AppUtility.MenuItems.Requests)
     {
         bcColor = "order-inv-background-color";
         form = "order-inv-form";

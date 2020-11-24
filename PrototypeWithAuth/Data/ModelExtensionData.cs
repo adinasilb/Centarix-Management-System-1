@@ -814,7 +814,7 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 1,
-                    MenuDescription = AppUtility.MenuItems.OrdersAndInventory.ToString(),
+                    MenuDescription = AppUtility.MenuItems.Requests.ToString(),
                     MenuViewName = "Orders & Inventory",
                     ControllerName = "Requests",
                     ActionName = "Index",
@@ -832,7 +832,7 @@ namespace PrototypeWithAuth.Data
                 new Menu
                 {
                     menuID = 3,
-                    MenuDescription = AppUtility.MenuItems.Operation.ToString(),
+                    MenuDescription = AppUtility.MenuItems.Operations.ToString(),
                     MenuViewName = "Operation",
                     ControllerName = "Operations",
                     ActionName = "Index",

@@ -36,7 +36,7 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Location;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
 
             var locations = _context.LocationInstances
                 .Include(li => li.AllRequestLocationInstances).Where(li => li.LocationInstanceParentID == null).Include(li => li.LocationType);

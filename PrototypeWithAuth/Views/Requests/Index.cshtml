@@ -105,7 +105,7 @@
     string orderedActiveClass = "";
     string receivedActiveClass = "";
     string approvedActiveClass = "";
-    int requestStatusID = 0;
+    int requestStatusID = Model.RequestStatusID;
     bool isEquipment = Model.PageType.Equals(AppUtility.LabManagementPageTypeEnum.Equipment);
     if (!search && !isEquipment)
     {
@@ -168,7 +168,7 @@
             break;
     }
 }
-
+<input type="hidden" id="section" value="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]"/>
 @if (backTextBool)
 {
     <div class="row">
@@ -247,29 +247,30 @@
                                         <hr class="mx-0  my-1" />
                                     }
 
-                                    <div class="row mt-2">
-                                        <div class="col-5">
-                                            <div class="custom-control custom-radio">
-                                                <input checked="checked"
-                                                       id="nis"
-                                                       name="currency"
-                                                       type="radio"
-                                                       value="@AppUtility.CurrencyEnum.NIS" class="custom-control-input currency">
-                                                <label class="custom-control-label currency radio-button text" for="nis">@AppUtility.CurrencyEnum.NIS.ToString()</label>
-                                            </div>
-
+                                <div class="row mt-2">
+                                    <input type="hidden" id="tempCurrency" value="NIS" />
+                                    <div class="col-5">
+                                        <div class="custom-control custom-radio">
+                                            <input checked="checked"
+                                                   id="nis"
+                                                   name="currency"
+                                                   type="radio"
+                                                   value="@AppUtility.CurrencyEnum.NIS" class="custom-control-input currency nis">
+                                            <label class="custom-control-label currency radio-button text" for="nis">@AppUtility.CurrencyEnum.NIS.ToString()</label>
                                         </div>
-                                        <div class="col-4">
-                                            <div class="custom-control custom-radio">
-                                                <input id="usd"
-                                                       name="currency"
-                                                       type="radio"
-                                                       value="@AppUtility.CurrencyEnum.USD"
-                                                       class="custom-control-input currency">
-                                                <label class="custom-control-label currency radio-button text" for="usd">@AppUtility.CurrencyEnum.USD.ToString()</label>
-                                            </div>
+
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="custom-control custom-radio">
+                                            <input id="usd"
+                                                   name="currency"
+                                                   type="radio"
+                                                   value="@AppUtility.CurrencyEnum.USD"
+                                                   class="custom-control-input currency usd">
+                                            <label class="custom-control-label currency radio-button text" for="usd">@AppUtility.CurrencyEnum.USD.ToString()</label>
                                         </div>
                                     </div>
+                                </div>
                                 </div>
 
                             </ul>
@@ -319,54 +320,4 @@
     }
 
 </form>
-<script>
-    $('body').on('click', '.priceFilterDiv', function (e) { e.preventDefault(); }).click();
-    function callIndexWithNewFilter(val, id) {
-        $(id).attr("checked", !$(id).prop("checked"));   
-
-        ajaxCallToPartial();
-        return false;
-    }
-    function ajaxCallToPartial() {
-        var selectedPriceSort = [];
-        $(".popover-body .priceSort:checked").each(function (e) {
-            selectedPriceSort.push($(this).attr("enum"));
-        })
-        $.ajax({
-            async: true,
-            url: "/Requests/_IndexTable",
-            data: {
-                page: '@Html.Raw(Model.Page)',
-                RequestStatusID:  '@Html.Raw(Model.RequestStatusID)',
-                subcategoryID:  '@Html.Raw(Model.SubCategoryID)',
-                vendorID : '@Html.Raw(Model.VendorID)',
-                applicationUserID:  '@Html.Raw(Model.ApplicationUserID)',
-                parentLocationInstanceID :  '@Html.Raw(Model.RequestParentLocationInstanceID)',
-                PageType:  '@Html.Raw(Model.PageType)',
-                selectedPriceSort: selectedPriceSort,
-                selectedCurrency: $("input[name='currency']:checked").val()
-            },
-            traditional: true,
-            type: 'GET',
-            cache: true,
-            success: function (data) {
-                $(".index-partial").html(data);
-
-                return true;
-            }
-        });
-    }
-    $('body').on('click', "#nis, #usd", function (e) {
-        if ($(this).attr('id') == "nis") {
-            $("#usd").attr("checked", false);
-        }
-        else {
-            $("#nis").attr("checked", false);
-        }
-      
-        $(this).attr("checked", true);
-        ajaxCallToPartial();
-        return false;
-    });
- 
-</script>
+<script src="~/js/IndexPartialScript.js"></script>

@@ -38,11 +38,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
                 TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Owner;
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.OrdersAndInventory;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             }
             if (categoryType == AppUtility.CategoryTypeEnum.Operations)
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operation;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Owner;
                 if (PageType == AppUtility.RequestPageTypeEnum.Request || PageType.ToString() == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
                 {

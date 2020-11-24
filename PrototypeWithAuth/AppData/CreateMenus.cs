@@ -49,7 +49,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Search",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"SectionType", AppUtility.MenuItems.OrdersAndInventory }
+                    {"SectionType", AppUtility.MenuItems.Requests }
                 },
                 Classes = AllClasses,
                 ID = "search-link"
@@ -62,7 +62,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"SectionType", AppUtility.MenuItems.OrdersAndInventory }
+                    {"SectionType", AppUtility.MenuItems.Requests }
                 },
                 Classes = AllClasses,
                 ID = "location-link"
@@ -257,7 +257,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Search",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"SectionType", AppUtility.MenuItems.Operation.ToString() }
+                    {"SectionType", AppUtility.MenuItems.Operations.ToString() }
                 },
                 Classes = CurrentClasses,
                 ID = "search-link"
@@ -428,7 +428,7 @@ namespace PrototypeWithAuth.AppData
                 {
                     { "PageType", pageType },
                     { "CategoryType", categoryType },
-                    { "SectionType", AppUtility.MenuItems.OrdersAndInventory}
+                    { "SectionType", AppUtility.MenuItems.Requests}
                 },
                 Classes = menuClass,
                 IconName = "icon-storefront-24px"
@@ -507,7 +507,7 @@ namespace PrototypeWithAuth.AppData
                 {
                     { "PageType", pageType },
                     { "CategoryType", categoryType },
-                    { "SectionType", AppUtility.MenuItems.OrdersAndInventory}
+                    { "SectionType", AppUtility.MenuItems.Requests}
                 },
                 Classes = menuClass,
                 IconName = "icon-storefront-24px"
@@ -556,7 +556,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Search",
                 RouteValues = new RouteValueDictionary()
                 {
-                    { "SectionType", AppUtility.MenuItems.OrdersAndInventory }
+                    { "SectionType", AppUtility.MenuItems.Requests }
                 },
                 Classes = menuClass + ActiveClasses,
                 IconName = "icon-zoom_in-24px-01"
@@ -607,7 +607,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"SectionType", AppUtility.MenuItems.OrdersAndInventory }
+                    {"SectionType", AppUtility.MenuItems.Requests }
                 },
                 Classes = menuClass + ActiveClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
@@ -1050,7 +1050,7 @@ namespace PrototypeWithAuth.AppData
                 {
                     {"PageType", typePageType },
                     {"categoryType", 2 },
-                           { "SectionType", AppUtility.MenuItems.Operation}
+                           { "SectionType", AppUtility.MenuItems.Operations}
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-storefront-24px"
@@ -1087,7 +1087,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Search",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"SectionType", AppUtility.MenuItems.Operation.ToString() }
+                    {"SectionType", AppUtility.MenuItems.Operations.ToString() }
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-zoom_in-24px-01"
