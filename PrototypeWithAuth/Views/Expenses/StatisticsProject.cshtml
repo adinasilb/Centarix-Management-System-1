@@ -1,6 +1,6 @@
 ﻿@using PrototypeWithAuth.AppData;
 @using PrototypeWithAuth.ViewModels;
-@model List<Project>;
+@model StatisticsProjectViewModel;
 
 @{
     ViewData["Title"] = "StatisticsProject";
@@ -13,11 +13,27 @@
         <div class="col-7 heading-1 p-0">
         </div>
         <div class="col-3 offset-2">
-            <select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 change-currency"
-                    id="select-currency" searchable="Search Currency">
-                <option value="@AppUtility.CurrencyEnum.USD" selected>&dollar; USD</option>
-                <option value="@AppUtility.CurrencyEnum.NIS">&#8362; NIS</option>
-            </select>
+            @*<select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 change-months" multiple
+                        id="select-months" searchable="Search Months">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        var selected = "";
+                        if (Model.Months.Contains(i))
+                        {
+                            selected = "selected";
+                        }
+                        <option value="@i" selected="@selected">@System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(i)</option>
+                    }
+                </select>*@
+            @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+            @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
+                new SelectListItem
+                     {
+                    Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+                    Value = m.ToString(),
+                    Selected = Model.Months.Contains(m)
+                }),
+                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
             @*</div>
                 <div class="col-1 p-0 monthsHours">*@
 
@@ -39,7 +55,7 @@
     </div>
     <div class="row">
         <div class="col-6 px-0">
-            @{ await Html.RenderPartialAsync("_StatisticsProjects", Model);}
+            @{ await Html.RenderPartialAsync("_StatisticsProjects", Model.ProjectStatistics);}
         </div>
         <div class="col-6 subprojects-table px-0">
 
@@ -47,3 +63,11 @@
     </div>
 </div>
 
+
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            
+        });
+    })
+</script>

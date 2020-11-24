@@ -13,6 +13,8 @@ using System.Drawing;
 using PrototypeWithAuth.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis;
+using Project = PrototypeWithAuth.Models.Project;
+using Request = PrototypeWithAuth.Models.Request;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -377,9 +379,62 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsProject.ToString();
 
-            var projects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product).ToList();
 
-            return View(projects);
+            var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
+                .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
+                .ToList();
+
+            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { 9 }, 2020));
+        }
+
+        public static StatisticsProjectViewModel GetStatisticsProjectViewModel(List<Project> AllProjects, List<int> Months, int Year)
+        {
+
+            //var MatchingRequests = _context.Requests.Where(r => r.Invoice.InvoiceDate.Month == 9).ToList();
+
+            List<ProjectStatistics> projectStatistics = new List<ProjectStatistics>();
+
+            //This is to ensure that all projects  are passed into the front end even if there aren't any orders for it
+            foreach (var project in AllProjects)
+            {
+                var MonthlyRequestsInProject = project.SubProjects.SelectMany(
+                    sp => sp.Requests.Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
+                    .Where(r => r.Invoice?.InvoiceDate.Year == Year)
+                    ).ToList();
+                if (MonthlyRequestsInProject.Any())
+                {
+                    ProjectStatistics ps = new ProjectStatistics()
+                    {
+                        ProjectID = project.ProjectID,
+                        ProjectName = project.ProjectDescription,
+                        Orders = MonthlyRequestsInProject.Count(),
+                        Items = MonthlyRequestsInProject.Select(r => r.ProductID).Distinct().Count(),
+                        Price = Convert.ToInt32(MonthlyRequestsInProject.Sum(r => r.Cost))
+                    };
+                    projectStatistics.Add(ps);
+                }
+                else
+                {
+                    ProjectStatistics ps = new ProjectStatistics()
+                    {
+                        ProjectID = project.ProjectID,
+                        ProjectName = project.ProjectDescription,
+                        Orders = 0,
+                        Items = 0,
+                        Price = 0
+                    };
+                    projectStatistics.Add(ps);
+                }
+            }
+
+            StatisticsProjectViewModel statisticsProjectViewModel = new StatisticsProjectViewModel()
+            {
+                ProjectStatistics = projectStatistics,
+                Months = Months,
+                Year = Year
+            };
+
+            return statisticsProjectViewModel;
         }
 
         [HttpGet]
