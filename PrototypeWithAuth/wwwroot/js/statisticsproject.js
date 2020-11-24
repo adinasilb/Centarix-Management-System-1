@@ -1,7 +1,11 @@
 ﻿$(function () {
-	$(".parent-project-button").on("click", function () {
+	$(".parent-project-button").off("click").on("click", function () {
 		var projectId = $(this).val();
-		console.log("parent project button clicked with value of: " + projectId);
+		var months = [];
+		$(".months-selected").each(function () {
+			months.push($(this).val());
+		});
+		var year = $("#Year").val();
 
 		//set the view:
 		var colorClass = "graduated-table-background-color";
@@ -15,7 +19,7 @@
 		$(this).parent().parent().addClass(borderLeftClass);
 
 		//fill the second div:
-		var url = "/Expenses/_StatisticsSubProjects?ProjectID=" + projectId;
+		var url = "/Expenses/_StatisticsSubProjects?ProjectID=" + projectId + "&Months=" + months + "&Year=" + year;
 
 		$.ajax({
 			async: true,
@@ -28,4 +32,44 @@
 			}
 		});
 	});
+
+	$("#Months").off("change").on("change", function () {
+		//call projects
+		$.fn.CallProjectsPartialView();
+
+		//remove subprojects
+		$(".subprojects-table").html("");
+	});
+
+	$("#select-years").off("change").on("change", function () {
+		//call projects
+		$.fn.CallProjectsPartialView();
+
+		//remove subprojects
+		$(".subprojects-table").html("");
+	});
+
+	$.fn.CallProjectsPartialView = function () {
+		var months = [];
+		//$(".months-selected").each(function () {
+		//	months.push($(this).val());
+		//});
+		months = $("#Months").val();
+		var year = $("#select-years").val();
+
+		var url = "/Expenses/_StatisticsProjects";
+
+		$.ajax({
+			async: true,
+			url: url,
+			type: 'GET',
+			traditional: true,
+			cache: false,
+			data: { Months: months, Year: year },
+			success: function (data) {
+				$(".projects-table").empty();
+				$(".projects-table").html(data);
+			}
+		});
+	};
 });

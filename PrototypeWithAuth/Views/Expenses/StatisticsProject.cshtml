@@ -8,6 +8,17 @@
 }
 <script src="~/js/statisticsproject.js"></script>
 
+<input type="hidden" class="setupdropdowns" value="true" />
+
+@*Hidden fors so the correct subproject requests will be called*@
+@*<div class="my-hiddenvalues-1">
+    <input type="hidden" asp-for="Year" />
+    @for (int i = 0; i < Model.Months.Count; i++)
+    {
+        <input type="hidden" asp-for="Months[i]" class="months-selected" />
+    }
+</div>*@
+
 <div class="container-fluid">
     <div class="row under-row-margin">
         <div class="col-7 heading-1 p-0">
@@ -28,12 +39,12 @@
             @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
             @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
                 new SelectListItem
-                     {
+                {
                     Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
                     Value = m.ToString(),
-                    Selected = Model.Months.Contains(m)
+                    //Selected = Model.Months
                 }),
-                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
+                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
             @*</div>
                 <div class="col-1 p-0 monthsHours">*@
 
@@ -54,7 +65,7 @@
 
     </div>
     <div class="row">
-        <div class="col-6 px-0">
+        <div class="col-6 projects-table px-0">
             @{ await Html.RenderPartialAsync("_StatisticsProjects", Model);}
         </div>
         <div class="col-6 subprojects-table px-0">
@@ -66,8 +77,14 @@
 
 <script type="text/javascript">
     $(function () {
-        $(document).ready(function () {
-            
-        });
+        $.fn.SetUpDropdowns = function () {
+            $("input[data-activates='select-options-Months']").attr('placeholder', "Months")
+            $("input[data-activates='select-options-Months']").val('')
+
+            $(".months-selected").each(function () {
+                $("#Months option[value='"+$(this).val()+"']").attr("selected", true);
+            });
+        };
+
     })
 </script>

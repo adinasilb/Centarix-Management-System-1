@@ -1,12 +1,13 @@
 ﻿@using PrototypeWithAuth.ViewModels
 @model StatisticsProjectViewModel
-
-@*Hidden fors so the correct subproject requests will be called*@
-<input type="hidden" asp-for="Year" />
-@for (int i = 0; i < Model.Months.Count; i++)
-{
-    <input type="hidden" asp-for="Months[i]" class="months-selected" />
-}
+    <script src="~/js/statisticsproject.js"></script>
+<div class="my-hiddenvalues-2">
+    <input type="hidden" asp-for="Year" />
+    @for (int i = 0; i < Model.Months.Count; i++)
+    {
+        <input type="hidden" asp-for="Months[i]" class="months-selected" />
+    }
+</div>
 
 <table class="table table-sm table-hover ">
     <thead>
@@ -27,33 +28,33 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var projectstat in Model.ProjectStatistics)
+        @foreach (var project in Model.Projects)
         {
             var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-project-button";
             var arrowButtonClasses = buttonClasses + " right-arrow-icon";
             <tr class="text-left">
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@projectstat.ProjectID">
-                        @projectstat.ProjectName
+                    <button class="@buttonClasses" value="@project.Key.ProjectID">
+                        @project.Key.ProjectDescription
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@projectstat.ProjectID">
-                        @projectstat.Orders
+                    <button class="@buttonClasses" value="@project.Key.ProjectID">
+                        @project.Value.Count()
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@projectstat.ProjectID">
-                        @projectstat.Items
+                    <button class="@buttonClasses" value="@project.Key.ProjectID">
+                        @project.Value.Select(r => r.ProductID).Distinct().Count()
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@projectstat.ProjectID">
-                        &#8362; @string.Format("{0:n0}", projectstat.Price)
+                    <button class="@buttonClasses" value="@project.Key.ProjectID">
+                        &#8362; @string.Format("{0:n0}", project.Value.Sum(r => r.Cost))
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@arrowButtonClasses" value="@projectstat.ProjectID">
+                    <button class="@arrowButtonClasses" value="@project.Key.ProjectID">
                         <i class="icon-back-24px ml-3 large-icon float-right"></i>
                     </button>
                 </td>
@@ -61,3 +62,9 @@
         }
     </tbody>
 </table>
+
+<script type="text/javascript">
+    $(function () {
+        $(".my-hiddenvalues-1").html("");
+    });
+</script>

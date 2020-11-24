@@ -385,7 +385,16 @@ namespace PrototypeWithAuth.Controllers
                 .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
                 .ToList();
 
-            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { 9 }, 2020));
+            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { 1 }, 2020));
+        }
+
+        public IActionResult _StatisticsProjects(List<int> Months, int Year)
+        {
+            var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
+                .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
+                .ToList();
+
+            return PartialView(GetStatisticsProjectViewModel(AllProjects, Months, Year));
         }
 
         public static StatisticsProjectViewModel GetStatisticsProjectViewModel(List<Project> AllProjects, List<int> Months, int Year)
@@ -393,8 +402,8 @@ namespace PrototypeWithAuth.Controllers
 
             //var MatchingRequests = _context.Requests.Where(r => r.Invoice.InvoiceDate.Month == 9).ToList();
 
-            List<ProjectStatistics> projectStatistics = new List<ProjectStatistics>();
-
+            //List<ProjectStatistics> projectStatistics = new List<ProjectStatistics>();
+            Dictionary<Project, List<Request>> Projects = new Dictionary<Project, List<Request>>();
             //This is to ensure that all projects  are passed into the front end even if there aren't any orders for it
             foreach (var project in AllProjects)
             {
@@ -402,35 +411,12 @@ namespace PrototypeWithAuth.Controllers
                     sp => sp.Requests.Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
                     .Where(r => r.Invoice?.InvoiceDate.Year == Year)
                     ).ToList();
-                if (MonthlyRequestsInProject.Any())
-                {
-                    ProjectStatistics ps = new ProjectStatistics()
-                    {
-                        ProjectID = project.ProjectID,
-                        ProjectName = project.ProjectDescription,
-                        Orders = MonthlyRequestsInProject.Count(),
-                        Items = MonthlyRequestsInProject.Select(r => r.ProductID).Distinct().Count(),
-                        Price = Convert.ToInt32(MonthlyRequestsInProject.Sum(r => r.Cost))
-                    };
-                    projectStatistics.Add(ps);
-                }
-                else
-                {
-                    ProjectStatistics ps = new ProjectStatistics()
-                    {
-                        ProjectID = project.ProjectID,
-                        ProjectName = project.ProjectDescription,
-                        Orders = 0,
-                        Items = 0,
-                        Price = 0
-                    };
-                    projectStatistics.Add(ps);
-                }
+                Projects.Add(project, MonthlyRequestsInProject);
             }
 
             StatisticsProjectViewModel statisticsProjectViewModel = new StatisticsProjectViewModel()
             {
-                ProjectStatistics = projectStatistics,
+                Projects = Projects,
                 Months = Months,
                 Year = Year
             };
@@ -442,10 +428,22 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult _StatisticsSubProjects(int ProjectID, List<int> Months, int Year)
         {
+            Dictionary<SubProject, List<Request>> subProjectRequests = new Dictionary<SubProject, List<Request>>();
+
+            var subprojects = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID).ToList();
+            foreach (var subproject in subprojects)
+            {
+                var requests = _context.SubProjects
+                    .Where(sp => sp == subproject)
+                    .Select(sp => sp.Requests.Where(r => r.Invoice != null)
+                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month))
+                    .Where(r => r.Invoice.InvoiceDate.Year == Year).ToList()).FirstOrDefault();
+                subProjectRequests.Add(subproject, requests);
+            }
+
             _StatisticsSubProjectViewModel statisticsSubProjectViewModel = new _StatisticsSubProjectViewModel()
             {
-                SubProjects = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID)
-                .Include(sp => sp.Requests).ThenInclude(r => r.Product).ToList(),
+                SubProjects = subProjectRequests,
                 ProjectName = _context.Projects.Where(p => p.ProjectID == ProjectID).FirstOrDefault().ProjectDescription
             };
 

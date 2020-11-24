@@ -2405,7 +2405,7 @@ a {
 
 /*Expenses*/
 .expenses .form-check-input[type="checkbox"].filled-in:checked + label:after,
-.expenses label.btn input[type="checkbox"].fci-exp.filled-in:checked + label:after,
+.expenses label.btn input[type="checkbox"].filled-in:checked + label:after,
 .expenses-form .form-check-input[type="checkbox"].filled-in:checked + label:after,
 .expenses-form label.btn input[type="checkbox"].fci-exp.filled-in:checked + label:after {
     border: 2px solid var(--expense-color);
