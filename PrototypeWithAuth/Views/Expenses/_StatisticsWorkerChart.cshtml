@@ -1,0 +1,49 @@
+﻿@model List<Employee>
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject UserManager<ApplicationUser> UserManager
+<table class="table table-headerspaced table-noheaderlines table-hover ">
+    <thead>
+        <tr class="text-center">
+            <th></th>
+            <th>Name</th>
+            <th>Number of Orders</th>
+            <th>Number of Items</th>
+            <th>Total</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model)
+        {
+            <tr class="text-center">
+                <th>
+                    @{
+                        var src = "/UserImages/profile_circle_big.png";
+                        if (employee.UserImage != null)
+                        {
+                            src = UserManager.GetUserAsync(User).Result.UserImage;
+                        }
+                    }
+                    <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
+                </th>
+                <th>
+                    @employee.FirstName
+                    @employee.LastName
+                </th>
+                <th>
+                    @employee.RequestsCreated.Count()
+                </th>
+                <th>
+                    @employee.RequestsCreated.Select(r => r.Product).Distinct().Count()
+                </th>
+                <th>
+                    @employee.RequestsCreated.Sum(r => r.Cost)
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        }
+    </tbody>
+</table>

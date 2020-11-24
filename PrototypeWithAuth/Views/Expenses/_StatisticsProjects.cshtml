@@ -1,5 +1,12 @@
-﻿@model List<PrototypeWithAuth.ViewModels.ProjectStatistics>;
+﻿@using PrototypeWithAuth.ViewModels;
+@model StatisticsProjectViewModel;
 
+@*Hidden Fors for the Jquery to pass the value into the subprojects (months and year)*@
+<input type="hidden" asp-for="Year" />
+@for (int i = 0; i< Model.Months.Count; i++)
+{
+    <input type="hidden" asp-for="Months[i]" class="months-selected" />
+}
 
 <table class="table table-sm table-hover ">
     <thead>
@@ -20,13 +27,13 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var projectstat in Model)
+        @foreach (var projectstat in Model.ProjectStatistics)
         {
             var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-project-button";
             var arrowButtonClasses = buttonClasses + " right-arrow-icon";
             <tr class="text-left">
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@projectstat.ProjectID">
+                    <button class="@buttonClasses" value="@projectstat.ProjectID" >
                         @projectstat.ProjectName
                     </button>
                 </td>

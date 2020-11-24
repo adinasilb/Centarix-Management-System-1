@@ -57,7 +57,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
+                    Configuration.GetConnectionString("AdinasHomeConnection"));
                 options.EnableSensitiveDataLogging(true);
             });
 
@@ -132,7 +132,7 @@ namespace PrototypeWithAuth
             });
 
             //ChangePassword(serviceProvider).Wait();
-            //CreateRoles(serviceProvider).Wait();
+            CreateRoles(serviceProvider).Wait();
             //AddRole(serviceProvider).Wait();
 
 
