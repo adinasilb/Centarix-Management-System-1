@@ -3,7 +3,7 @@
 
 @for (int c = 0; c < Model.CategoryTypesSelected.Count; c++)
 {
-    <input type="hidden" asp-for="CategoryTypesSelected[c]" class="category-type-selected" />
+    <input type="hidden" asp-for="CategoryTypesSelected[c].CategoryTypeID" class="category-type-selected" />
 }
 
 <table class="table table-headerspaced table-noheaderlines table-hover ">
@@ -21,7 +21,7 @@
         @foreach (var employee in Model.Employees)
         {
             <tr class="text-center">
-                <th>
+                <td class="p-0">
                     @{
                         var src = "/UserImages/profile_circle_big.png";
                         if (employee.Key.UserImage != null)
@@ -30,23 +30,23 @@
                         }
                     }
                     <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
-                </th>
-                <th>
+                </td>
+                <td class="p-0">
                     @employee.Key.FirstName
                     @employee.Key.LastName
-                </th>
-                <th>
+                </td>
+                <td class="p-0">
                     @employee.Value.Count()
-                </th>
-                <th>
+                </td>
+                <td class="p-0">
                     @employee.Value.Select(r => r.Product).Distinct().Count()
-                </th>
-                <th>
-                    @employee.Value.Sum(r => r.Cost)
-                </th>
-                <th>
+                </td>
+                <td class="p-0">
+                    &#8362; @string.Format("{0:n0}", employee.Value.Sum(r => r.Cost))
+                </td>
+                <td class="p-0">
 
-                </th>
+                </td>
             </tr>
         }
     </tbody>

@@ -58,6 +58,7 @@
             $("input[data-activates='select-options-CategoryTypesSelected']").val('')
 
             $(".category-type-selected").each(function () {
+                console.log("category type selected: " + $(this).val());
                 $("#CategoryTypesSelected option[value='"+$(this).val()+"']").attr("selected", true);
             });
         };
