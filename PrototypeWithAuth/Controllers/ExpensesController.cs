@@ -16,6 +16,7 @@ using Microsoft.CodeAnalysis;
 using Project = PrototypeWithAuth.Models.Project;
 using Request = PrototypeWithAuth.Models.Request;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Ocsp;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -408,7 +409,9 @@ namespace PrototypeWithAuth.Controllers
             foreach (var project in AllProjects)
             {
                 var MonthlyRequestsInProject = project.SubProjects.SelectMany(
-                    sp => sp.Requests.Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
+                    sp => sp.Requests
+                    .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                    .Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
                     .Where(r => r.Invoice?.InvoiceDate.Year == Year)
                     ).ToList();
                 Projects.Add(project, MonthlyRequestsInProject);
@@ -467,19 +470,42 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsWorker.ToString();
 
-            var employees = await _context.Employees
-                .Include(e => e.RequestsCreated).ThenInclude(r => r.Product).ToListAsync();
+            var employees = await _context.Employees.ToListAsync();
+            var categoryTypes = await _context.CategoryTypes.ToListAsync();
+            var months = new List<int> { 9 };
+            var year = DateTime.Today.Year;
+
+            return View(GetStatisticsWorkerViewModel(employees, categoryTypes, months, year));
+        }
+
+        public StatisticsWorkerViewModel GetStatisticsWorkerViewModel(List<Employee> Employees, List<CategoryType> CategoryTypes, List<int> Months, int Year)
+        {
+            Dictionary<Employee, List<Request>> EmployeeRequests = new Dictionary<Employee, List<Request>>();
+
+            foreach (var employee in Employees)
+            {
+                var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                    .Where(r => r.ApplicationUserCreator.Id == employee.Id)
+                    .Where(r => CategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryType))
+                    .Where(r => r.Invoice != null)
+                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == Year)
+                    .ToList();
+                EmployeeRequests.Add(employee, requests);
+            }
 
             StatisticsWorkerViewModel statisticsWorkerViewModel = new StatisticsWorkerViewModel()
             {
-                Employees = employees,
+                Employees = EmployeeRequests,
+                CategoryTypesSelected = CategoryTypes,
                 CategoryTypes = _context.CategoryTypes.ToList(),
-                Months = new List<int> { 1 },
-                Year = 2020
+                Months = Months,
+                Year = Year
             };
 
-            return View(statisticsWorkerViewModel);
+            return statisticsWorkerViewModel;
         }
+
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult StatisticsCategory()

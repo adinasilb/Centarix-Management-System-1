@@ -53,22 +53,26 @@
 	//    SLI($(this));
 	//});
 	$(".modal").off("click", ".SLI-click").on("click", ".SLI-click", function () {
+		//alert("clicked SLI");
 		SLI($(this));
 	});
 
 	function SLI(el) {
+		//alert("in SLI function");
 		//ONE ---> GET THE NEXT DROPDOWNLIST
 		var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
 		$(nextSelect).html('');
 		console.log(nextSelect)
-		var locationInstanceParentId = $(el).val();;
+		var locationInstanceParentId = $(el).val();
+		alert("locationinstanceparentid: " + locationInstanceParentId);
 		var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
 
 		if (nextSelect != undefined) { //if there is another one
 			$(nextSelect).html('');
 			$(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text('select');
-			var items = FillNextSelect(nextSelect, locationInstanceParentId);
-			alert("items: " + items);
+			FillNextSelect(nextSelect, locationInstanceParentId);
+			//alert("items: " + items);
+			//nextSelect.html(items);
 		}
 		//TWO ---> FILL VISUAL VIEW
 		var myDiv = $(".visualView");
@@ -112,17 +116,19 @@
 		$(el).parents('.dropdown-main').find('span:not(.caret)').text($(el).text());
 	};
 
-	function FillNextSelect(locationInstanceParentId) {
+	function FillNextSelect(nextSelect, locationInstanceParentId) {
+		alert("locationinstanceparentid: " + locationInstanceParentId);
+		var url = "/Requests/GetSublocationInstancesList?locationInstanceParentId=" + locationInstanceParentId;
 		//alert("in fill next select " + JSON.stringify(nextSelect));
-		var items = new Array();
+		//var items = $();
 		$.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
 			var item = "<li>Select Location Instance</li>";
 			$.each(result, function (i, field) {
 				item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" >' + field.locationInstanceName + '</li>'
 			});
-			items.append(item);
+			nextSelect.append(item);
 		});
-		return items;
+		//return items;
 	};
 
 

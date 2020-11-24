@@ -9,6 +9,7 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
+<input type="hidden" class="setupdropdowns" value="true" />
 <div class="container-fluid">
 
     <div class="row under-row-margin">
@@ -20,8 +21,7 @@
                 Model.CategoryTypes,
                 "CategoryTypeID",
                 "CategoryTypeDescription"),
-            "Select Category Type",
-            new { @class = "expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4", @multiple="multiple" }
+            new { @class = "expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4", @multiple = "multiple" }
             )
             <select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 ml-3 change-currency"
                     id="select-currency" searchable="Search Currency">
@@ -49,4 +49,18 @@
     </div>
 </div>
 
-@{ await Html.RenderPartialAsync("_StatisticsWorkerChart", Model.Employees);}
+@{ await Html.RenderPartialAsync("_StatisticsWorkerChart", Model);}
+
+<script type="text/javascript">
+    $(function () {
+        $.fn.SetUpDropdowns = function () {
+            $("input[data-activates='select-options-CategoryTypesSelected']").attr('placeholder', "Category Type")
+            $("input[data-activates='select-options-CategoryTypesSelected']").val('')
+
+            $(".category-type-selected").each(function () {
+                $("#CategoryTypesSelected option[value='"+$(this).val()+"']").attr("selected", true);
+            });
+        };
+
+    })
+</script>

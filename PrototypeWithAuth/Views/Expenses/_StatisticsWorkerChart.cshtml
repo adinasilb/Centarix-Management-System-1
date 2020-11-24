@@ -1,7 +1,11 @@
-﻿@model List<Employee>
-@using Microsoft.AspNetCore.Identity
-@using PrototypeWithAuth.Data
-@inject UserManager<ApplicationUser> UserManager
+﻿@model StatisticsWorkerViewModel
+@using PrototypeWithAuth.ViewModels
+
+@for (int c = 0; c < Model.CategoryTypesSelected.Count; c++)
+{
+    <input type="hidden" asp-for="CategoryTypesSelected[c]" class="category-type-selected" />
+}
+
 <table class="table table-headerspaced table-noheaderlines table-hover ">
     <thead>
         <tr class="text-center">
@@ -14,31 +18,31 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var employee in Model)
+        @foreach (var employee in Model.Employees)
         {
             <tr class="text-center">
                 <th>
                     @{
                         var src = "/UserImages/profile_circle_big.png";
-                        if (employee.UserImage != null)
+                        if (employee.Key.UserImage != null)
                         {
-                            src = UserManager.GetUserAsync(User).Result.UserImage;
+                            src = employee.Key.UserImage;
                         }
                     }
                     <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
                 </th>
                 <th>
-                    @employee.FirstName
-                    @employee.LastName
+                    @employee.Key.FirstName
+                    @employee.Key.LastName
                 </th>
                 <th>
-                    @employee.RequestsCreated.Count()
+                    @employee.Value.Count()
                 </th>
                 <th>
-                    @employee.RequestsCreated.Select(r => r.Product).Distinct().Count()
+                    @employee.Value.Select(r => r.Product).Distinct().Count()
                 </th>
                 <th>
-                    @employee.RequestsCreated.Sum(r => r.Cost)
+                    @employee.Value.Sum(r => r.Cost)
                 </th>
                 <th>
 
