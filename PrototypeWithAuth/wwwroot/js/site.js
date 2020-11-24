@@ -109,15 +109,22 @@ $(function () {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				var firstitem1 = '<option value=""> Select Subcategory</option>';
-				$("#sublist").empty();
-				$("#sublist").append(firstitem1);
+				
+				$("#sublist").destroyMaterialSelect()
 
 				$.each(data, function (i, subCategory) {
 					var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 					$("#sublist").append(newitem1);
 				});
 				$("#sublist").materialSelect();
+				$("input[data-activates='select-options-sublist']").attr('placeholder', "Select Sub Category")
+				$("input[data-activates='select-options-sublist']").val('')
+				var dropdown = $("#select-options-sublist input.form-check-input");
+				dropdown.addClass("filled-in");
+				//dropdown.addClass("fci-exp");
+				$(".multiple-select-dropdown li span").replaceWith(function () {
+					return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+				});
 				return false;
 			}
 		});
@@ -156,24 +163,41 @@ $(function () {
 		return false;
 	});
 
-	$.fn.changeProject = function (val) {
-		//console.log("project was changed");
-		//var projectId = val;
-		//var url = "/Requests/GetSubProjectList";
+	$.fn.changeProjectMulitple = function () {
+		console.log("in parent list");
 
-		//alert("before getjson");
-		//$.getJSON(url, { ProjectID: projectId }, function (data) {
-		//	alert("in getjson");
-		//	var item1 = "<option value=''>Select Sub Project</option>";
-		//	$("#SubProject").empty();
-		//	$("#SubProject").append(item1);
-		//	$.each(data, function (i, subproject) {
-		//		item = '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
-		//		$("#SubProject").append(item);
-		//	});
-		//	$("#SubProject").materialSelect();
-		//	return false
-		//});
+		var projectIds = $("#SelectedProjects").map(function (i, el) {
+			if ($(el).val() != '') {
+				return $(el).val();
+			}
+		}).get();
+		var url = "/Requests/GetSubProjectListMultiple";
+		$.ajax({
+			async: true,
+			url: url,
+			data: { ProjectIDs: projectIds },
+			traditional: true,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("#SelectedSubProjects").destroyMaterialSelect()
+				$("#SelectedSubProjects").empty();
+				$.each(data, function (i, subproject) {
+					item = '<option value="' + subproject.subProjectID + '">' + subproject.subProjectDescription + '</option>'
+					$("#SelectedSubProjects").append(item);
+				});
+				$("#SelectedSubProjects").materialSelect();
+				$("input[data-activates='select-options-SelectedSubProjects']").attr('placeholder', "Select Sub Project")
+				$("input[data-activates='select-options-SelectedSubProjects']").val('')
+				var dropdown = $("#select-options-SelectedSubProjects input.form-check-input");
+				dropdown.addClass("filled-in");
+				//dropdown.addClass("fci-exp");
+				$(".multiple-select-dropdown li span").replaceWith(function () {
+					return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+				});
+				return false;
+			}
+		});
 	};
 
 	//search forms- Redo js in newer versions

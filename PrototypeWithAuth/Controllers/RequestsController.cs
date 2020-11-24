@@ -2974,7 +2974,13 @@ namespace PrototypeWithAuth.Controllers
             var subprojectList = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID).ToList();
             return Json(subprojectList);
         }
-
+        [HttpGet]
+        public JsonResult GetSubProjectListMultiple(List<int> ProjectIDs)
+        {
+            //var projectName = _context.Projects.Where(pr => pr.ProjectID == ProjectID).FirstOrDefault().ProjectDescription;
+            var subprojectList = _context.SubProjects.Where(sp => ProjectIDs.Contains(sp.ProjectID)).ToList();
+            return Json(subprojectList);
+        }
         //[HttpGet]
         //public JsonResult GetCompanyAccountList(int PaymentTypeID)
         //{

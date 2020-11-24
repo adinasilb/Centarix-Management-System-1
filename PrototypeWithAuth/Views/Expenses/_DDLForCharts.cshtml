@@ -80,6 +80,7 @@
          //"Project",
          new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Projects", @multiple = "multiple" }
         )
+            <button type="button" onclick="$.fn.changeProjectMulitple();" class="btn-save saveParentSelection btn text-white expenses-background-color rounded-pill ">Save</button>
         </div>
         <div class=" select-box-margin-bottom">
             @Html.DropDownListFor(
