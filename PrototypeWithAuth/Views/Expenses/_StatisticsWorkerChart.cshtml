@@ -5,6 +5,10 @@
 {
     <input type="hidden" asp-for="CategoryTypesSelected[c].CategoryTypeID" class="category-type-selected" />
 }
+@for (int m = 0; m < Model.Months.Count; m++)
+{
+    <input type="hidden" asp-for="Months[m]" class="months-selected" />
+}
 
 <table class="table table-headerspaced table-noheaderlines table-hover ">
     <thead>
@@ -45,7 +49,6 @@
                     &#8362; @string.Format("{0:n0}", employee.Value.Sum(r => r.Cost))
                 </td>
                 <td class="p-0">
-
                 </td>
             </tr>
         }

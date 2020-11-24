@@ -51,9 +51,6 @@
 
 	$.fn.CallProjectsPartialView = function () {
 		var months = [];
-		//$(".months-selected").each(function () {
-		//	months.push($(this).val());
-		//});
 		months = $("#Months").val();
 		var year = $("#select-years").val();
 

@@ -478,6 +478,17 @@ namespace PrototypeWithAuth.Controllers
             return View(GetStatisticsWorkerViewModel(employees, categoryTypes, months, year));
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin, CEO, Expenses")]
+        public async Task<IActionResult> _StatisticsWorkerChart(List<int> CategoryTypeIDs, List<int> Months, int Year)
+        {
+            var employees = await _context.Employees.ToListAsync();
+            var categoryTypes = await _context.CategoryTypes.Where(ct => CategoryTypeIDs.Contains(ct.CategoryTypeID)).ToListAsync();
+
+            return PartialView(GetStatisticsWorkerViewModel(employees, categoryTypes, Months, Year));
+        }
+
+
         public StatisticsWorkerViewModel GetStatisticsWorkerViewModel(List<Employee> Employees, List<CategoryType> CategoryTypes, List<int> Months, int Year)
         {
             Dictionary<Employee, List<Request>> EmployeeRequests = new Dictionary<Employee, List<Request>>();
