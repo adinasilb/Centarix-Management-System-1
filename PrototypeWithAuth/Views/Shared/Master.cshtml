@@ -1145,7 +1145,7 @@
                         '<i class="' + notification.icon + ' rounded-circle p-1" style="font-size: 1.75rem; color:var(' + notification.color + '); border: .125rem solid var(' + notification.color + ');"></i>' +
                         '</div>' +
                         '<div class=" col-10">' +
-                        '<label class="m-0 mr-5" id="notificationTimestamp">' + timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getFullYear() +  ' </label>' +
+                        '<label class="m-0 mr-5" id="notificationTimestamp">' + timestamp.getDate() + '/' + (timestamp.getMonth()+1) + '/' + timestamp.getFullYear() +  ' </label>' +
                         '<label class="m-0 " id="notificationDescription" style="color:var('+notification.color+');">' + notification.description + '</label> </br>' +
                         '<label class="m-0" id="requestName" >' + notification.requestName + '</label>' +
                         '</div>' +
