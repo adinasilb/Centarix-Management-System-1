@@ -439,16 +439,16 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult _StatisticsSubProjects(int ProjectID)
+        public IActionResult _StatisticsSubProjects(int ProjectID, List<int> Months, int Year)
         {
-            _StatisticsProjectViewModel statisticsProjectViewModel = new _StatisticsProjectViewModel()
+            _StatisticsSubProjectViewModel statisticsSubProjectViewModel = new _StatisticsSubProjectViewModel()
             {
                 SubProjects = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID)
                 .Include(sp => sp.Requests).ThenInclude(r => r.Product).ToList(),
                 ProjectName = _context.Projects.Where(p => p.ProjectID == ProjectID).FirstOrDefault().ProjectDescription
             };
 
-            return PartialView(statisticsProjectViewModel);
+            return PartialView(statisticsSubProjectViewModel);
         }
 
         [HttpGet]
