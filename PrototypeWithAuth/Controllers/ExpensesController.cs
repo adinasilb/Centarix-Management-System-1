@@ -15,6 +15,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis;
 using Project = PrototypeWithAuth.Models.Project;
 using Request = PrototypeWithAuth.Models.Request;
+using System.Threading.Tasks;
+using Org.BouncyCastle.Ocsp;
+using Abp.Extensions;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -62,7 +65,7 @@ namespace PrototypeWithAuth.Controllers
             var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6);
             string currency = "₪";
             IEnumerable<Request> requestList = null;
-         
+
             if (summaryChartsViewModel.SelectedYears == null)
             {
                 requests.Where(r => r.CreationDate.Year == DateTime.Now.Year);
@@ -80,7 +83,7 @@ namespace PrototypeWithAuth.Controllers
                 isDollars = true;
                 currency = "$";
             }
-            ChartViewModel pieChartViewModel = new ChartViewModel ();
+            ChartViewModel pieChartViewModel = new ChartViewModel();
             pieChartViewModel.SectionColor = new List<String>();
             pieChartViewModel.SectionName = new List<String>();
             pieChartViewModel.SectionValue = new List<double>();
@@ -91,7 +94,7 @@ namespace PrototypeWithAuth.Controllers
                 if (summaryChartsViewModel.SelectedProductSubcategories != null)
                 {
                     count = 0;
-                 
+
                     var subCategories = _context.ProductSubcategories.Where(ps => summaryChartsViewModel.SelectedProductSubcategories.Contains(ps.ProductSubcategoryID));
                     foreach (var ps in subCategories)
                     {
@@ -110,7 +113,7 @@ namespace PrototypeWithAuth.Controllers
                             cost = requestList.Sum(r => r.Cost);
                         }
 
-                        pieChartViewModel.SectionName.Add( ps.ProductSubcategoryDescription );
+                        pieChartViewModel.SectionName.Add(ps.ProductSubcategoryDescription);
                         pieChartViewModel.SectionColor.Add(colors[count]);
                         pieChartViewModel.SectionValue.Add(cost);
                         count++;
@@ -120,7 +123,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     count = 0;
                     var parentCategories = _context.ParentCategories.Where(pc => summaryChartsViewModel.SelectedParentCategories.Contains(pc.ParentCategoryID));
-           
+
                     foreach (var pc in parentCategories)
                     {
                         if (count > 18)
@@ -250,7 +253,7 @@ namespace PrototypeWithAuth.Controllers
                         cost = requestList.Sum(r => r.Cost);
                     }
 
-                    pieChartViewModel.SectionName.Add( c.CategoryTypeDescription);
+                    pieChartViewModel.SectionName.Add(c.CategoryTypeDescription);
                     pieChartViewModel.SectionColor.Add(colors[count]);
                     pieChartViewModel.SectionValue.Add(cost);
                     count++;
@@ -384,7 +387,16 @@ namespace PrototypeWithAuth.Controllers
                 .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
                 .ToList();
 
-            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { 9 }, 2020));
+            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { DateTime.Now.Month }, 2020));
+        }
+
+        public IActionResult _StatisticsProjects(List<int> Months, int Year)
+        {
+            var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
+                .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
+                .ToList();
+
+            return PartialView(GetStatisticsProjectViewModel(AllProjects, Months, Year));
         }
 
         public static StatisticsProjectViewModel GetStatisticsProjectViewModel(List<Project> AllProjects, List<int> Months, int Year)
@@ -392,44 +404,23 @@ namespace PrototypeWithAuth.Controllers
 
             //var MatchingRequests = _context.Requests.Where(r => r.Invoice.InvoiceDate.Month == 9).ToList();
 
-            List<ProjectStatistics> projectStatistics = new List<ProjectStatistics>();
-
+            //List<ProjectStatistics> projectStatistics = new List<ProjectStatistics>();
+            Dictionary<Project, List<Request>> Projects = new Dictionary<Project, List<Request>>();
             //This is to ensure that all projects  are passed into the front end even if there aren't any orders for it
             foreach (var project in AllProjects)
             {
                 var MonthlyRequestsInProject = project.SubProjects.SelectMany(
-                    sp => sp.Requests.Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
+                    sp => sp.Requests
+                    .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                    .Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
                     .Where(r => r.Invoice?.InvoiceDate.Year == Year)
                     ).ToList();
-                if (MonthlyRequestsInProject.Any())
-                {
-                    ProjectStatistics ps = new ProjectStatistics()
-                    {
-                        ProjectID = project.ProjectID,
-                        ProjectName = project.ProjectDescription,
-                        Orders = MonthlyRequestsInProject.Count(),
-                        Items = MonthlyRequestsInProject.Select(r => r.ProductID).Distinct().Count(),
-                        Price = Convert.ToInt32(MonthlyRequestsInProject.Sum(r => r.Cost))
-                    };
-                    projectStatistics.Add(ps);
-                }
-                else
-                {
-                    ProjectStatistics ps = new ProjectStatistics()
-                    {
-                        ProjectID = project.ProjectID,
-                        ProjectName = project.ProjectDescription,
-                        Orders = 0,
-                        Items = 0,
-                        Price = 0
-                    };
-                    projectStatistics.Add(ps);
-                }
+                Projects.Add(project, MonthlyRequestsInProject);
             }
 
             StatisticsProjectViewModel statisticsProjectViewModel = new StatisticsProjectViewModel()
             {
-                ProjectStatistics = projectStatistics,
+                Projects = Projects,
                 Months = Months,
                 Year = Year
             };
@@ -439,16 +430,30 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult _StatisticsSubProjects(int ProjectID)
+        public IActionResult _StatisticsSubProjects(int ProjectID, List<int> Months, int Year)
         {
-            _StatisticsProjectViewModel statisticsProjectViewModel = new _StatisticsProjectViewModel()
+            Dictionary<SubProject, List<Request>> subProjectRequests = new Dictionary<SubProject, List<Request>>();
+
+            var subprojects = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID).ToList();
+            foreach (var subproject in subprojects)
             {
-                SubProjects = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID)
-                .Include(sp => sp.Requests).ThenInclude(r => r.Product).ToList(),
+                var requests = _context.Requests
+                    .Include(r => r.Invoice)
+                    .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                    .Where(r => r.SubProjectID == subproject.SubProjectID)
+                    .Where(r => r.InvoiceID != null)
+                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month))
+                    .Where(r => r.Invoice.InvoiceDate.Year == Year).ToList();
+                subProjectRequests.Add(subproject, requests);
+            }
+
+            _StatisticsSubProjectViewModel statisticsSubProjectViewModel = new _StatisticsSubProjectViewModel()
+            {
+                SubProjects = subProjectRequests,
                 ProjectName = _context.Projects.Where(p => p.ProjectID == ProjectID).FirstOrDefault().ProjectDescription
             };
 
-            return PartialView(statisticsProjectViewModel);
+            return PartialView(statisticsSubProjectViewModel);
         }
 
         [HttpGet]
@@ -458,17 +463,85 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsItem.ToString();
-            return View();
+
+            var categoryTypesSelected = _context.CategoryTypes.Select(ct => ct.CategoryTypeID).ToList();
+
+            return View(GetStatisticsItemViewModel(true, false, categoryTypesSelected, new List<int>() { DateTime.Now.Month }, DateTime.Now.Year));
         }
+
+        public StatisticsItemViewModel GetStatisticsItemViewModel(bool FrequentlyBought, bool HighestPrice, List<int> CategoryTypesSelected, List<int> Months, int Year)
+        {
+            var categoryTypes = _context.CategoryTypes.ToList();
+
+            StatisticsItemViewModel statisticsItemViewModel = new StatisticsItemViewModel()
+            {
+                Requests = _context.Requests.ToList(),
+                FrequentlyBought = FrequentlyBought,
+                HighestPrice = HighestPrice,
+                CategoryTypesSelected = _context.CategoryTypes.Where(ct => CategoryTypesSelected.Contains(ct.CategoryTypeID)).ToList(),
+                CategoryTypes = categoryTypes,
+                Months = Months,
+                Year = Year
+            };
+
+            return statisticsItemViewModel;
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult StatisticsWorker()
+        public async Task<IActionResult> StatisticsWorker()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsWorker.ToString();
-            return View();
+
+            var employees = await _context.Employees.ToListAsync();
+            var categoryTypes = await _context.CategoryTypes.ToListAsync();
+            var months = new List<int> { 9 };
+            var year = DateTime.Today.Year;
+
+            return View(GetStatisticsWorkerViewModel(employees, categoryTypes, months, year));
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, CEO, Expenses")]
+        public async Task<IActionResult> _StatisticsWorkerChart(List<int> CategoryTypeIDs, List<int> Months, int Year)
+        {
+            var employees = await _context.Employees.ToListAsync();
+            var categoryTypes = await _context.CategoryTypes.Where(ct => CategoryTypeIDs.Contains(ct.CategoryTypeID)).ToListAsync();
+
+            return PartialView(GetStatisticsWorkerViewModel(employees, categoryTypes, Months, Year));
+        }
+
+
+        public StatisticsWorkerViewModel GetStatisticsWorkerViewModel(List<Employee> Employees, List<CategoryType> CategoryTypes, List<int> Months, int Year)
+        {
+            Dictionary<Employee, List<Request>> EmployeeRequests = new Dictionary<Employee, List<Request>>();
+
+            foreach (var employee in Employees)
+            {
+                var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                    .Where(r => r.ApplicationUserCreator.Id == employee.Id)
+                    .Where(r => CategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryType))
+                    .Where(r => r.Invoice != null)
+                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == Year)
+                    .ToList();
+                EmployeeRequests.Add(employee, requests);
+            }
+
+            StatisticsWorkerViewModel statisticsWorkerViewModel = new StatisticsWorkerViewModel()
+            {
+                Employees = EmployeeRequests,
+                CategoryTypesSelected = CategoryTypes,
+                CategoryTypes = _context.CategoryTypes.ToList(),
+                Months = Months,
+                Year = Year
+            };
+
+            return statisticsWorkerViewModel;
+        }
+
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult StatisticsCategory()
@@ -476,8 +549,71 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsCategory.ToString();
-            return View();
+
+            var parentCategories = _context.ParentCategories.ToList();
+            var catTypes = _context.CategoryTypes.Select(ct => ct.CategoryTypeID).ToList();
+
+            return View(GetStatisticsCategoryViewModel(parentCategories, catTypes, new List<int>() { DateTime.Now.Month }, DateTime.Today.Year));
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, CEO, Expenses")]
+        public IActionResult _CategoryTypes(List<int> categoryTypes, List<int> months, int year)
+        {
+            var parentCategories = _context.ParentCategories.ToList();
+
+            return PartialView(GetStatisticsCategoryViewModel(parentCategories, categoryTypes, months, year));
+        }
+
+        public StatisticsCategoryViewModel GetStatisticsCategoryViewModel(List<ParentCategory> parentCategories, List<int> categoryTypes, List<int> months, int year)
+        {
+            Dictionary<ParentCategory, List<Request>> ParentCategories = new Dictionary<ParentCategory, List<Request>>();
+            foreach (var pc in parentCategories)
+            {
+                var pcRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID)
+                    .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                    .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
+                    .Where(r => r.Invoice != null)
+                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == year)
+                    .ToList();
+                ParentCategories.Add(pc, pcRequests);
+            }
+            StatisticsCategoryViewModel statisticsCategoryViewModel = new StatisticsCategoryViewModel()
+            {
+                ParentCategories = ParentCategories,
+                Months = months,
+                CategoryTypes = _context.CategoryTypes.ToList(),
+                CategoryTypeSelected = _context.CategoryTypes.Where(ct => categoryTypes.Contains(ct.CategoryTypeID)).ToList(),
+                Year = year
+            };
+            return statisticsCategoryViewModel;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, CEO, Expenses")]
+        public IActionResult _SubCategoryTypes(int ParentCategoryId, List<int> categoryTypes, List<int> months, int year)
+        {
+            var subCategories = _context.ProductSubcategories.Where(sc => sc.ParentCategoryID == ParentCategoryId).ToList();
+            Dictionary<ProductSubcategory, List<Request>> productSubs = new Dictionary<ProductSubcategory, List<Request>>();
+            foreach (var sc in subCategories)
+            {
+                var scRequests = _context.Requests.Where(r => r.Product.ProductSubcategoryID == sc.ProductSubcategoryID)
+                    .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                    .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
+                    .Where(r => r.Invoice != null)
+                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == year)
+                    .ToList();
+                productSubs.Add(sc, scRequests);
+            }
+            StatisticsSubCategoryViewModel statisticsSubCategoryViewModel = new StatisticsSubCategoryViewModel()
+            {
+                ProductSubcategories = productSubs,
+                ParentCategoryName = _context.ParentCategories.Where(pc => pc.ParentCategoryID == ParentCategoryId).FirstOrDefault().ParentCategoryDescription
+            };
+
+            return PartialView(statisticsSubCategoryViewModel);
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult StatisticsVendor()

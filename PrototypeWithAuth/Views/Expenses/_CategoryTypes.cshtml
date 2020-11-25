@@ -1,11 +1,16 @@
 ﻿@using PrototypeWithAuth.ViewModels
-@model StatisticsProjectViewModel
-    <script src="~/js/statisticsproject.js"></script>
+@model StatisticsCategoryViewModel
+
+    <script src="~/js/statisticscategory.js"></script>
 <div class="my-hiddenvalues-2">
     <input type="hidden" asp-for="Year" />
     @for (int i = 0; i < Model.Months.Count; i++)
     {
         <input type="hidden" asp-for="Months[i]" class="months-selected" />
+    }
+    @for (int c = 0; c < Model.CategoryTypeSelected.Count; c++)
+    {
+        <input type="hidden" asp-for="CategoryTypeSelected[c].CategoryTypeID" class="category-type-selected" />
     }
 </div>
 
@@ -28,33 +33,33 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var project in Model.Projects)
+        @foreach (var category in Model.ParentCategories)
         {
-            var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-project-button";
+            var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-category-button";
             var arrowButtonClasses = buttonClasses + " right-arrow-icon";
             <tr class="text-left">
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@project.Key.ProjectID">
-                        @project.Key.ProjectDescription
+                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                        @category.Key.ParentCategoryDescription
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@project.Key.ProjectID">
-                        @project.Value.Count()
+                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                        @category.Value.Count()
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@project.Key.ProjectID">
-                        @project.Value.Select(r => r.ProductID).Distinct().Count()
+                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                        @category.Value.Select(r => r.ProductID).Distinct().Count()
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@buttonClasses" value="@project.Key.ProjectID">
-                        &#8362; @string.Format("{0:n0}", project.Value.Sum(r => r.Cost))
+                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                        &#8362; @string.Format("{0:n0}", category.Value.Sum(r => r.Cost))
                     </button>
                 </td>
                 <td class="p-0">
-                    <button class="@arrowButtonClasses" value="@project.Key.ProjectID">
+                    <button class="@arrowButtonClasses" value="@category.Key.ParentCategoryID">
                         <i class="icon-back-24px ml-3 large-icon float-right"></i>
                     </button>
                 </td>

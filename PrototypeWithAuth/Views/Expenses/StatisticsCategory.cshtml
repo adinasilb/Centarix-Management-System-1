@@ -1,8 +1,99 @@
-﻿
+﻿@using PrototypeWithAuth.ViewModels;
+@model StatisticsCategoryViewModel;
 @{
     ViewData["Title"] = "StatisticsCategory";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+    <script src="~/js/statisticscategory.js"></script>
+<input type="hidden" class="setupdropdowns" value="true" />
 
-<h1>StatisticsCategory</h1>
+@*Hidden fors so the correct subproject requests will be called*@
+@*<div class="my-hiddenvalues-1">
+        <input type="hidden" asp-for="Year" />
+        @for (int i = 0; i < Model.Months.Count; i++)
+        {
+            <input type="hidden" asp-for="Months[i]" class="months-selected" />
+        }
+    </div>*@
 
+<div class="container-fluid">
+    <div class="row under-row-margin">
+        <div class="col-7 heading-1 p-0">
+        </div><div class="col-4 offset-1">
+            @Html.DropDownListFor(m => m.CategoryTypeSelected,
+            new SelectList(
+                Model.CategoryTypes,
+                "CategoryTypeID",
+                "CategoryTypeDescription"),
+            new { @class = "expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4", @multiple = "multiple" }
+            )
+
+            @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+            @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
+                new SelectListItem
+                {
+                    Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+                    Value = m.ToString(),
+                    //Selected = Model.Months
+                }),
+                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
+            @*</div>
+                <div class="col-1 p-0 monthsHours">*@
+
+            @{
+                var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
+                int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
+            }
+
+            @Html.DropDownList("select-years", years.Select(x =>
+        new SelectListItem
+        {
+        Text = x.ToString(),
+        Value = x.ToString(),
+        Selected = (x == curYear)
+        }
+        ), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3 change-year", @name = "SelectedYear", @searchable = "Search here.." })
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-6 cat-table px-0">
+            @{ await Html.RenderPartialAsync("_CategoryTypes", Model);}
+        </div>
+        <div class="col-6 subcat-table px-0">
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $.fn.SetUpDropdowns = function () {
+            $("input[data-activates='select-options-CategoryTypeSelected']").attr('placeholder', "Category Type")
+            $("input[data-activates='select-options-CategoryTypeSelected']").val('')
+
+            $(".category-type-selected").each(function () {
+                $("#CategoryTypeSelected option[value='" + $(this).val() + "']").attr("selected", true);
+            });
+
+            $(".months-selected").each(function () {
+                $("#Months option[value='" + $(this).val() + "']").attr("selected", true);
+            });
+        };
+
+        $(".change-month").on("change", function () {
+            $.fn.GetStatisticsCategoryPartial()
+        });
+
+        $(".change-year").on("change", function () {
+            $.fn.GetStatisticsCategoryPartial();
+        });
+
+        $("#CategoryTypeSelected").off("change").on("change", function () {
+            $.fn.GetStatisticsCategoryPartial()
+        });
+
+
+    })
+</script>

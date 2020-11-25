@@ -1,8 +1,77 @@
-﻿
+﻿@using PrototypeWithAuth.ViewModels
+@model StatisticsItemViewModel
 @{
     ViewData["Title"] = "StatisticsItem";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
-<h1>StatisticsItem</h1>
 
+<div class="row under-row-margin expenses-form">
+    <div class="col-7 heading-1 p-0">
+        @{ 
+            var fbClass = "";
+            var hpClass = "";
+            if (Model.HighestPrice)
+            {
+                hpClass = " active ";
+            }
+            else if (Model.FrequentlyBought)
+            {
+                fbClass = " active ";
+            }
+        }
+        <div class="item-table">
+            <ul class="pl-0">
+                <li class="list-inline-item m-0">
+                    <a class="new-button pt-4 @fbClass">
+                        <i class="new-icon icon-centarix-icons-04"></i>
+                        <label class="new-button-text">Frequently Bought</label>
+                    </a>
+                </li>
+                <li class="list-inline-item m-0">
+                    <a class="new-button pt-4 @hpClass">
+                        <i class="new-icon icon-monetization_on-24px"></i>
+                        <label class="new-button-text">Highest Price</label>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="col-4 offset-1">
+        @Html.DropDownListFor(m => m.CategoryTypesSelected,
+        new SelectList(
+            Model.CategoryTypes,
+            "CategoryTypeID",
+            "CategoryTypeDescription"),
+        new { @class = "expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4", @multiple = "multiple" }
+        )
+
+        @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+        @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
+            new SelectListItem
+            {
+                Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+                Value = m.ToString(),
+                //Selected = Model.Months
+            }),
+            htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
+        @*</div>
+            <div class="col-1 p-0 monthsHours">*@
+
+        @{
+            var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
+            int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
+        }
+
+        @Html.DropDownList("select-years", years.Select(x =>
+    new SelectListItem
+    {
+    Text = x.ToString(),
+    Value = x.ToString(),
+    Selected = (x == curYear)
+    }
+    ), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3 change-year", @name = "SelectedYear", @searchable = "Search here.." })
+    </div>
+
+</div>

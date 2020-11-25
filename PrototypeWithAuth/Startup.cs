@@ -132,7 +132,7 @@ namespace PrototypeWithAuth
             });
 
             //ChangePassword(serviceProvider).Wait();
-            //CreateRoles(serviceProvider).Wait();
+            CreateRoles(serviceProvider).Wait();
             //AddRole(serviceProvider).Wait();
 
 

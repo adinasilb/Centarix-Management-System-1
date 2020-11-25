@@ -1,11 +1,13 @@
 ﻿$(function () {
-	$(".parent-project-button").off("click").on("click", function () {
-		var projectId = $(this).val();
+	$(".parent-category-button").off("click").on("click", function () {
+		var parentCatID = $(this).val();
 		var months = [];
 		$(".months-selected").each(function () {
 			months.push($(this).val());
 		});
-		var year = $("#Year").val();
+		var catTypes = [];
+		catTypes = $("#CategoryTypeSelected").val();
+		var year = $("#select-years").val();
 
 		//set the view:
 		var colorClass = "graduated-table-background-color";
@@ -19,44 +21,31 @@
 		$(this).parent().parent().addClass(borderLeftClass);
 
 		//fill the second div:
-		var url = "/Expenses/_StatisticsSubProjects";
+		var url = "/Expenses/_SubCategoryTypes";
 
 		$.ajax({
 			async: true,
 			url: url,
 			type: 'GET',
-			cache: false,
 			traditional: true,
-			data: { ProjectID: projectId, Months: months, Year: year },
+			cache: false,
+			data: { ParentCategoryId: parentCatID, categoryTypes: catTypes, Months: months, year, year },
 			success: function (data) {
-				$(".subprojects-table").empty();
-				$(".subprojects-table").html(data);
+				$(".subcat-table").empty();
+				$(".subcat-table").html(data);
 			}
 		});
 	});
 
-	$("#Months").off("change").on("change", function () {
-		//call projects
-		$.fn.CallProjectsPartialView();
 
-		//remove subprojects
-		$(".subprojects-table").html("");
-	});
-
-	$("#select-years").off("change").on("change", function () {
-		//call projects
-		$.fn.CallProjectsPartialView();
-
-		//remove subprojects
-		$(".subprojects-table").html("");
-	});
-
-	$.fn.CallProjectsPartialView = function () {
+	$.fn.GetStatisticsCategoryPartial = function () {
+		var year = $("#select-years").val();
 		var months = [];
 		months = $("#Months").val();
-		var year = $("#select-years").val();
+		var catTypes = [];
+		catTypes = $("#CategoryTypeSelected").val();
 
-		var url = "/Expenses/_StatisticsProjects";
+		var url = "/Expenses/_CategoryTypes";
 
 		$.ajax({
 			async: true,
@@ -64,10 +53,11 @@
 			type: 'GET',
 			traditional: true,
 			cache: false,
-			data: { Months: months, Year: year },
+			data: { categoryTypes: catTypes, months: months, year: year },
 			success: function (data) {
-				$(".projects-table").empty();
-				$(".projects-table").html(data);
+				$(".subcat-table").empty();
+				$(".cat-table").empty();
+				$(".cat-table").html(data);
 			}
 		});
 	};

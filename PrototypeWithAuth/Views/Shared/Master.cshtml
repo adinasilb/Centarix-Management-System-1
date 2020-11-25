@@ -272,6 +272,9 @@
             $('#dtBasicExample').DataTable();
             $('.dataTables_length').addClass('bs-select');
             $('.mdb-select').materialSelect();
+            if ($(".setupdropdowns").val()) {
+                $.fn.SetUpDropdowns();
+            }
             $("input[data-activates='select-options-SelectedMonths']").attr('placeholder', "Month")
             $("input[data-activates='select-options-SelectedYears']").attr('placeholder', "Year")
             $("input[data-activates='select-options-SelectedCategoryTypes']").attr('placeholder', "Lab / Operation")
