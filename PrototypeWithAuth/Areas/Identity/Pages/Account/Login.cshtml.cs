@@ -94,9 +94,9 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 var user = await _userManager.FindByEmailAsync(Input.Email);
                 //var user = await _userManager.FindByEmailAsync(Input.Email);
-                var passwordValidator = new PasswordValidator<ApplicationUser>();
+               // var passwordValidator = new PasswordValidator<ApplicationUser>();
                 //var identityUserManager = new UserManager<IdentityUser>(user);
-                var validPassword = await passwordValidator.ValidateAsync(_userManager, user, Input.Password);
+                var validPassword = await _signInManager.UserManager.CheckPasswordAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -123,7 +123,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
                 }
-                else if (!validPassword.Succeeded)
+                else if (!validPassword)
                 {
                     _logger.LogInformation("User locked out.");
                     //Add error
