@@ -1,0 +1,70 @@
+﻿@using PrototypeWithAuth.ViewModels
+@model StatisticsCategoryViewModel
+<script src="~/js/statisticsproject.js"></script>
+<div class="my-hiddenvalues-2">
+    <input type="hidden" asp-for="Year" />
+    @for (int i = 0; i < Model.Months.Count; i++)
+    {
+        <input type="hidden" asp-for="Months[i]" class="months-selected" />
+    }
+</div>
+
+<table class="table table-sm table-hover ">
+    <thead>
+        <tr class="text-left">
+            <th class="under-td-padding pl-5">
+                Name
+            </th>
+            <th class="under-td-padding pl-3">
+                Orders
+            </th>
+            <th class="under-td-padding pl-3">
+                Items
+            </th>
+            <th class="under-td-padding pl-5">
+                Price
+            </th>
+            <th class="under-td-padding pl-3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.ParentCategories)
+        {
+            var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-category-button";
+            var arrowButtonClasses = buttonClasses + " right-arrow-icon";
+            <tr class="text-left">
+                <td class="p-0">
+                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                        @category.Key.ParentCategoryDescription
+                    </button>
+                </td>
+                <td class="p-0">
+                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                        @category.Value.Count()
+                    </button>
+                </td>
+                <td class="p-0">
+                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                        @category.Value.Select(r => r.ProductID).Distinct().Count()
+                    </button>
+                </td>
+                <td class="p-0">
+                    <button class="@buttonClasses" value="@category.Key.ParentCategoryID">
+                        &#8362; @string.Format("{0:n0}", category.Value.Sum(r => r.Cost))
+                    </button>
+                </td>
+                <td class="p-0">
+                    <button class="@arrowButtonClasses" value="@category.Key.ParentCategoryID">
+                        <i class="icon-back-24px ml-3 large-icon float-right"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        $(".my-hiddenvalues-1").html("");
+    });
+</script>
