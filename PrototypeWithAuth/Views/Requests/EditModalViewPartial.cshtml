@@ -543,7 +543,7 @@ Model.UnitTypeList,
                 </div>
                 @{
                     var cardDivDisplayNone = "d-none";
-                    var cardDisplayNoneSubSub = "";
+                    var cardDisplayNoneSubSub = "d-none";
                     var plusDisplayNoneSubSub = "";
                     if (Model.Request.SubUnit > 0)
                     {
@@ -637,7 +637,7 @@ Model.UnitTypeList,
                         <div class="input-group">
                             <span class="input-group-text">&#x20aa;</span>
                             @{ var vat = .17 * Model.Request.Cost;}
-                            <input value="@vat.ToString("N2");" class="form-control-plaintext border-bottom " disabled />
+                            <input value="@vat.ToString("N2")" class="form-control-plaintext border-bottom " disabled />
                             <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                         </div>
                     </div>

@@ -62,9 +62,9 @@
                     </div>
 
                     <div class="row" id="edit">
-                        <div class="col-4 RequestUnitCard">
+                        <div class="col-4 h-100 RequestUnitCard">
                             <div class="border p-3">
-                                <div class="row">
+                                <div class="row mb-4">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="Request.Unit" class="control-label"></label>
                                         <input asp-for="Request.Unit" class="form-control-plaintext border-bottom " min="1" />
@@ -83,7 +83,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-4">
                                     <label class="control-label">Price:</label>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -118,11 +118,16 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 ">
                                     <span aria-hidden="true">×</span>
                                 </button>
-                                <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub"><div class="row " style="display:initial;"><div class="col-6 offset-3 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled style="font-size: 5rem" /></div></div></div>
+                                <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub">
+                                <div class="row " style="display:initial;">
+                                    <div class="col-6 offset-3 text-center font-weight-light">
+                                    <input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow " style="font-size: 5rem" />
+                                       </div>
+
+                                </div>
+                                    </div>
                                 <div class="mx-2rem  subUnitsCard @cardDisplayNoneSub mt-4">
-
-
-                                    <div class="row">
+                                    <div class="row mb-4">
                                         <div class="col-md-6 pl-0 form-group">
                                             <label asp-for="Request.SubUnit" class="control-label"></label>
                                             <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" disabled />
@@ -139,7 +144,6 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                             <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
-
                                     <div class="form-group">
                                         <label class="control-label">Price:</label>
                                         <div class="row">
@@ -162,7 +166,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         </div>
                         @{
                             var cardDivDisplayNone = "d-none";
-                            var cardDisplayNoneSubSub = "";
+                            var cardDisplayNoneSubSub = "d-none";
                             var plusDisplayNoneSubSub = "";
                             if (Model.Request.SubUnit > 0)
                             {
@@ -187,10 +191,16 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 ">
                                     <span aria-hidden="true">×</span>
                                 </button>
-                                <div class="mx-2rem addSubSubUnitCard mt-4 @plusDisplayNoneSubSub"><div class="row " style="display:initial;"><div class="col-6 offset-3 text-center font-weight-light"><input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled style="font-size: 5rem" /></div></div></div>
+                                <div class="mx-2rem addSubSubUnitCard mt-4 @plusDisplayNoneSubSub">
+                                    <div class="row " style="display:initial;">
+                                        <div class="col-6 offset-3 text-center font-weight-light">
+                                            <input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow " style="font-size: 5rem" />
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="mx-2rem  subSubUnitsCard mt-4 @cardDisplayNoneSubSub">
-                                    <div class="row">
-                                        <div class="col-md-6 form-group">
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 pl-0 form-group">
                                             <label asp-for="Request.SubSubUnit" class="control-label"></label>
                                             <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
                                             <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
@@ -213,7 +223,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                             <div class="col-md-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text">&#36;</span>
-                                                    <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
+                                                    <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" value="" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -224,11 +234,11 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                             </div>
                                         </div>
                                     </div>
-                                    <div />
                                 </div>
-                            </div>
+                            </div>                          
+                            
                         </div>
-                       
+
                     </div>
                     <div class="row">
                         <div class="col-md-2">
@@ -256,7 +266,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
                                     @{ var vat = .17 * Model.Request.Cost;}
-                                    <input class="form-control-plaintext border-bottom vat" disabled value="@vat.ToString("N2");" />
+                                    <input class="form-control-plaintext border-bottom vat" disabled value="@vat.ToString("N2")" />
                                 </div>
                             </div>
                         </div>
@@ -298,3 +308,4 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+<script src="~/js/SubUnit.js"></script>
