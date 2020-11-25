@@ -1,14 +1,13 @@
 ﻿$(function () {
 	$(".parent-category-button").off("click").on("click", function () {
-		alert("Parent cat clicked");
 		var parentCatID = $(this).val();
 		var months = [];
 		$(".months-selected").each(function () {
 			months.push($(this).val());
 		});
 		var catTypes = [];
-		catTypes = $("#CategoryTypesSelected").val();
-		var year = $("#Year").val();
+		catTypes = $("#CategoryTypeSelected").val();
+		var year = $("#select-years").val();
 
 		//set the view:
 		var colorClass = "graduated-table-background-color";
@@ -22,17 +21,44 @@
 		$(this).parent().parent().addClass(borderLeftClass);
 
 		//fill the second div:
-		var url = "/Expenses/_SubCategoryTypes?ParentCategoryId=" + parentCatID + "&Months=" + months + "&Year=" + year;
+		var url = "/Expenses/_SubCategoryTypes";
 
 		$.ajax({
 			async: true,
 			url: url,
 			type: 'GET',
+			traditional: true,
 			cache: false,
+			data: { ParentCategoryId: parentCatID, categoryTypes: catTypes, Months: months, year, year },
 			success: function (data) {
 				$(".subcat-table").empty();
 				$(".subcat-table").html(data);
 			}
 		});
 	});
+
+
+	$.fn.GetStatisticsCategoryPartial = function () {
+		var year = $("#select-years").val();
+		var months = [];
+		months = $("#Months").val();
+		var catTypes = [];
+		catTypes = $("#CategoryTypeSelected").val();
+
+		var url = "/Expenses/_CategoryTypes";
+
+		$.ajax({
+			async: true,
+			url: url,
+			type: 'GET',
+			traditional: true,
+			cache: false,
+			data: { categoryTypes: catTypes, months: months, year: year },
+			success: function (data) {
+				$(".subcat-table").empty();
+				$(".cat-table").empty();
+				$(".cat-table").html(data);
+			}
+		});
+	};
 });

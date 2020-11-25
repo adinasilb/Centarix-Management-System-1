@@ -386,7 +386,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
                 .ToList();
 
-            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { 1 }, 2020));
+            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { DateTime.Now.Month }, 2020));
         }
 
         public IActionResult _StatisticsProjects(List<int> Months, int Year)
@@ -436,11 +436,13 @@ namespace PrototypeWithAuth.Controllers
             var subprojects = _context.SubProjects.Where(sp => sp.ProjectID == ProjectID).ToList();
             foreach (var subproject in subprojects)
             {
-                var requests = _context.SubProjects
-                    .Where(sp => sp == subproject)
-                    .Select(sp => sp.Requests.Where(r => r.Invoice != null)
+                var requests = _context.Requests
+                    .Include(r => r.Invoice)
+                    .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                    .Where(r => r.SubProjectID == subproject.SubProjectID)
+                    .Where(r => r.InvoiceID != null)
                     .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month))
-                    .Where(r => r.Invoice.InvoiceDate.Year == Year).ToList()).FirstOrDefault();
+                    .Where(r => r.Invoice.InvoiceDate.Year == Year).ToList();
                 subProjectRequests.Add(subproject, requests);
             }
 
@@ -528,7 +530,16 @@ namespace PrototypeWithAuth.Controllers
             var parentCategories = _context.ParentCategories.ToList();
             var catTypes = _context.CategoryTypes.Select(ct => ct.CategoryTypeID).ToList();
 
-            return View(GetStatisticsCategoryViewModel(parentCategories, catTypes, new List<int>() { 1 }, DateTime.Today.Year));
+            return View(GetStatisticsCategoryViewModel(parentCategories, catTypes, new List<int>() { DateTime.Now.Month }, DateTime.Today.Year));
+        }
+
+        [HttpGet]
+        [Authorize(Roles ="Admin, CEO, Expenses")]
+        public IActionResult _CategoryTypes(List<int> categoryTypes, List<int> months, int year)
+        {
+            var parentCategories = _context.ParentCategories.ToList();
+
+            return PartialView(GetStatisticsCategoryViewModel(parentCategories, categoryTypes, months, year));
         }
 
         public StatisticsCategoryViewModel GetStatisticsCategoryViewModel(List<ParentCategory> parentCategories, List<int> categoryTypes, List<int> months, int year)

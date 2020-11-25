@@ -70,17 +70,30 @@
 <script type="text/javascript">
     $(function () {
         $.fn.SetUpDropdowns = function () {
-            $("input[data-activates='select-options-CategoryTypesSelected']").attr('placeholder', "Category Type")
-            $("input[data-activates='select-options-CategoryTypesSelected']").val('')
+            $("input[data-activates='select-options-CategoryTypeSelected']").attr('placeholder', "Category Type")
+            $("input[data-activates='select-options-CategoryTypeSelected']").val('')
 
             $(".category-type-selected").each(function () {
-                $("#CategoryTypesSelected option[value='" + $(this).val() + "']").attr("selected", true);
+                $("#CategoryTypeSelected option[value='" + $(this).val() + "']").attr("selected", true);
             });
 
             $(".months-selected").each(function () {
                 $("#Months option[value='" + $(this).val() + "']").attr("selected", true);
             });
         };
+
+        $(".change-month").on("change", function () {
+            $.fn.GetStatisticsCategoryPartial()
+        });
+
+        $(".change-year").on("change", function () {
+            $.fn.GetStatisticsCategoryPartial();
+        });
+
+        $("#CategoryTypeSelected").off("change").on("change", function () {
+            $.fn.GetStatisticsCategoryPartial()
+        });
+
 
     })
 </script>

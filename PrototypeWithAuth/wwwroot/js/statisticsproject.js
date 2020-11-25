@@ -19,13 +19,15 @@
 		$(this).parent().parent().addClass(borderLeftClass);
 
 		//fill the second div:
-		var url = "/Expenses/_StatisticsSubProjects?ProjectID=" + projectId + "&Months=" + months + "&Year=" + year;
+		var url = "/Expenses/_StatisticsSubProjects";
 
 		$.ajax({
 			async: true,
 			url: url,
 			type: 'GET',
 			cache: false,
+			traditional: true,
+			data: { ProjectID: projectId, Months: months, Year: year },
 			success: function (data) {
 				$(".subprojects-table").empty();
 				$(".subprojects-table").html(data);
