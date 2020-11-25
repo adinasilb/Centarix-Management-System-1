@@ -17,6 +17,7 @@ using Project = PrototypeWithAuth.Models.Project;
 using Request = PrototypeWithAuth.Models.Request;
 using System.Threading.Tasks;
 using Org.BouncyCastle.Ocsp;
+using Abp.Extensions;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -462,8 +463,30 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsItem.ToString();
-            return View();
+
+            var categoryTypesSelected = _context.CategoryTypes.Select(ct => ct.CategoryTypeID).ToList();
+
+            return View(GetStatisticsItemViewModel(true, false, categoryTypesSelected, new List<int>() { DateTime.Now.Month }, DateTime.Now.Year));
         }
+
+        public StatisticsItemViewModel GetStatisticsItemViewModel(bool FrequentlyBought, bool HighestPrice, List<int> CategoryTypesSelected, List<int> Months, int Year)
+        {
+            var categoryTypes = _context.CategoryTypes.ToList();
+
+            StatisticsItemViewModel statisticsItemViewModel = new StatisticsItemViewModel()
+            {
+                Requests = _context.Requests.ToList(),
+                FrequentlyBought = FrequentlyBought,
+                HighestPrice = HighestPrice,
+                CategoryTypesSelected = _context.CategoryTypes.Where(ct => CategoryTypesSelected.Contains(ct.CategoryTypeID)).ToList(),
+                CategoryTypes = categoryTypes,
+                Months = Months,
+                Year = Year
+            };
+
+            return statisticsItemViewModel;
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public async Task<IActionResult> StatisticsWorker()
@@ -534,7 +557,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles ="Admin, CEO, Expenses")]
+        [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult _CategoryTypes(List<int> categoryTypes, List<int> months, int year)
         {
             var parentCategories = _context.ParentCategories.ToList();
@@ -572,7 +595,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var subCategories = _context.ProductSubcategories.Where(sc => sc.ParentCategoryID == ParentCategoryId).ToList();
             Dictionary<ProductSubcategory, List<Request>> productSubs = new Dictionary<ProductSubcategory, List<Request>>();
-            foreach( var sc in subCategories)
+            foreach (var sc in subCategories)
             {
                 var scRequests = _context.Requests.Where(r => r.Product.ProductSubcategoryID == sc.ProductSubcategoryID)
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
