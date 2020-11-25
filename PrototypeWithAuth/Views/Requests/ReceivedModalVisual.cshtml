@@ -9,50 +9,58 @@
         @Html.HiddenFor(vm => vm.ParentLocationInstance.LocationInstanceID);
         @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
         {
-            <tr>
-                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+        <tr>
+            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+            {
+                z++;
+                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                 {
-                    z++;
-                    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID)
+                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID)
+                    @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place)
+                    @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
+                    <input type="hidden" asp-for="ChildrenLocationInstances[z].LocationInstanceName" class="LocationInstanceName" />
+
+                    var link = "";
+                    var classes = "css-checkbox " + Model.ChildrenLocationInstances[z].LocationInstanceID;
+
+                    if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && Model.ChildrenLocationInstances[z].IsEmpty)
                     {
-                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID);
-                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID);
-                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place);
-                        @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
-                        <input type="hidden" asp-for="ChildrenLocationInstances[z].LocationInstanceName" class="LocationInstanceName" />
+                        classes += " open-new-visual";
+                        <td class="border" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
+                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = @classes })
+                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
+                        </td>
+                    }
+                    else if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && !Model.ChildrenLocationInstances[z].IsEmpty)
+                    {
+                        classes += " open-new-visual";
+                        <td class="border" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
+                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = @classes, @disabled="disabled" })
+                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
+                        </td>
+                    }
+                    else if (Model.ChildrenLocationInstances[z].IsFull)
+                    {
+                        var backgroundClass = " order-inv-filter ";
+                        <td class="border " style="padding:0px; width:42px; height:42px;">
+                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @class = @classes })
 
-                        var link = "";
-                        var classes = "css-checkbox " + Model.ChildrenLocationInstances[z].LocationInstanceID;
-
-                        if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && !Model.ChildrenLocationInstances[z].IsEmpty)
-                        {
-                            classes += " open-new-visual";
-                            <td class="border" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
-                                @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = @classes })
-                                @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
-                            </td>
-                        }
-                        else if (Model.ChildrenLocationInstances[z].IsFull)
-                        {
-                            var backgroundClass = " order-inv-filter ";
-                            <td class="border " style="padding:0px; width:42px; height:42px;">
-                                @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @class = @classes })
-
-                                @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = backgroundClass + "css-label" })
-                            </td>
-                        }
-                        else
-                        {
-                            <td class="border" style="padding:0px;">
-                                @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = @classes })
-                                @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
-                            </td>
-                        }
-
+                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = backgroundClass + "css-label" })
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="border" style="padding:0px;">
+                            @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = @classes })
+                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
+                        </td>
                     }
 
                 }
-            </tr>
+
+            }
+        </tr>
         }
     </table>
 }

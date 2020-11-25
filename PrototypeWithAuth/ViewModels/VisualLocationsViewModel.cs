@@ -8,6 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class VisualLocationsViewModel
     {
+        public string Error { get; set; }
         public LocationInstance ParentLocationInstance { get; set; }
         public List<LocationInstance> ChildrenLocationInstances { get; set; }
         public bool IsSmallestChild { get; set; }
