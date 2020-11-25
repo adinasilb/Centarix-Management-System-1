@@ -6,9 +6,9 @@ using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class _StatisticsProjectViewModel
+    public class _StatisticsSubProjectViewModel
     {
-        public List<SubProject> SubProjects { get; set; }
+        public Dictionary<SubProject, List<Request>> SubProjects { get; set; }
         public string ProjectName { get; set; }
     }
 }

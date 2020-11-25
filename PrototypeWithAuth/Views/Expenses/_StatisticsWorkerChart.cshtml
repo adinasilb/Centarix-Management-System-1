@@ -1,0 +1,56 @@
+﻿@model StatisticsWorkerViewModel
+@using PrototypeWithAuth.ViewModels
+
+@for (int c = 0; c < Model.CategoryTypesSelected.Count; c++)
+{
+    <input type="hidden" asp-for="CategoryTypesSelected[c].CategoryTypeID" class="category-type-selected" />
+}
+@for (int m = 0; m < Model.Months.Count; m++)
+{
+    <input type="hidden" asp-for="Months[m]" class="months-selected" />
+}
+
+<table class="table table-headerspaced table-noheaderlines table-hover ">
+    <thead>
+        <tr class="text-center">
+            <th></th>
+            <th>Name</th>
+            <th>Number of Orders</th>
+            <th>Number of Items</th>
+            <th>Total</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model.Employees)
+        {
+            <tr class="text-center">
+                <td class="py-2">
+                    @{
+                        var src = "/UserImages/profile_circle_big.png";
+                        if (employee.Key.UserImage != null)
+                        {
+                            src = employee.Key.UserImage;
+                        }
+                    }
+                    <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
+                </td>
+                <td class="p-0">
+                    @employee.Key.FirstName
+                    @employee.Key.LastName
+                </td>
+                <td class="p-0">
+                    @employee.Value.Count()
+                </td>
+                <td class="p-0">
+                    @employee.Value.Select(r => r.Product).Distinct().Count()
+                </td>
+                <td class="p-0">
+                    &#8362; @string.Format("{0:n0}", employee.Value.Sum(r => r.Cost))
+                </td>
+                <td class="p-0">
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

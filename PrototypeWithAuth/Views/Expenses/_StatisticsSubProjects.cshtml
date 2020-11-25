@@ -1,6 +1,6 @@
 ﻿@using PrototypeWithAuth.Models
 @using PrototypeWithAuth.ViewModels
-@model _StatisticsProjectViewModel
+@model _StatisticsSubProjectViewModel
 
 <div class="px-5">
     <table class="table table-sm table-hover mb-0">
@@ -33,23 +33,23 @@
                 var buttonClasses = "text-left btn btn-block clicked-outer-button clicked-button overflow-hidden no-box-shadow parent-project-button";
                 <tr class="location-index-border text-left">
                     <td class="p-0" width="30%">
-                        <button class="@buttonClasses" value="@subproject.SubProjectID">
-                            @subproject.SubProjectDescription
+                        <button class="@buttonClasses" value="@subproject.Key.SubProjectID">
+                            @subproject.Key.SubProjectDescription
                         </button>
                     </td>
                     <td class="p-0" width="20%">
-                        <button class="@buttonClasses" value="@subproject.SubProjectID">
-                            @subproject.Requests.Count()
+                        <button class="@buttonClasses" value="@subproject.Key.SubProjectID">
+                            @subproject.Value.Count()
                         </button>
                     </td>
                     <td class="p-0" width="20%">
-                        <button class="@buttonClasses" value="@subproject.SubProjectID">
-                            @subproject.Requests.Select(r => r.ProductID).Distinct().Count()
+                        <button class="@buttonClasses" value="@subproject.Key.SubProjectID">
+                            @subproject.Value.Select(r => r.ProductID).Distinct().Count()
                         </button>
                     </td>
                     <td class="p-0" width="30%">
-                        <button class="@buttonClasses" value="@subproject.SubProjectID">
-                            &#8362; @string.Format("{0:n0}", Convert.ToInt32(subproject.Requests.Sum(r => r.Cost)))
+                        <button class="@buttonClasses" value="@subproject.Key.SubProjectID">
+                            &#8362; @string.Format("{0:n0}", Convert.ToInt32(subproject.Value.Sum(r => r.Cost)))
                         </button>
                     </td>
                 </tr>
