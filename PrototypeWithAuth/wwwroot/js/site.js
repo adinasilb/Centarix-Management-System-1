@@ -2130,8 +2130,17 @@ $(function () {
 					$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
 					$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
 					$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
-					$.fn.CheckUnitsFilled();
-					$.fn.CheckSubUnitsFilled();
+					if (($("#edit #Request_Unit").val() > 0 && $("#edit #Request_UnitTypeID").val())
+						|| ($("#select-options-Request_Unit").val() > 0 && $("#select-options-Request_UnitTypeID").val())) {
+						//console.log("both have values");
+						$.fn.EnableSubUnits();
+						$.fn.ChangeSubUnitDropdown();
+					}
+					if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
+						|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
+						$.fn.EnableSubSubUnits();
+						$.fn.ChangeSubSubUnitDropdown();
+					}
 				}
 				if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
 					$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');

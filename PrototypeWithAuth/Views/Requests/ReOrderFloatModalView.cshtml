@@ -30,7 +30,7 @@
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
 
                 <!-- Modal Header -->
-                <div class="new-modal-header no-box-shadow modal-header-padding modal-line-1-header-with-back">
+                <div class="new-modal-header no-box-shadow modal-header-padding " style="border-bottom:0 !important">
                     @if (TempData["ErrorMessage"] != null)
                     {
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
@@ -240,13 +240,13 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         </div>
 
                     </div>
-                    <div class="row">
+                    <div class="row mt-4">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="control-label">Sum:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled />
+                                    <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled value=""/>
                                 </div>
                             </div>
                         </div>
@@ -265,8 +265,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label class="control-label">VAT</label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
-                                    @{ var vat = .17 * Model.Request.Cost;}
-                                    <input class="form-control-plaintext border-bottom vat" disabled value="@vat.ToString("N2")" />
+                                   
+                                    <input class="form-control-plaintext border-bottom vat" disabled value="@Model.Request.VAT.ToString("N2")" />
                                 </div>
                             </div>
                         </div>
@@ -309,3 +309,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 <script src="~/js/SubUnit.js"></script>
+<script>
+    $(function () {
+        $("#Request_Cost").trigger('change');
+    });
+</script>

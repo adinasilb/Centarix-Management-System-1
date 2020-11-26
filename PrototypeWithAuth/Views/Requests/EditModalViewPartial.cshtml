@@ -355,7 +355,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                                     }
                                 </div>
                             </div>
-                                        }
+                        }
                     </div>
                 </div>
                 <div class="row">
@@ -414,10 +414,10 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                                 }
                             </table>
                         </div>
-                                    }
+                    }
                 </div>
 
-                                    }
+            }
 
         </div>
         <div id="price" class="tab-pane fade @showPrice">
@@ -611,255 +611,255 @@ Model.UnitTypeList,
                 </div>
             </div>
         </div>
-            <div class="row mt-2">
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Sum:</label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#36;</span>
-                            <input class="form-control-plaintext border-bottom" name="sum-dollars" min="0" id="sum-dollars" disabled />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label asp-for="Request.Cost" class="control-label"></label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#x20aa;</span>
-                            <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label asp-for="Request.VAT" class="control-label"></label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#x20aa;</span>
-                            @{ var vat = .17 * Model.Request.Cost;}
-                            <input value="@vat.ToString("N2")" class="form-control-plaintext border-bottom " disabled />
-                            <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Total + VAT:</label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#36;</span>
-                            <input class="form-control-plaintext border-bottom" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">____</label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#x20aa;</span>
-                            <input class="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
-                        </div>
+        <div class="row mt-2">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label">Sum:</label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#36;</span>
+                        <input class="form-control-plaintext border-bottom" name="sum-dollars" min="0" id="sum-dollars" disabled />
                     </div>
                 </div>
             </div>
-
-          </div>
-        <div id="documents" class="tab-pane fade @showDocuments">
-            <div class="row modal-tab-name">
-                <span class="heading-1 col-12 modal-tab-name">Documents</span>
-            </div>
-
-            @{
-                var urlAction = Url.Action("DocumentsModal", "Requests");
-                var fontSize = "2rem";
-            }
-
-            <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-
-            <div class="row document-margin-bottom">
-                <div class=" document-margin">
-                    @{
-                        var filterClass = "opac87";
-                        if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
-                        <div class="card document-border ">
-                            <div class="document-card text-center">
-                                <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
-                </div>
-                <div class=" document-margin ">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class=" document-card text-center">
-                                <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
-                            </div>
-
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
-                </div>
-                <div class=" document-margin">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
-                </div>
-                <div class="">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label asp-for="Request.Cost" class="control-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#x20aa;</span>
+                        <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
+                    </div>
                 </div>
             </div>
-            <div class="row document-margin-bottom">
-                <div class=" document-margin">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Info</label>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Request.VAT" class="control-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#x20aa;</span>
+                        @{ var vat = .17 * Model.Request.Cost;}
+                        <input value="@vat.ToString("N2")" class="form-control-plaintext border-bottom " disabled />
+                        <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
+                    </div>
                 </div>
-                <div class=" document-margin">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Picture</label>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label">Total + VAT:</label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#36;</span>
+                        <input class="form-control-plaintext border-bottom" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                    </div>
                 </div>
-                <div class=" document-margin">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text  document-text-margin" style="width:100%;">Return</label>
-                </div>
-                <div class="">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Credit</label>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label">____</label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#x20aa;</span>
+                        <input class="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="comments" class="tab-pane fade @showComments">
-            <div class="row modal-tab-name">
-                <span class="heading-1 col-12 modal-tab-name float-left">Comments and Ratings</span>
-            </div>
-            <div class=" container text-right">
-                <ul class="list-unstyled">
-                    <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--order-inv-color);">   +</button></li>
-
-                    <div style="display:none;" id="popover-content">
-
-                        @foreach (var item in Model.CommentTypes)
-                        {<div class="row px-3">
-                                @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
-                                {
-                                    <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
-                                }
-                                else
-                                {
-                                    <i class="icon-report_problem-24px" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
-                                }
-                                <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark mark-readonly" disabled style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
-
-                            </div>
-                        }
-                    </div>
-
-                </ul>
-            </div>
-
-            <div id="comment-info">
-                <input type="hidden" value="@Model.Comments.Count" id="index" />
-                @for (int i = 0; i < Model.Comments.Count; i++)
-                {
-                    await Html.RenderPartialAsync("CommentInfoPartialView", new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
-                }
-
-            </div>
-        </div>
-
 
     </div>
+    <div id="documents" class="tab-pane fade @showDocuments">
+        <div class="row modal-tab-name">
+            <span class="heading-1 col-12 modal-tab-name">Documents</span>
+        </div>
+
+        @{
+            var urlAction = Url.Action("DocumentsModal", "Requests");
+            var fontSize = "2rem";
+        }
+
+        <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+
+        <div class="row document-margin-bottom">
+            <div class=" document-margin">
+                @{
+                    var filterClass = "opac87";
+                    if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
+                    <div class="card document-border ">
+                        <div class="document-card text-center">
+                            <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
+            </div>
+            <div class=" document-margin ">
+                @{
+                    filterClass = "opac87";
+                    if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class=" document-card text-center">
+                            <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
+                        </div>
+
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
+            </div>
+            <div class=" document-margin">
+                @{
+                    filterClass = "opac87";
+                    if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
+            </div>
+            <div class="">
+                @{
+                    filterClass = "opac87";
+                    if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+            </div>
+        </div>
+        <div class="row document-margin-bottom">
+            <div class=" document-margin">
+                @{
+                    filterClass = "opac87";
+                    if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Info</label>
+            </div>
+            <div class=" document-margin">
+                @{
+                    filterClass = "opac87";
+                    if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Picture</label>
+            </div>
+            <div class=" document-margin">
+                @{
+                    filterClass = "opac87";
+                    if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text  document-text-margin" style="width:100%;">Return</label>
+            </div>
+            <div class="">
+                @{
+                    filterClass = "opac87";
+                    if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Credit</label>
+            </div>
+        </div>
+    </div>
+    <div id="comments" class="tab-pane fade @showComments">
+        <div class="row modal-tab-name">
+            <span class="heading-1 col-12 modal-tab-name float-left">Comments and Ratings</span>
+        </div>
+        <div class=" container text-right">
+            <ul class="list-unstyled">
+                <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--order-inv-color);">   +</button></li>
+
+                <div style="display:none;" id="popover-content">
+
+                    @foreach (var item in Model.CommentTypes)
+                    {<div class="row px-3">
+                            @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
+                            {
+                                <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
+                            }
+                            else
+                            {
+                                <i class="icon-report_problem-24px" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                            }
+                            <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark mark-readonly" disabled style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
+
+                        </div>
+                    }
+                </div>
+
+            </ul>
+        </div>
+
+        <div id="comment-info">
+            <input type="hidden" value="@Model.Comments.Count" id="index" />
+            @for (int i = 0; i < Model.Comments.Count; i++)
+            {
+                await Html.RenderPartialAsync("CommentInfoPartialView", new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
+            }
+
+        </div>
+    </div>
+
+
+</div>
 </div>
 @if (Model.Tab != 0)
 {
@@ -868,3 +868,8 @@ Model.UnitTypeList,
     </script>
 }
 <script src="~/js/SubUnit.js"></script>
+<script>
+    $(function () {
+        $("#Request_Cost").trigger('change');
+    });
+</script>
