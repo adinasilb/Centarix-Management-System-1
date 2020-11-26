@@ -91,7 +91,7 @@ $(function () {
 			success: function (data) {
 				
 				$("#sublist").destroyMaterialSelect()
-
+				$("#sublist").empty();
 				$.each(data, function (i, subCategory) {
 					var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 					$("#sublist").append(newitem1);
