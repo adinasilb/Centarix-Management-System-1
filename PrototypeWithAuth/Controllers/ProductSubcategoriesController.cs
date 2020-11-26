@@ -23,7 +23,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
-        [Authorize(Roles = "Admin, OrdersAndInventory, Operation")]
+        [Authorize(Roles = "Admin, Requests, Operations")]
         public async Task<IActionResult> Index(String PageType = "", int categoryType=1)
         {
             if(PageType.Equals( AppUtility.LabManagementPageTypeEnum.Equipment.ToString()))

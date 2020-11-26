@@ -38,7 +38,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         // GET: Vendors
-        [Authorize(Roles = "Admin, OrdersAndInventory")]
+        [Authorize(Roles = "Admin, Requests")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             TempData["SectionType"] = SectionType;
