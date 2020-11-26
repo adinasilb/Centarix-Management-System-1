@@ -9,64 +9,76 @@
         <span class="sr-only">Loading...</span>
     </div>*@
 
-<div class="center" role="status" id="loading2" style="display:none;">
-    <img src="~/images/css/Loading/centarix_loading3.gif" />
-</div>
-@if (Model.IsSmallestChild || Model.CurrentEmptyChild.LocationInstanceID > 0)
+@*@if (Model.Error != null)
 {
-<div class="container float-right">
-    <div class="row">
-        <div class="col-12">
-            <button class="btn visual-locations-zoom 
-                    float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ParentLocationInstance.LocationInstanceID"> <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In</button>
-        </div>
-    </div>
-    <br />
-    <div class="row mt-0">
-        <div class="col-md-12">
-            <div class="container text-center">
-                <table class="table table-sm border mt-0">
-                    @{
-                        int z = -1;
-                    }
-                    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
-                    {
-                        <tr>
-                            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-                            {
-                                z++;
-                                var backgroundClass = "";
-                                var innerHtml = Model.ParentLocationInstance.Place;
-                                var AddedBGClass = " lab-man-50-background-color text-light";
-                                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
-                                {
-                                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
-                                    {
-                                        backgroundClass += AddedBGClass;
-
-                                        innerHtml = Model.ChildrenLocationInstances[z].Place;
-                                    }
-                                    else
-                                    {
-                                        backgroundClass = "";
-                                        innerHtml = Model.ChildrenLocationInstances[z].Place;
-                                    }
-                                }
-                                <td class="@backgroundClass" style="">@innerHtml</td>
-                                @*<td class="border">
-                                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
-                                        {
-                                            <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
-                                            z++;
-                                        }
-                                    </td>*@
-                            }
-                        </tr>
-                    }
-                </table>
-            </div>
-
-        </div>
-    </div>
-</div>
+    <h1>Error:</h1>
+    <h3>@Model.Error</h3>
 }
+else
+{*@
+
+    <div class="center" role="status" id="loading2" style="display:none;">
+        <img src="~/images/css/Loading/centarix_loading3.gif" />
+    </div>
+    @if (Model.IsSmallestChild || Model.CurrentEmptyChild.LocationInstanceID > 0)
+    {
+        <div class="container float-right">
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn visual-locations-zoom
+                    float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ParentLocationInstance.LocationInstanceID">
+                        <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
+                    </button>
+                </div>
+            </div>
+            <br />
+            <div class="row mt-0">
+                <div class="col-md-12">
+                    <div class="container text-center">
+                        <table class="table table-sm border mt-0">
+                            @{
+                                int z = -1;
+                            }
+                            @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+                            {
+                                <tr>
+                                    @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                                    {
+                                        z++;
+                                        var backgroundClass = "";
+                                        var innerHtml = Model.ParentLocationInstance.Place;
+                                        var AddedBGClass = " lab-man-50-background-color text-light";
+                                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                                        {
+                                            if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                                            {
+                                                backgroundClass += AddedBGClass;
+
+                                                innerHtml = Model.ChildrenLocationInstances[z].Place;
+                                            }
+                                            else
+                                            {
+                                                backgroundClass = "";
+                                                innerHtml = Model.ChildrenLocationInstances[z].Place;
+                                            }
+                                        }
+                                        <td class="@backgroundClass" style="">@innerHtml</td>
+                                        @*<td class="border">
+                                                @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
+                                                {
+                                                    <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
+                                                    z++;
+                                                }
+                                            </td>*@
+                                    }
+                                </tr>
+                            }
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+
+@*}*@

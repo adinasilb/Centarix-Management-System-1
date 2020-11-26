@@ -117,18 +117,19 @@
 	};
 
 	function FillNextSelect(nextSelect, locationInstanceParentId) {
-		alert("locationinstanceparentid: " + locationInstanceParentId);
 		var url = "/Requests/GetSublocationInstancesList?locationInstanceParentId=" + locationInstanceParentId;
-		//alert("in fill next select " + JSON.stringify(nextSelect));
-		//var items = $();
 		$.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
 			var item = "<li>Select Location Instance</li>";
 			$.each(result, function (i, field) {
-				item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" >' + field.locationInstanceName + '</li>'
+				var emptyText = "";
+				if (field.isEmpty) {
+					emptyText = " (Empty)";
+				}
+				item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" >' + field.locationInstanceName + emptyText + '</li>'
 			});
 			nextSelect.append(item);
 		});
-		//return items;
+		return false;
 	};
 
 

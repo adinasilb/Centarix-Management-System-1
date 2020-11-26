@@ -137,6 +137,11 @@ namespace PrototypeWithAuth.Controllers
                     locationType = _context.LocationTypes.Where(lt => lt.LocationTypeID == visualLocationsViewModel.ChildrenLocationInstances.FirstOrDefault().LocationTypeID).FirstOrDefault();
 
                 }
+                else
+                {
+                    visualLocationsViewModel.Error = "No smaller locations can be found"; // CHECK IF THIS WORKS EVERYWHERE!!!!!!!!!! IMPT TODO
+                }
+
                 if (locationType.LocationTypeChildID != null)
                 {
                     //is this enough or should we actually check for children
