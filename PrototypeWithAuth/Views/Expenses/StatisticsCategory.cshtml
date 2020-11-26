@@ -18,42 +18,46 @@
 
 <div class="container-fluid">
     <div class="row under-row-margin">
-        <div class="col-7 heading-1 p-0">
-        </div><div class="col-4 offset-1">
-            @Html.DropDownListFor(m => m.CategoryTypeSelected,
-            new SelectList(
-                Model.CategoryTypes,
-                "CategoryTypeID",
-                "CategoryTypeDescription"),
-            new { @class = "expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4", @multiple = "multiple" }
-            )
+        <div class="col-6 heading-1 p-0">
+        </div><div class="col-6 p-0">
 
-            @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
-            @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
-                new SelectListItem
-                {
-                    Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
-                    Value = m.ToString(),
-                    //Selected = Model.Months
-                }),
-                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
-            @*</div>
-                <div class="col-1 p-0 monthsHours">*@
+    @{
+        var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
+        int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
+    }
 
-            @{
-                var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
-                int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
-            }
+    @Html.DropDownList("select-years", years.Select(x =>
+new SelectListItem
+{
+Text = x.ToString(),
+Value = x.ToString(),
+Selected = (x == curYear)
+}
+), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right change-year", @name = "SelectedYear", @searchable = "Search here.." })
 
-            @Html.DropDownList("select-years", years.Select(x =>
+
+    @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+    @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
         new SelectListItem
         {
-        Text = x.ToString(),
-        Value = x.ToString(),
-        Selected = (x == curYear)
-        }
-        ), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3 change-year", @name = "SelectedYear", @searchable = "Search here.." })
-        </div>
+            Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+            Value = m.ToString(),
+            //Selected = Model.Months
+        }),
+        htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
+
+
+    @Html.DropDownListFor(m => m.CategoryTypeSelected,
+    new SelectList(
+        Model.CategoryTypes,
+        "CategoryTypeID",
+        "CategoryTypeDescription"),
+    new { @class = "expenses mdb-select custom select-dropdown form-control-plaintext reports-filters float-right mr-3", @multiple = "multiple" }
+    )
+
+    @*</div>
+        <div class="col-1 p-0 monthsHours">*@
+</div>
 
     </div>
     <div class="row">
