@@ -2043,8 +2043,8 @@ span.caret {
     border: 2px solid var(--expense-color) !important;
 }
 
-.expenses.adjust-small-width{
-    width: 8.75rem;
+.expenses.reports-filters {
+    width: 13rem;
 }
 
 /*end change to reports*/

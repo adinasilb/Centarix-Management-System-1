@@ -19,37 +19,12 @@
         }
     </div>*@
 
-<div class="container-fluid">
+<div class="container-fluid expenses">
     <div class="row under-row-margin">
-        <div class="col-7 heading-1 p-0">
+        <div class="col-6 heading-1 p-0">
             @*<button class="float-right custom-button-small-font custom-button click-me" id="click-me">Click Me</button>*@
         </div>
-        <div class="col-3 offset-2">
-            @*<select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 change-months" multiple
-                        id="select-months" searchable="Search Months">
-                    @for (int i = 1; i <= 12; i++)
-                    {
-                        var selected = "";
-                        if (Model.Months.Contains(i))
-                        {
-                            selected = "selected";
-                        }
-                        <option value="@i" selected="@selected">@System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(i)</option>
-                    }
-                </select>*@
-            @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
-            @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
-                new SelectListItem
-                {
-                    Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
-                    Value = m.ToString(),
-                    //Selected = Model.Months
-                }),
-                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left mr-3 change-month",
-                    @searchable = "Search here...", @multiple = "multiple", @onload = "ChangeCheckboxesToFilledIn()" })
-            @*</div>
-                <div class="col-1 p-0 monthsHours">*@
-
+        <div class="col-6 p-0">
             @{
                 var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
                 int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
@@ -62,7 +37,25 @@
      Value = x.ToString(),
      Selected = (x == curYear)
  }
-), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3 change-year", @name = "SelectedYear", @searchable = "Search here.." })
+), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right ml-3 change-year", @name = "SelectedYear", @searchable = "Search here.." })
+
+            @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+            @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
+                new SelectListItem
+                {
+                    Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+                    Value = m.ToString(),
+                    //Selected = Model.Months
+                }),
+                htmlAttributes: new
+                     {
+                         @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right change-month",
+                    @searchable = "Search here...",
+                         @multiple = "multiple",
+                         @onload = "ChangeCheckboxesToFilledIn()"
+                     })
+            @*</div>
+        <div class="col-1 p-0 monthsHours">*@
         </div>
 
     </div>
