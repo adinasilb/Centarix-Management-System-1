@@ -72,6 +72,8 @@ namespace PrototypeWithAuth
             builder.AddRazorRuntimeCompilation();
 #endif
 
+            services.AddApplicationInsightsTelemetry();
+
             // in order to be able to customize the aspnetcore identity
 
             services.AddMvc(config => //this creates a global authorzation - meaning only registered users can use view the application
