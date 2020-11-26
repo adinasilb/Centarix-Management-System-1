@@ -136,20 +136,29 @@
         for (var i = 0, len = values.length; i < len; i++) {
             data.addRow([names[i], values[i]])
             slices[i] = {color: colors[i]}
-        }
+            }
+            var formatter = new google.visualization.NumberFormat({
+                prefix: currency
+            });
+            formatter.format(data, 1);
         var options = {
             title: '',
             sliceVisibilityThreshold: 0,
             slices: slices,
             pieSliceBorderColor: 'white',
             chartArea: { width: 1000, height: 1000, left: "15%" },
-            legend: { position: 'right' }
+            legend: { position: 'right', labeledValueText: 'both', },
+            pieSliceText: 'both',
+            pieSliceTextStyle: {
+                bold: true,}
+                 
 
-        };
+                };
 
-        var chart = new google.visualization.PieChart($('#piechart')[0]);
-             chart.draw(data, options);
-        }
+                var chart = new google.visualization.PieChart($('#piechart')[0]);
+                chart.draw(data, options);
+                }
+
         google.charts.load('current', { packages: ['corechart'] }).then(drawChart);
     });
 </script>
@@ -158,6 +167,6 @@
         stroke-width: 5;
     }
     g {
-        box-shadow: 8px 6px #00000029;
+       
     }
 </style>

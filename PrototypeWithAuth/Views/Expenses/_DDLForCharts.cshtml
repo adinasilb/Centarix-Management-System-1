@@ -35,6 +35,14 @@
          new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Month", @multiple = "multiple", @value = "" }
         )
         </div>
+        <div class=" select-box-margin-bottom ">
+            <select asp-for="Currency" class="mdb-select custom select-dropdown form-control-plaintext" searchable="Search Currency" data-placeholder="Currency">
+                <option value="@AppUtility.CurrencyEnum.USD">&dollar; USD</option>
+                <option value="@AppUtility.CurrencyEnum.NIS" selected>&#8362; NIS</option>
+            </select>
+        </div>
+        <br />
+        <br />
         <div class=" select-box-margin-bottom">
             @Html.DropDownListFor(
          vm => vm.SelectedCategoryTypes,
@@ -93,6 +101,16 @@
          new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Sub Projects", @multiple = "multiple" }
         )
         </div>
+        <div class=" select-box-margin-bottom">
+            @Html.DropDownListFor(
+         vm => vm.SelectedVendors,
+         new SelectList(
+             Model.Vendors,
+             "VendorID",
+             "VendorEnName"),
+         new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Vendors", @multiple = "multiple" }
+        )
+        </div>
         @*<div class=" select-box-margin-bottom">
                @Html.DropDownListFor(
             vm => vm.AdvancedGraph,
@@ -102,12 +120,7 @@
             new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Advanced Graphs", @multiple = "multiple" }
         )
            </div>*@
-        <div class=" select-box-margin-bottom">
-            <select asp-for="Currency" class="mdb-select custom select-dropdown form-control-plaintext" searchable="Search Currency" data-placeholder="Currency">
-                <option value="@AppUtility.CurrencyEnum.USD">&dollar; USD</option>
-                <option value="@AppUtility.CurrencyEnum.NIS" selected>&#8362; NIS</option>
-            </select>
-        </div>
+
         <div class=" select-box-margin-bottom">
             @Html.DropDownListFor(
          vm => vm.SelectedEmployees,

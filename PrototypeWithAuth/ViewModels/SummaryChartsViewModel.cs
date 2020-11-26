@@ -25,6 +25,8 @@ namespace PrototypeWithAuth.ViewModels
         public int ProjectID { get; set; }
         public List<Project> Projects { get; set; }
         public List<int> SelectedProjects { get; set; }
+        public List<Vendor> Vendors { get; set; }
+        public List<int> SelectedVendors { get; set; }
         public int SubProjectID { get; set; }
         public List<SubProject> SubProjects { get; set; }
         public List<int> SelectedSubProjects { get; set; }

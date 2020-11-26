@@ -414,7 +414,8 @@ namespace PrototypeWithAuth.Controllers
                                       Text = e.FirstName + " " + e.LastName,
                                       Value = e.Id
                                   }
-                              ).ToList()
+                              ).ToList(),
+                Vendors = _context.Vendors.ToList()
             };
         }
 
