@@ -273,100 +273,7 @@
                 </div>
             </div>
             <br />
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Discount:</label>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Terms:</label>
-                        @Html.DropDownListFor(
-                                                model => model.Request.Terms,
-                                                new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-    htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary" }
-                                            )
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-check">
-                        <input class="form-check-input mark-readonly" type="checkbox" id="paid_checkbox" onchange="changeTerms(this)" disabled />
-                        <label class="form-check-label" for="paid_checkbox">Paid</label>
-                    </div>
-                </div>
-            </div>
-            <br />
-            @*<div class="row installments">
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label asp-for="Request.Installments" class="control-label"></label>
-                            <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
-                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
-                        </div>
-                        @if (Model.NewPayments != null && Model.NewPayments.Any())
-                        {
-                            <script>
-                                console.log("in script for installments disabled");
-                                $("#Request_ParentRequest_Installments").attr("disabled", true);
-                            </script>
-                        }
-                    </div>
-                    <div class="col-md-8 rounded card p-3">
-                        <table class="table table-sm payments-table">
-                            <thead class="thead-light rounded">
-                                <tr>
-                                    <th>Payment Date</th>
-                                    <th>Payment Type</th>
-                                    <th>Account</th>
-                                    <th>Reference</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @{
-                                    if (Model.NewPayments != null)
-                                    {
-                                        int counter = 0;
-                                        foreach (var payment in Model.NewPayments)
-                                        {
-                                            <tr class="payment-line">
-                                                <td>
-                                                    <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
-                                                </td>
-                                                <td>
-                                                    @Html.DropDownListFor(
-                                                   m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
-                                                   new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
-                                                   , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
-                                                   )
-                                                </td>
-                                                <td>
-                                                    @Html.DropDownListFor(
-                                                   m => m.NewPayments[counter].CompanyAccountID,
-                                                   new SelectList(
-                                                       Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
-                                                   "CompanyAccountID", "CompanyAccountNum"),
-                                                   new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
-                                                <td>
-                                                    <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
-                                                </td>
-                                                @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
-                                                @Html.HiddenFor(m => m.NewPayments[counter].RequestID)
-                                            </tr>
-                                            counter++;
-                                        }
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label class="control-label">Debt</label>
-                            <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
-                        </div>
-                    </div>
-                </div>*@
+         
         </div>
 
 
@@ -546,7 +453,7 @@
                                 }
                                 else
                                 {
-                                    <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                                    <i class="icon-report_problem-24px" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
                                 }
                                 <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark mark-readonly" disabled style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
 
@@ -578,3 +485,4 @@
     </script>
 }
 
+<script src="~/js/SubUnit.js"></script>
