@@ -2,7 +2,7 @@
 
 $(function () {
 	$.validator.setDefaults({
-		ignore: ':not(select:hidden, input:visible, textarea:visible)',
+		ignore: ':not(select:hidden, input:visible, textarea:visible), [disabled]',
 		errorPlacement: function (error, element) {
 			if (element.hasClass('select-dropdown')) {
 				error.insertAfter(element);
@@ -68,13 +68,28 @@ $(function () {
 				min: 1,
 				integer: true
 			},
+			"Request.SubUnit": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			"Request.SubSubUnit": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
 			"Request.Cost": {
 				required: true,
 				number: true,
 				min: 1
 			},
 
-			"Request.UnitTypeID": "selectRequired"
+			"Request.UnitTypeID": "selectRequired",
+			"Request.SubUnitTypeID": "selectRequired",
+			"Request.SubSubUnitTypeID": "selectRequired"
+
 		},
 
 	});
@@ -153,7 +168,20 @@ $(function () {
 				number: true,
 				min: 1
 			},
+
 			"Request.Unit": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			"Request.SubUnit": {
+				required: true,
+				number: true,
+				min: 1,
+				integer: true
+			},
+			"Request.SubSubUnit": {
 				required: true,
 				number: true,
 				min: 1,
@@ -169,7 +197,9 @@ $(function () {
 				number: true,
 				min: 1
 			},
-			"Request.UnitTypeID": "selectRequired"
+			"Request.UnitTypeID": "selectRequired",
+			"Request.SubUnitTypeID": "selectRequired",
+			"Request.SubSubUnitTypeID": "selectRequired"
 		},
 
 	});
@@ -321,8 +351,8 @@ $(function () {
 		return /[0-9]/.test(value);
 	}, "Password must contain at least one number ");
 	$.validator.addMethod("selectRequired", function (value, element) {
-		console.log("in select required")
-		return value != "";
+		console.log("in select required: "+ value)
+		return value != "" && value!=null;
 	}, 'Field is required');
 	$.validator.addMethod("atleastOneHoursField", function (value, element) {
 		return ($("#NewEmployee_SalariedEmployee_WorkScope").val() != "") || ($("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "") || $("#NewEmployee_EmployeeStatusID").val() == "4";
@@ -527,7 +557,7 @@ $(function () {
 				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
 			}
 		}
-		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
 	});
 
 	$('.next-tab').click(function () {

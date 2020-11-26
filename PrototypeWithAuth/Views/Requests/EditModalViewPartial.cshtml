@@ -75,14 +75,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="form-group">
                         <label class="control-label">Project:</label>
                         @Html.DropDownListFor(
-                            vm => vm.Request.SubProject.ProjectID,
-                            new SelectList(
-                                Model.Projects,
-                                "ProjectID",
-                                "ProjectDescription"
-                                ), "Select Project",
-                            new { @class = "mdb-select custom select-dropdown form-control-plaintext Project mark-readonly", @disabled = "disabled", @searchable = "Select Project" }
-                        )
+         vm => vm.Request.SubProject.ProjectID,
+         new SelectList(
+             Model.Projects,
+             "ProjectID",
+             "ProjectDescription"
+             ), "Select Project",
+         new { @class = "mdb-select custom select-dropdown form-control-plaintext Project mark-readonly", @disabled = "disabled", @searchable = "Select Project" }
+     )
                         <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -92,14 +92,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="form-group">
                         <label class="control-label">Sub Project:</label>
                         @Html.DropDownListFor(
-                            vm => vm.Request.SubProjectID,
-                            new SelectList(
-                                Model.SubProjects,
-                                "SubProjectID",
-                                "SubProjectDescription"
-                                ), "Select Sub Project",
-                            new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext mark-readonly", @id = "SubProject", @disabled = "disabled", @searchable = "Select Sub Project" }
-                        )
+         vm => vm.Request.SubProjectID,
+         new SelectList(
+             Model.SubProjects,
+             "SubProjectID",
+             "SubProjectDescription"
+             ), "Select Sub Project",
+         new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext mark-readonly", @id = "SubProject", @disabled = "disabled", @searchable = "Select Sub Project" }
+     )
                         <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -107,14 +107,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="form-group">
                         <label asp-for="Request.Product.Vendor" class="control-label"></label>
                         @Html.DropDownListFor(
-                            vm => vm.Request.Product.VendorID,
-                            new SelectList(
-                            Model.Vendors,
-                                dataValueField: "VendorID",
-                                dataTextField: "VendorEnName"), "Select A Vendor",
-                                //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
-                            htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "vendorList", @disabled = "disabled", @searchable = "Select A Vendor" }
-                        )
+         vm => vm.Request.Product.VendorID,
+         new SelectList(
+         Model.Vendors,
+             dataValueField: "VendorID",
+             dataTextField: "VendorEnName"), "Select A Vendor",
+         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing
+         htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "vendorList", @disabled = "disabled", @searchable = "Select A Vendor" }
+     )
                         <span asp-validation-for="Request.Product.Vendor.VendorID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -175,14 +175,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                                 //adding the amount of months of the warranty to the invoice date
                                 var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                             }*@
-                        <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty??0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                        <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty ?? 0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                     </div>
                 }
                 else
                 {
                     <div class="col-3">
                         <label class="control-label">Estimated End Date</label>
-                        <input value="@DateTime.Now.AddMonths(Model.Request.Warranty??0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                        <input value="@DateTime.Now.AddMonths(Model.Request.Warranty ?? 0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                     </div>
                 }
 
@@ -199,7 +199,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">Expected supply date</label>
-                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays??0).ToString("yyyy-MM-dd")" class="form-control-plaintext border-bottom mark-readonly" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" disabled />
+                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("yyyy-MM-dd")" class="form-control-plaintext border-bottom mark-readonly" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" disabled />
                         </div>
                     </div>
 
@@ -214,7 +214,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">Expected supply date</label>
-                            <input value="@DateTime.Now.Date.AddDays(Model.Request.ExpectedSupplyDays??0)" class="form-control-plaintext border-bottom mark-readonly" disabled type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                            <input value="@DateTime.Now.Date.AddDays(Model.Request.ExpectedSupplyDays ?? 0)" class="form-control-plaintext border-bottom mark-readonly" disabled type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
                         </div>
                     </div>
                 }
@@ -428,7 +428,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <div class="col-md-2 offset-8">
                     <div class="form-group">
                         <label asp-for="Request.Currency" class="control-label">Currency</label>
-                        <select id="currency" asp-for="Request.Currency" class="mdb-select custom select-dropdown form-control-plaintext" >
+                        <select id="currency" asp-for="Request.Currency" class="mdb-select custom select-dropdown form-control-plaintext">
                             <option value="dollar">&dollar; USD</option>
                             <option value="shekel">&#8362; NIS</option>
                         </select>
@@ -483,423 +483,383 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         </div>
                     </div>
                 </div>
+                @{var cardDisplayNoneSub = "d-none";
+                    var plusDisplayNoneSub = "";
+                    if (Model.Request.SubUnit > 0)
+                    {
+                        cardDisplayNoneSub = "";
+                        plusDisplayNoneSub = "d-none";
+                    }
+                }
                 <div class="col-4 pl-0 RequestSubunitCard">
-                    <div class="border p-3">
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label asp-for="Request.SubUnit" class="control-label"></label>
-                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" disabled />
-                                <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label asp-for="Request.SubUnitType" class="control-label"></label>
-                                @Html.DropDownListFor(
+                    <div class="border h-100 ">
+                        <button type="button" class="close sub-close @cardDisplayNoneSub pr-2 pt-2" aria-label="Close" style="
+    /* display: flex; */
+    float: right;
+">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub"><div class="row " style="display:initial;"><div class="col-6 offset-3 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled style="font-size: 5rem" /></div></div></div>
+                        <div class="mx-2rem  subUnitsCard @cardDisplayNoneSub mt-4">
+
+
+                            <div class="row">
+                                <div class="col-md-6 pl-0 form-group">
+                                    <label asp-for="Request.SubUnit" class="control-label"></label>
+                                    <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" disabled />
+                                    <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label asp-for="Request.SubUnitType" class="control-label"></label>
+                                    @Html.DropDownListFor(
 vm => vm.Request.SubUnitTypeID,
 Model.UnitTypeList,
 "",
-                                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
-                                    )
-                                <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Price:</label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" disabled />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text">&#x20aa;</span>
-                                        <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
-                                    </div>
+         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
+         )
+                                    <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4 pl-0 RequestSubsubunitCard">
-                    <div class="border p-3">
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
-                                @Html.DropDownListFor(
-                                    vm => vm.Request.SubSubUnitTypeID,
-                                    Model.UnitTypeList,
-                                    "",
-                                    htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
-                                    )
-                                <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Price:</label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
+
+                            <div class="form-group">
+                                <label class="control-label">Price:</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" disabled />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text">&#x20aa;</span>
-                                        <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Sum:</label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#36;</span>
-                            <input class="form-control-plaintext border-bottom" name="sum-dollars" min="0" id="sum-dollars" disabled />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label asp-for="Request.Cost" class="control-label"></label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#x20aa;</span>
-                            <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                            <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label asp-for="Request.VAT" class="control-label"></label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#x20aa;</span>
-                            @{ var vat = .17 * Model.Request.Cost;}
-                            <input value="@vat.ToString("N2");" class="form-control-plaintext border-bottom " disabled />
-                            <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Total + VAT:</label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#36;</span>
-                            <input class="form-control-plaintext border-bottom" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">____</label>
-                        <div class="input-group">
-                            <span class="input-group-text">&#x20aa;</span>
-                            <input class="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Discount:</label>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Terms:</label>
-                        @Html.DropDownListFor(
-                                                model => model.Request.Terms,
-                                                new SelectList(AppUtility.TermsSelectList(), "Value", "Text"),
-htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary mark-readonly", @disabled = "disabled" }
-                                            )
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-check">
-                        <input class="form-check-input mark-readonly" type="checkbox" id="paid_checkbox" onchange="changeTerms(this)" disabled />
-                        <label class="form-check-label" for="paid_checkbox">Paid</label>
-                    </div>
-                </div>
-            </div>
-            @*<div class="row installments">
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label asp-for="Request.Installments" class="control-label"></label>
-                            <input asp-for="Request.Installments" min="1" class="form-control-plaintext border-bottom" />
-                            <span asp-validation-for="Request.Installments" class="text-danger-centarix"></span>
-                        </div>
-                        @if (Model.NewPayments != null && Model.NewPayments.Any())
+                @{
+                    var cardDivDisplayNone = "d-none";
+                    var cardDisplayNoneSubSub = "d-none";
+                    var plusDisplayNoneSubSub = "";
+                    if (Model.Request.SubUnit > 0)
+                    {
+                        cardDivDisplayNone = "";
+                        if (Model.Request.SubSubUnit > 0)
                         {
-                            <script>
-                                console.log("in script for installments disabled");
-                                $("#Request_ParentRequest_Installments").attr("disabled", true);
-                            </script>
+                            plusDisplayNoneSubSub = "d-none";
+                            cardDisplayNoneSubSub = "";
                         }
-                    </div>
-                    <div class="col-md-8 rounded card p-3">
-                        <table class="table table-sm payments-table">
-                            <thead class="thead-light rounded">
-                                <tr>
-                                    <th>Payment Date</th>
-                                    <th>Payment Type</th>
-                                    <th>Account</th>
-                                    <th>Reference</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @{
-                                    if (Model.NewPayments != null)
-                                    {
-                                        int counter = 0;
-                                        foreach (var payment in Model.NewPayments)
-                                        {
-                                            <tr class="payment-line">
-                                                <td>
-                                                    <input asp-for="@Model.NewPayments[counter].PaymentDate" class="form-control-plaintext border-bottom datepicker" />
-                                                </td>
-                                                <td>
-                                                    @Html.DropDownListFor(
-                                                   m => m.NewPayments[counter].CompanyAccount.PaymentTypeID,
-                                                   new SelectList(Model.PaymentTypes, "PaymentTypeID", "PaymentTypeDescription")
-                                                   , new { @class = "mdb-select md-form  colorful-select dropdown-primary paymentType" }
-                                                   )
-                                                </td>
-                                                <td>
-                                                    @Html.DropDownListFor(
-                                                   m => m.NewPayments[counter].CompanyAccountID,
-                                                   new SelectList(
-                                                       Model.CompanyAccountListsByPaymentTypeID[Model.NewPayments[counter].CompanyAccount.PaymentTypeID],
-                                                   "CompanyAccountID", "CompanyAccountNum"),
-                                                   new { @class = "mdb-select md-form  colorful-select dropdown-primary" })
-                                                <td>
-                                                    <input asp-for="@Model.NewPayments[counter].Reference" class="form-control-plaintext border-bottom" />
-                                                </td>
-                                                @Html.HiddenFor(m => m.NewPayments[counter].PaymentID)
-                                            </tr>
-                                            counter++;
-                                        }
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label class="control-label">Debt</label>
-                            <input class="form-control-plaintext border-bottom" asp-for="Debt" disabled />
-                        </div>
-                    </div>
-                </div>*@
-        </div>
-        <div id="documents" class="tab-pane fade @showDocuments">
-            <div class="row modal-tab-name">
-                <span class="heading-1 col-12 modal-tab-name">Documents</span>
-            </div>
-
-            @{
-                var urlAction = Url.Action("DocumentsModal", "Requests");
-                var fontSize = "2rem";
-            }
-
-            <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-
-            <div class="row document-margin-bottom">
-                <div class=" document-margin">
-                    @{
-                        var filterClass = "opac87";
-                        if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
+                        else
                         {
-                            filterClass = "order-inv-filter";
+                            plusDisplayNoneSubSub = "";
+                            cardDisplayNoneSubSub = "d-none";
                         }
                     }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
-                        <div class="card document-border ">
-                            <div class="document-card text-center">
-                                <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
-                </div>
-                <div class=" document-margin ">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class=" document-card text-center">
-                                <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
-                            </div>
-
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
-                </div>
-                <div class=" document-margin">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
-                </div>
-                <div class="">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
-                </div>
-            </div>
-            <div class="row document-margin-bottom">
-                <div class=" document-margin">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Info</label>
-                </div>
-                <div class=" document-margin">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Picture</label>
-                </div>
-                <div class=" document-margin">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text  document-text-margin" style="width:100%;">Return</label>
-                </div>
-                <div class="">
-                    @{
-                        filterClass = "opac87";
-                        if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
-                        {
-                            filterClass = "order-inv-filter";
-                        }
-                    }
-                    <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
-                        <div class="card document-border">
-                            <div class="document-card text-center">
-                                <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <label class="control-label text-center text document-text-margin" style="width:100%;">Credit</label>
-                </div>
-            </div>
-        </div>
-        <div id="comments" class="tab-pane fade @showComments">
-            <div class="row modal-tab-name">
-                <span class="heading-1 col-12 modal-tab-name float-left">Comments and Ratings</span>
-            </div>
-            <div class=" container text-right">
-                <ul class="list-unstyled">
-                    <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--order-inv-color);">   +</button></li>
-
-                    <div style="display:none;" id="popover-content">
-
-                        @foreach (var item in Model.CommentTypes)
-                        {<div class="row px-3">
-                                @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
-                                {
-                                    <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
-                                }
-                                else
-                                {
-                                    <i class="icon-report_problem-24px-2" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
-                                }
-                                <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark mark-readonly" disabled style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
-
-                            </div>
-                        }
-                    </div>
-
-                </ul>
-            </div>
-
-            <div id="comment-info">
-                <input type="hidden" value="@Model.Comments.Count" id="index" />
-                @for (int i = 0; i < Model.Comments.Count; i++)
-                {
-                    await Html.RenderPartialAsync("CommentInfoPartialView", new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
                 }
+                <div class="col-4 pl-0 RequestSubsubunitCard @cardDivDisplayNone">
+                    <div class="border h-100">
+                        <button type="button" class="close subsub-close @cardDisplayNoneSubSub pr-2 pt-2" aria-label="Close" style="
+    /* display: flex; */
+    float: right;
+">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <div class="mx-2rem addSubSubUnitCard mt-4 @plusDisplayNoneSubSub"><div class="row " style="display:initial;"><div class="col-6 offset-3 text-center font-weight-light"><input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled style="font-size: 5rem" /></div></div></div>
+                        <div class="mx-2rem  subSubUnitsCard mt-4 @cardDisplayNoneSubSub">
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label asp-for="Request.SubSubUnit" class="control-label"></label>
+                                    <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label asp-for="Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
+                                    @Html.DropDownListFor(
+                                        vm => vm.Request.SubSubUnitTypeID,
+                                        Model.UnitTypeList,
+                                        "",
+                                        htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
+                                        )
+                                    <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
+                                </div>
+                            </div>
 
+                            <div class="form-group">
+                                <label class="control-label">Price:</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
+        <div class="row mt-2">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label">Sum:</label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#36;</span>
+                        <input class="form-control-plaintext border-bottom" name="sum-dollars" min="0" id="sum-dollars" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label asp-for="Request.Cost" class="control-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#x20aa;</span>
+                        <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Request.VAT" class="control-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#x20aa;</span>
+                        @{ var vat = .17 * Model.Request.Cost;}
+                        <input value="@vat.ToString("N2")" class="form-control-plaintext border-bottom " disabled />
+                        <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label">Total + VAT:</label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#36;</span>
+                        <input class="form-control-plaintext border-bottom" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label">____</label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#x20aa;</span>
+                        <input class="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
+    <div id="documents" class="tab-pane fade @showDocuments">
+        <div class="row modal-tab-name">
+            <span class="heading-1 col-12 modal-tab-name">Documents</span>
+        </div>
+
+        @{
+            var urlAction = Url.Action("DocumentsModal", "Requests");
+            var fontSize = "2rem";
+        }
+
+        <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+
+        <div class="row document-margin-bottom">
+            <div class=" document-margin">
+                @{
+                    var filterClass = "opac87";
+                    if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
+                    <div class="card document-border ">
+                        <div class="document-card text-center">
+                            <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
+            </div>
+            <div class=" document-margin ">
+                @{
+                    filterClass = "opac87";
+                    if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class=" document-card text-center">
+                            <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
+                        </div>
+
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
+            </div>
+            <div class=" document-margin">
+                @{
+                    filterClass = "opac87";
+                    if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
+            </div>
+            <div class="">
+                @{
+                    filterClass = "opac87";
+                    if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+            </div>
+        </div>
+        <div class="row document-margin-bottom">
+            <div class=" document-margin">
+                @{
+                    filterClass = "opac87";
+                    if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Info</label>
+            </div>
+            <div class=" document-margin">
+                @{
+                    filterClass = "opac87";
+                    if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Picture</label>
+            </div>
+            <div class=" document-margin">
+                @{
+                    filterClass = "opac87";
+                    if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text  document-text-margin" style="width:100%;">Return</label>
+            </div>
+            <div class="">
+                @{
+                    filterClass = "opac87";
+                    if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Credit</label>
+            </div>
+        </div>
+    </div>
+    <div id="comments" class="tab-pane fade @showComments">
+        <div class="row modal-tab-name">
+            <span class="heading-1 col-12 modal-tab-name float-left">Comments and Ratings</span>
+        </div>
+        <div class=" container text-right">
+            <ul class="list-unstyled">
+                <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--order-inv-color);">   +</button></li>
+
+                <div style="display:none;" id="popover-content">
+
+                    @foreach (var item in Model.CommentTypes)
+                    {<div class="row px-3">
+                            @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
+                            {
+                                <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
+                            }
+                            else
+                            {
+                                <i class="icon-report_problem-24px" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                            }
+                            <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark mark-readonly" disabled style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
+
+                        </div>
+                    }
+                </div>
+
+            </ul>
+        </div>
+
+        <div id="comment-info">
+            <input type="hidden" value="@Model.Comments.Count" id="index" />
+            @for (int i = 0; i < Model.Comments.Count; i++)
+            {
+                await Html.RenderPartialAsync("CommentInfoPartialView", new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
+            }
+
+        </div>
+    </div>
+
+
+</div>
 </div>
 @if (Model.Tab != 0)
 {
@@ -907,3 +867,9 @@ htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-pri
         $('.mdb-select').materialSelect();
     </script>
 }
+<script src="~/js/SubUnit.js"></script>
+<script>
+    $(function () {
+        $("#Request_Cost").trigger('change');
+    });
+</script>
