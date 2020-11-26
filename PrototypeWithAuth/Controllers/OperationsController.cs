@@ -115,12 +115,10 @@ namespace PrototypeWithAuth.Controllers
         {
             String pageType = TempData[AppUtility.TempDataTypes.PageType.ToString()]?.ToString();
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-
-            //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
-                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
-                .OrderBy(r => r.CreationDate);
+         .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
+         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Include(x => x.ParentRequest)
+         .OrderBy(r => r.CreationDate);
             if (pageType.Equals(AppUtility.RequestPageTypeEnum.Inventory.ToString()))
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
