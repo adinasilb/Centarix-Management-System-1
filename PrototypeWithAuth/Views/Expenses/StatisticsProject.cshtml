@@ -12,16 +12,17 @@
 
 @*Hidden fors so the correct subproject requests will be called*@
 @*<div class="my-hiddenvalues-1">
-    <input type="hidden" asp-for="Year" />
-    @for (int i = 0; i < Model.Months.Count; i++)
-    {
-        <input type="hidden" asp-for="Months[i]" class="months-selected" />
-    }
-</div>*@
+        <input type="hidden" asp-for="Year" />
+        @for (int i = 0; i < Model.Months.Count; i++)
+        {
+            <input type="hidden" asp-for="Months[i]" class="months-selected" />
+        }
+    </div>*@
 
 <div class="container-fluid">
     <div class="row under-row-margin">
         <div class="col-7 heading-1 p-0">
+            @*<button class="float-right custom-button-small-font custom-button click-me" id="click-me">Click Me</button>*@
         </div>
         <div class="col-3 offset-2">
             @*<select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 change-months" multiple
@@ -44,7 +45,8 @@
                     Value = m.ToString(),
                     //Selected = Model.Months
                 }),
-                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
+                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left mr-3 change-month",
+                    @searchable = "Search here...", @multiple = "multiple", @onload = "ChangeCheckboxesToFilledIn()" })
             @*</div>
                 <div class="col-1 p-0 monthsHours">*@
 
@@ -82,9 +84,29 @@
             $("input[data-activates='select-options-Months']").val('')
 
             $(".months-selected").each(function () {
-                $("#Months option[value='"+$(this).val()+"']").attr("selected", true);
+                $("#Months option[value='" + $(this).val() + "']").attr("selected", true);
             });
         };
+
+        //$("#click-me").on("click", function () {
+        //    var searchvalue = $("span[role='searchbox'] input");
+        //    alert("searchvalue: " + searchvalue.val());
+        //    //searchvalue.focus();
+        //    //searchvalue.parent().addClass("hidden"); <--works just need to do the other part first
+        //    //$(".change-month").val("3");
+        //});
+
+        $.fn.ChangeCheckboxesToFilledIn = function () {
+            console.log("in change checkboxes to filled in");
+            var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
+            console.log
+            dropdown.addClass("filled-in");
+            $(".multiple-select-dropdown li span").replaceWith(function () {
+                return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+            });
+
+        };
+
 
     })
 </script>

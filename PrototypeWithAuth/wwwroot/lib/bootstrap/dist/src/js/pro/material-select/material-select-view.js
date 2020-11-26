@@ -2,813 +2,813 @@ import MaterialSelectViewRenderer from './material-select-view-renderer';
 
 export default class MaterialSelectView {
 
-  // eslint-disable-next-line object-curly-newline
-  constructor($nativeSelect, { options, properties: { id } }) {
-
-    this.properties = {
-      id,
-      isMultiple: Boolean($nativeSelect.attr('multiple')),
-      isSearchable: Boolean($nativeSelect.attr('searchable')),
-      isRequired: Boolean($nativeSelect.attr('required')),
-      isEditable: Boolean($nativeSelect.attr('editable'))
-    };
-
-    this.options = this._copyOptions(options);
-
-    this.$nativeSelect = $nativeSelect;
-    this.$selectWrapper = $('<div class="select-wrapper"></div>');
-    this.$materialOptionsList = $(`<ul id="select-options-${this.properties.id}" class="dropdown-content select-dropdown w-100 ${this.properties.isMultiple ? 'multiple-select-dropdown' : ''}"></ul>`);
-    this.$materialSelectInitialOption = $nativeSelect.find('option:selected').text() || $nativeSelect.find('option:first').text() || '';
-    this.$nativeSelectChildren = this.$nativeSelect.children('option, optgroup');
-    this.$materialSelect = $(`<input type="text" class="${this.options.defaultMaterialInput ? 'browser-default custom-select multi-bs-select select-dropdown form-control' : 'select-dropdown form-control'}" ${!this.options.validate && 'readonly="true"'} required="${this.options.validate ? 'true' : 'false'}" ${this.$nativeSelect.is(' :disabled') ? 'disabled' : ''} data-activates="select-options-${this.properties.id}" value=""/>`);
-    this.$dropdownIcon = this.options.defaultMaterialInput ? '' : $('<span class="caret">&#9660;</span>');
-    this.$searchInput = null;
-    this.$noSearchResultsInfo = $(`<li><span><i>${this.options.labels.noSearchResults}</i></span></li>`);
-    this.$toggleAll = $(`<li class="select-toggle-all"><span><input type="checkbox" class="form-check-input"><label>${this.options.labels.selectAll}</label></span></li>`);
-    this.$addOptionBtn = $('<i class="select-add-option fas fa-plus"></i>');
-    this.$mainLabel = this._jQueryFallback(this.$nativeSelect.next('label.mdb-main-label'), $(`label[for='${this.properties.id}']`));
-    this.$customTemplateParts = this._jQueryFallback(this.$nativeSelect.nextUntil('select', '.mdb-select-template-part'), $(`[data-mdb-select-template-part-for='${this.properties.id}']`));
-    this.$btnSave = this.$nativeSelect.nextUntil('select', '.btn-save'); // @Depreciated
-    this.$btnReset = $('<span class="reset-select-btn">&times;</span>');
-
-    this.$validFeedback = $(`<div class="valid-feedback">${this.options.labels.validFeedback}</div>`);
-    this.$invalidFeedback = $(`<div class="invalid-feedback">${this.options.labels.invalidFeedback}</div>`);
-
-    this.keyCodes = {
-      tab: 9,
-      enter: 13,
-      shift: 16,
-      alt: 18,
-      esc: 27,
-      space: 32,
-      end: 35,
-      home: 36,
-      arrowUp: 38,
-      arrowDown: 40
-    };
-    
-    // eslint-disable-next-line no-undef
-    this.renderer = new MaterialSelectViewRenderer(this);
-    this.dropdown = null;
-  }
-
-  static get isMobileDevice() {
-
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  }
-
-  get isMultiple() {
-    return this.properties.isMultiple;
-  }
-
-  get isSearchable() {
-    return this.properties.isSearchable;
-  }
-
-  get isRequired() {
-    return this.properties.isRequired;
-  }
+	// eslint-disable-next-line object-curly-newline
+	constructor($nativeSelect, { options, properties: { id } }) {
+
+		this.properties = {
+			id,
+			isMultiple: Boolean($nativeSelect.attr('multiple')),
+			isSearchable: Boolean($nativeSelect.attr('searchable')),
+			isRequired: Boolean($nativeSelect.attr('required')),
+			isEditable: Boolean($nativeSelect.attr('editable'))
+		};
+
+		this.options = this._copyOptions(options);
+
+		this.$nativeSelect = $nativeSelect;
+		this.$selectWrapper = $('<div class="select-wrapper"></div>');
+		this.$materialOptionsList = $(`<ul id="select-options-${this.properties.id}" class="dropdown-content select-dropdown w-100 ${this.properties.isMultiple ? 'multiple-select-dropdown' : ''}"></ul>`);
+		this.$materialSelectInitialOption = $nativeSelect.find('option:selected').text() || $nativeSelect.find('option:first').text() || '';
+		this.$nativeSelectChildren = this.$nativeSelect.children('option, optgroup');
+		this.$materialSelect = $(`<input type="text" class="${this.options.defaultMaterialInput ? 'browser-default custom-select multi-bs-select select-dropdown form-control' : 'select-dropdown form-control'}" ${!this.options.validate && 'readonly="true"'} required="${this.options.validate ? 'true' : 'false'}" ${this.$nativeSelect.is(' :disabled') ? 'disabled' : ''} data-activates="select-options-${this.properties.id}" value=""/>`);
+		this.$dropdownIcon = this.options.defaultMaterialInput ? '' : $('<span class="caret">&#9660;</span>');
+		this.$searchInput = null;
+		this.$noSearchResultsInfo = $(`<li><span><i>${this.options.labels.noSearchResults}</i></span></li>`);
+		this.$toggleAll = $(`<li class="select-toggle-all"><span><input type="checkbox" class="form-check-input"><label>${this.options.labels.selectAll}</label></span></li>`);
+		this.$addOptionBtn = $('<i class="select-add-option fas fa-plus"></i>');
+		this.$mainLabel = this._jQueryFallback(this.$nativeSelect.next('label.mdb-main-label'), $(`label[for='${this.properties.id}']`));
+		this.$customTemplateParts = this._jQueryFallback(this.$nativeSelect.nextUntil('select', '.mdb-select-template-part'), $(`[data-mdb-select-template-part-for='${this.properties.id}']`));
+		this.$btnSave = this.$nativeSelect.nextUntil('select', '.btn-save'); // @Depreciated
+		this.$btnReset = $('<span class="reset-select-btn">&times;</span>');
 
-  get isEditable() {
-    return this.properties.isEditable;
-  }
+		this.$validFeedback = $(`<div class="valid-feedback">${this.options.labels.validFeedback}</div>`);
+		this.$invalidFeedback = $(`<div class="invalid-feedback">${this.options.labels.invalidFeedback}</div>`);
+
+		this.keyCodes = {
+			tab: 9,
+			enter: 13,
+			shift: 16,
+			alt: 18,
+			esc: 27,
+			space: 32,
+			end: 35,
+			home: 36,
+			arrowUp: 38,
+			arrowDown: 40
+		};
 
-  get isDisabled() {
-    return this.$nativeSelect.is(':disabled');
-  }
+		// eslint-disable-next-line no-undef
+		this.renderer = new MaterialSelectViewRenderer(this);
+		this.dropdown = null;
+	}
 
-  destroy() {
+	static get isMobileDevice() {
 
-    this.renderer.destroy();
-  }
+		return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	}
 
-  render() {
+	get isMultiple() {
+		return this.properties.isMultiple;
+	}
 
-    this.renderer.render();
-  }
+	get isSearchable() {
+		return this.properties.isSearchable;
+	}
 
-  selectPreselectedOptions(handler) {
+	get isRequired() {
+		return this.properties.isRequired;
+	}
 
-    if (this.isMultiple) {
+	get isEditable() {
+		return this.properties.isEditable;
+	}
 
-      this.$nativeSelect.find('option:selected:not(:disabled)').each((i, element) => {
+	get isDisabled() {
+		return this.$nativeSelect.is(':disabled');
+	}
 
-        let index = element.index;
-        handler(index);
+	destroy() {
 
-        if (this._isPlaceholderPresent())
-          index -= 1;
-        
-        this.$materialOptionsList.find('li:not(.optgroup):not(.select-toggle-all)').eq(index).addClass('selected active').find(':checkbox').prop('checked', true);
-        
-      });
-    } else {
+		this.renderer.destroy();
+	}
 
-      const $preselectedOption = this.$nativeSelect.find('option:selected').first();
-      const indexOfPreselectedOption = this.$nativeSelect.find('option').index($preselectedOption.get(0));
-      if ($preselectedOption.get(0) && $preselectedOption.attr('disabled') !== 'disabled') {
-        handler(indexOfPreselectedOption);
-      }
-    }
-  }
+	render() {
 
-  bindResetButtonClick(handler) {
+		this.renderer.render();
+	}
 
-    this.$btnReset.on('click', (e) => {
+	selectPreselectedOptions(handler) {
 
-      e.preventDefault();
+		if (this.isMultiple) {
 
-      if (!this.$nativeSelect.find('option[value=""][selected][disabled][data-mdb-novalue]').length) {
+			this.$nativeSelect.find('option:selected:not(:disabled)').each((i, element) => {
 
-        this._toggleResetButton(true);
+				let index = element.index;
+				handler(index);
 
-        this.$materialSelect.val(this.isMultiple ? [] : '');
-        this.$materialSelect.trigger('close');
-        this.$mainLabel.removeClass('active');
-        this.$materialOptionsList.find('li.active, li.selected').removeClass('active').removeClass('selected');
-        this.$materialOptionsList.find('li[aria-selected="true"]').attr('aria-selected', 'false');
-        this.$materialOptionsList.find('input[type="checkbox"]').prop('checked', false);
+				if (this._isPlaceholderPresent())
+					index -= 1;
 
-        handler();
-      }
-    });
-  }
+				this.$materialOptionsList.find('li:not(.optgroup):not(.select-toggle-all)').eq(index).addClass('selected active').find(':checkbox').prop('checked', true);
 
-  bindAddNewOptionClick() {
+			});
+		} else {
 
-    this.$addOptionBtn.on('click', this.renderer.addNewOption.bind(this.renderer));
-  }
+			const $preselectedOption = this.$nativeSelect.find('option:selected').first();
+			const indexOfPreselectedOption = this.$nativeSelect.find('option').index($preselectedOption.get(0));
+			if ($preselectedOption.get(0) && $preselectedOption.attr('disabled') !== 'disabled') {
+				handler(indexOfPreselectedOption);
+			}
+		}
+	}
 
-  bindMaterialSelectFocus() {
+	bindResetButtonClick(handler) {
 
-    this.$materialSelect.on('focus', (e) => {
-      
-      const $this = $(e.target);
-      
-      $this.parent().addClass('active');
+		this.$btnReset.on('click', (e) => {
 
-      if ($('ul.select-dropdown').not(this.$materialOptionsList.get(0)).is(':visible')) {
+			e.preventDefault();
 
-        $('input.select-dropdown').trigger('close');
-      }
+			if (!this.$nativeSelect.find('option[value=""][selected][disabled][data-mdb-novalue]').length) {
 
-      this.$mainLabel.addClass('active');
+				this._toggleResetButton(true);
 
-      if (!this.$materialOptionsList.is(':visible')) {
+				this.$materialSelect.val(this.isMultiple ? [] : '');
+				this.$materialSelect.trigger('close');
+				this.$mainLabel.removeClass('active');
+				this.$materialOptionsList.find('li.active, li.selected').removeClass('active').removeClass('selected');
+				this.$materialOptionsList.find('li[aria-selected="true"]').attr('aria-selected', 'false');
+				this.$materialOptionsList.find('input[type="checkbox"]').prop('checked', false);
 
-        const label = $this.val();
-        const $selectedOption = this.$materialOptionsList.find('li').filter(function () {
+				handler();
+			}
+		});
+	}
 
-          return $(this).text().toLowerCase() === label.toLowerCase();
-        }).get(0);
+	bindAddNewOptionClick() {
 
-        this._selectSingleOption($selectedOption);
-      }
+		this.$addOptionBtn.on('click', this.renderer.addNewOption.bind(this.renderer));
+	}
 
-      if (!this.isMultiple) {
+	bindMaterialSelectFocus() {
 
-        this.$mainLabel.addClass('active');
-      }
-    });
-  }
+		this.$materialSelect.on('focus', (e) => {
 
-  bindMaterialSelectClick() {
+			const $this = $(e.target);
 
-    this.$materialSelect.on('mousedown', (e) => {
+			$this.parent().addClass('active');
 
-      if (e.which === 3) {
-        e.preventDefault();
-      }
-    });
+			if ($('ul.select-dropdown').not(this.$materialOptionsList.get(0)).is(':visible')) {
 
-    this.$materialSelect.on('click', (e) => {
+				$('input.select-dropdown').trigger('close');
+			}
 
-      e.stopPropagation();
+			this.$mainLabel.addClass('active');
 
-      this.$mainLabel.addClass('active');
+			if (!this.$materialOptionsList.is(':visible')) {
 
-      this._updateDropdownScrollTop();
-    });
-  }
+				const label = $this.val();
+				const $selectedOption = this.$materialOptionsList.find('li').filter(function () {
 
-  bindMaterialSelectBlur() {
+					return $(this).text().toLowerCase() === label.toLowerCase();
+				}).get(0);
 
-    this.$materialSelect.on('blur', (e) => {
+				this._selectSingleOption($selectedOption);
+			}
 
-      const $this = $(e.target);
+			if (!this.isMultiple) {
 
-      $this.parent().removeClass('active');
+				this.$mainLabel.addClass('active');
+			}
+		});
+	}
 
-      if (!this.isMultiple && !this.isSearchable) {
+	bindMaterialSelectClick() {
 
-        $this.trigger('close');
-      }
+		this.$materialSelect.on('mousedown', (e) => {
 
-      this.$materialOptionsList.find('li.selected').removeClass('selected');
-    });
-  }
+			if (e.which === 3) {
+				e.preventDefault();
+			}
+		});
 
-  bindMaterialOptionsListTouchstart() {
+		this.$materialSelect.on('click', (e) => {
 
-    this.$materialOptionsList.on('touchstart', (e) => e.stopPropagation());
-  }
+			e.stopPropagation();
 
-  bindMaterialSelectKeydown() {
+			this.$mainLabel.addClass('active');
 
-    // eslint-disable-next-line complexity
-    this.$materialSelect.on('keydown', (e) => {
+			this._updateDropdownScrollTop();
+		});
+	}
 
-      const $this = $(e.target);
+	bindMaterialSelectBlur() {
 
-      const isTab = e.which === this.keyCodes.tab;
+		this.$materialSelect.on('blur', (e) => {
 
-      const isArrowUp = e.which === this.keyCodes.arrowUp;
-      const isArrowDown = e.which === this.keyCodes.arrowDown;
-      const isEnter = e.which === this.keyCodes.enter;
-      const isEsc = e.which === this.keyCodes.esc;
-      const isAltWithArrowDown = isArrowDown && e.altKey;
-      const isAltWithArrowUp = isArrowUp && e.altKey;
-      const isHome = e.which === this.keyCodes.home;
-      const isEnd = e.which === this.keyCodes.end;
-      const isSpace = e.which === this.keyCodes.space;
+			const $this = $(e.target);
 
-      const isDropdownExpanded = this.$materialOptionsList.is(':visible');
+			$this.parent().removeClass('active');
 
-      switch (true) {
-        case isTab:
-          return this._handleTabKey($this);
+			if (!this.isMultiple && !this.isSearchable) {
 
-        case !isDropdownExpanded && (isEnter || isAltWithArrowDown):
-        case this.isMultiple && !isDropdownExpanded && (isArrowDown || isArrowUp):
-          $this.trigger('open');
-          return this._updateDropdownScrollTop();
+				$this.trigger('close');
+			}
 
-        case isDropdownExpanded && (isEsc || isAltWithArrowUp):
-          return $this.trigger('close');
+			this.$materialOptionsList.find('li.selected').removeClass('selected');
+		});
+	}
 
-        case !isDropdownExpanded && (isArrowDown || isArrowUp):
-          return this._handleClosedArrowUpDownKey(e.which);
+	bindMaterialOptionsListTouchstart() {
 
-        case isDropdownExpanded && (isArrowDown || isArrowUp):
-          return this._handleArrowUpDownKey(e.which);
+		this.$materialOptionsList.on('touchstart', (e) => e.stopPropagation());
+	}
 
-        case isDropdownExpanded && isHome:
-          return this._handleHomeKey();
+	bindMaterialSelectKeydown() {
 
-        case isDropdownExpanded && isEnd:
-          return this._handleEndKey();
+		// eslint-disable-next-line complexity
+		this.$materialSelect.on('keydown', (e) => {
 
-        case isDropdownExpanded && (isEnter || isSpace):
-          return this._handleEnterKey($this);
+			const $this = $(e.target);
 
-        default:
-          return this._handleLetterKey(e);
-      }
-    });
-  }
+			const isTab = e.which === this.keyCodes.tab;
 
-  bindMaterialSelectDropdownToggle() {
+			const isArrowUp = e.which === this.keyCodes.arrowUp;
+			const isArrowDown = e.which === this.keyCodes.arrowDown;
+			const isEnter = e.which === this.keyCodes.enter;
+			const isEsc = e.which === this.keyCodes.esc;
+			const isAltWithArrowDown = isArrowDown && e.altKey;
+			const isAltWithArrowUp = isArrowUp && e.altKey;
+			const isHome = e.which === this.keyCodes.home;
+			const isEnd = e.which === this.keyCodes.end;
+			const isSpace = e.which === this.keyCodes.space;
 
-    this.$materialSelect.on('open', () => this.$materialSelect.attr('aria-expanded', 'true'));
-    this.$materialSelect.on('close', () => this.$materialSelect.attr('aria-expanded', 'false'));
-  }
+			const isDropdownExpanded = this.$materialOptionsList.is(':visible');
 
-  bindToggleAllClick(handler) {
+			switch (true) {
+				case isTab:
+					return this._handleTabKey($this);
 
-    this.$toggleAll.on('click', (e) => {
+				case !isDropdownExpanded && (isEnter || isAltWithArrowDown):
+				case this.isMultiple && !isDropdownExpanded && (isArrowDown || isArrowUp):
+					$this.trigger('open');
+					return this._updateDropdownScrollTop();
 
-      const checkbox = $(this.$toggleAll).find('input[type="checkbox"]').first();
-      const currentState = Boolean($(checkbox).prop('checked'));
-      const isToggleChecked = !currentState;
+				case isDropdownExpanded && (isEsc || isAltWithArrowUp):
+					return $this.trigger('close');
 
-      $(checkbox).prop('checked', !currentState);
+				case !isDropdownExpanded && (isArrowDown || isArrowUp):
+					return this._handleClosedArrowUpDownKey(e.which);
 
-      this.$materialOptionsList.find('li:not(.optgroup):not(.select-toggle-all)').each((materialOptionIndex, materialOption) => {
+				case isDropdownExpanded && (isArrowDown || isArrowUp):
+					return this._handleArrowUpDownKey(e.which);
 
-        const $materialOption = $(materialOption);
-        const $optionCheckbox = $materialOption.find('input[type="checkbox"]');
+				case isDropdownExpanded && isHome:
+					return this._handleHomeKey();
 
-        $materialOption.attr('aria-selected', isToggleChecked);
+				case isDropdownExpanded && isEnd:
+					return this._handleEndKey();
 
-        if (isToggleChecked && $optionCheckbox.is(':checked') || !isToggleChecked && !$optionCheckbox.is(':checked') || $(materialOption).is(':hidden') || $(materialOption).is('.disabled')) {
+				case isDropdownExpanded && (isEnter || isSpace):
+					return this._handleEnterKey($this);
 
-          return;
-        }
+				default:
+					return this._handleLetterKey(e);
+			}
+		});
+	}
 
-        $optionCheckbox.prop('checked', isToggleChecked);
-        this.$nativeSelect.find('option').eq(materialOptionIndex).prop('selected', isToggleChecked);
+	bindMaterialSelectDropdownToggle() {
 
-        $materialOption.toggleClass('active');
-        this._selectOption(materialOption);
-        handler(materialOptionIndex);
-      });
+		this.$materialSelect.on('open', () => this.$materialSelect.attr('aria-expanded', 'true'));
+		this.$materialSelect.on('close', () => this.$materialSelect.attr('aria-expanded', 'false'));
+	}
 
-      this.$nativeSelect.data('stop-refresh', true);
-      this._triggerChangeOnNativeSelect();
-      this.$nativeSelect.removeData('stop-refresh');
-      e.stopPropagation();
-    });
-  }
+	bindToggleAllClick(handler) {
 
-  bindMaterialOptionMousedown() {
+		this.$toggleAll.on('click', (e) => {
 
-    this.$materialOptionsList.on('mousedown', (e) => {
+			const checkbox = $(this.$toggleAll).find('input[type="checkbox"]').first();
+			const currentState = Boolean($(checkbox).prop('checked'));
+			const isToggleChecked = !currentState;
 
-      const option = e.target;
+			$(checkbox).prop('checked', !currentState);
 
-      const inModal = $('.modal-content').find(this.$materialOptionsList).length;
-      if (inModal && option.scrollHeight > option.offsetHeight) {
+			this.$materialOptionsList.find('li:not(.optgroup):not(.select-toggle-all)').each((materialOptionIndex, materialOption) => {
 
-        e.preventDefault();
-      }
-    });
-  }
+				const $materialOption = $(materialOption);
+				const $optionCheckbox = $materialOption.find('input[type="checkbox"]');
 
-  bindMaterialOptionClick(handler) {
+				$materialOption.attr('aria-selected', isToggleChecked);
 
-    this.$materialOptionsList.find('li:not(.optgroup)').not(this.$toggleAll).each((materialOptionIndex, materialOption) => {
-      $(materialOption).on('click', (e) => {
+				if (isToggleChecked && $optionCheckbox.is(':checked') || !isToggleChecked && !$optionCheckbox.is(':checked') || $(materialOption).is(':hidden') || $(materialOption).is('.disabled')) {
 
-        e.stopPropagation();
+					return;
+				}
 
-        this._toggleResetButton(false);
+				$optionCheckbox.prop('checked', isToggleChecked);
+				this.$nativeSelect.find('option').eq(materialOptionIndex).prop('selected', isToggleChecked);
 
-        const $this = $(materialOption);
+				$materialOption.toggleClass('active');
+				this._selectOption(materialOption);
+				handler(materialOptionIndex);
+			});
 
-        if ($this.hasClass('disabled') || $this.hasClass('optgroup')) {
+			this.$nativeSelect.data('stop-refresh', true);
+			this._triggerChangeOnNativeSelect();
+			this.$nativeSelect.removeData('stop-refresh');
+			e.stopPropagation();
+		});
+	}
 
-          return;
-        }
+	bindMaterialOptionMousedown() {
 
-        let selected = true;
+		this.$materialOptionsList.on('mousedown', (e) => {
 
-        if (this.isMultiple) {
+			const option = e.target;
 
-          $this.find('input[type="checkbox"]').prop('checked', (index, oldPropertyValue) => !oldPropertyValue);
+			const inModal = $('.modal-content').find(this.$materialOptionsList).length;
+			if (inModal && option.scrollHeight > option.offsetHeight) {
 
-          const hasOptgroup = Boolean(this.$nativeSelect.find('optgroup').length);
-          const thisIndex = this._isToggleAllPresent() && !this._isPlaceholderPresent() ? $this.index() - 1 : $this.index();
+				e.preventDefault();
+			}
+		});
+	}
 
-          /* eslint-disable max-statements-per-line */
-          switch (true) {
-            case this.isSearchable && hasOptgroup: selected = handler(thisIndex - $this.prevAll('.optgroup').length - 1); break;
-            case this.isSearchable: selected = handler(thisIndex - 1); break;
-            case hasOptgroup: selected = handler(thisIndex - $this.prevAll('.optgroup').length); break;
-            default: selected = handler(thisIndex); break;
-          }
-          /* eslint-enable max-statements-per-line */
+	bindMaterialOptionClick(handler) {
 
-          if (this._isToggleAllPresent()) {
+		this.$materialOptionsList.find('li:not(.optgroup)').not(this.$toggleAll).each((materialOptionIndex, materialOption) => {
+			$(materialOption).on('click', (e) => {
 
-            this._updateToggleAllOption();
-          }
+				e.stopPropagation();
 
-          this.$materialSelect.trigger('focus');
-        } else {
-          
-          this.$materialOptionsList.find('li').removeClass('active').attr('aria-selected', 'false');
-          const $selectedOption = $this.children().last()[0].childNodes[0];
-          this.$materialSelect.val($($selectedOption).text().replace(/  +/g, ' ').trim());
-          this.$materialSelect.trigger('close');
-        }
-        
-        $this.toggleClass('active');
-        const ariaSelected = $this.attr('aria-selected');
-        $this.attr('aria-selected', ariaSelected === 'true' ? 'false' : 'true');
-        this._selectSingleOption($this);
-        this.$nativeSelect.data('stop-refresh', true);
-        const selectedOptionIndex = this._isPlaceholderPresent() ? materialOptionIndex + 1 : materialOptionIndex;
-        this.$nativeSelect.find('option').eq(selectedOptionIndex).prop('selected', selected);
-        this.$nativeSelect.removeData('stop-refresh');
-        this._triggerChangeOnNativeSelect();
-        
-        if (this.$materialSelect.val()) {
+				this._toggleResetButton(false);
 
-          this.$mainLabel.addClass('active');
-        }
+				const $this = $(materialOption);
 
-        if ($this.hasClass('li-added')) {
+				if ($this.hasClass('disabled') || $this.hasClass('optgroup')) {
 
-          this.renderer.buildSingleOption($this, '');
-        }
-      });
-    });
-  }
+					return;
+				}
 
-  bindSingleMaterialOptionClick() {
+				let selected = true;
 
-    this.$materialOptionsList.find('li').on('click', () => {
+				if (this.isMultiple) {
 
-      this.$materialSelect.trigger('close');
-    });
-  }
+					$this.find('input[type="checkbox"]').prop('checked', (index, oldPropertyValue) => !oldPropertyValue);
 
-  bindSearchInputKeyup() {
+					const hasOptgroup = Boolean(this.$nativeSelect.find('optgroup').length);
+					const thisIndex = this._isToggleAllPresent() && !this._isPlaceholderPresent() ? $this.index() - 1 : $this.index();
 
-    this.$searchInput.find('.search').on('keyup', (e) => {
+					/* eslint-disable max-statements-per-line */
+					switch (true) {
+						case this.isSearchable && hasOptgroup: selected = handler(thisIndex - $this.prevAll('.optgroup').length - 1); break;
+						case this.isSearchable: selected = handler(thisIndex - 1); break;
+						case hasOptgroup: selected = handler(thisIndex - $this.prevAll('.optgroup').length); break;
+						default: selected = handler(thisIndex); break;
+					}
+					/* eslint-enable max-statements-per-line */
 
-      const $this = $(e.target);
+					if (this._isToggleAllPresent()) {
 
-      const isTab = e.which === this.keyCodes.tab;
-      const isEsc = e.which === this.keyCodes.esc;
-      const isEnter = e.which === this.keyCodes.enter;
-      const isEnterWithShift = isEnter && e.shiftKey;
-      const isArrowUp = e.which === this.keyCodes.arrowUp;
-      const isArrowDown = e.which === this.keyCodes.arrowDown;
+						this._updateToggleAllOption();
+					}
 
-      if (isArrowDown || isTab || isEsc || isArrowUp) {
+					this.$materialSelect.trigger('focus');
+				} else {
 
-        this.$materialSelect.focus();
-        this._handleArrowUpDownKey(e.which);
-        return;
-      }
+					this.$materialOptionsList.find('li').removeClass('active').attr('aria-selected', 'false');
+					const $selectedOption = $this.children().last()[0].childNodes[0];
+					this.$materialSelect.val($($selectedOption).text().replace(/  +/g, ' ').trim());
+					this.$materialSelect.trigger('close');
+				}
 
-      const $ul = $this.closest('ul');
-      const searchValue = $this.val();
-      const $options = $ul.find('li span.filtrable');
+				$this.toggleClass('active');
+				const ariaSelected = $this.attr('aria-selected');
+				$this.attr('aria-selected', ariaSelected === 'true' ? 'false' : 'true');
+				this._selectSingleOption($this);
+				this.$nativeSelect.data('stop-refresh', true);
+				const selectedOptionIndex = this._isPlaceholderPresent() ? materialOptionIndex + 1 : materialOptionIndex;
+				this.$nativeSelect.find('option').eq(selectedOptionIndex).prop('selected', selected);
+				this.$nativeSelect.removeData('stop-refresh');
+				this._triggerChangeOnNativeSelect();
 
-      let isOptionInList = false;
+				if (this.$materialSelect.val()) {
 
-      $options.each(function () {
+					this.$mainLabel.addClass('active');
+				}
 
-        const $option = $(this);
-        if (typeof this.outerHTML === 'string') {
+				if ($this.hasClass('li-added')) {
 
-          const liValue = this.textContent.toLowerCase();
+					this.renderer.buildSingleOption($this, '');
+				}
+			});
+		});
+	}
 
-          if (liValue.includes(searchValue.toLowerCase())) {
+	bindSingleMaterialOptionClick() {
 
-            $option.show().parent().show();
-          } else {
-            $option.hide().parent().hide();
-          }
+		this.$materialOptionsList.find('li').on('click', () => {
 
-          if (liValue.trim() === searchValue.toLowerCase()) {
-            isOptionInList = true;
-          }
-        }
-      });
+			this.$materialSelect.trigger('close');
+		});
+	}
 
-      if (isEnter) {
-        if (this.isEditable && !isOptionInList) {
-          this.renderer.addNewOption();
-          return;
-        }
-        if (isEnterWithShift) {
-          this._handleEnterWithShiftKey($this);
-        }
-        this.$materialSelect.trigger('open');
-        return;
-      }
+	bindSearchInputKeyup() {
 
-      this.$addOptionBtn[searchValue && this.isEditable && !isOptionInList ? 'show' : 'hide']();
+		this.$searchInput.find('.search').on('keyup', (e) => {
 
-      const anyOptionMatch = $options.filter((_, e) => $(e).is(':visible') && !$(e).parent().hasClass('disabled')).length !== 0;
-      if (!anyOptionMatch) {
+			const $this = $(e.target);
 
-        this.$toggleAll.hide();
-        this.$materialOptionsList.append(this.$noSearchResultsInfo);
-      } else {
+			const isTab = e.which === this.keyCodes.tab;
+			const isEsc = e.which === this.keyCodes.esc;
+			const isEnter = e.which === this.keyCodes.enter;
+			const isEnterWithShift = isEnter && e.shiftKey;
+			const isArrowUp = e.which === this.keyCodes.arrowUp;
+			const isArrowDown = e.which === this.keyCodes.arrowDown;
 
-        this.$toggleAll.show();
-        this.$materialOptionsList.find(this.$noSearchResultsInfo).remove();
-        this._updateToggleAllOption();
-      }
+			if (isArrowDown || isTab || isEsc || isArrowUp) {
 
-      this.dropdown.updatePosition(this.$materialSelect, this.$materialOptionsList);
-    });
-  }
+				this.$materialSelect.focus();
+				this._handleArrowUpDownKey(e.which);
+				return;
+			}
 
-  bindHtmlClick() {
+			const $ul = $this.closest('ul');
+			const searchValue = $this.val();
+			const $options = $ul.find('li span.filtrable');
 
-    $('html').on('click', (e) => {
+			let isOptionInList = false;
 
-      if (!$(e.target).closest(`#select-options-${this.properties.id}`).length && !$(e.target).hasClass('mdb-select') && $(`#select-options-${this.properties.id}`).hasClass('active')) {
+			$options.each(function () {
 
-        this.$materialSelect.trigger('close');
+				const $option = $(this);
+				if (typeof this.outerHTML === 'string') {
 
-        if (!this.$materialSelect.val() && !this.options.placeholder) {
+					const liValue = this.textContent.toLowerCase();
 
-          this.$mainLabel.removeClass('active');
-        }
-      }
+					if (liValue.includes(searchValue.toLowerCase())) {
 
-      if (this.isSearchable && this.$searchInput !== null && this.$materialOptionsList.hasClass('active')) {
+						$option.show().parent().show();
+					} else {
+						$option.hide().parent().hide();
+					}
 
-        this.$materialOptionsList.find('.search-wrap input.search').focus();
-      }
-    });
-  }
+					if (liValue.trim() === searchValue.toLowerCase()) {
+						isOptionInList = true;
+					}
+				}
+			});
 
-  bindMobileDevicesMousedown() {
+			if (isEnter) {
+				if (this.isEditable && !isOptionInList) {
+					this.renderer.addNewOption();
+					return;
+				}
+				if (isEnterWithShift) {
+					this._handleEnterWithShiftKey($this);
+				}
+				this.$materialSelect.trigger('open');
+				return;
+			}
 
-    $('select').siblings('input.select-dropdown', 'input.multi-bs-select').on('mousedown', (e) => {
-      if (MaterialSelectView.isMobileDevice && (e.clientX >= e.target.clientWidth || e.clientY >= e.target.clientHeight)) {
-        e.preventDefault();
-      }
-    });
-  }
+			this.$addOptionBtn[searchValue && this.isEditable && !isOptionInList ? 'show' : 'hide']();
 
-  bindSaveBtnClick() { // @Depreciated
+			const anyOptionMatch = $options.filter((_, e) => $(e).is(':visible') && !$(e).parent().hasClass('disabled')).length !== 0;
+			if (!anyOptionMatch) {
 
-    this.$btnSave.on('click', () => {
+				this.$toggleAll.hide();
+				this.$materialOptionsList.append(this.$noSearchResultsInfo);
+			} else {
 
-      this.$materialSelect.trigger('close');
-    });
-  }
+				this.$toggleAll.show();
+				this.$materialOptionsList.find(this.$noSearchResultsInfo).remove();
+				this._updateToggleAllOption();
+			}
 
-  _toggleResetButton(hide) {
+			this.dropdown.updatePosition(this.$materialSelect, this.$materialOptionsList);
+		});
+	}
 
-    const previousValue = this.$nativeSelect.data('stop-refresh');
-    this.$nativeSelect.attr('data-stop-refresh', 'true');
+	bindHtmlClick() {
 
-    if (hide) {
+		$('html').on('click', (e) => {
 
-      this.$nativeSelect.prepend('<option value="" selected disabled data-mdb-novalue></option>');
-    } else {
+			if (!$(e.target).closest(`#select-options-${this.properties.id}`).length && !$(e.target).hasClass('mdb-select') && $(`#select-options-${this.properties.id}`).hasClass('active')) {
 
-      this.$nativeSelect.find('option[data-mdb-novalue]').remove();
-    }
+				this.$materialSelect.trigger('close');
 
-    this.$nativeSelect.attr('data-stop-refresh', previousValue);
-    this.$btnReset[hide ? 'hide' : 'show']();
-  }
+				if (!this.$materialSelect.val() && !this.options.placeholder) {
 
-  _isToggleAllPresent() {
+					this.$mainLabel.removeClass('active');
+				}
+			}
 
-    return this.$materialOptionsList.find(this.$toggleAll).length;
-  }
+			if (this.isSearchable && this.$searchInput !== null && this.$materialOptionsList.hasClass('active')) {
 
-  _isPlaceholderPresent() {
-    if (this.$nativeSelect.attr('data-placeholder') || this.options.placeholder) {
-      return true;
-    } else {
-      return false;
-    }
-    
-  }
+				this.$materialOptionsList.find('.search-wrap input.search').focus();
+			}
+		});
+	}
 
-  _updateToggleAllOption() {
+	bindMobileDevicesMousedown() {
 
-    const $allOptionsButToggleAll = this.$materialOptionsList.find('li').not('.select-toggle-all, .disabled, :hidden').find('[type=checkbox]');
-    const $checkedOptionsButToggleAll = $allOptionsButToggleAll.filter(':checked');
-    const isToggleAllChecked = this.$toggleAll.find('[type=checkbox]').is(':checked');
+		$('select').siblings('input.select-dropdown', 'input.multi-bs-select').on('mousedown', (e) => {
+			if (MaterialSelectView.isMobileDevice && (e.clientX >= e.target.clientWidth || e.clientY >= e.target.clientHeight)) {
+				e.preventDefault();
+			}
+		});
+	}
 
-    if ($checkedOptionsButToggleAll.length === $allOptionsButToggleAll.length && !isToggleAllChecked) {
+	bindSaveBtnClick() { // @Depreciated
 
-      this.$toggleAll.find('[type=checkbox]').prop('checked', true);
-    } else if ($checkedOptionsButToggleAll.length < $allOptionsButToggleAll.length && isToggleAllChecked) {
+		this.$btnSave.on('click', () => {
 
-      this.$toggleAll.find('[type=checkbox]').prop('checked', false);
-    }
-  }
+			this.$materialSelect.trigger('close');
+		});
+	}
 
-  _handleTabKey($materialSelect) {
+	_toggleResetButton(hide) {
 
-    this._handleEscKey($materialSelect);
-  }
+		const previousValue = this.$nativeSelect.data('stop-refresh');
+		this.$nativeSelect.attr('data-stop-refresh', 'true');
 
-  _handleEnterWithShiftKey($materialSelect) {
+		if (hide) {
 
-    if (!this.isMultiple) {
+			this.$nativeSelect.prepend('<option value="" selected disabled data-mdb-novalue></option>');
+		} else {
 
-      this._handleEnterKey($materialSelect);
-    } else {
+			this.$nativeSelect.find('option[data-mdb-novalue]').remove();
+		}
 
-      this.$toggleAll.trigger('click');
-    }
-  }
+		this.$nativeSelect.attr('data-stop-refresh', previousValue);
+		this.$btnReset[hide ? 'hide' : 'show']();
+	}
 
-  _handleEnterKey($materialSelect) {
+	_isToggleAllPresent() {
 
-    const $activeOption = this.$materialOptionsList.find('li.selected:not(.disabled)');
+		return this.$materialOptionsList.find(this.$toggleAll).length;
+	}
 
-    $activeOption.trigger('click').addClass('active');
+	_isPlaceholderPresent() {
+		if (this.$nativeSelect.attr('data-placeholder') || this.options.placeholder) {
+			return true;
+		} else {
+			return false;
+		}
 
-    this._removeKeyboardActiveClass();
+	}
 
-    if (!this.isMultiple) {
+	_updateToggleAllOption() {
 
-      $materialSelect.trigger('close');
-    }
-  }
+		const $allOptionsButToggleAll = this.$materialOptionsList.find('li').not('.select-toggle-all, .disabled, :hidden').find('[type=checkbox]');
+		const $checkedOptionsButToggleAll = $allOptionsButToggleAll.filter(':checked');
+		const isToggleAllChecked = this.$toggleAll.find('[type=checkbox]').is(':checked');
 
-  _handleArrowUpDownKey(keyCode) {
+		if ($checkedOptionsButToggleAll.length === $allOptionsButToggleAll.length && !isToggleAllChecked) {
 
-    // eslint-disable-next-line object-curly-newline
-    const { $matchedMaterialOption, $activeOption } = this._getArrowMatchedActiveOptions(keyCode, false);
+			this.$toggleAll.find('[type=checkbox]').prop('checked', true);
+		} else if ($checkedOptionsButToggleAll.length < $allOptionsButToggleAll.length && isToggleAllChecked) {
 
-    this._selectSingleOption($matchedMaterialOption);
-    this._removeKeyboardActiveClass();
+			this.$toggleAll.find('[type=checkbox]').prop('checked', false);
+		}
+	}
 
-    if (!$matchedMaterialOption.find('input').is(':checked')) {
+	_handleTabKey($materialSelect) {
 
-      $matchedMaterialOption.removeClass(this.options.keyboardActiveClass);
-    }
+		this._handleEscKey($materialSelect);
+	}
 
-    if (!$activeOption.hasClass('selected') && !$activeOption.find('input').is(':checked') && this.isMultiple) {
+	_handleEnterWithShiftKey($materialSelect) {
 
-      $activeOption.removeClass('active', this.options.keyboardActiveClass);
-    }
+		if (!this.isMultiple) {
 
-    $matchedMaterialOption.addClass(this.options.keyboardActiveClass);
+			this._handleEnterKey($materialSelect);
+		} else {
 
-    if ($matchedMaterialOption.position()) {
-      this.$materialOptionsList.scrollTop(this.$materialOptionsList.scrollTop() + $matchedMaterialOption.position().top);
-    }
-  }
+			this.$toggleAll.trigger('click');
+		}
+	}
 
-  _handleClosedArrowUpDownKey(keyCode) {
+	_handleEnterKey($materialSelect) {
 
-    // eslint-disable-next-line object-curly-newline
-    const { $matchedMaterialOption } = this._getArrowMatchedActiveOptions(keyCode, true);
+		const $activeOption = this.$materialOptionsList.find('li.selected:not(.disabled)');
 
-    $matchedMaterialOption.trigger('click').addClass('active');
+		$activeOption.trigger('click').addClass('active');
 
-    this._updateDropdownScrollTop();
-    this._selectSingleOption($matchedMaterialOption);
-  }
+		this._removeKeyboardActiveClass();
 
-  _getArrowMatchedActiveOptions(keyCode, closedDropdown) {
+		if (!this.isMultiple) {
 
-    const visible = closedDropdown ? '' : ':visible';
-    const $availableOptions = this.$materialOptionsList.find(`li${visible}`).not('.disabled, .select-toggle-all');
+			$materialSelect.trigger('close');
+		}
+	}
 
-    const $firstOption = $availableOptions.first();
-    const $lastOption = $availableOptions.last();
-    const anySelected = this.$materialOptionsList.find('li.selected').length > 0;
+	_handleArrowUpDownKey(keyCode) {
 
-    let $matchedMaterialOption = null;
-    let $activeOption = null;
+		// eslint-disable-next-line object-curly-newline
+		const { $matchedMaterialOption, $activeOption } = this._getArrowMatchedActiveOptions(keyCode, false);
 
-    const isArrowUp = keyCode === this.keyCodes.arrowUp;
-    if (isArrowUp) {
+		this._selectSingleOption($matchedMaterialOption);
+		this._removeKeyboardActiveClass();
 
-      const $currentOption = anySelected ? this.$materialOptionsList.find('li.selected').first() : $lastOption;
-      let $prevOption = $currentOption.prev(`li${visible}:not(.disabled, .select-toggle-all)`);
-      $activeOption = $prevOption;
+		if (!$matchedMaterialOption.find('input').is(':checked')) {
 
-      $availableOptions.each((key, el) => {
-        if ($(el).hasClass(this.options.keyboardActiveClass)) {
-          $prevOption = $availableOptions.eq(key - 1);
-          $activeOption = $availableOptions.eq(key);
-        }
-      });
+			$matchedMaterialOption.removeClass(this.options.keyboardActiveClass);
+		}
 
-      $matchedMaterialOption = $currentOption.is($firstOption) || !anySelected ? $currentOption : $prevOption;
-    } else {
+		if (!$activeOption.hasClass('selected') && !$activeOption.find('input').is(':checked') && this.isMultiple) {
 
-      const $currentOption = anySelected ? this.$materialOptionsList.find('li.selected').first() : $firstOption;
-      let $nextOption = $currentOption.next(`li${visible}:not(.disabled, .select-toggle-all)`);
-      $activeOption = $nextOption;
+			$activeOption.removeClass('active', this.options.keyboardActiveClass);
+		}
 
-      $availableOptions.each((key, el) => {
-        if ($(el).hasClass(this.options.keyboardActiveClass)) {
-          $nextOption = $availableOptions.eq(key + 1);
-          $activeOption = $availableOptions.eq(key);
-        }
-      });
+		$matchedMaterialOption.addClass(this.options.keyboardActiveClass);
 
-      $matchedMaterialOption = $currentOption.is($lastOption) || !anySelected ? $currentOption : $nextOption;
-    }
+		if ($matchedMaterialOption.position()) {
+			this.$materialOptionsList.scrollTop(this.$materialOptionsList.scrollTop() + $matchedMaterialOption.position().top);
+		}
+	}
 
-    return {
-      $matchedMaterialOption,
-      $activeOption
-    };
-  }
+	_handleClosedArrowUpDownKey(keyCode) {
 
-  _handleHomeKey() {
+		// eslint-disable-next-line object-curly-newline
+		const { $matchedMaterialOption } = this._getArrowMatchedActiveOptions(keyCode, true);
 
-    this._selectBoundaryOption('first');
-  }
+		$matchedMaterialOption.trigger('click').addClass('active');
 
-  _handleEndKey() {
+		this._updateDropdownScrollTop();
+		this._selectSingleOption($matchedMaterialOption);
+	}
 
-    this._selectBoundaryOption('last');
-  }
+	_getArrowMatchedActiveOptions(keyCode, closedDropdown) {
 
-  _selectBoundaryOption(firstOrLast = '') {
+		const visible = closedDropdown ? '' : ':visible';
+		const $availableOptions = this.$materialOptionsList.find(`li${visible}`).not('.disabled, .select-toggle-all');
 
-    const $boundaryOption = this.$materialOptionsList.find('li:visible').not('.disabled, .select-toggle-all')[firstOrLast]();
+		const $firstOption = $availableOptions.first();
+		const $lastOption = $availableOptions.last();
+		const anySelected = this.$materialOptionsList.find('li.selected').length > 0;
 
-    this._selectSingleOption($boundaryOption);
+		let $matchedMaterialOption = null;
+		let $activeOption = null;
 
-    this._removeKeyboardActiveClass();
+		const isArrowUp = keyCode === this.keyCodes.arrowUp;
+		if (isArrowUp) {
 
-    if (!$boundaryOption.find('input').is(':checked')) {
+			const $currentOption = anySelected ? this.$materialOptionsList.find('li.selected').first() : $lastOption;
+			let $prevOption = $currentOption.prev(`li${visible}:not(.disabled, .select-toggle-all)`);
+			$activeOption = $prevOption;
 
-      $boundaryOption.removeClass(this.options.keyboardActiveClass);
-    }
+			$availableOptions.each((key, el) => {
+				if ($(el).hasClass(this.options.keyboardActiveClass)) {
+					$prevOption = $availableOptions.eq(key - 1);
+					$activeOption = $availableOptions.eq(key);
+				}
+			});
 
-    $boundaryOption.addClass(this.options.keyboardActiveClass);
+			$matchedMaterialOption = $currentOption.is($firstOption) || !anySelected ? $currentOption : $prevOption;
+		} else {
 
-    if ($boundaryOption.position()) {
-      this.$materialOptionsList.scrollTop(this.$materialOptionsList.scrollTop() + $boundaryOption.position().top);
-    }
-  }
+			const $currentOption = anySelected ? this.$materialOptionsList.find('li.selected').first() : $firstOption;
+			let $nextOption = $currentOption.next(`li${visible}:not(.disabled, .select-toggle-all)`);
+			$activeOption = $nextOption;
 
-  _handleEscKey($materialSelect) {
+			$availableOptions.each((key, el) => {
+				if ($(el).hasClass(this.options.keyboardActiveClass)) {
+					$nextOption = $availableOptions.eq(key + 1);
+					$activeOption = $availableOptions.eq(key);
+				}
+			});
 
-    this._removeKeyboardActiveClass();
-    $materialSelect.trigger('close');
-  }
+			$matchedMaterialOption = $currentOption.is($lastOption) || !anySelected ? $currentOption : $nextOption;
+		}
 
-  _handleLetterKey(e) {
+		return {
+			$matchedMaterialOption,
+			$activeOption
+		};
+	}
 
-    this._removeKeyboardActiveClass();
+	_handleHomeKey() {
 
-    if (this.isSearchable) {
+		this._selectBoundaryOption('first');
+	}
 
-      const isLetter = e.which > 46 && e.which < 91;
-      const isNumber = e.which > 93 && e.which < 106;
-      const isBackspace = e.which === 8;
+	_handleEndKey() {
 
-      if (isLetter || isNumber) {
-        this.$searchInput.find('input').focus();
-      }
-      if (isBackspace) {
-        this.$searchInput.find('input').val('').focus();
-      }
+		this._selectBoundaryOption('last');
+	}
 
-    } else {
+	_selectBoundaryOption(firstOrLast = '') {
 
-      let filterQueryString = '';
-      const letter = String.fromCharCode(e.which).toLowerCase();
-      const nonLetters = Object.keys(this.keyCodes).map((key) => this.keyCodes[key]);
-      const isLetterSearchable = letter && nonLetters.indexOf(e.which) === -1;
+		const $boundaryOption = this.$materialOptionsList.find('li:visible').not('.disabled, .select-toggle-all')[firstOrLast]();
 
-      if (isLetterSearchable) {
+		this._selectSingleOption($boundaryOption);
 
-        filterQueryString += letter;
+		this._removeKeyboardActiveClass();
 
-        const $matchedMaterialOption = this.$materialOptionsList.find('li').filter((index, element) => $(element).text().toLowerCase().includes(filterQueryString)).first();
+		if (!$boundaryOption.find('input').is(':checked')) {
 
-        if (!this.isMultiple) {
+			$boundaryOption.removeClass(this.options.keyboardActiveClass);
+		}
 
-          this.$materialOptionsList.find('li').removeClass('active');
-        }
+		$boundaryOption.addClass(this.options.keyboardActiveClass);
 
-        $matchedMaterialOption.addClass('active');
-        this._selectSingleOption($matchedMaterialOption);
-        this._updateDropdownScrollTop();
-      }
-    }
-  }
+		if ($boundaryOption.position()) {
+			this.$materialOptionsList.scrollTop(this.$materialOptionsList.scrollTop() + $boundaryOption.position().top);
+		}
+	}
 
-  _removeKeyboardActiveClass() {
+	_handleEscKey($materialSelect) {
 
-    this.$materialOptionsList.find('li').removeClass(this.options.keyboardActiveClass);
-  }
+		this._removeKeyboardActiveClass();
+		$materialSelect.trigger('close');
+	}
 
-  _triggerChangeOnNativeSelect() {
+	_handleLetterKey(e) {
 
-    const keyboardEvt = new KeyboardEvent('change', {
-      bubbles: true,
-      cancelable: true
-    });
-    this.$nativeSelect.get(0).dispatchEvent(keyboardEvt);
-  }
+		this._removeKeyboardActiveClass();
 
-  _selectSingleOption(newOption) {
+		if (this.isSearchable) {
 
-    this.$materialOptionsList.find('li.selected').removeClass('selected');
+			const isLetter = e.which > 46 && e.which < 91;
+			const isNumber = e.which > 93 && e.which < 106;
+			const isBackspace = e.which === 8;
 
-    this._selectOption(newOption);
-  }
+			if (isLetter || isNumber) {
+				this.$searchInput.find('input').focus();
+			}
+			if (isBackspace) {
+				this.$searchInput.find('input').val('').focus();
+			}
 
-  _updateDropdownScrollTop() {
+		} else {
 
-    const $preselected = this.$materialOptionsList.find('li.active').not('.disabled').first();
-    if ($preselected.length) {
-      this.$materialOptionsList.scrollTo($preselected);
-    } else {
-      this.$materialOptionsList.scrollTop(0);
-    }
-  }
+			let filterQueryString = '';
+			const letter = String.fromCharCode(e.which).toLowerCase();
+			const nonLetters = Object.keys(this.keyCodes).map((key) => this.keyCodes[key]);
+			const isLetterSearchable = letter && nonLetters.indexOf(e.which) === -1;
 
-  _selectOption(newOption) {
+			if (isLetterSearchable) {
 
-    const option = $(newOption);
-    option.addClass('selected');
-  }
+				filterQueryString += letter;
 
-  _copyOptions(options) {
+				const $matchedMaterialOption = this.$materialOptionsList.find('li').filter((index, element) => $(element).text().toLowerCase().includes(filterQueryString)).first();
 
-    return $.extend({}, options);
-  }
+				if (!this.isMultiple) {
 
-  _jQueryFallback(...$elements) {
+					this.$materialOptionsList.find('li').removeClass('active');
+				}
 
-    let $lastElem = null;
-    for (let i = 0; i < $elements.length; i++) {
+				$matchedMaterialOption.addClass('active');
+				this._selectSingleOption($matchedMaterialOption);
+				this._updateDropdownScrollTop();
+			}
+		}
+	}
 
-      $lastElem = $elements[i];
-      if ($lastElem.length) {
-        return $lastElem;
-      }
-    }
+	_removeKeyboardActiveClass() {
 
-    return $lastElem;
-  }
+		this.$materialOptionsList.find('li').removeClass(this.options.keyboardActiveClass);
+	}
+
+	_triggerChangeOnNativeSelect() {
+
+		const keyboardEvt = new KeyboardEvent('change', {
+			bubbles: true,
+			cancelable: true
+		});
+		this.$nativeSelect.get(0).dispatchEvent(keyboardEvt);
+	}
+
+	_selectSingleOption(newOption) {
+
+		this.$materialOptionsList.find('li.selected').removeClass('selected');
+
+		this._selectOption(newOption);
+	}
+
+	_updateDropdownScrollTop() {
+
+		const $preselected = this.$materialOptionsList.find('li.active').not('.disabled').first();
+		if ($preselected.length) {
+			this.$materialOptionsList.scrollTo($preselected);
+		} else {
+			this.$materialOptionsList.scrollTop(0);
+		}
+	}
+
+	_selectOption(newOption) {
+
+		const option = $(newOption);
+		option.addClass('selected');
+	}
+
+	_copyOptions(options) {
+
+		return $.extend({}, options);
+	}
+
+	_jQueryFallback(...$elements) {
+
+		let $lastElem = null;
+		for (let i = 0; i < $elements.length; i++) {
+
+			$lastElem = $elements[i];
+			if ($lastElem.length) {
+				return $lastElem;
+			}
+		}
+
+		return $lastElem;
+	}
 }
