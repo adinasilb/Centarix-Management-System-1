@@ -686,6 +686,13 @@ namespace PrototypeWithAuth.Controllers
                             //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
                             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
                         }
+                        else
+                        {
+                            requestItemViewModel.Request.RequestStatusID = 1; //needs approvall
+                            requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
+                            _context.Update(requestItemViewModel.Request);
+                            _context.SaveChanges();
+                        }
 
                     }
                     catch (Exception ex)

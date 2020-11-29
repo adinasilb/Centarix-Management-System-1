@@ -86,15 +86,15 @@
     bool Request = false;
     bool Inventory = false;
     bool Summary = false;
-    if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
+    if (Model.OperPageType.Equals(AppUtility.OperationsPageTypeEnum.RequestOperations))
     {
         Request = true;
     }
-    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    else if (Model.OperPageType.Equals(AppUtility.OperationsPageTypeEnum.InventoryOperations))
     {
         Inventory = true;
     }
-    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Summary))
+    else if (Model.OperPageType.Equals(AppUtility.OperationsPageTypeEnum.SearchOperations))
     {
         Summary = true;
     }
@@ -268,11 +268,7 @@
                         </ul>
                     </span>
                 </th>
-                @*Later on should have a better location...*@
-                @if (Inventory)
-                {
-                    <th> Location </th>
-                }
+
                 <th width="10%">@Html.DisplayNameFor(m => m.PagedList[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
                 @*<th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>*@
 
