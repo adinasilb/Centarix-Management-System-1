@@ -79,10 +79,10 @@ namespace PrototypeWithAuth.Controllers
             RequestsSearchViewModel? requestsSearchViewModel = null)
         {
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p==AppUtility.PriceSortEnum.Total?true:false }));
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p == AppUtility.PriceSortEnum.Total ? true : false }));
 
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-           
+
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
@@ -116,7 +116,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
                 TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
             }
-         
+
 
             if (ViewBag.ErrorMessage != null)
             {
@@ -127,7 +127,17 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.currency = AppUtility.CurrencyEnum.NIS;
             return View(viewmodel);
         }
-        private async Task<RequestIndexViewModel> GetIndexViewModel(int page =1, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
+
+        private async Task<RequestIndexViewModel> GetExpensesItemsViewModel(int page = 1)
+        {
+            RequestIndexViewModel viewModel = new RequestIndexViewModel()
+            {
+                Page = page,
+                MenuType = AppUtility.MenuItems.Reports
+            };
+            return viewModel;
+        }
+        private async Task<RequestIndexViewModel> GetIndexViewModel(int page = 1, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
             AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             RequestsSearchViewModel? requestsSearchViewModel = null)
         {
@@ -138,20 +148,20 @@ namespace PrototypeWithAuth.Controllers
          .OrderBy(r => r.CreationDate);
             if (SectionType == AppUtility.MenuItems.LabManagement)
             {
-                    if (subcategoryID > 0)
-                    {
-                        RequestsPassedIn= _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-                            .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-                            .Include(r => r.ParentRequest).Where(r => r.Product.ProductSubcategoryID == subcategoryID).Include(r => r.ParentRequest);
+                if (subcategoryID > 0)
+                {
+                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
+                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
+                        .Include(r => r.ParentRequest).Where(r => r.Product.ProductSubcategoryID == subcategoryID).Include(r => r.ParentRequest);
 
-                    }
-                    else
-                    {
-                        RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-                            .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-                            .Include(r => r.ParentRequest);
-                    }
-                    RequestsPassedIn.OrderByDescending(e => e.ParentRequest.OrderDate);
+                }
+                else
+                {
+                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
+                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
+                        .Include(r => r.ParentRequest);
+                }
+                RequestsPassedIn.OrderByDescending(e => e.ParentRequest.OrderDate);
             }
             else if (ViewData["ReturnRequests"] != null)
             {
@@ -165,7 +175,7 @@ namespace PrototypeWithAuth.Controllers
                  * you only need the separate union variable in order for the union to work
                  * and the original queries are on separate lists because each is querying the full database with a separate where
                  */
-            
+
                 IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
                 if (RequestStatusID == 0 || RequestStatusID == 1)
                 {
@@ -248,14 +258,14 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
             {
-              //  SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
+                //  SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
                 LocationInstance rliList = _context.LocationInstances
                     .Include(li => li.AllRequestLocationInstances)
                     .Where(li => li.LocationInstanceID == parentLocationInstanceID).FirstOrDefault();
                 RequestsPassedIn = RequestsPassedIn.Where(r => rliList.AllRequestLocationInstances.Select(rli => rli.RequestID).ToList().Contains(r.RequestID));
             }
-    
-        
+
+
             RequestIndexViewModel requestIndexViewModel = new RequestIndexViewModel();
             //instantiate your list of requests to pass into the index
             /*int?*/
@@ -283,7 +293,7 @@ namespace PrototypeWithAuth.Controllers
                 onePageOfProducts = await RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentRequest)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .ToPagedListAsync(page==0?1:page  , 25);
+                    .ToPagedListAsync(page == 0 ? 1 : page, 25);
 
                 onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
                 onePageOfProducts.Where(opop => opop.RequestStatusID == 2).OrderByDescending(opop => opop.ParentRequest.OrderDate); // display by orderdate if ordered
@@ -292,9 +302,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData["ErrorMessage"] = ex.Message;
                 TempData["InnerMessage"] = ex.InnerException;
-               // Redirect("~/Views/Shared/RequestError.cshtml");
+                // Redirect("~/Views/Shared/RequestError.cshtml");
             }
             requestIndexViewModel.PagedList = onePageOfProducts;
+            requestIndexViewModel.MenuType = AppUtility.MenuItems.Requests;
             return requestIndexViewModel;
         }
 
@@ -302,14 +313,20 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, OrdersAndInventory")]
         public async Task<IActionResult> _IndexTable(int page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
             AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
-            RequestsSearchViewModel? requestsSearchViewModel = null, List<String> selectedPriceSort =null, AppUtility.CurrencyEnum selectedCurrency = AppUtility.CurrencyEnum.NIS)
+            RequestsSearchViewModel? requestsSearchViewModel = null, List<String> selectedPriceSort = null, AppUtility.CurrencyEnum selectedCurrency = AppUtility.CurrencyEnum.NIS,
+            string ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null)
         {
 
-             RequestIndexViewModel viewModel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID,
-            PageType, SectionType ,
-            requestsSearchViewModel);
+            RequestIndexViewModel viewModel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID,
+           PageType, SectionType,
+           requestsSearchViewModel);
             viewModel.currency = selectedCurrency;
             viewModel.PriceSortEnumsList = selectedPriceSort;
+
+            if (ExpensesFilter != null)
+            {
+                viewModel.MenuType = AppUtility.MenuItems.Reports;
+            }
             return PartialView(viewModel);
         }
 
@@ -1554,7 +1571,7 @@ namespace PrototypeWithAuth.Controllers
             reorderRequest.SubSubUnitTypeID = requestItemViewModel.Request.SubSubUnitTypeID;
             reorderRequest.UnitsOrdered = oldRequest.UnitsOrdered;
             reorderRequest.UnitsInStock = oldRequest.UnitsInStock;
-            reorderRequest.Quantity = oldRequest.Quantity;            
+            reorderRequest.Quantity = oldRequest.Quantity;
             reorderRequest.ParentQuote = new ParentQuote();
             reorderRequest.ParentQuote.QuoteStatusID = -1;
 
@@ -1924,13 +1941,13 @@ namespace PrototypeWithAuth.Controllers
                     //    requestStatusID = 2,
                     //    PageType = AppUtility.RequestPageTypeEnum.Request
                     //});
-                   
+
                     return RedirectToAction("Index"); //temp: todo: must add Tempdata
                 }
                 else if (firstRequest.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
                 {
-                   
-                    return RedirectToAction("Index", "Operations"); 
+
+                    return RedirectToAction("Index", "Operations");
                 }
                 else
                 {
@@ -2526,7 +2543,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
-                 return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+                return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
             }
             else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
             {
@@ -2543,7 +2560,7 @@ namespace PrototypeWithAuth.Controllers
                 return RedirectToAction("Index", "Operations", new { vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
             }
 
-            return RedirectToAction("Index", new {pagetype= TempData[AppUtility.TempDataTypes.PageType.ToString()] , vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+            return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
 
         }
 

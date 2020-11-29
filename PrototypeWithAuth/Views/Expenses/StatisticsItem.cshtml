@@ -5,12 +5,12 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
-
+<script src="~/js/statisticsitem.js"></script>
 <div class="row under-row-margin expenses-form">
     <div class="col-6 heading-1 p-0">
         @{
-            var fbClass = "";
-            var hpClass = "";
+            var fbClass = "sort-fb"; //this way it will only call the ajax if it's not already clicked
+            var hpClass = "sort-hp";
             if (Model.HighestPrice)
             {
                 hpClass = " active ";
@@ -21,7 +21,7 @@
             }
         }
         <div class="">
-            <div class="item-table">
+            <div class="">
                 <ul class="pl-0">
                     <li class="list-inline-item m-0">
                         <a class="new-button pt-4 @fbClass">
@@ -78,4 +78,49 @@
 
     </div>
 
+</div>
+<div class="row p-0">
+    <div class="col-12">
+
+        <table class="table table-headerspaced table-noheaderlines table-hover ">
+            <thead>
+                <tr class="text-center">
+                    @*<th width="4%">
+
+                    </th>*@
+                    <th width="7%">
+                        Item Image
+                    </th>
+                    <th width="17%">
+                        Item Name
+                    </th>
+                    <th width="10%">
+                        Vendor
+                    </th>
+                    <th width="10%">
+                        Amount
+                    </th>
+                    <th width="12%">
+                        Location
+                    </th>
+                    <th width="10%">
+                        Type
+                    </th>
+                    <th width="10%">
+                        Owner
+                    </th>
+                    <th width="9%">
+                        Price
+                    </th>
+                    <th width="10%">
+                        Graphs
+                    </th>
+                    <th width="5%"></th>
+                </tr>
+            </thead>
+        </table>
+
+        <div class="index-table">
+        </div>
+    </div>
 </div>

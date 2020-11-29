@@ -1073,6 +1073,7 @@ a.nav-link {
     background-color: transparent;
     color: var(--black-87);
     font-size: 1.25rem;
+    padding-bottom: .3125rem;
 }
 
     .new-button:hover {
@@ -1092,9 +1093,14 @@ a.nav-link {
 
 .new-button-text {
     padding-right: 1rem;
-    line-height: 2.50rem;
+    /*line-height: 2.50rem;*/
     vertical-align: text-bottom;
     margin: 0px;
+}
+
+.expenses-form .new-button:hover {
+    opacity: 1;
+    color: var(--expense-color) !important;
 }
 
 .new-icon {
