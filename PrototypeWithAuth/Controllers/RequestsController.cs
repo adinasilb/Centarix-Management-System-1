@@ -1600,7 +1600,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", new
             {
                 page = requestItemViewModel.Page,
-                requestStatusID = 1,
+                requestStatusID = 3,
                 PageType = AppUtility.RequestPageTypeEnum.Request
             });
         }

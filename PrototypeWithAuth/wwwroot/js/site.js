@@ -51,26 +51,6 @@ $(function () {
 		$.fn.parentListChange();
 	});
 
-	//$("body").on("change", ".mdb-select", function () {
-	//	alert("body on change mdb select");
-	//});
-
-	//$("body").on("click", ".mdb-select ul", function () {
-	//	alert("body on click mdb select ul");
-	//});
-
-	//$("body").on("change", ".mdb-select ul", function () {
-	//	alert("body on change mdb select ul");
-	//});
-
-	//$("body").on("click", ".mdb-select ul li", function () {
-	//	alert("body on click mdb select ul li");
-	//});
-
-	//$("body").on("change", ".mdb-select ul li", function () {
-	//	alert("body on change mdb select ul li");
-	//});
-
 
 	$.fn.parentListChange = function () {
 		console.log("in parent list");
@@ -131,9 +111,9 @@ $(function () {
 	
 	};
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
-	$(".Project").change(function () {
-		$.fn.changeProject($(this).val());
-	});
+	//$(".Project").change(function () {
+	//	$.fn.changeProject($(this).val());
+	//});
 
 	//$('.modal').off('change').on('change', ".Project", function () {
 	//	$.fn.changeProject($(this).val());
@@ -2317,10 +2297,6 @@ $(function () {
 	$('#LastName').off('change').change(function () {
 		$('.userName').val($('#FirstName').val() + " " + $(this).val())
 	});
-	$('.exitModal').off('click').on('click', '.close', function (e) {
-		console.log("close edit modal");
-		$.fn.CallPageTimeKeeper('/Timekeeper/ReportHours');
-	})
 	$.fn.CallPageTimekeeper = function (url) {
 		$.ajax({
 			async: true,
@@ -2332,6 +2308,23 @@ $(function () {
 			}
 		});
 	}
+	$('.exitModal').off('click').on('click', '.close', function (e) {
+		console.log("close edit modal");
+		//$.fn.CallPageTimeKeeper();
+		$.ajax({
+			async: true,
+			url: '/Timekeeper/ReportHours',
+			type: 'GET',
+			cache: true,
+			success: function (data) {
+				$('.render-body').html(data);
+				$('.modal').replaceWith('');
+				$(".modal-backdrop").remove();
+
+			}
+		});
+	})
+
 
 	//$('body').on('click', '.callIndexPartial', function () {
 	//	var url = $(this).attr('url');
