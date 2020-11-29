@@ -1680,10 +1680,15 @@ td .btn {
 .modal.on-form-modal {
     margin-top: 0rem !important;
 }
+.new-modal-header.modal-line-1-header-with-back, .modal .new-modal-header{
+    border-bottom: 0.125rem solid #DCDCDC !important;
+    padding-bottom: 0px !important;
+}
+
 .order-inv-form .on-form-modal-border {
     border: 0.125rem solid var(--order-inv-color);
 }
-.order-inv-form .new-modal-header:not(.modal-line-1-header-with-back) {
+.order-inv-form .new-modal-header:not(.modal-line-1-header-with-back){
     border-bottom: 0.125rem solid var(--order-inv-color) !important;
 }
 .oper-form .on-form-modal-border {
@@ -1708,10 +1713,6 @@ td .btn {
 }
 .users-form .new-modal-header:not(.modal-line-1-header-with-back) {
     border-bottom: 0.125rem solid var(--user-color) !important;
-}
-.new-modal-header.modal-line-1-header-with-back {
-    border-bottom: 0.125rem solid #DCDCDC !important;
-    padding-bottom: 0px !important;
 }
 
 .supplier-form .on-form-modal-border {
