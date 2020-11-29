@@ -45,6 +45,7 @@
 }
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
+<script src="~/js/Validation/CreateVendorFormValidation.js"></script>
 <input type="hidden" class="old-name" value="@Model.Vendor.VendorEnName" />
 <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; border: 2px solid #EAEAEB;">
     <div class=" row text-right mb-0">
@@ -313,35 +314,35 @@
                     <input type="hidden" value="@Model.VendorComments.Count" id="comment-index" />
                     <input type="hidden" asp-for="VendorComments[i].VendorCommentID" />
 
-                    await Html.RenderPartialAsync("CommentInfoPartialView", new AddCommentViewModel { VendorComment = Model.VendorComments[i], Index = i, IsEdit = true  });
+                    await Html.RenderPartialAsync("CommentInfoPartialView", new AddCommentViewModel { VendorComment = Model.VendorComments[i], Index = i, IsEdit = true });
 
                 }
             </div>
-            </div>
-            <div id="contact" class="tab-pane fade @showContact">
-                <div id="contact-info">
-                    <div class="row modal-tab-name">
-                        <span class="heading-1 col-12 modal-tab-name">Contact Info</span>
-                    </div>
-                    <input type="hidden" value="@Model.VendorContacts.Count" id="contact-index" />
-                    @for (int i = 0; i < Model.VendorContacts.Count(); i++)
-                    {
-
-                        <input type="hidden" asp-for="VendorContacts[i].VendorContactID" />
-
-                        await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts[i], Index = i, IsEdit=true });
-                    }
-                    </div>
-                    <div class="text-center">
-                        <input id="addSuplierContact" type="button" value="+ Add contact name" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize mark-readonly" disabled style="font-size:1rem;" />
-                    </div>
-
-                </div>
-            </div>
         </div>
-        @if (Model.Tab != 0)
-        {
-            <script>
-                $('.mdb-select').materialSelect();
-            </script>
-        }
+        <div id="contact" class="tab-pane fade @showContact">
+            <div id="contact-info">
+                <div class="row modal-tab-name">
+                    <span class="heading-1 col-12 modal-tab-name">Contact Info</span>
+                </div>
+                <input type="hidden" value="@Model.VendorContacts.Count" id="contact-index" />
+                @for (int i = 0; i < Model.VendorContacts.Count(); i++)
+                {
+
+                    <input type="hidden" asp-for="VendorContacts[i].VendorContactID" />
+
+                    await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts[i], Index = i, IsEdit = true });
+                }
+            </div>
+            <div class="text-center">
+                <input id="addSuplierContact" type="button" value="+ Add contact name" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize mark-readonly" disabled style="font-size:1rem;" />
+            </div>
+
+        </div>
+    </div>
+</div>
+@if (Model.Tab != 0)
+{
+    <script>
+        $('.mdb-select').materialSelect();
+    </script>
+}

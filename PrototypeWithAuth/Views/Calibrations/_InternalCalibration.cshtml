@@ -108,6 +108,10 @@
 
 <script type="text/javascript">
     $(function () {
+        $(".createCalibration").validate({
+            rules: {
+            }
+        });
         var InternalCalibrationIsRepeat = function (index) {
             return $(".ICIsRepeat" + index).val() == "true";
         }

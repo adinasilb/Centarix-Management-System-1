@@ -113,6 +113,10 @@
 
 <script type="text/javascript">
     $(function () {
+        $(".createCalibration").validate({
+            rules: {
+            }
+        });
         var RepairsIsRepeat = function (index) {
             return $(".ReIsRepeat" + index).val() == "true";
         }

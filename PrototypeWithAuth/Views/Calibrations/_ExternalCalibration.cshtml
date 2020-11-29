@@ -114,6 +114,10 @@
 
 <script type="text/javascript">
     $(function () {
+        $(".createCalibration").validate({
+            rules: {
+            }
+        });
         var ExternalCalibrationIsRepeat = function (index) {
             return $(".ECIsRepeat" + index).val() == "true";
         }
