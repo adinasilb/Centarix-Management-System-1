@@ -37,7 +37,8 @@ namespace PrototypeWithAuth
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddLogging(loggingBuilder => {
+            services.AddLogging(loggingBuilder =>
+            {
                 loggingBuilder.AddConsole()
                     .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
                 loggingBuilder.AddDebug();
@@ -50,16 +51,16 @@ namespace PrototypeWithAuth
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("ElixirAzureConnection")));
-
             services.AddDbContext<ApplicationDbContext>(options =>
-            {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
-                options.EnableSensitiveDataLogging(true);
-            });
+                    Configuration.GetConnectionString("CentarixConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //{
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection"));
+            //    options.EnableSensitiveDataLogging(true);
+            //});
 
 
             services.AddControllersWithViews();
@@ -67,10 +68,11 @@ namespace PrototypeWithAuth
 
             // Enable Razor pages, but in the Debug configuration, compile the views at runtime, for ease of development
             IMvcBuilder builder = services.AddRazorPages();
-#if DEBUG
-            builder.AddRazorRuntimeCompilation();
-#endif            
-            
+            //#if DEBUG
+            //            builder.AddRazorRuntimeCompilation();
+            //#endif
+            services.AddApplicationInsightsTelemetry();
+
             // in order to be able to customize the aspnetcore identity
 
             services.AddMvc(config => //this creates a global authorzation - meaning only registered users can use view the application
@@ -79,7 +81,7 @@ namespace PrototypeWithAuth
                                  .RequireAuthenticatedUser()
                                  .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
-               // config.AllowValidatingTopLevelNodes = true;
+                // config.AllowValidatingTopLevelNodes = true;
             });
 
             ////allow for data anotations validations
@@ -87,7 +89,7 @@ namespace PrototypeWithAuth
             //   .AddDataAnnotations();
             // //.AddMvcOptions(opt =>
             // //       opt.Filters.Add<RequestFilterAttribute>());
-         
+
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
@@ -95,8 +97,8 @@ namespace PrototypeWithAuth
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-                options.SlidingExpiration = true;         
-          
+                options.SlidingExpiration = true;
+
             });
         }
 
@@ -132,8 +134,11 @@ namespace PrototypeWithAuth
             });
 
             //ChangePassword(serviceProvider).Wait();
-            CreateRoles(serviceProvider).Wait();
+            // CreateRoles(serviceProvider).Wait();
             //AddRole(serviceProvider).Wait();
+
+            app.UseApplicationInsightsRequestTelemetry();
+            app.UseApplicationInsightsExceptionTelemetry();
 
 
         }
@@ -146,7 +151,7 @@ namespace PrototypeWithAuth
         //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         //    var result = _userManager.ResetPasswordAsync(user, code, "adinabCE2063*");
         //}
-        
+
 
         //Seed database with new roles
 

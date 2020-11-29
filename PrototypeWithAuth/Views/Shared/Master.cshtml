@@ -328,7 +328,7 @@
 
             if ($("#tdterms").val()) {
                 $("#tdterms").hide();
-                alert("in tdterms.val()");
+                //alert("in tdterms.val()");
                 $itemurl = "/Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true";
                 console.log("url " + $itemurl)
                 //$("#loading").show();
@@ -700,7 +700,7 @@
                     var err = eval("(" + xhr.responseText + ")");
                     console.log("in error..." + err.Description);
                     $("#loading").hide();
-                    alert(err.Message);
+                    //alert(err.Message);
                 }
 
                 //error: function (/*request, status, error*/) {

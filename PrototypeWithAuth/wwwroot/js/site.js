@@ -733,7 +733,7 @@ $(function () {
 	});
 
 	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations) {
-		alert("in open doc modal");
+		//alert("in open doc modal");
 		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
@@ -1212,7 +1212,7 @@ $(function () {
 						$("#UserImagePath").val(result);
 					}
 					else {
-						alert("Please only select images");
+						//alert("Please only select images");
 					}
 
 				}
