@@ -5,24 +5,24 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
 }
-    <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="chartForm">
+<form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="chartForm on-form-modal">
 
-        <div class="row">
+    <div class="row">
 
-            <div class="col-2 chart-dropdownlists">
-                @{ await Html.RenderPartialAsync("_DDLForCharts", Model);
-        }
-                <div class="margin-top-button">
-                    <input type="submit" value="Create a pie chart" id="createPieChart" style="width:100%; padding-left: 2.875rem; padding-right: 2.875rem;"
-                           class="expenses-background-color custom-button custom-button-font float-left text" />
-                </div>
-            </div>
-
-
-            <div class="col-10 chartDiv">
-                @*@{ await Html.RenderPartialAsync("_PieChart");
-                }*@
+        <div class="col-2 chart-dropdownlists">
+            @{ await Html.RenderPartialAsync("_DDLForCharts", Model);
+            }
+            <div class="margin-top-button">
+                <input type="submit" value="Create a pie chart" id="createPieChart" style="width:100%; padding-left: 2.875rem; padding-right: 2.875rem;"
+                       class="expenses-background-color custom-button custom-button-font float-left text" />
             </div>
         </div>
-    </form>
-    <script src="~/js/piechart.js"></script>
+
+
+        <div class="col-10 chartDiv">
+            @*@{ await Html.RenderPartialAsync("_PieChart");
+                }*@
+        </div>
+    </div>
+</form>
+<script src="~/js/piechart.js"></script>

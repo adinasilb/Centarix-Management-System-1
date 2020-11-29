@@ -14,6 +14,7 @@ $(function () {
 			}
 		}
 	});
+
 	$('.addInvoiceForm').validate({
 		rules: {
 			"InvoiceImage": { required: true, extension: "jpg|jpeg|png|pdf" },

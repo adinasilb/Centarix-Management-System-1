@@ -1,118 +1,59 @@
 ﻿@model PrototypeWithAuth.ViewModels.ChartViewModel
-    <div id="labelChart" style="height: 700px; width: 100%;"></div>
-<script type="text/javascript" src="~/lib/canvasjs.min.js"></script>
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div id="columnchart" style="        width: 100%;
+        height: 100%;"></div>
 <script>
-	$(function () {
-//alert("chart function")
-	@*var ctxP = document.getElementById("labelChart").getContext('2d');
 
-	var myBarChart = new Chart(ctxP, {
-
-		plugins: [ChartDataLabels],
-		type: 'bar',
-		data: {
-            labels: [@Html.Raw(Model.SectionName)],
-			//ChartDataLabels: ["1", "2", "3", "4", "5"],
-			datasets: [{
-				data: [@Html.Raw(Model.SectionValue)],
-				backgroundColor: [@Html.Raw(Model.SectionColor)],
-                barPercentage: 0.5,
-                barThickness: 3,
-                maxBarThickness: 6,
-                minBarLength: 0,
-                //hoverBackgroundColor: [@Html.Raw(Model.SectionColor)],
-			},
-			]
-		},
-		options: {
-			hover: false,
-			tooltips: {
-				// Disable the on-canvas tooltip
-				enabled: false,
-			},
-			legend: {
-				display: false
-			},
-
-			responsive: true,
-
-			plugins: {
-				datalabels: {
-                    display:true,
-					//formatter: (value, ctx) => {
-					//	var sum = 0;
-					//	var dataArr = ctx.chart.data.datasets[0].data;
-					//	dataArr.map(data => {
-					//		sum += parseFloat(data);
-					//	});
-					//	//alert(sum)
-     //                   var percentage = (value * 100 / sum).toFixed(2) + "%";
-     //                   //alert("value"+(value * 100)+ "sum"+sum)
-     //                   return ctx.chart.data.labels[ctx.dataIndex] + "\n" + percentage + "\n" + parseFloat(ctx.chart.data.datasets[0].data[ctx.dataIndex]).toFixed(2) ;
-					//},
-					color: 'white',
-					labels: {
-						title: {
-							font: {
-								size: 18,
-								textAlign: 'center'
-							},
-							text: "Custom TEgt"
+    $(function () {
 
 
-						}
-					},
-
-				}
-			}
-		}
-	});*@
-		var colors = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionColor))')
+        function drawChart() {
+               //google.charts.setOnLoadCallback(drawChart);
+        var colors = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionColor))')
         var values = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionValue))')
-		var names = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionName))')
-		  var currency = JSON.parse('@Html.Raw(Json.Serialize(Model.Currency))')
-		var datapoints =[]
-        for (var i = 0, len = values.length; i < len; i++) {
-			datapoints.push({x:i+1, y: values[i], label: names[i] })
-		}
-        CanvasJS.addColorSet("colors",
-            colors);
+        var names = JSON.parse('@Html.Raw(Json.Serialize(Model.SectionName))')
+        var currency = JSON.parse('@Html.Raw(Json.Serialize(Model.Currency))')
 
-        var chart = new CanvasJS.Chart("labelChart",
-			{
-				colorSet: "colors",
-                title: {
-
-                },
-                legend: {
-
-				},
-                axisX: {
-                    labelFontSize: 12,
-				},
-                axisY: {
-					labelFontSize: 12,
-					lineThickness: 0,
-                    valueFormatString: currency+"#######.00",
-				},
-
-                data: [
-					{
-
-                        //indexLabelPlacement: "outside",
-                        //indexLabelOrientation: "horizontal",
-						//toolTipContent: "{y} - #percent %",
-                       // indexLabel: "{indexLabel} {y} - #percent %",
-
-                        type: "column",
-                        showInLegend: false,
-
-						dataPoints: datapoints
-                    }
-                ]
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+            data.addColumn('number');
+            data.addColumn({ role: 'style', type: 'string' });
+        var bars = {}
+            for (var i = 0, len = values.length; i < len; i++) {
+                data.addRow([names[i], values[i], colors[i]])
+        //    bars[i] =  { color: colors[i], visibleInLegend: true } 
+            }
+            var formatter = new google.visualization.NumberFormat({
+                prefix: currency
             });
-        chart.render();
+            formatter.format(data, 1);
+            var options = {
+                title: '',
+                sliceVisibilityThreshold: 0,
+               // series: bars,
 
-})</script>
+                chartArea: { width: 600, height: 600, left: "20%" },
+                legend: { position: 'top'},
+                vAxis: {
+                    textPosition: 'out',
+                },
 
+
+            }
+            var chart = new google.visualization.ColumnChart($('#columnchart')[0]);
+                chart.draw(data, options);
+                }
+
+
+        google.charts.load('current', { packages: ['corechart'] }).then(drawChart);
+    });
+</script>
+<style type="text/css">
+    path {
+        stroke-width: 5;
+    }
+
+    g {
+    }
+</style>
