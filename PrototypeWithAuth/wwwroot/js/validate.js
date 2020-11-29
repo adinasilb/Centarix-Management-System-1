@@ -29,9 +29,6 @@ $(function () {
 		});
 	});
 
-
-	
-	
 	$.validator.addMethod("nonAlphaNumeric", function (value) {
 		return /^[a-zA-Z0-9]+$/.test(value) == false;
 	}, "Password must contain a non alphanumeric character ");

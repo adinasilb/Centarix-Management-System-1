@@ -1,4 +1,5 @@
-﻿$('.ordersItemForm').validate({
+﻿
+$('.ordersItemForm').validate({
 	rules: {
 		"Request.Product.ProductName": "required",
 		"Request.CatalogNumber": {
@@ -68,5 +69,4 @@
 		"Request.SubUnitTypeID": "selectRequired",
 		"Request.SubSubUnitTypeID": "selectRequired"
 	},
-
-});
+			});
