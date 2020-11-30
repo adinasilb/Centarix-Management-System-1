@@ -2860,7 +2860,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Admin, Requests")]
-        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations = false, bool IsNotifications = false)
+        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType  = AppUtility.MenuItems.Requests, bool IsNotifications = false)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -2869,7 +2869,7 @@ namespace PrototypeWithAuth.Controllers
                 RequestFolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 //Files = new List<FileInfo>(),
-                SectionType = IsOperations ? AppUtility.MenuItems.Operations : AppUtility.MenuItems.Requests,
+                SectionType = SectionType,
                 IsNotifications = IsNotifications
 
             };
@@ -2936,7 +2936,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations = false)
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
@@ -2944,7 +2944,7 @@ namespace PrototypeWithAuth.Controllers
                 RequestID = id,
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
-                SectionType = IsOperations ? AppUtility.MenuItems.Operations : AppUtility.MenuItems.Requests
+                SectionType = SectionType
             };
             return PartialView(deleteDocumentsViewModel);
         }

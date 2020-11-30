@@ -15,11 +15,13 @@
     var bcColor = "order-inv-background-color";
     var color = "order-inv-color";
     var form = "order-inv-form";
+    var sectionType = AppUtility.MenuItems.Requests.ToString();
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
         color = "operations-filter";
+        sectionType = AppUtility.MenuItems.Operations.ToString();
     }
     else if(Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
@@ -27,6 +29,7 @@
         form = "suppliers-form";
         bcColor = "lab-man-background-color";
         color = "lab-man-filter";
+        sectionType = AppUtility.MenuItems.LabManagement.ToString();
     }
     var bcColorToUse = bcColor;
     var colorToUse = color;
@@ -53,7 +56,7 @@
 <script src="~/js/site.js"></script>
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
-<div class="modal modal-document fader documentsModal  @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<div class="modal modal-document fader documentsModal @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close">
@@ -74,7 +77,7 @@
                 <input type="hidden" id="color" class="@color" />
                 <input type="hidden" id="isEdittable" class="@markDisabled" />
 
-                <a href="" class="open-document-modal active-document-modal" data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;"></a>
+                <a href="" class="open-document-modal active-document-modal  @sectionType " data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;"></a>
                 <div class="modal-header modal-header-padding">
                     <div class="container">
 

@@ -41,28 +41,29 @@
 
 				var $enumString = $(".open-document-modal.active-document-modal").data("string");
 				var $requestId = $(".open-document-modal.active-document-modal").data("id");
-
+				var section = "";
 				console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
-				if ($(".open-document-modal.active-document-modal").hasClass('operations')) {
-					var section = "Operations"
-				} else if($(".open-document-modal.active-document-modal").hasClass('labMangement')) {
-					var section = "LabManagement"
+				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
+					section = "Operations"
+				} else if ($(".open-document-modal.active-document-modal").hasClass('labMangement')|| $(".open-document-modal.active-document-modal").hasClass('LabMangement')) {
+					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section);
-				return false;
+				$.fn.OpenDocumentsModal1($enumString, $requestId, $isEdittable, section);
+				return true;
 			},
 			processData: false,
 			contentType: false
 		});
-		return false;
+		return true;
 
 	});
 
 
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section) {
+	$.fn.OpenDocumentsModal1 = function (enumString, requestId, isEdittable, section) {
 		$(".documentsModal").replaceWith('');
+		alert("in documents modal in document modal js")
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
@@ -77,8 +78,10 @@
 					keyboard: true,
 				});
 				$(".modal").modal('show');
+				return true;
 			}
 		});
+		return true;
 	};
 
 	$.fn.ChangeColorsOfModal = function ($foldername, section) {
@@ -92,9 +95,9 @@
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
-			if (section="Operations") {
+			if (section=="Operations") {
 				div.addClass("oper-filter");
-			} else if ((section = "LabManagement")) {
+			} else if ((section == "LabManagement")) {
 				div.addClass("lab-man-filter");
 			}
 			else {
