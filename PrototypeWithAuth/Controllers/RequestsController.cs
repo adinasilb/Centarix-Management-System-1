@@ -125,6 +125,7 @@ namespace PrototypeWithAuth.Controllers
             var viewmodel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID, PageType, SectionType, requestsSearchViewModel);
             viewmodel.PriceSortEnums = priceSorts;
             viewmodel.currency = AppUtility.CurrencyEnum.NIS;
+            viewmodel.MenuType = AppUtility.MenuItems.Requests;
             return View(viewmodel);
         }
 
