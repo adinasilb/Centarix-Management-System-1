@@ -279,7 +279,7 @@
                                     </span>
                                     <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
                                         @{
-                                            var src = "/UserImages/profile_circle_big.png";
+                                            var src = "/UserImages/user-image-placeholder.png";
                                             if (UserManager.GetUserAsync(User).Result.UserImage != null)
                                             {
                                                 src = UserManager.GetUserAsync(User).Result.UserImage;

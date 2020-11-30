@@ -114,7 +114,7 @@
                     <tr class="text-center users-tr ">
                         <td width="11%" class="py-2">
                             @{
-                                var src = "/UserImages/profile_circle_big.png";
+                                var src = "/UserImages/user-image-placeholder.png";
                                 if (employee.Employee.UserImage != null)
                                 {
                                     src = UserManager.GetUserAsync(User).Result.UserImage;

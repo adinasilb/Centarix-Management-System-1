@@ -37,12 +37,12 @@ namespace PrototypeWithAuth
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.AddConsole()
-                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
-                loggingBuilder.AddDebug();
-            });
+            //services.AddLogging(loggingBuilder =>
+            //{
+            //    loggingBuilder.AddConsole()
+            //        .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+            //    loggingBuilder.AddDebug();
+            //});
 
             ////Set database Connection from application json file
 
@@ -51,16 +51,16 @@ namespace PrototypeWithAuth
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("CentarixConnection")));
-
             services.AddDbContext<ApplicationDbContext>(options =>
-            {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
-                options.EnableSensitiveDataLogging(true);
-            });
+                    Configuration.GetConnectionString("ElixirAzureConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //{
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection"));
+            //    options.EnableSensitiveDataLogging(true);
+            //});
 
 
             services.AddControllersWithViews();
@@ -134,7 +134,7 @@ namespace PrototypeWithAuth
             });
 
             //ChangePassword(serviceProvider).Wait();
-            // CreateRoles(serviceProvider).Wait();
+            //CreateRoles(serviceProvider).Wait();
             //AddRole(serviceProvider).Wait();
 
             app.UseApplicationInsightsRequestTelemetry();
@@ -186,8 +186,8 @@ namespace PrototypeWithAuth
 
             var adminuser = new Employee()
             {
-                UserName = "adina@centarix.com",
-                Email = "adina@centarix.com",
+                UserName = "adinasilberberg@gmail.com",
+                Email = "adinasilberberg@gmail.com",
                 FirstName = "Adina",
                 LastName = "Gayer",
                 EmailConfirmed = true,
@@ -195,7 +195,8 @@ namespace PrototypeWithAuth
                 EmployeeStatusID = 4,
                 LockoutEnabled = true,
                 LockoutEnd = new DateTime(2999, 01, 01),
-                NeedsToResetPassword = true
+                NeedsToResetPassword = true,
+                UserNum = 2
             };
             var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
             adminuser.EmailConfirmed = true;

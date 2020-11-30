@@ -38,7 +38,7 @@
                             <a href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
                                class=" bold-hover-effects" id="profile-img">
                                 @{
-                                    var src = "UserImages/profile_circle_big.png";
+                                    var src = "/UserImages/user-image-placeholder.png";
                                     if (Model.ElementAt(i).UserImage != null)
                                     {
                                         src = Model.ElementAt(i).UserImage;
@@ -54,7 +54,7 @@
                         <a href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
                            class=" bold-hover-effects" id="profile-img">
                             @{
-                                var src = "UserImages/profile_circle_big.png";
+                                var src = "/UserImages/user-image-placeholder.png";
                                 if (Model.ElementAt(i).UserImage != null)
                                 {
                                     src = Model.ElementAt(i).UserImage;
