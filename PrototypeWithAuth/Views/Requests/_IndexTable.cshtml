@@ -8,9 +8,10 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @using System.Globalization
 @using X.PagedList.Mvc.Core @* import this so we get our HTML Helper *@
-@{ 
+@{
     bool Inventory = false;
     bool Summary = false;
+    bool Reports = false;
 
     if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
     {
@@ -20,21 +21,25 @@
     {
         Summary = true;
     }
+    if (Model.MenuType.Equals(AppUtility.MenuItems.Reports))
+    {
+        Reports = true;
+    }
 }
 <div class="">
-    
+
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <tbody>
             @*@foreach (var item in Model)*@
             @for (int itemNum = 0; itemNum < Model.PagedList.Count; itemNum++)
             {
                 <tr class="text-center ">
-                    <td width="7%">
-                        <div class="form-check order-inv-form">
-                            <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
-                            <label class="form-check-label" for="@Model.PagedList[itemNum].RequestID">@Model.PagedList[itemNum].RequestID</label>
-                        </div>
-                    </td>
+                    @*<td width="7%">
+                            <div class="form-check order-inv-form">
+                                <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
+                                <label class="form-check-label" for="@Model.PagedList[itemNum].RequestID">@Model.PagedList[itemNum].RequestID</label>
+                            </div>
+                        </td>*@
                     <td width="7%">
                         @if (Model.PagedList[itemNum].Product.ProductSubcategory.ImageURL != null)
                         {
@@ -48,26 +53,45 @@
                     </td>
                     @if (Summary)
                     {
-                        <td width="15%">
+                        <td width="20%">
                             <button class="btn p-0 m-0 inv-link-clr load-product-details-summary no-box-shadow" title="Details" value="@Model.PagedList[itemNum].RequestID" data-target="item" href="item">
+                                <p class="m-0">@Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.ProductName)</p>
+                            </button>
+                        </td>
+                    }
+                    else if (Reports)
+                    {
+                        <td width="17%">
+                            <button class="btn p-0 m-0 inv-link-clr no-box-shadow" title="Details" value="@Model.PagedList[itemNum].RequestID" data-target="item" href="item">
                                 <p class="m-0">@Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.ProductName)</p>
                             </button>
                         </td>
                     }
                     else
                     {
-                        <td width="15%">
+                        <td width="20%">
                             <button class="btn p-0 m-0 inv-link-clr load-product-details no-box-shadow" title="Details" value="@Model.PagedList[itemNum].RequestID" data-target="item" href="item">
                                 <p class="m-0">@Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.ProductName)</p>
                             </button>
                         </td>
                     }
 
-
-                    <td width="7%"> @Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.Vendor.VendorEnName) </td>
+                    @{
+                        var vendorPercentage = "7%";
+                        if (Reports)
+                        {
+                            vendorPercentage = "10%";
+                        }
+                    }
+                    <td width="@vendorPercentage"> @Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.Vendor.VendorEnName) </td>
                     @if (!Summary)
                     {
-                        <td width="9%">
+                        var priceWidth = "11%";
+                        if (Reports)
+                        {
+                            priceWidth = "10%";
+                        }
+                        <td width="@priceWidth">
                             <ul style="list-style: none; padding-left:0px;" class="mb-0">
 
                                 @if (Model.PagedList[itemNum].Unit != null)
@@ -99,53 +123,64 @@
                         @*Computed column?*@
                     }
 
-                    <td width="12%" class="p-0">
-                        @*@Html.DisplayFor(modelItem => item.Cost)*@
-                        @{
-                            var item = Model.PagedList[itemNum];
-                            var currency = "he-IL";
-                            var pricePerUnit = item.PricePerUnit;
-                            var cost = item.Cost;
-                            var total = item.TotalWithVat;
-                            var vat = item.VAT;
-                            var exchangeRate = item.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : item.ExchangeRate;
-                            if (Model.currency == AppUtility.CurrencyEnum.USD)
-                            {
-                                currency = "en-US";
-                                pricePerUnit = item.PricePerUnit / exchangeRate;
-                                cost = item.Cost / exchangeRate;
-                                total = item.TotalWithVat / exchangeRate;
-                                vat = item.VAT / exchangeRate;
-                            }
-                        }
 
-                        @if (Model.PriceSortEnumsList != null)
+                    @*@Html.DisplayFor(modelItem => item.Cost)*@
+                    @{
+                        var item = Model.PagedList[itemNum];
+                        var currency = "he-IL";
+                        var pricePerUnit = item.PricePerUnit;
+                        var cost = item.Cost;
+                        var total = item.TotalWithVat;
+                        var vat = item.VAT;
+                        var exchangeRate = item.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : item.ExchangeRate;
+                        if (Model.currency == AppUtility.CurrencyEnum.USD)
                         {
-                            for (int i = 0; i < Model.PriceSortEnumsList.Count; i++)
+                            currency = "en-US";
+                            pricePerUnit = item.PricePerUnit / exchangeRate;
+                            cost = item.Cost / exchangeRate;
+                            total = item.TotalWithVat / exchangeRate;
+                            vat = item.VAT / exchangeRate;
+                        }
+                    }
+
+                    @if (!Reports)
+                    {
+                        <td width="12%" class="p-0">
+                            @if (Model.PriceSortEnumsList != null)
                             {
-                                switch (Enum.Parse(typeof(AppUtility.PriceSortEnum), Model.PriceSortEnumsList[i]))
+                                for (int i = 0; i < Model.PriceSortEnumsList.Count; i++)
                                 {
-                                    case AppUtility.PriceSortEnum.Unit:
-                        <label class="m-0">U: @string.Format(new CultureInfo(currency), "{0:c}", pricePerUnit)</label>
-                                        break;
-                                    case AppUtility.PriceSortEnum.Total:
-                    <label class="m-0">T:  @string.Format(new CultureInfo(currency), "{0:c}", cost)</label>
-                                        break;
-                                    case AppUtility.PriceSortEnum.Vat:
-                    <label class="m-0">V:  @string.Format(new CultureInfo(currency), "{0:c}", vat)</label>
-                                        break;
-                                    case AppUtility.PriceSortEnum.TotalVat:
-                    <label class="m-0"> P:   @string.Format(new CultureInfo(currency), "{0:c}", total)</label>
-                                        break;
+                                    switch (Enum.Parse(typeof(AppUtility.PriceSortEnum), Model.PriceSortEnumsList[i]))
+                                    {
+                                        case AppUtility.PriceSortEnum.Unit:
+                                            <label class="m-0">U: @string.Format(new CultureInfo(currency), "{0:c}", pricePerUnit)</label>
+                                            break;
+                                        case AppUtility.PriceSortEnum.Total:
+                                            <label class="m-0">T:  @string.Format(new CultureInfo(currency), "{0:c}", cost)</label>
+                                            break;
+                                        case AppUtility.PriceSortEnum.Vat:
+                                            <label class="m-0">V:  @string.Format(new CultureInfo(currency), "{0:c}", vat)</label>
+                                            break;
+                                        case AppUtility.PriceSortEnum.TotalVat:
+                                            <label class="m-0"> P:   @string.Format(new CultureInfo(currency), "{0:c}", total)</label>
+                                            break;
+                                    }
+                                    <br />
                                 }
-                                <br />
                             }
-                        }
-                        else
-                        {
-                            <label>T: @item.Cost.ToString("C02")</label>
-                        }
-                    </td>
+                            else
+                            {
+                                <label>T: @item.Cost.ToString("C02")</label>
+                            }
+                        </td>
+                    }
+                    @if (Reports)
+                    {
+                        <td width="12%">
+                            Location
+                        </td>
+                    }
+
                     @*Later on should have a better location...*@
                     @if (Inventory)
                     {
@@ -165,6 +200,16 @@
                             @Html.DisplayFor(modelItem => Model.PagedList[itemNum].ApplicationUserCreator.LastName)
                         </td>
                     }
+                    @if (Reports)
+                    {
+                        <td width="9%" class="p-0">
+                            <label class="m-0">U: @string.Format(new CultureInfo(currency), "{0:c}", pricePerUnit)</label><br />
+                            <label class="m-0">T:  @string.Format(new CultureInfo(currency), "{0:c}", cost)</label><br />
+                            <label class="m-0">V:  @string.Format(new CultureInfo(currency), "{0:c}", vat)</label><br />
+                            <label class="m-0"> P:   @string.Format(new CultureInfo(currency), "{0:c}", total)</label>
+
+                        </td>
+                    }
                     @{
                         if (Model.RequestStatusID == 2 || Summary)
                         {
@@ -179,6 +224,8 @@
                             <td width="9%">@Model.PagedList[itemNum].CreationDate.ToString("yyyy-MM-dd")</td>
                         }
                     }
+                    @if (!Reports)
+                    {
                     <td width="9%">
                         <div class="d-inline-flex">
                             <div class="table-icon-div">
@@ -237,6 +284,11 @@
                         @*@Html.ActionLink("Delete", "DeleteModal", new { id = item.RequestID}, new { @class = "btn btn-link" })*@
                         @*<button class="btn btn-link" asp-action="Delete" value="@item.RequestID" data-target="item" href="item"> Delete </button>*@
                     </td>
+                    }
+                    else
+                    {
+                        <td width="5%"></td>
+                    }
                 </tr>
             }
         </tbody>

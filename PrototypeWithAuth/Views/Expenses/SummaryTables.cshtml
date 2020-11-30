@@ -11,30 +11,33 @@
 <div class="container-fluid">
 
     <div class="row under-row-margin">
-        <div class="col-7 heading-1 p-0">
+        <div class="col-6 heading-1 p-0">
         </div>
-        <div class="col-3 offset-2">
-            <select class="expenses mdb-select custom select-dropdown form-control-plaintext adjust-small-width float-left mr-4 change-currency" 
-                    id="select-currency" searchable="Search Currency">
-                <option value="@AppUtility.CurrencyEnum.USD" selected>&dollar; USD</option>
-                <option value="@AppUtility.CurrencyEnum.NIS">&#8362; NIS</option>
-            </select>
-            @*</div>
-                <div class="col-1 p-0 monthsHours">*@
-
+        <div class="col-6 p-0">
             @{
                 var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
                 int curYear = Model.CurrentYear;
             }
-
             @Html.DropDownList("select-years", years.Select(x =>
- new SelectListItem
- {
-     Text = x.ToString(),
-     Value = x.ToString(),
-     Selected = (x == curYear)
- }
-), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext adjust-small-width float-left ml-3 change-year", @name = "SelectedYear", @searchable = "Search here.." })
+                 new SelectListItem
+                 {
+                     Text = x.ToString(),
+                     Value = x.ToString(),
+                     Selected = (x == curYear)
+                 }
+                ), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right ml-3 change-year", 
+                    @name = "SelectedYear", @searchable = "Search here.." })
+
+            <div class="mr-4">
+                <select class="expenses mdb-select custom select-dropdown form-control-plaintext reports-filters float-right change-currency"
+                        id="select-currency" searchable="Search Currency">
+                    <option value="@AppUtility.CurrencyEnum.USD" selected>&dollar; USD</option>
+                    <option value="@AppUtility.CurrencyEnum.NIS">&#8362; NIS</option>
+                </select>
+            </div>
+            @*</div>
+        <div class="col-1 p-0 monthsHours">*@
+
         </div>
 
     </div>

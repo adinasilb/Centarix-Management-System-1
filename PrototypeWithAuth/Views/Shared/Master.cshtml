@@ -236,6 +236,7 @@
 
     <script>
         $(document).ready(function () {
+            console.log("in doc ready");
             //$('form').change(function () {
             //    console.log("form change");
             //    $(".input-group .form-control-plaintext").unwrap();
@@ -348,24 +349,21 @@
             $.fn.GetNotifications();
             $.fn.getMenuItems();
 
-            $.fn.ChangeCheckboxesToFilledIn();
-
+            //$.fn.ChangeCheckboxesToFilledIn();
         });
 
-        $.fn.ChangeCheckboxesToFilledIn = function () {
-            console.log("in change checkboxes to filled in");
-            var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
-            dropdown.addClass("filled-in");
-            //dropdown.addClass("fci-exp");
-            $(".multiple-select-dropdown li span").replaceWith(function () {
-                return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
-            });
 
-            //var boolExpenses = false;
-            //if (dropdown.parent("div.select-wrapper").hasClass("expenses")) {
-            //    console.log("expenses checkboxes!")
-            //}
-        };
+        //$.fn.ChangeCheckboxesToFilledIn = function () {
+        //    console.log("in change checkboxes to filled in");
+        //    var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
+        //    console.log
+        //    dropdown.addClass("filled-in");
+        //    $(".multiple-select-dropdown li span").replaceWith(function () {
+        //        return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+        //    });
+
+        //};
+
 
         $.fn.CallPage = function (itemurl, $type) {
             console.log("in call page function");
@@ -932,7 +930,7 @@
             }
         });
 
-        $("table tr .form-check-input.fci-oi").click(function () {
+        $("table tr .order-inv-form .form-check-input").click(function () {
             if ($(this).is(':checked')) {
                 $(this).closest("tr").addClass("clicked-border-orders-inv");
             }
