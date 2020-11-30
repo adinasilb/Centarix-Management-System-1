@@ -79,9 +79,9 @@ namespace PrototypeWithAuth.Controllers
 
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
-                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
-                .OrderBy(r => r.CreationDate);
+                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
+                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
+                 .OrderBy(r => r.CreationDate);
 
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p == AppUtility.PriceSortEnum.Total ? true : false }));
@@ -121,15 +121,15 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
                 .OrderBy(r => r.CreationDate);
-            if (pageType.Equals(AppUtility.RequestPageTypeEnum.Inventory.ToString()))
+            if (pageType.Equals(AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString()))
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
             }
-            else if (pageType.Equals(AppUtility.RequestPageTypeEnum.Request.ToString()))
+            else if (pageType.Equals(AppUtility.OperationsPageTypeEnum.RequestOperations.ToString()))
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
             }
-            else if (pageType.Equals(AppUtility.RequestPageTypeEnum.Search.ToString()))
+            else if (pageType.Equals(AppUtility.OperationsPageTypeEnum.SearchOperations.ToString()))
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.SearchOperations;
             }
@@ -253,7 +253,6 @@ namespace PrototypeWithAuth.Controllers
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
             requestIndexViewModel.RequestParentLocationInstanceID = parentLocationInstanceID;
             //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
-
             var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarTitle;
             try
@@ -266,11 +265,11 @@ namespace PrototypeWithAuth.Controllers
                 onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
                 onePageOfProducts.Where(opop => opop.RequestStatusID == 2).OrderByDescending(opop => opop.ParentRequest.OrderDate); // display by orderdate if ordered
             }
-                       
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
                 TempData["InnerMessage"] = ex.InnerException;
+                ViewBag.ErrorMessage = ex.Message;
                 // Redirect("~/Views/Shared/RequestError.cshtml");
             }
             requestIndexViewModel.PagedList = onePageOfProducts;
