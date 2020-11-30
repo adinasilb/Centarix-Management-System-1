@@ -51,16 +51,16 @@ namespace PrototypeWithAuth
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("ElixirAzureConnection")));
-
             //services.AddDbContext<ApplicationDbContext>(options =>
-            //{
             //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("DefaultConnection"));
-            //    options.EnableSensitiveDataLogging(true);
-            //});
+            //        Configuration.GetConnectionString("ElixirAzureConnection")));
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection"));
+                options.EnableSensitiveDataLogging(true);
+            });
 
 
             services.AddControllersWithViews();
