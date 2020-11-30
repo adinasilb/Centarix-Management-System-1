@@ -7,8 +7,6 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
-<script src="~/js/CreateUser.js"></script>
-<script src="~/js/Validation/UsersFormValidation.js"></script>
 <div class="col-12 create-user mx-auto on-form-modal users-form" style="width: 60%">
     <div class="on-form-modal-border">
         <form action="" id="myForm" method="post" class="usersForm" enctype="multipart/form-data" style="height: 100%; ">
@@ -639,9 +637,18 @@
         </form>
     </div>
 </div>
-<script>
-    $(".upload-image").off("click").on("click", function (e) {
-        console.log("in upload image 2");
-        $.fn.CallModal2("/Admin/UserImageModal");
-        return false;
-    });</script>
+@section Scripts{
+
+
+    <script src="~/js/Validation/UsersFormValidation.js"></script>
+    <script src="~/js/CreateUser.js"></script>
+    <script src="~/js/Validate.js"></script>
+    <script>
+        $(".upload-image").off("click").on("click", function (e) {
+            console.log("in upload image 2");
+            $.fn.CallModal2("/Admin/UserImageModal");
+            return false;
+        });
+    </script>
+
+}

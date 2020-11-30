@@ -1,4 +1,16 @@
-﻿$('.usersForm').validate({
+﻿var isEmployee = function () {
+	console.log("employeestatus: " + ($("#NewEmployee_EmployeeStatusID").val() != '4'));
+	return $("#NewEmployee_EmployeeStatusID").val() != "4";
+}
+var isUserAndIsNotEdit = function () {
+	return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
+}
+
+var isUser = function () {
+	return $("#NewEmployee_EmployeeStatusID").val() == "4";
+}
+
+$('.usersForm').validate({
 	rules: {
 		"FirstName": "required",
 		"LastName": "required",
@@ -110,14 +122,3 @@
 		},
 	}
 });
-var isEmployee = function () {
-	console.log("employeestatus: " + ($("#NewEmployee_EmployeeStatusID").val() != '4'));
-	return $("#NewEmployee_EmployeeStatusID").val() != "4";
-}
-var isUserAndIsNotEdit = function () {
-	return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
-}
-
-var isUser = function () {
-	return $("#NewEmployee_EmployeeStatusID").val() == "4";
-}

@@ -1,20 +1,17 @@
 ﻿
 
 $(function () {
-	$.validator.setDefaults({
-		ignore: ':not(select:hidden, input:visible, textarea:visible), [disabled]',
-		errorPlacement: function (error, element) {
-			if (element.hasClass('select-dropdown')) {
-				error.insertAfter(element);
-			} else {
-				error.insertAfter(element);
-			}
-			if (element.hasClass('employee-status')) {
-				$("#validation-EmployeeStatus").removeClass("hidden");
-			}
+	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
+	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
+		if (element.hasClass('select-dropdown')) {
+			error.insertAfter(element);
+		} else {
+			error.insertAfter(element);
 		}
-	});
-
+		if (element.hasClass('employee-status')) {
+			$("#validation-EmployeeStatus").removeClass("hidden");
+		}
+	}
 	$(".cost-validation").each(function () {
 		$(this).rules("add", {
 			required: true,
