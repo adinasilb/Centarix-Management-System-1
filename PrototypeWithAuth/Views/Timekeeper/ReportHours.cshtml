@@ -25,7 +25,7 @@
                 <button type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-225">
                     @{
                         var user = UserManager.GetUserAsync(User).Result;
-                        var src = "/UserImages/profile_circle_big.png";
+                        var src = "/UserImages/user-image-placeholder.png";
                         if (user.UserImage != null)
                         {
                             src = user.UserImage;

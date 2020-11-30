@@ -123,12 +123,12 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
                 }
-                else if (!validPassword)
-                {
-                    _logger.LogInformation("User locked out.");
-                    //Add error
-                    return Page();
-                }
+                //else if (!validPassword)
+                //{
+                //    _logger.LogInformation("User locked out.");
+                //    //Add error
+                //    return Page();
+                //}
                 else if (result.IsLockedOut)
                 {
                     _logger.LogInformation("User locked out.");

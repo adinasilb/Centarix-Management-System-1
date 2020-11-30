@@ -24,7 +24,7 @@
         <div class="col-1 mt-auto mb-auto ">
             <button href="#" type="button" class="btn btn-link p-0 circular-profile-img circular-profile-img-50">
                 @{
-                    var src = "/UserImages/profile_circle_big.png";
+                    var src = "/UserImages/user-image-placeholder.png";
                     if (_userManager.GetUserAsync(User).Result.UserImage != null)
                     {
                         src = _userManager.GetUserAsync(User).Result.UserImage;
