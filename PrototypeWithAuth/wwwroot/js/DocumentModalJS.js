@@ -43,9 +43,13 @@
 				var $requestId = $(".open-document-modal.active-document-modal").data("id");
 
 				console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
-				var isOperations = $(".open-document-modal.active-document-modal").hasClass('operations');
-				$.fn.ChangeColorsOfModal($enumString, isOperations);
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, isOperations);
+				if ($(".open-document-modal.active-document-modal").hasClass('operations')) {
+					var section = "Operations"
+				} else if($(".open-document-modal.active-document-modal").hasClass('labMangement')) {
+					var section = "LabManagement"
+				}
+				$.fn.ChangeColorsOfModal($enumString, section);
+				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section);
 				return false;
 			},
 			processData: false,
@@ -57,12 +61,12 @@
 
 
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations) {
+	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section) {
 		$(".documentsModal").replaceWith('');
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
-			url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&IsOperations=" + isOperations,
+			url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -77,20 +81,23 @@
 		});
 	};
 
-	$.fn.ChangeColorsOfModal = function ($foldername, isOperations) {
+	$.fn.ChangeColorsOfModal = function ($foldername, section) {
 		console.log("foldername: " + $foldername);
 		var numCards = $(".card.document-border").length;
 		console.log("numcards: " + numCards);
 
 		var div = $("#" + $foldername + " i");
 		
-		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter")) {
+		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter")) {
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
-			if (isOperations) {
+			if (section="Operations") {
 				div.addClass("oper-filter");
-			} else {
+			} else if ((section = "LabManagement")) {
+				div.addClass("lab-man-filter");
+			}
+			else {
 				div.addClass("order-inv-filter");
 			}
 

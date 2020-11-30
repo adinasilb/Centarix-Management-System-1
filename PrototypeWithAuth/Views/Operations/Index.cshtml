@@ -178,7 +178,7 @@
         </a>
     </div>
 }
-@if (TempData[AppUtility.TempDataTypes.PageType.ToString()].Equals(AppUtility.OperationsPageTypeEnum.RequestOperations.ToString()) && !search)
+@if (Model.OperPageType.Equals(AppUtility.OperationsPageTypeEnum.RequestOperations.ToString()) && !search)
 {
     <div class="row">
         <div class="">

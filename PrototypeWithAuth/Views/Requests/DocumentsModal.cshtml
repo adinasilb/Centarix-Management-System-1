@@ -21,6 +21,13 @@
         bcColor = "oper-background-color";
         color = "operations-filter";
     }
+    else if(Model.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+
+        form = "suppliers-form";
+        bcColor = "lab-man-background-color";
+        color = "lab-man-filter";
+    }
     var bcColorToUse = bcColor;
     var colorToUse = color;
     var disabled = "";
@@ -46,7 +53,7 @@
 <script src="~/js/site.js"></script>
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
-<div class="modal modal-document fader documentsModal @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<div class="modal modal-document fader documentsModal  @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close">
