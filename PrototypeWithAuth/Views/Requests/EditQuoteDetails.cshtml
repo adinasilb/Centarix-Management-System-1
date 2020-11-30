@@ -5,6 +5,7 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <script src="~/js/validate.js" asp-append-version="true"></script>
+<script src="~/js/Validation/EditQuoteDetailsFormValidation.js"></script>
 
 <div class="modal modal-view fader on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
@@ -23,7 +24,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <!-- Modal Header -->
                 <div class="new-modal-header no-box-shadow"
-                     @if (TempData["ErrorMessage"] != null) { <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
+                     @if (TempData["ErrorMessage"] != null) {<h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
 
@@ -134,7 +135,7 @@
                                 }
                                 <tr class="border-0  no-hover ">
                                     <td colspan="3" class="p-0">
-                                        <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt" accept=".pdf" required>
+                                        <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt">
                                     </td>
                                     <td colspan="4"  class="p-0 ">
                                         <div class="form-group text-center modal-footer-mt">

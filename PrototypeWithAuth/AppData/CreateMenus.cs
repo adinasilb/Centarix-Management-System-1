@@ -231,7 +231,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"PageType", AppUtility.RequestPageTypeEnum.Request.ToString() }
+                    {"PageType", AppUtility.OperationsPageTypeEnum.RequestOperations.ToString() }
                 },
                 Classes = CurrentClasses,
                 ID = "request-link"
@@ -244,7 +244,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"PageType", AppUtility.RequestPageTypeEnum.Inventory.ToString() }
+                    {"PageType", AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString() }
                 },
                 Classes = CurrentClasses,
                 ID = "inventory-link"

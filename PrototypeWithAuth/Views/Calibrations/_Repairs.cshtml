@@ -67,7 +67,9 @@
         <div class="col-2">
             @if (Model.IsNew || Model.Repair.Date > DateTime.Now)
             {
-                <button class="removeNewRepair close modal-close-padding modal-close-style" index="@Model.RepairIndex">X</button>
+                <button type="button" class="close modal-close-padding modal-close-style removeNewRepair" aria-label="Close" index="@Model.RepairIndex">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             }
         </div>
     </div>
@@ -113,6 +115,10 @@
 
 <script type="text/javascript">
     $(function () {
+        $(".createCalibration").validate({
+            rules: {
+            }
+        });
         var RepairsIsRepeat = function (index) {
             return $(".ReIsRepeat" + index).val() == "true";
         }

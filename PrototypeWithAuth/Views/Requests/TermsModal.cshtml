@@ -24,6 +24,7 @@
 <script src="~/js/TermsModal.js"></script>
 <script src="~/js/site.js"></script>
 <script src="~/js/validate.js"></script>
+<script src="~/js/Validation/TermsModalFormValidation.js"></script>
 <div class="modal modal-view termsModal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
     <div class="modal-dialog-centered modal-xl mx-auto on-form-modal @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
@@ -65,12 +66,12 @@
                                 )
 
                                 @*<select asp-for="Terms" asp-items="@Model.TermsList" class="form-control-plaintext border-bottom">
-                            <option value="selected" selected="selected">Select</option>
-                            <option value="0">Pay Now</option>
-                            <option value="15">+15</option>
-                            <option value="30">+30</option>
-                            <option value="45">+45</option>
-                        </select>*@
+                                        <option value="selected" selected="selected">Select</option>
+                                        <option value="0">Pay Now</option>
+                                        <option value="15">+15</option>
+                                        <option value="30">+30</option>
+                                        <option value="45">+45</option>
+                                    </select>*@
                                 <span asp-validation-for="Terms" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-2">

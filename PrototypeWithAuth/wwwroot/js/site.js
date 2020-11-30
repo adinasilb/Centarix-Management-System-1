@@ -91,7 +91,7 @@ $(function () {
 			success: function (data) {
 				
 				$("#sublist").destroyMaterialSelect()
-
+				$("#sublist").empty();
 				$.each(data, function (i, subCategory) {
 					var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 					$("#sublist").append(newitem1);
@@ -2040,7 +2040,7 @@ $(function () {
 			var section = ""
 			if ($(this).hasClass('operations')) {
 				url = "/Operations/EditModalView";
-				section = "Operation";
+				section = "Operations";
 			} else if ($(this).hasClass('suppliers')) {
 				url = "/Vendors/Edit";
 				section = "LabManagement";
@@ -2053,7 +2053,7 @@ $(function () {
 				section = "Users";
 			} else if ($(this).hasClass('orders')) {
 				url = "/Requests/EditModalView";
-				section = "OrdersAndInventory";
+				section = "Requests";
 			}
 
 			if (type == 'edit') {
@@ -2109,17 +2109,14 @@ $(function () {
 					console.log("orders")
 					$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
 					$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
-					$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
-					if (($("#edit #Request_Unit").val() > 0 && $("#edit #Request_UnitTypeID").val())
-						|| ($("#select-options-Request_Unit").val() > 0 && $("#select-options-Request_UnitTypeID").val())) {
-						//console.log("both have values");
-						$.fn.EnableSubUnits();
-						$.fn.ChangeSubUnitDropdown();
-					}
-					if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
-						|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
+					$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');				
+					if (($("#Request_SubSubUnit").hasClass('.mark-readonly'))) {
 						$.fn.EnableSubSubUnits();
 						$.fn.ChangeSubSubUnitDropdown();
+					}
+					if (($("#Request_SubUnit").hasClass('.mark-readonly'))) {
+						$.fn.EnableSubUnits();
+						$.fn.ChangeSubUnitDropdown();
 					}
 				}
 				if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {

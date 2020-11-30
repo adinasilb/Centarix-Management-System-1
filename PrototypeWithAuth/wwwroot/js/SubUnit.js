@@ -254,7 +254,7 @@ $.fn.EnableSubSubUnits = function () {
 		$("#Request_SubSubUnitTypeID").materialSelect();
 	};
 $.fn.CheckUnitsFilled = function () {
-	//console.log("in check units function");
+	console.log("in check units function");
 	if (($("#edit #Request_Unit").val() > 0 && $("#edit #Request_UnitTypeID").val())
 		|| ($("#select-options-Request_Unit").val() > 0 && $("#select-options-Request_UnitTypeID").val())) {
 		//console.log("both have values");
@@ -263,6 +263,8 @@ $.fn.CheckUnitsFilled = function () {
 		$('.sub-close').removeClass('d-none');
 		$('.addSubUnitCard').addClass('d-none');
 		$('.RequestSubsubunitCard').removeClass('d-none');
+		$("#Request_SubUnit").addClass('mark-readonly');
+		$("#Request_SubUnitTypeID").addClass('mark-readonly');
 		$.fn.ChangeSubUnitDropdown();
 	}
 	//else {
@@ -282,6 +284,8 @@ $.fn.CheckSubUnitsFilled = function () {
 		$('.subsub-close').removeClass('d-none');
 		$('.addSubSubUnitCard').addClass('d-none');
 		//console.log("about to change subsubunitdropdown");
+		$("#Request_SubSubUnit").addClass('mark-readonly');
+		$("#Request_SubSubUnitTypeID").addClass('mark-readonly');
 		$.fn.ChangeSubSubUnitDropdown();
 	}
 	//else {
@@ -430,6 +434,10 @@ $("#sum-dollars").change(function (e) {
 		$('.RequestSubsubunitCard').addClass('d-none');
 		$('.subSubUnitsCard').addClass('d-none');
 		$('.subsub-close').addClass('d-none');
+		$("#Request_SubUnit").removeClass('mark-readonly');
+		$("#Request_SubSubUnit").removeClass('mark-readonly');
+		$("#Request_SubUnitTypeID").removeClass('mark-readonly');
+		$("#Request_SubSubUnitTypeID").removeClass('mark-readonly');
 
 	})
 
@@ -438,6 +446,8 @@ $("#sum-dollars").change(function (e) {
 		$('.subSubUnitsCard').addClass('d-none');
 		$('.subsub-close').addClass('d-none');
 		$('.addSubSubUnitCard').removeClass('d-none');
+		$("#Request_SubSubUnit").removeClass('mark-readonly');
+		$("#Request_SubSubUnitTypeID").removeClass('mark-readonly');
 	})
 });
 

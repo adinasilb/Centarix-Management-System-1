@@ -74,7 +74,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> Index(int page=0, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0,
             string applicationUserID = null, int parentLocationInstanceID = 0,
-            RequestsSearchViewModel? requestsSearchViewModel = null)
+            RequestsSearchViewModel? requestsSearchViewModel = null, AppUtility.OperationsPageTypeEnum PageType= AppUtility.OperationsPageTypeEnum.RequestOperations)
         {
 
             //instantiate your list of requests to pass into the index
@@ -92,7 +92,7 @@ namespace PrototypeWithAuth.Controllers
             int approvedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, vendorID, subcategoryID, applicationUserID);
             newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, vendorID, subcategoryID, applicationUserID);
             newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, vendorID, subcategoryID, applicationUserID);
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;//passing in the amounts to display in the top buttons
             TempData["AmountNew"] = newCount;
@@ -104,14 +104,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 ViewBag.ErrorMessage = ViewBag.ErrorMessage;
             }
-            var viewmodel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID,  requestsSearchViewModel);
+            var viewmodel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID,  requestsSearchViewModel, PageType);
             viewmodel.PriceSortEnums = priceSorts;
             viewmodel.currency = AppUtility.CurrencyEnum.NIS;
             return View(viewmodel);
         
         }
         private async Task<RequestIndexViewModel> GetIndexViewModel(int page = 1, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
-          RequestsSearchViewModel? requestsSearchViewModel = null)
+          RequestsSearchViewModel? requestsSearchViewModel = null, AppUtility.OperationsPageTypeEnum PageType = AppUtility.OperationsPageTypeEnum.RequestOperations)
         {
             String pageType = TempData[AppUtility.TempDataTypes.PageType.ToString()]?.ToString();
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
@@ -247,7 +247,7 @@ namespace PrototypeWithAuth.Controllers
             /*string*/
             requestIndexViewModel.ApplicationUserID = applicationUserID;
             /*AppUtility.RequestPageTypeEnum*/
-           // requestIndexViewModel.PageType = PageType;
+            requestIndexViewModel.OperPageType = PageType;
 
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
@@ -461,6 +461,13 @@ namespace PrototypeWithAuth.Controllers
                             TempData["OpenTermsModal"] = "Single";
                             //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
                             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+                        }
+                        else
+                        {
+                            requestItemViewModel.Request.RequestStatusID = 1; //needs approvall
+                            requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
+                            _context.Update(requestItemViewModel.Request);
+                            _context.SaveChanges();
                         }
 
                     }
