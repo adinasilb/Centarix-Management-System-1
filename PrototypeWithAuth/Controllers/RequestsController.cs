@@ -1503,13 +1503,14 @@ namespace PrototypeWithAuth.Controllers
         //}
 
         [Authorize(Roles = "Admin, Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(int? id, bool NewRequestFromProduct = false)
+        public async Task<IActionResult> ReOrderFloatModalView(int? id, bool NewRequestFromProduct = false, String SectionType="")
         {
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
 
             //to the best of my knowledge we do not need a list of request status so I commented it out
             //var requeststatuses = await _context.RequestStatuses.ToListAsync();
@@ -1534,7 +1535,7 @@ namespace PrototypeWithAuth.Controllers
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 PaymentTypes = paymenttypes,
                 CompanyAccounts = companyaccounts,
-                Request = request
+                Request = request,
             };
 
             //initiating the  following models so that we can use them in an asp-for in the view 
@@ -1623,6 +1624,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return RedirectToAction("Index", new
             {
+                SectionType= TempData[AppUtility.TempDataTypes.MenuType.ToString()],
                 page = requestItemViewModel.Page,
                 requestStatusID = 3,
                 PageType = AppUtility.RequestPageTypeEnum.Request
