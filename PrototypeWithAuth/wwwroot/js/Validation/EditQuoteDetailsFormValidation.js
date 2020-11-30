@@ -10,7 +10,7 @@ $('.editQuoteDetails').validate({
 			min: 0,
 			integer: true
 		},
-		"QuoteFileUpload": "required"
+		"QuoteFileUpload": { required: true, extension: "jpg|jpeg|png|pdf" }
 	},
 
 });
