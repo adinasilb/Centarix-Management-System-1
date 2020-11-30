@@ -210,12 +210,12 @@
 
                                 else if (Model.PagedList[itemNum].RequestStatusID == 2)
                                 {
-                                    <button class="btn p-0 m-0 load-receive-and-location no-box-shadow" data-title="receive" value="@Model.PagedList[itemNum].RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
+                                    <button class="btn p-0 m-0 load-receive-and-location no-box-shadow"  data-title="receive" value="@Model.PagedList[itemNum].RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
                                 }
                                 else
                                 {
                                     @*work on getting the correct syntax to create a new product with*@
-                                    <button class="btn p-0 m-0 load-order-details no-box-shadow" data-title="order" value="@Model.PagedList[itemNum].RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px1 hover-bold"></i></button>// order
+                                    <button class="btn p-0 m-0 load-order-details no-box-shadow" data-title="order" section="@Model.SectionType" value="@Model.PagedList[itemNum].RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px1 hover-bold"></i></button>// order
                                 }
 
                             </div>

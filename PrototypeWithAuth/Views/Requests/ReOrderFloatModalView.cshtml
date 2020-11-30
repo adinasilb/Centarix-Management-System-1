@@ -1,11 +1,21 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
+@{ 
+    var bcColor = "order-inv-background-color  ";
+    var form = "order-inv-form";
+    if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement.ToString()))
+    {
+        bcColor = "lab-man-background-color";
+        form = "supplier-form";
+    }
+    TempData.Keep();
 
+}
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/Validation/ReorderFormValidation.js"></script>
-<div class="modal modal-view fader on-form-modal order-inv-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view fader on-form-modal @form " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered modal-xl mx-auto" role="document">
 
@@ -294,7 +304,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                     </div>
 
                     <div class="form-group mx-auto text-center mb-4 modal-footer-mt">
-                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="custom-button custom-button-font order-inv-background-color between-button-margin" />
+                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="custom-button custom-button-font @bcColor between-button-margin" />
                         <button type="button" class="custom-cancel custom-button " data-dismiss="modal" >Cancel</button>
                     </div>
                 </div>
