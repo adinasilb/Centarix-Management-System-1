@@ -135,7 +135,9 @@
                         </div>
                         <div id="repairs" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                <button class="addRepair text custom-button">Add Repair</button>
+                                <div class="text-center">
+                                    <input type="button" value="+ Add Repair" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize addRepair " style="font-size:1rem;" />
+                                </div>
                                 @{ var repairIndex = 0;}
                                 <div id="repairsListDiv">
                                     @for (var i = 0; i < Model.Repairs.Count; i++)
@@ -167,7 +169,9 @@
                         </div>
                         <div id="externalCalibration" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                <button class="addExternalCalibration text custom-button">Add External Calibration</button>
+                                <div class="text-center">
+                                    <input type="button" value="+ Add External Calibration" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize addExternalCalibration " style="font-size:1rem;" />
+                                </div>
                                 @{ var externalCalibrationIndex = 0;}
                                 <div id="ecListDiv">
                                     @for (var i = 0; i < Model.ExternalCalibrations.Count; i++)
@@ -200,7 +204,10 @@
 
                         <div id="internalCalibration" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                <button class="addInternalCalibration text custom-button">Add Internal Calibration</button>
+                                <div class="text-center">
+                                    <input type="button" value="+ Add Internal Calibration" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize addInternalCalibration " style="font-size:1rem;" />
+                                </div>
+             
                                 @{ var icIndex = 0;}
                                 <div id="icListDiv">
                                     @for (var i = 0; i < Model.InternalCalibration.Count; i++)

@@ -24,8 +24,9 @@
         backgroundColor = " var(--acc-color)";
         sectionClass = "accounting-form";
     }
+    <script src="~/js/Validation/CreateVendorFormValidation.js"></script>
     <div class="col-12  mx-auto on-form-modal @sectionClass " style="width: 60%">
-        <div class="on-form-modal-border" id="addVendorModal"> 
+        <div class="on-form-modal-border" id="addVendorModal">
             <form action="" id="myForm" class="createVendorForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(c => c.SectionType)
                 <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
@@ -253,7 +254,7 @@
                                 </div>
                             </div>
                             <div id="contact" class="tab-pane fade">
-                               
+
                                 <div class="modal-sides modal-body-top-p">
                                     <div id="contact-info">
                                         <input type="hidden" value="1" id="contact-index" />
@@ -261,21 +262,21 @@
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <input id="addSuplierContact" type="button" value="+ Add contact name"  class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize " style="font-size:1rem;" />
+                                    <input id="addSuplierContact" type="button" value="+ Add contact name" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize " style="font-size:1rem;" />
                                 </div>
                             </div>
                         </div>
-                            </div>
                     </div>
+                </div>
 
             </form>
-                </div>
-            </div>
+        </div>
+    </div>
 
 
-            }
+}
 
 
-            @*@section Scripts {
-                    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-                }*@
+@*@section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@

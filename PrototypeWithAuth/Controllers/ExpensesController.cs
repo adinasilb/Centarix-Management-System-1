@@ -64,6 +64,7 @@ namespace PrototypeWithAuth.Controllers
             var colors = AppUtility.GetChartColors();
             var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6);
             string currency = "₪";
+            var greyColor = AppUtility.GetChartUnderZeroColor();
             IEnumerable<Request> requestList = null;
 
             if (summaryChartsViewModel.SelectedYears == null)
@@ -114,9 +115,16 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         pieChartViewModel.SectionName.Add(ps.ProductSubcategoryDescription);
-                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        if (cost > 0)
+                        {
+                            pieChartViewModel.SectionColor.Add(colors[count]);
+                            count++;
+                        }
+                        else
+                        {
+                            pieChartViewModel.SectionColor.Add(greyColor);
+                        }
                         pieChartViewModel.SectionValue.Add(cost);
-                        count++;
                     }
                 }
                 else
@@ -142,9 +150,16 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         pieChartViewModel.SectionName.Add(pc.ParentCategoryDescription);
-                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        if (cost > 0)
+                        {
+                            pieChartViewModel.SectionColor.Add(colors[count]);
+                            count++;
+                        }
+                        else
+                        {
+                            pieChartViewModel.SectionColor.Add(greyColor);
+                        }
                         pieChartViewModel.SectionValue.Add(cost);
-                        count++;
                     }
                 }
             }
@@ -172,9 +187,16 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         pieChartViewModel.SectionName.Add(sp.SubProjectDescription);
-                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        if (cost > 0)
+                        {
+                            pieChartViewModel.SectionColor.Add(colors[count]);
+                            count++;
+                        }
+                        else
+                        {
+                            pieChartViewModel.SectionColor.Add(greyColor);
+                        }
                         pieChartViewModel.SectionValue.Add(cost);
-                        count++;
                     }
                 }
                 else
@@ -199,9 +221,17 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         pieChartViewModel.SectionName.Add(s.ProjectDescription);
-                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        if (cost > 0)
+                        {
+                            pieChartViewModel.SectionColor.Add(colors[count]);
+                            count++;
+                        }
+                        else
+                        {
+                            pieChartViewModel.SectionColor.Add(greyColor);
+                        }
                         pieChartViewModel.SectionValue.Add(cost);
-                        count++;
+                   
                     }
                 }
             }
@@ -227,9 +257,16 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     pieChartViewModel.SectionName.Add(e.FirstName + " " + e.LastName);
-                    pieChartViewModel.SectionColor.Add(colors[count]);
+                    if (cost > 0)
+                    {
+                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        count++;
+                    }
+                    else
+                    {
+                        pieChartViewModel.SectionColor.Add(greyColor);
+                    }
                     pieChartViewModel.SectionValue.Add(cost);
-                    count++;
                 }
             }
             else if (summaryChartsViewModel.SelectedCategoryTypes != null)
@@ -254,9 +291,16 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     pieChartViewModel.SectionName.Add(c.CategoryTypeDescription);
-                    pieChartViewModel.SectionColor.Add(colors[count]);
+                    if (cost > 0)
+                    {
+                        pieChartViewModel.SectionColor.Add(colors[count]);
+                        count++;
+                    }
+                    else
+                    {
+                        pieChartViewModel.SectionColor.Add(greyColor);
+                    }
                     pieChartViewModel.SectionValue.Add(cost);
-                    count++;
                 }
             }
 
@@ -370,7 +414,8 @@ namespace PrototypeWithAuth.Controllers
                                       Text = e.FirstName + " " + e.LastName,
                                       Value = e.Id
                                   }
-                              ).ToList()
+                              ).ToList(),
+                Vendors = _context.Vendors.ToList()
             };
         }
 

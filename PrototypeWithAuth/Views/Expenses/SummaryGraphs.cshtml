@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
-<form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="chartForm">
+<form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="chartForm on-form-modal">
 
     <div class="row">
 
@@ -19,10 +19,11 @@
         </div>
 
 
-        <div class="col-6 offset-2 chartDiv">
+        <div class="col-10 chartDiv">
             @*@{ await Html.RenderPartialAsync("_PieChart");
                 }*@
         </div>
     </div>
 </form>
+
 <script src="~/js/piechart.js"></script>

@@ -231,22 +231,22 @@
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white ourNavBar p-0 no-box-shadow">
 
                 @{ var styleClass = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + ";";}
-                    <div class="  ">
-                        <ul class="list-unstyled mb-0 ">
-                            <li>
-                                <span style="@styleClass">
-                                    <a href="#" id="home-btn" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="navbar-brand home-nav-item ">
-                                        <img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" />
-                                    </a>
-                                </span>
-                            </li>
-                            <div style="display:none;" id="home-content">
+                <div class="  ">
+                    <ul class="list-unstyled mb-0 ">
+                        <li>
+                            <span style="@styleClass">
+                                <a href="#" id="home-btn" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="navbar-brand home-nav-item ">
+                                    <img src="~/images/css/Centarix_Logo_only.png" height="20" alt="Logo" />
+                                </a>
+                            </span>
+                        </li>
+                        <div style="display:none;" id="home-content">
 
-                            </div>
-                        </ul>
-                    </div>
-           
-              
+                        </div>
+                    </ul>
+                </div>
+
+
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav dropdown-menu-md-left " style="font-size:1.25rem; font-weight:500; padding-left: 5.625rem;">
 
@@ -359,3 +359,9 @@
 <!-- Confirm Email Modal -->
 <div class="modal confirm-email-modal" id="myModal">
 </div>
+@section requestNavScript{
+    @if (IsSectionDefined("Scripts"))
+    {
+    @RenderSection("Scripts", required: true)
+    }
+}

@@ -1,4 +1,4 @@
-﻿
+﻿@using PrototypeWithAuth.AppData.UtilityModels
 @{
     Layout = null;
 }
@@ -73,14 +73,9 @@
     <div class="center" role="status" id="loading" style="display:none;">
         <img src="~/images/css/Loading/centarix_loading3.gif" />
     </div>
-    @RenderBody()
-   
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/validate.js" asp-append-version="true"></script>
-
-
-    @RenderSection("Scripts", required: false)
-
+    @RenderBody()
 
     <!--  SCRIPTS  -->
     <!-- Bootstrap tooltips -->
@@ -101,8 +96,10 @@
         <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>*@
 
     <script type="text/javascript" src="~/js/popper.min.js"></script>
-    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script> @*getting an error without type=module*@
-    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script> @*getting an error without type=module*@
+    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script>
+    @*getting an error without type=module*@
+    <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script>
+    @*getting an error without type=module*@
     <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/addons/datatables2.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/addons/directives.min.js"></script>
@@ -125,9 +122,7 @@
     @*<script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"))" type="text/javascript"></script>
         <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"))" type="text/javascript"></script>
         <script src="@(Url.Content("~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"))" type="text/javascript"></script>*@
-    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/modules/material-select/material-select-view-renderer.min.js"></script>
+
 
     <script src="~/lib/bootstrap/dist/js/modules/accordion-extended.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/modules/animations-extended.min.js"></script>
@@ -159,7 +154,9 @@
     <script src="~/lib/bootstrap/dist/src/js/pro/dropdown/dropdown-searchable.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/dropdown/dropdown.js"></script>
 
-    <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
+
+
+    <script type="module" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view-renderer.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select-view.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/src/js/pro/material-select/material-select.js"></script>
 
@@ -217,7 +214,7 @@
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map-world-mill.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/vendor/pro/vector-map.js"></script>
     <script type="text/javascript" src="~/lib/canvasjs.min.js"></script>
-
+    <script src="~/js/charts/googleCharts.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @*load jquery ui*@
@@ -285,6 +282,8 @@
             $("input[data-activates='select-options-SelectedEmployees']").attr('placeholder', "Worker")
             $("input[data-activates='select-options-parentlistMulitple']").attr('placeholder', "Category")
             $("input[data-activates='select-options-SelectedMonths']").val('')
+            $("input[data-activates='select-options-SelectedVendors']").attr('placeholder', "Vendors")
+            $("input[data-activates='select-options-SelectedVendors']").val('')
             $("input[data-activates='select-options-SelectedYears']").val('')
             $("input[data-activates='select-options-SelectedCategoryTypes']").val('')
             $("input[data-activates='select-options-sublist']").val('')
@@ -1219,5 +1218,11 @@
         };
 
     </script>
+
+    @if (IsSectionDefined("requestNavScript"))
+    {
+        @RenderSection("requestNavScript", required: true)
+    }
+
 </body>
 </html>

@@ -347,7 +347,10 @@ namespace PrototypeWithAuth.AppData
            "#03A9F4", "#8BC34A", "#CDDC39",
                 "#FF5722",     "#FFEB3B", "#FFC107",};
         }
-
+        public static string GetChartUnderZeroColor()
+        {
+            return "#000000";
+        }
     }
 
 }
