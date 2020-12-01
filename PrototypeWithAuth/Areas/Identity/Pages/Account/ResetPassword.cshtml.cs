@@ -80,7 +80,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 {
                     Email = user.Email,
                     Code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)),
-                    AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey)
+                    AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey),
+                    ErrorMessage = errorMessage
                 };
                 return Page();
             }
@@ -113,13 +114,13 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
                 if (!is2faTokenValid)
                 {
-                    var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-                    Input.ErrorMessage = "Invalid Authentication Code";
-                    Input.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
-                    //return View(resetPasswordViewModel);
-                    var pcode = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    pcode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(pcode));
-                    return RedirectToPage("./ResetPassword", new { code = pcode, userId = user.Id });
+                    //var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+                    Input.ErrorMessage = "Password reset was successful.\nInvalid Authentication Code.";
+                    //Input.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
+                    ////return View(resetPasswordViewModel);
+                    //var pcode = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    //pcode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(pcode));
+                    return RedirectToPage("./Login", new { errorMessage= Input.ErrorMessage});
 
                 }
 
@@ -181,7 +182,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 ErrorMessage = errorMessage
             };
             //return Page();
-            return RedirectToPage("./ResetPassword", new { code = code, userId = user.Id });
+            return RedirectToPage("./ResetPassword", new { code = code, userId = user.Id, errorMessage = Input.ErrorMessage });
         }
 
         private string GenerateQrCodeUri(string email, string unformattedKey)

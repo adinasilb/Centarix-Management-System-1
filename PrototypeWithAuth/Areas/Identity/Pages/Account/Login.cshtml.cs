@@ -66,8 +66,9 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string returnUrl = null, string errorMessage=null)
         {
+            ErrorMessage = errorMessage;
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
@@ -129,10 +130,10 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 //    //Add error
                 //    return Page();
                 //}
-                else if (result.IsLockedOut)
+                else if (result.IsLockedOut && validPassword)
                 {
                     _logger.LogInformation("User locked out.");
-                    if (user.NeedsToResetPassword && !user.IsSuspended)
+                    if (user.NeedsToResetPassword && !user.IsSuspended )
                     {
                         //await _signInManager.SignOutAsync();
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
