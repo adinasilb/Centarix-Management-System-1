@@ -360,6 +360,9 @@
 <div class="modal confirm-email-modal" id="myModal">
 </div>
 @section requestNavScript{
+<script>
+    $('[data-toggle="tooltip"]').tooltip()
+</script>
     @if (IsSectionDefined("Scripts"))
     {
     @RenderSection("Scripts", required: true)
