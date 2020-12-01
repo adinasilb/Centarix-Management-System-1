@@ -271,7 +271,7 @@
             });
             $('#dtBasicExample').DataTable();
             $('.dataTables_length').addClass('bs-select');
-            $('.mdb-select').materialSelect();
+            $.fn.ChangeCheckboxesToFilledIn()
             if ($(".setupdropdowns").val()) {
                 $.fn.SetUpDropdowns();
             }
@@ -350,20 +350,23 @@
             $.fn.GetNotifications();
             $.fn.getMenuItems();
 
-            //$.fn.ChangeCheckboxesToFilledIn();
+           
         });
+        $.fn.ChangeCheckboxesToFilledInWithoutMDB = function () {
+            console.log("in change checkboxes to filled in");
+            var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
+            console.log
+            dropdown.addClass("filled-in");
+            $(".multiple-select-dropdown li span").replaceWith(function () {
+                return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+            });
 
+        };
 
-        //$.fn.ChangeCheckboxesToFilledIn = function () {
-        //    console.log("in change checkboxes to filled in");
-        //    var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
-        //    console.log
-        //    dropdown.addClass("filled-in");
-        //    $(".multiple-select-dropdown li span").replaceWith(function () {
-        //        return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
-        //    });
-
-        //};
+        $.fn.ChangeCheckboxesToFilledIn = function () {
+            $('.mdb-select').materialSelect();
+            $.fn.ChangeCheckboxesToFilledInWithoutMDB();
+        };
 
 
         $.fn.CallPage = function (itemurl, $type) {

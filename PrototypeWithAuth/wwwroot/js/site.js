@@ -2179,6 +2179,7 @@ $(function () {
 		$(selectID).removeAttr("disabled")
 		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
 		$(selectID).materialSelect();
+		$.fn.ChangeCheckboxesToFilledInWithoutMDB();
 		$('.open-document-modal').attr("data-val", true);
 	}
 	$("#addSupplierComment").click(function () {
