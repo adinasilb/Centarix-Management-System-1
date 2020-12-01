@@ -1785,7 +1785,7 @@ td .btn {
 }
 
 .on-form-modal span.text-danger-centarix,
-.modal span.text-danger-centarix, .on-form-modal label.error {
+.modal span.text-danger-centarix, .on-form-modal label.error, .centarix-error-style span.text-danger-centarix, .centarix-error-style label.error {
     font-size: .75rem;
 }
 
@@ -2317,7 +2317,7 @@ span.caret {
     border-color: var(--user-color);
     background-color: var(--user-color);
 }
-input[type=text].error, input[type=number].error {
+input[type=text].error:not(.select-dropdown), input[type=number].error {
     background-image: url('../images/info.png');
     background-repeat: no-repeat;
     background-position: 95% .5rem;

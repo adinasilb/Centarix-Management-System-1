@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
 }
-<form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="chartForm on-form-modal">
+<form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="chartForm centarix-error-style">
 
     <div class="row">
 
@@ -25,4 +25,8 @@
         </div>
     </div>
 </form>
-<script src="~/js/piechart.js"></script>
+@section Scripts{
+    <script src="~/js/piechart.js"></script>
+    <script src="~/js/validate.js"></script>
+
+}

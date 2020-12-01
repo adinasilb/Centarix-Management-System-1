@@ -52,6 +52,46 @@ $(function () {
 	});
 
 
+	$.fn.CategoriesMultipleChange = function () {
+		console.log("in parent list");
+
+		var selectedCategoryTypes = $("#SelectedCategoryTypes").map(function (i, el) {
+			if ($(el).val() != '') {
+				return $(el).val();
+			}
+		}).get();
+		var url = "/Requests/GetParentCategoryListMultiple";
+		$.ajax({
+			async: true,
+			url: url,
+			data: { SelectedCategoryTypes: selectedCategoryTypes },
+			traditional: true,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+
+				$("#parentlistMulitple").destroyMaterialSelect()
+				$("#parentlistMulitple").empty();
+				$.each(data, function (i, category) {
+					var newitem1 = '<option value="' + category.parentCategoryID + '">' + category.parentCategoryDescription + '</option>';
+					$("#parentlistMulitple").append(newitem1);
+				});
+				$("#parentlistMulitple").after('<button type="button" onclick="$.fn.parentListMultipleChange();" class="btn-save  btn text-white expenses-background-color rounded-pill ">Save</button>');
+				$("#parentlistMulitple").materialSelect();
+				
+				$("input[data-activates='select-options-parentlistMulitple']").attr('placeholder', "Select Category")
+				$("input[data-activates='select-options-parentlistMulitple']").val('')
+				var dropdown = $("#select-options-parentlistMulitple input.form-check-input");
+				dropdown.addClass("filled-in");
+				//dropdown.addClass("fci-exp");
+				$(".multiple-select-dropdown li span").replaceWith(function () {
+					return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+				});
+				return false;
+			}
+		});
+
+	};
 	$.fn.parentListChange = function () {
 		console.log("in parent list");
 		var parentCategoryId = $("#parentlist").val();

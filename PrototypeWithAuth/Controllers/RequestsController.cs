@@ -3000,6 +3000,15 @@ namespace PrototypeWithAuth.Controllers
             return Json(subCategoryList);
 
         }
+        [HttpGet] //send a json to that the subcategory list is filered
+        public JsonResult GetParentCategoryListMultiple(List<int> SelectedCategoryTypes)
+        {
+            var categoryList = _context.ParentCategories.Where(c => SelectedCategoryTypes.Contains(c.CategoryTypeID)).ToList();
+            var vendors = _context.w
+            return Json(categoryList);
+
+        }
+    
         [HttpGet]
         public JsonResult GetSubProjectList(int ProjectID)
         {
