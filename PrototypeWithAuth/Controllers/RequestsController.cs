@@ -125,6 +125,7 @@ namespace PrototypeWithAuth.Controllers
             var viewmodel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID, PageType, SectionType, requestsSearchViewModel);
             viewmodel.PriceSortEnums = priceSorts;
             viewmodel.currency = AppUtility.CurrencyEnum.NIS;
+            viewmodel.MenuType = AppUtility.MenuItems.Requests;
             return View(viewmodel);
         }
 
@@ -142,6 +143,10 @@ namespace PrototypeWithAuth.Controllers
             RequestsSearchViewModel? requestsSearchViewModel = null)
         {
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
+            IQueryable<Request> RPI = _context.Requests;
+            RPI = _context.Requests.Include(r => r.ApplicationUserCreator);
+            RPI = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.RequestLocationInstances);
+            RPI = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
          .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
          .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Include(x => x.ParentRequest)

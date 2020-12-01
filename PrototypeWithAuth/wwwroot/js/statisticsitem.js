@@ -15,6 +15,13 @@
 				break;
 		}
 
+		var catTypes = [];
+		catTypes = $("#CategoryTypeSelected").val();
+		var months = [];
+		$(".months-selected").each(function () {
+			months.push($(this).val());
+		});
+
 		var url = "/Requests/_IndexTable";
 
 		$.ajax({
