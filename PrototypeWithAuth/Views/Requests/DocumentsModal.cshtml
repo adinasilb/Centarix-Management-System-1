@@ -33,11 +33,11 @@
     }
     var bcColorToUse = bcColor;
     var colorToUse = color;
-    var disabled = "";
+    var disabled = false;
     var isChecked = "";
     if (!Model.IsEdittable)
     {
-        disabled = " disabled ";
+        disabled = true;
     }
     else
     {
@@ -89,7 +89,15 @@
                             <div class="col-3 offset-7">
                                 <div class="upload-btn-wrapper float-right">
                                     <button class="custom-button custom-button-font @bcColorToUse  float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
-                                    <input @disabled type="file" asp-for="FilesToSave"  class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple >
+                                    @if (disabled)
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple disabled/>
+                                    }
+                                    else
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple />
+                                    }
+
                                 </div>
                                 <input type="submit" value="Save" id="save-documents" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
 

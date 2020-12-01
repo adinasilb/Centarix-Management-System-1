@@ -12,6 +12,7 @@
     bool Inventory = false;
     bool Summary = false;
     bool Reports = false;
+    bool IsEquipment = false;
 
     if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
     {
@@ -24,6 +25,10 @@
     if (Model.MenuType.Equals(AppUtility.MenuItems.Reports))
     {
         Reports = true;
+    }
+    @if(TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString().Equals(AppUtility.LabManagementPageTypeEnum.Equipment.ToString()))
+    {
+        IsEquipment = true;
     }
 }
 <div class="">
@@ -270,15 +275,16 @@
                                 }
 
                             </div>
-                            @*@if (IsEquipment)
+                            @if (IsEquipment)
                                                     {
                                                             <div class="table-icon-div">
-                                                                <a class="btn p-0 m-0 no-box-shadow" data-title="Create" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
+                                                                <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+  title="Add"  href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
                                                                     <i style="        font-size: 2rem;
                                 color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
                                                                 </a>
                                                             </div>
-                                                        }*@
+                                                        }
                             <div class="table-icon-div">
                                 <button class="btn p-0 m-0 load-confirm-delete no-box-shadow" data-toggle="tooltip" data-placement="top"
   title="Delete" value="@Model.PagedList[itemNum].RequestID" name="@AppUtility.MenuItems.Requests"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button>

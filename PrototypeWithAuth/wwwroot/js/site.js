@@ -728,6 +728,7 @@ $(function () {
 		} else if ($(".open-document-modal").hasClass('labManagement') || $(".open-document-modal").hasClass('LabManagement')){
 			section = "LabManagement";
 		}
+		//alert("section:" + section)
 		$(this).addClass("active-document-modal");
 		var enumString = $(this).data("string");
 		console.log("enumString: " + enumString);
@@ -741,7 +742,7 @@ $(function () {
 
 	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section) {
 		//alert("in open doc modal");
-		alert("in open document in site.js")
+		//alert("in open document in site.js")
 		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/

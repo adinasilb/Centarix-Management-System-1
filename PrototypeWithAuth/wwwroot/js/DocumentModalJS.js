@@ -45,7 +45,7 @@
 				console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 					section = "Operations"
-				} else if ($(".open-document-modal.active-document-modal").hasClass('labMangement')|| $(".open-document-modal.active-document-modal").hasClass('LabMangement')) {
+				} else if ($(".open-document-modal.active-document-modal").hasClass('labManagement')|| $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
@@ -63,7 +63,7 @@
 
 	$.fn.OpenDocumentsModal1 = function (enumString, requestId, isEdittable, section) {
 		$(".documentsModal").replaceWith('');
-		alert("in documents modal in document modal js")
+		//alert("in documents modal in document modal js")
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
@@ -85,6 +85,7 @@
 	};
 
 	$.fn.ChangeColorsOfModal = function ($foldername, section) {
+		//alert("section: " + section)
 		console.log("foldername: " + $foldername);
 		var numCards = $(".card.document-border").length;
 		console.log("numcards: " + numCards);
