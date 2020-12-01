@@ -1875,7 +1875,7 @@ namespace PrototypeWithAuth.Controllers
 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
                 //var users = _context.Users.ToList();
-                currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
+                //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
                 string ownerEmail = currentUser.Email;
                 string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                 string ownerPassword = currentUser.SecureAppPass;
@@ -2599,22 +2599,23 @@ namespace PrototypeWithAuth.Controllers
             //    _context.Update(li);
             //}
             //_context.SaveChanges();
+            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                    .FirstOrDefault();
 
             ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
             {
-                Request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                    .FirstOrDefault(),
+                Request = request,
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
                 ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
-                SectionType = IsOperations ? AppUtility.MenuItems.Operations : AppUtility.MenuItems.Requests
+                SectionType = IsOperations ? AppUtility.MenuItems.Operations : AppUtility.MenuItems.Requests,
+                RequestStatusID = request.RequestStatusID??0
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             receivedLocationViewModel.Request.ApplicationUserReceiverID = currentUser.Id;
             receivedLocationViewModel.Request.ArrivalDate = DateTime.Today;
             receivedLocationViewModel.CategoryType = receivedLocationViewModel.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID;
-
             return PartialView(receivedLocationViewModel);
         }
 
@@ -2865,7 +2866,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Admin, Requests")]
-        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations = false, bool IsNotifications = false)
+        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType  = AppUtility.MenuItems.Requests, bool IsNotifications = false)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -2874,7 +2875,7 @@ namespace PrototypeWithAuth.Controllers
                 RequestFolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 //Files = new List<FileInfo>(),
-                SectionType = IsOperations ? AppUtility.MenuItems.Operations : AppUtility.MenuItems.Requests,
+                SectionType = SectionType,
                 IsNotifications = IsNotifications
 
             };
@@ -2941,7 +2942,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool IsOperations = false)
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
@@ -2949,7 +2950,7 @@ namespace PrototypeWithAuth.Controllers
                 RequestID = id,
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
-                SectionType = IsOperations ? AppUtility.MenuItems.Operations : AppUtility.MenuItems.Requests
+                SectionType = SectionType
             };
             return PartialView(deleteDocumentsViewModel);
         }

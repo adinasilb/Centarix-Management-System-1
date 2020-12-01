@@ -71,7 +71,7 @@ namespace PrototypeWithAuth
             //#if DEBUG
             //            builder.AddRazorRuntimeCompilation();
             //#endif
-            services.AddApplicationInsightsTelemetry();
+            //services.AddApplicationInsightsTelemetry();
 
             // in order to be able to customize the aspnetcore identity
 
@@ -137,8 +137,8 @@ namespace PrototypeWithAuth
             //CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();
 
-            app.UseApplicationInsightsRequestTelemetry();
-            app.UseApplicationInsightsExceptionTelemetry();
+            //app.UseApplicationInsightsRequestTelemetry();
+            //app.UseApplicationInsightsExceptionTelemetry();
 
 
         }

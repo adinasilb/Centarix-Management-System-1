@@ -68,12 +68,14 @@
 
                         <div class="d-inline-flex">
                             <div class="table-icon-div">
-                                <a class="btn p-0 m-0 no-box-shadow" href="#">
+                                <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+  title="Report" href="#">
                                     <i style="font-size:1.75rem; @dangerColor color: var(--lab-man-color);" class="@item.CalibrationType.Icon  "></i>
                                 </a>
                             </div>
                             <div class="table-icon-div">
-                                <a class="btn p-0 m-0 no-box-shadow" data-title="Create" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = item.RequestID })">
+                                <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+  title="Add" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = item.RequestID })">
                                     <i style="        font-size: 2rem;
         color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
                                 </a>

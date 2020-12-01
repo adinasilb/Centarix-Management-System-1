@@ -3,7 +3,7 @@
 	e.stopPropagation();
 	var link = $('#submitDelete').attr("href");
 	console.log("link: " + link)
-	var formData = new FormData($("#DeleteDocumentModalForm")[0]);
+	//var formData = new FormData($("#DeleteDocumentModalForm")[0]);
 	$foldername = $("#FolderName").val();
 	$requestId = $("#RequestID").val();
 	var isOperations = $("#SectionType").val()!="Operation";

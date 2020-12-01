@@ -11,10 +11,13 @@ function ajaxCallToPartial() {
     $(".popover-body .priceSort:checked").each(function (e) {
         selectedPriceSort.push($(this).attr("enum"));
     })
- 
+    if (section == "LabManagement") {
+        section = "Requests"
+        var sectiontype = "LabManagement";
+    }
     $.ajax({
         async: true,
-        url: "/"+section+"/_IndexTable",
+        url: "/"+section+"/_IndexTable?SectionType="+sectiontype,
         data: {
             page: $('#Page').val(),
             RequestStatusID: $('#RequestStatusID').val(),

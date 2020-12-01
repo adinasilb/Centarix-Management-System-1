@@ -79,9 +79,9 @@ namespace PrototypeWithAuth.Controllers
 
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
-                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
-                .OrderBy(r => r.CreationDate);
+                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
+                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
+                 .OrderBy(r => r.CreationDate);
 
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p == AppUtility.PriceSortEnum.Total ? true : false }));
@@ -113,7 +113,7 @@ namespace PrototypeWithAuth.Controllers
         private async Task<RequestIndexViewModel> GetIndexViewModel(int page = 1, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
           RequestsSearchViewModel? requestsSearchViewModel = null, AppUtility.OperationsPageTypeEnum PageType = AppUtility.OperationsPageTypeEnum.RequestOperations)
         {
-            String pageType = TempData[AppUtility.TempDataTypes.PageType.ToString()]?.ToString();
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
 
             //instantiate your list of requests to pass into the index
@@ -121,27 +121,12 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
                 .OrderBy(r => r.CreationDate);
-            if (pageType.Equals(AppUtility.RequestPageTypeEnum.Inventory.ToString()))
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
-            }
-            else if (pageType.Equals(AppUtility.RequestPageTypeEnum.Request.ToString()))
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
-            }
-            else if (pageType.Equals(AppUtility.RequestPageTypeEnum.Search.ToString()))
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.SearchOperations;
-            }
-            else
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = pageType;
-            }
+           
             if (ViewData["ReturnRequests"] != null)
             {
                 RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
             }
-            else if (pageType == AppUtility.RequestPageTypeEnum.Request.ToString() || pageType == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
+            else if (PageType == AppUtility.OperationsPageTypeEnum.RequestOperations)
             {
                 /*
                  * In order to combine all the requests each one needs to be in a separate list
@@ -191,10 +176,11 @@ namespace PrototypeWithAuth.Controllers
 
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
-            else if (pageType == AppUtility.RequestPageTypeEnum.Inventory.ToString())
+            else if (PageType == AppUtility.OperationsPageTypeEnum.InventoryOperations)
             {
                 //partial and clarify?
                 RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3);
+                RequestStatusID = 3;
             }
             else
             {
@@ -253,7 +239,6 @@ namespace PrototypeWithAuth.Controllers
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
             requestIndexViewModel.RequestParentLocationInstanceID = parentLocationInstanceID;
             //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
-
             var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarTitle;
             try
@@ -266,11 +251,11 @@ namespace PrototypeWithAuth.Controllers
                 onePageOfProducts.OrderByDescending(opop => opop.ArrivalDate).Where(opop => opop.RequestStatusID == 5); // display by arrivaldate if recieved
                 onePageOfProducts.Where(opop => opop.RequestStatusID == 2).OrderByDescending(opop => opop.ParentRequest.OrderDate); // display by orderdate if ordered
             }
-                       
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
                 TempData["InnerMessage"] = ex.InnerException;
+                ViewBag.ErrorMessage = ex.Message;
                 // Redirect("~/Views/Shared/RequestError.cshtml");
             }
             requestIndexViewModel.PagedList = onePageOfProducts;

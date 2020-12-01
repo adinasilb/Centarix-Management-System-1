@@ -77,10 +77,12 @@
     @RenderBody()
 
     <!--  SCRIPTS  -->
+    <!-- JQuery -->
+    @*load jquery ui*@
+    <script src="~/lib/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
     <script type="text/javascript" src="~/js/popper.min.js"></script>
-    <!-- JQuery -->
-    <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <!-- Bootstrap core JavaScript -->
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
@@ -94,7 +96,6 @@
         <script type="text/javascript" src="~/lib/bootstrap/dist/js/mdb.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>*@
 
-    <script type="text/javascript" src="~/js/popper.min.js"></script>
     <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script>
     @*getting an error without type=module*@
     <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script>
@@ -216,8 +217,9 @@
     <script src="~/js/charts/googleCharts.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @*load jquery ui*@
-    <script src="~/lib/jquery/jquery-ui.min.js"></script>
+
+
+    <script type="text/javascript" src="~/js/popper.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.js"></script>
@@ -246,7 +248,7 @@
             //});
            // $('form').attr('autocomplete', 'off');
 
-
+            $('[data-toggle="tooltip"]').tooltip()
 
             $("#alertCount").hide();
 
@@ -269,7 +271,7 @@
             });
             $('#dtBasicExample').DataTable();
             $('.dataTables_length').addClass('bs-select');
-            $('.mdb-select').materialSelect();
+            $.fn.ChangeCheckboxesToFilledIn()
             if ($(".setupdropdowns").val()) {
                 $.fn.SetUpDropdowns();
             }
@@ -348,20 +350,23 @@
             $.fn.GetNotifications();
             $.fn.getMenuItems();
 
-            //$.fn.ChangeCheckboxesToFilledIn();
+           
         });
+        $.fn.ChangeCheckboxesToFilledInWithoutMDB = function () {
+            console.log("in change checkboxes to filled in");
+            var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
+            console.log
+            dropdown.addClass("filled-in");
+            $(".multiple-select-dropdown li span").replaceWith(function () {
+                return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+            });
 
+        };
 
-        //$.fn.ChangeCheckboxesToFilledIn = function () {
-        //    console.log("in change checkboxes to filled in");
-        //    var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
-        //    console.log
-        //    dropdown.addClass("filled-in");
-        //    $(".multiple-select-dropdown li span").replaceWith(function () {
-        //        return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
-        //    });
-
-        //};
+        $.fn.ChangeCheckboxesToFilledIn = function () {
+            $('.mdb-select').materialSelect();
+            $.fn.ChangeCheckboxesToFilledInWithoutMDB();
+        };
 
 
         $.fn.CallPage = function (itemurl, $type) {

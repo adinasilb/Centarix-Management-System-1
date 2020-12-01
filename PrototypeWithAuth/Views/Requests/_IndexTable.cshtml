@@ -12,6 +12,7 @@
     bool Inventory = false;
     bool Summary = false;
     bool Reports = false;
+    bool IsEquipment = false;
 
     if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
     {
@@ -24,6 +25,10 @@
     if (Model.MenuType.Equals(AppUtility.MenuItems.Reports))
     {
         Reports = true;
+    }
+    @if(TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString().Equals(AppUtility.LabManagementPageTypeEnum.Equipment.ToString()))
+    {
+        IsEquipment = true;
     }
 }
 <div class="">
@@ -238,7 +243,8 @@
                                     {
                                         if (Model.PagedList[itemNum] is Reorder)
                                         {
-                                            <a class="btn p-0 m-0 no-box-shadow" data-title="Approve" href="@Url.Action("ApproveReorder", new { id = Model.PagedList[itemNum].RequestID })">
+                                            <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+  title="Approve" href="@Url.Action("ApproveReorder", new { id = Model.PagedList[itemNum].RequestID })">
                                                 <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
                                             </a>
                                         }
@@ -246,7 +252,8 @@
                                         {
                                             @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
 
-                                            <a class="btn p-0 m-0 no-box-shadow" data-title="Approve" href="@Url.Action("Approve", new { id = Model.PagedList[itemNum].RequestID })">
+                                            <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+  title="Approve"  href="@Url.Action("Approve", new { id = Model.PagedList[itemNum].RequestID })">
                                                 <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
                                             </a>
                                         }
@@ -257,26 +264,30 @@
 
                                 else if (Model.PagedList[itemNum].RequestStatusID == 2)
                                 {
-                                    <button class="btn p-0 m-0 load-receive-and-location no-box-shadow"  data-title="receive" value="@Model.PagedList[itemNum].RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
+                                    <button class="btn p-0 m-0 load-receive-and-location no-box-shadow"  data-toggle="tooltip" data-placement="top"
+  title="Recieve" value="@Model.PagedList[itemNum].RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold"></i></button> // receive
                                 }
                                 else
                                 {
                                     @*work on getting the correct syntax to create a new product with*@
-                                    <button class="btn p-0 m-0 load-order-details no-box-shadow" data-title="order" section="@Model.SectionType" value="@Model.PagedList[itemNum].RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px1 hover-bold"></i></button>// order
+                                    <button class="btn p-0 m-0 load-order-details no-box-shadow" data-toggle="tooltip" data-placement="top"
+  title="Reorder" section="@Model.SectionType" value="@Model.PagedList[itemNum].RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px1 hover-bold"></i></button>// order
                                 }
 
                             </div>
-                            @*@if (IsEquipment)
+                            @if (IsEquipment)
                                                     {
                                                             <div class="table-icon-div">
-                                                                <a class="btn p-0 m-0 no-box-shadow" data-title="Create" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
+                                                                <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+  title="Add"  href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
                                                                     <i style="        font-size: 2rem;
                                 color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
                                                                 </a>
                                                             </div>
-                                                        }*@
+                                                        }
                             <div class="table-icon-div">
-                                <button class="btn p-0 m-0 load-confirm-delete no-box-shadow" data-title="delete" value="@Model.PagedList[itemNum].RequestID" name="@AppUtility.MenuItems.Requests"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button>
+                                <button class="btn p-0 m-0 load-confirm-delete no-box-shadow" data-toggle="tooltip" data-placement="top"
+  title="Delete" value="@Model.PagedList[itemNum].RequestID" name="@AppUtility.MenuItems.Requests"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button>
                             </div>
                         </div>
 
@@ -300,3 +311,4 @@
         @Html.PagedListPager(Model.PagedList, page => Url.Action("Index", new { page = page, RequestStatusID = Model.RequestStatusID, }))
     </div>
 </div>
+<script>   $('[data-toggle="tooltip"]').tooltip()</script>

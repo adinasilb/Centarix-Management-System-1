@@ -41,28 +41,33 @@
 
 				var $enumString = $(".open-document-modal.active-document-modal").data("string");
 				var $requestId = $(".open-document-modal.active-document-modal").data("id");
-
+				var section = "";
 				console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
-				var isOperations = $(".open-document-modal.active-document-modal").hasClass('operations');
-				$.fn.ChangeColorsOfModal($enumString, isOperations);
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, isOperations);
-				return false;
+				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
+					section = "Operations"
+				} else if ($(".open-document-modal.active-document-modal").hasClass('labManagement')|| $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
+					section = "LabManagement"
+				}
+				$.fn.ChangeColorsOfModal($enumString, section);
+				$.fn.OpenDocumentsModal1($enumString, $requestId, $isEdittable, section);
+				return true;
 			},
 			processData: false,
 			contentType: false
 		});
-		return false;
+		return true;
 
 	});
 
 
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations) {
+	$.fn.OpenDocumentsModal1 = function (enumString, requestId, isEdittable, section) {
 		$(".documentsModal").replaceWith('');
+		//alert("in documents modal in document modal js")
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
-			url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&IsOperations=" + isOperations,
+			url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -73,24 +78,30 @@
 					keyboard: true,
 				});
 				$(".modal").modal('show');
+				return true;
 			}
 		});
+		return true;
 	};
 
-	$.fn.ChangeColorsOfModal = function ($foldername, isOperations) {
+	$.fn.ChangeColorsOfModal = function ($foldername, section) {
+		//alert("section: " + section)
 		console.log("foldername: " + $foldername);
 		var numCards = $(".card.document-border").length;
 		console.log("numcards: " + numCards);
 
 		var div = $("#" + $foldername + " i");
 		
-		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter")) {
+		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter")) {
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
-			if (isOperations) {
+			if (section=="Operations") {
 				div.addClass("oper-filter");
-			} else {
+			} else if ((section == "LabManagement")) {
+				div.addClass("lab-man-filter");
+			}
+			else {
 				div.addClass("order-inv-filter");
 			}
 

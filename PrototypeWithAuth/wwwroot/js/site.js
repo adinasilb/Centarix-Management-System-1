@@ -687,7 +687,7 @@ $(function () {
 		}
 	}
 
-	$(".open-invoice-doc-modal").click(function (e) {
+	$(".open-invoice-doc-modal").off('click').click(function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		//console.log("in opened invoice doc modal");
@@ -717,11 +717,18 @@ $(function () {
 
 
 	$(".open-document-modal").off('click').on("click", function (e) {
+		
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal");
 		$(".open-document-modal").removeClass("active-document-modal");
-		var isOperations = $(".open-document-modal").hasClass('operations')
+		var section = "";
+		if ($(".open-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
+			section = "Operations";
+		} else if ($(".open-document-modal").hasClass('labManagement') || $(".open-document-modal").hasClass('LabManagement')){
+			section = "LabManagement";
+		}
+		//alert("section:" + section)
 		$(this).addClass("active-document-modal");
 		var enumString = $(this).data("string");
 		console.log("enumString: " + enumString);
@@ -729,16 +736,18 @@ $(function () {
 		console.log("requestId: " + requestId);
 		var isEdittable = $(this).data("val");
 		console.log("isEdittable: " + isEdittable);
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, isOperations);
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section);
+		return true;
 	});
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations) {
+	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section) {
 		//alert("in open doc modal");
+		//alert("in open document in site.js")
 		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
 		console.log("urltogo: " + urltogo);
-		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&IsOperations=" + isOperations
+		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
@@ -753,8 +762,11 @@ $(function () {
 					keyboard: true,
 				});
 				$(".modal").modal('show');
+				return true;
 			}
+		
 		});
+		return true;
 	};
 
 	$(".file-select").on("change", function (e) {
@@ -762,6 +774,7 @@ $(function () {
 		$cardDiv = $(this).closest("div.card");
 		console.log("cardDiv: " + JSON.stringify($cardDiv));
 		$cardDiv.addClass("document-border");
+		return true;
 	});
 
 
@@ -1939,6 +1952,7 @@ $(function () {
 	//});
 	/*End Dropdown Menu*/
 	//$("body").off('click').on("click", ".upload-image", function (e) {
+	//$("body").off('click').on("click", ".upload-image", function (e) {
 	//	console.log("in upload image");
 	//	$.fn.CallModal2("/Admin/UserImageModal");
 	//});
@@ -2165,6 +2179,7 @@ $(function () {
 		$(selectID).removeAttr("disabled")
 		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
 		$(selectID).materialSelect();
+		$.fn.ChangeCheckboxesToFilledInWithoutMDB();
 		$('.open-document-modal').attr("data-val", true);
 	}
 	$("#addSupplierComment").click(function () {

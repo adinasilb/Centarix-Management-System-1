@@ -15,19 +15,29 @@
     var bcColor = "order-inv-background-color";
     var color = "order-inv-color";
     var form = "order-inv-form";
+    var sectionType = AppUtility.MenuItems.Requests.ToString();
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
         color = "operations-filter";
+        sectionType = AppUtility.MenuItems.Operations.ToString();
+    }
+    else if(Model.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+
+        form = "suppliers-form";
+        bcColor = "lab-man-background-color";
+        color = "lab-man-filter";
+        sectionType = AppUtility.MenuItems.LabManagement.ToString();
     }
     var bcColorToUse = bcColor;
     var colorToUse = color;
-    var disabled = "";
+    var disabled = false;
     var isChecked = "";
     if (!Model.IsEdittable)
     {
-        disabled = " disabled ";
+        disabled = true;
     }
     else
     {
@@ -67,7 +77,7 @@
                 <input type="hidden" id="color" class="@color" />
                 <input type="hidden" id="isEdittable" class="@markDisabled" />
 
-                <a href="" class="open-document-modal active-document-modal" data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;"></a>
+                <a href="" class="open-document-modal active-document-modal  @sectionType " data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;"></a>
                 <div class="modal-header modal-header-padding">
                     <div class="container">
 
@@ -79,7 +89,15 @@
                             <div class="col-3 offset-7">
                                 <div class="upload-btn-wrapper float-right">
                                     <button class="custom-button custom-button-font @bcColorToUse  float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
-                                    <input @disabled type="file" asp-for="FilesToSave"  class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple >
+                                    @if (disabled)
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple disabled/>
+                                    }
+                                    else
+                                    {
+                                        <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple />
+                                    }
+
                                 </div>
                                 <input type="submit" value="Save" id="save-documents" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
 
