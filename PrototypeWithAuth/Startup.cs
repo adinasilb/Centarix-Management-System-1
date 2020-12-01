@@ -51,16 +51,16 @@ namespace PrototypeWithAuth
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("ElixirAzureConnection")));
-
             services.AddDbContext<ApplicationDbContext>(options =>
-            {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
-                options.EnableSensitiveDataLogging(true);
-            });
+                    Configuration.GetConnectionString("ElixirAzureConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //{
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection"));
+            //    options.EnableSensitiveDataLogging(true);
+            //});
 
 
             services.AddControllersWithViews();
@@ -120,10 +120,10 @@ namespace PrototypeWithAuth
 
             app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
-           // app.UseSession();
+            // app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
@@ -135,7 +135,7 @@ namespace PrototypeWithAuth
 
             //ChangePassword(serviceProvider).Wait();
             //CreateRoles(serviceProvider).Wait();
-            //AddRole(serviceProvider).Wait();
+            //AddRoles(serviceProvider).Wait();
 
             app.UseApplicationInsightsRequestTelemetry();
             app.UseApplicationInsightsExceptionTelemetry();
@@ -154,6 +154,14 @@ namespace PrototypeWithAuth
 
 
         //Seed database with new roles
+
+        //private async Task AddRoles(IServiceProvider serviceProvider)
+        //{
+        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        //    var user = await UserManager.FindByEmailAsync("shimon@centarix.com");
+        //    await UserManager.AddToRoleAsync(user, "Admin");
+        //    await UserManager.AddToRoleAsync(user, "CEO");
+        //}
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
@@ -225,46 +233,46 @@ namespace PrototypeWithAuth
             //  }
         }
     }
-} 
+}
 
-            // var poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
-            // //{
-            // //    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
-            // //    Email = Configuration.GetSection("UserSettings")["UserEmail"]
-            // //};
-            //string UserPassword = /*Configuration.GetSection("UserSettings")["UserEmail"]*/ "AkivaH1!";
-            // var _user = await UserManager.FindByEmailAsync("faigew@gmail.com");
-            // if (_user == null)
-            // {
-            //     var createPowerUser = await UserManager.CreateAsync(poweruser, UserPassword);
-            //     if (createPowerUser.Succeeded)
-            //     {
-            //         await UserManager.AddToRoleAsync(poweruser, "Admin");
-            //     }
-            // }
-            //  }
+// var poweruser = await UserManager.FindByEmailAsync("faigew@gmail.com");
+// //{
+// //    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
+// //    Email = Configuration.GetSection("UserSettings")["UserEmail"]
+// //};
+//string UserPassword = /*Configuration.GetSection("UserSettings")["UserEmail"]*/ "AkivaH1!";
+// var _user = await UserManager.FindByEmailAsync("faigew@gmail.com");
+// if (_user == null)
+// {
+//     var createPowerUser = await UserManager.CreateAsync(poweruser, UserPassword);
+//     if (createPowerUser.Succeeded)
+//     {
+//         await UserManager.AddToRoleAsync(poweruser, "Admin");
+//     }
+// }
+//  }
 
-            /* private async Task CreateRoles(IServiceProvider serviceProvider)
-             {
-                 var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityUser>>(); 
-                 var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();//replaced Idetntiy user with application user
+/* private async Task CreateRoles(IServiceProvider serviceProvider)
+ {
+     var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityUser>>(); 
+     var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();//replaced Idetntiy user with application user
 
-                 IdentityResult roleResult;
-                 //here in this line we are adding Admin Role
-                 var roleCheck = await RoleManager.RoleExistsAsync("Admin");
-                 if (!roleCheck)
-                 {
-                     //here in this line we are creating admin role and seed it to the database
-                     roleResult = await RoleManager.CreateAsync(new IdentityUser("Admin"));
-                 }
-                 //here we are assigning the Admin role to the User that we have registered above 
-                 //Now, we are assinging admin role to this user("Ali@gmail.com"). When will we run this project then it will
-                 //be assigned to that user.
-                 IdentityUser user = await UserManager.FindByEmailAsync("faigew@gmail.com");
-                 var User = new IdentityUser();
-                 await UserManager.AddToRoleAsync(user, "Admin");
-             }*/
-        
+     IdentityResult roleResult;
+     //here in this line we are adding Admin Role
+     var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+     if (!roleCheck)
+     {
+         //here in this line we are creating admin role and seed it to the database
+         roleResult = await RoleManager.CreateAsync(new IdentityUser("Admin"));
+     }
+     //here we are assigning the Admin role to the User that we have registered above 
+     //Now, we are assinging admin role to this user("Ali@gmail.com"). When will we run this project then it will
+     //be assigned to that user.
+     IdentityUser user = await UserManager.FindByEmailAsync("faigew@gmail.com");
+     var User = new IdentityUser();
+     await UserManager.AddToRoleAsync(user, "Admin");
+ }*/
+
 
 /*              app.UseRouting();
                 app.UseAuthentication();
