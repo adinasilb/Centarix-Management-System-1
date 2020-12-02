@@ -63,7 +63,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersDetails;
-            var employees = _context.Users.OfType<Employee>().Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
+            var employees = _context.Users.OfType<Employee>().Where(u=>u.EmployeeStatusID!=4).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
                 .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobCategoryType);
             EmployeeDetailsViewModel employeeDetailsViewModel = new EmployeeDetailsViewModel
             {
