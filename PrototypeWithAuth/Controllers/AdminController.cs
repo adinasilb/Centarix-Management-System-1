@@ -66,7 +66,7 @@ namespace PrototypeWithAuth.Controllers
                 //.Where(u => u.NeedsToResetPassword? !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
                 //.OrderBy(u => u.UserNum)
                 .ToList();
-            var UsersList = _context.Users.ToList();
+            List<ApplicationUser> UsersList = _context.Users.ToList();
             bool IsCEO = false;
             if (User.IsInRole("CEO"))
             {
@@ -90,7 +90,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
-            var roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
+            IQueryable<IdentityRole> roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
             {
                 //Roles = roles
@@ -105,14 +105,14 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> RegisterUser(RegisterUserViewModel registerUserViewModel)
         {
 
-            var usernum = 1;
+            int usernum = 1;
             if (_context.Users.Any())
             {
                 usernum = _context.Users.LastOrDefault().UserNum + 1;
             }
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser
+                ApplicationUser user = new ApplicationUser
                 {
                     UserName = registerUserViewModel.Email,
                     Email = registerUserViewModel.Email,
@@ -122,7 +122,7 @@ namespace PrototypeWithAuth.Controllers
                     UserNum = usernum
                 };
 
-                var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
+                IdentityResult result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
                 if (result.Succeeded)
                 {
                     //await _userManager.AddToRoleAsync(user, registerUserViewModel.Role);
@@ -132,7 +132,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
+                    foreach (IdentityError error in result.Errors)
                     {
                         ModelState.AddModelError("", error.Description);
                     }
@@ -208,7 +208,7 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task CreateSingleRole()
         {
-            var user = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault();
+            ApplicationUser user = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault();
             await _userManager.AddToRoleAsync(user, "CEO");
         }
 
@@ -216,15 +216,15 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> CreateUser(RegisterUserViewModel registerUserViewModel)
         {
-            var userid = 0;
-            var usernum = 1;
+            int userid = 0;
+            int usernum = 1;
             if (_context.Users.Any())
             {
                 usernum = _context.Users.OrderByDescending(u => u.UserNum).FirstOrDefault().UserNum + 1;
             }
-            var UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
+            int UserType = registerUserViewModel.NewEmployee.EmployeeStatusID;
 
-            var user = new Employee()
+            Employee user = new Employee()
             {
                 /*User*/
                 UserName = registerUserViewModel.Email,
@@ -273,14 +273,14 @@ namespace PrototypeWithAuth.Controllers
                 user.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
                 /*Salaried Employee*/
             }
-            var IsUser = true;
+            bool IsUser = true;
             if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
             {
                 IsUser = false;
-                var newPassword = GeneratePassword(true, true, true, true, false, 10);
+                string newPassword = GeneratePassword(true, true, true, true, false, 10);
                 registerUserViewModel.Password = newPassword;
             }
-            var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
+            IdentityResult result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
             //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
             if (result.Succeeded)
             {
@@ -304,7 +304,7 @@ namespace PrototypeWithAuth.Controllers
                 switch (UserType)
                 {
                     case 1: /*Salaried Employee*/
-                        var salariedEmployee = new SalariedEmployee()
+                        SalariedEmployee salariedEmployee = new SalariedEmployee()
                         {
                             EmployeeId = user.Id,
                             HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay
@@ -312,7 +312,7 @@ namespace PrototypeWithAuth.Controllers
                         _context.Add(salariedEmployee);
                         break;
                     case 2: /*Freelancer*/
-                        var freelancer = new Freelancer()
+                        Freelancer freelancer = new Freelancer()
                         {
                             EmployeeId = user.Id
                         };
@@ -324,70 +324,70 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
 
 
-                foreach (var orderRole in registerUserViewModel.OrderRoles)
+                foreach (UserRoleViewModel orderRole in registerUserViewModel.OrderRoles)
                 {
                     if (orderRole.Name == "General" && orderRole.Selected == true)
                     {
                         await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Requests.ToString());
                     }
                 }
-                foreach (var protcolRole in registerUserViewModel.ProtocolRoles)
+                foreach (UserRoleViewModel protcolRole in registerUserViewModel.ProtocolRoles)
                 {
                     if (protcolRole.Name == "General" && protcolRole.Selected == true)
                     {
                         await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Protocols.ToString());
                     }
                 }
-                foreach (var operationRole in registerUserViewModel.OperationRoles)
+                foreach (UserRoleViewModel operationRole in registerUserViewModel.OperationRoles)
                 {
                     if (operationRole.Name == "General" && operationRole.Selected == true)
                     {
                         await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Operations.ToString());
                     }
                 }
-                foreach (var biomarkerRole in registerUserViewModel.BiomarkerRoles)
+                foreach (UserRoleViewModel biomarkerRole in registerUserViewModel.BiomarkerRoles)
                 {
                     if (biomarkerRole.Name == "General" && biomarkerRole.Selected == true)
                     {
                         await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Biomarkers.ToString());
                     }
                 }
-                foreach (var timekeeperRole in registerUserViewModel.TimekeeperRoles)
+                foreach (UserRoleViewModel timekeeperRole in registerUserViewModel.TimekeeperRoles)
                 {
                     if (timekeeperRole.Name == "General" && timekeeperRole.Selected == true)
                     {
                         await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.TimeKeeper.ToString());
                     }
                 }
-                foreach (var labmanagementRole in registerUserViewModel.LabManagementRoles)
+                foreach (UserRoleViewModel labmanagementRole in registerUserViewModel.LabManagementRoles)
                 {
                     if (labmanagementRole.Name == "General" && labmanagementRole.Selected == true)
                     {
                         await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.LabManagement.ToString());
                     }
                 }
-                foreach (var accountingRole in registerUserViewModel.AccountingRoles)
+                foreach (UserRoleViewModel accountingRole in registerUserViewModel.AccountingRoles)
                 {
                     if (accountingRole.Name == "General" && accountingRole.Selected == true)
                     {
                         await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Accounting.ToString());
                     }
                 }
-                foreach (var expensesRole in registerUserViewModel.ExpenseesRoles)
+                foreach (UserRoleViewModel expensesRole in registerUserViewModel.ExpenseesRoles)
                 {
                     if (expensesRole.Name == "General" && expensesRole.Selected == true)
                     {
                         await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Reports.ToString());
                     }
                 }
-                foreach (var incomeRole in registerUserViewModel.IncomeRoles)
+                foreach (UserRoleViewModel incomeRole in registerUserViewModel.IncomeRoles)
                 {
                     if (incomeRole.Name == "General" && incomeRole.Selected == true)
                     {
                         await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Income.ToString());
                     }
                 }
-                foreach (var usersRole in registerUserViewModel.UserRoles)
+                foreach (UserRoleViewModel usersRole in registerUserViewModel.UserRoles)
                 {
                     if (usersRole.Name == "General" && usersRole.Selected == true)
                     {
@@ -428,8 +428,8 @@ namespace PrototypeWithAuth.Controllers
                 }
 
 
-                var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                string userId = await _userManager.GetUserIdAsync(user);
+                string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 string confirmationLink = Url.Page(
             "/Account/ConfirmEmail",
@@ -438,10 +438,10 @@ namespace PrototypeWithAuth.Controllers
             protocol: Request.Scheme);
 
 
-                var message = new MimeMessage();
+                MimeMessage message = new MimeMessage();
 
                 //instantiate the body builder
-                var builder = new BodyBuilder();
+                BodyBuilder builder = new BodyBuilder();
 
 
 
@@ -461,7 +461,7 @@ namespace PrototypeWithAuth.Controllers
 
                 message.Body = builder.ToMessageBody();
 
-                using (var client = new SmtpClient())
+                using (SmtpClient client = new SmtpClient())
                 {
 
                     client.Connect("smtp.gmail.com", 587, false);
@@ -489,7 +489,7 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 ViewBag.ErrorMessage = "User Failed to add. Please try again.";
-                foreach (var e in result.Errors)
+                foreach (IdentityError e in result.Errors)
                 {
                     ViewBag.ErrorMessage += "/n " + e;
                 }
@@ -519,9 +519,9 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 Employee userEditted = userEditted = await _context.Employees.Where(u => u.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
-                var selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
+                int selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
                 Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
-                var oldSelectedStatus = employeeEditted.EmployeeStatusID;
+                int oldSelectedStatus = employeeEditted.EmployeeStatusID;
                 if (selectedStatusID == 4)
                 {
                     //never was an employee only was a user and wants to update info                 
@@ -600,7 +600,7 @@ namespace PrototypeWithAuth.Controllers
                             employeeEditted.SalariedEmployee = salariedEmployee;
                             break;
                         case 2: /*Freelancer*/
-                            var freelancer = _context.Freelancers.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
+                            Freelancer freelancer = _context.Freelancers.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
                             if (freelancer == null)
                             {
                                 freelancer = new Freelancer();
@@ -621,7 +621,7 @@ namespace PrototypeWithAuth.Controllers
                     if (passwordChangeResult.Succeeded)
                     {
                         employeeEditted.NeedsToResetPassword = true;
-                        await _userManager.ResetAuthenticatorKeyAsync(employeeEditted); 
+                        await _userManager.ResetAuthenticatorKeyAsync(employeeEditted);
                         await _userManager.UpdateSecurityStampAsync(employeeEditted);
                         employeeEditted.LockoutEnabled = true;
                         employeeEditted.LockoutEnd = new DateTime(2999, 01, 01);
@@ -644,7 +644,7 @@ namespace PrototypeWithAuth.Controllers
                 //}
 
 
-                var rolesList = await _userManager.GetRolesAsync(userEditted).ConfigureAwait(false);
+                IList<string> rolesList = await _userManager.GetRolesAsync(userEditted).ConfigureAwait(false);
 
                 if (rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && !registerUserViewModel.OrderRoles[0].Selected)
                 {
@@ -807,7 +807,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public IActionResult DeleteUserModal(string Id)
         {
-            var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
+            ApplicationUser user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
             return PartialView(user);
         }
 
@@ -839,7 +839,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "CEO")]
         public IActionResult SuspendUserModal(string Id)
         {
-            var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
+            ApplicationUser user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
             return PartialView(user);
         }
 
@@ -878,10 +878,10 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> editUserFunction(string id, int? Tab = 0)
         {
-            var userSelected = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            ApplicationUser userSelected = _context.Users.Where(u => u.Id == id).FirstOrDefault();
             if (userSelected != null)
             {
-                var registerUserViewModel = new RegisterUserViewModel
+                RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
                 {
                     ApplicationUserID = userSelected.Id,
                     UserNum = userSelected.UserNum,
@@ -935,7 +935,7 @@ namespace PrototypeWithAuth.Controllers
 
 
                 //var userToShow = _context.Users.Where(u => u.Id == id).FirstOrDefault();
-                var rolesList = await _userManager.GetRolesAsync(userSelected).ConfigureAwait(false);
+                IList<string> rolesList = await _userManager.GetRolesAsync(userSelected).ConfigureAwait(false);
 
                 registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {
@@ -1058,7 +1058,7 @@ namespace PrototypeWithAuth.Controllers
 
         public JsonResult GetGeneratedPassword()
         {
-            var password = "";
+            string password = "";
             while (!PasswordIsValid(password))
             {
                 password = GeneratePassword();
@@ -1134,13 +1134,13 @@ namespace PrototypeWithAuth.Controllers
 
         public string SaveTempUserImage(UserImageViewModel userImageViewModel)
         {
-            var SavedUserImagePath = "";
+            string SavedUserImagePath = "";
 
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
             Directory.CreateDirectory(uploadFolder);
             if (userImageViewModel.FileToSave != null) //test for more than one???
             {
-                var FileName = "TempUserImage";
+                string FileName = "TempUserImage";
 
                 DirectoryInfo dir = new DirectoryInfo(uploadFolder);
                 FileInfo[] files = dir.GetFiles(FileName + ".*");
@@ -1153,12 +1153,12 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
 
-                var indexOfDot = userImageViewModel.FileToSave.FileName.IndexOf(".");
-                var extension = userImageViewModel.FileToSave.FileName.Substring(indexOfDot, userImageViewModel.FileToSave.FileName.Length - indexOfDot);
+                int indexOfDot = userImageViewModel.FileToSave.FileName.IndexOf(".");
+                string extension = userImageViewModel.FileToSave.FileName.Substring(indexOfDot, userImageViewModel.FileToSave.FileName.Length - indexOfDot);
                 string uniqueFileName = FileName + extension;
                 string filePath = Path.Combine(uploadFolder, uniqueFileName);
 
-                using (var FileStream = new FileStream(filePath, FileMode.Create))
+                using (FileStream FileStream = new FileStream(filePath, FileMode.Create))
                 {
                     try
                     {
@@ -1176,7 +1176,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-       
+
         private static bool PasswordIsValid(string password, bool includeLowercase = true, bool includeUppercase = true, bool includeNumeric = true, bool includeSpecial = true, bool includeSpaces = false)
         {
             const string REGEX_LOWERCASE = @"[a-z]";

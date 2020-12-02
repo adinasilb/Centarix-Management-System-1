@@ -12,9 +12,9 @@ namespace PrototypeWithAuth.AppData
     {
         public static List<MenuItems> CreateOrdersAndInventoryMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
         {
-            var MainMenuItems = new List<MenuItems>();
+            List<MenuItems> MainMenuItems = new List<MenuItems>();
 
-            var AllClasses = OrigClasses;
+            string AllClasses = OrigClasses;
             if (MainMenu == AppUtility.RequestPageTypeEnum.Request.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
@@ -98,9 +98,9 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> CreateLabManagementMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
         {
-            var MainMenuItems = new List<MenuItems>();
+            List<MenuItems> MainMenuItems = new List<MenuItems>();
 
-            var AllClasses = OrigClasses;
+            string AllClasses = OrigClasses;
             if (MainMenu == AppUtility.LabManagementPageTypeEnum.Suppliers.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
@@ -164,9 +164,9 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> CreateAccountingMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
         {
-            var MainMenuItems = new List<MenuItems>();
+            List<MenuItems> MainMenuItems = new List<MenuItems>();
 
-            var MainClasses = OrigClasses;
+            string MainClasses = OrigClasses;
             if (MainMenu == AppUtility.PaymentPageTypeEnum.Payments.ToString()) { MainClasses += ActiveClasses; } else { MainClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
@@ -220,9 +220,9 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> CreateOperationsMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
         {
-            var MainMenuItems = new List<MenuItems>();
+            List<MenuItems> MainMenuItems = new List<MenuItems>();
 
-            var CurrentClasses = OrigClasses;
+            string CurrentClasses = OrigClasses;
             if (MainMenu == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
@@ -267,8 +267,8 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> CreateUsersMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
         {
-            var MainMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> MainMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (MainMenu == AppUtility.UserPageTypeEnum.User.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
@@ -295,9 +295,9 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> CreateTimekeeperMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
         {
-            var MainMenuItems = new List<MenuItems>();
+            List<MenuItems> MainMenuItems = new List<MenuItems>();
 
-            var CurrentClasses = OrigClasses;
+            string CurrentClasses = OrigClasses;
             if (MainMenu == AppUtility.TimeKeeperPageTypeEnum.Report.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
@@ -324,9 +324,9 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateExpensesMainMenu(string MainMenu, string OrigClasses, string ActiveClasses)
         {
-            var MainMenuItems = new List<MenuItems>();
+            List<MenuItems> MainMenuItems = new List<MenuItems>();
 
-            var CurrentClasses = OrigClasses;
+            string CurrentClasses = OrigClasses;
             if (MainMenu == AppUtility.ExpensesPageTypeEnum.ExpensesSummary.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
@@ -373,9 +373,9 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> GetOrdersAndInventoryRequestsSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var menuClass = OrigClasses;
+            string menuClass = OrigClasses;
             if (SidebarTitle == AppUtility.OrdersAndInventorySidebarEnum.LastItem.ToString()) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -452,9 +452,9 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> GetOrdersAndInventorySummarySidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var menuClass = OrigClasses;
+            string menuClass = OrigClasses;
             if (SidebarTitle == AppUtility.OrdersAndInventorySidebarEnum.LastItem.ToString()) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -545,9 +545,9 @@ namespace PrototypeWithAuth.AppData
         public static List<MenuItems> GetOrdersAndInventorySearchSidebarMenuItems(string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var menuClass = OrigClasses;
+            string menuClass = OrigClasses;
 
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -567,9 +567,9 @@ namespace PrototypeWithAuth.AppData
         public static List<MenuItems> GetOrdersAndInventoryCartSidebarMenuItems(string SidebarTitle, string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var menuClass = OrigClasses;
+            string menuClass = OrigClasses;
             if (SidebarTitle == AppUtility.OrdersAndInventorySidebarEnum.Cart.ToString()) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -596,9 +596,9 @@ namespace PrototypeWithAuth.AppData
         public static List<MenuItems> GetOrdersAndInventoryLocationSidebarMenuItems(string OrigClasses, string ActiveClasses, string pageType, AppUtility.CategoryTypeEnum categoryType)
         {
 
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var menuClass = OrigClasses;
+            string menuClass = OrigClasses;
 
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -618,9 +618,9 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateLabManageSuppliersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var Classes = OrigClasses;
+            string Classes = OrigClasses;
             if (SidebarTitle == AppUtility.LabManagementSidebarEnum.AllSuppliers.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -665,9 +665,9 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> CreateLabManageEquipmentSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var Classes = OrigClasses;
+            string Classes = OrigClasses;
             if (SidebarTitle == AppUtility.LabManagementSidebarEnum.Calibrate.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -727,9 +727,9 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateLabManageLocationsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var Classes = OrigClasses;
+            string Classes = OrigClasses;
             if (SidebarTitle == AppUtility.LabManagementSidebarEnum.LocationsList.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -749,9 +749,9 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateLabManageOrdersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var Classes = OrigClasses;
+            string Classes = OrigClasses;
             if (SidebarTitle == AppUtility.LabManagementSidebarEnum.Quotes.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -778,9 +778,9 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateLabManageSearchSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var Classes = OrigClasses;
+            string Classes = OrigClasses;
             if (SidebarTitle == AppUtility.LabManagementSidebarEnum.SearchRequests.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -800,9 +800,9 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateAccountingPaymentsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var Classes = OrigClasses;
+            string Classes = OrigClasses;
             if (SidebarTitle == AppUtility.AccountingPaymentsEnum.MonthlyPayment.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -879,9 +879,9 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateAccountingNotificationsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
-            var Classes = OrigClasses;
+            string Classes = OrigClasses;
             if (SidebarTitle == AppUtility.AccountingNotificationsEnum.NoInvoice.ToString()) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -939,8 +939,8 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> CreateAccountingSuppliersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.AccountingSidebarEnum.AllSuppliersAC.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -987,11 +987,11 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateOperationsRequestsSidebar(string PageType, string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.OperationsSidebarEnum.LastItem.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            var typePageType = "Request";
+            string typePageType = "Request";
             if (PageType == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
             {
                 typePageType = AppUtility.RequestPageTypeEnum.Request.ToString();
@@ -1076,8 +1076,8 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateOperationsSearchSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.OperationsSidebarEnum.Search.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1099,8 +1099,8 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateUsersUsersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.UserSideBarEnum.UsersList.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1127,8 +1127,8 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> CreateUsersWorkersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.UserSideBarEnum.WorkersDetails.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1176,8 +1176,8 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateTimekeeperReportsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.ReportHours.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1224,8 +1224,8 @@ namespace PrototypeWithAuth.AppData
         }
         public static List<MenuItems> CreateTimekeeperSummarySidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.Documents.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1253,8 +1253,8 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateExpensesSummarySidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.ExpensesSidebarEnum.SummaryPieCharts.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1292,8 +1292,8 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateExpensesStatisticsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.ExpensesSidebarEnum.StatisticsProject.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1351,8 +1351,8 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateExpensesCostsSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.ExpensesSidebarEnum.CostsProject.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1390,8 +1390,8 @@ namespace PrototypeWithAuth.AppData
 
         public static List<MenuItems> CreateExpensesWorkersSidebar(string SidebarTitle, string OrigClasses, string ActiveClasses)
         {
-            var SidebarMenuItems = new List<MenuItems>();
-            var CurrentClasses = OrigClasses;
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
             if (SidebarTitle == AppUtility.ExpensesSidebarEnum.WorkersDetails.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()

@@ -243,10 +243,10 @@ namespace PrototypeWithAuth.AppData
         public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(String CurrentEnum)
         {
             List<AccountingPopoverLink> list = new List<AccountingPopoverLink>();
-            var enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
+            List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
             if (!CurrentEnum.Equals(AppUtility.AccountingPaymentsEnum.StandingOrders.ToString()))
             {
-                foreach (var e in enums)
+                foreach (PaymentsPopoverEnum e in enums)
                 {
 
                     if (CurrentEnum != e.ToString())
@@ -311,9 +311,9 @@ namespace PrototypeWithAuth.AppData
         public static int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
         {
             DateTime nextDay = firstOfTheMonth;
-            var endOfTheMonth = firstOfTheMonth.AddMonths(1);
+            DateTime endOfTheMonth = firstOfTheMonth.AddMonths(1);
             int totalDays = 0;
-            var companyDaysOffCount = companyDayOffs.Where(d => d.Date.Year == firstOfTheMonth.Year && firstOfTheMonth.Month == d.Date.Month).Count();
+            int companyDaysOffCount = companyDayOffs.Where(d => d.Date.Year == firstOfTheMonth.Year && firstOfTheMonth.Month == d.Date.Month).Count();
             while (nextDay.Date < endOfTheMonth)
             {
                 if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
@@ -329,9 +329,9 @@ namespace PrototypeWithAuth.AppData
         public static int GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
         {
             DateTime nextDay = firstOfTheYear;
-            var endofTheYear = firstOfTheYear.AddYears(1);
+            DateTime endofTheYear = firstOfTheYear.AddYears(1);
             int totalDays = 0;
-            var companyDaysOffCount = companyDayOffs.Where(d => d.Date.Year == firstOfTheYear.Year).Count();
+            int companyDaysOffCount = companyDayOffs.Where(d => d.Date.Year == firstOfTheYear.Year).Count();
             while (nextDay.Date < endofTheYear)
             {
                 if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
