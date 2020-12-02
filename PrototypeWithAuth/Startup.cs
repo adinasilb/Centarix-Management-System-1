@@ -48,7 +48,13 @@ namespace PrototypeWithAuth
             ////Set database Connection from application json file
 
             //add identity
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Tokens.ProviderMap.Add("CustomEmailConfirmation",
+                    new TokenProviderDescriptor(
+                        typeof(CustomEmailConfirmationTokenProvider<IdentityUser>)));
+                options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+            })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -102,14 +108,7 @@ namespace PrototypeWithAuth
 
             });
 
-            services.AddDefaultIdentity<IdentityUser>(config =>
-            {
-                config.SignIn.RequireConfirmedEmail = true;
-                config.Tokens.ProviderMap.Add("CustomEmailConfirmation",
-                    new TokenProviderDescriptor(
-                        typeof(CustomEmailConfirmationTokenProvider<IdentityUser>)));
-                config.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
-            }).AddEntityFrameworkStores<ApplicationDbContext>();
+         
 
             services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
 
