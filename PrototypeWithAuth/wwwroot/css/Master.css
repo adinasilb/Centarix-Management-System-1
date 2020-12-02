@@ -546,3 +546,31 @@ table td, table td .btn, .text, table th {
         .second-graduated-div tr:last-child {
             border-bottom: 0 !important;
         }
+
+.order-inv-form .document-border:hover {
+    border: 1px solid var(--order-inv-color) !important;
+}
+
+.oper-form .document-border:hover {
+    border: 1px solid var(--operations-color) !important;
+}
+
+.supplier-form .document-border:hover {
+    border: 1px solid var(--lab-man-color) !important;
+}
+
+.accounting-form .document-border:hover {
+    border: 1px solid var(--acc-color) !important;
+}
+.accounting-form .document-border:hover i{
+    color: var(--acc-color)
+}
+.order-inv-form .document-border:hover i {
+    color: var(--order-inv-color)
+}
+.oper-form .document-border:hover i{
+    color: var(--operations-color)
+}
+.supplier-form .document-border:hover i{
+    color: var(--lab-man-color)
+}

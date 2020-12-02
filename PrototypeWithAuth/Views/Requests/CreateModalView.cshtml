@@ -637,7 +637,7 @@
                                         <div style="display:none;" id="popover-content">
 
                                             @foreach (var item in Model.CommentTypes)
-                                            {<div class="row px-3">
+                                            {<div class="row px-3 comment-btn">
                                                     @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
                                                     {
                                                         <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
@@ -686,9 +686,9 @@
                                 <br />
                                 <div class="form-group">
                                     @*you can only add to cart if you are creating a new one*@
-                                    <input type="submit" name="OrderType" value="Order" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                    <input type="submit" name="OrderType" value="Place Order" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
 
-                                    <input type="submit" name="OrderType" value="Without Order" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                    <input type="submit" name="OrderType" value="Mark As Ordered" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
                                     <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
                                     <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
                                     <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>
