@@ -396,7 +396,14 @@ namespace PrototypeWithAuth.Controllers
 
             return View(summaryChartsViewModel);
         }
+        [HttpGet]
+        [Authorize(Roles = "Admin, CEO, Expenses")]
+        public IActionResult _DDLForCharts()
+        {
+            SummaryChartsViewModel summaryChartsViewModel = GetSummaryChartsViewModel();
 
+            return PartialView(summaryChartsViewModel);
+        }
         private SummaryChartsViewModel GetSummaryChartsViewModel()
         {
             return new SummaryChartsViewModel()

@@ -2993,22 +2993,8 @@ namespace PrototypeWithAuth.Controllers
             return Json(subCategoryList);
 
         }
-        [HttpGet] //send a json to that the subcategory list is filered
-        public JsonResult GetSubCategoryListMultiple(List<int> ParentCategoryIds)
-        {
-            var subCategoryList = _context.ProductSubcategories.Where(c => ParentCategoryIds.Contains(c.ParentCategoryID)).ToList();
-            return Json(subCategoryList);
+       
 
-        }
-        [HttpGet] //send a json to that the subcategory list is filered
-        public JsonResult GetParentCategoryListMultiple(List<int> SelectedCategoryTypes)
-        {
-            var categoryList = _context.ParentCategories.Where(c => SelectedCategoryTypes.Contains(c.CategoryTypeID)).ToList();
-            var vendors = _context.w
-            return Json(categoryList);
-
-        }
-    
         [HttpGet]
         public JsonResult GetSubProjectList(int ProjectID)
         {
@@ -3017,11 +3003,20 @@ namespace PrototypeWithAuth.Controllers
             return Json(subprojectList);
         }
         [HttpGet]
-        public JsonResult GetSubProjectListMultiple(List<int> ProjectIDs)
+        public JsonResult FilterByProjects(List<int> ProjectIDs)
         {
-            //var projectName = _context.Projects.Where(pr => pr.ProjectID == ProjectID).FirstOrDefault().ProjectDescription;
-            var subprojectList = _context.SubProjects.Where(sp => ProjectIDs.Contains(sp.ProjectID)).ToList();
-            return Json(subprojectList);
+            var requests = _context.Requests.Where(r => ProjectIDs.Contains(r.SubProject.ProjectID)).Include(r => r.ApplicationUserCreator).Include(r=>r.SubProject);
+            var subProjectList = requests.Select(r => r.SubProject).Distinct().Select(sp => new { subProjectID = sp.SubProjectID, subProjectDescription = sp.SubProjectDescription });
+            var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
+            return Json(new { SubProjects = subProjectList , Employees = workers});
+
+        }
+        [HttpGet]
+        public JsonResult FilterBySubProjects(List<int> SubProjectIDs)
+        {
+            var requests = _context.Requests.Where(r => SubProjectIDs.Contains(r.SubProjectID??0)).Include(r => r.ApplicationUserCreator);
+            var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
+            return Json(new {Employees = workers});
         }
         //[HttpGet]
         //public JsonResult GetCompanyAccountList(int PaymentTypeID)
