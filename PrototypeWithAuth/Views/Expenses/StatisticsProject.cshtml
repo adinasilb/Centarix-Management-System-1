@@ -55,7 +55,7 @@
                          @onload = "ChangeCheckboxesToFilledIn()"
                      })
             @*</div>
-        <div class="col-1 p-0 monthsHours">*@
+                <div class="col-1 p-0 monthsHours">*@
         </div>
 
     </div>
@@ -89,16 +89,16 @@
         //    //$(".change-month").val("3");
         //});
 
-        $.fn.ChangeCheckboxesToFilledIn = function () {
-            console.log("in change checkboxes to filled in");
-            var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
-            console.log
-            dropdown.addClass("filled-in");
-            $(".multiple-select-dropdown li span").replaceWith(function () {
-                return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
-            });
+        //$.fn.ChangeCheckboxesToFilledIn = function () {
+        //    console.log("in change checkboxes to filled in");
+        //    var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
+        //    console.log
+        //    dropdown.addClass("filled-in");
+        //    $(".multiple-select-dropdown li span").replaceWith(function () {
+        //        return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
+        //    });
 
-        };
+        //};
 
 
     })
