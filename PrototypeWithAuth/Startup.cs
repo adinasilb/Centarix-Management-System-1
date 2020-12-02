@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace PrototypeWithAuth
 {
@@ -94,12 +95,24 @@ namespace PrototypeWithAuth
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                options.ExpireTimeSpan = TimeSpan.FromHours(1);
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
 
             });
+
+            services.AddDefaultIdentity<IdentityUser>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = true;
+                config.Tokens.ProviderMap.Add("CustomEmailConfirmation",
+                    new TokenProviderDescriptor(
+                        typeof(CustomEmailConfirmationTokenProvider<IdentityUser>)));
+                config.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
