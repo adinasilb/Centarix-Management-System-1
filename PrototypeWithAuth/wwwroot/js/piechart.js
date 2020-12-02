@@ -6,7 +6,7 @@
 				selectRequired: true,
 			},
 			"Currency": {
-				required: true,
+				selectRequired: true,
 			}
 		}
 	});
