@@ -10,115 +10,157 @@
 }
 
 
-<div class="expenses-form">
-    <div class=" select-box-margin-bottom">
+    <div class="expenses-form">
+        <div class=" select-box-margin-bottom">
 
-        @Html.DropDownListFor(vm => vm.SelectedYears, years.Select(x =>
-    new SelectListItem
-    {
-    Text = x.ToString(),
-    Value = x.ToString(),
+            @Html.DropDownListFor(vm => vm.SelectedYears, years.Select(x =>
+        new SelectListItem
+        {
+        Text = x.ToString(),
+        Value = x.ToString(),
 
-    }
-    ), htmlAttributes: new { @class = " mdb-select  custom select-dropdown form-control-plaintext ", @searchable = "Search year..", @multiple = "multiple" })
-    </div>
+        }
+        ), htmlAttributes: new { @class = " mdb-select  custom select-dropdown form-control-plaintext ", @searchable = "Search year..", @multiple = "multiple" })
+        </div>
 
-    <div class=" select-box-margin-bottom">
-        @Html.DropDownListFor(
-     vm => vm.SelectedMonths,
-      months.Select(x =>
-      new SelectListItem
-      {
-          Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
-          Value = x.ToString()
-      }),
-     new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Month", @multiple = "multiple", @value = "" }
-    )
-    </div>
-    <div class=" select-box-margin-bottom ">
-        <select asp-for="Currency" class="mdb-select custom select-dropdown form-control-plaintext" searchable="Search Currency" data-placeholder="Currency">
-            <option value="@AppUtility.CurrencyEnum.USD">&dollar; USD</option>
-            <option value="@AppUtility.CurrencyEnum.NIS" selected>&#8362; NIS</option>
-        </select>
-    </div>
-    <br />
-    <br />
-    <div class=" select-box-margin-bottom">
-        @Html.DropDownListFor(
-     vm => vm.SelectedCategoryTypes,
-     new SelectList(
-         Model.CategoryTypes,
-         "CategoryTypeID",
-         "CategoryTypeDescription"),
-     //"Lab / Operation",
-     new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Lab / Operation", @multiple = "multiple" }
-    )
-        <button type="button" onclick="$.fn.filterByCategoryType();" class="btn-save
+        <div class=" select-box-margin-bottom">
+            @Html.DropDownListFor(
+         vm => vm.SelectedMonths,
+          months.Select(x =>
+          new SelectListItem
+          {
+              Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
+              Value = x.ToString()
+          }),
+         new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Month", @multiple = "multiple", @value = "" }
+        )
+        </div>
+        <div class=" select-box-margin-bottom ">
+            <select asp-for="Currency" class="mdb-select custom select-dropdown form-control-plaintext" data-placeholder="Currency">
+                <option value="@AppUtility.CurrencyEnum.USD">&dollar; USD</option>
+                <option value="@AppUtility.CurrencyEnum.NIS" selected>&#8362; NIS</option>
+            </select>
+        </div>
+        <br />
+        <br />
+        <div class=" select-box-margin-bottom">
+            <select asp-for="SelectedCategoryTypes" class="mdb-select custom select-dropdown form-control-plaintext">
+                <option disabled selected class="d-none" value="">Lab / Operational</option>
+                @foreach (var c in Model.CategoryTypes)
+                {
+                    <option value="@c.CategoryTypeID">@c.CategoryTypeDescription</option>
+                }
+            </select>
+            @*@Html.DropDownListFor(
+             vm => vm.SelectedCategoryTypes,
+             new SelectList(
+                 Model.CategoryTypes,
+                 "CategoryTypeID",
+                 "CategoryTypeDescription"),
+             //"Lab / Operation",
+             new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Lab / Operation", @multiple = "multiple" }
+            )*@
+            <button type="button" onclick="$.fn.filterByCategoryType();" class="btn-save
                     btn text-white expenses-background-color rounded-pill no-box-shadow ">
-            Save
-        </button>
-    </div>
-    <div class=" select-box-margin-bottom">
-        @Html.DropDownListFor(
-     vm => vm.SelectedParentCategories,
-     new SelectList(
-         Model.ParentCategories,
-         "ParentCategoryID",
-         "ParentCategoryDescription"),
-     //"Category",
-     new { @class = "mdb-select custom select-dropdown form-control-plaintext parentlistMulitple", @searchable = "Search Category", @multiple = "multiple", @id = "parentlistMulitple" }
-    )
-        <button type="button" onclick="$.fn.filterByParentCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
-    </div>
-    <div class=" select-box-margin-bottom">
-        @Html.DropDownListFor(
-     vm => vm.SelectedProductSubcategories,
-     new SelectList(
-         Model.ProductSubcategories,
-         "ProductSubcategoryID",
-         "ProductSubcategoryDescription"),
-     //"Sub Category",
-     new { @class = "mdb-select custom select-dropdown mdb-select-sublist form-control-plaintext", @searchable = "Search Sub Category", @multiple = "multiple", @id = "sublist", @selected = "" }
-    )
-        <button type="button" onclick="$.fn.filterBySubCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
-    </div>
-    <div class=" select-box-margin-bottom">
-        @Html.DropDownListFor(
-     vm => vm.SelectedProjects,
-     new SelectList(
-         Model.Projects,
-         "ProjectID",
-         "ProjectDescription"),
-     //"Project",
-     new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Projects", @multiple = "multiple" }
-    )
-        <button type="button" onclick="$.fn.filterByProject();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
-    </div>
-    <div class=" select-box-margin-bottom">
-        @Html.DropDownListFor(
-     vm => vm.SelectedSubProjects,
-     new SelectList(
-         Model.SubProjects,
-         "SubProjectID",
-         "SubProjectDescription"),
-     //"Sub Project",
-     new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Sub Projects", @multiple = "multiple" }
-    )
-        <button type="button" onclick="$.fn.filterBySubProject();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow ">Save</button>
-    </div>
+                Save
+            </button>
+        </div>
+        <div class=" select-box-margin-bottom">
+            <select asp-for="SelectedParentCategories" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlistMulitple">
+                <option disabled selected class="d-none" value="">Select Category</option>
+                @foreach (var p in Model.ParentCategories)
+                {
+                    <option value="@p.ParentCategoryID">@p.ParentCategoryDescription</option>
+                }
+            </select>
+            @*@Html.DropDownListFor(
+             vm => vm.SelectedParentCategories,
+             new SelectList(
+                 Model.ParentCategories,
+                 "ParentCategoryID",
+                 "ParentCategoryDescription"),
 
-    <div class=" select-box-margin-bottom">
-        @Html.DropDownListFor(
-     vm => vm.SelectedVendors,
-     new SelectList(
-         Model.Vendors,
-         "VendorID",
-         "VendorEnName"),
-     new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Vendors", @multiple = "multiple" }
-    )
+             new { @class = "mdb-select custom select-dropdown form-control-plaintext parentlistMulitple", @searchable = "Search Category", @multiple = "multiple", @id = "parentlistMulitple" }
+            )*@
+            <button type="button" onclick="$.fn.filterByParentCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
+        </div>
+        <div class=" select-box-margin-bottom">
+            <select asp-for="SelectedProductSubcategories" class="mdb-select custom select-dropdown form-control-plaintext" id="sublist" >
+                <option disabled selected class="d-none" value="">Select Sub Category</option>
+                @foreach (var p in Model.ProductSubcategories)
+                {
+                    <option value="@p.ProductSubcategoryID">@p.ProductSubcategoryDescription</option>
+                }
+            </select>
+            @*@Html.DropDownListFor(
+             vm => vm.SelectedProductSubcategories,
+             new SelectList(
+                 Model.ProductSubcategories,
+                 "ProductSubcategoryID",
+                 "ProductSubcategoryDescription"),
+             //"Sub Category",
+             new { @class = "mdb-select custom select-dropdown mdb-select-sublist form-control-plaintext", @searchable = "Search Sub Category", @multiple = "multiple", @id = "sublist", @selected = "" }
+            )*@
+            <button type="button" onclick="$.fn.filterBySubCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
+        </div>
+        <div class=" select-box-margin-bottom">
+            <select asp-for="SelectedProjects" class="mdb-select custom select-dropdown form-control-plaintext">
+                <option disabled selected class="d-none" value="">Select Project</option>
+                @foreach (var p in Model.Projects)
+                {
+                    <option value="@p.ProjectID">@p.ProjectDescription</option>
+                }
+            </select>
+            @*@Html.DropDownListFor(
+             vm => vm.SelectedProjects,
+             new SelectList(
+                 Model.Projects,
+                 "ProjectID",
+                 "ProjectDescription"),
+             //"Project",
+             new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Projects", @multiple = "multiple" }
+            )*@
+            <button type="button" onclick="$.fn.filterByProject();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
+        </div>
+        <div class=" select-box-margin-bottom">
+            <select asp-for="SelectedSubProjects" class="mdb-select custom select-dropdown form-control-plaintext">
+                <option disabled selected class="d-none" value="">Select Sub Sub Project</option>
+                @foreach (var p in Model.SubProjects)
+                {
+                    <option value="@p.SubProjectID">@p.SubProjectDescription</option>
+                }
+            </select>
+            @*@Html.DropDownListFor(
+             vm => vm.SelectedSubProjects,
+             new SelectList(
+                 Model.SubProjects,
+                 "SubProjectID",
+                 "SubProjectDescription"),
+             //"Sub Project",
+             new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Sub Projects", @multiple = "multiple" }
+            )*@
+            <button type="button" onclick="$.fn.filterBySubProject();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow ">Save</button>
+        </div>
+     
+        <div class=" select-box-margin-bottom">
+            <select asp-for="SelectedVendors" class="mdb-select custom select-dropdown form-control-plaintext">
+                <option disabled selected class="d-none" value="">Select Vendor</option>
+                @foreach (var v in Model.Vendors)
+                {
+                    <option value="@v.VendorID">@v.VendorEnName</option>
+                }
+            </select>
+            @*@Html.DropDownListFor(
+         vm => vm.SelectedVendors,
+         new SelectList(
+             Model.Vendors,
+             "VendorID",
+             "VendorEnName"),
+         new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Vendors", @multiple = "multiple" }
+        )*@
 
-    </div>
-    @*<div class=" select-box-margin-bottom">
+        </div>
+        @*<div class=" select-box-margin-bottom">
                @Html.DropDownListFor(
             vm => vm.AdvancedGraph,
             new SelectList(
@@ -129,13 +171,20 @@
            </div>*@
 
     <div class=" select-box-margin-bottom">
-        @Html.DropDownListFor(
+        <select asp-for="SelectedEmployees" class="mdb-select custom select-dropdown form-control-plaintext">
+            <option disabled selected class="d-none" value="">Select Worker</option>
+            @foreach (var e in Model.Employees)
+            {
+                <option value="@e.Value">@e.Text</option>
+            }
+        </select>
+        @*@Html.DropDownListFor(
      vm => vm.SelectedEmployees,
      Model.Employees,
      new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Sub Projects", @multiple = "multiple" }
-    )
+    )*@
     </div>
-</div>
+    </div>
  @if (AppUtility.IsAjaxRequest(Context.Request))
 {
     <script >

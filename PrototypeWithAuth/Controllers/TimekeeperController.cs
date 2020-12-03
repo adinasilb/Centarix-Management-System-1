@@ -447,6 +447,12 @@ namespace PrototypeWithAuth.Controllers
     }
     [HttpGet]
     [Authorize(Roles = "Admin, TimeKeeper")]
+    public async Task<IActionResult> SickDayConfirmModal(String PageType, DateTime? date)
+    {
+        return PartialView("SickDayConfirmModal", new SickDayViewModel { PageType = PageType, SelectedDate = date ?? DateTime.Now });
+    }
+    [HttpGet]
+    [Authorize(Roles = "Admin, TimeKeeper")]
     public async Task<IActionResult> ExitModal()
     {
         var userID = _userManager.GetUserId(User);
@@ -481,8 +487,15 @@ namespace PrototypeWithAuth.Controllers
         SaveOffDay(dateFrom, dateTo, 1);
         return RedirectToAction(PageType,  new { Month = new DateTime(DateTime.Now.Year, month??DateTime.Now.Month, 1 )});
     }
+    [HttpPost]
+    [Authorize(Roles = "Admin, TimeKeeper")]
+    public IActionResult SickDayConfirmModal(DateTime dateFrom, String PageType, int? month)
+    {
+        SaveOffDay(dateFrom, new DateTime(), 1);
+        return RedirectToAction(PageType, new { Month = new DateTime(DateTime.Now.Year, month ?? DateTime.Now.Month, 1) });
+    }
 
-    private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, int offDayTypeID)
+        private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, int offDayTypeID)
     {
         var userID = _userManager.GetUserId(User);
             var companyDaysOff = new List<DateTime>();

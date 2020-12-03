@@ -5,6 +5,7 @@ $(function () {
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
 		if (element.hasClass('select-dropdown')) {
 			error.insertAfter(element);
+			console.log(error)
 		} else {
 			error.insertAfter(element);
 		}
@@ -69,7 +70,6 @@ $(function () {
 		if ($(this).rules()) {
 			$(this).valid();
 		}
-
 	});
 
 	function isInteger(n) {

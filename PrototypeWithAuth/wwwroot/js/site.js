@@ -1757,7 +1757,22 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
+	$(".confirm-report-sick").off('click').click(function (e) {
 
+		$("#loading").show();
+		var pageType = "";
+		var selectedDate = null;
+		if ($(this).hasClass("SummaryHours")) {
+			selectedDate = $(this).val();
+			console.log("selecteddate: " + selectedDate)
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportDaysOff")) {
+			pageType = "ReportDaysOff";
+		}
+		var itemurl = "SickDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
+		$.fn.CallModal(itemurl);
+	});
 	$("body").on("change", "#Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
 	});
@@ -1933,22 +1948,55 @@ $(function () {
 			pageType = "ReportDaysOff";
 		}
 
-		$.fn.SaveOffDays("SaveVacation", pageType,"");
+		$.fn.SaveOffDays("SaveVacation", pageType, "");
 	});
-	$("body").off('click').on("click", "#saveSick", function (e) {
-		e.preventDefault();
+	$.fn.SaveSick = function () {
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
 			var month = $('#months').val();
-			console.log("month: "+month)
+			console.log("month: " + month);
 			pageType = "SummaryHours";
 		}
 		if ($(this).hasClass("ReportDaysOff")) {
 			pageType = "ReportDaysOff";
 		}
 		$.fn.SaveOffDays("SaveSick", pageType, month);
+	}
+
+	$("body").off('click').on("click", "#saveSick", function (e) {
+		e.preventDefault();
+		$.fn.SaveSick();
 	});
 
+	$("body").off('click').on("click", "#saveSickConfirmation", function (e) {
+		e.preventDefault();
+		var pageType = "";
+		if ($(this).hasClass("SummaryHours")) {
+			var month = $('#months').val();
+			console.log("month: " + month);
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportDaysOff")) {
+			pageType = "ReportDaysOff";
+		}
+		//alert($('#SelectedDate').val())
+		var date = $('#SelectedDate').val();
+		var dd = parseInt(date[2]);
+		var mm = parseInt(date[1]);
+		var yyyy = parseInt(date[0]);
+		var dateFrom = new Date(yyyy, mm, dd);
+		$.ajax({
+			async: true,
+			url: "/Timekeeper/SickDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + month,
+			type: 'POST',
+			cache: false,
+			success: function (data) {
+				$(".modal").modal('hide');
+				$(".render-body").html(data);
+
+			}
+		});
+	});
 	$(".approve-hours").off('click').click(function (e) {
 		$.ajax({
 			async: true,
@@ -2282,4 +2330,5 @@ $(function () {
 	
 
 });
+
 

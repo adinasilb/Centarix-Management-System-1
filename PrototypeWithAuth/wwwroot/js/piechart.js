@@ -7,7 +7,7 @@
 			},
 			"Currency": {
 				selectRequired: true,
-			}
+			},
 		}
 	});
 

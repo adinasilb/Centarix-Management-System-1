@@ -5,7 +5,6 @@
 @model PrototypeWithAuth.ViewModels.SummaryHoursViewModel
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-<script src="~/js/validate.js" asp-append-version="true"></script>
 
 <div class="row mt-6 p-3 text-center">
     <div class="col-4 pl-5 text-left">
@@ -34,9 +33,9 @@
             @eh.OffDayType?.Description
         </div>
         <div class="col-3 p-0">
-            @if (eh.Entry1 == null && eh.OffDayType == null)
+            @if ((eh.Entry1 == null || eh.TotalHours==null) && eh.OffDayType == null)
             {
-                <button type="button" class="custom-clear-button-table table-button timekeeper-font-color report-sick-days @AppUtility.TimeKeeperSidebarEnum.SummaryHours" style="background: transparent; border: .125rem solid var(--timekeeper-color);" value="@eh.Date.ToString("yyyy-MM-dd")">Report Sick</button>
+                <button type="button" class="custom-clear-button-table table-button timekeeper-font-color confirm-report-sick @AppUtility.TimeKeeperSidebarEnum.SummaryHours" style="background: transparent; border: .125rem solid var(--timekeeper-color);" value="@eh.Date.ToString("yyyy-MM-dd")">Report Sick</button>
             }
             @eh.Entry1?.ToShortTimeString()
             <br />
