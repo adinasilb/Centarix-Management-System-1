@@ -80,12 +80,10 @@
             $("input[data-activates='select-options-Years']").val('')
 
             $(".months-selected").each(function () {
-                alert("month: " + $(this).val());
                 $("#Months option[value='" + $(this).val() + "']").attr("selected", true);
             });
 
             $(".years-selected").each(function () {
-                alert("years: " + $(this).val());
                 $("#select-years option[value='" + $(this).val() + "']").attr("selected", true);
             });
             //$.fn.ChangeCheckboxesToFilledInWithoutMDB();
@@ -93,7 +91,6 @@
 
         //$("#click-me").on("click", function () {
         //    var searchvalue = $("span[role='searchbox'] input");
-        //    alert("searchvalue: " + searchvalue.val());
         //    //searchvalue.focus();
         //    //searchvalue.parent().addClass("hidden"); <--works just need to do the other part first
         //    //$(".change-month").val("3");

@@ -9,6 +9,11 @@
 {
     <input type="hidden" asp-for="Months[m]" class="months-selected" />
 }
+@for (int y = 0; y < Model.Years.Count; y++)
+{
+    <input type="hidden" asp-for="Years[y]" class="years-selected" />
+}
+
 
 <table class="table table-headerspaced table-noheaderlines table-hover ">
     <thead>

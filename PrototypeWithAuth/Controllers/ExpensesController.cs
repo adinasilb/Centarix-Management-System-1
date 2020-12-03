@@ -580,24 +580,24 @@ namespace PrototypeWithAuth.Controllers
 
             var employees = await _context.Employees.ToListAsync();
             var categoryTypes = await _context.CategoryTypes.ToListAsync();
-            var months = new List<int> { 9 };
-            var year = DateTime.Today.Year;
+            var months = new List<int> { DateTime.Today.Month };
+            var years = new List<int> { DateTime.Today.Year };
 
-            return View(GetStatisticsWorkerViewModel(employees, categoryTypes, months, year));
+            return View(GetStatisticsWorkerViewModel(employees, categoryTypes, months, years));
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public async Task<IActionResult> _StatisticsWorkerChart(List<int> CategoryTypeIDs, List<int> Months, int Year)
+        public async Task<IActionResult> _StatisticsWorkerChart(List<int> CategoryTypeIDs, List<int> Months, List<int> Years)
         {
             var employees = await _context.Employees.ToListAsync();
             var categoryTypes = await _context.CategoryTypes.Where(ct => CategoryTypeIDs.Contains(ct.CategoryTypeID)).ToListAsync();
 
-            return PartialView(GetStatisticsWorkerViewModel(employees, categoryTypes, Months, Year));
+            return PartialView(GetStatisticsWorkerViewModel(employees, categoryTypes, Months, Years));
         }
 
 
-        public StatisticsWorkerViewModel GetStatisticsWorkerViewModel(List<Employee> Employees, List<CategoryType> CategoryTypes, List<int> Months, int Year)
+        public StatisticsWorkerViewModel GetStatisticsWorkerViewModel(List<Employee> Employees, List<CategoryType> CategoryTypes, List<int> Months, List<int> Years)
         {
             Dictionary<Employee, List<Request>> EmployeeRequests = new Dictionary<Employee, List<Request>>();
 
@@ -607,7 +607,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.ApplicationUserCreator.Id == employee.Id)
                     .Where(r => CategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryType))
                     .Where(r => r.Invoice != null)
-                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == Year)
+                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => Years.Contains(r.Invoice.InvoiceDate.Year))
                     .ToList();
                 EmployeeRequests.Add(employee, requests);
             }
@@ -618,7 +618,7 @@ namespace PrototypeWithAuth.Controllers
                 CategoryTypesSelected = CategoryTypes,
                 CategoryTypes = _context.CategoryTypes.ToList(),
                 Months = Months,
-                Year = Year
+                Years = Years
             };
 
             return statisticsWorkerViewModel;

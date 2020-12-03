@@ -12,7 +12,8 @@
 	});
 
 	$.fn.GetStatisticsWorkerChartPartial = function () {
-		var year = $("#select-years").val();
+		var years = [];
+		years = $("#select-years").val();
 		var months = [];
 		months = $("#Months").val();
 		var catTypes = [];
@@ -26,7 +27,7 @@
 			type: 'GET',
 			traditional: true,
 			cache: false,
-			data: { CategoryTypeIDs: catTypes, Months: months, Year: year },
+			data: { CategoryTypeIDs: catTypes, Months: months, Years: years },
 			success: function (data) {
 				$(".statistics-worker-chart").empty();
 				$(".statistics-worker-chart").html(data);
