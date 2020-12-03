@@ -1,8 +1,85 @@
-﻿
+﻿@using PrototypeWithAuth.ViewModels;
+@model StatisticsVendorViewModel;
+
 @{
     ViewData["Title"] = "StatisticsVendor";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+<script src="~/js/statisticsvendor.js"></script>
+<input type="hidden" class="setupdropdowns" value="true" />
+<div class="container-fluid">
 
-<h1>StatisticsVendor</h1>
+    <div class="row under-row-margin">
+        <div class="col-6 heading-1 p-0">
+        </div>
+        <div class="col-6 p-0">
 
+            @{
+                var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
+            }
+
+            @Html.DropDownList("select-years", years.Select(x =>
+ new SelectListItem
+ {
+     Text = x.ToString(),
+     Value = x.ToString()
+ }
+), htmlAttributes: new
+     {
+         @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right change-year",
+  @multiple = "multiple",
+         @name = "SelectedYear",
+         @searchable = "Search here.."
+     })
+
+
+            @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+            @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
+                new SelectListItem
+                {
+                    Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+                    Value = m.ToString(),
+                    //Selected = Model.Months
+                }),
+                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
+
+            @Html.DropDownListFor(m => m.CategoryTypesSelected,
+            new SelectList(
+                Model.CategoryTypes,
+                "CategoryTypeID",
+                "CategoryTypeDescription"),
+            new { @class = "expenses mdb-select custom select-dropdown form-control-plaintext reports-filters mr-3 float-right", @multiple = "multiple" }
+            )
+
+            @*</div>
+                <div class="col-1 p-0 monthsHours">*@
+
+        </div>
+
+    </div>
+</div>
+<div class="row statistics-vendor-chart">
+    @{ await Html.RenderPartialAsync("_VendorsTable", Model);}
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $.fn.SetUpDropdowns = function () {
+            //$("input[data-activates='select-options-CategoryTypesSelected']").attr('placeholder', "Category Type")
+            //$("input[data-activates='select-options-CategoryTypesSelected']").val('')
+
+            $(".category-type-selected").each(function () {
+                $("#CategoryTypesSelected option[value='" + $(this).val() + "']").attr("selected", true);
+            });
+
+            $(".months-selected").each(function () {
+                $("#Months option[value='" + $(this).val() + "']").attr("selected", true);
+            });
+
+            $(".years-selected").each(function () {
+                $("#select-years option[value='" + $(this).val() + "']").attr("selected", true);
+            });
+        };
+
+    })
+</script>

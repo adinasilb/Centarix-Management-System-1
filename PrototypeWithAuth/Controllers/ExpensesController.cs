@@ -334,7 +334,7 @@ namespace PrototypeWithAuth.Controllers
 
                 }
             }
-            
+
             return pieChartViewModel;
         }
 
@@ -704,8 +704,49 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsVendor.ToString();
-            return View();
+
+            var catTypes = _context.CategoryTypes.ToList();
+
+            return View(GetStatisticsVendorViewModel(catTypes, new List<int> { DateTime.Now.Month }, new List<int> { DateTime.Now.Year }));
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, CEO, Expenses")]
+        public IActionResult _VendorsTable(List<int> CategoryTypes, List<int> Months, List<int> Years)
+        {
+            var catTypes = _context.CategoryTypes.Where(ct => CategoryTypes.Contains(ct.CategoryTypeID)).ToList();
+            return PartialView(GetStatisticsVendorViewModel(catTypes, Months, Years));
+        }
+
+        public StatisticsVendorViewModel GetStatisticsVendorViewModel(List<CategoryType> CategoryTypes, List<int> Months, List<int> Years)
+        {
+            Dictionary<Vendor, List<Request>> VendorRequests = new Dictionary<Vendor, List<Request>>();
+
+            foreach (var vendor in _context.Vendors.ToList())
+            {
+                var requests = _context.Requests
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                .Where(r => r.Product.Vendor.VendorID == vendor.VendorID)
+                .Where(r => CategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryType))
+                .Where(r => r.Invoice != null)
+                .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => Years.Contains(r.Invoice.InvoiceDate.Year))
+                   .ToList();
+                VendorRequests.Add(vendor, requests);
+            }
+
+            StatisticsVendorViewModel svvm = new StatisticsVendorViewModel()
+            {
+                Vendors = VendorRequests,
+                CategoryTypesSelected = CategoryTypes,
+                CategoryTypes = _context.CategoryTypes.ToList(),
+                Months = Months,
+                Years = Years
+            };
+            return svvm;
+        }
+
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult CostsProject()

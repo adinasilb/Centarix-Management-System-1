@@ -1,0 +1,62 @@
+﻿@model PrototypeWithAuth.ViewModels.StatisticsVendorViewModel;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@for (int c = 0; c < Model.CategoryTypesSelected.Count; c++)
+{
+    <input type="hidden" asp-for="CategoryTypesSelected[c].CategoryTypeID" class="category-type-selected" />
+}
+@for (int m = 0; m < Model.Months.Count; m++)
+{
+    <input type="hidden" asp-for="Months[m]" class="months-selected" />
+}
+@for (int y = 0; y < Model.Years.Count; y++)
+{
+    <input type="hidden" asp-for="Years[y]" class="years-selected" />
+}
+
+
+<table class="table table-headerspaced table-noheaderlines table-hover ">
+    <thead>
+        <tr class="text-center">
+            <th></th>
+            <th>Name</th>
+            <th>Number of Orders</th>
+            <th>Number of Items</th>
+            <th>Total</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vendor in Model.Vendors)
+        {
+            <tr class="text-center">
+                <td class="py-2">
+                    @{
+                        var src = "/UserImages/user-image-placeholder.png";
+                        //if (vendor.Key.UserImage != null)
+                        //{
+                        //    src = employee.Key.UserImage;
+                        //}
+                    }
+                    <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
+                </td>
+                <td class="p-0">
+                    @vendor.Key.VendorEnName
+                    @vendor.Key.VendorHeName
+                </td>
+                <td class="p-0">
+                    @vendor.Value.Count()
+                </td>
+                <td class="p-0">
+                    @vendor.Value.Select(r => r.Product).Distinct().Count()
+                </td>
+                <td class="p-0">
+                    &#8362; @string.Format("{0:n0}", vendor.Value.Sum(r => r.Cost))
+                </td>
+                <td class="p-0">
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
