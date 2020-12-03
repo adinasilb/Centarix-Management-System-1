@@ -34,10 +34,11 @@
  new SelectListItem
  {
      Text = x.ToString(),
-     Value = x.ToString(),
-     Selected = (x == curYear)
+     Value = x.ToString()
+     //TODO : set selected in javascript
  }
-), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right ml-3 change-year", @name = "SelectedYear", @searchable = "Search here.." })
+), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right ml-3 change-year",
+    @multiple="multiple", @name = "SelectedYear", @searchable = "Search here.." })
 
             @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
             @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
@@ -75,11 +76,18 @@
         $.fn.SetUpDropdowns = function () {
             $("input[data-activates='select-options-Months']").attr('placeholder', "Months")
             $("input[data-activates='select-options-Months']").val('')
+            $("input[data-activates='select-options-Years']").attr('placeholder', "Years")
+            $("input[data-activates='select-options-Years']").val('')
 
             $(".months-selected").each(function () {
+                alert("month: " + $(this).val());
                 $("#Months option[value='" + $(this).val() + "']").attr("selected", true);
             });
 
+            $(".years-selected").each(function () {
+                alert("years: " + $(this).val());
+                $("#select-years option[value='" + $(this).val() + "']").attr("selected", true);
+            });
             //$.fn.ChangeCheckboxesToFilledInWithoutMDB();
         };
 

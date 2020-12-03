@@ -470,19 +470,19 @@ namespace PrototypeWithAuth.Controllers
                 .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
                 .ToList();
 
-            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { DateTime.Now.Month }, 2020));
+            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Now.Year }));
         }
 
-        public IActionResult _StatisticsProjects(List<int> Months, int Year)
+        public IActionResult _StatisticsProjects(List<int> Months, List<int> Years)
         {
             var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
                 .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
                 .ToList();
 
-            return PartialView(GetStatisticsProjectViewModel(AllProjects, Months, Year));
+            return PartialView(GetStatisticsProjectViewModel(AllProjects, Months, Years));
         }
 
-        public static StatisticsProjectViewModel GetStatisticsProjectViewModel(List<Project> AllProjects, List<int> Months, int Year)
+        public static StatisticsProjectViewModel GetStatisticsProjectViewModel(List<Project> AllProjects, List<int> Months, List<int> Years)
         {
 
             //var MatchingRequests = _context.Requests.Where(r => r.Invoice.InvoiceDate.Month == 9).ToList();
@@ -496,7 +496,7 @@ namespace PrototypeWithAuth.Controllers
                     sp => sp.Requests
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
-                    .Where(r => r.Invoice?.InvoiceDate.Year == Year)
+                    .Where(r => Years.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Year)))
                     ).ToList();
                 Projects.Add(project, MonthlyRequestsInProject);
             }
@@ -505,7 +505,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 Projects = Projects,
                 Months = Months,
-                Year = Year
+                Years = Years
             };
 
             return statisticsProjectViewModel;
@@ -513,7 +513,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult _StatisticsSubProjects(int ProjectID, List<int> Months, int Year)
+        public IActionResult _StatisticsSubProjects(int ProjectID, List<int> Months, List<int> Years)
         {
             Dictionary<SubProject, List<Request>> subProjectRequests = new Dictionary<SubProject, List<Request>>();
 
@@ -526,7 +526,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.SubProjectID == subproject.SubProjectID)
                     .Where(r => r.InvoiceID != null)
                     .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month))
-                    .Where(r => r.Invoice.InvoiceDate.Year == Year).ToList();
+                    .Where(r => Years.Contains(r.Invoice.InvoiceDate.Year)).ToList();
                 subProjectRequests.Add(subproject, requests);
             }
 

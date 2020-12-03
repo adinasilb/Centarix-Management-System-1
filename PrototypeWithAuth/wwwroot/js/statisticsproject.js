@@ -5,7 +5,11 @@
 		$(".months-selected").each(function () {
 			months.push($(this).val());
 		});
-		var year = $("#Year").val();
+		var years = [];
+		$(".years-selected").each(function () {
+			years.push($(this).val());
+		});
+		//var year = $("#Year").val();
 
 		//set the view:
 		var colorClass = "graduated-table-background-color";
@@ -27,7 +31,7 @@
 			type: 'GET',
 			cache: false,
 			traditional: true,
-			data: { ProjectID: projectId, Months: months, Year: year },
+			data: { ProjectID: projectId, Months: months, Years: years },
 			success: function (data) {
 				$(".subprojects-table").empty();
 				$(".subprojects-table").html(data);
@@ -54,7 +58,8 @@
 	$.fn.CallProjectsPartialView = function () {
 		var months = [];
 		months = $("#Months").val();
-		var year = $("#select-years").val();
+		var years = [];
+		years = $("#select-years").val();
 
 		var url = "/Expenses/_StatisticsProjects";
 
@@ -64,7 +69,7 @@
 			type: 'GET',
 			traditional: true,
 			cache: false,
-			data: { Months: months, Year: year },
+			data: { Months: months, Years: years },
 			success: function (data) {
 				$(".projects-table").empty();
 				$(".projects-table").html(data);
