@@ -176,14 +176,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                                 //adding the amount of months of the warranty to the invoice date
                                 var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                             }*@
-                        <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty ?? 0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                        <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty ?? 0).ToString("dd/mm/yyyy")" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                     </div>
                 }
                 else
                 {
                     <div class="col-3">
                         <label class="control-label">Estimated End Date</label>
-                        <input value="@DateTime.Now.AddMonths(Model.Request.Warranty ?? 0).ToString("yyyy-MM-dd")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                        <input value="@DateTime.Now.AddMonths(Model.Request.Warranty ?? 0).ToString("dd/mm/yyyy")" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                     </div>
                 }
 
@@ -824,7 +824,7 @@ Model.UnitTypeList,
         <div class="row modal-tab-name">
             <span class="heading-1 col-12 modal-tab-name float-left">Comments and Ratings</span>
         </div>
-        <div class=" container text-right">
+        <div class=" container text-right p-0">
             <ul class="list-unstyled">
                 <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--order-inv-color);">   +</button></li>
 

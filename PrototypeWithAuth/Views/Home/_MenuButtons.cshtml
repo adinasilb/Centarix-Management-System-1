@@ -12,7 +12,7 @@
             {
 
                     <div class="col-4 py-3 module-button-div text-center d-inline-block" >
-                        <a class="module-button bold-hover-effects  text-center"  href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class=" px-3" height="50" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span class="m-auto text-nowrap text-center d-inline-block" style="width: calc(80%); text-overflow: ellipsis; font-size: 14px; overflow: hidden; ">@Model.ElementAt(i).MenuViewName</span></a>
+                        <a class="module-button text-center"  href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class=" px-3" height="50" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span class="m-auto text-nowrap text-center d-inline-block" style="width: calc(80%); text-overflow: ellipsis; font-size: 14px; overflow: hidden; ">@Model.ElementAt(i).MenuViewName</span></a>
                     </div>
 
             }

@@ -308,16 +308,16 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 ID = "reports-link"
             });
-            if (MainMenu == AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Summary",
-                Controller = "Timekeeper",
-                Action = "Documents",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                ID = "summary-link"
-            });
+            //if (MainMenu == AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //MainMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Summary",
+            //    Controller = "Timekeeper",
+            //    Action = "Documents",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    ID = "summary-link"
+            //});
 
             return MainMenuItems;
         }
