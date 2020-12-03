@@ -12,6 +12,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<CategoryType> CategoryTypes { get; set; }
         public List<CategoryType> CategoryTypeSelected { get; set; }
         public List<int> Months { get; set; }
-        public int Year { get; set; }
+        public List<int> Years { get; set; }
     }
 }

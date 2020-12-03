@@ -636,19 +636,19 @@ namespace PrototypeWithAuth.Controllers
             var parentCategories = _context.ParentCategories.ToList();
             var catTypes = _context.CategoryTypes.Select(ct => ct.CategoryTypeID).ToList();
 
-            return View(GetStatisticsCategoryViewModel(parentCategories, catTypes, new List<int>() { DateTime.Now.Month }, DateTime.Today.Year));
+            return View(GetStatisticsCategoryViewModel(parentCategories, catTypes, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Today.Year }));
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult _CategoryTypes(List<int> categoryTypes, List<int> months, int year)
+        public IActionResult _CategoryTypes(List<int> categoryTypes, List<int> months, List<int> years)
         {
             var parentCategories = _context.ParentCategories.ToList();
 
-            return PartialView(GetStatisticsCategoryViewModel(parentCategories, categoryTypes, months, year));
+            return PartialView(GetStatisticsCategoryViewModel(parentCategories, categoryTypes, months, years));
         }
 
-        public StatisticsCategoryViewModel GetStatisticsCategoryViewModel(List<ParentCategory> parentCategories, List<int> categoryTypes, List<int> months, int year)
+        public StatisticsCategoryViewModel GetStatisticsCategoryViewModel(List<ParentCategory> parentCategories, List<int> categoryTypes, List<int> months, List<int> years)
         {
             Dictionary<ParentCategory, List<Request>> ParentCategories = new Dictionary<ParentCategory, List<Request>>();
             foreach (var pc in parentCategories)
@@ -657,7 +657,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
                     .Where(r => r.Invoice != null)
-                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == year)
+                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => years.Contains(r.Invoice.InvoiceDate.Year))
                     .ToList();
                 ParentCategories.Add(pc, pcRequests);
             }
@@ -667,14 +667,14 @@ namespace PrototypeWithAuth.Controllers
                 Months = months,
                 CategoryTypes = _context.CategoryTypes.ToList(),
                 CategoryTypeSelected = _context.CategoryTypes.Where(ct => categoryTypes.Contains(ct.CategoryTypeID)).ToList(),
-                Year = year
+                Years = years
             };
             return statisticsCategoryViewModel;
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult _SubCategoryTypes(int ParentCategoryId, List<int> categoryTypes, List<int> months, int year)
+        public IActionResult _SubCategoryTypes(int ParentCategoryId, List<int> categoryTypes, List<int> months, List<int> years)
         {
             var subCategories = _context.ProductSubcategories.Where(sc => sc.ParentCategoryID == ParentCategoryId).ToList();
             Dictionary<ProductSubcategory, List<Request>> productSubs = new Dictionary<ProductSubcategory, List<Request>>();
@@ -684,7 +684,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
                     .Where(r => r.Invoice != null)
-                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == year)
+                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => years.Contains(r.Invoice.InvoiceDate.Year))
                     .ToList();
                 productSubs.Add(sc, scRequests);
             }

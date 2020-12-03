@@ -272,9 +272,6 @@
             $('#dtBasicExample').DataTable();
             $('.dataTables_length').addClass('bs-select');
             $.fn.ChangeCheckboxesToFilledIn()
-            if ($(".setupdropdowns").val()) {
-                $.fn.SetUpDropdowns();
-            }
             $.fn.setUpChartDDlPlaceholders()
             //$('.mdb-select').focusin(function () { $('.search-wrap input.search').focus() });
             $('.timekeeper .dropdown-content').removeClass('w-100');
@@ -358,16 +355,22 @@
         $.fn.ChangeCheckboxesToFilledInWithoutMDB = function () {
             console.log("in change checkboxes to filled in");
             var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
-            console.log
             dropdown.addClass("filled-in");
             $(".multiple-select-dropdown li span").replaceWith(function () {
                 return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
             });
-
+            $(".multiple-select-dropdown li").each(function () {
+                if ($(this).attr("aria-selected") == "true") {
+                    $(this).children(".form-check").children("input[type='checkbox']").attr('checked', 'checked');
+                }
+            });
         };
 
         $.fn.ChangeCheckboxesToFilledIn = function () {
             console.log("in change checkboxes to be filled in");
+            if ($(".setupdropdowns").val()) {
+                $.fn.SetUpDropdowns();
+            }
             $('.mdb-select').materialSelect();
             $.fn.ChangeCheckboxesToFilledInWithoutMDB();
         };

@@ -7,7 +7,10 @@
 		});
 		var catTypes = [];
 		catTypes = $("#CategoryTypeSelected").val();
-		var year = $("#select-years").val();
+		var years = [];
+		$(".years-selected").each(function () {
+			years.push($(this).val());
+		});
 
 		//set the view:
 		var colorClass = "graduated-table-background-color";
@@ -29,7 +32,7 @@
 			type: 'GET',
 			traditional: true,
 			cache: false,
-			data: { ParentCategoryId: parentCatID, categoryTypes: catTypes, Months: months, year, year },
+			data: { ParentCategoryId: parentCatID, categoryTypes: catTypes, Months: months, years, years },
 			success: function (data) {
 				$(".subcat-table").empty();
 				$(".subcat-table").html(data);
@@ -39,7 +42,8 @@
 
 
 	$.fn.GetStatisticsCategoryPartial = function () {
-		var year = $("#select-years").val();
+		var years = [];
+		years = $("#select-years").val();
 		var months = [];
 		months = $("#Months").val();
 		var catTypes = [];
@@ -53,7 +57,7 @@
 			type: 'GET',
 			traditional: true,
 			cache: false,
-			data: { categoryTypes: catTypes, months: months, year: year },
+			data: { categoryTypes: catTypes, months: months, years: years },
 			success: function (data) {
 				$(".subcat-table").empty();
 				$(".cat-table").empty();

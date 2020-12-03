@@ -37,8 +37,13 @@
      Value = x.ToString()
      //TODO : set selected in javascript
  }
-), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right ml-3 change-year",
-    @multiple="multiple", @name = "SelectedYear", @searchable = "Search here.." })
+), htmlAttributes: new
+     {
+         @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right ml-3 change-year",
+    @multiple = "multiple",
+         @name = "SelectedYear",
+         @searchable = "Search here.."
+     })
 
             @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
             @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
@@ -70,43 +75,18 @@
     </div>
 </div>
 
+    <script type="text/javascript">
+        $(function () {
+            $.fn.SetUpDropdowns = function () {
+                $(".months-selected").each(function () {
+                    $("#Months option[value='" + $(this).val() + "']").attr("selected", true);
+                });
 
-<script type="text/javascript">
-    $(function () {
-        $.fn.SetUpDropdowns = function () {
-            $("input[data-activates='select-options-Months']").attr('placeholder', "Months")
-            $("input[data-activates='select-options-Months']").val('')
-            $("input[data-activates='select-options-Years']").attr('placeholder', "Years")
-            $("input[data-activates='select-options-Years']").val('')
+                $(".years-selected").each(function () {
+                    $("#select-years option[value='" + $(this).val() + "']").attr("selected", true);
+                });
+                //$.fn.ChangeCheckboxesToFilledInWithoutMDB();
+            };
 
-            $(".months-selected").each(function () {
-                $("#Months option[value='" + $(this).val() + "']").attr("selected", true);
-            });
-
-            $(".years-selected").each(function () {
-                $("#select-years option[value='" + $(this).val() + "']").attr("selected", true);
-            });
-            //$.fn.ChangeCheckboxesToFilledInWithoutMDB();
-        };
-
-        //$("#click-me").on("click", function () {
-        //    var searchvalue = $("span[role='searchbox'] input");
-        //    //searchvalue.focus();
-        //    //searchvalue.parent().addClass("hidden"); <--works just need to do the other part first
-        //    //$(".change-month").val("3");
-        //});
-
-        //$.fn.ChangeCheckboxesToFilledIn = function () {
-        //    console.log("in change checkboxes to filled in");
-        //    var dropdown = $(".multiple-select-dropdown li span input.form-check-input");
-        //    console.log
-        //    dropdown.addClass("filled-in");
-        //    $(".multiple-select-dropdown li span").replaceWith(function () {
-        //        return "<div class='form-check pl-0 py-2'>" + this.innerHTML + "</div>";
-        //    });
-
-        //};
-
-
-    })
-</script>
+        })
+    </script>
