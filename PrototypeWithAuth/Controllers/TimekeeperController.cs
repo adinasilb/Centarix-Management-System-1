@@ -410,7 +410,7 @@ namespace PrototypeWithAuth.Controllers
             employeeHoursAwaitingApproval.Exit1 = employeeHours.Exit1;
             employeeHoursAwaitingApproval.Exit2 = employeeHours.Exit2;
             employeeHoursAwaitingApproval.TotalHours = employeeHours.TotalHours;
-            employeeHoursAwaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
+            employeeHoursAwaitingApproval.OffDayTypeID = null;
             employeeHoursAwaitingApproval.Date = employeeHours.Date;
             employeeHoursAwaitingApproval.EmployeeHoursStatusID = employeeHours.EmployeeHoursStatusID;
         }
@@ -421,7 +421,7 @@ namespace PrototypeWithAuth.Controllers
             awaitingApproval.Entry2 = employeeHours.Entry2;
             awaitingApproval.Exit2 = employeeHours.Exit2;
             awaitingApproval.TotalHours = employeeHours.TotalHours;
-            awaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
+            awaitingApproval.OffDayTypeID = null;
             employeeHoursAwaitingApproval = awaitingApproval;
         }
         DateTime Month = employeeHoursAwaitingApproval.Date;
@@ -495,67 +495,67 @@ namespace PrototypeWithAuth.Controllers
         return RedirectToAction(PageType, new { Month = new DateTime(DateTime.Now.Year, month ?? DateTime.Now.Month, 1) });
     }
 
-        private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, int offDayTypeID)
+    private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, int offDayTypeID)
     {
         var userID = _userManager.GetUserId(User);
-            var companyDaysOff = new List<DateTime>();
-            EmployeeHours employeeHour = null;
+        var companyDaysOff = new List<DateTime>();
+        EmployeeHours employeeHour = null;
         if (dateTo == new DateTime())
+        {
+            if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
             {
-                if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
+                companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date == dateFrom).ToList();
+                employeeHour = _context.EmployeeHours.Where(eh => eh.Date.Date == dateFrom.Date && eh.EmployeeID == userID).FirstOrDefault();
+                if (employeeHour == null)
                 {
-                    companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date == dateFrom).ToList();
-                    employeeHour = _context.EmployeeHours.Where(eh => eh.Date.Date == dateFrom.Date && eh.EmployeeID == userID).FirstOrDefault();
-                    if (employeeHour == null)
+                    employeeHour = new EmployeeHours
                     {
-                        employeeHour = new EmployeeHours
-                        {
-                            EmployeeID = userID,
-                            Date = dateFrom
-                        };
-                    }
-                    employeeHour.OffDayTypeID = offDayTypeID;
-                    _context.Update(employeeHour);
-                    _context.SaveChanges();
+                        EmployeeID = userID,
+                        Date = dateFrom
+                    };
                 }
+                employeeHour.OffDayTypeID = offDayTypeID;
+                _context.Update(employeeHour);
+                _context.SaveChanges();
+            }
             return true;
         }
         else
         {
             var employeeHours = _context.EmployeeHours.Where(eh => (eh.Date.Date >= dateFrom && eh.Date.Date <= dateTo) && eh.EmployeeID == userID);
-                companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date >= dateFrom && d.Date<=dateTo).ToList();
-                while (dateFrom <= dateTo)
+            companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date >= dateFrom && d.Date <= dateTo).ToList();
+            while (dateFrom <= dateTo)
             {
-                    if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
-                    {
+                if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
+                {
 
-                        if (employeeHours.Count() > 0)
-                        {
-                            employeeHour = employeeHours.Where(eh => eh.Date == dateFrom).FirstOrDefault();
-                            if (employeeHour == null)
-                            {
-                                employeeHour = new EmployeeHours
-                                {
-                                    EmployeeID = userID,
-                                    Date = dateFrom
-                                };
-                            }
-                            employeeHour.OffDayTypeID = offDayTypeID;
-                        }
-                        else
+                    if (employeeHours.Count() > 0)
+                    {
+                        employeeHour = employeeHours.Where(eh => eh.Date == dateFrom).FirstOrDefault();
+                        if (employeeHour == null)
                         {
                             employeeHour = new EmployeeHours
                             {
                                 EmployeeID = userID,
-                                OffDayTypeID = offDayTypeID,
                                 Date = dateFrom
                             };
                         }
-                        _context.Update(employeeHour);
-
+                        employeeHour.OffDayTypeID = offDayTypeID;
                     }
-                    dateFrom = dateFrom.AddDays(1);
+                    else
+                    {
+                        employeeHour = new EmployeeHours
+                        {
+                            EmployeeID = userID,
+                            OffDayTypeID = offDayTypeID,
+                            Date = dateFrom
+                        };
+                    }
+                    _context.Update(employeeHour);
+
                 }
+                dateFrom = dateFrom.AddDays(1);
+            }
             _context.SaveChanges();
             return true;
         }

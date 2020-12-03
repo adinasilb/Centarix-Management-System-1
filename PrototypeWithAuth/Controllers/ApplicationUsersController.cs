@@ -174,6 +174,18 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersAwaitingApproval;
 
+            List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = GetAwaitingApprovalModel();
+            return View(awaitingApproval);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> _AwaitingApproval()
+        {
+            List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = GetAwaitingApprovalModel();
+            return PartialView(awaitingApproval);
+        }
+        private List<EmployeeHoursAwaitingApprovalViewModel> GetAwaitingApprovalModel()
+        {
             var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatus).ToList();
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
             foreach (var ehaa in employeeHoursAwaitingApproval)
@@ -214,7 +226,8 @@ namespace PrototypeWithAuth.Controllers
                 };
                 awaitingApproval.Add(viewModel);
             }
-            return View(awaitingApproval);
+
+            return awaitingApproval;
         }
 
         [HttpGet]
@@ -235,6 +248,7 @@ namespace PrototypeWithAuth.Controllers
                 oldEmployeeHours.Exit1 = employeeHoursBeingApproved.Exit1;
                 oldEmployeeHours.Exit2 = employeeHoursBeingApproved.Exit2;
                 oldEmployeeHours.TotalHours = employeeHoursBeingApproved.TotalHours;
+                oldEmployeeHours.OffDayTypeID = null;
                 employeeHours = oldEmployeeHours;
             }
             else
@@ -265,7 +279,7 @@ namespace PrototypeWithAuth.Controllers
                 return View("~/Views/Shared/RequestError.cshtml");
             }
           
-            return Redirect("AwaitingApproval");
+            return RedirectToAction("_AwaitingApproval");
         }
     }
 

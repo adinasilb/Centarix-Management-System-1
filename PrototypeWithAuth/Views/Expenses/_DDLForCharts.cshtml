@@ -12,19 +12,32 @@
 
     <div class="expenses-form">
         <div class=" select-box-margin-bottom">
-
-            @Html.DropDownListFor(vm => vm.SelectedYears, years.Select(x =>
+            <select asp-for="SelectedYears" class="mdb-select custom select-dropdown form-control-plaintext" searchable="Search Month">
+                <option disabled selected class="d-none" value="">Select Year</option>
+                @foreach (var y in years)
+                {
+                    <option value="@y">@y</option>
+                }
+            </select>
+            @*@Html.DropDownListFor(vm => vm.SelectedYears, years.Select(x =>
         new SelectListItem
         {
         Text = x.ToString(),
         Value = x.ToString(),
 
         }
-        ), htmlAttributes: new { @class = " mdb-select  custom select-dropdown form-control-plaintext ", @searchable = "Search year..", @multiple = "multiple" })
+        ), htmlAttributes: new { @class = " mdb-select  custom select-dropdown form-control-plaintext ", @searchable = "Search year..", @multiple = "multiple" })*@
         </div>
 
         <div class=" select-box-margin-bottom">
-            @Html.DropDownListFor(
+            <select asp-for="SelectedMonths" class="mdb-select custom select-dropdown form-control-plaintext" searchable = "Search Month">
+                <option disabled selected class="d-none" value="">Select Month</option>
+                @foreach (var m in months)
+                {
+            <option value="@m">@System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m)</option>
+                }
+            </select>
+            @*@Html.DropDownListFor(
          vm => vm.SelectedMonths,
           months.Select(x =>
           new SelectListItem
@@ -33,7 +46,7 @@
               Value = x.ToString()
           }),
          new { @class = "mdb-select custom select-dropdown form-control-plaintext", @searchable = "Search Month", @multiple = "multiple", @value = "" }
-        )
+        )*@
         </div>
         <div class=" select-box-margin-bottom ">
             <select asp-for="Currency" class="mdb-select custom select-dropdown form-control-plaintext" data-placeholder="Currency">
@@ -66,7 +79,7 @@
             </button>
         </div>
         <div class=" select-box-margin-bottom">
-            <select asp-for="SelectedParentCategories" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlistMulitple">
+            <select asp-for="SelectedParentCategories" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlistMulitple" searchable = "Search Category">
                 <option disabled selected class="d-none" value="">Select Category</option>
                 @foreach (var p in Model.ParentCategories)
                 {
@@ -85,7 +98,7 @@
             <button type="button" onclick="$.fn.filterByParentCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
         </div>
         <div class=" select-box-margin-bottom">
-            <select asp-for="SelectedProductSubcategories" class="mdb-select custom select-dropdown form-control-plaintext" id="sublist" >
+            <select asp-for="SelectedProductSubcategories" class="mdb-select custom select-dropdown form-control-plaintext" id="sublist" searchable = "Search Sub Category">
                 <option disabled selected class="d-none" value="">Select Sub Category</option>
                 @foreach (var p in Model.ProductSubcategories)
                 {
@@ -104,7 +117,7 @@
             <button type="button" onclick="$.fn.filterBySubCategoryType();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
         </div>
         <div class=" select-box-margin-bottom">
-            <select asp-for="SelectedProjects" class="mdb-select custom select-dropdown form-control-plaintext">
+            <select asp-for="SelectedProjects" class="mdb-select custom select-dropdown form-control-plaintext" searchable = "Search Projects">
                 <option disabled selected class="d-none" value="">Select Project</option>
                 @foreach (var p in Model.Projects)
                 {
@@ -123,7 +136,7 @@
             <button type="button" onclick="$.fn.filterByProject();" class="btn-save  btn text-white expenses-background-color rounded-pill no-box-shadow  ">Save</button>
         </div>
         <div class=" select-box-margin-bottom">
-            <select asp-for="SelectedSubProjects" class="mdb-select custom select-dropdown form-control-plaintext">
+            <select asp-for="SelectedSubProjects" class="mdb-select custom select-dropdown form-control-plaintext" searchable = "Search Sub Projects">
                 <option disabled selected class="d-none" value="">Select Sub Sub Project</option>
                 @foreach (var p in Model.SubProjects)
                 {
@@ -143,7 +156,7 @@
         </div>
      
         <div class=" select-box-margin-bottom">
-            <select asp-for="SelectedVendors" class="mdb-select custom select-dropdown form-control-plaintext">
+            <select asp-for="SelectedVendors" class="mdb-select custom select-dropdown form-control-plaintext" searchable = "Search Vendors">
                 <option disabled selected class="d-none" value="">Select Vendor</option>
                 @foreach (var v in Model.Vendors)
                 {
@@ -171,7 +184,7 @@
            </div>*@
 
     <div class=" select-box-margin-bottom">
-        <select asp-for="SelectedEmployees" class="mdb-select custom select-dropdown form-control-plaintext">
+        <select asp-for="SelectedEmployees" class="mdb-select custom select-dropdown form-control-plaintext" searchable = "Search Sub Projects">
             <option disabled selected class="d-none" value="">Select Worker</option>
             @foreach (var e in Model.Employees)
             {

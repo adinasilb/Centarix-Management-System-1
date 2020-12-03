@@ -1997,18 +1997,6 @@ $(function () {
 			}
 		});
 	});
-	$(".approve-hours").off('click').click(function (e) {
-		$.ajax({
-			async: true,
-			url: "ApproveHours" + '?id=' + $(this).val(),
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				$("body").html(data);
-			}
-		});
-	});
-
 
 
 	//function ChangeEdits() {

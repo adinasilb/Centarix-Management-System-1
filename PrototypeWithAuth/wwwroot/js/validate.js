@@ -5,7 +5,6 @@ $(function () {
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
 		if (element.hasClass('select-dropdown')) {
 			error.insertAfter(element);
-			console.log(error)
 		} else {
 			error.insertAfter(element);
 		}
@@ -49,7 +48,6 @@ $(function () {
 		return /[0-9]/.test(value);
 	}, "Password must contain at least one number ");
 	$.validator.addMethod("selectRequired", function (value, element) {
-		console.log("in select required: "+ value)
 		return value != "" && value!=null;
 	}, 'Field is required');
 	$.validator.addMethod("atleastOneHoursField", function (value, element) {
@@ -78,7 +76,6 @@ $(function () {
 	}
 
 	$('.modal').on('change', '.mdb-select', function () {
-		console.log("mdb change .mdb-select")
 		if ($(this).rules()) {
 			$(this).valid();
 		}
@@ -89,7 +86,6 @@ $(function () {
 		$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid");
 		if ($('#myForm').valid()) {
-			console.log("valid");
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
 		} else {
 			$(".error:not(.beforeCallValid)").addClass("afterCallValid")

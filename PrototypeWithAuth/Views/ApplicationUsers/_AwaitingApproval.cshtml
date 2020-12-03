@@ -1,0 +1,110 @@
+﻿@model List<PrototypeWithAuth.ViewModels.EmployeeHoursAwaitingApprovalViewModel>
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@inject UserManager<ApplicationUser> UserManager
+<table class="table table-headerspaced col-12 ">
+    <tbody>
+        <tr class="text-center " style="border-color:transparent; border-bottom: 1px solid lightgrey;">
+            <td width="12%"></td>
+            <td class="text-left" width="10%">
+                Name
+            </td>
+            <td width="20%">
+                Type
+            </td>
+            <td width="16%">
+                Date
+            </td>
+            <td width="9%">
+                Entry Time
+            </td>
+            <td width="9%">
+                Exit Time
+            </td>
+            <td width="9%">
+                Total
+            </td>
+            <td width="15%">
+            </td>
+        </tr>
+        @{
+
+            var specialClass = "users-font-color font-weight-bold";
+            foreach (var hours in Model)
+            {
+                string Entry1 = "";
+                string Entry2 = "";
+                string Exit1 = "";
+                string Exit2 = "";
+                string TotalHours = "";
+                if (hours.Entry1)
+                {
+                    Entry1 = specialClass;
+                }
+                if (hours.Entry2)
+                {
+                    Entry2 = specialClass;
+                }
+                if (hours.Exit1)
+                {
+                    Exit1 = specialClass;
+                }
+                if (hours.Exit2)
+                {
+                    Exit2 = specialClass;
+                }
+                if (hours.TotalHours)
+                {
+                    TotalHours = specialClass;
+                }
+
+                <tr class="text-center users-tr ">
+                    <td width="12%">
+                        @{
+                            var src = "/UserImages/user-image-placeholder.png";
+                            if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                            {
+                                src = UserManager.GetUserAsync(User).Result.UserImage;
+                            }
+                        }
+                        <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
+                    </td>
+                    <td class="text-left" width="10%">
+                        @hours.EmployeeHoursAwaitingApproval.Employee.FirstName  @hours.EmployeeHoursAwaitingApproval.Employee.LastName
+                    </td>
+                    <td width="20%">
+                        @hours.EmployeeHoursAwaitingApproval.EmployeeHoursStatus.Description
+                    </td>
+                    <td width="16%">
+                        @hours.EmployeeHoursAwaitingApproval.Date.ToLongDateString()
+                    </td>
+                    <td width="9%">
+                        <label class="@Entry1 m-0">@hours.EmployeeHoursAwaitingApproval.Entry1?.ToShortTimeString()</label>
+                        @if (hours.EmployeeHoursAwaitingApproval.Entry2 != null)
+                        {
+                            <br />
+                        }
+                        <label class="@Entry2 m-0">@hours.EmployeeHoursAwaitingApproval.Entry2?.ToShortTimeString() </label>
+                    </td>
+                    <td width="9%">
+                        <label class="@Exit1 m-0">@hours.EmployeeHoursAwaitingApproval.Exit1?.ToShortTimeString() </label>
+                        @if (hours.EmployeeHoursAwaitingApproval.Exit2?.ToShortTimeString() != null)
+                        {
+                            <br />
+                        }
+                        <label class="@Exit2 m-0">@hours.EmployeeHoursAwaitingApproval.Exit2?.ToShortTimeString()</label>
+                    </td>
+                    <td width="9%" class="@TotalHours">
+                        @hours.EmployeeHoursAwaitingApproval.TotalHours?.ToString(@"h\:mm")
+                    </td>
+                    <td width="15%">
+                        <button type="button" class="rounded-pill px-4 py-1 text-white no-box-shadow border-0 approve-hours" style="background-color:var(--user-color)" value="@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID">Approve</button>
+                    </td>
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@*  *@
+<script src="~/js/AwaitingApprovalScript.js"></script>
