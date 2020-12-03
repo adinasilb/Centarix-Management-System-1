@@ -39,20 +39,20 @@ namespace PrototypeWithAuth.Controllers
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
             EntryExitViewModel entryExitViewModel = new EntryExitViewModel();
-            if ((todaysEntry == null || todaysEntry.Entry1 == null) && todaysEntry.TotalHours==null)
+            if (todaysEntry == null || todaysEntry.Entry1 == null)
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry1;
             }
-            else if (todaysEntry.Exit1 == null && todaysEntry.TotalHours == null)
+            else if (todaysEntry.Exit1 == null )
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
                 entryExitViewModel.Entry = todaysEntry.Entry1;
             }
-            else if (todaysEntry.Entry2 == null && todaysEntry.TotalHours == null)
+            else if (todaysEntry.Entry2 == null )
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
             }
-            else if (todaysEntry.Exit2 == null && todaysEntry.TotalHours == null)
+            else if (todaysEntry.Exit2 == null )
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
                 entryExitViewModel.Entry = todaysEntry.Entry2;
@@ -75,6 +75,7 @@ namespace PrototypeWithAuth.Controllers
 
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
+            todaysEntry.OffDayTypeID = null;
             if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry1)
             {
                 if (todaysEntry == null)
@@ -94,7 +95,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit1)
             {
-                todaysEntry.Exit1 = DateTime.Now;
+                todaysEntry.Exit1 = DateTime.Now;              
                 _context.EmployeeHours.Update(todaysEntry);
                 _context.SaveChanges();
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
