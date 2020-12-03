@@ -39,20 +39,20 @@ namespace PrototypeWithAuth.Controllers
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
             EntryExitViewModel entryExitViewModel = new EntryExitViewModel();
-            if (todaysEntry == null || todaysEntry.Entry1 == null)
+            if ((todaysEntry == null || todaysEntry.Entry1 == null) && todaysEntry.TotalHours==null)
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry1;
             }
-            else if (todaysEntry.Exit1 == null)
+            else if (todaysEntry.Exit1 == null && todaysEntry.TotalHours == null)
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
                 entryExitViewModel.Entry = todaysEntry.Entry1;
             }
-            else if (todaysEntry.Entry2 == null)
+            else if (todaysEntry.Entry2 == null && todaysEntry.TotalHours == null)
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
             }
-            else if (todaysEntry.Exit2 == null)
+            else if (todaysEntry.Exit2 == null && todaysEntry.TotalHours == null)
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
                 entryExitViewModel.Entry = todaysEntry.Entry2;
@@ -370,7 +370,7 @@ namespace PrototypeWithAuth.Controllers
     }
     [HttpGet]
     [Authorize(Roles = "Admin, TimeKeeper")]
-    public async Task<IActionResult> UpdateHours(DateTime chosenDate)
+    public async Task<IActionResult> UpdateHours(DateTime chosenDate, String PageType)
     {
         if (chosenDate == new DateTime())
         {
@@ -386,41 +386,41 @@ namespace PrototypeWithAuth.Controllers
         {
             employeeHour.EmployeeHoursStatusID = 2;
         }
-
-        return PartialView(employeeHour);
+            UpdateHoursViewModel updateHoursViewModel = new UpdateHoursViewModel() { EmployeeHour = employeeHour, PageType = PageType };
+        return PartialView(updateHoursViewModel);
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin, TimeKeeper")]
-    public async Task<IActionResult> UpdateHours(EmployeeHours employeeHours)
+    public async Task<IActionResult> UpdateHours(UpdateHoursViewModel updateHoursViewModel)
     {
-        var awaitingApproval = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == employeeHours.EmployeeID && eh.Date.Date == employeeHours.Date.Date).FirstOrDefault();
+        var awaitingApproval = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date).FirstOrDefault();
         int? employeeHoursID = null;
-        if (employeeHours.EmployeeHoursID != 0)
+        if (updateHoursViewModel.EmployeeHour.EmployeeHoursID != 0)
         {
-            employeeHoursID = employeeHours.EmployeeHoursID;
+            employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
         }
         EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval = new EmployeeHoursAwaitingApproval();
         if (awaitingApproval == null)
         {
-            employeeHoursAwaitingApproval.EmployeeID = employeeHours.EmployeeID;
+            employeeHoursAwaitingApproval.EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID;
             employeeHoursAwaitingApproval.EmployeeHoursID = employeeHoursID;
-            employeeHoursAwaitingApproval.Entry1 = employeeHours.Entry1;
-            employeeHoursAwaitingApproval.Entry2 = employeeHours.Entry2;
-            employeeHoursAwaitingApproval.Exit1 = employeeHours.Exit1;
-            employeeHoursAwaitingApproval.Exit2 = employeeHours.Exit2;
-            employeeHoursAwaitingApproval.TotalHours = employeeHours.TotalHours;
+            employeeHoursAwaitingApproval.Entry1 = updateHoursViewModel.EmployeeHour.Entry1;
+            employeeHoursAwaitingApproval.Entry2 = updateHoursViewModel.EmployeeHour.Entry2;
+            employeeHoursAwaitingApproval.Exit1 = updateHoursViewModel.EmployeeHour.Exit1;
+            employeeHoursAwaitingApproval.Exit2 = updateHoursViewModel.EmployeeHour.Exit2;
+            employeeHoursAwaitingApproval.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
             employeeHoursAwaitingApproval.OffDayTypeID = null;
-            employeeHoursAwaitingApproval.Date = employeeHours.Date;
-            employeeHoursAwaitingApproval.EmployeeHoursStatusID = employeeHours.EmployeeHoursStatusID;
+            employeeHoursAwaitingApproval.Date = updateHoursViewModel.EmployeeHour.Date;
+            employeeHoursAwaitingApproval.EmployeeHoursStatusID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusID;
         }
         else
         {
-            awaitingApproval.Entry1 = employeeHours.Entry1;
-            awaitingApproval.Exit1 = employeeHours.Exit1;
-            awaitingApproval.Entry2 = employeeHours.Entry2;
-            awaitingApproval.Exit2 = employeeHours.Exit2;
-            awaitingApproval.TotalHours = employeeHours.TotalHours;
+            awaitingApproval.Entry1 = updateHoursViewModel.EmployeeHour.Entry1;
+            awaitingApproval.Exit1 = updateHoursViewModel.EmployeeHour.Exit1;
+            awaitingApproval.Entry2 = updateHoursViewModel.EmployeeHour.Entry2;
+            awaitingApproval.Exit2 = updateHoursViewModel.EmployeeHour.Exit2;
+            awaitingApproval.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
             awaitingApproval.OffDayTypeID = null;
             employeeHoursAwaitingApproval = awaitingApproval;
         }
@@ -430,7 +430,7 @@ namespace PrototypeWithAuth.Controllers
         _context.SaveChanges();
 
 
-        return RedirectToAction("SummaryHours", new { Month = Month });
+        return RedirectToAction(updateHoursViewModel.PageType, new { Month = Month });
     }
 
     [HttpGet]

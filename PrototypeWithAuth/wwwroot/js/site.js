@@ -1722,7 +1722,13 @@ $(function () {
 			var date = new Date(val).toISOString();
 			console.log(date)
 		}
-		var itemurl = "UpdateHours?chosenDate=" + date;
+		if ($(this).hasClass("SummaryHours")) {
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportHours")) {
+			pageType = "ReportHours";
+		}
+		var itemurl = "UpdateHours?PageType=" + pageType +"&chosenDate=" + date;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
