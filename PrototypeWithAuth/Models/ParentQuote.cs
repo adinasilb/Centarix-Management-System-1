@@ -26,7 +26,6 @@ namespace PrototypeWithAuth.Models
 
         [Display(Name = "Quote Number")]
 
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         public string QuoteNumber { get; set; }
         public int QuoteStatusID { get; set; }
         [ForeignKey("QuoteStatusID")]

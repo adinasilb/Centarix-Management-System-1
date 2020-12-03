@@ -3,9 +3,7 @@ $('.ordersItemForm').validate({
 	rules: {
 		"Request.Product.ProductName": "required",
 		"Request.CatalogNumber": {
-			required: true,
-			number: true,
-			min: 1
+			required: true
 		},
 		"Request.Product.ProductSubcategory.ParentCategoryID": "selectRequired",
 		"Request.Product.ProductSubcategoryID": "selectRequired",
@@ -13,10 +11,7 @@ $('.ordersItemForm').validate({
 		"Request.SubProjectID": "selectRequired",
 		"Request.Product.VendorID": "selectRequired",
 		"Request.ParentQuote.QuoteNumber": {
-			required: true,
-			number: true,
-			min: 1,
-			integer: true
+			required: true
 		},
 		"Request.ExpectedSupplyDays": {
 			min: 0,

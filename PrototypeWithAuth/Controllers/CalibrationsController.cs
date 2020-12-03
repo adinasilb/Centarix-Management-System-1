@@ -34,8 +34,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.Calibrate;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Equipment;
             //Getting the page that is going to be seen (if no page was specified it will be one)
-            var pageNumber = page ?? 1;
-            var onePageOfProducts = Enumerable.Empty<Calibration>().ToPagedList();
+            int pageNumber = page ?? 1;
+            IPagedList<Calibration> onePageOfProducts = Enumerable.Empty<Calibration>().ToPagedList();
 
             try
             {
@@ -60,8 +60,8 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> CreateCalibration(int requestid)
         {
-            var request = await _context.Requests.Where(r => r.RequestID == requestid).Include(r => r.Product).FirstOrDefaultAsync();
-            var calibrations = await _context.Calibrations.Where(c => c.RequestID == requestid).ToListAsync();
+            Request request = await _context.Requests.Where(r => r.RequestID == requestid).Include(r => r.Product).FirstOrDefaultAsync();
+            List<Calibration> calibrations = await _context.Calibrations.Where(c => c.RequestID == requestid).ToListAsync();
             List<ExternalCalibration> externalCalibrations = await _context.ExternalCalibrations
                 .Where(c => c.RequestID == requestid)
                 .Where(c => c.Date > DateTime.Now).ToListAsync();
@@ -144,11 +144,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, LabManagment")]
         public async Task<IActionResult> SaveRepairs(CreateCalibrationViewModel vm)
         {
-            foreach (var repair in vm.Repairs)
+            foreach (Repair repair in vm.Repairs)
             {
                 if (repair.CalibrationID > 0) //an old repair
                 {
-                    var updatedRepair = _context.Repairs.Where(c => c.CalibrationID == repair.CalibrationID).FirstOrDefault();
+                    Repair updatedRepair = _context.Repairs.Where(c => c.CalibrationID == repair.CalibrationID).FirstOrDefault();
                     updatedRepair.CalibrationName = repair.CalibrationName;
                     updatedRepair.Date = repair.Date;
                     updatedRepair.IsRepeat = repair.IsRepeat;
@@ -182,11 +182,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles ="Admin, LabManagment")]
         public async Task<IActionResult> SaveExternalCalibrations(CreateCalibrationViewModel vm)
         {
-            foreach (var externalCalibration in vm.ExternalCalibrations)
+            foreach (ExternalCalibration externalCalibration in vm.ExternalCalibrations)
             {
                 if (externalCalibration.CalibrationID > 0) //an old repair
                 {
-                    var updatedEC = _context.ExternalCalibrations.Where(c => c.CalibrationID == externalCalibration.CalibrationID).FirstOrDefault();
+                    ExternalCalibration updatedEC = _context.ExternalCalibrations.Where(c => c.CalibrationID == externalCalibration.CalibrationID).FirstOrDefault();
                     updatedEC.CalibrationName = externalCalibration.CalibrationName;
                     updatedEC.Date = externalCalibration.Date;
                     updatedEC.IsRepeat = externalCalibration.IsRepeat;
@@ -220,7 +220,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, LabManagment")]
         public async Task<IActionResult> SaveInternalCalibrations(CreateCalibrationViewModel vm)
         {
-            foreach (var internalCalibration in vm.InternalCalibration)
+            foreach (InternalCalibration internalCalibration in vm.InternalCalibration)
             {
                 if (internalCalibration.CalibrationID > 0) //an old calibration
                 {
