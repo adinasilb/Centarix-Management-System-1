@@ -12,6 +12,13 @@
 		console.log("upload file submitted");
 
 		var inputButton = $('#save-documents');
+		var filePath = $(".file-select")[0].value;
+		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
+		console.log("extn: " + extn);
+		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn !="") {
+			alert("invalid file extension");
+			return;
+		}
 
 		//var $form = $(this).parents('form');
 		console.log("in save doc files");
@@ -22,8 +29,8 @@
 		var url = inputButton.attr("href");
 		var $isEdittable = $('.isEdittable').val();
 		console.log("url : " + url);
-		var formData = new FormData($("#documentModalForm")[0]);
-		var data = $("#documentModalForm").serialize();
+		var formData = new FormData($(".documentModalForm")[0]);
+		var data = $(".documentModalForm").serialize();
 		//var formData = new FormData($(this));
 		//console.log("data : " + data);
 		console.log("formData : " + formData);

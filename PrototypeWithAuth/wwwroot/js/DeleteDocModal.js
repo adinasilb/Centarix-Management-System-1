@@ -26,25 +26,12 @@
 	return false;
 });
 
-function ChangeColorsOfDocs($foldername) {
-	console.log("foldername: " + $foldername);
-	var numCards = $(".carousel-inner").length;
-	console.log("numcards: " + numCards);
-}
 
-$.fn.ChangeColorsOfDocs = function ($foldername) {
-	console.log("foldername: " + $foldername);
-	var numCards = $(".card.document-border").length;
-	console.log("numcards: " + numCards);
-
-	var div = $("#" + $foldername + " img");
-	console.log("div: " + div);
-	//if (div.hasClass("order-inv-filter")) {
-	//	console.log("has class already");
-	//} else {
-	//	console.log("does not class already");
-	//	div.addClass("order-inv-filter");
-	//}
+$.fn.RemoveColorsOfDocs = function ($foldername) {
+	$("#" + $foldername + " i").removeClass('oper-filter');
+	$("#" + $foldername + " i").removeClass('order-inv-filter')
+	$("#" + $foldername + " i").removeClass('lab-man-filter')
+	$("#" + $foldername + " i").addClass('opac87');
 };
 
 $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionType)  {
@@ -64,7 +51,11 @@ $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionT
 			});
 			$(".modal").modal('show');
 			console.log("Here");
-			ChangeColorsOfDocs($foldername);
+			var length = $('.iframe-container').length;
+			if (length < 1) {
+				$.fn.RemoveColorsOfDocs($foldername);
+			}
+		
 		}
 	});
 };
