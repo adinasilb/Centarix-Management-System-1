@@ -544,7 +544,7 @@ $(function () {
 				});
 				$(".modal").modal('show');
 				//$('.modal-backdrop').remove()
-				var firstTDFilled = $("td.lab-man-50-background-color");
+				var firstTDFilled = $("td.filled-location-class");
 				var height = firstTDFilled.height();
 				var width = firstTDFilled.width();
 				console.log("h: " + height + "------ w: " + width);
@@ -577,25 +577,6 @@ $(function () {
 		//});
 	});
 
-	//$(".clicked-inside-button").click(function () {
-	//	$(this).parent().removeClass("td-selected-inside");
-	//	$(this).parent().removeClass("lab-man-50-background-color");
-	//	$(this).parent().addClass("td-selected-inside");
-	//	$(this).parent().addClass("lab-man-50-background-color");
-	//});
-
-	//$(".clicked-outer-button").click(function () {
-	//	$(this).parent().removeClass("td-selected-outer");
-	//	$(this).parent().parent().removeClass("td-selected-outer");
-	//	$(this).parent().removeClass("lab-man-50-background-color");
-	//	$(this).parent().parent().removeClass("lab-man-50-background-color");
-	//	$(this).parent().parent().parent().removeClass("lab-man-50-background-color");
-	//	$(this).parent().addClass("td-selected-outer");
-	//	$(this).parent().parent().addClass("td-selected-outer");
-	//	$(this).parent().addClass("lab-man-50-background-color");
-	//	$(this).parent().parent().addClass("lab-man-50-background-color");
-	//	$(this).parent().parent().parent().addClass("lab-man-50-background-color");
-	//});
 
 
 
@@ -918,16 +899,17 @@ $(function () {
 	});
 
 
-	$(".load-location-index-view").click(function (e) {
+	$(".load-location-index-view").off("click").on("click", function (e) {
 		//clear the div to restart filling with new children
 		$(".load-location-index-view").removeClass("location-type-selected");
-		$.fn.setUpLocationIndexList($(this).val())
+		$.fn.setUpLocationIndexList($(this).attr("value"))
 	});
 
 	$.fn.setUpLocationIndexList = function (val) {
 		//clear second div just in case
 		var subDiv = $(".colTwoSublocations");
 		subDiv.html("");
+		$(".li-name").html("");
 
 		//fill up col 2 with the next one
 		$("#loading3")/*.delay(1000)*/.show(0);
@@ -972,15 +954,22 @@ $(function () {
 		var table = $(this).closest('table');
 
 		//Begin CSS Styling
-		var stylingClass = "lab-man-50-background-color";
+		var stylingClass = "filled-location-class";
+		var trStylingClass = "filled-location-tr";
 
 		table.children('tbody').children('tr').children('td').removeClass(stylingClass);
+		table.children('tbody').children('tr').removeClass(trStylingClass);
 		$(this).parent().addClass(stylingClass);
+		$(this).parent().parent().addClass(trStylingClass);
 
 		var parentStylingClass = "parent-location-selected-outer-lab-man";
+		var trParentStylingClass = "pl-border-right-0";
+		alert("new js sheet - trparentstlyingclass");
 		if ($(this).hasClass("parent-location")) {
 			$("body td").removeClass(parentStylingClass);
+			$("body tr").removeClass(trParentStylingClass);
 			$(this).parent().addClass(parentStylingClass);
+			$(this).parent().parent().addClass(trParentStylingClass);
 
 		}
 		//End CSS Styling
@@ -989,6 +978,7 @@ $(function () {
 
 
 	$(".load-sublocation-view").off("click").on("click", function (e) {
+		alert("load-sublocation-view");
 		//e.preventDefault();
 		//e.stopPropagation();
 		//add or remove the background class in col 1
@@ -1037,7 +1027,7 @@ $(function () {
 		//}
 
 		//Begin CSS Styling
-		var stylingClass = "lab-man-50-background-color";
+		var stylingClass = "filled-location-class";
 		//$("body td").removeClass(stylingClass);
 
 		//$(table + " td").removeClass(stylingClass);
@@ -1066,6 +1056,9 @@ $(function () {
 		var parentsParentId = $(this).closest('tr').attr('name');
 
 		if ($("#colTwoSublocations" + parentsParentId).length == 0) {
+			//if (!$('.second-col .li-name').val()) {
+				
+			//}
 			$('.colTwoSublocations').append('<div class="colTwoSublocationsChildren" id="colTwoSublocations' + parentsParentId + '"></div>');
 		}
 		//console.log("about to call ajax with a parentid of: " + parentId);
@@ -1077,6 +1070,10 @@ $(function () {
 			context: $("#colTwoSublocations" + parentsParentId),
 			success: function (result) {
 				myDiv.show();
+				if ($(this).hasClass("parent-location")) {
+					alert("this has been clicked by a parent location");
+					$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
+				}
 				$("#loading1").hide();
 				$("#loading1")/*.delay(1000)*/.hide(0);
 				this.html(result);

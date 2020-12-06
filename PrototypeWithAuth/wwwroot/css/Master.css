@@ -14,6 +14,7 @@
 /*color*/
 :root {
     --black-87: #000000DE;
+    --black-50: rgba(0,0,0, .5);
     --white: white;
     --user-color: #795548;
     --lab-man-color: rgb(125,155,170); /*#7D9BAA;*/

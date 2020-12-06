@@ -92,11 +92,8 @@ namespace PrototypeWithAuth.Controllers
             /*
              * Right now in the js validation it should not allow anything to be 0 x 0; therefore, we can test by depth and not by a has children method
              */
-            if (depth > 1)
-            {
-                sublocationIndexViewModel.PrevLocationInstance = parentLocationInstance;
-                sublocationIndexViewModel.IsSmallestChild = false;
-            }
+            sublocationIndexViewModel.PrevLocationInstance = parentLocationInstance;
+
 
             //get the max depth this location instance can go
             LocationType locationType = new LocationType();
@@ -372,7 +369,7 @@ namespace PrototypeWithAuth.Controllers
                                         {
                                             _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
                                         }
-                                        catch(Exception e)
+                                        catch (Exception e)
                                         {
                                             DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
                                             return RedirectToAction("Index");
@@ -396,7 +393,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         addLocationViewModel.LocationInstance.CompanyLocationNo = CompanyLocNo;
 
-                        _context.Add(addLocationViewModel.LocationInstance); 
+                        _context.Add(addLocationViewModel.LocationInstance);
                         try
                         {
                             _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
@@ -482,7 +479,7 @@ namespace PrototypeWithAuth.Controllers
                                             CompanyLocationNo = CompanyLocNo,
                                             Place = FullPlace
                                         };
-                                        _context.Add(newSublocationInstance); 
+                                        _context.Add(newSublocationInstance);
                                         try
                                         {
                                             _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
@@ -492,12 +489,12 @@ namespace PrototypeWithAuth.Controllers
                                             DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
                                             return RedirectToAction("Index");
                                         }
-                                        if (b == 0 ) //Testing Shelves
+                                        if (b == 0) //Testing Shelves
                                         {
                                             if (subLocationViewModel.EmptyShelves80?.ContainsKey(x) == true && subLocationViewModel.EmptyShelves80[x])
                                             {
                                                 newSublocationInstance.IsEmpty = true;
-                                                _context.Update(newSublocationInstance); 
+                                                _context.Update(newSublocationInstance);
                                                 try
                                                 {
                                                     _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
@@ -539,7 +536,7 @@ namespace PrototypeWithAuth.Controllers
                         addLocationViewModel.LocationInstance.CompanyLocationNo = CoNo;
                         string nameAbbrev1 = addLocationViewModel.LocationInstance.LocationInstanceName;
 
-                        _context.Add(addLocationViewModel.LocationInstance); 
+                        _context.Add(addLocationViewModel.LocationInstance);
                         try
                         {
                             _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
@@ -586,7 +583,7 @@ namespace PrototypeWithAuth.Controllers
                                     CompanyLocationNo = CoNo,
                                     Place = FullPlace1
                                 };
-                                _context.Add(newSublocationInstance); 
+                                _context.Add(newSublocationInstance);
                                 try
                                 {
                                     _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
@@ -659,7 +656,7 @@ namespace PrototypeWithAuth.Controllers
                                     CompanyLocationNo = CoNo2,
                                     Place = FullPlace1
                                 };
-                                _context.Add(newSublocationInstance); 
+                                _context.Add(newSublocationInstance);
                                 try
                                 {
                                     _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
@@ -788,9 +785,9 @@ namespace PrototypeWithAuth.Controllers
         public void DeleteLocationsIfFailed(LocationInstance ParentLocationInstance, List<List<int>> placeholderIds)
         {
             _context.Remove(ParentLocationInstance);
-            foreach(List<int> listID in placeholderIds)
+            foreach (List<int> listID in placeholderIds)
             {
-                foreach(int liID in listID)
+                foreach (int liID in listID)
                 {
                     var currentInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == liID).FirstOrDefault();
                     _context.Remove(currentInstance);

@@ -75,9 +75,9 @@ namespace PrototypeWithAuth
 
             // Enable Razor pages, but in the Debug configuration, compile the views at runtime, for ease of development
             IMvcBuilder builder = services.AddRazorPages();
-            //#if DEBUG
-            //            builder.AddRazorRuntimeCompilation();
-            //#endif
+#if DEBUG
+            builder.AddRazorRuntimeCompilation();
+#endif
             //services.AddApplicationInsightsTelemetry();
 
             // in order to be able to customize the aspnetcore identity

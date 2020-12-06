@@ -2,17 +2,19 @@
 @using PrototypeWithAuth.AppData;
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    var pagetype = "";
     switch (TempData[AppUtility.TempDataTypes.MenuType.ToString()])
     {
         case AppUtility.MenuItems.Requests:
-            Layout = "~/Views/Shared/RequestNavView.cshtml";
+            pagetype = "orders-and-inv";
             break;
         case AppUtility.MenuItems.LabManagement:
-            Layout = "~/Views/Shared/RequestNavView.cshtml";
+            pagetype = "labmanage";
             break;
     }
 }
-<div class="locations-page">
+<div class="locations-page @pagetype">
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 
     @*<div class="row mt-4">
@@ -21,16 +23,16 @@
 
         </div>
         <br />*@
-    <div class="row">
+    <div class="row top-row">
         <div class="col-9">
-            <div class="row">
+            <div class="row pl-0">
                 @foreach (var type in Model.LocationTypes)
                 {
                     <ul class="pl-0">
                         <li class="list-inline-item">
-                            <button class="opac-87 clicked-button btn location-type-name  top-menu load-location-index-view mr-3 pt-0 mt-0 ml-0 pl-0" value=@type.LocationTypeID>
+                            <span class="opac-87 location-type-name  top-menu load-location-index-view" value=@type.LocationTypeID>
                                 @type.LocationTypeName
-                            </button>
+                            </span>
                         </li>
                         @* opac87 btn load-location-index-view clicked-button location-type-name *@
                     </ul>
@@ -53,8 +55,9 @@
         <div class="col-md-3 colOne pr-0" style="max-width:15%;">
 
         </div>
-        <div class="row colTwoSublocations text-center pl-0" style="max-width:45%;">
-
+        <div class="row second-col filled-location-class text-center pl-0" style="max-width:45%;">
+            <span class="heading-1 li-name"></span>
+            <div class="row p-0 m-0 colTwoSublocations"></div>
         </div>
 
         <div class="col-md-6 VisualBoxColumn" style="max-width:40%;">
