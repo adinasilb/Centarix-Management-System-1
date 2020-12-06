@@ -512,10 +512,15 @@ namespace PrototypeWithAuth.Controllers
                     employeeHour = new EmployeeHours
                     {
                         EmployeeID = userID,
-                        Date = dateFrom
+                        Date = dateFrom,
+                        OffDayTypeID = offDayTypeID
                     };
                 }
-                employeeHour.OffDayTypeID = offDayTypeID;
+                 else if(employeeHour.Entry1 ==null && employeeHour.Entry2 == null && employeeHour.TotalHours == null)
+                {
+                    employeeHour.OffDayTypeID = offDayTypeID;
+                }
+             
                 _context.Update(employeeHour);
                 _context.SaveChanges();
             }
@@ -538,10 +543,14 @@ namespace PrototypeWithAuth.Controllers
                             employeeHour = new EmployeeHours
                             {
                                 EmployeeID = userID,
-                                Date = dateFrom
+                                Date = dateFrom,
+                                OffDayTypeID = offDayTypeID
                             };
                         }
-                        employeeHour.OffDayTypeID = offDayTypeID;
+                        else if (employeeHour.Entry1 == null && employeeHour.Entry2 == null && employeeHour.TotalHours == null)
+                        {
+                            employeeHour.OffDayTypeID = offDayTypeID;
+                        }
                     }
                     else
                     {
