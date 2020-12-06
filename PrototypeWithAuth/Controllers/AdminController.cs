@@ -898,7 +898,8 @@ namespace PrototypeWithAuth.Controllers
                     OperationMonthlyLimit = userSelected.OperationMonthlyLimit,
                     OperationUnitLimit = userSelected.OperationUnitLimit,
                     OperaitonOrderLimit = userSelected.OperationOrderLimit,
-                    Tab = Tab ?? 1
+                    Tab = Tab ?? 1,
+                    ConfirmedEmail = userSelected.EmailConfirmed
                 };
 
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
