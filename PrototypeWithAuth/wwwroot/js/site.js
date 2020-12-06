@@ -669,6 +669,7 @@ $(function () {
 	});
 
 	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section) {
+		alert(isEdittable)
 		//alert("in open doc modal");
 		//alert("in open document in site.js")
 		$(".documentsModal").replaceWith('');

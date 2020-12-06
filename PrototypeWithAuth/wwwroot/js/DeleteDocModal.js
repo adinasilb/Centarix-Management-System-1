@@ -3,21 +3,21 @@
 	e.stopPropagation();
 	var link = $('#submitDelete').attr("href");
 	console.log("link: " + link)
-	//var formData = new FormData($("#DeleteDocumentModalForm")[0]);
+	var formData = new FormData($(".DeleteDocumentModalForm")[0]);
 	$foldername = $("#FolderName").val();
 	$requestId = $("#RequestID").val();
-	var isOperations = $("#SectionType").val()!="Operation";
+	var $SectionType = $("#SectionType").val();
+	alert($("#SectionType").val())
 	var $isEdittable = $('#IsEdittable').val();
 	console.log("foldername: " + $foldername);
 	console.log("$requestId: " + $requestId);
-	console.log("$isEdittable: " + $isEdittable);
 	$.ajax({
 		url: link,
 		method: 'POST',
 		data: formData,
 		success: (partialResult) => {
 			$("#DeleteDocumentsModal").replaceWith('');
-			$.fn.OpenDocumentsModal($foldername, $requestId, $isEdittable, isOperations);
+			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
@@ -47,12 +47,12 @@ $.fn.ChangeColorsOfDocs = function ($foldername) {
 	//}
 };
 
-$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, isOperations)  {
+$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionType)  {
 	$("#documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&IsOperations=" + isOperations,
+		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + sectionType,
 		type: 'GET',
 		cache: false,
 		success: function (data) {

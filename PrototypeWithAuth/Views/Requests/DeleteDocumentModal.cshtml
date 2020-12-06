@@ -7,6 +7,11 @@
     {
         bcColor = "oper-background-color";
     }
+    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+
+        bcColor = "lab-man-background-color";
+    }
 }
 <script src="~/js/DeleteDocModal.js"></script>
 <div class="modal modal-document-delete fader" id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
@@ -15,7 +20,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding">
+            <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding DeleteDocumentModalForm">
                 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <input asp-for="RequestID" type="hidden" />
                 <input asp-for="FileName" type="hidden" />
@@ -31,7 +36,7 @@
                             <div class="">
                                 <div class="card document-border m-0">
                                     <div class="card-body responsive-iframe-container">
-                                        <iframe src="@Model" title="View" class="responsive-iframe" scrolling="no"></iframe>
+                                        <iframe src="/@Model.FileName" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
                                     </div>
                                     <div class="card-body text-center">
