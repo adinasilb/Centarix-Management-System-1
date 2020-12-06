@@ -1424,17 +1424,17 @@ input[type=checkbox].css-checkbox {
     display: none;
 }
 
-.css-label {
+/*.css-label {
     width: 42px;
     height: 42px;
-    font-size: 0.45rem;
-    padding-right: 26px;
+    font-size: 0.45rem;*/
+    /*padding-right: 26px;
     padding-top: 28px;
     background-image: url('../images/css/inventory/icons/cell_checkbox.png');
     background-repeat: no-repeat;
-    background-size: contain;
-    margin-bottom: 0px;
-}
+    background-size: contain;*/
+    /*margin-bottom: 0px;
+}*/
 
 input[type=checkbox].css-checkbox:checked ~ label.css-label {
     background-position: 0 0;
@@ -2506,4 +2506,10 @@ a {
 .users label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--user-color);
     background-color: var(--user-color);
+}
+
+
+.order-inv-form .addSubSubUnit,
+.order-inv-form .addSubUnit{
+    filter: var(--order-inv-filter);
 }

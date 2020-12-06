@@ -124,8 +124,8 @@
                                         <div class="form-group sublist">
                                             <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                                             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-     Enumerable.Empty<SelectListItem>(),
-     new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext", @id = "sublist", @searchable = "Select SubCategory" })
+     Enumerable.Empty<SelectListItem>(), "Select Sub Category",
+     new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext", @id = "sublist", @searchable = "Select Sub Category" })
                                             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -149,7 +149,11 @@
                                     <div class="col-md-4">
                                         <div class="form-group SubProject">
                                             <label class="control-label">Sub Project:</label>
-                                            <select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project"></select>
+                                            @Html.DropDownListFor(vm => vm.Request.SubProjectID,
+     Enumerable.Empty<SelectListItem>(), "Select Sub Project",
+     new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext", @id = "SubProject", @searchable = "Select Sub Project" })
+                                            @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
+                                            </select>*@
                                             <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -181,12 +185,12 @@
                                 <div class="row">
                                     <div class="col-md-6 pr-4">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom " type="text" />
+                                        <input asp-for="Request.ParentQuote.QuoteNumber" class="form-control-plaintext border-bottom " type="text" />
                                         <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date" />
+                                        <input asp-for="Request.ParentQuote.QuoteDate" type="date" asp-format="{0:dd'/'MM'/'yyyy}" class="form-control-plaintext border-bottom create-modal-quote-date" />
                                         <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
                                     </div>
                                 </div>
@@ -204,7 +208,7 @@
                                     <div class="col-md-3">
                                         <label class="control-label">Estimated End Date</label>
                                         @*no date in backend so set to zero*@
-                                        <input value="0000-00-00" name="WarrantyDate" class="form-control-plaintext border-bottom " disabled="disabled" />
+                                        <input value="0000-00-00" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom " disabled="disabled" />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -216,7 +220,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Expected supply date</label>
-                                            <input value="00-00-0000" class="form-control-plaintext border-bottom" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                            <input value="00/00/0000" class="form-control-plaintext border-bottom" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -287,7 +291,7 @@
                                                         <div class="col-md-6">
                                                             <div class="input-group">
                                                                 <span class="input-group-text border-bottom">&#36;</span>
-                                                                <input class="form-control-plaintext border-bottom " name="unit-price-dollars" id="unit-price-dollars" disabled />
+                                                                <input class="form-control-plaintext border-bottom " name="unit-price-dollars" id="unit-price-dollars" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
@@ -351,13 +355,13 @@
                                                         <div class="col-md-6">
                                                             <div class="input-group">
                                                                 <span class="input-group-text">&#36;</span>
-                                                                <input class="form-control-plaintext border-bottom " name="subunit-price-dollars" id="subunit-price-dollars" disabled />
+                                                                <input class="form-control-plaintext border-bottom " type="number" min="0" name="subunit-price-dollars" id="subunit-price-dollars" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
                                                                 <span class="input-group-text">&#x20aa;</span>
-                                                                <input class="form-control-plaintext border-bottom " name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                                                <input class="form-control-plaintext border-bottom " type="number" min="0" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -404,7 +408,7 @@
                                                         <div class="col-md-6">
                                                             <div class="input-group">
                                                                 <span class="input-group-text">&#36;</span>
-                                                                <input class="form-control-plaintext border-bottom" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
+                                                                <input class="form-control-plaintext border-bottom" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">

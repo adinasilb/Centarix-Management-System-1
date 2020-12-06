@@ -1,71 +1,71 @@
 ﻿
 $(function () {
 
-$.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
-	var theResult = parseFloat($value);
-	theResult = theResult.toFixed(2);
-	theResult = isFinite(theResult) && theResult || "";
-	$inputBox.val(theResult);
-}
-
-$.fn.CalculateSumPlusVat = function () {
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	var sumShek = $("#Request_Cost").val();
-	//console.log("sumShek: " + sumShek);
-	var vatCalc = sumShek * .17;
-	//console.log("VatPercentage: " + VatPercentage);
-	//console.log("vatCalc: " + vatCalc);
-	//$("#Request_VAT").val(vatCalc)
-	//var vatInShekel = $("#Request_VAT").val();
-	if ($("#sum-dollars").prop("disabled")) {
-		$sumDollars = parseFloat($("#Request_Cost").val()) / $exchangeRate;
-		$iptBox = $('input[name="sum-dollars"]');
-		$.fn.ShowResults($iptBox, $sumDollars);
+	$.fn.ShowResults = function ($inputBox, $value) { //this function ensures that the value passed back won't be NaN or undefined --> it'll instead send back a blank
+		var theResult = parseFloat($value);
+		theResult = theResult.toFixed(2);
+		theResult = isFinite(theResult) && theResult || "";
+		$inputBox.val(theResult);
 	}
-	else if ($("#Request_Cost").prop("readonly")) {
-		$sumShekel = $("#sum-dollars").val() * $exchangeRate;
-		$iptBox = $("input[name='Request.Cost']");
-		$.fn.ShowResults($iptBox, $sumShekel);
-	}
-	$sumShekel = parseFloat($("#Request_Cost").val());
-	//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
-	$('#Request_VAT').val(vatCalc.toFixed(2));
-	$sumTotalVatShekel = $sumShekel + vatCalc;
-	$iptBox = $("input[name='sumPlusVat-Shekel']");
-	$.fn.ShowResults($iptBox, $sumTotalVatShekel);
-	$sumTotalVatDollars = $sumTotalVatShekel / $exchangeRate;
-	$iptBox = $("input[name='sumPlusVat-Dollar']");
-	$.fn.ShowResults($iptBox, $sumTotalVatDollars);
-};
-$.fn.CalculateUnitAmounts = function () {
-	$unitSumShekel = parseFloat($("#Request_Cost").val()) / $("#Request_Unit").val();
-	$iptBox = $("input[name='unit-price-shekel']");
-	$.fn.ShowResults($iptBox, $unitSumShekel);
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	$unitSumDollars = $unitSumShekel / $exchangeRate;
-	$iptBox = $("input[name='unit-price-dollars']");
-	$.fn.ShowResults($iptBox, $unitSumDollars);
-};
 
-$.fn.CalculateSubUnitAmounts = function () {
-	$subUnitSumShekel = $("#unit-price-shekel").val() / $("#Request_SubUnit").val();
-	$iptBox = $("input[name='subunit-price-shekel']");
-	$.fn.ShowResults($iptBox, $subUnitSumShekel);
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	$subUnitSumDollars = $subUnitSumShekel / $exchangeRate;
-	$iptBox = $("input[name='subunit-price-dollars']");
-	$.fn.ShowResults($iptBox, $subUnitSumDollars);
-};
+	$.fn.CalculateSumPlusVat = function () {
+		var $exchangeRate = $("#Request_ExchangeRate").val();
+		var sumShek = $("#Request_Cost").val();
+		//console.log("sumShek: " + sumShek);
+		var vatCalc = sumShek * .17;
+		//console.log("VatPercentage: " + VatPercentage);
+		//console.log("vatCalc: " + vatCalc);
+		//$("#Request_VAT").val(vatCalc)
+		//var vatInShekel = $("#Request_VAT").val();
+		if ($("#sum-dollars").prop("disabled")) {
+			$sumDollars = parseFloat($("#Request_Cost").val()) / $exchangeRate;
+			$iptBox = $('input[name="sum-dollars"]');
+			$.fn.ShowResults($iptBox, $sumDollars);
+		}
+		else if ($("#Request_Cost").prop("readonly")) {
+			$sumShekel = $("#sum-dollars").val() * $exchangeRate;
+			$iptBox = $("input[name='Request.Cost']");
+			$.fn.ShowResults($iptBox, $sumShekel);
+		}
+		$sumShekel = parseFloat($("#Request_Cost").val());
+		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
+		$('#Request_VAT').val(vatCalc.toFixed(2));
+		$sumTotalVatShekel = $sumShekel + vatCalc;
+		$iptBox = $("input[name='sumPlusVat-Shekel']");
+		$.fn.ShowResults($iptBox, $sumTotalVatShekel);
+		$sumTotalVatDollars = $sumTotalVatShekel / $exchangeRate;
+		$iptBox = $("input[name='sumPlusVat-Dollar']");
+		$.fn.ShowResults($iptBox, $sumTotalVatDollars);
+	};
+	$.fn.CalculateUnitAmounts = function () {
+		$unitSumShekel = parseFloat($("#Request_Cost").val()) / $("#Request_Unit").val();
+		$iptBox = $("input[name='unit-price-shekel']");
+		$.fn.ShowResults($iptBox, $unitSumShekel);
+		var $exchangeRate = $("#Request_ExchangeRate").val();
+		$unitSumDollars = $unitSumShekel / $exchangeRate;
+		$iptBox = $("input[name='unit-price-dollars']");
+		$.fn.ShowResults($iptBox, $unitSumDollars);
+	};
 
-$.fn.CalculateSubSubUnitAmounts = function () {
-	$subSubUnitSumShekel = $("#subunit-price-shekel").val() / $("#Request_SubSubUnit").val();
-	$iptBox = $("input[name='subsubunit-price-shekel']");
-	$.fn.ShowResults($iptBox, $subSubUnitSumShekel);
-	var $exchangeRate = $("#Request_ExchangeRate").val();
-	$subSubUnitSumDollars = $subSubUnitSumShekel / $exchangeRate;
-	$iptBox = $("input[name='subsubunit-price-dollars']");
-	$.fn.ShowResults($iptBox, $subSubUnitSumDollars);
-};
+	$.fn.CalculateSubUnitAmounts = function () {
+		$subUnitSumShekel = $("#unit-price-shekel").val() / $("#Request_SubUnit").val();
+		$iptBox = $("input[name='subunit-price-shekel']");
+		$.fn.ShowResults($iptBox, $subUnitSumShekel);
+		var $exchangeRate = $("#Request_ExchangeRate").val();
+		$subUnitSumDollars = $subUnitSumShekel / $exchangeRate;
+		$iptBox = $("input[name='subunit-price-dollars']");
+		$.fn.ShowResults($iptBox, $subUnitSumDollars);
+	};
+
+	$.fn.CalculateSubSubUnitAmounts = function () {
+		$subSubUnitSumShekel = $("#subunit-price-shekel").val() / $("#Request_SubSubUnit").val();
+		$iptBox = $("input[name='subsubunit-price-shekel']");
+		$.fn.ShowResults($iptBox, $subSubUnitSumShekel);
+		var $exchangeRate = $("#Request_ExchangeRate").val();
+		$subSubUnitSumDollars = $subSubUnitSumShekel / $exchangeRate;
+		$iptBox = $("input[name='subsubunit-price-dollars']");
+		$.fn.ShowResults($iptBox, $subSubUnitSumDollars);
+	};
 
 	$.fn.EnableSubUnits = function () {
 		$("#Request_SubUnit").prop("disabled", false);
@@ -231,21 +231,21 @@ $.fn.CalculateSubSubUnitAmounts = function () {
 	};
 
 
-$.fn.EnableSubSubUnits = function () {
-	$("#Request_SubSubUnit").prop("disabled", false);
-	$.fn.EnableMaterialSelect('#Request_SubSubUnitTypeID', 'select-options-Request_SubSubUnitTypeID');
-};
+	$.fn.EnableSubSubUnits = function () {
+		$("#Request_SubSubUnit").prop("disabled", false);
+		$.fn.EnableMaterialSelect('#Request_SubSubUnitTypeID', 'select-options-Request_SubSubUnitTypeID');
+	};
 	$.fn.DisableSubUnits = function () {
 		$("#Request_SubUnit").prop("disabled", true);
 		$("#Request_SubUnitTypeID").destroyMaterialSelect();
 		$("#Request_SubUnitTypeID").prop("disabled", true);
 		$("#Request_SubUnitTypeID").materialSelect();
 
-	//$("#select-options-Request_SubUnitTypeID").prop("disabled", true);
-	//$("#select-options-Request_SubUnitTypeID").attr("aria-disabled", true);
-	//disable validation
-	//$('#Request_SubUnitTypeID').rules("remove", "selectRequired");
-};
+		//$("#select-options-Request_SubUnitTypeID").prop("disabled", true);
+		//$("#select-options-Request_SubUnitTypeID").attr("aria-disabled", true);
+		//disable validation
+		//$('#Request_SubUnitTypeID').rules("remove", "selectRequired");
+	};
 
 	$.fn.DisableSubSubUnits = function () {
 		$("#Request_SubSubUnit").prop("disabled", true);
@@ -253,169 +253,177 @@ $.fn.EnableSubSubUnits = function () {
 		$("#Request_SubSubUnitTypeID").prop("disabled", true);
 		$("#Request_SubSubUnitTypeID").materialSelect();
 	};
-$.fn.CheckUnitsFilled = function () {
-	console.log("in check units function");
-	if (($("#edit #Request_Unit").val() > 0 && $("#edit #Request_UnitTypeID").val())
-		|| ($("#select-options-Request_Unit").val() > 0 && $("#select-options-Request_UnitTypeID").val())) {
-		//console.log("both have values");
-		$.fn.EnableSubUnits();
-		$('.subUnitsCard').removeClass('d-none');
-		$('.sub-close').removeClass('d-none');
-		$('.addSubUnitCard').addClass('d-none');
-		$('.RequestSubsubunitCard').removeClass('d-none');
-		$("#Request_SubUnit").addClass('mark-readonly');
-		$("#Request_SubUnitTypeID").addClass('mark-readonly');
+	$.fn.CheckUnitsFilled = function () {
+		console.log("in check units function");
+		if (($("#edit #Request_Unit").val() > 0 && $("#edit #Request_UnitTypeID").val())
+			|| ($("#select-options-Request_Unit").val() > 0 && $("#select-options-Request_UnitTypeID").val())) {
+			//console.log("both have values");
+			$.fn.EnableSubUnits();
+			$('.subUnitsCard').removeClass('d-none');
+			$('.sub-close').removeClass('d-none');
+			$('.addSubUnitCard').addClass('d-none');
+			$('.RequestSubsubunitCard').removeClass('d-none');
+			$("#Request_SubUnit").addClass('mark-readonly');
+			$("#Request_SubUnitTypeID").addClass('mark-readonly');
+			$.fn.ChangeSubUnitDropdown();
+		}
+		//else {
+		//	$.fn.DisableSubUnits();
+		//	$.fn.DisableSubSubUnits();
+		//}
+		//$.fn.CalculateUnitAmounts();
+		//$.fn.CalculateSubUnitAmounts();
+		//$.fn.CalculateSubSubUnitAmounts();
+	};
+	$.fn.CheckSubUnitsFilled = function () {
+		console.log("in check sub units function");
+		if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
+			|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
+			$.fn.EnableSubSubUnits();
+			$('.subSubUnitsCard').removeClass('d-none');
+			$('.subsub-close').removeClass('d-none');
+			$('.addSubSubUnitCard').addClass('d-none');
+			//console.log("about to change subsubunitdropdown");
+			$("#Request_SubSubUnit").addClass('mark-readonly');
+			$("#Request_SubSubUnitTypeID").addClass('mark-readonly');
+			$.fn.ChangeSubSubUnitDropdown();
+		}
+		//else {
+		//	$.fn.DisableSubSubUnits();
+		//}
+		//$.fn.CalculateSubUnitAmounts();
+		//$.fn.CalculateSubSubUnitAmounts();
+	}
+
+	$.fn.CheckCurrency = function () {
+		alert("in check currency");
+		var currencyType = $("#currency").val();
+		switch (currencyType) {
+			case "dollar":
+				$("#Request_Cost").prop("readonly", true);
+				$("#sum-dollars").prop("disabled", false);
+
+				$("#unit-price-dollars").prop("disabled", false);
+				$("#unit-price-shekel").prop("disabled", true);
+				break;
+			case "shekel":
+				$("#Request_Cost").prop("readonly", false);
+				$("#sum-dollars").prop("disabled", true);
+
+				$("#unit-price-dollars").prop("disabled", true);
+				$("#unit-price-shekel").prop("disabled", false);
+				break;
+		}
+	};
+
+
+
+
+	$("#Request_Unit").change(function () {
+		//alert("request unit changed");
+		$.fn.CalculateUnitAmounts();
+		$.fn.CalculateSubUnitAmounts();
+		$.fn.CalculateSubSubUnitAmounts();
+	});
+
+	//$(".modal").on("click", "#Request_UnitTypeID", function () {
+	//	alert("modal Request_UnitTypeID was clicked");
+	//	$.fn.CheckUnitsFilled();
+
+
+	//});
+
+	$(".modal").on("change", "#Request_UnitTypeID", function () {
+		//	alert("modal Request_UnitTypeID was changed");
+		//$.fn.CheckUnitsFilled();
 		$.fn.ChangeSubUnitDropdown();
-	}
-	//else {
-	//	$.fn.DisableSubUnits();
-	//	$.fn.DisableSubSubUnits();
-	//}
-	//$.fn.CalculateUnitAmounts();
-	//$.fn.CalculateSubUnitAmounts();
-	//$.fn.CalculateSubSubUnitAmounts();
-};
-$.fn.CheckSubUnitsFilled = function () {
-	console.log("in check sub units function");
-	if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
-		|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
-		$.fn.EnableSubSubUnits();
-		$('.subSubUnitsCard').removeClass('d-none');
-		$('.subsub-close').removeClass('d-none');
-		$('.addSubSubUnitCard').addClass('d-none');
-		//console.log("about to change subsubunitdropdown");
-		$("#Request_SubSubUnit").addClass('mark-readonly');
-		$("#Request_SubSubUnitTypeID").addClass('mark-readonly');
 		$.fn.ChangeSubSubUnitDropdown();
-	}
-	//else {
-	//	$.fn.DisableSubSubUnits();
-	//}
-	//$.fn.CalculateSubUnitAmounts();
-	//$.fn.CalculateSubSubUnitAmounts();
-}
+	});
+	$(".modal").on("change", "#Request_SubUnitTypeID", function () {
+		//	alert("modal Request_SubUnitTypeID was changed");
+		$.fn.ChangeSubSubUnitDropdown();
+	});
 
-$.fn.CheckCurrency = function () {
-	var currencyType = $("#currency").val();
-	switch (currencyType) {
-		case "dollar":
-			$("#Request_Cost").prop("readonly", true);
-			$("#sum-dollars").prop("disabled", false);
-			break;
-		case "shekel":
-			$("#Request_Cost").prop("readonly", false);
-			$("#sum-dollars").prop("disabled", true);
-			break;
-	}
-};
+	$("#unit-type-select").on("change", function () {
+		//console.log("unit type id changed");
+		//alert("select options change was selected");
+		//$.fn.CheckUnitsFilled();
+		$.fn.ChangeSubUnitDropdown();
+		$.fn.ChangeSubSubUnitDropdown();
+	});
 
+	$("#Request_SubUnit").change(function () {
+		//console.log("about to check subunitsfilled");
+		$.fn.CalculateSubUnitAmounts();
+		$.fn.CalculateSubSubUnitAmounts();
+	});
+	$("#Request_UnitTypeID").change(function () {
+		$.fn.ChangeSubUnitDropdown();
+		$.fn.ChangeSubSubUnitDropdown();
+	});
+	$("#Request_SubUnitTypeID").change(function () {
+		//	console.log("about to check subunitsfilled");
+		//$.fn.CheckSubUnitsFilled();
+	});
+	$("#select-options-Request_SubUnitTypeID").change(function () {
+		//	console.log("about to check subunitsfilled");
+		//$.fn.CheckSubUnitsFilled();
+	});
 
+	$("#Request_SubSubUnit").change(function () {
+		//	console.log("about to check subunitsfilled");
+		$.fn.CalculateSubSubUnitAmounts();
+	});
 
+	$("#Request_SubSubUnitTypeID").change(function () {
+		//	console.log("about to check subunitsfilled");
+		//	$.fn.CheckSubUnitsFilled();
+	});
+	$("#select-options-Request_SubSubUnitTypeID").change(function () {
+		//console.log("about to check subunitsfilled");
+		//	$.fn.CheckSubUnitsFilled();
+	});
 
-$("#Request_Unit").change(function () {
-	//alert("request unit changed");
-	$.fn.CalculateUnitAmounts();
-	$.fn.CalculateSubUnitAmounts();
-	$.fn.CalculateSubSubUnitAmounts();
-});
+	//PRICE PAGE ON MODAL VIEW//
+	$("#price-tab").click(function () {
+		//$.fn.CheckUnitsFilled();
+		//$.fn.CheckSubUnitsFilled();
+		//I don't think that we need $.fn.CheckSubSubUnitsFilled over here b/c we don't need to enable or disable anything and the CalculateSubSubUnits should already run
+		$.fn.CalculateSumPlusVat();
+		$.fn.CheckCurrency();
+	});
 
-//$(".modal").on("click", "#Request_UnitTypeID", function () {
-//	alert("modal Request_UnitTypeID was clicked");
-//	$.fn.CheckUnitsFilled();
+	$("#currency").change(function (e) {
+		alert("Currency changed!");
+		$.fn.CheckCurrency();
+	});
 
+	$("#Request_ExchangeRate").change(function (e) {
+		$.fn.CalculateSumPlusVat();
+		$.fn.CalculateUnitAmounts();
+		$.fn.CalculateSubUnitAmounts();
+		$.fn.CalculateSubSubUnitAmounts();
+	});
 
-//});
+	$("#Request_Cost").change(function (e) {
+		$.fn.CalculateSumPlusVat();
+		$.fn.CalculateUnitAmounts();
+		$.fn.CalculateSubUnitAmounts();
+		$.fn.CalculateSubSubUnitAmounts();
 
-$(".modal").on("change", "#Request_UnitTypeID", function () {
-	//	alert("modal Request_UnitTypeID was changed");
-	//$.fn.CheckUnitsFilled();
-	$.fn.ChangeSubUnitDropdown();
-	$.fn.ChangeSubSubUnitDropdown();
-});
-$(".modal").on("change", "#Request_SubUnitTypeID", function () {
-	//	alert("modal Request_SubUnitTypeID was changed");
-	$.fn.ChangeSubSubUnitDropdown();
-});
+	});
 
-$("#unit-type-select").on("change", function () {
-	//console.log("unit type id changed");
-	//alert("select options change was selected");
-	//$.fn.CheckUnitsFilled();
-	$.fn.ChangeSubUnitDropdown();
-	$.fn.ChangeSubSubUnitDropdown();
-});
-
-$("#Request_SubUnit").change(function () {
-	//console.log("about to check subunitsfilled");
-	$.fn.CalculateSubUnitAmounts();
-	$.fn.CalculateSubSubUnitAmounts();
-});
-$("#Request_UnitTypeID").change(function () {
-	$.fn.ChangeSubUnitDropdown();
-	$.fn.ChangeSubSubUnitDropdown();
-});
-$("#Request_SubUnitTypeID").change(function () {
-//	console.log("about to check subunitsfilled");
-	//$.fn.CheckSubUnitsFilled();
-});
-$("#select-options-Request_SubUnitTypeID").change(function () {
-//	console.log("about to check subunitsfilled");
-	//$.fn.CheckSubUnitsFilled();
-});
-
-$("#Request_SubSubUnit").change(function () {
-//	console.log("about to check subunitsfilled");
-	$.fn.CalculateSubSubUnitAmounts();
-});
-
-$("#Request_SubSubUnitTypeID").change(function () {
-//	console.log("about to check subunitsfilled");
-//	$.fn.CheckSubUnitsFilled();
-});
-$("#select-options-Request_SubSubUnitTypeID").change(function () {
-	//console.log("about to check subunitsfilled");
-//	$.fn.CheckSubUnitsFilled();
-});
-
-//PRICE PAGE ON MODAL VIEW//
-$("#price-tab").click(function () {
-	//$.fn.CheckUnitsFilled();
-	//$.fn.CheckSubUnitsFilled();
-	//I don't think that we need $.fn.CheckSubSubUnitsFilled over here b/c we don't need to enable or disable anything and the CalculateSubSubUnits should already run
-    $.fn.CalculateSumPlusVat();
-	$.fn.CheckCurrency();
-});
-
-$("#currency").change(function (e) {
-	$.fn.CheckCurrency();
-});
-
-$("#Request_ExchangeRate").change(function (e) {
-	$.fn.CalculateSumPlusVat();
-	$.fn.CalculateUnitAmounts();
-	$.fn.CalculateSubUnitAmounts();
-	$.fn.CalculateSubSubUnitAmounts();
-});
-
-$("#Request_Cost").change(function (e) {
-	$.fn.CalculateSumPlusVat();
-	$.fn.CalculateUnitAmounts();
-	$.fn.CalculateSubUnitAmounts();
-	$.fn.CalculateSubSubUnitAmounts();
-
-});
-
-$("#sum-dollars").change(function (e) {
-	$.fn.CalculateSumPlusVat();
-    $.fn.CalculateUnitAmounts();
-	$.fn.CalculateSubUnitAmounts();
-	$.fn.CalculateSubSubUnitAmounts();
-	$.fn.updateDebt();
-});
+	$("#sum-dollars").change(function (e) {
+		$.fn.CalculateSumPlusVat();
+		$.fn.CalculateUnitAmounts();
+		$.fn.CalculateSubUnitAmounts();
+		$.fn.CalculateSubSubUnitAmounts();
+		$.fn.updateDebt();
+	});
 
 
 
-	$('.addSubUnit').click( function () {
+	$('.addSubUnit').click(function () {
 		$.fn.CheckUnitsFilled();
 	})
 
