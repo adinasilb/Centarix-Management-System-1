@@ -1,13 +1,14 @@
 ﻿@model PrototypeWithAuth.ViewModels.UpdateHoursViewModel;
+
+<script src="~/js/Validation/UpdateHoursValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
-<script src="~/js/Validation/ReportHoursFromHomeFormValidation.js"></script>
 <div class="modal modal-document fader on-form-modal timekeeper-form" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered modal-sm  mx-auto work-from-home-modal">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reportHoursForm">
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding UpdateHoursForm">
                 @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursID)
                 @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursStatusID)
                 @Html.HiddenFor(r => r.EmployeeHour.OffDayTypeID)
