@@ -2326,7 +2326,11 @@ input[type=text].error:not(.select-dropdown), input[type=number].error {
     background-position: 95% .5rem;
     background-size: 1.25rem 1.25rem;
 }
-
+div.required {
+    background-image: url('/img/star.png');
+    background-repeat: no-repeat;
+    background-position-x: right;
+}
 .owners-ml {
     margin-left: 4.375rem
 }
