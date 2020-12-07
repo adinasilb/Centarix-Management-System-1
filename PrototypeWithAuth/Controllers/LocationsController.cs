@@ -122,7 +122,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault()
             };
-            if (!visualLocationsViewModel.ParentLocationInstance.IsEmpty)
+            if (!visualLocationsViewModel.ParentLocationInstance.IsEmptyShelf)
             {
                 visualLocationsViewModel.ChildrenLocationInstances =
                     _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
@@ -493,7 +493,7 @@ namespace PrototypeWithAuth.Controllers
                                         {
                                             if (subLocationViewModel.EmptyShelves80?.ContainsKey(x) == true && subLocationViewModel.EmptyShelves80[x])
                                             {
-                                                newSublocationInstance.IsEmpty = true;
+                                                newSublocationInstance.IsEmptyShelf = true;
                                                 _context.Update(newSublocationInstance);
                                                 try
                                                 {

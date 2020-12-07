@@ -184,11 +184,23 @@
 		if ($(this).has("i").length) {
 
 			var locationInstanceId = $(this).children("input").first().attr("liid");
-			alert("added location to : " + locationInstanceId);
 
 			var lip = $(".liid." + locationInstanceId);
-			lip.val("true");
-			//chkBox.
+			console.log("lip val: " + lip.val());
+			if (lip.val() == "true") {
+				console.log("TRUE!");
+				lip.val("false"); //IMPT: sending back the true value to controller to place it here
+
+				$(this).children(".row-1").children("i").addClass("icon-add_circle_outline-24px1");
+				$(this).children(".row-1").children("i").removeClass("icon-delete-24px");
+			}
+			else {
+				console.log("FALSE!");
+				lip.val("true"); //IMPT: sending back the true value to controller to place it here
+
+				$(this).children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
+				$(this).children(".row-1").children("i").addClass("icon-delete-24px");
+			}
 		}
 	});
 

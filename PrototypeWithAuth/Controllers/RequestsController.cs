@@ -29,6 +29,7 @@ using SQLitePCL;
 using Microsoft.AspNetCore.Localization;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Linq.Expressions;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -2665,7 +2666,7 @@ namespace PrototypeWithAuth.Controllers
             var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
 
             //if it's an empty shelf- reset the location to the parent location instance id:
-            if (parentLocationInstance.LocationTypeID == 201 && parentLocationInstance.IsEmpty)
+            if (parentLocationInstance.LocationTypeID == 201 && parentLocationInstance.IsEmptyShelf)
             {
                 parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
             }
@@ -2681,14 +2682,14 @@ namespace PrototypeWithAuth.Controllers
             if (parentLocationInstance.LocationTypeID == 200) //check if it containes empty shelves ONLY IF -80
             {
                 Is80Freezer = true;
-                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmpty == true).ToList();
+                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmptyShelf == true).ToList();
                 if (shelves.Any())
                 {
                     hasEmptyShelves = true;
                 }
             }
 
-            if (parentLocationInstance.IsEmpty == true || (secondChildLi != null && !Is80Freezer) || (Is80Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
+            if (parentLocationInstance.IsEmptyShelf == true || (secondChildLi != null && !Is80Freezer) || (Is80Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
@@ -2735,25 +2736,58 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (place.Placed)
                     {
-                        var liParent = receivedModalVisualViewModel.ParentLocationInstance;
+                        hasLocationInstances = true;
+                        //getting the parentlocationinstanceid
+                        var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
                         var mayHaveParent = true;
                         while (mayHaveParent)
                         {
-                            if(liParent.LocationInstanceParentID != null)
+                            if (liParent.LocationInstanceParentID != null)
                             {
-                                liParent = liParent.LocationInstanceParent;
+                                liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
                             }
                             else
                             {
                                 mayHaveParent = false;
                             }
                         }
+
+                        //adding the requestlocationinstance
                         var rli = new RequestLocationInstance()
                         {
                             LocationInstanceID = place.LocationInstanceId,
                             RequestID = requestReceived.RequestID,
                             ParentLocationInstanceID = liParent.LocationInstanceID
                         };
+                        _context.Add(rli);
+                        try
+                        {
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+
+                        //updating the locationinstance
+                        var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
+                        if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 204)
+                        {
+                            locationInstance.IsFull = true;
+                        }
+                        else
+                        {
+                            locationInstance.ContainsItems = true;
+                        }
+                        _context.Update(locationInstance);
+                        try
+                        {
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
                     }
                 }
                 //foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)

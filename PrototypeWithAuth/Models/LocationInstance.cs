@@ -22,7 +22,8 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Location")]
         public string LocationInstanceName { get; set; }
         public string Place { get; set; }
-        public bool IsEmpty { get; set; }
+        public bool IsEmptyShelf { get; set; }
+        public bool ContainsItems { get; set; }
         public bool IsFull { get; set; }
         [Display(Name = "No")]
         public int CompanyLocationNo { get; set; }

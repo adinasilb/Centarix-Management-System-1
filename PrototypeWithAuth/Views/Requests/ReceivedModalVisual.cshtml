@@ -6,6 +6,7 @@
     //This is the current dynamically populated list sent into the controller:
     for (int p = 0; p< Model.LocationInstancePlaces.Count; p++)
     {
+        <input type="hidden" asp-for="LocationInstancePlaces[p].LocationInstanceId" />
         <input type="hidden" asp-for="LocationInstancePlaces[p].Placed" class="liid @Model.LocationInstancePlaces[p].LocationInstanceId" />
     }
 
@@ -41,7 +42,7 @@
                         }
                         var labelClass = "tiny-label-font-size float-left bottom-cell-label";
 
-                        if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && Model.ChildrenLocationInstances[z].IsEmpty)
+                        if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && Model.ChildrenLocationInstances[z].IsEmptyShelf)
                         {
                             classes += " open-new-visual";
                             <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
@@ -52,7 +53,7 @@
                                 </div>
                             </td>
                         }
-                        else if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && !Model.ChildrenLocationInstances[z].IsEmpty)
+                        else if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && !Model.ChildrenLocationInstances[z].IsEmptyShelf)
                         {
                             classes += " open-new-visual";
                             <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">

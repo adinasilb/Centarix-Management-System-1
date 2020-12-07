@@ -23,7 +23,7 @@
         <table class="table table-sm border-0">
             @foreach (var locationInstance in Model.SublocationInstances)
             {
-                if (!locationInstance.IsEmpty)
+                if (!locationInstance.IsEmptyShelf)
                 {
                     <tr class="border-0" name="@locationInstance.LocationInstanceParentID">
                         <td class="border-0 px-0">
