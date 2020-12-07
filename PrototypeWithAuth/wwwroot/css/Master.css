@@ -57,6 +57,7 @@
     --text-font-weight: 400;
     --small-text-font-size: .9rem;
     --graduated-table-background-color: #FAFAFB;
+    --tiny-label-font-size: 0.469375rem;
 }
 
 .success-color {
@@ -203,6 +204,47 @@ a.yearly-monthly, input[type=button].yearly-monthly {
     background-color: var(--graduated-table-background-color) !important;
 }
 
+.tiny-label-font-size {
+    font-size: var(--tiny-label-font-size);
+}
+.visual-box{
+    border: 1px solid var(--black-87);
+}
+
+/*.visual-box .row-1{
+    height: 75%;
+}
+.visual-box .row-2{
+    height: 25%;
+}*/
+
+/*table.visual-locations {
+    width: 100%;
+}
+
+table.visual-locations td {
+    width: 33.33%;
+    position: relative;
+}
+
+table.visual-locations td:after {
+    content: '';
+    display: block;
+    margin-top: 100%;
+}
+
+table.visual-locations td .content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: gold;
+}*/
+
+.bottom-cell-label {
+    margin-bottom: 0;
+}
 
 .px-2rem {
     padding-right: 2.25rem !important;

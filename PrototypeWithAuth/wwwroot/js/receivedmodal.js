@@ -108,6 +108,40 @@
 				context: myDiv,
 				success: function (result) {
 					$(this).html(result);
+
+					console.log("____________________________________");
+					var visualBox = $(".visual-box");
+					var visualShelf = $(".visual-shelf");
+					var table = $("table.visual-locations");
+					//table.css("width", "100%");
+					//var tableWidth = table.width();
+					//console.log("tableWidth: " + tableWidth);
+					//var tblH = tableWidth + "px";
+					//table.css("height", tblH);
+
+					var cols = 0;
+					$("table.visual-locations tr:nth-child(1) td").each(function () {
+						cols++; //no colspans so don't count for that here
+					});
+					console.log("cols: " + cols);
+					var perc = parseFloat(100) / parseFloat(cols);
+					console.log("perc: " + parseFloat(perc));
+					visualBoxWidth = perc + "%";
+					visualBox.css('width', visualBoxWidth);
+					//var width = visualBox.width();
+					//console.log("width: " + width);
+					//var heightPx = width + "px";
+					//visualBox.css('overflow', "hidden");
+					//visualBox.css('height', heightPx);
+
+					//var row1 = $(".visual-box .row-1");
+					//var row2 = $(".visual-box .row-2");
+					//var height = visualBox.height();
+					//console.log("height: " + height);
+					//var row1H = parseFloat(height, 10) * .75;
+					//console.log("row1H: " + row1H);
+					//var row2H = parseFloat(height, 10) * .25;
+					//console.log("row2H: " + row2H);
 				}
 			});
 		}
@@ -144,6 +178,18 @@
 		$("#1").parents('.dropdown-main').find('input').attr('value', childlocationinstanceid);
 
 		//now send a new visual
+	});
+
+	$(".visual-locations td").on("click", function () {
+		if ($(this).has("i").length) {
+
+			var locationInstanceId = $(this).children("input").first().attr("liid");
+			alert("added location to : " + locationInstanceId);
+
+			var lip = $(".liid." + locationInstanceId);
+			lip.val("true");
+			//chkBox.
+		}
 	});
 
 });
