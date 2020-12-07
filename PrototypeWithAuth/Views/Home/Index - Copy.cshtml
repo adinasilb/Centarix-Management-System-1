@@ -1,0 +1,81 @@
+﻿@model IEnumerable<PrototypeWithAuth.Models.Menu>
+@using PrototypeWithAuth.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_HomeView.cshtml";
+
+
+}
+@*Need to add security here*@
+
+<div class="text-center center-horizontally mt-3">
+    <h2>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h2>
+    <div class="container col-md-12" style="min-width:560px">
+        <div class="row mt-5 mb-2">
+            @{ var offset1 = "offset-";
+                var offset2 = "offset-";
+                int indexToBreakNextLine = Model.Count();
+                if (Model.Count() % 2 == 0 && Model.Count() > 5)
+                {
+                    indexToBreakNextLine = Model.Count() / 2;
+                    offset1 += (5 - (indexToBreakNextLine - 1));
+                    offset2 += (5 - (indexToBreakNextLine - 1));
+                }
+                else if (Model.Count() <= 5)
+                {
+                    offset1 += (5 - Model.Count() + 1);
+                }
+                else
+                {
+                    indexToBreakNextLine = (Model.Count() + 1) / 2;
+                    offset1 += (5 - (indexToBreakNextLine - 1));
+                    offset2 += (5 - (Model.Count() - indexToBreakNextLine - 1));
+                }
+            }
+
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+
+
+                if (0 == i)
+                {
+                    <div class="px-2 pt-2 @offset1 col-2 module-button-div text-center d-inline-block">
+                        <a class="module-button " href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new { })"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    </div>
+                }
+                else if (i == indexToBreakNextLine)
+                {
+                    <div class="px-2 pt-2 @offset2 col-2 module-button-div text-center d-inline-block">
+                        <a class="module-button " href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new { })"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    </div>
+                }
+                else
+                {
+                    <div class="px-2 pt-2  col-2 module-button-div text-center d-inline-block">
+                        <a class="module-button " href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new { })"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                    </div>
+                }
+
+            }
+        </div>
+        <div class="row mt-6 text-center"><div class="col-12">Version: 0.0.2</div></div>
+    </div>
+
+
+    @*<div class="mt-5">
+            <button type="submit" class="btn btn-success module-buttons">Protocols</button>
+            &nbsp;
+            @Html.ActionLink("Orders & Inventory", "Index", "Requests", new { /*should this be none or inventory?*/}, new { @class = "btn btn-info module-buttons" })
+            &nbsp;
+            @Html.ActionLink("Expenses", "Index", "ParentRequests", new { }, new { @class = "btn btn-primary module-buttons" })
+            &nbsp;
+            <button type="submit" class="btn btn-danger module-buttons">Biomarkers</button>
+            &nbsp;
+            @Html.ActionLink("Register A New User", "RegisterUser", "Admin", new { }, new { @class = "btn btn-secondary module-buttons" })
+        </div>*@
+
+</div>
