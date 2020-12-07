@@ -10,6 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public Dictionary<Project, List<Request>> Projects { get; set; }
         public List<int> Months { get; set; }
-        public int Year { get; set; }
+        public List<int> Years { get; set; }
     }
 }

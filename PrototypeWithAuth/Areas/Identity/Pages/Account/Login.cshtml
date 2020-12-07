@@ -18,6 +18,10 @@
             <form id="account" method="post">
 
                 <div asp-validation-summary="All" class="text-danger-centarix"></div>
+                @if (Model.SuccessMessage != null)
+                {
+                    <p class="text">@Model.SuccessMessage</p>
+                }
                 <div class="form-group text-center">
 
                     <input asp-for="Input.Email" class="form-control login-field" placeholder="Name" />

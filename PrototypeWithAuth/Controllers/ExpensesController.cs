@@ -334,7 +334,7 @@ namespace PrototypeWithAuth.Controllers
 
                 }
             }
-            
+
             return pieChartViewModel;
         }
 
@@ -470,19 +470,19 @@ namespace PrototypeWithAuth.Controllers
                 .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
                 .ToList();
 
-            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { DateTime.Now.Month }, 2020));
+            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Now.Year }));
         }
 
-        public IActionResult _StatisticsProjects(List<int> Months, int Year)
+        public IActionResult _StatisticsProjects(List<int> Months, List<int> Years)
         {
             var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
                 .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
                 .ToList();
 
-            return PartialView(GetStatisticsProjectViewModel(AllProjects, Months, Year));
+            return PartialView(GetStatisticsProjectViewModel(AllProjects, Months, Years));
         }
 
-        public static StatisticsProjectViewModel GetStatisticsProjectViewModel(List<Project> AllProjects, List<int> Months, int Year)
+        public static StatisticsProjectViewModel GetStatisticsProjectViewModel(List<Project> AllProjects, List<int> Months, List<int> Years)
         {
 
             //var MatchingRequests = _context.Requests.Where(r => r.Invoice.InvoiceDate.Month == 9).ToList();
@@ -496,7 +496,7 @@ namespace PrototypeWithAuth.Controllers
                     sp => sp.Requests
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
-                    .Where(r => r.Invoice?.InvoiceDate.Year == Year)
+                    .Where(r => Years.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Year)))
                     ).ToList();
                 Projects.Add(project, MonthlyRequestsInProject);
             }
@@ -505,7 +505,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 Projects = Projects,
                 Months = Months,
-                Year = Year
+                Years = Years
             };
 
             return statisticsProjectViewModel;
@@ -513,7 +513,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult _StatisticsSubProjects(int ProjectID, List<int> Months, int Year)
+        public IActionResult _StatisticsSubProjects(int ProjectID, List<int> Months, List<int> Years)
         {
             Dictionary<SubProject, List<Request>> subProjectRequests = new Dictionary<SubProject, List<Request>>();
 
@@ -526,7 +526,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.SubProjectID == subproject.SubProjectID)
                     .Where(r => r.InvoiceID != null)
                     .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month))
-                    .Where(r => r.Invoice.InvoiceDate.Year == Year).ToList();
+                    .Where(r => Years.Contains(r.Invoice.InvoiceDate.Year)).ToList();
                 subProjectRequests.Add(subproject, requests);
             }
 
@@ -580,24 +580,24 @@ namespace PrototypeWithAuth.Controllers
 
             var employees = await _context.Employees.ToListAsync();
             var categoryTypes = await _context.CategoryTypes.ToListAsync();
-            var months = new List<int> { 9 };
-            var year = DateTime.Today.Year;
+            var months = new List<int> { DateTime.Today.Month };
+            var years = new List<int> { DateTime.Today.Year };
 
-            return View(GetStatisticsWorkerViewModel(employees, categoryTypes, months, year));
+            return View(GetStatisticsWorkerViewModel(employees, categoryTypes, months, years));
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public async Task<IActionResult> _StatisticsWorkerChart(List<int> CategoryTypeIDs, List<int> Months, int Year)
+        public async Task<IActionResult> _StatisticsWorkerChart(List<int> CategoryTypeIDs, List<int> Months, List<int> Years)
         {
             var employees = await _context.Employees.ToListAsync();
             var categoryTypes = await _context.CategoryTypes.Where(ct => CategoryTypeIDs.Contains(ct.CategoryTypeID)).ToListAsync();
 
-            return PartialView(GetStatisticsWorkerViewModel(employees, categoryTypes, Months, Year));
+            return PartialView(GetStatisticsWorkerViewModel(employees, categoryTypes, Months, Years));
         }
 
 
-        public StatisticsWorkerViewModel GetStatisticsWorkerViewModel(List<Employee> Employees, List<CategoryType> CategoryTypes, List<int> Months, int Year)
+        public StatisticsWorkerViewModel GetStatisticsWorkerViewModel(List<Employee> Employees, List<CategoryType> CategoryTypes, List<int> Months, List<int> Years)
         {
             Dictionary<Employee, List<Request>> EmployeeRequests = new Dictionary<Employee, List<Request>>();
 
@@ -607,7 +607,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.ApplicationUserCreator.Id == employee.Id)
                     .Where(r => CategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryType))
                     .Where(r => r.Invoice != null)
-                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == Year)
+                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => Years.Contains(r.Invoice.InvoiceDate.Year))
                     .ToList();
                 EmployeeRequests.Add(employee, requests);
             }
@@ -618,7 +618,7 @@ namespace PrototypeWithAuth.Controllers
                 CategoryTypesSelected = CategoryTypes,
                 CategoryTypes = _context.CategoryTypes.ToList(),
                 Months = Months,
-                Year = Year
+                Years = Years
             };
 
             return statisticsWorkerViewModel;
@@ -636,19 +636,19 @@ namespace PrototypeWithAuth.Controllers
             var parentCategories = _context.ParentCategories.ToList();
             var catTypes = _context.CategoryTypes.Select(ct => ct.CategoryTypeID).ToList();
 
-            return View(GetStatisticsCategoryViewModel(parentCategories, catTypes, new List<int>() { DateTime.Now.Month }, DateTime.Today.Year));
+            return View(GetStatisticsCategoryViewModel(parentCategories, catTypes, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Today.Year }));
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult _CategoryTypes(List<int> categoryTypes, List<int> months, int year)
+        public IActionResult _CategoryTypes(List<int> categoryTypes, List<int> months, List<int> years)
         {
             var parentCategories = _context.ParentCategories.ToList();
 
-            return PartialView(GetStatisticsCategoryViewModel(parentCategories, categoryTypes, months, year));
+            return PartialView(GetStatisticsCategoryViewModel(parentCategories, categoryTypes, months, years));
         }
 
-        public StatisticsCategoryViewModel GetStatisticsCategoryViewModel(List<ParentCategory> parentCategories, List<int> categoryTypes, List<int> months, int year)
+        public StatisticsCategoryViewModel GetStatisticsCategoryViewModel(List<ParentCategory> parentCategories, List<int> categoryTypes, List<int> months, List<int> years)
         {
             Dictionary<ParentCategory, List<Request>> ParentCategories = new Dictionary<ParentCategory, List<Request>>();
             foreach (var pc in parentCategories)
@@ -657,7 +657,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
                     .Where(r => r.Invoice != null)
-                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == year)
+                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => years.Contains(r.Invoice.InvoiceDate.Year))
                     .ToList();
                 ParentCategories.Add(pc, pcRequests);
             }
@@ -667,14 +667,14 @@ namespace PrototypeWithAuth.Controllers
                 Months = months,
                 CategoryTypes = _context.CategoryTypes.ToList(),
                 CategoryTypeSelected = _context.CategoryTypes.Where(ct => categoryTypes.Contains(ct.CategoryTypeID)).ToList(),
-                Year = year
+                Years = years
             };
             return statisticsCategoryViewModel;
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult _SubCategoryTypes(int ParentCategoryId, List<int> categoryTypes, List<int> months, int year)
+        public IActionResult _SubCategoryTypes(int ParentCategoryId, List<int> categoryTypes, List<int> months, List<int> years)
         {
             var subCategories = _context.ProductSubcategories.Where(sc => sc.ParentCategoryID == ParentCategoryId).ToList();
             Dictionary<ProductSubcategory, List<Request>> productSubs = new Dictionary<ProductSubcategory, List<Request>>();
@@ -684,7 +684,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
                     .Where(r => r.Invoice != null)
-                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => r.Invoice.InvoiceDate.Year == year)
+                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => years.Contains(r.Invoice.InvoiceDate.Year))
                     .ToList();
                 productSubs.Add(sc, scRequests);
             }
@@ -704,8 +704,49 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.StatisticsVendor.ToString();
-            return View();
+
+            var catTypes = _context.CategoryTypes.ToList();
+
+            return View(GetStatisticsVendorViewModel(catTypes, new List<int> { DateTime.Now.Month }, new List<int> { DateTime.Now.Year }));
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, CEO, Expenses")]
+        public IActionResult _VendorsTable(List<int> CategoryTypes, List<int> Months, List<int> Years)
+        {
+            var catTypes = _context.CategoryTypes.Where(ct => CategoryTypes.Contains(ct.CategoryTypeID)).ToList();
+            return PartialView(GetStatisticsVendorViewModel(catTypes, Months, Years));
+        }
+
+        public StatisticsVendorViewModel GetStatisticsVendorViewModel(List<CategoryType> CategoryTypes, List<int> Months, List<int> Years)
+        {
+            Dictionary<Vendor, List<Request>> VendorRequests = new Dictionary<Vendor, List<Request>>();
+
+            foreach (var vendor in _context.Vendors.ToList())
+            {
+                var requests = _context.Requests
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
+                .Where(r => r.Product.Vendor.VendorID == vendor.VendorID)
+                .Where(r => CategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryType))
+                .Where(r => r.Invoice != null)
+                .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => Years.Contains(r.Invoice.InvoiceDate.Year))
+                   .ToList();
+                VendorRequests.Add(vendor, requests);
+            }
+
+            StatisticsVendorViewModel svvm = new StatisticsVendorViewModel()
+            {
+                Vendors = VendorRequests,
+                CategoryTypesSelected = CategoryTypes,
+                CategoryTypes = _context.CategoryTypes.ToList(),
+                Months = Months,
+                Years = Years
+            };
+            return svvm;
+        }
+
+
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
         public IActionResult CostsProject()

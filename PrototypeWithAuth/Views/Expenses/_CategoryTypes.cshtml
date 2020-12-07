@@ -3,7 +3,10 @@
 
     <script src="~/js/statisticscategory.js"></script>
 <div class="my-hiddenvalues-2">
-    <input type="hidden" asp-for="Year" />
+    @for (int y = 0; y< Model.Years.Count; y++)
+    {
+        <input type="hidden" asp-for="Years[y]" class="years-selected" />
+    }
     @for (int i = 0; i < Model.Months.Count; i++)
     {
         <input type="hidden" asp-for="Months[i]" class="months-selected" />

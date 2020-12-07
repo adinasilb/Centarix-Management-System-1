@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             public PrototypeWithAuth.ViewModels.TwoFactorAuthenticationViewModel TwoFactorAuthenticationViewModel { get; set; }
         }
 
-        public async Task<IActionResult> OnGet(string code = null, string userID = null, string errorMessage=null)
+        public async Task<IActionResult> OnGet(string code = null, string userID = null, string errorMessage = null)
         {
             if (code == null)
             {
@@ -100,8 +100,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             {
                 // Don't reveal that the user does not exist
                 return RedirectToPage("./ResetPasswordConfirmation");
-            }
-           ;
+            };
 
 
             var result = await _userManager.ResetPasswordAsync(user, Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Input.Code)), Input.Password);
@@ -120,7 +119,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     ////return View(resetPasswordViewModel);
                     //var pcode = await _userManager.GeneratePasswordResetTokenAsync(user);
                     //pcode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(pcode));
-                    return RedirectToPage("./Login", new { errorMessage= Input.ErrorMessage});
+                    return RedirectToPage("./Login", new { errorMessage = Input.ErrorMessage });
 
                 }
 
@@ -138,7 +137,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 }
                 else if (signInResult.RequiresTwoFactor) //took out the is locked out query- b/c they may be suspended
                 {
-                    return RedirectToPage(".LoginWith2fa");
+                    return RedirectToPage("./Login", new { SuccessMessage = "Password Reset & 2 Factor Authentication Setup Successful.\nLogin to Continue" });
 
                     //var authenticatorCode = Input.TwoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
 

@@ -6,7 +6,7 @@
         @{
             int z = -1;
         }
-        @Html.HiddenFor(vm => vm.ParentLocationInstance.LocationInstanceID);
+        @Html.HiddenFor(vm => vm.ParentLocationInstance.LocationInstanceID)
         @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
         {
         <tr>

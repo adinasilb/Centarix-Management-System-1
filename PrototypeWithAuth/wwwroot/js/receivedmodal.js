@@ -64,7 +64,6 @@
 		$(nextSelect).html('');
 		console.log(nextSelect)
 		var locationInstanceParentId = $(el).val();
-		alert("locationinstanceparentid: " + locationInstanceParentId);
 		var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
 
 		if (nextSelect != undefined) { //if there is another one

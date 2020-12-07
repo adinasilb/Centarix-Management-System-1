@@ -6,11 +6,11 @@ using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class StatisticsCategoryViewModel
+    public class StatisticsVendorViewModel
     {
-        public Dictionary<ParentCategory, List<Request>> ParentCategories { get; set; }
+        public Dictionary<Vendor, List<Request>> Vendors { get; set; }
         public List<CategoryType> CategoryTypes { get; set; }
-        public List<CategoryType> CategoryTypeSelected { get; set; }
+        public List<CategoryType> CategoryTypesSelected { get; set; }
         public List<int> Months { get; set; }
         public List<int> Years { get; set; }
     }

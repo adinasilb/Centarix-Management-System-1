@@ -1,6 +1,7 @@
-﻿@model StatisticsWorkerViewModel
-@using PrototypeWithAuth.ViewModels
-
+﻿@model PrototypeWithAuth.ViewModels.StatisticsVendorViewModel;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
 @for (int c = 0; c < Model.CategoryTypesSelected.Count; c++)
 {
     <input type="hidden" asp-for="CategoryTypesSelected[c].CategoryTypeID" class="category-type-selected" />
@@ -27,31 +28,31 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var employee in Model.Employees)
+        @foreach (var vendor in Model.Vendors)
         {
             <tr class="text-center">
                 <td class="py-2">
                     @{
                         var src = "/UserImages/user-image-placeholder.png";
-                        if (employee.Key.UserImage != null)
-                        {
-                            src = employee.Key.UserImage;
-                        }
+                        //if (vendor.Key.UserImage != null)
+                        //{
+                        //    src = employee.Key.UserImage;
+                        //}
                     }
                     <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
                 </td>
                 <td class="p-0">
-                    @employee.Key.FirstName
-                    @employee.Key.LastName
+                    @vendor.Key.VendorEnName
+                    @vendor.Key.VendorHeName
                 </td>
                 <td class="p-0">
-                    @employee.Value.Count()
+                    @vendor.Value.Count()
                 </td>
                 <td class="p-0">
-                    @employee.Value.Select(r => r.Product).Distinct().Count()
+                    @vendor.Value.Select(r => r.Product).Distinct().Count()
                 </td>
                 <td class="p-0">
-                    &#8362; @string.Format("{0:n0}", employee.Value.Sum(r => r.Cost))
+                    &#8362; @string.Format("{0:n0}", vendor.Value.Sum(r => r.Cost))
                 </td>
                 <td class="p-0">
                 </td>

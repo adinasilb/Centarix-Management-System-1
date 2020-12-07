@@ -8,7 +8,7 @@
     ViewData["Title"] = "StatisticsWorker";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-    <script src="~/js/statisticsworker.js"></script>
+<script src="~/js/statisticsworker.js"></script>
 <input type="hidden" class="setupdropdowns" value="true" />
 <div class="container-fluid">
 
@@ -19,29 +19,33 @@
 
             @{
                 var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
-                int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
             }
 
             @Html.DropDownList("select-years", years.Select(x =>
  new SelectListItem
  {
      Text = x.ToString(),
-     Value = x.ToString(),
-     Selected = (x == curYear)
+     Value = x.ToString()
  }
-), htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right change-year", @name = "SelectedYear", @searchable = "Search here.." })
+), htmlAttributes: new
+     {
+         @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right change-year",
+  @multiple = "multiple",
+         @name = "SelectedYear",
+         @searchable = "Search here.."
+     })
 
 
-                @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
-                @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
-                    new SelectListItem
-                    {
-                        Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
-                        Value = m.ToString(),
-                        //Selected = Model.Months
-                    }),
-                    htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
-          
+            @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+            @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
+                new SelectListItem
+                {
+                    Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+                    Value = m.ToString(),
+                    //Selected = Model.Months
+                }),
+                htmlAttributes: new { @class = "expenses mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
+
             @Html.DropDownListFor(m => m.CategoryTypesSelected,
             new SelectList(
                 Model.CategoryTypes,
@@ -51,7 +55,7 @@
             )
 
             @*</div>
-        <div class="col-1 p-0 monthsHours">*@
+                <div class="col-1 p-0 monthsHours">*@
 
         </div>
 
@@ -69,11 +73,15 @@
             //$("input[data-activates='select-options-CategoryTypesSelected']").val('')
 
             $(".category-type-selected").each(function () {
-                $("#CategoryTypesSelected option[value='"+$(this).val()+"']").attr("selected", true);
+                $("#CategoryTypesSelected option[value='" + $(this).val() + "']").attr("selected", true);
             });
 
             $(".months-selected").each(function () {
                 $("#Months option[value='" + $(this).val() + "']").attr("selected", true);
+            });
+
+            $(".years-selected").each(function () {
+                $("#select-years option[value='" + $(this).val() + "']").attr("selected", true);
             });
         };
 

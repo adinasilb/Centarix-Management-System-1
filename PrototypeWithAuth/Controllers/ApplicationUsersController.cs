@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Abp.Threading.Extensions;
 using PrototypeWithAuth.ViewModels;
 using static PrototypeWithAuth.AppData.AppUtility;
+using Microsoft.EntityFrameworkCore.Query;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PrototypeWithAuth.Controllers
@@ -33,7 +34,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1)
         {
-            TempData["CategoryType"] = categoryType == 1 ? AppUtility.CategoryTypeEnum.Lab:AppUtility.CategoryTypeEnum.Operations ;
+            TempData["CategoryType"] = categoryType == 1 ? AppUtility.CategoryTypeEnum.Lab : AppUtility.CategoryTypeEnum.Operations;
             if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
@@ -53,7 +54,7 @@ namespace PrototypeWithAuth.Controllers
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
                 }
             }
-            return View(await _context.Users.Where(u=>!u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync());
+            return View(await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync());
         }
 
         [HttpGet]
@@ -63,7 +64,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersDetails;
-            var employees = _context.Users.OfType<Employee>().Where(u=>u.EmployeeStatusID!=4).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
+            IIncludableQueryable<Employee, JobCategoryType> employees = _context.Users.OfType<Employee>().Where(u => u.EmployeeStatusID != 4).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
                 .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobCategoryType);
             EmployeeDetailsViewModel employeeDetailsViewModel = new EmployeeDetailsViewModel
             {
@@ -81,18 +82,18 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Hours(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0)
         {
-            var viewModel = hoursPagePopulate(yearlyMonthlyEnum, month, year);
+            WorkersHoursViewModel viewModel = hoursPagePopulate(yearlyMonthlyEnum, month, year);
             return View(viewModel);
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
-        public async Task<IActionResult> _Hours(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0, int amountInYear= 0)
+        public async Task<IActionResult> _Hours(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0, int amountInYear = 0)
         {
-            var viewModel = hoursPagePopulate(yearlyMonthlyEnum, month, year, amountInYear);
+            WorkersHoursViewModel viewModel = hoursPagePopulate(yearlyMonthlyEnum, month, year, amountInYear);
             return PartialView(viewModel);
         }
-        private WorkersHoursViewModel hoursPagePopulate(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0, int amountInYear =0)
+        private WorkersHoursViewModel hoursPagePopulate(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0, int amountInYear = 0)
         {
             if (year == 0)
             {
@@ -105,10 +106,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersHours;
-            var employees = _context.Users.OfType<Employee>().Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
-              .Include(e => e.EmployeeStatus).Include(e => e.JobCategoryType).Include(e => e.EmployeeHours).Include(e=>e.SalariedEmployee);
+            IIncludableQueryable<Employee, SalariedEmployee> employees = _context.Users.OfType<Employee>().Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
+              .Include(e => e.EmployeeStatus).Include(e => e.JobCategoryType).Include(e => e.EmployeeHours).Include(e => e.SalariedEmployee);
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
-            foreach (var employee in employees)
+            foreach (Employee employee in employees)
             {
                 int vacationDays = 0;
                 int workDays = 0;
@@ -133,29 +134,30 @@ namespace PrototypeWithAuth.Controllers
                         break;
                 }
 
-                var worker = new WorkerHourViewModel
+                WorkerHourViewModel worker = new WorkerHourViewModel
                 {
                     Employee = employee,
                     SickDays = sickDays,
                     VacationDays = vacationDays,
                     WorkingDays = workDays,
                     Hours = hours,
-                    VacationSickCount =  vacationSickCount };
-            workerHoursViewModel.Add(worker);
+                    VacationSickCount = vacationSickCount
+                };
+                workerHoursViewModel.Add(worker);
+            }
+            WorkersHoursViewModel viewModel = new WorkersHoursViewModel
+            {
+                Year = year,
+                Month = month,
+                YearlyMonthlyEnum = yearlyMonthlyEnum,
+                Employees = workerHoursViewModel,
+                Months = Enumerable.Range(1, 12).ToList(),
+                Years = Enumerable.Range(2010, DateTime.Today.Year - 2009).ToList(),
+                TotalWorkingDaysInMonth = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, month, 1), _context.CompanyDayOffs, 0),
+                TotalWorkingDaysInYear = amountInYear == 0 ? AppUtility.GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), _context.CompanyDayOffs, 0) : amountInYear
+            };
+            return viewModel;
         }
-        var viewModel = new WorkersHoursViewModel
-        {
-            Year = year,
-            Month = month,
-            YearlyMonthlyEnum = yearlyMonthlyEnum,
-            Employees = workerHoursViewModel,
-            Months = Enumerable.Range(1, 12).ToList(),
-            Years = Enumerable.Range(2010, DateTime.Today.Year - 2009).ToList(),
-            TotalWorkingDaysInMonth = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, month, 1), _context.CompanyDayOffs,0),
-            TotalWorkingDaysInYear = amountInYear==0?AppUtility.GetTotalWorkingDaysThisYear (new DateTime(year, 1,1), _context.CompanyDayOffs, 0):amountInYear
-        };
-        return viewModel;
-    }
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Salary()
@@ -188,7 +190,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatus).ToList();
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
-            foreach (var ehaa in employeeHoursAwaitingApproval)
+            foreach (EmployeeHoursAwaitingApproval ehaa in employeeHoursAwaitingApproval)
             {
                 bool entry1 = false;
                 bool entry2 = false;
@@ -235,8 +237,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ApproveHours(int id)
         {
             EmployeeHours employeeHours = new EmployeeHours();
-            var employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).FirstOrDefaultAsync();
-            var oldEmployeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
+            EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).FirstOrDefaultAsync();
+            EmployeeHours oldEmployeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
             if (oldEmployeeHours != null)
             {
                 if (oldEmployeeHours.EmployeeHoursStatusID != 1)

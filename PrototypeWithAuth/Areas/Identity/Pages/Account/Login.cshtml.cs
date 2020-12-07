@@ -51,6 +51,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
         [TempData]
         public string ErrorMessage { get; set; }
+        [TempData]
+        public string SuccessMessage { get; set; }
 
         public class InputModel
         {
@@ -66,9 +68,10 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null, string errorMessage=null)
+        public async Task OnGetAsync(string returnUrl = null, string errorMessage=null, string successMessage = null)
         {
             ErrorMessage = errorMessage;
+            SuccessMessage = successMessage;
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);

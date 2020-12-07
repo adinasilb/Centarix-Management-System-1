@@ -70,7 +70,6 @@ namespace PrototypeWithAuth.Models
         public double Cost { get; set; } //this is always shekel no matter what currency is
         public string Currency { get; set; }
 
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         [Required]
         [Display(Name = "Catalog Number")]
         public string CatalogNumber { get; set; }

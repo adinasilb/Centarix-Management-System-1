@@ -46,8 +46,15 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/Validation/CreateVendorFormValidation.js"></script>
+
+
 <input type="hidden" class="old-name" value="@Model.Vendor.VendorEnName" />
 <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; border: 2px solid #EAEAEB;">
+    <input type="hidden" class="setupdropdowns" value="true" />
+    @for (int ct = 0; ct < Model.VendorCategoryTypes.Count; ct++)
+    {
+        <input type="hidden" asp-for="VendorCategoryTypes[0]" class="vendor-cat-types" />
+    }
     <div class=" row text-right mb-0">
         <div class="switch col-12 switch-margin">
             <label>
@@ -76,16 +83,19 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label class="control-label">Category Type</label>
-                        <select class=" mdb-select custom select-dropdown form-control-plaintext mark-readonly" asp-for="VendorCategoryTypes" multiple disabled>
-                            @foreach (var categoryType in Model.CategoryTypes)
-                            {
-                                <option value="@categoryType.CategoryTypeID">
-                                    @categoryType.CategoryTypeDescription
-                                </option>
+                        @Html.DropDownListFor(m => m.VendorCategoryTypes,
+                       new SelectList(Model.CategoryTypes, "CategoryTypeID", "CategoryTypeDescription"),
+                        new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @multiple = "multiple", @disabled = "disabled" })
+                        @*<select class=" mdb-select custom select-dropdown form-control-plaintext mark-readonly" asp-for="VendorCategoryTypes" multiple disabled>
+                                @foreach (var categoryType in Model.CategoryTypes)
+                                {
+                                    <option value="@categoryType.CategoryTypeID">
+                                        @categoryType.CategoryTypeDescription
+                                    </option>
 
-                            }
+                                }
 
-                        </select>
+                            </select>*@
                     </div>
                 </div>
                 <div class="col-6">
@@ -346,3 +356,17 @@
         $.fn.ChangeCheckboxesToFilledIn();
     </script>
 }
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            alert("doc ready of vendors edit partial");
+            $.fn.SetUpDropdowns();
+        });
+        $.fn.SetUpDropdowns = function () {
+            $(".vendor-cat-types").each(function () {
+                $("#VendorCategoryTypes option[value='" + $(this).val() + "']").attr("selected", true);
+                console.log("value of cat type is: " + $(this).val());
+            });
+        };
+    });
+</script>

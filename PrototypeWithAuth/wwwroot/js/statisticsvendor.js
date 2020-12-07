@@ -1,17 +1,17 @@
 ﻿$(function () {
 	$("#select-years").off("change").on("change", function () {
-		$.fn.GetStatisticsWorkerChartPartial();
+		$.fn.GetStatisticsVendorChartPartial();
 	});
 
 	$("#CategoryTypesSelected").off("change").on("change", function () {
-		$.fn.GetStatisticsWorkerChartPartial()
+		$.fn.GetStatisticsVendorChartPartial()
 	});
 
 	$("#Months").off("change").on("change", function () {
-		$.fn.GetStatisticsWorkerChartPartial()
+		$.fn.GetStatisticsVendorChartPartial()
 	});
 
-	$.fn.GetStatisticsWorkerChartPartial = function () {
+	$.fn.GetStatisticsVendorChartPartial = function () {
 		var years = [];
 		years = $("#select-years").val();
 		var months = [];
@@ -19,7 +19,7 @@
 		var catTypes = [];
 		catTypes = $("#CategoryTypesSelected").val();
 
-		var url = "/Expenses/_StatisticsWorkerChart";
+		var url = "/Expenses/_VendorsTable";
 
 		$.ajax({
 			async: true,
@@ -27,10 +27,10 @@
 			type: 'GET',
 			traditional: true,
 			cache: false,
-			data: { CategoryTypeIDs: catTypes, Months: months, Years: years },
+			data: { CategoryTypes: catTypes, Months: months, Years: years },
 			success: function (data) {
-				$(".statistics-worker-chart").empty();
-				$(".statistics-worker-chart").html(data);
+				$(".statistics-vendor-chart").empty();
+				$(".statistics-vendor-chart").html(data);
 			}
 		});
 	};
