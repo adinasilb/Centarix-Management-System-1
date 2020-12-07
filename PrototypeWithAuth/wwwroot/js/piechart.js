@@ -7,16 +7,26 @@
 			},
 			"Currency": {
 				selectRequired: true,
-			}
+			},
 		}
 	});
 
 	$("#createPieChart").click(function (e) {
 		//alert("validate form");
 		e.preventDefault();
+		$.fn.getChart("/Expenses/_PieChart");
+		
+	});
+	$(".chart-dropdownlists").on("click", "#createGraphChart", function (e) {
+		e.preventDefault();
+		$.fn.getChart("/Expenses/_GraphChart");
+	
+	});
+	
+	$.fn.getChart = function (url) {
 		$(".chartForm").data("validator").settings.ignore = "";
 		var valid = $(".chartForm").valid();
-		
+
 		if (!valid) {
 			$(".chartForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
@@ -26,48 +36,22 @@
 		}
 		else {
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
-			$.fn.getChart("/Expenses/_PieChart");
+			var formData = new FormData($(".chartForm")[0]);
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: formData,
+
+				success: function (data) {
+
+					$('.chartDiv').html(data);
+				},
+				processData: false,
+				contentType: false
+			});
 			return true;
 		}
-		
-	});
-	$(".chart-dropdownlists").on("click", "#createGraphChart", function (e) {
-		e.preventDefault();
-		//alert("validate form");
-		$(this).data("validator").settings.ignore = "";
-		var valid = $(this).valid();
-		
-		if (!valid) {
-			$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
-			}
-			return false;
-		}
-		else {
-			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
-			$.fn.getChart("/Expenses/_GraphChart");
-			return true;
-		}
-	
-	});
-	$.fn.getChart = function(url)
-	{
-		var formData = new FormData($(".chartForm")[0]);
-		$.ajax({
-			url: url,
-			method: 'POST',
-			data: formData,
-
-			success: function (data) {
-
-				$('.chartDiv').html(data);
-			},
-			processData: false,
-			contentType: false
-		});
 	}
-
 	$.fn.filterByCategoryType = function () {
 
 		var selectedCategoryTypes = $("#SelectedCategoryTypes").map(function (i, el) {

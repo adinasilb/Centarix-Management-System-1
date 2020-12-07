@@ -1,17 +1,24 @@
-﻿@model PrototypeWithAuth.Models.EmployeeHours;
+﻿@model PrototypeWithAuth.ViewModels.UpdateHoursViewModel;
+
+<script src="~/js/Validation/UpdateHoursValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
-<script src="~/js/Validation/ReportHoursFromHomeFormValidation.js"></script>
 <div class="modal modal-document fader on-form-modal timekeeper-form" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered modal-sm  mx-auto work-from-home-modal">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reportHoursForm">
-                @Html.HiddenFor(r => r.EmployeeHoursID)
-                @Html.HiddenFor(r => r.EmployeeHoursStatusID)
-                @Html.HiddenFor(r => r.OffDayTypeID)
-                @Html.HiddenFor(r => r.EmployeeID)
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding UpdateHoursForm">
+                @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursID)
+                @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursStatusID)
+                @Html.HiddenFor(r => r.EmployeeHour.OffDayTypeID)
+                @Html.HiddenFor(r => r.EmployeeHour.EmployeeID)
+                @{var disabled = false;
+                    if (Model.PageType.Equals("SummaryHours"))
+                    {
+                        disabled = true;
+                    }
+                }
                 <div class="modal-header border-0 border-bottom modal-header-padding">
                     <div class="container">
                         <div class="heading-1">
@@ -26,44 +33,52 @@
                     <div class="row">
                         <div class="col-md-6 pr-4">
                             <label class="control-label">Day</label>
-                            <input asp-for="Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week " disabled />
-                            <span asp-validation-for="Date.DayOfWeek" class="text-danger-centarix " />
+                            <input asp-for="EmployeeHour.Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week " disabled />
+                            <span asp-validation-for="EmployeeHour.Date.DayOfWeek" class="text-danger-centarix " />
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="Date" class="control-label"></label>
-                            <input asp-for="Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
-                            <span asp-validation-for="Date" class="text-danger-centarix " />
+                            <label asp-for="EmployeeHour.Date" class="control-label"></label>
+                            @if (disabled)
+                            {
+                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" disabled />
+                            }
+                            else
+                            {
+                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                            }
+
+                            <span asp-validation-for="EmployeeHour.Date" class="text-danger-centarix " />
                         </div>
                     </div>
                     <br />
                     <div class="row">
                         <div class="col-4 ">
-                            <label asp-for="Entry1" class="control-label">Entry</label>
-                            <input asp-for="Entry1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="Entry1" class="text-danger-centarix"></span>
+                            <label asp-for="EmployeeHour.Entry1" class="control-label">Entry</label>
+                            <input asp-for="EmployeeHour.Entry1" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHour.Entry1" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-4 ">
-                            <label asp-for="Exit1" class="control-label">Exit</label>
-                            <input asp-for="Exit1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="Exit1" class="text-danger-centarix"></span>
+                            <label asp-for="EmployeeHour.Exit1" class="control-label">Exit</label>
+                            <input asp-for="EmployeeHour.Exit1" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHour.Exit1" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-4">
-                            <label asp-for="TotalHours" class="control-label"></label>
-                            <input asp-for="TotalHours" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="TotalHours" class="text-danger-centarix"></span>
+                            <label asp-for="EmployeeHour.TotalHours" class="control-label"></label>
+                            <input asp-for="EmployeeHour.TotalHours" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHour.TotalHours" class="text-danger-centarix"></span>
                         </div>
                     </div>
-                    @if (Model.Entry2 != null)
+                    @if (Model.EmployeeHour.Entry2 != null)
                     {
 
                         <div class="row entry2Div">
                             <div class="col-4 ">
-                                <input asp-for="Entry2" class="form-control-plaintext border-bottom " />
-                                <span asp-validation-for="Entry2" class="text-danger-centarix"></span>
+                                <input asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " />
+                                <span asp-validation-for="EmployeeHour.Entry2" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-4 ">
-                                <input asp-for="Exit2" class="form-control-plaintext border-bottom " />
-                                <span asp-validation-for="Exit2" class="text-danger-centarix"></span>
+                                <input asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " />
+                                <span asp-validation-for="EmployeeHour.Exit2" class="text-danger-centarix"></span>
                             </div>
                         </div>
                     }
@@ -71,7 +86,7 @@
                 </div>
                 <div class="modal-footer  border-0  modal-footer-mt">
                     <div class="mx-auto text-center">
-                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin" asp-action="UpdateHours" value="Save" />
+                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin " asp-action="UpdateHours" asp-route-PageType="@Model.PageType"  value="Save" />
                         <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>@*FAIGE: should this delete the request?*@
                     </div>
                 </div>

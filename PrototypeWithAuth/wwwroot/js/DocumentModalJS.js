@@ -12,6 +12,13 @@
 		console.log("upload file submitted");
 
 		var inputButton = $('#save-documents');
+		var filePath = $(".file-select")[0].value;
+		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
+		console.log("extn: " + extn);
+		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn !="") {
+			alert("invalid file extension");
+			return;
+		}
 
 		//var $form = $(this).parents('form');
 		console.log("in save doc files");
@@ -20,10 +27,10 @@
 		//var url = $("#documentModalForm").data('string');
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
-		var $isEdittable = $('#IsEdittable').val();
+		var $isEdittable = $('.isEdittable').val();
 		console.log("url : " + url);
-		var formData = new FormData($("#documentModalForm")[0]);
-		var data = $("#documentModalForm").serialize();
+		var formData = new FormData($(".documentModalForm")[0]);
+		var data = $(".documentModalForm").serialize();
 		//var formData = new FormData($(this));
 		//console.log("data : " + data);
 		console.log("formData : " + formData);
@@ -62,6 +69,7 @@
 
 
 	$.fn.OpenDocumentsModal1 = function (enumString, requestId, isEdittable, section) {
+		$('#loading').show();
 		$(".documentsModal").replaceWith('');
 		//alert("in documents modal in document modal js")
 		//$(".modal-backdrop").first().removeClass();
@@ -71,6 +79,7 @@
 			type: 'GET',
 			cache: false,
 			success: function (data) {
+				$('#loading').hide();
 				var modal = $(data);
 				$('body').append(modal);
 				$(".documentsModal").modal({
@@ -78,6 +87,7 @@
 					keyboard: true,
 				});
 				$(".modal").modal('show');
+
 				return true;
 			}
 		});
@@ -108,14 +118,13 @@
 		}
 	};
 
-	$(".delete-document").on("click", function (e) {
+	$(".modal").on("click", ".delete-document",function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var id = $(this).attr("id");
-		//alert("id: " + id);
-		if (id != "") {
+		var hasClass = $(this).hasClass("delete-file-document");
+		if (hasClass ==true) {
 			console.log("delete doc clicked");
-			var link = $("#deleteUrl").attr("href");
+			var link = $(this).attr("url");
 			console.log("link: " + link);
 			$.ajax({
 				async: true,
@@ -124,6 +133,7 @@
 				cache: false,
 				success: function (data) {
 					var modal = data;
+					$("#DeleteDocumentsModal").replaceWith('');
 					$('body').append(modal);
 					$("#DeleteDocumentsModal").modal({
 						backdrop: false,
@@ -157,10 +167,10 @@
 	//$(".modal").on("click", ".turn-edit-doc-on-off", function () {
 	//	alert("djs modal turned on or off!");
 	//});
-	$(".turn-edit-doc-on-off").off("click").on("click", function () {
-
-		var detailsBool = $("#isEdittable").hasClass("details");
-		var editBool = $("#isEdittable").hasClass("edit");
+	$(".modal .turn-edit-doc-on-off").off("click").on("click", function () {
+		alert('.turneditdoc on and off')
+		var detailsBool = $(".isEdittable").hasClass("details");
+		var editBool = $(".isEdittable").hasClass("edit");
 
 
 		var $bcColor = $("#bcColor").attr("class");
@@ -169,8 +179,8 @@
 
 		//alert("classes: " + detailsBool + " ; " + editBool);
 		if (detailsBool) {
-			$("#isEdittable").removeClass("details");
-			$("#isEdittable").addClass("edit");
+			$(".isEdittable").removeClass("details");
+			$(".isEdittable").addClass("edit");
 
 			$(".upload-file").removeClass("disabled-color");
 			$(".upload-file").addClass($bcColor);
@@ -178,11 +188,11 @@
 			$(".documents-delete-icon.icon-delete-24px").removeClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").addClass($color);
 
-			$(".delete-document").attr("id", "delete-file-document");
+			$(".delete-document").addClass("delete-file-document");
 		}
 		else if (editBool) {
-			$("#isEdittable").addClass("details");
-			$("#isEdittable").removeClass("edit");
+			$(".isEdittable").addClass("details");
+			$(".isEdittable").removeClass("edit");
 
 			$(".upload-file").addClass("disabled-color");
 			$(".upload-file").removeClass($bcColor);
@@ -190,7 +200,7 @@
 			$(".documents-delete-icon.icon-delete-24px").addClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").removeClass($color);
 
-			$(".delete-document").attr("id", "");
+			$(".delete-document").removeClass("delete-file-document");
 		}
 	});
 	//$(".modal").on("change", ".turn-edit-doc-on-off", function () {

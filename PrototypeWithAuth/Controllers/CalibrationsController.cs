@@ -13,16 +13,19 @@ using Abp.Extensions;
 using PrototypeWithAuth.ViewModels;
 using X.PagedList;
 using SQLitePCL;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class CalibrationsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public CalibrationsController(ApplicationDbContext context)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public CalibrationsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment )
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: ProductSubcategories
@@ -71,16 +74,76 @@ namespace PrototypeWithAuth.Controllers
             List<Repair> repairs = await _context.Repairs
                 .Where(c => c.RequestID == requestid)
                 .Where(c => c.Date > DateTime.Now).ToListAsync();
+            //delete temp files that may not have been deleted
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string requestFolder = Path.Combine(uploadFolder, "0");
+           
+            Directory.CreateDirectory(requestFolder);
             CreateCalibrationViewModel createCalibrationViewModel = new CreateCalibrationViewModel
             {
                 ProductDescription = request.Product.ProductName,
                 PastCalibrations = _context.Calibrations.Where(c => c.RequestID == requestid).Where(c => c.Date < DateTime.Now).Include(c => c.CalibrationType).ToList(),
                 Repairs = repairs,
                 ExternalCalibrations = externalCalibrations,
-                InternalCalibration = internalCalibrations
+                InternalCalibration = internalCalibrations,
+                RequestID = requestid
             };
 
+            //may be able to do this together - combining the path for the orders folders
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder2 = Path.Combine(uploadFolder1, requestid.ToString());
+            string uploadFolderWarranties = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Warranty.ToString());
+            string uploadFolderManuals = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Manual.ToString());
+            string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
+            string uploadFolderMore = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.More.ToString());
+            //the partial file name that we will search for (1- because we want the first one)
+            //creating the directory from the path made earlier
 
+            if (Directory.Exists(uploadFolderManuals))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderManuals);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                createCalibrationViewModel.ManualFileStrings = new List<String>();
+                foreach (var orderfile in orderfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+                    createCalibrationViewModel.ManualFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderWarranties))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderWarranties);
+                FileInfo[] invoicefilesfound = DirectoryToSearch.GetFiles("*.*");
+                createCalibrationViewModel.WarrantyFileStrings = new List<string>();
+                foreach (var invoicefile in invoicefilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(invoicefile.FullName, 4);
+                    createCalibrationViewModel.WarrantyFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderPictures))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderPictures);
+                FileInfo[] shipmentfilesfound = DirectoryToSearch.GetFiles("*.*");
+                createCalibrationViewModel.PicturesFileStrings = new List<string>();
+                foreach (var shipmentfile in shipmentfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(shipmentfile.FullName, 4);
+                    createCalibrationViewModel.PicturesFileStrings.Add(newFileString);
+                }
+            }
+            if (Directory.Exists(uploadFolderMore))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderMore);
+                FileInfo[] quotefilesfound = DirectoryToSearch.GetFiles("*.*");
+                createCalibrationViewModel.MoreFileStrings = new List<string>();
+                foreach (var quotefile in quotefilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(quotefile.FullName, 4);
+                    createCalibrationViewModel.MoreFileStrings.Add(newFileString);
+                }
+            }
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.Calibrate;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Equipment;

@@ -5,7 +5,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding sickModal">
+            <div style="height: 100%; overflow: auto;" class="modal-padding sickModal">
                 <div class="modal-header border-0 border-bottom modal-header-padding">
                     <div class="container">
                         <div class="">
@@ -14,24 +14,21 @@
                         <div class="mt-5 mb-3">
                             <hr />
                         </div>
+                        <div class="text">@Model.SelectedDate.ToLongDateString()</div>
                     </div>
+               
                 </div>
-                <div class="datepicker-here" data-range="true" id="vacation-dates"
-                     data-multiple-dates-separator=" - " data-language='en' ></div>
+          
+                <input type="hidden" id="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")"/>
                 <div class="modal-footer mt-4 border-0 ">
                     <div class="text-center m-auto">
-                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin @Model.PageType" id="saveSick" value="Save" />
+                        <input type="button" class="custom-button custom-button-font timekeeper-color between-button-margin @Model.PageType" id="saveSickConfirmation" value="Save" />
                         <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-<script>
-    $('#vacation-dates').datepicker().data('datepicker').selectDate(new Date("@Model.SelectedDate.Year-@Model.SelectedDate.ToString("MM")-@Model.SelectedDate.ToString("dd")"))
-</script>
-<script src="~/js/datepicker.min.js"></script>
-<!-- Include English language -->
-<script src="~/js/datepicker.en.js"></script>
+
 

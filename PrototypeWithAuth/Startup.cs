@@ -27,6 +27,7 @@ namespace PrototypeWithAuth
 {
     public class Startup
     {
+        private  const String ConfirmEmailProvider = "CustomEmailConfirmation";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -48,15 +49,18 @@ namespace PrototypeWithAuth
             ////Set database Connection from application json file
 
             //add identity
-            services.AddDefaultIdentity<ApplicationUser>(options => {
+            services.AddDefaultIdentity<ApplicationUser>(options =>
+            {
                 options.SignIn.RequireConfirmedAccount = true;
-                options.Tokens.ProviderMap.Add("CustomEmailConfirmation",
+                options.Tokens.ProviderMap.Add(ConfirmEmailProvider,
                     new TokenProviderDescriptor(
                         typeof(CustomEmailConfirmationTokenProvider<IdentityUser>)));
-                options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
-            })
+                options.Tokens.EmailConfirmationTokenProvider = ConfirmEmailProvider;
+            }).AddDefaultTokenProviders()
+    .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>(ConfirmEmailProvider)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
@@ -96,6 +100,8 @@ namespace PrototypeWithAuth
             //   .AddDataAnnotations();
             // //.AddMvcOptions(opt =>
             // //       opt.Filters.Add<RequestFilterAttribute>());
+
+         
 
             services.ConfigureApplicationCookie(options =>
             {

@@ -176,12 +176,12 @@ namespace PrototypeWithAuth.Controllers
         }
         private void fillInTimekeeperMissingDays(ApplicationUser user)
         {
-            DateTime nextDay = user.LastLogin.AddDays(1);
-            var year = nextDay.Year;
             if (user.LastLogin == new DateTime())
             {
                 return;
             }
+            DateTime nextDay = user.LastLogin.AddDays(1);
+            var year = nextDay.Year;
             var companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == year).ToList();
 
             while (nextDay.Date <= DateTime.Today)
@@ -211,6 +211,10 @@ namespace PrototypeWithAuth.Controllers
 
         private void fillInOrderLate(ApplicationUser user)
         {
+            if (user.LastLogin == new DateTime())
+            {
+                return;
+            }
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
 
