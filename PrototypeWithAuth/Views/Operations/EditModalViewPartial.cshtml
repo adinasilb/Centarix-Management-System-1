@@ -443,7 +443,11 @@
             </div>
             <div class=" container text-right">
                 <ul class="list-unstyled">
-                    <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn btn-circle btn-xl" style="background-color:var(--operations-color);">   +</button></li>
+                    <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 mark-readonly" disabled>
+    <i class="oper-color icon-add_circle-24px" style="
+    font-size: 3rem;
+"></i>
+</button></li>
 
                     <div style="display:none;" id="popover-content">
 
@@ -457,7 +461,7 @@
                                 {
                                     <i class="icon-report_problem-24px" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
                                 }
-                                <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark mark-readonly" disabled style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
+                                <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark " style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
 
                             </div>
                         }

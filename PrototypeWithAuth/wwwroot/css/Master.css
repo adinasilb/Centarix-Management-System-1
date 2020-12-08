@@ -147,13 +147,18 @@
 .lab-man-filter {
     filter: var(--lab-man-filter) !important;
 }
-
+.lab-man-color {
+    color: var(--lab-man-color) !important;
+}
 .lab-man-background-color {
     background-color: var(--lab-man-color) !important;
 }
 
 .oper-background-color {
     background-color: var(--operations-color) !important;
+}
+.oper-color {
+   color: var(--operations-color) !important;
 }
 
 .expenses-color {
