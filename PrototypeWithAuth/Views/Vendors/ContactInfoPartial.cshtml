@@ -12,19 +12,18 @@
 @{
     var cardId = "contact-info-" + Model.Index;
 
-    var contactNameID = "VendorContacts_" + Model.Index + "__VendorContactName";
-    var contactNameName = "VendorContacts[" + Model.Index + "].VendorContactName";
-    var contactEmailID = "VendorContacts_" + Model.Index + "__VendorContactEmail";
-    var contactEmailName = "VendorContacts[" + Model.Index + "].VendorContactEmail";
-    var contactPhoneID = "VendorContacts_" + Model.Index + "__VendorContactPhone";
-    var contactPhoneName = "VendorContacts[" + Model.Index + "].VendorContactPhone";
-
+    var contactNameID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactName";
+    var contactNameName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactName";
+    var contactEmailID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactEmail";
+    var contactEmailName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactEmail";
+    var contactPhoneID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactPhone";
+    var contactPhoneName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactPhone";
 }
 <div class="contact-info" id="@cardId">
     <div class="row mb-0">
         <div class="col-10 mr-4">@*empty div b/c need same margins as below*@</div>
         <div class="col-1">
-            <button type="button" class="close vendor-contact-close float-right pr-2 pt-2" ContactCardID="@Model.Index" aria-label="Close" style="float: right;">X</button>
+            <button type="button" class="close vendor-contact-close float-right pr-2 pt-2 mark-readonly" @disabled ContactCardID="@Model.Index" aria-label="Close" style="float: right;">X</button>
         </div>
     </div>
     <br />

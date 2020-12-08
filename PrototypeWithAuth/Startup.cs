@@ -176,7 +176,7 @@ namespace PrototypeWithAuth
         //private async Task AddRoles(IServiceProvider serviceProvider)
         //{
         //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await UserManager.FindByEmailAsync("shimon@centarix.com");
+        //    var user = await UserManager.FindByEmailAsync("itzhak@centarix.com");
         //    await UserManager.AddToRoleAsync(user, "Admin");
         //    await UserManager.AddToRoleAsync(user, "CEO");
         //}
