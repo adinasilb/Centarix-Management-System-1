@@ -26,7 +26,7 @@
             @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
             {
                 z++;
-                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                @if (Model.ChildrenLocationInstances.ToList().Count() > z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                 {
 
 
@@ -53,7 +53,7 @@
                         classes += " open-new-visual";
                         <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
                             <div>
-                                @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = @classes, @liid = liID })
+                                @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID })
                                 <div class="row-1"><i class="@iconClass"></i></div>
                                 <div class="row-2 text-left">
                                     @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
@@ -66,11 +66,11 @@
 
                         classes += " open-new-visual";
                
-        <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
+        <td class="@outerClass not-clickable" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID" >
             <div>
-                    @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = @classes, @liid = liID, @disabled = "disabled" })
+                    @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID, @disabled = "disabled" })
                     <div class="row-1">
-                        <i class="@iconClass"></i>
+                        <i class=@*"@iconClass"*@></i>
                     </div>
                     <div class="row-2 text-left">
                         @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
