@@ -21,7 +21,12 @@
 
 }
 <div class="contact-info" id="@cardId">
-    <button type="button" class="close vendor-contact-close pr-2 pt-2" ContactCardID="@Model.Index" aria-label="Close" style="float: right;">X</button>
+    <div class="row mb-0">
+        <div class="col-10 mr-4">@*empty div b/c need same margins as below*@</div>
+        <div class="col-1">
+            <button type="button" class="close vendor-contact-close float-right pr-2 pt-2" ContactCardID="@Model.Index" aria-label="Close" style="float: right;">X</button>
+        </div>
+    </div>
     <br />
     <div class="row mb-3 ">
         <div class="col-6 mr-4  ">
