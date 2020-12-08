@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'elixir-icons';
-    src: url('fonts/elixir-icons.eot?63dvc6');
-    src: url('fonts/elixir-icons.eot?63dvc6#iefix') format('embedded-opentype'), url('fonts/elixir-icons.ttf?63dvc6') format('truetype'), url('fonts/elixir-icons.woff?63dvc6') format('woff'), url('fonts/elixir-icons.svg?63dvc6#elixir-icons') format('svg');
+    src: url('fonts/elixir-icons.eot?kb8s6d');
+    src: url('fonts/elixir-icons.eot?kb8s6d#iefix') format('embedded-opentype'), url('fonts/elixir-icons.ttf?kb8s6d') format('truetype'), url('fonts/elixir-icons.woff?kb8s6d') format('woff'), url('fonts/elixir-icons.svg?kb8s6d#elixir-icons') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -19,6 +19,82 @@
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-create-project-24px:before {
+    content: "\e96c";
+}
+
+.icon-add-24px:before {
+    content: "\e97b";
+}
+
+.icon-stop-24px:before {
+    content: "\e97c";
+}
+
+.icon-tip-24px:before {
+    content: "\e97d";
+}
+
+.icon-research-24px:before {
+    content: "\e97e";
+}
+
+.icon-theory-tab-24px:before {
+    content: "\e97f";
+}
+
+.icon-protocol-tab-24px:before {
+    content: "\e980";
+}
+
+.icon-kit-protocol-24px:before {
+    content: "\e981";
+}
+
+.icon-sop-protocol-24px:before {
+    content: "\e982";
+}
+
+.icon-troubleshooting-24px:before {
+    content: "\e983";
+}
+
+.icon-results-24px:before {
+    content: "\e984";
+}
+
+.icon-print-24px-1:before {
+    content: "\e985";
+}
+
+.icon-attach-item-24px:before {
+    content: "\e986";
+}
+
+.icon-attach-protocol-24px:before {
+    content: "\e987";
+}
+
+.icon-clipboard-24px-1:before {
+    content: "\e988";
+}
+
+.icon-label-24px-1:before {
+    content: "\e989";
+}
+
+.icon-play_circle_outline-24px-1:before {
+    content: "\e98a";
+}
+
+.icon-add_task-24px:before {
+    content: "\e98b";
+}
+
+.icon-local_shipping-24px:before {
+    content: "\e98c";
 }
 
 .icon-info-24px-2:before {
