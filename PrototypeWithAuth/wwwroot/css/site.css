@@ -2568,3 +2568,46 @@ a {
 .order-inv-form .addSubUnit {
     filter: var(--order-inv-filter);
 }
+
+
+table.visual-locations {
+    width: 100% !important;
+}
+
+
+td.visual-box {
+    width: 8.3% !important;
+    height: 0;
+    border: 1px solid var(--black-87)
+}
+td.visual-shelf {
+    width: 100% !important;
+    height: 0;
+    border: 1px solid var(--black-87)
+}
+    td.visual-box .row-2 label, td.visual-shelf .row-2 label {
+        display: grid;
+        margin-left: .2rem !important;
+    }
+td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
+    height: 32px;
+    padding-top: .7rem;
+}
+.is12X12 .row-1 {
+    height: 20px;
+    padding-top: .2rem;
+}
+.order-inv-form .location-selected {
+    background-color: var(--order-inv-color);
+    
+}
+.visual-locations tr {
+    border: 1px solid var(--black-87) !important;
+}
+.visual-locations {
+    border: 1px solid var(--black-87) !important;
+}
+
+.visual-locations.table td {
+    border-top: 1px solid var(--black-87) !important;
+}
