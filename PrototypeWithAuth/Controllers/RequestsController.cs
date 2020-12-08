@@ -3079,7 +3079,7 @@ namespace PrototypeWithAuth.Controllers
         public JsonResult FilterByProjects(List<int> ProjectIDs)
         {
             var requests = _context.Requests.Where(r => ProjectIDs.Contains(r.SubProject.ProjectID)).Include(r => r.ApplicationUserCreator).Include(r => r.SubProject);
-            var subProjectList = requests.Select(r => r.SubProject).Distinct().Select(sp => new { subProjectID = sp.SubProjectID, subProjectDescription = sp.SubProjectDescription });
+            var subProjectList = _context.SubProjects.Where(sp=>ProjectIDs.Contains(sp.ProjectID)).Select(sp => new { subProjectID = sp.SubProjectID, subProjectDescription = sp.SubProjectDescription });
             var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
             return Json(new { SubProjects = subProjectList, Employees = workers });
 
