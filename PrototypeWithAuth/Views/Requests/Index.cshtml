@@ -13,6 +13,7 @@
 
 
 @{
+    TempData.Keep();
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
@@ -32,7 +33,7 @@
     string plApplicationUserID = null;
     int plParentLocationInstanceID = 0;
 
-    
+
     if (TempData["TempPageType"] != null)
     {
         pgt = TempData["TempPageType"].ToString();

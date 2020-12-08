@@ -2037,6 +2037,10 @@ $(function () {
 				url = "/Requests/EditModalView";
 				section = "Requests";
 			}
+			if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
+				url = "/Requests/EditModalView";
+				section = "LabManagement";
+			}
 
 			if (type == 'edit') {
 				$("#loading").show();
