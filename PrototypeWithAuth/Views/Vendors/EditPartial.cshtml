@@ -340,9 +340,6 @@
                 @foreach(var vendorContact in Model.VendorContacts)*@
                 {
 
-                    <input type="hidden" asp-for="VendorContacts[x].VendorContact.VendorContactID" />
-                    <input type="hidden" asp-for="VendorContacts[x].Delete" />
-
                     await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts[x].VendorContact, Index = x, IsEdit = true });
                     
                 }

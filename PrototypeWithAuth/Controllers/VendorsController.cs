@@ -391,9 +391,12 @@ namespace PrototypeWithAuth.Controllers
                 //delete contacts that need to be deleted
                 foreach(var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
                 {
-                    var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
-                    _context.Remove(dvc);
-                    await _context.SaveChangesAsync();
+                    if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
+                    {
+                        var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
+                        _context.Remove(dvc);
+                        await _context.SaveChangesAsync();
+                    }
                 }
 
 

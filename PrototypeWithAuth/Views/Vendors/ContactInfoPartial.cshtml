@@ -12,6 +12,11 @@
 @{
     var cardId = "contact-info-" + Model.Index;
 
+    var hiddenContactIdID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactID";
+    var hiddenContactIdName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactID";
+    var hiddenContactDeleteID = "VendorContacts_" + Model.Index + "__Delete";
+    var hiddenContactDeleteName = "VendorContacts[" + Model.Index + "].Delete";
+
     var contactNameID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactName";
     var contactNameName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactName";
     var contactEmailID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactEmail";
@@ -20,6 +25,10 @@
     var contactPhoneName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactPhone";
 }
 <div class="contact-info" id="@cardId">
+
+    <input type="hidden" id="@hiddenContactIdID" name="@hiddenContactIdName" value="@Model.VendorContact.VendorContactID" />
+    <input type="hidden" id="@hiddenContactDeleteID" name="@hiddenContactDeleteName" value="false" class="contact-deletes" />
+
     <div class="row mb-0">
         <div class="col-10 mr-4">@*empty div b/c need same margins as below*@</div>
         <div class="col-1">
