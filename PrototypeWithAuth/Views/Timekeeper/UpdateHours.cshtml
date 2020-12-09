@@ -40,7 +40,7 @@
                             <label asp-for="EmployeeHour.Date" class="control-label"></label>
                             @if (disabled)
                             {
-                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" disabled />
+                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" readonly />
                             }
                             else
                             {
