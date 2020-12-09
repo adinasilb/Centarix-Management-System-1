@@ -1044,7 +1044,7 @@ $(function () {
 			console.log("this has been clicked by a parent location");
 
 			//add heading name
-			$(".li-name").html("Filling this in");
+			$(".li-name").html($(this).attr("name"));
 
 			//remove prev sidebars
 			$("body td").removeClass(parentStylingClass);
