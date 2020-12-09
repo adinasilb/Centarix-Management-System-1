@@ -41,7 +41,7 @@
                                     var src = "/UserImages/user-image-placeholder.png";
                                     if (Model.ElementAt(i).UserImage != null)
                                     {
-                                        src = Model.ElementAt(i).UserImage;
+                                        src = "\\" + AppUtility.GetLastFiles(Model.ElementAt(i).UserImage, 2);
                                     }
                                 }
                                 <div class="btn btn-link p-0 circular-profile-img circular-profile-img-141 m-0"><img id="user-image" src="@src" /></div>
@@ -54,18 +54,18 @@
                         <a href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
                            class=" bold-hover-effects" id="profile-img">
                             @{
-                                var src = "/UserImages/user-image-placeholder.png";
-                                if (Model.ElementAt(i).UserImage != null)
-                                {
-                                    src = Model.ElementAt(i).UserImage;
-                                }
-                            }
+                                        var src = "/UserImages/user-image-placeholder.png";
+                                        if (Model.ElementAt(i).UserImage != null)
+                                        {
+                                            src = "\\" + AppUtility.GetLastFiles(Model.ElementAt(i).UserImage, 2);
+                                        }
+                                    }
                             <div class="btn btn-link p-0 circular-profile-img circular-profile-img-141 m-0"><img id="user-image" src="@src" /></div>
                             <br />
                             <label class="owner-label mb-0">@Model.ElementAt(i).FirstName<br />@Model.ElementAt(i).LastName</label>
                         </a>
                             }
-                            
+
                             @*<button id="profile-img" class="btn no-box-shadow ">
 
             <img src="@src" class="user-image ml-0" height="50" alt="default User image" />

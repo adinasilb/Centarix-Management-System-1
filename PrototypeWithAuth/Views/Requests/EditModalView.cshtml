@@ -6,7 +6,7 @@
    @{
        var form = " order-inv-form ";
        var tabClass = "";
-       if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals((int)AppUtility.MenuItems.LabManagement))
+       if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
        {
            form = " supplier-form ";
            tabClass = "lab-man-nav-link";

@@ -79,5 +79,6 @@ namespace PrototypeWithAuth.ViewModels
         public int Tab { get; set; }
         public List<AppUtility.CommentTypeEnum> CommentTypes { get; set; }
         public List<Comment> Comments { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
     }
 }

@@ -28,7 +28,7 @@
                         var src = "/UserImages/user-image-placeholder.png";
                         if (user.UserImage != null)
                         {
-                            src = user.UserImage;
+                            src = "\\"+AppUtility.GetLastFiles(user.UserImage, 2);
                         }
                     }
                     <img src="@src" class=" ml-0" alt="default User image" />

@@ -1,6 +1,7 @@
 ﻿@model List<PrototypeWithAuth.ViewModels.EmployeeHoursAwaitingApprovalViewModel>
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
 <table class="table table-headerspaced col-12 ">
     <tbody>
@@ -64,7 +65,7 @@
                             var src = "/UserImages/user-image-placeholder.png";
                             if (UserManager.GetUserAsync(User).Result.UserImage != null)
                             {
-                                src = UserManager.GetUserAsync(User).Result.UserImage;
+                                src = src = "\\" + AppUtility.GetLastFiles(UserManager.GetUserAsync(User).Result.UserImage, 2);
                             }
                         }
                         <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>

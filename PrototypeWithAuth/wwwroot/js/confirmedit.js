@@ -69,12 +69,11 @@
 			
 		}
 		else if ($('.turn-edit-on-off').hasClass('users')) {
-			console.log("has class users");
 			url = "/Admin/EditUserPartial?id=" + id + "&Tab=" + selectedTab;
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
-			console.log("has class orders");
-			url = "/Requests/EditModalViewPartial?id=" + id +"&Tab="+ selectedTab;
+			section = $("#SectionType").val();
+			url = "/Requests/EditModalViewPartial?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section ;
 
 		}
 		else {

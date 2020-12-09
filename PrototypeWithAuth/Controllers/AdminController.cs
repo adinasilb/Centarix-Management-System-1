@@ -268,7 +268,6 @@ namespace PrototypeWithAuth.Controllers
                 user.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
                 user.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
                 user.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
-                /*phonenumber2 is not working --> talk to Debbie*/
                 user.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
                 user.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
                 /*Salaried Employee*/
@@ -420,7 +419,10 @@ namespace PrototypeWithAuth.Controllers
                         {
                             //System.IO.File.Move(file., user.UserNum.ToString());
                             file.MoveTo(Path.Combine(uploadFolder, user.UserNum.ToString() + file.Extension));
+                            user.UserImage = file.FullName;
                         }
+                        _context.Update(user);
+                        await _context.SaveChangesAsync();
                     }
 
                     //should we move the delete here and test for the extension just in case it breaks over there
@@ -518,33 +520,32 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                Employee userEditted = userEditted = await _context.Employees.Where(u => u.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
                 int selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
                 Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
                 int oldSelectedStatus = employeeEditted.EmployeeStatusID;
                 if (selectedStatusID == 4)
                 {
                     //never was an employee only was a user and wants to update info                 
-                    userEditted.UserName = registerUserViewModel.Email;
-                    userEditted.CentarixID = registerUserViewModel.CentarixID;
-                    userEditted.FirstName = registerUserViewModel.FirstName;
-                    userEditted.LastName = registerUserViewModel.LastName;
-                    userEditted.Email = registerUserViewModel.Email;
-                    userEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
-                    userEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
+                    employeeEditted.UserName = registerUserViewModel.Email;
+                    employeeEditted.CentarixID = registerUserViewModel.CentarixID;
+                    employeeEditted.FirstName = registerUserViewModel.FirstName;
+                    employeeEditted.LastName = registerUserViewModel.LastName;
+                    employeeEditted.Email = registerUserViewModel.Email;
+                    employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
+                    employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
                     //are users allowed to update their password
                     if (registerUserViewModel.SecureAppPass != null)
                     {
-                        userEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
+                        employeeEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
                     }
-                    userEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
-                    userEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
-                    userEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
-                    userEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
-                    userEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
-                    userEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
-                    userEditted.EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
-                    _context.Update(userEditted);
+                    employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
+                    employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
+                    employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
+                    employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
+                    employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
+                    employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
+                    employeeEditted.EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
+                    _context.Update(employeeEditted);
                     await _context.SaveChangesAsync();
 
                 }
@@ -561,7 +562,7 @@ namespace PrototypeWithAuth.Controllers
                     //are users allowed to update their password
                     if (registerUserViewModel.SecureAppPass != null)
                     {
-                        userEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
+                        employeeEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
                     }
                     employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
                     employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
@@ -644,96 +645,96 @@ namespace PrototypeWithAuth.Controllers
                 //}
 
 
-                IList<string> rolesList = await _userManager.GetRolesAsync(userEditted).ConfigureAwait(false);
+                IList<string> rolesList = await _userManager.GetRolesAsync(employeeEditted).ConfigureAwait(false);
 
                 if (rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && !registerUserViewModel.OrderRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Requests.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && registerUserViewModel.OrderRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Requests.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) && !registerUserViewModel.ProtocolRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Protocols.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) && registerUserViewModel.ProtocolRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Protocols.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && !registerUserViewModel.OperationRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Operations.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && registerUserViewModel.OperationRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Operations.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) && !registerUserViewModel.BiomarkerRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Biomarkers.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) && registerUserViewModel.BiomarkerRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Biomarkers.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.TimeKeeper.ToString()) && !registerUserViewModel.TimekeeperRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.TimeKeeper.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.TimeKeeper.ToString()) && registerUserViewModel.TimekeeperRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.TimeKeeper.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.LabManagement.ToString()) && !registerUserViewModel.LabManagementRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.LabManagement.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.LabManagement.ToString()) && registerUserViewModel.LabManagementRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.LabManagement.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Accounting.ToString()) && !registerUserViewModel.AccountingRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Accounting.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Accounting.ToString()) && registerUserViewModel.AccountingRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Accounting.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && !registerUserViewModel.ExpenseesRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Reports.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && registerUserViewModel.ExpenseesRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Reports.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Income.ToString()) && !registerUserViewModel.IncomeRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Income.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Income.ToString()) && registerUserViewModel.IncomeRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Income.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Users.ToString()) && !registerUserViewModel.UserRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(userEditted, AppUtility.MenuItems.Users.ToString());
+                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Users.ToString()) && registerUserViewModel.UserRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(userEditted, AppUtility.MenuItems.Users.ToString());
+                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
                 }
 
 
@@ -763,9 +764,12 @@ namespace PrototypeWithAuth.Controllers
                         {
                             //System.IO.File.Move(file., user.UserNum.ToString());
                             file.MoveTo(Path.Combine(uploadFolder, registerUserViewModel.UserNum.ToString() + file.Extension));
+                            employeeEditted.UserImage = file.FullName;
                         }
+                        _context.Update(employeeEditted);
+                        await _context.SaveChangesAsync();
                     }
-
+                   
                     //should we move the delete here and test for the extension just in case it breaks over there
 
                 }
@@ -878,7 +882,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> editUserFunction(string id, int? Tab = 0)
         {
-            ApplicationUser userSelected = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            Employee userSelected = _context.Employees.Where(u => u.Id == id).FirstOrDefault();
             if (userSelected != null)
             {
                 RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
@@ -913,10 +917,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
 
-
-                registerUserViewModel.NewEmployee = new Employee(); //this may be able to be taken out but it might cause errors with users if taken out. so check first
-
-                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).Include(s => s.SalariedEmployee).FirstOrDefault();
+                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.IsSuspended).Include(s => s.SalariedEmployee).FirstOrDefault();
                 registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
                 registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
                 registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
