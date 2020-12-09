@@ -1220,7 +1220,13 @@ a.nav-link {
     border-left: .3rem solid var(--order-inv-color) !important;
     border-right: 0 !important;
 }
-
+.location-index-border td{
+    padding:0 !important;
+}
+.location-index-border td button {
+    padding-top: .6rem !important;
+    padding-bottom: .6rem !important;
+}
 .pl-border-right-0 {
     border-right: 0px !important;
 }
