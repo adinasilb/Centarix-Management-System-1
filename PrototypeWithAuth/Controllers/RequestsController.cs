@@ -1313,7 +1313,7 @@ namespace PrototypeWithAuth.Controllers
                             .Select(li => new RequestChildrenLocationInstances()
                             {
                                 LocationInstance = li,
-                                IsThisRequest = li.RequestLocationInstances.Select(rli => rli.Request.RequestID == id).Any()
+                                IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i=>i == id).Any()
                             }).ToList();
 
                         //return NotFound();
