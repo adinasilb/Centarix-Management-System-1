@@ -57,6 +57,7 @@
     --text-font-weight: 400;
     --small-text-font-size: .9rem;
     --graduated-table-background-color: #FAFAFB;
+    --graduated-table-filter: brightness(0) saturate(100%) invert(91%) sepia(29%) saturate(0%) hue-rotate(314deg) brightness(97%) contrast(106%);
     --tiny-label-font-size: 0.469375rem;
 }
 
@@ -207,6 +208,10 @@ a.yearly-monthly, input[type=button].yearly-monthly {
 
 .graduated-table-background-color {
     background-color: var(--graduated-table-background-color) !important;
+}
+
+.graduated-table-filter {
+    filter: var(--graduated-table-filter);
 }
 
 .tiny-label-font-size {

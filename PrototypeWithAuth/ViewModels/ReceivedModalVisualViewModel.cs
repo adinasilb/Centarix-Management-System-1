@@ -10,10 +10,10 @@ namespace PrototypeWithAuth.ViewModels
     {
         public LocationInstance ParentLocationInstance { get; set; }
         public List<LocationInstance> ChildrenLocationInstances { get; set; }
-
+        public List<RequestChildrenLocationInstances> RequestChildrenLocationInstances { get; set; } //only for the edit modal view so we can check if hasitems- if it's there
         public List<LocationInstancePlace> LocationInstancePlaces { get; set; }
         public bool DeleteTable { get; set; } //set this option to true if the "select" option is selected and we don't want to show anything
-        public bool Edittable { get; set; }
+        public bool IsEditModalTable { get; set; }
         //public List<bool> CheckedLocations { get; set; }
     }
 }

@@ -1299,15 +1299,20 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
                     ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
                     {
-                        Edittable = false,
+                        IsEditModalTable = true,
                         ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == parentLocationInstance.LocationInstanceID).FirstOrDefault()
                     };
 
                     if (receivedModalVisualViewModel.ParentLocationInstance != null)
                     {
-                        receivedModalVisualViewModel.ChildrenLocationInstances =
+                        receivedModalVisualViewModel.RequestChildrenLocationInstances =
                             _context.LocationInstances.Where(m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID)
-                            .Include(m => m.RequestLocationInstances).ToList();
+                            .Include(m => m.RequestLocationInstances)
+                            .Select(li => new RequestChildrenLocationInstances()
+                            {
+                                LocationInstance = li,
+                                IsThisRequest = li.RequestLocationInstances.Select(rli => rli.Request.RequestID == id).Any()
+                            }).ToList();
 
                         //return NotFound();
                     }
@@ -2665,7 +2670,7 @@ namespace PrototypeWithAuth.Controllers
         {
             ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
             {
-                Edittable = true
+                IsEditModalTable = false
             };
 
             var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
