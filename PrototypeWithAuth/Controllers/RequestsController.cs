@@ -1299,6 +1299,7 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
                     ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
                     {
+                        Edittable = false,
                         ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == parentLocationInstance.LocationInstanceID).FirstOrDefault()
                     };
 
@@ -2662,7 +2663,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Requests")]
         public IActionResult ReceivedModalVisual(int LocationInstanceID)
         {
-            ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel();
+            ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
+            {
+                Edittable = true
+            };
 
             var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
 

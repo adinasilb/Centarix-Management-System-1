@@ -2,9 +2,15 @@
 <script src="~/js/receivedmodal.js"></script>
 @if (Model.DeleteTable == false)
 {
+    var edittable = "";
+    if (!Model.Edittable)
+    {
+        edittable = "not-clickable";
+    }
 
     //This is the current dynamically populated list sent into the controller:
-    for (int p = 0; p< Model.LocationInstancePlaces.Count; p++)
+    var pCount = Model.LocationInstancePlaces?.Count ?? 0;
+    for (int p = 0; p < pCount; p++)
     {
         <input type="hidden" asp-for="LocationInstancePlaces[p].LocationInstanceId" />
         <input type="hidden" asp-for="LocationInstancePlaces[p].Placed" class="liid @Model.LocationInstancePlaces[p].LocationInstanceId" />
@@ -51,7 +57,7 @@
                     if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && Model.ChildrenLocationInstances[z].IsEmptyShelf)
                     {
                         classes += " open-new-visual";
-                        <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
+                        <td class="@outerClass @edittable" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
                             <div>
                                 @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID })
                                 <div class="row-1"><i class="@iconClass"></i></div>
@@ -82,7 +88,7 @@
                     {
                         var backgroundClass = " order-inv-filter ";
 
-                        <td class="@outerClass location-selected" style="padding:0px;  ">
+                        <td class="@outerClass  @edittable location-selected" style="padding:0px;  ">
                             <div class="">
                                 @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @liid = liID, @class = @classes })
 
@@ -99,7 +105,7 @@
                     }
                     else
                     {
-                        <td class="@outerClass" style="padding:0px;">
+                        <td class="@outerClass @edittable" style="padding:0px;">
                             <div>
                                 @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
                                 <div class="row-1">
