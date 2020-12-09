@@ -296,7 +296,7 @@ $(function () {
 	}
 
 	$.fn.CheckCurrency = function () {
-		alert("in check currency");
+		//alert("in check currency");
 		var currencyType = $("#currency").val();
 		switch (currencyType) {
 			case "dollar":
@@ -394,7 +394,7 @@ $(function () {
 	});
 
 	$("#currency").change(function (e) {
-		alert("Currency changed!");
+		//alert("Currency changed!");
 		$.fn.CheckCurrency();
 	});
 

@@ -29,7 +29,6 @@
 
 		}
 		else {
-			alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
 
@@ -77,7 +76,6 @@
 
 		}
 		else {
-			alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
 

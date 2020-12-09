@@ -650,7 +650,7 @@ $(function () {
 	});
 
 	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section) {
-		alert(isEdittable)
+		//alert(isEdittable)
 		//alert("in open doc modal");
 		//alert("in open document in site.js")
 		$(".documentsModal").replaceWith('');
@@ -965,7 +965,7 @@ $(function () {
 
 		var parentStylingClass = "parent-location-selected-outer-lab-man";
 		var trParentStylingClass = "pl-border-right-0";
-		alert("new js sheet - trparentstlyingclass");
+		//alert("new js sheet - trparentstlyingclass");
 		if ($(this).hasClass("parent-location")) {
 			$("body td").removeClass(parentStylingClass);
 			$("body tr").removeClass(trParentStylingClass);
@@ -1095,7 +1095,7 @@ $(function () {
 			success: function (result) {
 				myDiv.show();
 				if ($(this).hasClass("parent-location")) {
-					alert("parent loc second if");
+					//alert("parent loc second if");
 					$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
 				}
 				$("#loading1").hide();
@@ -2246,7 +2246,7 @@ $(function () {
 	$('.employee-status-radio').off("click").on("click", function () {
 
 		var val = $(this).val();
-		alert("employee status" + val);
+		//alert("employee status" + val);
 		$('#NewEmployee_EmployeeStatusID').val(val)
 		$("#validation-EmployeeStatus").addClass("hidden");
 		if (val == "4") {

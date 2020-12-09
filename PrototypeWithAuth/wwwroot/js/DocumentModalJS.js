@@ -15,8 +15,8 @@
 		var filePath = $(".file-select")[0].value;
 		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
 		console.log("extn: " + extn);
-		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn !="") {
-			alert("invalid file extension");
+		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn != "") {
+			//invalid file extn
 			return;
 		}
 
@@ -52,7 +52,7 @@
 				console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 					section = "Operations"
-				} else if ($(".open-document-modal.active-document-modal").hasClass('labManagement')|| $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
+				} else if ($(".open-document-modal.active-document-modal").hasClass('labManagement') || $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
@@ -101,12 +101,12 @@
 		console.log("numcards: " + numCards);
 
 		var div = $("#" + $foldername + " i");
-		
+
 		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter")) {
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
-			if (section=="Operations") {
+			if (section == "Operations") {
 				div.addClass("oper-filter");
 			} else if ((section == "LabManagement")) {
 				div.addClass("lab-man-filter");
@@ -118,11 +118,11 @@
 		}
 	};
 
-	$(".modal").on("click", ".delete-document",function (e) {
+	$(".modal").on("click", ".delete-document", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		var hasClass = $(this).hasClass("delete-file-document");
-		if (hasClass ==true) {
+		if (hasClass == true) {
 			console.log("delete doc clicked");
 			var link = $(this).attr("url");
 			console.log("link: " + link);
@@ -168,7 +168,7 @@
 	//	alert("djs modal turned on or off!");
 	//});
 	$(".modal .turn-edit-doc-on-off").off("click").on("click", function () {
-		alert('.turneditdoc on and off')
+		//alert('.turneditdoc on and off')
 		var detailsBool = $(".isEdittable").hasClass("details");
 		var editBool = $(".isEdittable").hasClass("edit");
 

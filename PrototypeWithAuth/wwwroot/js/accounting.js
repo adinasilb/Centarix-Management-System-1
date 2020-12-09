@@ -38,7 +38,6 @@
 			//}
 			//else {
 			//	$(this).find(".form-check-input").prop("checked", false);
-			//	alert("can only select requests from the same vendor");
 			//}
 
 			//arrayOfSelected.splice(arrayOfSelected, $(this).attr("vendorid"));
