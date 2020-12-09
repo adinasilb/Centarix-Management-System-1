@@ -234,7 +234,7 @@ namespace PrototypeWithAuth.Controllers
             }
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
             createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-            List<VendorContact> vendorContacts = new List<VendorContact>();
+            List<VendorContactWithDeleteViewModel> vendorContacts = new List<VendorContactWithDeleteViewModel>();
             List<VendorComment> vendorComments = new List<VendorComment>();
             //only allowed to have 10 contacts
             //have to hard coded becasuse did not know how to render dynamic partial views
@@ -274,7 +274,7 @@ namespace PrototypeWithAuth.Controllers
                 _context.SaveChanges();
                 foreach (var vendorContact in createSupplierViewModel.VendorContacts)
                 {
-                    vendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                    vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
                     _context.Add(vendorContact);
 
                 }
@@ -333,7 +333,12 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
             createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-            createSupplierViewModel.VendorContacts = await _context.VendorContacts.Where(c => c.VendorID == id).ToListAsync();
+            createSupplierViewModel.VendorContacts =  _context.VendorContacts.Where(c => c.VendorID == id).ToList()
+                .Select(vc => new VendorContactWithDeleteViewModel()
+                {
+                    VendorContact = vc,
+                    Delete = false
+                }).ToList();
             createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == id).ToListAsync();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             //tempdata page type for active tab link
@@ -358,6 +363,14 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Edit(CreateSupplierViewModel createSupplierViewModel)
         {
+            //ModelState.Remove()
+            foreach (var ms in ModelState.ToArray())
+            {
+                if (ms.Key.StartsWith("VendorContact"))
+                {
+                    ModelState.Remove(ms.Key);
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Update(createSupplierViewModel.Vendor);
@@ -375,16 +388,29 @@ namespace PrototypeWithAuth.Controllers
                 {
                     _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
                 }
-                foreach (var vendorContact in createSupplierViewModel.VendorContacts)
+                //delete contacts that need to be deleted
+                foreach(var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
                 {
-                    vendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                    _context.Update(vendorContact);
+                    if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
+                    {
+                        var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
+                        _context.Remove(dvc);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+
+                //update and add contacts
+                foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
+                {
+                    vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                    _context.Update(vendorContact.VendorContact);
 
                 }
-                if(createSupplierViewModel.VendorComments != null)
+                if (createSupplierViewModel.VendorComments != null)
                 {
                     foreach (var vendorComment in createSupplierViewModel.VendorComments)
-                {
+                    {
                         vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
                         _context.Update(vendorComment);
 

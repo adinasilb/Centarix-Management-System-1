@@ -84,8 +84,8 @@
                     <div class="form-group">
                         <label class="control-label">Category Type</label>
                         @Html.DropDownListFor(m => m.VendorCategoryTypes,
-                       new SelectList(Model.CategoryTypes, "CategoryTypeID", "CategoryTypeDescription"),
-                        new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @multiple = "multiple", @disabled = "disabled" })
+    new SelectList(Model.CategoryTypes, "CategoryTypeID", "CategoryTypeDescription"),
+     new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @multiple = "multiple", @disabled = "disabled" })
                         @*<select class=" mdb-select custom select-dropdown form-control-plaintext mark-readonly" asp-for="VendorCategoryTypes" multiple disabled>
                                 @foreach (var categoryType in Model.CategoryTypes)
                                 {
@@ -329,12 +329,13 @@
                     <span class="heading-1 col-12 modal-tab-name">Contact Info</span>
                 </div>
                 <input type="hidden" value="@Model.VendorContacts.Count" id="contact-index" />
-                @for (int i = 0; i < Model.VendorContacts.Count(); i++)
+                @for (int x = 0; x < Model.VendorContacts.Count(); x++)
+                @*@{var x = 0; }
+                @foreach(var vendorContact in Model.VendorContacts)*@
                 {
 
-                    <input type="hidden" asp-for="VendorContacts[i].VendorContactID" />
-
-                    await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts[i], Index = i, IsEdit = true });
+                    await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts[x].VendorContact, Index = x, IsEdit = true });
+                    
                 }
             </div>
             <div class="text-center">
@@ -353,7 +354,6 @@
 <script type="text/javascript">
     $(function () {
         $(document).ready(function () {
-            alert("doc ready of vendors edit partial");
             $.fn.SetUpDropdowns();
         });
         $.fn.SetUpDropdowns = function () {

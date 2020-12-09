@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddContactViewModel
+<script src="~/js/vendorcontactinfopartial.js"></script>
 @{
 
     var disabled = "";
@@ -9,15 +10,32 @@
 }
 
 @{
-    var contactNameID = "VendorContacts_" + Model.Index + "__VendorContactName";
-    var contactNameName = "VendorContacts[" + Model.Index + "].VendorContactName";
-    var contactEmailID = "VendorContacts_" + Model.Index + "__VendorContactEmail";
-    var contactEmailName = "VendorContacts[" + Model.Index + "].VendorContactEmail";
-    var contactPhoneID = "VendorContacts_" + Model.Index + "__VendorContactPhone";
-    var contactPhoneName = "VendorContacts[" + Model.Index + "].VendorContactPhone";
+    var cardId = "contact-info-" + Model.Index;
 
+    var hiddenContactIdID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactID";
+    var hiddenContactIdName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactID";
+    var hiddenContactDeleteID = "VendorContacts_" + Model.Index + "__Delete";
+    var hiddenContactDeleteName = "VendorContacts[" + Model.Index + "].Delete";
+
+    var contactNameID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactName";
+    var contactNameName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactName";
+    var contactEmailID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactEmail";
+    var contactEmailName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactEmail";
+    var contactPhoneID = "VendorContacts_" + Model.Index + "__VendorContact_VendorContactPhone";
+    var contactPhoneName = "VendorContacts[" + Model.Index + "].VendorContact.VendorContactPhone";
 }
-<div class=" contact-info">
+<div class="contact-info" id="@cardId">
+
+    <input type="hidden" id="@hiddenContactIdID" name="@hiddenContactIdName" value="@Model.VendorContact.VendorContactID" />
+    <input type="hidden" id="@hiddenContactDeleteID" name="@hiddenContactDeleteName" value="false" class="contact-deletes" />
+
+    <div class="row mb-0">
+        <div class="col-10 mr-4">@*empty div b/c need same margins as below*@</div>
+        <div class="col-1">
+            <button type="button" class="close vendor-contact-close float-right pr-2 pt-2 mark-readonly" @disabled ContactCardID="@Model.Index" aria-label="Close" style="float: right;">X</button>
+        </div>
+    </div>
+    <br />
     <div class="row mb-3 ">
         <div class="col-6 mr-4  ">
             <label id="@contactNameID" name="@contactNameName" class="control-label ">Name</label>
