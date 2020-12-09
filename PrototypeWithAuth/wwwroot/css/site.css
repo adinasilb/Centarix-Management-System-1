@@ -2617,3 +2617,6 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
 .visual-locations.table td {
     border-top: 1px solid var(--black-87) !important;
 }
+.select-dropdown.form-control {
+    border-radius: 0 !important;
+}

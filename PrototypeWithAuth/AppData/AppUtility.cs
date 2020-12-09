@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -113,6 +115,20 @@ namespace PrototypeWithAuth.AppData
         }
 
         public static double ExchangeRateIfNull = 3.5;
+        public static double _GetExchangeRateFromApi = GetExchangeRateFromApi();
+        public static double GetExchangeRateFromApi()
+        {
+            var client = new RestClient("https://v6.exchangerate-api.com/v6/96ffcdbcf4b24b1bdf2dc9be/latest/USD");
+            var request = new RestRequest(Method.GET);
+            IRestResponse response = client.Execute(request);
+            double rate=0.0;
+            dynamic tmp = JsonConvert.DeserializeObject(response.Content);
+            String stringRate = (string)tmp.conversion_rates.ILS;
+            stringRate = stringRate.Replace("{", "");
+            stringRate = stringRate.Replace("}", "");
+            Double.TryParse(stringRate, out rate);
+            return rate;
+        }
 
         public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
         {
