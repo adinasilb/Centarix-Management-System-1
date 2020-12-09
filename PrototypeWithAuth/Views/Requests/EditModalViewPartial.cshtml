@@ -9,9 +9,10 @@
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 @{
     var color = "order-inv-color";
-    if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals((int)AppUtility.MenuItems.LabManagement))
+    var equipment = "";
+    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
     {
-
+        equipment = "equipment";
         color = "lab-man-color";
     }
 }
@@ -48,7 +49,7 @@
             <div class="switch col-12 switch-margin">
                 <label>
                     <label class="edit-mode-switch-description">Edit Mode Off</label>
-                    <input type="checkbox" class="turn-edit-on-off  orders equipment" value="@Model.Request.RequestID" name="details">
+                    <input type="checkbox" class="turn-edit-on-off  orders @equipment" value="@Model.Request.RequestID" name="details">
                     <span class="lever"></span>
                 </label>
             </div>

@@ -1008,18 +1008,18 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Admin, Requests")]
-        public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false)
+        public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
-            return await editModalViewFunction(id);
+            return await editModalViewFunction(id, 0 ,SectionType);
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, Requests")]
-        public async Task<IActionResult> EditModalViewPartial(int? id, int? Tab)
+        public async Task<IActionResult> EditModalViewPartial(int? id, int? Tab, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
-            return await editModalViewFunction(id, Tab);
+            return await editModalViewFunction(id, Tab, SectionType);
         }
-        public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0)
+        public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType =AppUtility.MenuItems.Requests)
         {
             string ModalViewType = "";
             if (id == null)
@@ -1049,7 +1049,9 @@ namespace PrototypeWithAuth.Controllers
                 Comments = await _context.Comments
                 .Include(r => r.ApplicationUser)
                 .Where(r => r.Request.RequestID == id).ToListAsync(),
-                CommentTypes = commentTypes
+                CommentTypes = commentTypes,
+                SectionType = SectionType
+
             };
 
             ModalViewType = "Edit";
