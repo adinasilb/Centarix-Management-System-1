@@ -148,11 +148,11 @@
                         if (Model.RequestChildrenLocationInstances[z].LocationInstance.IsFull || Model.RequestChildrenLocationInstances[z].LocationInstance.ContainsItems)
                         {
                             var backgroundColor = " order-inv-filter ";
-                            if (Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            if (!Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 backgroundColor = " graduated-table-filter ";
                             }
-                            <td class="@outerClass  not-clickable location-selected" style="padding:0px;  ">
+                            <td class="@outerClass  not-clickable location-selected @backgroundColor" style="padding:0px;  ">
                                 <div class="">
                                     @Html.CheckBoxFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @liid = liID, @class = @classes })
 
