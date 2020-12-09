@@ -1,30 +1,24 @@
-﻿$.validator.addMethod("timeRangeMakeSenseEntry1", function (value, element) {
-	return $('#Exit1').val() > $('#Entry1').val();
-}, 'Entry must be less than Exit');
-
-
-$.validator.addMethod("timeRangeMakeSenseEntry2", function (value, element) {
-	return $('#Exit2').val() > $('#Entry2').val();
-}, 'Entry must be less than Exit');
+﻿$.validator.addMethod("eitherHoursOrTimeAndTimeRangeMakesSenseEntry1", function (value, element) {
+	return ($("#Exit1").val() != "" && $("#Entry1").val() != "") && ($('#Exit1').val() > $('#Entry1').val()) || $("#TotalHours").val() != "";
+}, 'Either total hours or Entry1 and Entry 2 must be filled in. Entry Must Be Less Than Exit');
+$.validator.addMethod("eitherHoursOrTimeAndTimeRangeMakesSenseEntry2", function (value, element) {
+	return ((($("#Exit1").val() != "" && $("#Entry1").val() != "") && ($('#Exit2').val() > $('#Entry2').val())) || $("#TotalHours").val() != "");
+}, 'Either total hours or Entry1 and Entry 2 must be filled in. Entry Must Be Less Than Exit');
 
 
 $('.reportHoursForm').validate({
 	rules: {
 		Entry1: {
-			eitherHoursOrTime: true,
-			timeRangeMakeSenseEntry1: true
+			eitherHoursOrTimeAndTimeRangeMakesSenseEntry1: true
 		},
 		Exit1: {
-			eitherHoursOrTime: true,
-			timeRangeMakeSenseEntry1: true
+			eitherHoursOrTimeAndTimeRangeMakesSenseEntry1: true
 		},
 		Entry2: {
-			eitherHoursOrTime: true,
-			timeRangeMakeSenseEntry2: true
+			eitherHoursOrTimeAndTimeRangeMakesSenseEntry2: true
 		},
 		Exit2: {
-			eitherHoursOrTime: true,
-			timeRangeMakeSenseEntry2: true
+			eitherHoursOrTimeAndTimeRangeMakesSenseEntry2: true
 		},
 		TotalHours: {
 			eitherHoursOrTime: true,

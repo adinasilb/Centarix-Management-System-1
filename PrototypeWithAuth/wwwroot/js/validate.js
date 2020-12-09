@@ -72,8 +72,9 @@ $(function () {
 		return (($("#Paid").val() != "false" && $("#Paid").val() != "") || ($("#Terms").val() != "" && $("#Terms").val() != null) || ($("#Installments").val()!=''&&parseInt($("#Installments").val()) > 0)) ;
 	}, 'Must choose one type of payment');
 	$.validator.addMethod("eitherHoursOrTime", function (value, element) {
-		return ($("#Exit1").val() != "" && $("#Entry1").val() != "") || $("#TotalHours").val() != "";
+		return (($("#Exit1").val() != "" && $("#Entry1").val() != "") || $("#TotalHours").val() != "");
 	}, 'Either total hours or Entry1 and Entry 2 must be filled in');
+
 	$.validator.addMethod("integer", function (value, element) {
 		return isInteger(value) || value == '';
 	}, 'Field must be an integer');

@@ -1906,9 +1906,21 @@ $(function () {
 		$('#Exit2').val('');
 		$('#Entry2').val('');
 	});
+	$("body").on("change", "#EmployeeHour_TotalHours", function (e) {
+		$('#EmployeeHour_Exit1').val('');
+		$('#EmployeeHour_Entry1').val('');
+		$('#EmployeeHour_Exit2').val('');
+		$('#EmployeeHour_Entry2').val('');
+	});
 
 	$("body").on("change", "#Exit1", function (e) {
 		$('#TotalHours').val('');
+	});
+	$("body").on("change", "#EmployeeHour_Exit1", function (e) {
+		$('#EmployeeHour_TotalHours').val('');
+	});
+	$("body").on("change", "#EmployeeHour_Entry1", function (e) {
+		$('#EmployeeHour_TotalHours').val('');
 	});
 	$("body").on("change", "#Entry1", function (e) {
 		$('#TotalHours').val('');
@@ -1916,8 +1928,14 @@ $(function () {
 	$("body").on("change", "#Exit2", function (e) {
 		$('#TotalHours').val('');
 	});
+	$("body").on("change", "#EmployeeHour_Exit2", function (e) {
+		$('#EmployeeHour_TotalHours').val('');
+	});
 	$("body").on("change", "#Entry2", function (e) {
 		$('#TotalHours').val('');
+	});
+	$("body").on("change", "#EmployeeHour_Entry2", function (e) {
+		$('#EmployeeHour_TotalHours').val('');
 	});
 	//});
 	/*End Dropdown Menu*/
