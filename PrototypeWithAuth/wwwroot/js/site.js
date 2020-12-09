@@ -91,7 +91,7 @@ $(function () {
 		console.log("project was changed");
 		var projectId = $(this).val();
 		var url = "/Requests/GetSubProjectList";
-		
+
 		$.getJSON(url, { ProjectID: projectId }, function (data) {
 			var item1 = "<option value=''>Select Sub Project</option>";
 			$("#SubProject").empty();
@@ -141,7 +141,7 @@ $(function () {
 	$("#search-form #vendorBusinessIDList").change(function () {
 		$("#search-form #vendorList").val($(this).val());
 	});
-	
+
 
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
 	$(".payments-table").on("change", ".paymentType", function (e) {
@@ -626,7 +626,7 @@ $(function () {
 
 
 	$(".open-document-modal").off('click').on("click", function (e) {
-		
+
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("clicked open doc modal");
@@ -634,7 +634,7 @@ $(function () {
 		var section = "";
 		if ($(".open-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 			section = "Operations";
-		} else if ($(".open-document-modal").hasClass('labManagement') || $(".open-document-modal").hasClass('LabManagement')){
+		} else if ($(".open-document-modal").hasClass('labManagement') || $(".open-document-modal").hasClass('LabManagement')) {
 			section = "LabManagement";
 		}
 		//alert("section:" + section)
@@ -674,7 +674,7 @@ $(function () {
 				$(".modal").modal('show');
 				return true;
 			}
-		
+
 		});
 		return true;
 	};
@@ -979,7 +979,7 @@ $(function () {
 
 
 	$(".load-sublocation-view").off("click").on("click", function (e) {
-		alert("load-sublocation-view");
+
 		//e.preventDefault();
 		//e.stopPropagation();
 		//add or remove the background class in col 1
@@ -988,22 +988,22 @@ $(function () {
 		$("#loading1")/*.delay(1000)*/.show(0);
 
 		//delete all prev tables:
-		var tableVal = $(this).val();
-		console.log("-------------------------------------------------------------");
-		console.log("table val: " + tableVal);
-		$('div[id^="table"]').each(function () {
-			var tableID = $(this).attr("id");
-			var tableNum = tableID.substr(5, tableID.length);
-			console.log("tableID: " + tableID);
-			console.log("tableNum: " + tableNum);
-			if (parseInt(tableVal) < parseInt(tableNum)) {
-				console.log(tableVal + " < " + tableNum);
-				$(this).hide();
-			}
-			else {
-				console.log(tableVal + " > " + tableNum);
-			}
-		});
+		//var tableVal = $(this).val();
+		//console.log("-------------------------------------------------------------");
+		//console.log("table val: " + tableVal);
+		//$('div[id^="table"]').each(function () {
+		//	var tableID = $(this).attr("id");
+		//	var tableNum = tableID.substr(5, tableID.length);
+		//	console.log("tableID: " + tableID);
+		//	console.log("tableNum: " + tableNum);
+		//	if (parseInt(tableVal) < parseInt(tableNum)) {
+		//		console.log(tableVal + " < " + tableNum);
+		//		$(this).hide();
+		//	}
+		//	else {
+		//		console.log(tableVal + " > " + tableNum);
+		//	}
+		//});
 
 		var myDiv = $(".colTwoSublocations");
 		var table = $(this).closest('table');
@@ -1041,12 +1041,35 @@ $(function () {
 		var parentStylingClass = "parent-location-selected-outer-lab-man";
 		if ($(this).hasClass("parent-location")) {
 			//console.log("is parent location!");
+			console.log("this has been clicked by a parent location");
+
+			//add heading name
+			$(".li-name").html("Filling this in");
+
+			//remove prev sidebars
 			$("body td").removeClass(parentStylingClass);
+			//add new sidebars
 			$(this).parent().addClass(parentStylingClass);
+
+			//remove all from column 2
+			$(".sublocation-index").each(function () {
+				$(this).hide();
+			});
 
 		}
 		else {
-			//console.log("is not parent location");
+			console.log("is not parent location");
+			//remove all columns to the right
+			var thisLocationInstanceID = $(this).val();
+			console.log("thisLocationInstanceID: " + thisLocationInstanceID);
+			$(".sublocation-index").each(function () {
+				var sublocationIndexParsed = $(this).children("table").children("tbody").children("tr:first-child").children("td").children("button").val();
+				console.log("sublocationIndexParsed: " + sublocationIndexParsed);
+				if (parseInt(sublocationIndexParsed) > parseInt(thisLocationInstanceID)) {
+					console.log("hiding " + sublocationIndexParsed + "...");
+					$(this).hide();
+				}
+			});
 		}
 		//End CSS Styling
 
@@ -1056,12 +1079,12 @@ $(function () {
 
 		var parentsParentId = $(this).closest('tr').attr('name');
 
-		if ($("#colTwoSublocations" + parentsParentId).length == 0) {
-			//if (!$('.second-col .li-name').val()) {
-				
-			//}
-			$('.colTwoSublocations').append('<div class="colTwoSublocationsChildren" id="colTwoSublocations' + parentsParentId + '"></div>');
-		}
+		//if ($("#colTwoSublocations" + parentsParentId).length == 0) {
+		//	//if (!$('.second-col .li-name').val()) {
+
+		//	//}
+		//	$('.colTwoSublocations').append('<div class="colTwoSublocationsChildren" id="colTwoSublocations' + parentsParentId + '"></div>');
+		//}
 		//console.log("about to call ajax with a parentid of: " + parentId);
 		$.ajax({
 			//IMPORTANT: ADD IN THE ID
@@ -1072,12 +1095,13 @@ $(function () {
 			success: function (result) {
 				myDiv.show();
 				if ($(this).hasClass("parent-location")) {
-					alert("this has been clicked by a parent location");
+					alert("parent loc second if");
 					$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
 				}
 				$("#loading1").hide();
 				$("#loading1")/*.delay(1000)*/.hide(0);
-				this.html(result);
+				myDiv.append(result);
+				//this.html(result);
 
 			}
 		});
@@ -1133,8 +1157,7 @@ $(function () {
 			success: (result) => {
 				console.log("result: " + result);
 				if (result) {
-					if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg")
-					{
+					if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
 						console.log("inside the if statement");
 						if (typeof (FileReader) != "undefined") {
 							console.log("file reader does not equal undefined");
@@ -1175,7 +1198,7 @@ $(function () {
 		//var imgPath = $("#UserImageModal")[0].value;
 		var imgPath = $("#UserImagePath").val();
 		//$(".user-image").html('<img src="~/' + imgPath + '" class="user-image" />');
-		$("#user-image").attr("src", "/"+imgPath);
+		$("#user-image").attr("src", "/" + imgPath);
 		$(".userImage i").hide();
 
 		$('.modal.userImageModal').remove();
@@ -1501,7 +1524,7 @@ $(function () {
 				$.fn.AddContactValidation();
 			}
 		});
-	
+
 	});
 
 
@@ -1527,7 +1550,7 @@ $(function () {
 		var index = $('#index').val();
 		$.ajax({
 			async: false,
-			url: '/Requests/CommentInfoPartialView?type='+type+'&index='+index,
+			url: '/Requests/CommentInfoPartialView?type=' + type + '&index=' + index,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -1726,7 +1749,7 @@ $(function () {
 		if ($(this).hasClass("ReportHours")) {
 			pageType = "ReportHours";
 		}
-		var itemurl = "UpdateHours?PageType=" + pageType +"&chosenDate=" + date;
+		var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + date;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -1868,7 +1891,7 @@ $(function () {
 		//alert("in multiple");
 		$(this).parents('.dropdown-multiple').find('span:not(.caret)').append($(this).find('label').text());
 	});
-	/*End Dropdown Menu*/ 
+	/*End Dropdown Menu*/
 
 
 	//$('.dropdown-menu li').click(function () {
@@ -2095,7 +2118,7 @@ $(function () {
 					console.log("orders")
 					$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
 					$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
-					$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');				
+					$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
 					if (($("#Request_SubSubUnit").hasClass('.mark-readonly'))) {
 						$.fn.EnableSubSubUnits();
 						$.fn.ChangeSubSubUnitDropdown();
@@ -2214,14 +2237,14 @@ $(function () {
 			placement: 'bottom',
 			html: true,
 			content: function () {
-				return $('#'+val).html();
+				return $('#' + val).html();
 			}
 		});
 		$(this).popover('toggle');
 
 	});
 	$('.employee-status-radio').off("click").on("click", function () {
-		
+
 		var val = $(this).val();
 		alert("employee status" + val);
 		$('#NewEmployee_EmployeeStatusID').val(val)
@@ -2325,7 +2348,7 @@ $(function () {
 	//});
 
 
-	
+
 
 });
 

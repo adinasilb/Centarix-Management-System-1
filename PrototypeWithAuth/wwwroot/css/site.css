@@ -1236,8 +1236,8 @@ a.nav-link {
 }
 
 .orders-and-inv .sublocation-index {
-    padding-right: 3.125rem !important;
-    padding-left: 3.125rem !important;
+    /*padding-right: 2.8125rem !important;*/
+    padding-left: 2.8125rem !important;
 }
 
     .orders-and-inv .sublocation-index tr:not(:last-child) {
