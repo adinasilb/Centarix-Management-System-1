@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
@@ -9,16 +8,13 @@ using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Chart.Mvc.Core.SimpleChart;
-using System.Drawing;
 using PrototypeWithAuth.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis;
 using Project = PrototypeWithAuth.Models.Project;
 using Request = PrototypeWithAuth.Models.Request;
 using System.Threading.Tasks;
-using Org.BouncyCastle.Ocsp;
-using Abp.Extensions;
+
 
 namespace PrototypeWithAuth.Controllers
 {

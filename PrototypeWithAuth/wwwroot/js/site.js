@@ -2221,8 +2221,9 @@ $(function () {
 
 	});
 	$('.employee-status-radio').off("click").on("click", function () {
-		//console.log('employee status')
+		
 		var val = $(this).val();
+		alert("employee status" + val);
 		$('#NewEmployee_EmployeeStatusID').val(val)
 		$("#validation-EmployeeStatus").addClass("hidden");
 		if (val == "4") {

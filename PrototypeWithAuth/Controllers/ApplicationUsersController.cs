@@ -54,7 +54,7 @@ namespace PrototypeWithAuth.Controllers
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
                 }
             }
-            return View(await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync());
+            return View(await _context.Employees.Where(u => !u.IsSuspended).ToListAsync());
         }
 
         [HttpGet]

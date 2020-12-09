@@ -117,7 +117,7 @@
                                 var src = "/UserImages/user-image-placeholder.png";
                                 if (employee.Employee.UserImage != null)
                                 {
-                                    src = UserManager.GetUserAsync(User).Result.UserImage;
+                                    src = "\\" + AppUtility.GetLastFiles(UserManager.GetUserAsync(User).Result.UserImage, 2);
                                 }
                             }
                             <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
