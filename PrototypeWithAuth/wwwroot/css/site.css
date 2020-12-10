@@ -1887,16 +1887,22 @@ td .btn {
 }
 
 /*HOVER FOR EACH SECTION*/
-.order-inv-form .form-control-plaintext:focus {
+.order-inv-form .form-control-plaintext:not(.danger-box-shadow):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
 }
 
-.order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
-    border-bottom: none !important;
-    border: 2px solid var(--order-inv-color) !important;
+.order-inv-form .form-control-plaintext.danger-box-shadow:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--danger-color) !important;
 }
+
+    .order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+        border-bottom: none !important;
+        border: 2px solid var(--order-inv-color) !important;
+    }
 
 .select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-radius: .25rem !important;
@@ -2626,3 +2632,7 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     justify-content: left;
     align-items: center;
 }
+
+/*
+    MULTIPLE EMAIL CSS
+*/

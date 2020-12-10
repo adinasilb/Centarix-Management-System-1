@@ -78,11 +78,15 @@
 }
 
 .danger-text {
-    color: var(--danger-color);
+    color: var(--danger-color) !important;
 }
 
 .border-danger-centarix {
     border-color: var(--danger-color) !important;
+}
+
+.danger-box-shadow {
+    box-shadow: 0 2px 0 0 var(--danger-color) !important;
 }
 
 .operations-filter {

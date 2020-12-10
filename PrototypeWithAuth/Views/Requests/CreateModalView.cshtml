@@ -701,7 +701,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <label class="control-label">Send to: (Add up to 5 email addresses)</label>
-                                        <input class="form-control-plaintext border-bottom" />
+                                        <input class="form-control-plaintext border-bottom" type="text" id="allEmails" placeholder="Email" />
                                         @for (int e = 0; e < Model.EmailAddresses.Count; e++)
                                         {
                                             <input type="hidden" asp-for="EmailAddresses[e]" />
@@ -746,9 +746,9 @@
                                         </div>
                                     </div>
                                     @*<input type="submit" name="OrderType" value="Mark As Ordered" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-            <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-            <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-            <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>*@
+                                        <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                        <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                        <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>*@
                                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 </div>
                             </div>
@@ -777,4 +777,22 @@
     <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
     <script src="~/js/validate.js"></script>
     <script src="~/js/SubUnit.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function ($) {
+            let data = [
+                "admin@jqueryscript.net",
+                "admin@cssscript.com"
+            ]
+            $("#allEmails").email_multiple({
+                data: data
+            })
+
+            var newEmailLine = $(".enter-mail-id");
+            newEmailLine.removeAttr('placeholder');
+            newEmailLine.addClass('form-control-plaintext');
+            newEmailLine.addClass('border-bottom');
+        });
+
+    </script>
 }
