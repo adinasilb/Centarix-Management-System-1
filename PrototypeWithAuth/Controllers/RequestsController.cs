@@ -531,6 +531,7 @@ namespace PrototypeWithAuth.Controllers
                 CompanyAccounts = companyaccounts,
                 CommentTypes = commentTypes,
                 Comments = new List<Comment>(),
+                EmailAddresses = new List<string>() { "", "", "", "", "" }
                 //CurrentUser = 
             };
 
@@ -639,9 +640,6 @@ namespace PrototypeWithAuth.Controllers
                     {
                         ViewBag.ErrorHeader += "/n Unable to assign data";
                         ViewBag.ErrorText += "/n Error assigning the following fields: subproject, quote status, request status";
-                        //TempData["ErrorMessage"] = ex.Message;
-                        //TempData["InnerMessage"] = ex.InnerException;
-                        //return View("~/Views/Shared/RequestError.cshtml");
                     }
                 }
                 else
@@ -698,7 +696,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(requestNotification);
                             _context.SaveChanges();
                         }
-                        else if (OrderType.Equals("Order"))
+                        else if (OrderType.Equals("Order Now"))
                         {
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
@@ -1011,7 +1009,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Requests")]
         public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
-            return await editModalViewFunction(id, 0 ,SectionType);
+            return await editModalViewFunction(id, 0, SectionType);
         }
 
         [HttpGet]
@@ -1020,7 +1018,7 @@ namespace PrototypeWithAuth.Controllers
         {
             return await editModalViewFunction(id, Tab, SectionType);
         }
-        public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType =AppUtility.MenuItems.Requests)
+        public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             string ModalViewType = "";
             if (id == null)
@@ -1314,7 +1312,7 @@ namespace PrototypeWithAuth.Controllers
                             .Select(li => new RequestChildrenLocationInstances()
                             {
                                 LocationInstance = li,
-                                IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i=>i == id).Any()
+                                IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == id).Any()
                             }).ToList();
 
                         //return NotFound();
@@ -1806,6 +1804,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["ParentRequestConfirmEmail"] = true;
             TempData["ParentRequestID"] = termsViewModel.ParentRequest.ParentRequestID;
             TempData.Keep();
+            TempData["OpenTermsModal"] = null;
             return RedirectToAction("Index"); //todo: put in tempdata memory here
             //return RedirectToAction("ConfirmEmailModal", new { id = termsViewModel.ParentRequest.ParentRequestID });
         }
@@ -1886,7 +1885,7 @@ namespace PrototypeWithAuth.Controllers
 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
                 //var users = _context.Users.ToList();
-                //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
+                currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
                 string ownerEmail = currentUser.Email;
                 string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                 string ownerPassword = currentUser.SecureAppPass;
@@ -3091,7 +3090,7 @@ namespace PrototypeWithAuth.Controllers
         public JsonResult FilterByProjects(List<int> ProjectIDs)
         {
             var requests = _context.Requests.Where(r => ProjectIDs.Contains(r.SubProject.ProjectID)).Include(r => r.ApplicationUserCreator).Include(r => r.SubProject);
-            var subProjectList = _context.SubProjects.Where(sp=>ProjectIDs.Contains(sp.ProjectID)).Select(sp => new { subProjectID = sp.SubProjectID, subProjectDescription = sp.SubProjectDescription });
+            var subProjectList = _context.SubProjects.Where(sp => ProjectIDs.Contains(sp.ProjectID)).Select(sp => new { subProjectID = sp.SubProjectID, subProjectDescription = sp.SubProjectDescription });
             var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
             return Json(new { SubProjects = subProjectList, Employees = workers });
 

@@ -21,7 +21,7 @@
 
 <div class="col-12 create-user mx-auto on-form-modal order-inv-form" style="width: 60%">
     <div class="on-form-modal-border">
-        <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+        <form action="" id="" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
             @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
             @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -154,7 +154,7 @@
      Enumerable.Empty<SelectListItem>(), "Select Sub Project",
      new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext", @id = "SubProject", @searchable = "Select Sub Project" })
                                             @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
-                                            </select>*@
+                                                </select>*@
                                             <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -638,11 +638,13 @@
                                 <span class="heading-1 modal-tab-name float-left">Comments and ratings</span>
                                 <div class=" container text-right">
                                     <ul class="list-unstyled">
-                                        <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 ">
-    <i class="order-inv-color icon-add_circle-24px" style="
+                                        <li>
+                                            <button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 ">
+                                                <i class="order-inv-color icon-add_circle-24px" style="
     font-size: 3rem;
 "></i>
-</button></li>
+                                            </button>
+                                        </li>
 
                                         <div style="display:none;" id="popover-content">
 
@@ -691,17 +693,62 @@
 
                         <div id="order" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                <span class="heading-1 modal-tab-name">Order</span>
-                                <br />
-                                <br />
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span class="heading-1 modal-tab-name">Order</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="control-label">Send to: (Add up to 5 email addresses)</label>
+                                        <input class="form-control-plaintext border-bottom" />
+                                        @for (int e = 0; e < Model.EmailAddresses.Count; e++)
+                                        {
+                                            <input type="hidden" asp-for="EmailAddresses[e]" />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="control-label">Notes to the supplier</label>
+                                        <input class="form-control-plaintext border-bottom" />
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     @*you can only add to cart if you are creating a new one*@
-                                    <input type="submit" name="OrderType" value="Place Order" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                    <div class="row">
+                                        <div class="col-8 align-vertical-middle-col">
+                                            <span class="small-text">If you want to process a single order immediately</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="submit" name="OrderType" value="Order Now" asp-action="CreateModalView"
+                                                   class="text custom-order-inv custom-button float-right create-modal-submit" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8 align-vertical-middle-col">
+                                            <span class="small-text">If you want to order multiple items</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView"
+                                                   class="text custom-order-inv custom-button float-right create-modal-submit" />
 
-                                    <input type="submit" name="OrderType" value="Mark As Ordered" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-                                    <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-                                    <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-                                    <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8 align-vertical-middle-col">
+                                            <span class="small-text">If you want to get permission from an executive</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView"
+                                                   class="text custom-order-inv custom-button float-right create-modal-submit" />
+
+                                        </div>
+                                    </div>
+                                    @*<input type="submit" name="OrderType" value="Mark As Ordered" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+            <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+            <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+            <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>*@
                                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 </div>
                             </div>

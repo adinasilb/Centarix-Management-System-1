@@ -2620,3 +2620,9 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
 .select-dropdown.form-control {
     border-radius: 0 !important;
 }
+
+.align-vertical-middle-col {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
