@@ -1912,7 +1912,7 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     min-width: 6.25rem;
 } .entry-exit-button {
     padding: .563rem 2.625rem;
-    font-size: 4rem;
+    font-size: 3rem;
     font-weight: var(--bold-medium)
 } .datepicker--nav {
     border: none;
