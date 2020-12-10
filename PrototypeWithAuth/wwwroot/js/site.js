@@ -903,7 +903,9 @@ $(function () {
 	$(".load-location-index-view").off("click").on("click", function (e) {
 		//clear the div to restart filling with new children
 		$(".load-location-index-view").removeClass("location-type-selected");
+		$(this).addClass("location-type-selected");
 		$.fn.setUpLocationIndexList($(this).attr("value"))
+		$(".second-col").addClass("d-none");
 	});
 
 	$.fn.setUpLocationIndexList = function (val) {
@@ -937,20 +939,17 @@ $(function () {
 	};
 
 	$(".load-visual-sublocation-view").off("click").on("click", function (e) {
-		console.log("load visual sublocation view");//delete all prev tables:
-		var tableVal = $(this).val();
-		$('div[id^="table"]').each(function () {
-			var tableID = $(this).attr("id");
-			var tableNum = tableID.substr(5, tableID.length);
-			if (parseInt(tableVal) < parseInt(tableNum)) {
-				console.log(tableVal + " < " + tableNum);
-				$(this).hide();
-			}
-			else {
-				console.log(tableVal + " > " + tableNum);
+		//remove all from column 2
+		var thisLocationInstanceID = $(this).val();
+		$(".sublocation-index").each(function () {
+			var sublocationIndexParsed = $(this).children("table").children("tbody").children("tr:first-child").children("td").children("button").val();
+			console.log("sublocationIndexParsed: " + sublocationIndexParsed);
+			if (parseInt(sublocationIndexParsed) > parseInt(thisLocationInstanceID)) {
+				console.log("hiding " + sublocationIndexParsed + "...");
+				$(this).remove();
 			}
 		});
-
+		
 		var myDiv = $(".colTwoSublocations");
 		var table = $(this).closest('table');
 
@@ -963,18 +962,18 @@ $(function () {
 		$(this).parent().addClass(stylingClass);
 		$(this).parent().parent().addClass(trStylingClass);
 
-		var parentStylingClass = "parent-location-selected-outer-lab-man";
-		var trParentStylingClass = "pl-border-right-0";
-		alert("new js sheet - trparentstlyingclass");
-		if ($(this).hasClass("parent-location")) {
-			$("body td").removeClass(parentStylingClass);
-			$("body tr").removeClass(trParentStylingClass);
-			$(this).parent().addClass(parentStylingClass);
-			$(this).parent().parent().addClass(trParentStylingClass);
+		//var parentStylingClass = "parent-location-selected-outer-lab-man";
+		//var trParentStylingClass = "pl-border-right-0";
+		//alert("new js sheet - trparentstlyingclass");
+		//if ($(this).hasClass("parent-location")) {
+		//	$("body td").removeClass(parentStylingClass);
+		//	$("body tr").removeClass(trParentStylingClass);
+		//	$(this).parent().addClass(parentStylingClass);
+		//	$(this).parent().parent().addClass(trParentStylingClass);
 
-		}
+		//}
 		//End CSS Styling
-		$.fn.setUpVisual($(this).val());
+		$.fn.setUpVisual($(this).val(), false);
 	});
 
 
@@ -1029,23 +1028,26 @@ $(function () {
 
 		//Begin CSS Styling
 		var stylingClass = "filled-location-class";
+		var trstylingClass = "filled-location-tr";
 		//$("body td").removeClass(stylingClass);
 
 		//$(table + " td").removeClass(stylingClass);
 		//$(table + " td").removeClass(stylingClass);
 		table.children('tbody').children('tr').children('td').removeClass(stylingClass);
+		table.children('tbody').children('tr').removeClass(trstylingClass);
 		$(this).parent().addClass(stylingClass);
+		$(this).parent().parent().addClass(trstylingClass);
 
 		//$("." + stylingClass).addClass(stylingClass);
 
-		var parentStylingClass = "parent-location-selected-outer-lab-man";
+		var parentStylingClass = "parent-location-selected-outer-lab-man  location-open-border-right";
+		var isParent = false;
 		if ($(this).hasClass("parent-location")) {
 			//console.log("is parent location!");
 			console.log("this has been clicked by a parent location");
-
 			//add heading name
 			$(".li-name").html($(this).attr("name"));
-
+			$(".li-name-container").removeClass("d-none");
 			//remove prev sidebars
 			$("body td").removeClass(parentStylingClass);
 			//add new sidebars
@@ -1056,8 +1058,12 @@ $(function () {
 				$(this).hide();
 			});
 
+		
+			isParent = true;
+
 		}
 		else {
+			
 			console.log("is not parent location");
 			//remove all columns to the right
 			var thisLocationInstanceID = $(this).val();
@@ -1075,6 +1081,7 @@ $(function () {
 
 		//fill up col 2 with the next one
 		var parentId = $(this).val();
+		var parentLocation = $(this);
 		console.log("open sublocation view, index: " + parentId);
 
 		var parentsParentId = $(this).closest('tr').attr('name');
@@ -1086,6 +1093,7 @@ $(function () {
 		//	$('.colTwoSublocations').append('<div class="colTwoSublocationsChildren" id="colTwoSublocations' + parentsParentId + '"></div>');
 		//}
 		//console.log("about to call ajax with a parentid of: " + parentId);
+
 		$.ajax({
 			//IMPORTANT: ADD IN THE ID
 			url: "/Locations/SublocationIndex/?parentId=" + parentId,
@@ -1094,24 +1102,29 @@ $(function () {
 			context: $("#colTwoSublocations" + parentsParentId),
 			success: function (result) {
 				myDiv.show();
-				if ($(this).hasClass("parent-location")) {
-					alert("parent loc second if");
-					$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
-				}
+				
 				$("#loading1").hide();
 				$("#loading1")/*.delay(1000)*/.hide(0);
 				myDiv.append(result);
+				if ($(parentLocation).hasClass("parent-location") ) {
+					//$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
+					//$("table td.li-name").html($(parentLocation).attr("name"));
+					//$("table td.li-name").removeClass("filled-location-class-color")
+					$(".second-col").removeClass("d-none");
+				}
 				//this.html(result);
+				//add heading name
+			
 
 			}
 		});
 
-		$.fn.setUpVisual($(this).val());
+		$.fn.setUpVisual($(this).val(), isParent);
 
 
 	});
 
-	$.fn.setUpVisual = function (val) {
+	$.fn.setUpVisual = function (val, isParent) {
 		$("#loading2")/*.delay(1000)*/.show(0);
 		console.log("in set up visual");
 		//fill up col three with the visual
@@ -1126,6 +1139,17 @@ $(function () {
 			success: function (result) {
 				visualDiv.show();
 				this.html(result);
+				var width = $('.visual-locations-table td').width();
+				alert(width)
+				if ($('.visual-locations-table td').hasClass("is25")) {
+					$('.visual-locations-table td').css("height", width);
+				}
+
+				if ($(".hasVisual").length > 0 && isParent == true) {
+					$(".li-name").html("");
+					$(".li-name-container").addClass("d-none");
+					$(".second-col").addClass("d-none");
+				}
 				$("#loading2").hide();
 				$("#loading2")/*.delay(1000)*/.hide(0);
 			}

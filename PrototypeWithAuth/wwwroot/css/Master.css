@@ -627,3 +627,14 @@ table td, table td .btn, .text, table th {
 .supplier-form .document-border:hover i{
     color: var(--lab-man-color)
 }
+
+.btn.btn-block.location-font-size {
+    font-size: 22px !important;
+}
+
+.location-parent-name{
+    font-size: 24px !important;
+}
+.location-visual-font{
+    font-size:11.59px !important;
+}

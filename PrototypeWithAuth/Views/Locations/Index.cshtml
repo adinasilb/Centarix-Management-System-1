@@ -14,7 +14,7 @@
             break;
     }
 }
-<div class="locations-page @pagetype">
+<div class="locations-page @pagetype " style=" margin-right: -5.625rem !important;">
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 
     @*<div class="row mt-4">
@@ -25,7 +25,7 @@
         <br />*@
     <div class="row top-row">
         <div class="col-9">
-            <div class="row pl-0">
+            <div class="row pl-0 ">
                 @foreach (var type in Model.LocationTypes)
                 {
                     <ul class="pl-0">
@@ -55,12 +55,17 @@
         <div class="col-md-3 colOne pr-0" style="max-width:15%;">
 
         </div>
-        <div class="row second-col filled-location-class text-center pl-0" style="max-width:45%;">
-            <span class="heading-1 li-name"></span><br />
-            <div class="row p-0 m-0 colTwoSublocations"></div>
+       
+        <div class=" second-col filled-location-class text-center d-none pl-0 pt-3 " style="max-width:45%;">
+            <div class="container-fluid li-name-container d-none"><div class="row location-parent-name  li-name pb-4" style=" padding-left: 2.8125rem !important;"></div></div>
+            <div class="container">
+                <div class="row p-0 m-0 colTwoSublocations"></div>
+            </div>
         </div>
 
-        <div class="col-md-6 VisualBoxColumn" style="max-width:40%;">
+        <div class="col-7 VisualBoxColumn mr-0  pr-0 location-parent-name" style="        max-width: 40%;
+      
+">
 
         </div>
     </div>
