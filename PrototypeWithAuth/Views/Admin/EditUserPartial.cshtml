@@ -38,6 +38,8 @@
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/CreateUser.js"></script>
 
+<input class="hasErrorMessage" type="hidden" value="@ViewBag.ErrorMessage" />
+
 <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
     <div class=" row text-right mb-6">
         <div class="switch col-12 switch-margin">
@@ -635,4 +637,11 @@
 
 <script>
     $('#FirstName').trigger('change');
+
+    @*$(function () {
+    $.fn.AddErrorMessage = function () {
+        alert("in error message with msg: " + @ViewBag.ErrorMessage);
+        $(".error-message").html(@ViewBag.ErrorMessage);
+    };
+    });*@
 </script>

@@ -2090,6 +2090,8 @@ $(function () {
 						//shows the modal
 						$(".confirm-edit-modal").modal('show');
 						$(".modal-open-state").attr("text", "open");
+
+
 					}
 
 				});

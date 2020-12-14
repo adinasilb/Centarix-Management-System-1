@@ -793,15 +793,16 @@ namespace PrototypeWithAuth.Controllers
                 //    await _context.SaveChangesAsync();
                 //    stream.Close();
                 //}
+                ViewBag.ErrorMessage = "Test Error Message";
 
             }
             catch (DbUpdateException ex)
             {
-
+                ViewBag.ErrorMessage = ex.InnerException;
             }
             catch (Exception e)
             {
-
+                ViewBag.ErrorMessage = e.InnerException;
             }
 
             return RedirectToAction("Index");
