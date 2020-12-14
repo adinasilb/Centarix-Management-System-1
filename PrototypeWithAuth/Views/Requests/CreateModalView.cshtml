@@ -708,7 +708,7 @@
                                             var supplierEmailClass = "emailaddresses ";
                                             if (e == 0)
                                             {
-                                                supplierEmailClass += "isSupplier";
+                                                supplierEmailClass = "isSupplier";
                                             }
                                             <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
                                         }
@@ -827,11 +827,18 @@
         }
 
         $.fn.RemoveFromHiddenIds = function (emailValue) {
+            //$(".emailaddresses").each(function () {
+            //    if ($(this).val() == emailValue) {
+            //        $(this).val('');
+            //        return false;
+            //    }
+            //});
+            $(".emailaddresses[value='" + emailValue + "']:first").val('');
             alert("removing: " + emailValue);
         }
 
         $.fn.AddToHiddenIds = function (emailValue) {
-            $(".emailaddresses:text[value='']:first").val(emailValue);
+            $(".emailaddresses[value='']:first").val(emailValue);
             alert("adding: " + emailValue);
         }
 
