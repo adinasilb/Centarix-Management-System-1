@@ -33,6 +33,7 @@ span.cancel-email {
     line-height: 1.5;
     margin-top: 1px;
     cursor: pointer;
+    /*font-size: 1.5rem;*/
 }
 
 .email-id-row {

@@ -3,77 +3,88 @@
  * Select multiple email by jquery.email_multiple
  * **/
 
-(function($){
+(function ($) {
 
-    $.fn.email_multiple = function(options) {
+	$.fn.email_multiple = function (options) {
 
-        let defaults = {
-            reset: false,
-            fill: false,
-            data: null
-        };
+		let defaults = {
+			reset: false,
+			fill: false,
+			data: null
+		};
 
-        let settings = $.extend(defaults, options);
-        let email = "";
+		let settings = $.extend(defaults, options);
+		let email = "";
 
-        return this.each(function()
-        {
-            $(this).after("<span class=\"to-input\">Email :</span>\n" +
-                "<div class=\"all-mail\"></div>\n" +
-                "<input type=\"text\" name=\"email\" class=\"enter-mail-id\" placeholder=\"Enter Email ...\" />");
-            let $orig = $(this);
-            let $element = $('.enter-mail-id');
+		return this.each(function () {
+			//$(this).after("<span class=\"to-input\">Email :</span>\n" +
+			//    "<div class=\"all-mail\"></div>\n" +
+			//    "<input type=\"text\" name=\"email\" class=\"enter-mail-id\" placeholder=\"Enter Email ...\" />");
 
-            var dangerClass = "danger-box-shadow";//Adina
+			//Adina replaced...
+			$(this).after("" +
+				"<div class=\"all-mail\"></div>\n" +
+				"<input type=\"text\" name=\"email\" class=\"enter-mail-id\" placeholder=\"Enter Email ...\" />");
+			let $orig = $(this);
+			let $element = $('.enter-mail-id');
 
-            $element.keydown(function (e) {
-                $element.css('border', '');
-                if (e.keyCode === 13 || e.keyCode === 32) {
-                    let getValue = $element.val();
-                    if (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/.test(getValue)){
-                        $('.all-mail').append('<span class="email-ids">' + getValue + '<span class="cancel-email">x</span></span>');
-                        $element.val('');
+			var dangerClass = "danger-box-shadow";//Adina
 
-                        email += getValue + ';'
-                        $element.removeClass(dangerClass);
-                    } else {
-                        $element.addClass(dangerClass);
-                    }
+			$element.keydown(function (e) {
+				$element.css('border', '');
+				if (e.keyCode === 13 || e.keyCode === 32) {
+					let getValue = $element.val();
+					if (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/.test(getValue)) {
+						$('.all-mail').append('<span class="email-ids">' + getValue + '<span class="cancel-email">&times;</span></span>');
+						$element.val('');
 
-                    e.preventDefault(); //Adina
-                    e.stopPropagation(); //Adina
-                }
+						email += getValue + ';'
+						$element.removeClass(dangerClass);
 
-                $orig.val(email.slice(0, -1))
+						$.fn.CheckListLength();
+						$.fn.AddToHiddenIds(getValue);
+					} else {
+						$element.addClass(dangerClass);
+					}
 
-            });
+					e.preventDefault(); //Adina
+					e.stopPropagation(); //Adina
+				}
 
-            $(document).on('click','.cancel-email',function(){
-                $(this).parent().remove();
-            });
+				$orig.val(email.slice(0, -1))
 
-            if(settings.data){
-                $.each(settings.data, function (x, y) {
-                    if (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/.test(y)){
-                        $('.all-mail').append('<span class="email-ids">' + y + '<span class="cancel-email">x</span></span>');
-                        $element.val('');
+			});
 
-                        email += y + ';'
-                    } else {
-                        $element.css('border', '1px solid red')
-                    }
-                })
+			$(document).on('click', '.cancel-email', function () {
+				if (!$(this).attr("disabled")) {
+					$(this).parent().remove();
+					$.fn.CheckListLength();
+					$.fn.RemoveFromHiddenIds($(this).parent().html().substr(0, $(this).parent().html().indexOf('<')));
+				}
+			});
 
-                $orig.val(email.slice(0, -1))
-            }
+			if (settings.data) {
+				$.each(settings.data, function (x, y) {
+					if (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/.test(y)) {
+						$('.all-mail').append('<span class="email-ids">' + y + '<span class="cancel-email">&times;</span></span>');
+						$element.val('');
 
-            if(settings.reset){
-                $('.email-ids').remove()
-            }
+						email += y + ';'
+					} else {
+						$element.css('border', '1px solid red')
+					}
+				})
 
-            return $orig.hide()
-        });
+				$orig.val(email.slice(0, -1))
+			}
 
-    };
+			if (settings.reset) {
+				$('.email-ids').remove()
+			}
+
+			return $orig.hide()
+		});
+
+	};
 
 })(jQuery);

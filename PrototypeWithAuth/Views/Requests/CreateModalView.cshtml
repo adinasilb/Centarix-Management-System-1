@@ -174,6 +174,7 @@
                                             <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
+                                    <input type="hidden" value="" id="vendor-primary-email" />
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             @* IN MIDDLE *@
@@ -700,11 +701,16 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <label class="control-label">Send to: (Add up to 5 email addresses)</label>
-                                        <input class="form-control-plaintext border-bottom" type="text" id="allEmails" placeholder="Email" />
+                                        <label class="control-label">Send to: (Add up to 5 email addresses@*- including the suppliers email address*@)</label>
+                                        <input class="form-control-plaintext border-bottom" type="text" id="allEmails" />
                                         @for (int e = 0; e < Model.EmailAddresses.Count; e++)
                                         {
-                                            <input type="hidden" asp-for="EmailAddresses[e]" />
+                                            var supplierEmailClass = "emailaddresses ";
+                                            if (e == 0)
+                                            {
+                                                supplierEmailClass += "isSupplier";
+                                            }
+                                            <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
                                         }
                                     </div>
                                 </div>
@@ -779,19 +785,63 @@
     <script src="~/js/SubUnit.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function ($) {
-            let data = [
-                "admin@jqueryscript.net",
-                "admin@cssscript.com"
-            ]
-            $("#allEmails").email_multiple({
-                data: data
-            })
+        $(".order-tab").on("click", function (e) {
+            if ($(".all-mail").length == 0) {
+                let data = [
+                    $("#vendor-primary-email").val()
+                ]
+                $("#allEmails").email_multiple({
+                    data: data
+                })
+                var newEmailLine = $(".enter-mail-id");
+                newEmailLine.removeAttr('placeholder');
+                newEmailLine.addClass('form-control-plaintext');
+                newEmailLine.addClass('border-bottom');
 
-            var newEmailLine = $(".enter-mail-id");
-            newEmailLine.removeAttr('placeholder');
-            newEmailLine.addClass('form-control-plaintext');
-            newEmailLine.addClass('border-bottom');
+                $(".email-ids:first span").attr("disabled", true);
+                $(".email-ids:first span").css("display", "none");
+                $(".email-ids:first").addClass("supplier-email");
+            }
+        });
+
+        $.fn.UpdatePrimaryOrderEmail = function () {
+            if ($(".supplier-email").length > 0) {
+                $(".supplier-email").html($("#vendor-primary-email").val());
+                $(".isSupplier").val($("#vendor-primary-email").val());
+            }
+            else {
+                $('.all-mail').prepend('<span class="email-ids supplier-email">' + $("#vendor-primary-email").val() + '</span>');
+                $(".isSupplier").val($("#vendor-primary-email").val());
+            }
+        };
+
+        $.fn.CheckListLength = function () {
+            //Disable if 5 emails
+            var listlength = $(".email-ids").length;
+            if (listlength >= 5 || (listlength == 4 && $(".supplier-email").length == 0)) {
+                $(".enter-mail-id").attr("disabled", true);
+            }
+            else {
+                $(".enter-mail-id").attr("disabled", false);
+            }
+        }
+
+        $.fn.RemoveFromHiddenIds = function (emailValue) {
+            alert("removing: " + emailValue);
+        }
+
+        $.fn.AddToHiddenIds = function (emailValue) {
+            $(".emailaddresses:text[value='']:first").val(emailValue);
+            alert("adding: " + emailValue);
+        }
+
+        $(document).ready(function ($) {
+            //let data = [
+            //]
+            //$("#allEmails").email_multiple({
+            //    data: data
+            //})
+
         });
 
     </script>
