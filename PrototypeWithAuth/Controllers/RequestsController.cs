@@ -208,14 +208,12 @@ namespace PrototypeWithAuth.Controllers
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                     RequestsPassedIn = RequestsPassedIn.OrderByDescending(rpi => rpi.ArrivalDate);
                 }
-                //if the user chooses a new status they want to see this too
-                if (RequestStatusID == 0 || RequestStatusID == 4 || RequestStatusID == 1)
+                if (RequestStatusID == 0 || RequestStatusID == 4)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                 }
-                //if the user chooses a new status they want to see this too
-                if (RequestStatusID == 0 || RequestStatusID == 5 || RequestStatusID == 1)
+                if (RequestStatusID == 0 || RequestStatusID == 5)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
