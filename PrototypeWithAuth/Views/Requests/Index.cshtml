@@ -217,9 +217,10 @@
                     <th width="20%">Item Name</th>
                     @*<th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>*@
                     <th width="7%">Vendor</th>
+                    <th width="12%">Type</th>
                     @if (!Summary)
                     {
-                        <th width="9%">
+                        <th width="12%">
                             Amount
 
                         </th>
@@ -248,30 +249,30 @@
                                         <hr class="mx-0  my-1" />
                                     }
 
-                                <div class="row mt-2">
-                                    <input type="hidden" id="tempCurrency" value="NIS" />
-                                    <div class="col-5">
-                                        <div class="custom-control custom-radio">
-                                            <input checked="checked"
-                                                   id="nis"
-                                                   name="currency"
-                                                   type="radio"
-                                                   value="@AppUtility.CurrencyEnum.NIS" class="custom-control-input currency nis">
-                                            <label class="custom-control-label currency radio-button text" for="nis">@AppUtility.CurrencyEnum.NIS.ToString()</label>
-                                        </div>
+                                    <div class="row mt-2">
+                                        <input type="hidden" id="tempCurrency" value="NIS" />
+                                        <div class="col-5">
+                                            <div class="custom-control custom-radio">
+                                                <input checked="checked"
+                                                       id="nis"
+                                                       name="currency"
+                                                       type="radio"
+                                                       value="@AppUtility.CurrencyEnum.NIS" class="custom-control-input currency nis">
+                                                <label class="custom-control-label currency radio-button text" for="nis">@AppUtility.CurrencyEnum.NIS.ToString()</label>
+                                            </div>
 
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="custom-control custom-radio">
-                                            <input id="usd"
-                                                   name="currency"
-                                                   type="radio"
-                                                   value="@AppUtility.CurrencyEnum.USD"
-                                                   class="custom-control-input currency usd">
-                                            <label class="custom-control-label currency radio-button text" for="usd">@AppUtility.CurrencyEnum.USD.ToString()</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="custom-control custom-radio">
+                                                <input id="usd"
+                                                       name="currency"
+                                                       type="radio"
+                                                       value="@AppUtility.CurrencyEnum.USD"
+                                                       class="custom-control-input currency usd">
+                                                <label class="custom-control-label currency radio-button text" for="usd">@AppUtility.CurrencyEnum.USD.ToString()</label>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 </div>
 
                             </ul>
@@ -282,7 +283,6 @@
                     {
                         <th> Location </th>
                     }
-                    <th width="10%">@Html.DisplayNameFor(m => m.PagedList[0].Product.ProductSubcategory.ProductSubcategoryDescription)</th>
                     @*<th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>*@
 
                     @if (!Summary)

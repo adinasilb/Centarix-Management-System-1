@@ -649,92 +649,92 @@ namespace PrototypeWithAuth.Controllers
 
                 if (rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && !registerUserViewModel.OrderRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && registerUserViewModel.OrderRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) && !registerUserViewModel.ProtocolRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) && registerUserViewModel.ProtocolRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && !registerUserViewModel.OperationRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && registerUserViewModel.OperationRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) && !registerUserViewModel.BiomarkerRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) && registerUserViewModel.BiomarkerRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.TimeKeeper.ToString()) && !registerUserViewModel.TimekeeperRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.TimeKeeper.ToString()) && registerUserViewModel.TimekeeperRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.LabManagement.ToString()) && !registerUserViewModel.LabManagementRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.LabManagement.ToString()) && registerUserViewModel.LabManagementRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Accounting.ToString()) && !registerUserViewModel.AccountingRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Accounting.ToString()) && registerUserViewModel.AccountingRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && !registerUserViewModel.ExpenseesRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && registerUserViewModel.ExpenseesRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Income.ToString()) && !registerUserViewModel.IncomeRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Income.ToString()) && registerUserViewModel.IncomeRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
                 }
 
                 if (rolesList.Contains(AppUtility.MenuItems.Users.ToString()) && !registerUserViewModel.UserRoles[0].Selected)
                 {
-                    await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
+                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
                 }
                 else if (!rolesList.Contains(AppUtility.MenuItems.Users.ToString()) && registerUserViewModel.UserRoles[0].Selected)
                 {
-                    await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
+                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
                 }
 
 
@@ -793,15 +793,16 @@ namespace PrototypeWithAuth.Controllers
                 //    await _context.SaveChangesAsync();
                 //    stream.Close();
                 //}
+                ViewBag.ErrorMessage = "Test Error Message";
 
             }
             catch (DbUpdateException ex)
             {
-
+                ViewBag.ErrorMessage = ex.InnerException;
             }
             catch (Exception e)
             {
-
+                ViewBag.ErrorMessage = e.InnerException;
             }
 
             return RedirectToAction("Index");

@@ -43,6 +43,12 @@
 			cache: true,
 			success: function (data) {
 				$.fn.getMenuItems();
+				alert("in success");
+				//sets up error message if it has the setup in the view
+				if ($(".hasErrorMessage").length > 0) {
+					alert("error message: " + $(".hasErrorMessage").val());
+					$(".error-message").html($(".hasErrorMessage").val());
+				}
 			}
 		});
 		$.fn.TurnToDetails();

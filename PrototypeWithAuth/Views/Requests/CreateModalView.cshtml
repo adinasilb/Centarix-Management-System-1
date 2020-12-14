@@ -154,7 +154,7 @@
      Enumerable.Empty<SelectListItem>(), "Select Sub Project",
      new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext", @id = "SubProject", @searchable = "Select Sub Project" })
                                             @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
-                                            </select>*@
+                                                </select>*@
                                             <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -174,6 +174,7 @@
                                             <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
+                                    <input type="hidden" value="" id="vendor-primary-email" />
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             @* IN MIDDLE *@
@@ -638,11 +639,13 @@
                                 <span class="heading-1 modal-tab-name float-left">Comments and ratings</span>
                                 <div class=" container text-right">
                                     <ul class="list-unstyled">
-                                        <li><button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 ">
-    <i class="order-inv-color icon-add_circle-24px" style="
+                                        <li>
+                                            <button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 ">
+                                                <i class="order-inv-color icon-add_circle-24px" style="
     font-size: 3rem;
 "></i>
-</button></li>
+                                            </button>
+                                        </li>
 
                                         <div style="display:none;" id="popover-content">
 
@@ -691,17 +694,67 @@
 
                         <div id="order" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                <span class="heading-1 modal-tab-name">Order</span>
-                                <br />
-                                <br />
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span class="heading-1 modal-tab-name">Order</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="control-label">Send to: (Add up to 5 email addresses@*- including the suppliers email address*@)</label>
+                                        <input class="form-control-plaintext border-bottom" type="text" id="allEmails" />
+                                        @for (int e = 0; e < Model.EmailAddresses.Count; e++)
+                                        {
+                                            var supplierEmailClass = "emailaddresses ";
+                                            if (e == 0)
+                                            {
+                                                supplierEmailClass = "isSupplier";
+                                            }
+                                            <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="control-label">Notes to the supplier</label>
+                                        <input asp-for="Request.NoteToSupplier" class="form-control-plaintext border-bottom" />
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     @*you can only add to cart if you are creating a new one*@
-                                    <input type="submit" name="OrderType" value="Place Order" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                    <div class="row">
+                                        <div class="col-8 align-vertical-middle-col">
+                                            <span class="small-text">If you want to process a single order immediately</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="submit" name="OrderType" value="Order Now" asp-action="CreateModalView"
+                                                   class="text custom-order-inv custom-button float-right create-modal-submit" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8 align-vertical-middle-col">
+                                            <span class="small-text">If you want to order multiple items</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView"
+                                                   class="text custom-order-inv custom-button float-right create-modal-submit" />
 
-                                    <input type="submit" name="OrderType" value="Mark As Ordered" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-                                    <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-                                    <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-                                    <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8 align-vertical-middle-col">
+                                            <span class="small-text">If you want to get permission from an executive</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView"
+                                                   class="text custom-order-inv custom-button float-right create-modal-submit" />
+
+                                        </div>
+                                    </div>
+                                    @*<input type="submit" name="OrderType" value="Mark As Ordered" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                        <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                        <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+                                        <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>*@
                                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 </div>
                             </div>
@@ -730,4 +783,65 @@
     <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
     <script src="~/js/validate.js"></script>
     <script src="~/js/SubUnit.js"></script>
+
+    <script type="text/javascript">
+        $(".order-tab").on("click", function (e) {
+            if ($(".all-mail").length == 0) {
+                let data = [
+                    $("#vendor-primary-email").val()
+                ]
+                $("#allEmails").email_multiple({
+                    data: data
+                })
+                var newEmailLine = $(".enter-mail-id");
+                newEmailLine.removeAttr('placeholder');
+                newEmailLine.addClass('form-control-plaintext');
+                newEmailLine.addClass('border-bottom');
+
+                $(".email-ids:first span").attr("disabled", true);
+                $(".email-ids:first span").css("display", "none");
+                $(".email-ids:first").addClass("supplier-email");
+            }
+        });
+
+        $.fn.UpdatePrimaryOrderEmail = function () {
+            if ($(".supplier-email").length > 0) {
+                $(".supplier-email").html($("#vendor-primary-email").val());
+                $(".isSupplier").val($("#vendor-primary-email").val());
+            }
+            else {
+                $('.all-mail').prepend('<span class="email-ids supplier-email">' + $("#vendor-primary-email").val() + '</span>');
+                $(".isSupplier").val($("#vendor-primary-email").val());
+            }
+        };
+
+        $.fn.CheckListLength = function () {
+            //Disable if 5 emails
+            var listlength = $(".email-ids").length;
+            if (listlength >= 5 || (listlength == 4 && $(".supplier-email").length == 0)) {
+                $(".enter-mail-id").attr("disabled", true);
+            }
+            else {
+                $(".enter-mail-id").attr("disabled", false);
+            }
+        }
+
+        $.fn.RemoveFromHiddenIds = function (emailValue) {
+            $(".emailaddresses[value='" + emailValue + "']:first").val('');
+        }
+
+        $.fn.AddToHiddenIds = function (emailValue) {
+            $(".emailaddresses[value='']:first").val(emailValue);
+        }
+
+        $(document).ready(function ($) {
+            //let data = [
+            //]
+            //$("#allEmails").email_multiple({
+            //    data: data
+            //})
+
+        });
+
+    </script>
 }

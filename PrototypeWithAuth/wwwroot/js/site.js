@@ -230,12 +230,11 @@ $(function () {
 			$.getJSON(url, { VendorID: vendorid }, function (data) {
 				//get the business id from json
 				newBusinessID = data.vendorBuisnessID;
-				//console.log("data.vendorBuisnessID: " + data.vendorBuisnessID);
-				//console.log("data: " + data);
-				//console.log("newBusinessID: " + newBusinessID);
 				//cannot only use the load outside. apparently it needs this one in order to work
 				$(".vendorBusinessId").val(newBusinessID);
 				$(".vendorBusinessId").text(newBusinessID);
+				$("#vendor-primary-email").val(data.ordersEmail);
+				$.fn.UpdatePrimaryOrderEmail();
 			})
 		}
 		//console.log("newBusinessID: " + newBusinessID);
@@ -2115,6 +2114,8 @@ $(function () {
 						//shows the modal
 						$(".confirm-edit-modal").modal('show');
 						$(".modal-open-state").attr("text", "open");
+
+
 					}
 
 				});

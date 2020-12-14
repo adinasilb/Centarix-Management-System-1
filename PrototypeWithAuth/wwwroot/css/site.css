@@ -1729,14 +1729,24 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     color: var(--order-inv-color) !important;
 }
 /*HOVER FOR EACH SECTION*/
-.order-inv-form .form-control-plaintext:focus {
+.order-inv-form .form-control-plaintext:not(.danger-box-shadow):focus {
     outline-width: 0px !important;
     outline-color: none !important;
     box-shadow: 0 2px 0 0 var(--order-inv-color) !important;
-} .order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
-    border-bottom: none !important;
-    border: 2px solid var(--order-inv-color) !important;
-} .select-wrapper:not(.md-outline) .select-dropdown:focus {
+}
+
+.order-inv-form .form-control-plaintext.danger-box-shadow:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    box-shadow: 0 2px 0 0 var(--danger-color) !important;
+}
+
+    .order-inv-form .select-wrapper:not(.md-outline) .select-dropdown:focus {
+        border-bottom: none !important;
+        border: 2px solid var(--order-inv-color) !important;
+    }
+
+.select-wrapper:not(.md-outline) .select-dropdown:focus {
     border-radius: .25rem !important;
     box-shadow: none !important;
 } .order-inv-form .input-group:focus-within > .input-group-text {
@@ -2176,3 +2186,15 @@ table.visual-locations-table td .visual-locations-div {
 .labmanage .location-box-selected {
     background-color: var(--lab-man-color)
 }
+.select-dropdown.form-control:not(.expenses-form .select-dropdown.form-control) {
+    border-radius: 0 !important;
+} 
+.align-vertical-middle-col {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+/*
+    MULTIPLE EMAIL CSS
+*/
