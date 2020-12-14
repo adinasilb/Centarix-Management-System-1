@@ -373,10 +373,14 @@
                                 {
                                     @Html.HiddenFor(model => model.OrderRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.OrderRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="OrderRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="OrderRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
                                     </div>
+                                    @*<div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input mark-readonly" asp-for="OrderRoles[i].Selected" disabled />
+                <label class="custom-control-label" asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
+            </div>*@
                                 }
                             </div>
                         </div>
@@ -393,9 +397,10 @@
                                 {
                                     @Html.HiddenFor(model => model.ProtocolRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.ProtocolRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="ProtocolRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="ProtocolRoles[i].Selected">@Model.ProtocolRoles[i].Name</label>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="ProtocolRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="ProtocolRoles[i].Selected">@Model.ProtocolRoles[i].Name</label>
                                     </div>
                                 }
                             </div>
@@ -413,9 +418,9 @@
                                 {
                                     @Html.HiddenFor(model => model.OperationRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.OperationRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="OperationRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="OperationRoles[i].Selected">@Model.OperationRoles[i].Name</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="OperationRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="OperationRoles[i].Selected">@Model.OperationRoles[i].Name</label>
                                     </div>
                                 }
                             </div>
@@ -433,9 +438,9 @@
                                 {
                                     @Html.HiddenFor(model => model.BiomarkerRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.BiomarkerRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="BiomarkerRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="BiomarkerRoles[i].Selected">@Model.BiomarkerRoles[i].Name</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="BiomarkerRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="BiomarkerRoles[i].Selected">@Model.BiomarkerRoles[i].Name</label>
                                     </div>
                                 }
                             </div>
@@ -453,9 +458,9 @@
                                 {
                                     @Html.HiddenFor(model => model.TimekeeperRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.TimekeeperRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="TimekeeperRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="TimekeeperRoles[i].Selected">@Model.TimekeeperRoles[i].Name</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="TimekeeperRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="TimekeeperRoles[i].Selected">@Model.TimekeeperRoles[i].Name</label>
                                     </div>
                                 }
                             </div>
@@ -473,9 +478,9 @@
                                 {
                                     @Html.HiddenFor(model => model.LabManagementRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.LabManagementRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="LabManagementRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="LabManagementRoles[i].Selected">@Model.LabManagementRoles[i].Name</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="LabManagementRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="LabManagementRoles[i].Selected">@Model.LabManagementRoles[i].Name</label>
                                     </div>
                                 }
                             </div>
@@ -493,9 +498,9 @@
                                 {
                                     @Html.HiddenFor(model => model.AccountingRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.AccountingRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="AccountingRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="AccountingRoles[i].Selected">@Model.AccountingRoles[i].Name</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="AccountingRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="AccountingRoles[i].Selected">@Model.AccountingRoles[i].Name</label>
                                     </div>
                                 }
                             </div>
@@ -513,9 +518,9 @@
                                 {
                                     @Html.HiddenFor(model => model.ExpenseesRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.ExpenseesRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="ExpenseesRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="ExpenseesRoles[i].Selected">@Model.ExpenseesRoles[i].Name</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="ExpenseesRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="ExpenseesRoles[i].Selected">@Model.ExpenseesRoles[i].Name</label>
                                     </div>
                                 }
                             </div>
@@ -533,9 +538,9 @@
                                 {
                                     @Html.HiddenFor(model => model.IncomeRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.IncomeRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="IncomeRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="IncomeRoles[i].Selected">@Model.IncomeRoles[i].Name</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="IncomeRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="IncomeRoles[i].Selected">@Model.IncomeRoles[i].Name</label>
                                     </div>
                                 }
                             </div>
@@ -553,9 +558,9 @@
                                 {
                                     @Html.HiddenFor(model => model.UserRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.UserRoles[i].Name)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input mark-readonly" asp-for="UserRoles[i].Selected" disabled />
-                                        <label class="custom-control-label" asp-for="UserRoles[i].Selected">@Model.UserRoles[i].Name</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input filled-in" asp-for="UserRoles[i].Selected" />
+                                        <label class="form-check-label " asp-for="UserRoles[i].Selected">@Model.UserRoles[i].Name</label>
                                     </div>
                                 }
                             </div>
