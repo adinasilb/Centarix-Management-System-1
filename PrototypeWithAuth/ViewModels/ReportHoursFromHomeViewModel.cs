@@ -8,7 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class ReportHoursFromHomeViewModel
     {
-        public EmployeeHoursAwaitingApproval EmployeeHoursAwaitingApproval { get; set; }
+        public EmployeeHoursAwaitingApproval EmployeeHour { get; set; }
         public String PageType { get; set; }
     }
 }

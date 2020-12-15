@@ -1,6 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.ReportHoursFromHomeViewModel;
-
-<script src="~/js/Validation/ReportHoursFromHomeFormValidation.js"></script>
+    <script src="~/js/Validation/UpdateHoursValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <div class="modal modal-document fader on-form-modal timekeeper-form" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered mx-auto modal-sm  work-from-home-modal">
@@ -15,9 +14,9 @@
                         disabled = true;
                     }
                 }
-                @Html.HiddenFor(r => r.EmployeeHoursAwaitingApproval.EmployeeHoursID)
-                @Html.HiddenFor(r => r.EmployeeHoursAwaitingApproval.EmployeeID)
-                @Html.HiddenFor(r => r.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID)
+                @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursID)
+                @Html.HiddenFor(r => r.EmployeeHour.EmployeeID)
+                @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursAwaitingApprovalID)
                 <div class="modal-header border-0 border-bottom modal-header-padding">
                     <div class="container">
                         <div class="">
@@ -32,39 +31,39 @@
                     <div class="row">
                         <div class="col-md-6 pr-4">
                             <label class="control-label">Day</label>
-                            <input asp-for="EmployeeHoursAwaitingApproval.Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week" disabled />
-                            <span asp-validation-for="EmployeeHoursAwaitingApproval.Date.DayOfWeek" class="text-danger-centarix " />
+                            <input asp-for="EmployeeHour.Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week" disabled />
+                            <span asp-validation-for="EmployeeHour.Date.DayOfWeek" class="text-danger-centarix " />
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="EmployeeHoursAwaitingApproval.Date" class="control-label"></label>
+                            <label asp-for="EmployeeHour.Date" class="control-label"></label>
                             @if (disabled)
                             {
-                                <input asp-for="EmployeeHoursAwaitingApproval.Date" class="form-control-plaintext  border-bottom  update-work-from-home" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" readonly />
+                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom  update-work-from-home" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" readonly />
                             }
                             else
                             {
-                                <input asp-for="EmployeeHoursAwaitingApproval.Date" class="form-control-plaintext  border-bottom  update-work-from-home" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom  update-work-from-home" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
                             }
 
-                            <span asp-validation-for="EmployeeHoursAwaitingApproval.Date" class="text-danger-centarix quote-date" />
+                            <span asp-validation-for="EmployeeHour.Date" class="text-danger-centarix quote-date" />
                         </div>
                     </div>
                     <br />
                     <div class="row">
                         <div class="col-4 ">
                             <label class="control-label">Entry</label>
-                            <input asp-for="EmployeeHoursAwaitingApproval.Entry1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="EmployeeHoursAwaitingApproval.Entry1" class="text-danger-centarix"></span>
+                            <input asp-for="EmployeeHour.Entry1" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHour.Entry1" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-4 ">
                             <label class="control-label">Exit</label>
-                            <input asp-for="EmployeeHoursAwaitingApproval.Exit1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="EmployeeHoursAwaitingApproval.Exit1" class="text-danger-centarix"></span>
+                            <input asp-for="EmployeeHour.Exit1" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHour.Exit1" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-4">
-                            <label asp-for="EmployeeHoursAwaitingApproval.TotalHours" class="control-label"></label>
-                            <input asp-for="EmployeeHoursAwaitingApproval.TotalHours" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="EmployeeHoursAwaitingApproval.TotalHours" class="text-danger-centarix"></span>
+                            <label asp-for="EmployeeHour.TotalHours" class="control-label"></label>
+                            <input asp-for="EmployeeHour.TotalHours" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHour.TotalHours" class="text-danger-centarix"></span>
                         </div>
                     </div>
                 </div>

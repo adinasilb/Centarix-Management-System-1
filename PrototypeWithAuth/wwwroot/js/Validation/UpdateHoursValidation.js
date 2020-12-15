@@ -8,7 +8,7 @@ $.validator.addMethod("eitherHoursOrTimeAndTimeRangeMakesSenseEntry2", function 
 
 
 
-$('.UpdateHoursForm').validate({
+$('.UpdateHoursForm, .reportHoursForm').validate({
 	rules: {
 		"EmployeeHour.Entry1": {
 			eitherHoursOrTimeAndTimeRangeMakesSenseEntry1: true

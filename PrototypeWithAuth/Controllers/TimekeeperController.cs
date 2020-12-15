@@ -361,7 +361,7 @@ namespace PrototypeWithAuth.Controllers
             employeeHoursAwaitingApproval.Exit2 = employeeHours.Exit2;
             employeeHoursAwaitingApproval.TotalHours = employeeHours.TotalHours;
         }
-            ReportHoursFromHomeViewModel reportHoursFromHomeViewModel = new ReportHoursFromHomeViewModel() { EmployeeHoursAwaitingApproval = employeeHoursAwaitingApproval, PageType = PageType };
+            ReportHoursFromHomeViewModel reportHoursFromHomeViewModel = new ReportHoursFromHomeViewModel() { EmployeeHour = employeeHoursAwaitingApproval, PageType = PageType };
             return PartialView(reportHoursFromHomeViewModel);
 
 
@@ -372,20 +372,20 @@ namespace PrototypeWithAuth.Controllers
     public IActionResult ReportHoursFromHomeModal(ReportHoursFromHomeViewModel reportHoursFromHomeViewModel)
     {
         var userID = _userManager.GetUserId(User);
-        var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == reportHoursFromHomeViewModel.EmployeeHoursAwaitingApproval.Date.Date).FirstOrDefault();
+        var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == reportHoursFromHomeViewModel.EmployeeHour.Date.Date).FirstOrDefault();
         if (employeeHours != null)
         {
-                reportHoursFromHomeViewModel.EmployeeHoursAwaitingApproval.EmployeeHoursID = employeeHours.EmployeeHoursID;
-                reportHoursFromHomeViewModel.EmployeeHoursAwaitingApproval.OffDayTypeID = employeeHours.OffDayTypeID;
+                reportHoursFromHomeViewModel.EmployeeHour.EmployeeHoursID = employeeHours.EmployeeHoursID;
+                reportHoursFromHomeViewModel.EmployeeHour.OffDayTypeID = employeeHours.OffDayTypeID;
         }
-        var awaitingApprovalID = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == reportHoursFromHomeViewModel.EmployeeHoursAwaitingApproval.Date.Date).Select(e => e.EmployeeHoursAwaitingApprovalID).FirstOrDefault();
+        var awaitingApprovalID = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == reportHoursFromHomeViewModel.EmployeeHour.Date.Date).Select(e => e.EmployeeHoursAwaitingApprovalID).FirstOrDefault();
         if (awaitingApprovalID != null)
         {
-                reportHoursFromHomeViewModel.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID = awaitingApprovalID;
+                reportHoursFromHomeViewModel.EmployeeHour.EmployeeHoursAwaitingApprovalID = awaitingApprovalID;
         }
-            reportHoursFromHomeViewModel.EmployeeHoursAwaitingApproval.EmployeeHoursStatusID = 1;
-            DateTime Month = reportHoursFromHomeViewModel.EmployeeHoursAwaitingApproval.Date;
-            _context.Update(reportHoursFromHomeViewModel.EmployeeHoursAwaitingApproval);
+            reportHoursFromHomeViewModel.EmployeeHour.EmployeeHoursStatusID = 1;
+            DateTime Month = reportHoursFromHomeViewModel.EmployeeHour.Date;
+            _context.Update(reportHoursFromHomeViewModel.EmployeeHour);
           _context.SaveChanges();
             return RedirectToAction(reportHoursFromHomeViewModel.PageType, new { Month = Month });
 
