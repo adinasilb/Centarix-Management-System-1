@@ -133,21 +133,40 @@ namespace PrototypeWithAuth.Controllers
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
             if (user != null)
             {
-                var daysWorking = (DateTime.Today - user.StartedWorking).TotalDays;
-                int totalYears = (int)(daysWorking / 365);
-                var startOfThisYear = user.StartedWorking.AddYears(totalYears);
-                ReportDaysViewModel reportDaysViewModel = new ReportDaysViewModel
-                {
-                    VacationDays = user.VacationDays,
-                    VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date >= startOfThisYear).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).OrderByDescending(eh => eh.Date),
-                    SickDaysTaken = _context.EmployeeHours.Where(eh => eh.Date >= startOfThisYear).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).OrderByDescending(eh => eh.Date),
-                    VacationDaysLeft = getVacationDaysLeft(user)
-                };
+                ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, DateTime.Now.Year);
                 return View(reportDaysViewModel);
 
             }
 
             return RedirectToAction("ReportHours");
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin, TimeKeeper")]
+        public async Task<IActionResult> _SummaryDaysOff(int year)
+        {
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.TimeKeeperSidebarEnum.SummaryDaysOff;
+            var userid = _userManager.GetUserId(User);
+            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
+            if (user != null)
+            {
+                ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, year);
+                return PartialView(reportDaysViewModel);
+            }
+
+            return RedirectToAction("ReportHours");
+        }
+        private ReportDaysViewModel GetSummaryDaysOffModel(string userid, Employee user, int year)
+        {
+            return new ReportDaysViewModel
+            {
+                VacationDays = user.VacationDays,
+                VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).OrderByDescending(eh => eh.Date),
+                SickDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).OrderByDescending(eh => eh.Date),
+                VacationDaysLeft = getVacationDaysLeft(user),
+                SelectedYear = year
+            };
         }
 
         private int getVacationDaysLeft(Employee user)

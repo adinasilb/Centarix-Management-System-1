@@ -1762,6 +1762,7 @@ $(function () {
 			}
 		});
 	};
+	
 	$(".open-work-from-home-modal").off('click').click(function (e) {
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
