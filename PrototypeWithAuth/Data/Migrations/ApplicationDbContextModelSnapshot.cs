@@ -2300,6 +2300,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("NoteToSupplier")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Paid")
                         .HasColumnType("bit");
 

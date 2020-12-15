@@ -141,7 +141,7 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("InvoiceID")]
         public Invoice Invoice { get; set; }
 
-
+        public string? NoteToSupplier { get; set; }
 
 
     }

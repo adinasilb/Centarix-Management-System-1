@@ -78,11 +78,15 @@
 }
 
 .danger-text {
-    color: var(--danger-color);
+    color: var(--danger-color) !important;
 }
 
 .border-danger-centarix {
     border-color: var(--danger-color) !important;
+}
+
+.danger-box-shadow {
+    box-shadow: 0 2px 0 0 var(--danger-color) !important;
 }
 
 .operations-filter {
@@ -325,6 +329,12 @@ input:not(input[type=button]) {
     color: var(--white);
 }
 
+.order-inv-custom-button-font {
+    font-size: 1.563rem;
+    font-weight: var(--bold-regular);
+    color: var(--order-inv-color);
+}
+
 .custom-button-small-font {
     font-size: .8rem;
     font-weight: var(--bold-medium);
@@ -342,6 +352,18 @@ input:not(input[type=button]) {
     background-color: transparent;
     font-weight: var(--bold-light);
     font-size: 1.438rem;
+}
+
+.create-modal-submit {
+    width: 17.375rem !important;
+}
+
+.custom-order-inv {
+    border: .125rem solid var(--order-inv-color) !important;
+    background-color: transparent;
+    font-weight: var(--bold-light);
+    font-size: 1.438rem;
+    color: var(--order-inv-color) !important;
 }
 
 .custom-clear-button-table {
@@ -429,6 +451,13 @@ table td, table td .btn, .text, table th {
     height: 2.875rem;
     border-radius: 1.438rem;
     border: none;
+}
+
+.inverted-custom-button {
+    padding-left: 3.125rem;
+    padding-right: 3.125rem;
+    height: 2.875rem;
+    border-radius: 1.438rem;
 }
 
 .new-modal-body .row,

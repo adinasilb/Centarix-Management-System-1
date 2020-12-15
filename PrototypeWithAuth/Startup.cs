@@ -176,9 +176,11 @@ namespace PrototypeWithAuth
         //private async Task AddRoles(IServiceProvider serviceProvider)
         //{
         //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await UserManager.FindByEmailAsync("itzhak@centarix.com");
-        //    await UserManager.AddToRoleAsync(user, "Admin");
-        //    await UserManager.AddToRoleAsync(user, "CEO");
+        //    var user = await UserManager.FindByEmailAsync("adina@centarix.com");
+        //    //await UserManager.AddToRoleAsync(user, "Admin");
+        //    //await UserManager.AddToRoleAsync(user, "CEO");
+        //    var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+        //    var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
         //}
 
         private async Task CreateRoles(IServiceProvider serviceProvider)

@@ -80,19 +80,19 @@ namespace PrototypeWithAuth.AppData
                 Classes = AllClasses,
                 ID = "personal-link"
             });
-            if (MainMenu == AppUtility.RequestPageTypeEnum.Inventory.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Full Inventory",
-                Controller = "Requests",
-                Action = "Index",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.RequestPageTypeEnum.Inventory }
-                },
-                Classes = AllClasses,
-                ID = "inventory-link"
-            });
+            //if (MainMenu == AppUtility.RequestPageTypeEnum.Inventory.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+            //MainMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Full Inventory",
+            //    Controller = "Requests",
+            //    Action = "Index",
+            //    RouteValues = new RouteValueDictionary()
+            //    {
+            //        {"PageType", AppUtility.RequestPageTypeEnum.Inventory }
+            //    },
+            //    Classes = AllClasses,
+            //    ID = "inventory-link"
+            //});
 
             return MainMenuItems;
         }

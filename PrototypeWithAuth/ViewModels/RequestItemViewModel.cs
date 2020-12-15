@@ -63,6 +63,8 @@ namespace PrototypeWithAuth.ViewModels
         public LocationType LocationType { get; set; }
         public List<LocationInstance> LocationInstances { get; set; }
 
+        public List<string> EmailAddresses { get; set; } //to pass back the email addresses in the create modal view
+
 
 
         //The following properties are for remembering where you are on the request Index to follow through to the right page
