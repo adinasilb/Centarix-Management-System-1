@@ -5,117 +5,219 @@
 @model PrototypeWithAuth.ViewModels.SummaryHoursViewModel
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-<script src="~/js/validate.js" asp-append-version="true"></script>
+@{ var years = Enumerable.Range(2010, DateTime.Today.Year - 2010 + 1);}
+<div class="row mb-5">
+    <div class="col-9">
 
-<div class="row mt-6 p-3 text-center">
-    <div class="col-4 pl-5 text-left">
-        Date
-    </div>
-    <div class="col-1">
+        <div class="row">
+            <div class="col-6 heading-1 p-0"><label class="m-0 p-0">@System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(Model.CurrentMonth.Month) @Model.SelectedYear Summary</label></div>
+            <div class="col-2 offset-2 yearsHours pl-0">
+                <select asp-for="SelectedYear" class="mdb-select timekeeper custom select-dropdown form-control-plaintext" searchable="Search Year">
+                    <option disabled selected class="d-none" value="">Select Year</option>
+                    @foreach (var y in years)
+                    {
+                        <option value="@y">@y</option>
+                    }
+                </select>
+            </div>
+            <div class="col-2  pr-0 monthsHours">
 
-    </div>
-    <div class="col-3">
-        Entry Time
-    </div>
-    <div class="col-3">
-        Exit Time
-    </div>
-    <div class="col-1">
-        Total
+                @{
+                    int[] months = Enumerable.Range(1, 12).ToArray();
+                    int curMonth = Model.CurrentMonth.Month;
+                }
+
+                @Html.DropDownList("months", months.Select(x =>
+     new SelectListItem
+     {
+         Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
+         Value = x.ToString(),
+         Selected = (x == curMonth)
+     }
+ ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })
+            </div>
+
+
+        </div>
     </div>
 </div>
-@foreach (var eh in Model.EmployeeHours)
-{
-    <div class="row border p-3 text-center">
-        <div class="col-4 pl-5 text-left">
-            @eh.Date.ToLongDateString()
+<div class="row">
+    <div class="col-9">
+        <div class="row mt-6 p-3 text-center">
+            <div class="col-2 pl-5 text-left">
+                Day
+            </div>
+            <div class="col-2 ">
+                Date
+            </div>
+            <div class="col-2">
+
+            </div>
+            <div class="col-2">
+                Entry Time
+            </div>
+            <div class="col-2">
+                Exit Time
+            </div>
+            <div class="col-2">
+                Total
+            </div>
         </div>
-        <div class="col-1  timekeeper-font-color">
-            @eh.OffDayType?.Description
-        </div>
-        <div class="col-3 p-0">
-            @if (eh.Entry1 == null && eh.TotalHours==null && eh.OffDayType == null)
-            {
-                <button type="button" class="custom-clear-button-table table-button timekeeper-font-color confirm-report-sick @AppUtility.TimeKeeperSidebarEnum.SummaryHours" style="background: transparent; border: .125rem solid var(--timekeeper-color);" value="@eh.Date.ToString("yyyy-MM-dd")">Report Sick</button>
-            }
-            @eh.Entry1?.ToShortTimeString()
-            <br />
-            @eh.Entry2?.ToShortTimeString()
-        </div>
-        <div class="col-3 p-0">
-            @if (eh.Entry2 != null && eh.Exit2 == null)
-            {
-                @eh.Exit1?.ToShortTimeString() <br />
-                <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString(" yyyy-MM-dd")">
-                    Update Hours
-                </button>
+        @foreach (var eh in Model.EmployeeHours)
+        {
+            <div class="row border p-3 text-center">
+                <div class="col-2 pl-5 text-left">
+                    @eh.Date.DayOfWeek
+                </div>
+                <div class="col-2 ">
+                    @eh.Date.ToShortDateString()
+                </div>
+                <div class="col-2 ">
+                    @{ var hoursType = "";}
+                    @if (eh.CompanyDayOffID != null)
+                    {
+                        hoursType = eh.CompanyDayOff.CompanyDayOffType.Name;
+                    }
+                    else
+                    {
 
-            }
-            else if (( eh.Exit1 == null || (eh.Entry2 != null && eh.Exit2 == null)) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
-            {
-                <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString(" yyyy-MM-dd")">
-                    Update Hours
-                </button>
-                @eh.Exit1?.ToShortTimeString()
-            }
-            else if ((((eh.Entry1 != null && eh.Exit1 == null) || (eh.Entry2 != null && eh.Exit2 == null))) && (eh.TotalHours == null || eh.TotalHours == TimeSpan.Zero))
-            {
-                <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
-                @eh.Exit1?.ToShortTimeString()
-            }
-            else
-            {
-                @eh.Exit1?.ToShortTimeString()
-            }
+                        hoursType = eh.OffDayType?.Description;
+                        @if (eh.Entry1 != null || eh.TotalHours != null)
+                        {
+                            if (eh.EmployeeHoursStatusID != 1)
+                            {
+                                hoursType = "Worked from office";
+                            }
+                            else
+                            {
+                                hoursType = "Worked from home";
+                            }
+                        }
+                        @if (eh.Entry1 == null && eh.TotalHours == null && eh.OffDayType == null)
+                        {
+                            <select class="mdb-select  timekeeper custom select-dropdown no-hours-reported mb-0" date="@eh.Date.ToString("yyyy-MM-dd")">
+                                <option value="" selected disabled class="timekeeper-color">No hours reported</option>
+                                <option value="1" class="open-work-from-home-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Worked from home</option>
+                                <option value="2" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Update hours</option>
+                                <option value="3" class="confirm-report-sick">Report sick day</option>
+                                <option value="4" class="confirm-report-sick">Report vacation day</option>
+                            </select>
+                        }
+                    }
 
-            <br />
-            @eh.Exit2?.ToShortTimeString()
 
-        </div>
+                    @hoursType
+                </div>
+                <div class="col-2 ">
 
-        <div class="col-1 timekeeper-font-color font-weight-bold">
-            @{var hours = eh.TotalHours == TimeSpan.Zero ? "" : eh.TotalHours?.ToString(@"h\:mm"); }
-            @hours
-        </div>
+                    @eh.Entry1?.ToShortTimeString()
+                    @{ var entry = "";}
+                    @if (eh.Entry1 == null)
+                    {
+                        entry = "n/a";
+                    }
+                    @entry
+                    @if (eh.Entry2 != null)
+                    {
+                        <br />
 
-    </div>
+                    }
+                    @eh.Entry2?.ToShortTimeString()
 
-}
-<div class="row mt-6 py-4 pl-3 text-center">
-    <div class="col-2">
-        Work Days
-    </div>
-    <div class="col-2">
-        Sick Days
-    </div>
-    <div class="col-2">
-        Vacation Days
-    </div>
-    <div class="col-6  text-right pr-5">
-        Total Hours
-    </div>
-</div>
-<div class="row mt-2 p-4  border  text-center" style="border-color: var(--timekeeper-color) !important;">
-    <div class="col-2">
-        @Model.EmployeeHours.Where(eh => eh.OffDayTypeID == null).Count()
-    </div>
-    <div class="col-2">
-        @Model.EmployeeHours.Where(eh => eh.OffDayTypeID == 1).Count()
-    </div>
-    <div class="col-2">
-        @Model.EmployeeHours.Where(eh => eh.OffDayTypeID == 2).Count()
-    </div>
-    <div class="col-6 text-right pr-5 timekeeper-font-color font-weight-bold">
-        @{ var sum = new TimeSpan(Model.EmployeeHours.Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
-        @{var totalHours = sum.Days * 24 + sum.Hours;
-            String? totalInMonthString = null;
-            if (Model.TotalHoursInMonth != null)
-            {
-                var totalInMonth = TimeSpan.FromHours(Model.TotalHoursInMonth ?? 0);
-                totalInMonthString= " / "+Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
-            }
+                </div>
+                <div class="col-2 p-0">
+                    @{ var exit = "";}
+                    @eh.Exit1?.ToShortTimeString()
+                    @if (eh.Entry2 != null && eh.Exit2 == null)
+                    {
+                        <br />
+                        <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString(" yyyy-MM-dd")">
+                            Update Hours
+                        </button>
+
+                    }
+                    else if (eh.Entry1 != null && eh.Exit1 == null)
+                    {
+                        <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                    }
+                    else if (eh.Exit1 == null)
+                    {
+                        exit = "n/a";
+                    }
+                    @exit
+                    @if (eh.Exit2 != null)
+                    {
+                        <br />
+
+                    }
+                    @eh.Exit2?.ToShortTimeString()
+
+
+                </div>
+
+                <div class="col-2 timekeeper-font-color font-weight-bold">
+                    @{var hours = eh.TotalHours == TimeSpan.Zero || eh.TotalHours == null ? "n/a" : eh.TotalHours?.ToString(@"h\:mm"); }
+                    @hours
+                </div>
+
+            </div>
 
         }
-        @totalHours:@sum.ToString("mm")@totalInMonthString
+    <div class="row mt-6 py-4  text-center">
+        <div class="col-2">
+            Work Days
+        </div>
+        <div class="col-2">
+            Holidays
+        </div>
+        <div class="col-2">
+            Sick Days
+        </div>
+        <div class="col-2">
+            Vacation Days
+        </div>
+        <div class="col-2">
+            Work From Home
+        </div>
+        <div class="col-2  ">
+            Total Hours
+        </div>
+    </div>
+        <div class="row mt-2 py-4  border  text-center" style="border-color: var(--timekeeper-color) !important;">
+            <div class="col-2">
+                @Model.EmployeeHours.Where(eh => eh.OffDayTypeID == null).Count()
+            </div>
+            <div class="col-2">
+                @Model.EmployeeHours.Where(eh=>eh.CompanyDayOffID !=null).Count()
+            </div>
+            <div class="col-2">
+                @Model.EmployeeHours.Where(eh => eh.OffDayTypeID == 1).Count()
+            </div>
+            <div class="col-2">
+                @Model.EmployeeHours.Where(eh => eh.OffDayTypeID == 2).Count()
+            </div>
+            <div class="col-2">
+                @Model.EmployeeHours.Where(eh => eh.EmployeeHoursStatusID == 1).Count()
+            </div>
+            <div class="col-2 timekeeper-font-color font-weight-bold">
+                @{ var sum = new TimeSpan(Model.EmployeeHours.Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
+                @{var totalHours = sum.Days * 24 + sum.Hours;
+                    String? totalInMonthString = null;
+                    if (Model.TotalHoursInMonth != null)
+                    {
+                        var totalInMonth = TimeSpan.FromHours(Model.TotalHoursInMonth ?? 0);
+                        totalInMonthString = " / " + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
+                    }
+
+                }
+                @totalHours:@sum.ToString("mm")@totalInMonthString
+            </div>
+        </div>
     </div>
 </div>
+@if (AppUtility.IsAjaxRequest(Context.Request))
+{
+    <script>
+        $('.mdb-select').materialSelect();
+    </script>
+}

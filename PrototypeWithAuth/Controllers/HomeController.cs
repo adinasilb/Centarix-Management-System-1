@@ -182,27 +182,46 @@ namespace PrototypeWithAuth.Controllers
             }
             DateTime nextDay = user.LastLogin.AddDays(1);
             var year = nextDay.Year;
-            var companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == year).ToList();
+            var companyDaysOff = _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToList();
 
             while (nextDay.Date <= DateTime.Today)
             {
                 if( year != nextDay.Year)
                 {
                     year = nextDay.Year;
-                    companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date.Year == year).ToList();
+                    companyDaysOff = _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToList();
                 }
-                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(nextDay.Date))
+                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
                 {
                     var existentHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Date == nextDay.Date).FirstOrDefault();
-                    if (existentHours == null)
+                    var dayoff = companyDaysOff.Where(cdo => cdo.Date == nextDay.Date).FirstOrDefault();
+                    if (dayoff !=null)
                     {
-                        EmployeeHours employeeHours = new EmployeeHours
+                        if (existentHours == null)
                         {
-                            EmployeeID = user.Id,
-                            Date = nextDay.Date
-                        };
-                        _context.Update(employeeHours);
+                            existentHours = new EmployeeHours
+                            {
+                                EmployeeID = user.Id,
+                                Date = nextDay.Date                                
+                            };
+                           
+                        }
+                        existentHours.CompanyDayOffID = dayoff.CompanyDayOffID;
+                        _context.Update(existentHours);
                     }
+                    else
+                    {                       
+                        if (existentHours == null)
+                        {
+                            EmployeeHours employeeHours = new EmployeeHours
+                            {
+                                EmployeeID = user.Id,
+                                Date = nextDay.Date
+                            };
+                            _context.Update(employeeHours);
+                        }
+                    }
+                   
                 }
                 nextDay = nextDay.AddDays(1);
             }

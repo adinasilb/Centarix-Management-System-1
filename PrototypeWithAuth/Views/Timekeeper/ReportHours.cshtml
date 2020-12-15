@@ -116,7 +116,7 @@
                 <form action="" id="entryForm" method="post" enctype="multipart/form-data" style="width:100%">
                     @Html.HiddenFor(e => e.EntryExitEnum)
                     <div class="row entry-exit-background p-5  mt-5">
-                        <div class="col-6  my-3 text-right">
+                        <div class="col-6 between-button-margin my-3 text-right">
                             <button id="entry" class="no-box-shadow border-0 rounded-pill @entryClasses text-white entry-exit-button" @isEntryDisabled type="submit" asp-action="ReportHours">
                                 <span>
                                     <i class="icon-entry-24px" style=" font-size: 3rem; top:.25rem; position:relative;  margin-right: 2rem;
@@ -124,7 +124,7 @@
             </span>
             </button>
             </div>
-            <div class="col-6  my-3 text-left">
+            <div class="col-5   my-3 text-left button p-0">
                 <button id="exit" class="no-box-shadow border-0 rounded-pill @exitClasses text-white entry-exit-button" @isExitDisabled type="submit" asp-action="ReportHours">
                     <span>
                         @exitDescription<i class="icon-exit-24px" style="        font-size: 3rem; top:.25rem; position:relative;  margin-left: 2rem;
@@ -147,7 +147,7 @@
                     <div style="font-size:2rem;">@hebrewDate</div>
                 </div>
                 <div class="row mt-6 text-left ">
-                    <button class="col-8 timekeeper-color rounded-pill border-0 open-work-from-home-modal text-white heading-1 pt-3 pb-3 pr-5 pl-5 " type="button">Work From Home</button>
+                    <button class="col-8 timekeeper-color rounded-pill border-0 open-work-from-home-modal text-white  ReportHours heading-1 pt-3 pb-3 pr-5 pl-5 " type="button">Work From Home</button>
                 </div>
                 <div class="row mt-5 text-left ">
                     <button class=" col-8 timekeeper-color rounded-pill border-0 open-update-hours-modal text-white ReportHours heading-1 pt-3 pb-3 pr-5 pl-5" type="button">Update Hours</button>

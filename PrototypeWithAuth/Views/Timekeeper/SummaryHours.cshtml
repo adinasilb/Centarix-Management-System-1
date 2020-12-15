@@ -12,45 +12,15 @@
     if (AppUtility.IsAjaxRequest(Context.Request))
     {
         Layout = null;
-        <script>$('.mdb-select').materialSelect()</script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     }
     else
     {
         Layout = "~/Views/Shared/RequestNavView.cshtml";
     }
+  
 
 }
-<div class=" container-fluid">
-
-    <div class="row mb-5">
-        <div class="col-8">
-
-            <div class="row">
-                <div class="col-7 heading-1 p-0"><label class="m-0 p-0">Monthly Summary</label></div>
-                <div class="col-3 offset-2  p-0 monthsHours">
-
-                    @{
-                        int[] months = Enumerable.Range(1, 12).ToArray();
-                        int curMonth = Model.CurrentMonth.Month;
-                    }
-
-                    @Html.DropDownList("months", months.Select(x =>
-         new SelectListItem
-         {
-             Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x),
-             Value = x.ToString(),
-             Selected = (x == curMonth)
-         }
-     ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-8" id="hoursTable">
-            @{await Html.RenderPartialAsync("HoursPage", Model);            }
-        </div>
-    </div>
+<div class=" container-fluid" id="hoursTable">
+    @{await Html.RenderPartialAsync("HoursPage", Model); }  
 </div>

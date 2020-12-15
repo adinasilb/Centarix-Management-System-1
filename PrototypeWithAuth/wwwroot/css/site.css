@@ -1595,7 +1595,8 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     max-width: 100% !important; /* Max Width of the popover (depending on the container!) */
 } .notification-bold td {
     font-weight: 500;
-} .entry-exit-background {
+}
+.entry-exit-background {
     background-color: #E5E5E9;
     border-radius: 3.8rem;
 }
@@ -2175,4 +2176,21 @@ table.visual-locations-table td .visual-locations-div {
 }
 .labmanage .location-box-selected {
     background-color: var(--lab-man-color)
+}
+.no-hours-reported.select-wrapper input.select-dropdown {
+    max-height: 30px;
+    border-bottom: 0 !important;
+    border-bottom: none !important;
+    border: 2px solid var(--timekeeper-color) !important;
+    color: var(--timekeeper-color);
+    border-radius: .25rem !important;
+    font-size: 14px
+   
+}
+.no-hours-reported.select-wrapper span.caret {
+    color: var(--timekeeper-color);
+    top: .3rem !important;
+}
+.no-hours-reported.select-wrapper {
+
 }

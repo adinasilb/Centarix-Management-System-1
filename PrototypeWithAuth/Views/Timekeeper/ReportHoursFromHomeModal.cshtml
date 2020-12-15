@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval;
+﻿@model PrototypeWithAuth.ViewModels.ReportHoursFromHomeViewModel;
 
 <script src="~/js/Validation/ReportHoursFromHomeFormValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
@@ -9,9 +9,15 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" id="myForm" enctype="multipart/form-data" class="reportHoursForm modal-padding" style="height: 100%; overflow: auto;">
-                @Html.HiddenFor(r => r.EmployeeHoursID)
-                @Html.HiddenFor(r => r.EmployeeID)
-                @Html.HiddenFor(r => r.EmployeeHoursAwaitingApprovalID)
+                @{var disabled = false;
+                    if (Model.PageType.Equals("SummaryHours"))
+                    {
+                        disabled = true;
+                    }
+                }
+                @Html.HiddenFor(r => r.EmployeeHoursAwaitingApproval.EmployeeHoursID)
+                @Html.HiddenFor(r => r.EmployeeHoursAwaitingApproval.EmployeeID)
+                @Html.HiddenFor(r => r.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID)
                 <div class="modal-header border-0 border-bottom modal-header-padding">
                     <div class="container">
                         <div class="">
@@ -26,37 +32,45 @@
                     <div class="row">
                         <div class="col-md-6 pr-4">
                             <label class="control-label">Day</label>
-                            <input asp-for="Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week" disabled />
-                            <span asp-validation-for="Date.DayOfWeek" class="text-danger-centarix " />
+                            <input asp-for="EmployeeHoursAwaitingApproval.Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week" disabled />
+                            <span asp-validation-for="EmployeeHoursAwaitingApproval.Date.DayOfWeek" class="text-danger-centarix " />
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="Date" class="control-label"></label>
-                            <input asp-for="Date" class="form-control-plaintext  border-bottom  update-work-from-home" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
-                            <span asp-validation-for="Date" class="text-danger-centarix quote-date" />
+                            <label asp-for="EmployeeHoursAwaitingApproval.Date" class="control-label"></label>
+                            @if (disabled)
+                            {
+                                <input asp-for="EmployeeHoursAwaitingApproval.Date" class="form-control-plaintext  border-bottom  update-work-from-home" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" readonly />
+                            }
+                            else
+                            {
+                                <input asp-for="EmployeeHoursAwaitingApproval.Date" class="form-control-plaintext  border-bottom  update-work-from-home" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                            }
+
+                            <span asp-validation-for="EmployeeHoursAwaitingApproval.Date" class="text-danger-centarix quote-date" />
                         </div>
                     </div>
                     <br />
                     <div class="row">
                         <div class="col-4 ">
                             <label class="control-label">Entry</label>
-                            <input asp-for="Entry1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="Entry1" class="text-danger-centarix"></span>
+                            <input asp-for="EmployeeHoursAwaitingApproval.Entry1" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHoursAwaitingApproval.Entry1" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-4 ">
                             <label class="control-label">Exit</label>
-                            <input asp-for="Exit1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="Exit1" class="text-danger-centarix"></span>
+                            <input asp-for="EmployeeHoursAwaitingApproval.Exit1" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHoursAwaitingApproval.Exit1" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-4">
-                            <label asp-for="TotalHours" class="control-label"></label>
-                            <input asp-for="TotalHours" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="TotalHours" class="text-danger-centarix"></span>
+                            <label asp-for="EmployeeHoursAwaitingApproval.TotalHours" class="control-label"></label>
+                            <input asp-for="EmployeeHoursAwaitingApproval.TotalHours" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHoursAwaitingApproval.TotalHours" class="text-danger-centarix"></span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer modal-footer-mt border-0">
                     <div class="m-auto">
-                        <input type="submit" class="custom-button-font timekeeper-color custom-button between-button-margin" asp-action="ReportHoursFromHomeModal" value="Save" />
+                        <input type="submit" class="custom-button-font timekeeper-color custom-button between-button-margin" asp-action="ReportHoursFromHomeModal" asp-route-PageType="@Model.PageType" value="Save" />
                         <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>

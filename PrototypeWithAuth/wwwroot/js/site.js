@@ -1742,13 +1742,19 @@ $(function () {
 	$('.monthsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".monthsHours chnage")
 		if ($(this).val() != '') {
-			$.fn.SortByMonth($(this).val())
+			$.fn.SortByMonth($(this).val(), $('#SelectedYear').val())
 		}
 	});
-	$.fn.SortByMonth = function (month) {
+	$('.yearsHours .select-dropdown').off('change').change(function (e) {
+	console.log(".yearsHours chnage")
+	if ($(this).val() != '') {
+		$.fn.SortByMonth($('#months').val(), $(this).val())
+	}
+});
+	$.fn.SortByMonth = function (month, year) {
 		$.ajax({
 			async: false,
-			url: 'HoursPage?month=' + month,
+			url: 'HoursPage?month=' + month+"&year="+year,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -1757,7 +1763,13 @@ $(function () {
 		});
 	};
 	$(".open-work-from-home-modal").off('click').click(function (e) {
-		var itemurl = "ReportHoursFromHomeModal";
+		if ($(this).hasClass("SummaryHours")) {
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportHours")) {
+			pageType = "ReportHours";
+		}
+		var itemurl = "ReportHoursFromHomeModal?PageType=" + pageType;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -1807,7 +1819,30 @@ $(function () {
 		var itemurl = "SickDay?PageType=" + pageType + "&date=" + selectedDate;
 		$.fn.CallModal(itemurl);
 	});
-
+	$('.no-hours-reported').off('change').change(function (e) {
+		var selectedDate = $(this).attr("date");
+		var pageType = "SummaryHours";
+		switch ($(this).val()) {
+			case "1":
+				var itemurl = "ReportHoursFromHomeModal?PageType=" + pageType + "&chosenDate=" + selectedDate;
+				$("#loading").show();
+				$.fn.CallModal(itemurl)
+				break;
+			case "2":
+				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate;
+				$("#loading").show();
+				$.fn.CallModal(itemurl);
+				break;
+			case "3":		
+				var itemurl = "SickDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
+				$.fn.CallModal(itemurl);
+				break;
+			case "4":
+				var itemurl = "VacationDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
+				$.fn.CallModal(itemurl);
+				break;
+		}
+	});
 	$(".confirm-report-sick").off('click').click(function (e) {
 
 		$("#loading").show();
@@ -2048,13 +2083,41 @@ $(function () {
 			cache: false,
 			success: function (data) {
 				$(".modal").modal('hide');
-				$(".render-body").html(data);
+				$("#hoursTable").html(data);
 
 			}
 		});
 	});
 
+	$("body").off('click').on("click", "#saveVacationConfirmation", function (e) {
+		e.preventDefault();
+		var pageType = "";
+		if ($(this).hasClass("SummaryHours")) {
+			var month = $('#months').val();
+			console.log("month: " + month);
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportDaysOff")) {
+			pageType = "ReportDaysOff";
+		}
+		//alert($('#SelectedDate').val())
+		var date = $('#SelectedDate').val();
+		var dd = parseInt(date[2]);
+		var mm = parseInt(date[1]);
+		var yyyy = parseInt(date[0]);
+		var dateFrom = new Date(yyyy, mm, dd);
+		$.ajax({
+			async: true,
+			url: "/Timekeeper/VacationDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + month,
+			type: 'POST',
+			cache: false,
+			success: function (data) {
+				$(".modal").modal('hide');
+				$("#hoursTable").html(data);
 
+			}
+		});
+	});
 	//function ChangeEdits() {
 	//	alert("sitejs change edits");
 	//};
