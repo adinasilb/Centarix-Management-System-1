@@ -534,7 +534,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             requestItemViewModel.Request = new Request();
-            requestItemViewModel.Request.ExchangeRate = AppUtility.GetExchangeRateFromApi();
+            requestItemViewModel.Request.ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentQuote = new ParentQuote();
             requestItemViewModel.Request.SubProject = new SubProject();

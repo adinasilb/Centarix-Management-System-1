@@ -58,7 +58,21 @@ namespace PrototypeWithAuth.Controllers
                 menu = _context.Menus.Where(m => rolesList.Contains(m.MenuDescription));
             }
 
-
+            //update latest exchange rate if need be
+            var latestRate = _context.ExchangeRates.FirstOrDefault();
+          
+            if (latestRate == null)
+            {
+                latestRate = new ExchangeRate();
+            }
+            var updateDate = latestRate.LastUpdated;
+            if (updateDate.Date != DateTime.Today)
+            {
+                latestRate.LastUpdated = DateTime.Now;
+                latestRate.LatestExchangeRate = AppUtility.GetExchangeRateFromApi();
+                _context.Update(latestRate);
+                await _context.SaveChangesAsync();
+            }
             return View(menu);
         }
         public async Task<IActionResult> _MenuButtons()
