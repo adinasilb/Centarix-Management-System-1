@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().UserNum)
             </td>
             <td>
-                @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().UserName)
+               Name
             </td>
             <td>
                 @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().Email)
@@ -39,11 +39,11 @@
                 </td>
                 <td>
                     <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
-                        @Html.DisplayFor(modelItem => user.UserName)
+                        @user.FirstName @user.LastName
                     </a>
                 </td>
                 <td>
-                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                    <a href="" class="open-user-modal text-lowercase" value="@user.Id" style="display:block;">
                         @Html.DisplayFor(modelItem => user.Email)
                     </a>
                 </td>
