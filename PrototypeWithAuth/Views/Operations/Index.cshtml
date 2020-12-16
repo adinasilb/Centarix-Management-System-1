@@ -36,32 +36,33 @@
     }
     <input type="hidden" asp-for=" Page" />
     <input type="hidden" asp-for="RequestStatusID" />
+    <input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
     <input type="hidden" asp-for="SubCategoryID" />
     <input type="hidden" asp-for="PageType" />
     <input type="hidden" asp-for="VendorID" />
     <input type="hidden" asp-for="ApplicationUserID" />
     <input type="hidden" asp-for="RequestParentLocationInstanceID" />
-                if (Model.SubCategoryID > 0)
-                {
-                    backTextBool = true;
-                    backText = Model.VendorID.ToString();
-                    backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations , @categoryType=2}).ToString();
-                }
-                if (Model.VendorID > 0)
-                {
-                    backTextBool = true;
-                    backText = Model.VendorID.ToString();
-                    backLink = Url.ActionLink("Index", "Vendors", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations, @categoryType = 2 }).ToString();
-                }
-                if (!string.IsNullOrEmpty(Model.ApplicationUserID))
-                {
-                    backTextBool = true;
-                    backText = Model.ApplicationUserID;
-                    backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations, @categoryType = 2 }).ToString();
-            }
+    if (Model.SubCategoryID > 0)
+    {
+        backTextBool = true;
+        backText = Model.VendorID.ToString();
+        backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations, @categoryType = 2 }).ToString();
+    }
+    if (Model.VendorID > 0)
+    {
+        backTextBool = true;
+        backText = Model.VendorID.ToString();
+        backLink = Url.ActionLink("Index", "Vendors", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations, @categoryType = 2 }).ToString();
+    }
+    if (!string.IsNullOrEmpty(Model.ApplicationUserID))
+    {
+        backTextBool = true;
+        backText = Model.ApplicationUserID;
+        backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = AppUtility.MenuItems.Operations, @categoryType = 2 }).ToString();
+    }
 
 
-            bool search = false;
+    bool search = false;
     if (TempData["Search"] != null)
     {
         if (TempData["Search"].ToString() == "True")
@@ -223,17 +224,21 @@
                             <div style="display:none;" id="priceSortContent" class="">
                                 @for (int i = 0; i < Model.PriceSortEnums.Count; i++)
                                 {
-                                    var val = (int)(Model.PriceSortEnums[i].PriceSortEnum);
-                                    var id = "PriceSortEnums_" + i + "__Selected";
-                                    <div class="custom-control custom-checkbox plain-form priceFilterDiv" onclick="callIndexWithNewFilter(@val, @id)">
-                                        <input type="checkbox" class="custom-control-input priceSort" enum="@Model.PriceSortEnums[i].PriceSortEnum" asp-for="PriceSortEnums[i].Selected" />
-                                        <label class="custom-control-label text" asp-for="PriceSortEnums[i].Selected">@Html.DisplayFor(e => Model.PriceSortEnums[i].PriceSortEnum)</label>
-                                    </div>
-                                    <hr class="mx-0  my-1" />
+                                    if (Model.PriceSortEnums[i].PriceSortEnum != AppUtility.PriceSortEnum.Unit)
+                                    {
+                                        var val = (int)(Model.PriceSortEnums[i].PriceSortEnum);
+                                        var id = "PriceSortEnums_" + i + "__Selected";
+                                        <div class="custom-control custom-checkbox plain-form priceFilterDiv" onclick="callIndexWithNewFilter(@val, @id)">
+                                            <input type="checkbox" class="custom-control-input priceSort" enum="@Model.PriceSortEnums[i].PriceSortEnum" asp-for="PriceSortEnums[i].Selected" />
+                                            <label class="custom-control-label text" asp-for="PriceSortEnums[i].Selected">@Html.DisplayFor(e => Model.PriceSortEnums[i].PriceSortEnum)</label>
+                                        </div>
+                                        <hr class="mx-0  my-1" />
+                                    }
+
                                 }
 
                                 <div class="row mt-2">
-                                    <input type="hidden" id="tempCurrency" value="NIS"/>
+                                    <input type="hidden" id="tempCurrency" value="NIS" />
                                     <div class="col-5">
                                         <div class="custom-control custom-radio">
                                             <input checked

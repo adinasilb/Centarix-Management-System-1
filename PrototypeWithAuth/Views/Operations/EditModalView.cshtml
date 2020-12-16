@@ -22,6 +22,11 @@
                 @Html.HiddenFor(model => model.RequestStatusID)
                 @Html.HiddenFor(model => model.SubCategoryID)
                 @Html.HiddenFor(model => model.VendorID)
+                @Html.HiddenFor(model => model.Request.ApplicationUserCreatorID)
+                @Html.HiddenFor(model => model.Request.ApplicationUserReceiverID)
+                @Html.HiddenFor(model => model.Request.ParentRequest.OrderDate)
+                @Html.HiddenFor(model => model.Request.ArrivalDate)
+                @Html.HiddenFor(model => model.Request.CreationDate)
                 @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
                 @*Requests search view model*@

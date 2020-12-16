@@ -8,7 +8,7 @@ function callIndexWithNewFilter(val, id) {
 function ajaxCallToPartial() {
     var section = $('#section').val();
     var selectedPriceSort = [];
-    $(".popover-body .priceSort:checked").each(function (e) {
+    $("#priceSortContent .priceSort:checked").each(function (e) {
         selectedPriceSort.push($(this).attr("enum"));
     })
     if (section == "LabManagement") {
@@ -20,7 +20,7 @@ function ajaxCallToPartial() {
         url: "/"+section+"/_IndexTable?SectionType="+sectiontype,
         data: {
             page: $('#Page').val(),
-            RequestStatusID: $('#RequestStatusID').val(),
+            RequestStatusID: $('.request-status-id').val(),
             subcategoryID: $('#SubCategoryID').val(),
             vendorID: $('#VendorID').val(),
             applicationUserID: $('#ApplicationUserID').val(),

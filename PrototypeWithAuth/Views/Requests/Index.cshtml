@@ -40,13 +40,14 @@
         TempData["TempPageType"] = TempData["TempPageType"];
     }
     <input type="hidden" asp-for=" Page" />
-    <input type="hidden" asp-for="RequestStatusID" />
+    <input type="hidden" asp-for="RequestStatusID"  />
+    <input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
     <input type="hidden" asp-for="SubCategoryID" />
     <input type="hidden" asp-for="PageType" />
     <input type="hidden" asp-for="VendorID" />
     <input type="hidden" asp-for="ApplicationUserID" />
     <input type="hidden" asp-for="RequestParentLocationInstanceID" />
-    <input type="hidden" asp-for="SectionType"/>
+    <input type="hidden" asp-for="SectionType" />
     if (Model.SubCategoryID > 0)
     {
         backTextBool = true;
@@ -170,7 +171,7 @@
             break;
     }
 }
-<input type="hidden" id="section" value="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]"/>
+<input type="hidden" id="section" value="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]" />
 @if (backTextBool)
 {
     <div class="row">
