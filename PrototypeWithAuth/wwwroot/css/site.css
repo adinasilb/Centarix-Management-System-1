@@ -2076,10 +2076,8 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     direction: rtl;
 } .disable-custom-mdbselect {
     pointer-events: none;
-} .upload-image-icon {
-    height: 91px;
-    width: 91px;
-} #qrCode img {
+} 
+  #qrCode img {
     margin: auto;
 } .accounting-popover:hover {
     color: #212529;

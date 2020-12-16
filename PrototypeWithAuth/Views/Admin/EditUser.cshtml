@@ -41,8 +41,8 @@
                     </div>
                     <div class="row modal-title-line">
                         <div class="col-2 form-group  pl-0  d-table">
-                            <button type="button" class="btn no-box-shadow upload-image-icon upload-image border-0 rounded-circle p-0 m-0 mark-readonly" disabled>
-                                <div class="userImage upload-image btn btn-link no-hover p-0 circular-profile-img circular-profile-img-89 m-0 text-decoration-none">
+                            <button type="button" class="btn no-box-shadow  upload-image border-0 rounded-circle p-0 m-0 mark-readonly" disabled>
+                                <div class="userImage upload-image ">
                                     @{
                                         var src = "src=" + "/images/user-image-placeholder.png";
                                         var hiddenIcon = "";
@@ -54,7 +54,7 @@
 
                                     }
 
-                                    <img id="user-image" @src />
+                                    <img id="user-image" class=" circular-profile-img circular-profile-img-89" @src />
                                 </div>
                             </button>
                         </div>

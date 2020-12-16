@@ -497,64 +497,51 @@ table td, table td .btn, .text, table th {
 }
 
 
-.circular-profile-img {
-    height: 50px;
-    width: 50px;
-    border-radius: 50% !important;
-    border: 1px solid rgba(0, 0, 0, .54) !important;
-}
 
 .circular-profile-img-50 {
     height: 50px;
     width: 50px;
-    clip-path: circle(25px at center);
 }
 
 .circular-profile-img-65 {
     height: 65px;
     width: 65px;
-    clip-path: circle(32.5px at center);
 }
 
 .circular-profile-img-89 {
     height: 89px;
     width: 89px;
-    clip-path: circle(44.5px at center);
 }
 
 .circular-profile-img-150 {
     height: 150px;
     width: 150px;
-    clip-path: circle(75px at center);
 }
 
 .circular-profile-img-141 {
     height: 141px;
     width: 141px;
-    clip-path: circle(70.5px at center);
 }
 
 .circular-profile-img-400 {
     height: 400px;
     width: 400px;
-    clip-path: circle(200px at center);
 }
 
 .circular-profile-img-225 {
     height: 225px;
     width: 225px;
-    clip-path: circle(112.5px at center);
 }
 
 .circular-profile-img-197 {
     height: 197px;
     width: 197px;
-    clip-path: circle(98.5px at center);
 }
 
-.circular-profile-img img {
-    position: relative;
-    height: 100%;
+.circular-profile-img{
+    -webkit-border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, .54) !important;
 }
 
 .modal-border-radius {

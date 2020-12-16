@@ -44,7 +44,7 @@
                                         src = "\\" + AppUtility.GetLastFiles(Model.ElementAt(i).UserImage, 2);
                                     }
                                 }
-                                <div class="btn btn-link p-0 circular-profile-img circular-profile-img-141 m-0"><img id="user-image" src="@src" /></div>
+                                <img id="user-image" class="circular-profile-img circular-profile-img-141" src="@src" />
                                 <br />
                                 <label class="owner-label mb-0">@Model.ElementAt(i).FirstName<br />@Model.ElementAt(i).LastName</label>
                             </a>
@@ -60,7 +60,7 @@
                                             src = "\\" + AppUtility.GetLastFiles(Model.ElementAt(i).UserImage, 2);
                                         }
                                     }
-                            <div class="btn btn-link p-0 circular-profile-img circular-profile-img-141 m-0"><img id="user-image" src="@src" /></div>
+                            <img id="user-image" class="circular-profile-img circular-profile-img-141" src="@src" />
                             <br />
                             <label class="owner-label mb-0">@Model.ElementAt(i).FirstName<br />@Model.ElementAt(i).LastName</label>
                         </a>
