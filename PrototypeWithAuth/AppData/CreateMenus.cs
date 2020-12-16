@@ -283,7 +283,7 @@ namespace PrototypeWithAuth.AppData
             if (MainMenu == AppUtility.UserPageTypeEnum.Workers.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
-                Description = "Workers",
+                Description = "Employees",
                 Controller = "ApplicationUsers",
                 Action = "Details",
                 RouteValues = new RouteValueDictionary(),

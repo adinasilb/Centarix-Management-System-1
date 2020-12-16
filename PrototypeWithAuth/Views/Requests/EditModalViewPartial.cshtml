@@ -481,7 +481,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <span class="input-group-text">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom" name="unit-price-dollars" id="unit-price-dollars" disabled />
+                                        <input class="form-control-plaintext border-bottom" name="unit-price-dollars" id="unit-price-dollars"  />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -538,13 +538,13 @@ Model.UnitTypeList,
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" disabled />
+                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars"  />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel"  disabled/>
                                         </div>
                                     </div>
                                 </div>
@@ -605,13 +605,13 @@ Model.UnitTypeList,
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled />
+                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars"  />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
+                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel " disabled  /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -628,7 +628,7 @@ Model.UnitTypeList,
                     <label class="control-label">Sum:</label>
                     <div class="input-group">
                         <span class="input-group-text">&#36;</span>
-                        <input class="form-control-plaintext border-bottom" name="sum-dollars" min="0" id="sum-dollars" disabled />
+                        <input class="form-control-plaintext border-bottom mark-readonly" name="sum-dollars" min="0" id="sum-dollars" disabled />
                     </div>
                 </div>
             </div>
@@ -637,7 +637,7 @@ Model.UnitTypeList,
                     <label asp-for="Request.Cost" class="control-label"></label>
                     <div class="input-group">
                         <span class="input-group-text">&#x20aa;</span>
-                        <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom " readonly />
                         <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                     </div>
                 </div>
@@ -647,8 +647,8 @@ Model.UnitTypeList,
                     <label asp-for="Request.VAT" class="control-label"></label>
                     <div class="input-group">
                         <span class="input-group-text">&#x20aa;</span>
-                        @{ var vat = .17 * Model.Request.Cost;}
-                        <input value="@vat.ToString("N2")" class="form-control-plaintext border-bottom " disabled />
+                        @{ var vat = .17 * Model.Request.VAT;}
+                        <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " disabled />
                         <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                     </div>
                 </div>
