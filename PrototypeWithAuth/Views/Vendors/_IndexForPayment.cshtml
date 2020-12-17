@@ -1,0 +1,85 @@
+﻿
+@model IEnumerable<PrototypeWithAuth.Models.Vendor>
+@using PrototypeWithAuth.AppData
+@{
+    string hoverClass = "";
+    ViewData["Title"] = "IndexForPayment";
+
+    if (TempData["SectionType"].Equals(AppUtility.MenuItems.LabManagement))
+    {
+        hoverClass = "lab-man-link-clr";
+    }
+    else
+    {
+        hoverClass = "acc-link-clr";
+    }
+}
+<table class="table table-headerspaced table-noheaderlines text-center">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorID)
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.VendorEnName)*@
+                Vendor Name
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.VendorHeName)*@
+                Hebrew Name
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorBuisnessID)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.OrdersEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VendorTelephone)
+            </th>
+            @*<th>
+
+                </th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="vendor-list-item">
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorID)
+                </td>
+                <td>
+                    <button val="@item.VendorID" class="@hoverClass  btn-link no-box-shadow link-ho load-vendor-edit border-0 text-capitalize" sectionType="@TempData["SectionType"]">@item.VendorEnName.ToLower()</button>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorHeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorBuisnessID)
+                </td>
+
+                <td class="text-lowercase">
+                    @Html.DisplayFor(modelItem => item.OrdersEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorTelephone)
+                </td>
+                @*<td>
+
+                        @Html.ActionLink("orders", "Index", "Requests", new { vendorID = @item.VendorID, @PageType = pageType }, null)
+                    </td>*@
+                <!--<td>
+                    @*<a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |*@
+                    <a asp-action="DetailsForPayment" asp-route-id="@item.VendorID"> <img src="~/images/css/accounting/icons/view.png" alt="Details" /></a>
+                    @*<a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>*@
+                </td>-->
+                @*<td>
+                        <a asp-action="Delete" asp-route-id="@item.VendorID"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></a>
+                    </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+<script src="~/js/IndexForPaymentPartial.js"></script>
