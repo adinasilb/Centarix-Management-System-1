@@ -105,6 +105,13 @@ namespace PrototypeWithAuth.Controllers
             TempData["AmountReceived"] = receivedCount;
             TempData["AmountApproved"] = approvedCount;
 
+
+            TempData["Email1"] = TempData["Email1"];
+            TempData["Email2"] = TempData["Email2"];
+            TempData["Email3"] = TempData["Email3"];
+            TempData["Email4"] = TempData["Email4"];
+            TempData["Email5"] = TempData["Email5"];
+
             if (SectionType.Equals(AppUtility.MenuItems.LabManagement))
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Equipment;
@@ -702,6 +709,11 @@ namespace PrototypeWithAuth.Controllers
                             _context.SaveChanges();
 
                             TempData["OpenTermsModal"] = "Single";
+                            TempData["Email1"] = requestItemViewModel.EmailAddresses[0];
+                            TempData["Email2"] = requestItemViewModel.EmailAddresses[1];
+                            TempData["Email3"] = requestItemViewModel.EmailAddresses[2];
+                            TempData["Email4"] = requestItemViewModel.EmailAddresses[3];
+                            TempData["Email5"] = requestItemViewModel.EmailAddresses[4];
                             //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
                             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
                         }
@@ -1703,6 +1715,11 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> TermsModal(int id, bool isSingleRequest = false, bool IsCart = false) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
             //TODO: add temp data memory here 
+            //TempData["Email1"] = TempData["Email1"];
+            //TempData["Email2"] = TempData["Email2"];
+            //TempData["Email3"] = TempData["Email3"];
+            //TempData["Email4"] = TempData["Email4"];
+            //TempData["Email5"] = TempData["Email5"];
             int lastParentRequestOrderNum = 0;
             var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
@@ -1893,7 +1910,7 @@ namespace PrototypeWithAuth.Controllers
                 string ownerEmail = currentUser.Email;
                 string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                 string ownerPassword = currentUser.SecureAppPass;
-                string vendorEmail = firstRequest.Product.Vendor.OrdersEmail;
+                string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ TempData["Email1"]?.ToString() ?? firstRequest.Product.Vendor.OrdersEmail;
                 string vendorName = firstRequest.Product.Vendor.VendorEnName;
 
                 //add a "From" Email
@@ -1901,6 +1918,12 @@ namespace PrototypeWithAuth.Controllers
 
                 // add a "To" Email
                 message.To.Add(new MailboxAddress(vendorName, vendorEmail));
+
+                //add CC's to email
+                message.Cc.Add(new MailboxAddress(TempData["Email2"]?.ToString() ?? ""));
+                message.Cc.Add(new MailboxAddress(TempData["Email3"]?.ToString() ?? ""));
+                message.Cc.Add(new MailboxAddress(TempData["Email4"]?.ToString() ?? ""));
+                message.Cc.Add(new MailboxAddress(TempData["Email5"]?.ToString() ?? ""));
 
                 //subject
                 message.Subject = "Order from Centarix to " + vendorName;
