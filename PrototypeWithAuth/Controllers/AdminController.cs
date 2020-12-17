@@ -59,7 +59,20 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersList;
 
             ViewBag.ErrorMessage = ViewBag.ErrorMessage;
+            UserIndexViewModel userIndexViewModel = GetUserIndexViewModel();
+            return View(userIndexViewModel);
+        }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin , Users")]
+        public IActionResult _Index()
+        {
+            ViewBag.ErrorMessage = ViewBag.ErrorMessage;
+            UserIndexViewModel userIndexViewModel = GetUserIndexViewModel();
+            return PartialView(userIndexViewModel);
+        }
+        private UserIndexViewModel GetUserIndexViewModel()
+        {
             List<Employee> users = new List<Employee>();
             users = _context.Employees
                 //.Where(u => !u.IsSuspended) //instead of using lockout use bool so needstoreset password will be shown
@@ -79,7 +92,7 @@ namespace PrototypeWithAuth.Controllers
                 ApplicationUsers = users,
                 IsCEO = IsCEO
             };
-            return View(userIndexViewModel);
+            return userIndexViewModel;
         }
 
         [HttpGet]

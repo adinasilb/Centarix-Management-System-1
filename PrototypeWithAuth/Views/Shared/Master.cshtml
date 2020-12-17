@@ -245,6 +245,7 @@
             //$('form').change(function () {
             //    console.log("form change");
             //    $(".input-group .form-control-plaintext").unwrap();
+            //    $(".input-group .form-control-plaintext").unwrap();
             //    $(".input-group").remove('.input-group-text');
             //    $(".form-control-plaintext.input-validation-error").wrap("<div class=\"input-group invalid\"></div>");
 
@@ -423,29 +424,12 @@
 
             });
         }
-        $(".prevent-js-reload").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        });
 
         $(".search-link").on("click", function () {
             $('#request-search a:first').tab('show');
         });
 
-      
 
-
-        $(".create-product-details").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-            var $itemurl = "/Requests/CreateModalView";
-            //var $itemurl = "Requests/DetailsModalView/?id=62";
-            $.fn.CallPageRequest($itemurl, "create");
-            return false;
-        });
 
 
         $(".load-confirm-delete-quote").on("click", function (e) {
@@ -683,16 +667,6 @@
 
         }
 
-        $(".open-user-modal").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "/Admin/EditUser/?id=" + $(this).attr("value");
-            console.log("itemurl: " + $itemurl);
-            $.fn.CallPageUser($itemurl);
-            return false;
-        });
-
         $(".load-terms-modal").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -764,13 +738,7 @@
             return false;
         };
 
-        $.fn.SuspendUserModal = function (userid, suspend) {
-            console.log("in delete user modal function");
-            $itemurl = '/Admin/SuspendUserModal?id=' + userid;
-            $.fn.CallPageUser($itemurl, '');
-            return false;
-        };
-
+      
 
         $.fn.getMenuItems = function () {
            // alert("get menu items")
