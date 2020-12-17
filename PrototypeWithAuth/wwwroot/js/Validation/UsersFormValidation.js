@@ -1,6 +1,8 @@
 ﻿var isEmployee = function () {
-	console.log("employeestatus: " + ($("#NewEmployee_EmployeeStatusID").val() != '4'));
 	return $("#NewEmployee_EmployeeStatusID").val() != "4";
+}
+var isEmployeeOnly = function () {
+	return $("#NewEmployee_EmployeeStatusID").val() == "1";
 }
 var isUserAndIsNotEdit = function () {
 	return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
@@ -63,15 +65,15 @@ $('.usersForm').validate({
 			number: true,
 			integer: true
 		},
-		"NewEmployee.SalariedEmployee.WorkScope": {
-			atleastOneHoursField: true,
+		"NewEmployeeWorkScope": {
+			required: isEmployeeOnly,
 		},
 		"NewEmployee.SalariedEmployee.HoursPerDay": {
-			atleastOneHoursField: true,
+			required: isEmployeeOnly,
 			number: true
 		},
 		"NewEmployee.VacationDays": {
-			required: isEmployee,
+			required: isEmployeeOnly,
 			number: true,
 			integer: true
 		},

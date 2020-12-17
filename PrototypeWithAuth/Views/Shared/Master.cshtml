@@ -256,6 +256,14 @@
                     $('#loading').hide();
                     alert("Cookie timed out. Please login again.");
                 }
+                if (jqxhr.status == 400) {
+                    $('#loading').hide();
+                    alert("Error 400: error making request");
+                }
+                if (jqxhr.status == 500) {
+                    $('#loading').hide();
+                    alert("Error 500: error carrying out request");
+                }
             });
             $('[data-toggle="tooltip"]').tooltip()
 
